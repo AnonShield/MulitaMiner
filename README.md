@@ -130,6 +130,7 @@ O arquivo JSON gerado contém três seções principais:
   ],
   "extracted_at": "2025-09-30T15:42:17.123456"
 }
+```
 
 ## 🤝 Contribuição
 
