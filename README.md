@@ -8,7 +8,7 @@
 
 ## 📋 Sobre
 
-Extrato de PDF TeanableWAS é uma ferramenta especializada para extrair e analisar dados de relatórios de vulnerabilidade do TenableWAS em formato PDF. A ferramenta converte os relatórios em formato JSON estruturado, facilitando a integração com outras ferramentas de análise de segurança e automação de relatórios.
+Extrato de PDF TenableWAS é uma ferramenta especializada para extrair e analisar dados de relatórios de vulnerabilidade do TenableWAS em formato PDF. A ferramenta converte os relatórios em formato JSON estruturado, facilitando a integração com outras ferramentas de análise de segurança e automação de relatórios.
 
 ## ✨ Recursos
 
