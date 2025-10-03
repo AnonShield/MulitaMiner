@@ -1,5 +1,7 @@
 # PDF Vulnerability Extractor
 
+> **🔗 Repositório:** https://github.com/AnonShield/pdf_reader_tenableWAS.git
+
 Um extrator inteligente de vulnerabilidades de relatórios PDF de segurança usando OpenAI GPT e LangChain, com arquitetura modular profissional, processamento vetorial FAISS e suporte completo ao Docker.
 
 ## Características
@@ -21,6 +23,22 @@ Um extrator inteligente de vulnerabilidades de relatórios PDF de segurança usa
 - **Tratamento robusto de erros** com continuidade do processamento
 - **Logging otimizado** sem ruído de requisições HTTP, focado em progresso
 - **Performance aprimorada** com logs limpos e processamento eficiente
+
+## 🚀 Instalação
+
+### 1. Clone o repositório:
+```bash
+git clone https://github.com/AnonShield/pdf_reader_tenableWAS.git
+cd pdf_reader_tenableWAS
+```
+
+### 2. Configure a API OpenAI:
+Edite o arquivo `config.json` com sua chave válida da OpenAI API.
+
+### 3. Execute com Docker (recomendado):
+```bash
+docker-compose up
+```
 
 ## Pré-requisitos
 
@@ -604,11 +622,11 @@ docker-compose run pdf-extractor --pdf "/pdf_reader_tenableWAS/host/automated_sc
 4. Descreva passos para reproduzir o problema
 
 ### 🚀 Como Contribuir:
-1. Fork do repositório
+1. Fork do repositório: https://github.com/AnonShield/pdf_reader_tenableWAS.git
 2. Crie uma branch para sua feature (`git checkout -b feature/nova-funcionalidade`)
 3. Commit suas mudanças (`git commit -am 'Adiciona nova funcionalidade'`)
 4. Push para a branch (`git push origin feature/nova-funcionalidade`)
-5. Crie um Pull Request
+5. Crie um Pull Request no GitHub
 
 ## 🆕 Atualizações Recentes (v2.2.0)
 
@@ -659,9 +677,10 @@ Este projeto está sob a licença MIT. Veja o arquivo `LICENSE` para mais detalh
 ## 📞 Suporte
 
 Para suporte técnico ou dúvidas:
-- 📧 **Email**: [seu-email@exemplo.com]
-- 💬 **Issues**: Use o sistema de issues do GitHub
+- � **Repositório**: https://github.com/AnonShield/pdf_reader_tenableWAS.git
+- 💬 **Issues**: https://github.com/AnonShield/pdf_reader_tenableWAS/issues
 - 📚 **Documentação**: Consulte este README atualizado
+- 📧 **Email**: [seu-email@exemplo.com]
 
 ---
 
