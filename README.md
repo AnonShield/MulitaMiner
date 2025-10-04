@@ -773,16 +773,6 @@ docker-compose run pdf-extractor --pdf "/pdf_reader_tenableWAS/host/automated_sc
 
 Este projeto está sob a licença MIT. Veja o arquivo `LICENSE` para mais detalhes.
 
-## 📞 Suporte
-
-Para suporte técnico ou dúvidas:
-- � **Repositório**: https://github.com/AnonShield/pdf_reader_tenableWAS.git
-- 💬 **Issues**: https://github.com/AnonShield/pdf_reader_tenableWAS/issues
-- 📚 **Documentação**: Consulte este README atualizado
-- 📧 **Email**: [seu-email@exemplo.com]
-
----
-
 ⭐ **Se este projeto foi útil para você, considere dar uma estrela no repositório!**
 
 *Última atualização: Outubro 2025*
