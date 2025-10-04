@@ -10,4 +10,4 @@ services:
       - ./config.json:/pdf_reader_tenableWAS/config.json
     environment:
       - PYTHONPATH=/pdf_reader_tenableWAS
-    command: ["--pdf", "/pdf_reader_tenableWAS/host/WAS_Web_app_scan_Juice_Shop___bWAAP-2[1].pdf", "--save-all"]
+    command: ["--pdf", "/pdf_reader_tenableWAS/WAS_Web_app_scan_Juice_Shop___bWAAP-2[1].pdf", "--save-all"]
