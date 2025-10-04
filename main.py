@@ -186,9 +186,9 @@ Examples:
 def main() -> None:
     """Main entry point."""
     try:
-        # Parse arguments
-        parser = setup_argument_parser()
-        args = parser.parse_args()
+        # commands arguments
+        commands = setup_argument_parser()
+        args = commands.parse_args()
         
         # Initialize application
         app = PDFVulnerabilityExtractorApp()
