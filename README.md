@@ -36,8 +36,15 @@ cd pdf_reader_tenableWAS
 Edite o arquivo `config.json` com sua chave válida da OpenAI API.
 
 ### 3. Execute com Docker (recomendado):
-```bash
+
+**Windows:**
+```powershell
 docker-compose up
+```
+
+**Linux/WSL/macOS:**
+```bash
+docker compose up  # Note: sem hífen
 ```
 
 ## Pré-requisitos
@@ -142,19 +149,41 @@ python main.py --pdf "scan.pdf" --save-all
 ### ✅ Método 1: Docker Compose (Mais Simples)
 
 #### 🔨 Construir e executar pela primeira vez:
+
+**Windows PowerShell:**
 ```powershell
-# No Windows PowerShell
-cd app
+cd pdf_reader_tenableWAS
 docker-compose build
 docker-compose up
 ```
 
+**Linux/WSL/macOS:**
+```bash
+cd pdf_reader_tenableWAS
+docker compose build  # Note: sem hífen
+docker compose up
+```
+
+> 📝 **Nota importante**: 
+> - **Windows**: Use `docker-compose` (com hífen)
+> - **Linux/WSL/macOS**: Use `docker compose` (sem hífen) - versão mais recente
+> - **WSL**: Certifique-se de ativar a integração WSL no Docker Desktop
+
 #### 🚀 Processar o PDF padrão:
+
+**Windows:**
 ```powershell
 docker-compose up
 ```
 
+**Linux/WSL/macOS:**
+```bash
+docker compose up
+```
+
 #### 📊 Executar com formatos específicos:
+
+**Windows:**
 ```powershell
 # Gerar apenas Excel
 docker-compose run pdf-extractor --save-excel
@@ -166,25 +195,88 @@ docker-compose run pdf-extractor --save-csv --save-excel
 docker-compose run pdf-extractor --save-all
 ```
 
+**Linux/WSL/macOS:**
+```bash
+# Gerar apenas Excel
+docker compose run pdf-extractor --save-excel
+
+# Gerar CSV e Excel
+docker compose run pdf-extractor --save-csv --save-excel
+
+# Gerar todos os formatos
+docker compose run pdf-extractor --save-all
+```
+
 #### 📁 Processar com diretório de saída customizado:
+
+**Windows:**
 ```powershell
 docker-compose run pdf-extractor --pdf "/pdf_reader_tenableWAS/host/seu_arquivo.pdf" --output "/pdf_reader_tenableWAS/host/custom_results" --save-all
 ```
 
+**Linux/WSL/macOS:**
+```bash
+docker compose run pdf-extractor --pdf "/pdf_reader_tenableWAS/host/seu_arquivo.pdf" --output "/pdf_reader_tenableWAS/host/custom_results" --save-all
+```
+
 #### ⚙️ Executar em background (sem logs na tela):
+
+**Windows:**
 ```powershell
 docker-compose up -d
 ```
 
+**Linux/WSL/macOS:**
+```bash
+docker compose up -d
+```
+
 #### 📋 Ver logs em tempo real:
+
+**Windows:**
 ```powershell
 docker-compose logs -f
 ```
 
+**Linux/WSL/macOS:**
+```bash
+docker compose logs -f
+```
+
 #### 🛑 Parar containers:
+
+**Windows:**
 ```powershell
 docker-compose down
 ```
+
+**Linux/WSL/macOS:**
+```bash
+docker compose down
+```
+
+### 🐧 Configuração WSL (Windows Subsystem for Linux)
+
+Se você está usando WSL e encontrar o erro `'docker-compose' could not be found`:
+
+1. **Ativar integração WSL no Docker Desktop:**
+   - Abra Docker Desktop no Windows
+   - Vá em Settings → Resources → WSL Integration
+   - Ative "Enable integration with my default WSL distro"
+   - Marque sua distribuição WSL
+   - Clique "Apply & Restart"
+
+2. **Usar comando alternativo:**
+   ```bash
+   # Use docker compose (sem hífen)
+   docker compose up
+   ```
+
+3. **Ou instalar docker-compose no WSL:**
+   ```bash
+   sudo apt update
+   sudo apt install docker-compose-plugin
+   ```
 
 ### 🔧 Método 2: Docker Direto
 
@@ -204,8 +296,15 @@ docker run -v "${PWD}:/pdf_reader_tenableWAS/host" -v "${PWD}/output:/pdf_reader
 ```
 
 ### 📖 Ver ajuda:
+
+**Windows:**
 ```powershell
 docker-compose run pdf-extractor --help
+```
+
+**Linux/WSL/macOS:**
+```bash
+docker compose run pdf-extractor --help
 ```
 
 ## 💻 Uso Local (sem Docker)
