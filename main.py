@@ -191,7 +191,7 @@ def main():
                     else:
                         print(f"  Resposta não é uma lista válida no chunk {i+1}")
                 except json.JSONDecodeError:
-                    print(f"  Erro ao decodificar JSON no chunk {i+1}, tentando extrair...")
+                    #print(f"  Erro ao decodificar JSON no chunk {i+1}, tentando extrair...")
                     # Tentar extrair JSON da resposta se não estiver limpo
                     try:
                         start = resposta.find('[')
