@@ -1,4 +1,10 @@
 {
-  "OPENAI_API_KEY": "sk-your-openai-key-here",
-  "MODEL_NAME": "gpt-3.5-turbo"
+  "api_key": "insira sua key aqui",
+  "endpoint": "https://api.groq.com/openai/v1",
+  "model": "llama-3.3-70b-versatile",
+  "temperature": 0,
+  "max_tokens": null,
+  "chunk_size": 1500,
+  "chunk_overlap": 150,
+  "output_file": "vulnerabilities.json"
 }
