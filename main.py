@@ -6,9 +6,8 @@ def check_dependencies():
     """Verifica se todas as dependências estão instaladas"""
     required_packages = {
         'langchain_openai': 'langchain-openai',
-        'langchain_community': 'langchain-community', 
         'langchain': 'langchain',
-        'unstructured': 'unstructured[pdf]'
+        'PyPDF2': 'PyPDF2'
     }
     
     missing_packages = []
@@ -28,14 +27,43 @@ def check_dependencies():
 
 try:
     from langchain_openai import ChatOpenAI
-    from langchain_community.document_loaders import UnstructuredPDFLoader
     from langchain.text_splitter import CharacterTextSplitter
-    from langchain.chains.summarize import load_summarize_chain
+    from langchain.schema import Document
+    import PyPDF2
     import json
 except ImportError as e:
     print(f"Erro ao importar dependências: {e}")
-    print("Execute: pip install langchain langchain-openai langchain-community unstructured[pdf]")
+    print("Execute: pip install langchain langchain-openai PyPDF2")
     sys.exit(1)
+
+def load_pdf_with_pypdf2(pdf_path):
+    """Carrega PDF usando PyPDF2"""
+    try:
+        with open(pdf_path, 'rb') as file:
+            pdf_reader = PyPDF2.PdfReader(file)
+            text = ""
+            
+            print(f"Processando {len(pdf_reader.pages)} páginas...")
+            
+            for page_num, page in enumerate(pdf_reader.pages):
+                try:
+                    page_text = page.extract_text()
+                    if page_text:
+                        text += page_text + "\n\n"
+                    print(f"Página {page_num + 1} processada")
+                except Exception as e:
+                    print(f"Erro ao extrair texto da página {page_num + 1}: {e}")
+            
+            if not text.strip():
+                print("Aviso: Nenhum texto foi extraído do PDF. O arquivo pode estar corrompido ou ser apenas imagens.")
+                return None
+            
+            # Retorna um objeto Document compatível com LangChain
+            return [Document(page_content=text, metadata={"source": pdf_path})]
+    
+    except Exception as e:
+        print(f"Erro ao carregar PDF: {e}")
+        return None
 
 def load_config(config_file="config.json"):
     """Carrega configurações do arquivo JSON"""
@@ -145,12 +173,16 @@ def main():
     
     try:
         print("Carregando o PDF...")
-        loader = UnstructuredPDFLoader(args.pdf_path)  # Usa o path da linha de comando
-        documents = loader.load()
+        documents = load_pdf_with_pypdf2(args.pdf_path)
+        
+        if documents is None:
+            print("Falha ao carregar o PDF. Verifique se o arquivo não está corrompido.")
+            return
         
         print("Dividindo o texto em chunks...")
         doc_texts = text_splitter.split_documents(documents)
         
+        print(f"Texto dividido em {len(doc_texts)} chunks")
         print("Processando todo o texto para extrair vulnerabilidades...")
         
         # Lista para acumular todos os JSONs
@@ -191,7 +223,6 @@ def main():
                     else:
                         print(f"  Resposta não é uma lista válida no chunk {i+1}")
                 except json.JSONDecodeError:
-                    #print(f"  Erro ao decodificar JSON no chunk {i+1}, tentando extrair...")
                     # Tentar extrair JSON da resposta se não estiver limpo
                     try:
                         start = resposta.find('[')

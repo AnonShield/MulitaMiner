@@ -1,31 +1,9 @@
 # Core LangChain packages
 langchain>=0.1.0
 langchain-openai>=0.1.0
-langchain-community>=0.0.20
 
-# Document processing
-unstructured[pdf]>=0.10.0
-
-# PDF processing dependencies
-pypdf>=3.0.0
-pdfminer.six>=20221105
-
-# Additional dependencies that may be required by unstructured
-python-magic-bin>=0.4.14; sys_platform == "win32"
-python-magic>=0.4.27; sys_platform != "win32"
-
-# HTTP requests (used by OpenAI/Groq APIs)
-requests>=2.28.0
-
-# JSON handling (built-in, but good to specify)
-# json - built-in module
-
-# System dependencies
-argparse>=1.4.0
-
-# Optional: For better performance and compatibility
-tiktoken>=0.5.0
-openai>=1.0.0
+# PDF processing
+PyPDF2>=3.0.0
 
 # Development dependencies (optional)
 # pytest>=7.0.0
