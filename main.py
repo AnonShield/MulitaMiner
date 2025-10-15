@@ -5,57 +5,17 @@ import argparse
 # Adicionar src ao path para importar conversores
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'src'))
 
-def check_dependencies():
-    """Verifica se todas as dependências estão instaladas"""
-    required_packages = {
-        'langchain_openai': 'langchain-openai',
-        'langchain': 'langchain',
-        'pdfplumber': 'pdfplumber'
-    }
-    
-    missing_packages = []
-    for package, install_name in required_packages.items():
-        try:
-            __import__(package)
-        except ImportError:
-            missing_packages.append(install_name)
-    
-    if missing_packages:
-        print("Dependências faltando:")
-        for package in missing_packages:
-            print(f"  - {package}")
-        print("\nInstale com: pip install " + " ".join(missing_packages))
-        return False
-    return True
+# Imports das dependências
+from langchain_openai import ChatOpenAI
+from langchain.text_splitter import CharacterTextSplitter, RecursiveCharacterTextSplitter
+from langchain.schema import Document
+import pdfplumber
+import json
+import datetime
 
-try:
-    from langchain_openai import ChatOpenAI
-    from langchain.text_splitter import CharacterTextSplitter, RecursiveCharacterTextSplitter
-    from langchain.schema import Document
-    import pdfplumber
-    import json
-    import datetime
-    
-    # Importar conversores
-    from converters.csv_converter import CSVConverter, TSVConverter
-    from converters.xlsx_converter import XLSXConverter
-    CONVERTERS_AVAILABLE = True
-except ImportError as e:
-    print(f"Erro ao importar dependências: {e}")
-    print("Execute: pip install langchain langchain-openai pdfplumber")
-    
-    # Verificar se é erro apenas dos conversores
-    try:
-        from langchain_openai import ChatOpenAI
-        from langchain.text_splitter import CharacterTextSplitter
-        from langchain.schema import Document
-        import pdfplumber
-        import json
-        import datetime
-        CONVERTERS_AVAILABLE = False
-        print("Conversores não disponíveis, mas extração PDF funcionará")
-    except ImportError:
-        sys.exit(1)
+# Importar conversores
+from converters.csv_converter import CSVConverter, TSVConverter
+from converters.xlsx_converter import XLSXConverter
 
 def extract_visual_layout_from_pdf(pdf_path):
     """
@@ -222,11 +182,6 @@ def execute_conversions(json_file_path, args):
         json_file_path: Caminho para o arquivo JSON
         args: Argumentos da linha de comando
     """
-    if not CONVERTERS_AVAILABLE:
-        print("Aviso: Conversores não disponíveis. Instale as dependências:")
-        print("pip install pandas openpyxl")
-        return []
-    
     if args.convert == 'none':
         return []
     
@@ -312,10 +267,6 @@ def convert_single_format(json_file_path, format_type, args):
 def main():
     # Parse argumentos da linha de comando
     args = parse_arguments()
-    
-    # Verificar dependências primeiro
-    if not check_dependencies():
-        return
     
     # Verificar se o arquivo PDF existe
     if not os.path.isfile(args.pdf_path):
