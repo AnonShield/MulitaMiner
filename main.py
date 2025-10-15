@@ -353,15 +353,18 @@ def main():
 REPORT CONTENT:
 {doc_chunk.page_content}
 
-REQUIRED JSON FORMAT:
-[{{"name":"...", "plugin_id":"...", "description":"...", "severity":"...", "solution":"...", "risk_information":"...", "reference_information":"..."}}]
+REQUIRED JSON FORMAT (USE EXACTLY THESE FIELDS ONLY):
+[{{"name":"...", "Synopsis":"...", "Description":"...", "Plugin Output":"...", "Solution":"...", "See Also":"...", "CVSSv3":"...", "CVSSv4":"...", "Risk":"..."}}]
 
 INSTRUCTIONS:
 1. Extract ONLY real security vulnerabilities
-2. Use visual layout to identify structured sections
-3. Preserve Plugin ID, CVSS, CWE, etc. information
-4. Maintain exact severity (High, Medium, Low, Critical)
-5. If no vulnerabilities found, return []
+2. Use visual layout to identify structured sections  
+3. Use ONLY the 9 fields shown above - no additional fields
+4. Put severity information in the "Risk" field
+5. Put CWE codes in the "Description" or "See Also" fields
+6. If no vulnerabilities found, return []
+
+IMPORTANT: Return ONLY valid JSON with exactly the fields shown above.
 
 JSON:"""
                 
