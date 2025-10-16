@@ -1,0 +1,37 @@
+REQUIRED JSON FORMAT (USE EXACTLY THESE FIELDS ONLY):
+[{"Name":"...", "Description":"...", "Plugin Output":"...", "Solution":"...", "See Also":"...", "CVSSv3":"...", "CVSSv4":"...", "Risk":"..."}]
+
+INSTRUCTIONS:
+1. Extract ONLY real security vulnerabilities from the report text. For each vulnerability, fill the fields below using the exact text from the report whenever possible.
+2. Use visual layout and section titles (e.g., "Description", "Solution", "Risk", "See Also") to identify and extract the correct information.
+3. Use ONLY the 8 fields shown above—do not add, remove, rename, or omit any fields.
+4. Put severity information in the "Risk" field.
+5. "Plugin Output" is union of "Identification" or "HTTP Info", copy the exact text from the report. If the field is missing, use null.
+8. "Name" must be a full title.
+9. If a field is not present for a vulnerability, set its value to null for that item.
+10. If no vulnerabilities are found, return an empty list: [].
+11. Return ONLY valid JSON with exactly the fields shown above—no comments, explanations, or extra text.
+12. Always fill the "Description" field with the entire block of text immediately preceding the "Solution" section, including all paragraphs, lists, and examples. Do not split or omit any part of this block; extract it exactly as presented in the report.
+13. If you find a title containing the name of a vulnerability, a software version, or the phrase "Instances (number)", treat it as the start of a new vulnerability block. Each occurrence of "Instances (number)" should be interpreted as the beginning of a new vulnerability block.
+
+EXAMPLE:
+Input (excerpt from report):
+Name: SQL Injection
+The application is vulnerable to SQL injection...
+Solution: Use parameterized queries...
+Risk: High
+See Also: https://owasp.org/...
+
+Output:
+[
+  {
+    "Name": "SQL Injection",
+    "Description": "The application is vulnerable to SQL injection...",
+    "Plugin Output": null,
+    "Solution": "Use parameterized queries...",
+    "See Also": "https://owasp.org/...",
+    "CVSSv3": null,
+    "CVSSv4": null,
+    "Risk": "High"
+  }
+]
