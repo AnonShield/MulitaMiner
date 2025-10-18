@@ -37,7 +37,7 @@ Exemplos de uso:
         """
     )
     parser.add_argument('--profile',
-                        default='tenable',
+                        default='default',
                         help='Nome do perfil de configuração a ser usado (padrão: tenable)')
     
     parser.add_argument('pdf_path', 

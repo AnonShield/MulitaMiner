@@ -18,6 +18,7 @@ class BaseConverter(ABC):
     def __init__(self):
         # Campos do nosso formato JSON atual
         self.supported_fields = [
+            'Name',
             'name',
             'Synopsis', 
             'Description',
@@ -69,8 +70,8 @@ class BaseConverter(ABC):
             if not isinstance(item, dict):
                 return False
             
-            # Verificar se tem pelo menos o campo 'name'
-            if 'name' not in item:
+            # Verificar se tem pelo menos o campo 'name' (minúsculo) ou 'Name' (maiúsculo)
+            if 'name' not in item and 'Name' not in item:
                 return False
         
         return True

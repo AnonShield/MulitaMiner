@@ -73,12 +73,21 @@ def remove_duplicates_by_name(vulnerabilities):
     seen_names = set()
     unique_vulnerabilities = []
     for vulnerability in vulnerabilities:
-        if isinstance(vulnerability, dict) and 'name' in vulnerability:
-            name = vulnerability['name']
+        if not isinstance(vulnerability, dict):
+            unique_vulnerabilities.append(vulnerability)
+            continue
+
+        # Normalizar: se a entrada usar 'name' em minúsculas, converte para 'Name'
+        if 'name' in vulnerability and 'Name' not in vulnerability:
+            vulnerability['Name'] = vulnerability.pop('name')
+
+        if 'Name' in vulnerability:
+            name = vulnerability['Name']
             if name not in seen_names:
                 seen_names.add(name)
                 unique_vulnerabilities.append(vulnerability)
         else:
+            # Se não houver campo name/Name, mantém o item, mas avisa
             unique_vulnerabilities.append(vulnerability)
     return unique_vulnerabilities
 import datetime
@@ -150,7 +159,17 @@ merger = Merger(
 def merge_vulnerabilities_deepmerge(vuln_list):
     merged = {}
     for vuln in vuln_list:
-        name = vuln["Name"]
+        # Aceita tanto 'Name' quanto 'name' e normaliza para 'Name'
+        if not isinstance(vuln, dict):
+            continue
+
+        if 'Name' not in vuln and 'name' in vuln:
+            vuln['Name'] = vuln.pop('name')
+
+        name = vuln.get("Name")
+        if name is None:
+            # Ignorar ou usar uma representação fallback
+            continue
         if name not in merged:
             merged[name] = vuln.copy()
         else:
