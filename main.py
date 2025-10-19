@@ -1,23 +1,22 @@
 import os
 import sys
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'src'))
 import argparse
+import json
+import datetime
+
+# third-party
+from tqdm import tqdm
+
+# ensure local package imports resolve (adds project src to sys.path)
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'src'))
+
+# local imports (from src/)
 from utils.utils import (
     load_profile, load_llm, init_llm, load_prompt, save_visual_layout,
     merge_vulnerabilities_deepmerge, execute_conversions, convert_single_format
 )
-# Imports das dependências
-from langchain_openai import ChatOpenAI
-import json
-from tqdm import tqdm
-import datetime
-# Import utilitário do divisor de texto
-from src.utils.text_splitter import get_text_splitter
-# Importar conversores
-from converters.csv_converter import CSVConverter, TSVConverter
-from converters.xlsx_converter import XLSXConverter
-
 from utils.pdf_loader import extract_visual_layout_from_pdf, load_pdf_with_pypdf2
+from utils.text_splitter import get_text_splitter
 
 
 
