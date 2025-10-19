@@ -25,23 +25,11 @@ from utils.pdf_loader import extract_visual_layout_from_pdf, load_pdf_with_pypdf
 def parse_arguments():
     """Parse argumentos da linha de comando"""
     parser = argparse.ArgumentParser(
-        description='Extrai vulnerabilidades de relatórios PDF de segurança usando LLM',
-        formatter_class=argparse.RawDescriptionHelpFormatter,
-        epilog="""
-Exemplos de uso:
-  python main.py arquivo.pdf
-  python main.py "C:\\path\\to\\arquivo.pdf"
-  python main.py arquivo.pdf --convert csv
-  python main.py arquivo.pdf --convert xlsx --output report.xlsx
-  python main.py arquivo.pdf --convert all
-        """
+        description='Extrai vulnerabilidades de relatórios PDF usando um LLM e salva em JSON/CSV/XLSX.'
     )
-    parser.add_argument('--profile',
-                        default='default',
-                        help='Nome do perfil de configuração a ser usado (padrão: tenable)')
+    parser.add_argument('--profile', default='default', help='Perfil de configuração (padrão: default)')
     
-    parser.add_argument('pdf_path', 
-                        help='Caminho para o arquivo PDF a ser processado')
+    parser.add_argument('pdf_path', help='Caminho para o arquivo PDF')
     
     
     # Opções de conversão
@@ -49,11 +37,22 @@ Exemplos de uso:
                         choices=['csv', 'xlsx', 'tsv', 'all', 'none'],
                         default='none',
                         help='Converter saída JSON para formato específico (padrão: none)')
+    parser.add_argument('--output',
+                        help='Caminho do arquivo de saída para a conversão (opcional)')
+    parser.add_argument('--output-dir',
+                        dest='output_dir',
+                        help='Diretório de saída para arquivos convertidos (opcional)')
+    parser.add_argument('--csv-delimiter',
+                        dest='csv_delimiter',
+                        default=',',
+                        help='Delimitador para CSV (padrão: ,)')
+    parser.add_argument('--csv-encoding',
+                        dest='csv_encoding',
+                        default='utf-8-sig',
+                        help='Codificação para CSV (padrão: utf-8-sig)')
     
     # Argumentos essenciais
-    parser.add_argument('--LLM',
-                        default='gpt4',
-                        help='Modelo LLM a ser usado (ex: gpt4, gemini, llama)')
+    parser.add_argument('--LLM', default='gpt4', help='Nome do LLM a usar (padrão: gpt4)')
     return parser.parse_args()
 def validate_pdf_path(pdf_path):
     if not os.path.isfile(pdf_path):
@@ -126,6 +125,17 @@ def save_results(all_vulnerabilities, output_file):
 
 def handle_conversions(output_file, args, visual_file):
     print(f"Layout visual salvo em: {visual_file if visual_file else 'Erro ao salvar'}")
+    # Executa conversões conforme argumentos (csv/xlsx/tsv/all)
+    try:
+        converted = execute_conversions(output_file, args)
+        if converted:
+            print("Conversões geradas:")
+            for c in converted:
+                print(f" - {c}")
+        else:
+            print("Nenhuma conversão realizada.")
+    except Exception as e:
+        print(f"Erro ao executar conversões: {e}")
 
 def main():
     args = parse_arguments()
