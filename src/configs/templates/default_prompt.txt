@@ -1,52 +1,84 @@
-VULNERABILITY EXTRACTION PROMPT
-
 You are an information extraction model.
-Your task is to extract structured vulnerability information from Tenable WAS and OpenVAS security reports.
+
+Your task is to extract structured vulnerability information from the TEXT REPORT provided above.
 
 Return the output in valid JSON format using exactly these fields:
 
-json
 [
   {
     "Name": "<string>",
-    "description": "<detailed description of the vulnerability>",
-    "cvss": [<list of all numeric CVSS scores found, e.g. [5.0, 7.5, 9.8]>],
+    "description": "<detailed full description of the vulnerability as found in the report>",
+    "cvss": [<list of all CVSS scores found, e.g. 'CVSS BASE SCORE - 5.0', 'CVSSv3 BASE SCORE - 7.5', 'CVSSv4 BASE SCORE - 9.8'>],
     "severity": "<Low|Medium|High|Critical>",
-    "solution": "<recommended action or fix>",
+    "solution": "<recommended action or fix verbatim from the report>",
     "port": <number or null>,
     "protocol": "<tcp|udp|null>",
     "cwe": ["<CWE-ID1>", "<CWE-ID2>", ... or null],
+    "WASC": [string or null],
+    "OWASP": [string or null],
+    "CVE": [string or null],
     "references": ["<URL1>", "<URL2>", ... or null]
   }
 ]
 
-
 INSTRUCTIONS
-1. Parse the report text (from either OpenVAS or Tenable WAS) and extract each vulnerability entry as one JSON object.
-2. Use only the 9 fields shown above — do not add, rename, or remove any fields.
-3. If no vulnerabilities are found, return an empty list ([]).
-4. CVSS extraction rules:
-   * Collect all numeric CVSS values found (CVSSv2, CVSSv3, CVSSv4, etc.).
-   * Store them as a list of floats, e.g. "cvss": [5.0, 7.5, 9.8].
-   * If no CVSS is found, use an empty list ([]).
-5. CWE extraction rules:
-   * Extract all CWE identifiers (e.g. CWE-79, CWE-125, CWE-476) as a list.
-   * If not found, set "cwe": null.
-6. Naming rules:
-   * For OpenVAS reports, use "NVT" as "Name".
-   * For Tenable WAS reports, use the section header or "Name" field as "Name".
-7. Port and protocol:
-   * For OpenVAS, extract the port and protocol (e.g. 443 and "tcp").
-   * For Tenable WAS, set both to null.
-8. References:
-   * Collect all URLs appearing under “See Also”, “References”, or “Other” into a list.
-   * If none are present, set "references": null.
-9. Solution:
-   * Extract the “Solution” or “Recommended Action” text verbatim.
-10. JSON rules:
-    * Output must be strictly valid JSON.
-    * No comments, markdown, or text outside the JSON array.
-    * If the same vulnerability appears multiple times, merge the CVSS scores, CWEs, and references.
-11. severity field:
-    * Map severity levels to one of: Low, Medium, High, Critical.
-    * Use the highest severity if multiple are found for the same vulnerability.
+
+1. Parse the OpenVAS report and extract each vulnerability entry as one JSON object.
+
+2. Use only the 11 fields shown above — do not add, rename, or remove any fields.
+
+3. Include **all vulnerabilities**, even those with severity "Log" or CVSS 0.0.
+
+4. CVSS extraction:
+   - Extract all CVSS scores mentioned (e.g., CVSS: 5.0, CVSS: 7.5).
+   - Format each as 'CVSS BASE SCORE - <score>'.
+   - If none are found, use: ['-', '-', '-'].
+
+5. CWE extraction:
+   - Extract all CWE identifiers (e.g., CWE-79).
+   - If none are found, set "cwe": null.
+
+6. WASC extraction:
+   - Extract any WASC identifiers or categories mentioned.
+   - If none are found, set "WASC": null.
+
+7. OWASP extraction:
+   - Extract any OWASP categories or references.
+   - If none are found, set "OWASP": null.
+
+8. CVE extraction:
+   - Extract all CVE identifiers (e.g., CVE-2021-34527).
+   - If none are found, set "CVE": null.
+
+9. Naming:
+   - For OpenVAS reports, use the "NVT" field as the "Name".
+
+10. Port and protocol:
+   - Extract port number and protocol (e.g., 443 and "tcp").
+   - If not specified, set both to null.
+
+11. References:
+   - Extract all URLs under “References”, “Other”, or “See Also”.
+   - If none are found, set "references": null.
+
+12. Solution:
+   - Extract the “Solution” or “Solution type” section verbatim.
+
+13. Severity:
+   - Use the highest severity mentioned (e.g., if both Medium and High appear, use High).
+   - Map to one of: Low, Medium, High, Critical.
+   - Include vulnerabilities marked as "Log" and treat them as "Low" severity.
+
+14. JSON formatting:
+   - Output must be strictly valid JSON.
+   - No comments, markdown, or text outside the JSON array.
+   - Merge duplicate vulnerabilities by combining CVSS scores, CWEs, and references.
+
+15. Description:
+   - Include the full vulnerability summary, detection method, impact, and insight from the report.
+
+16. Do not skip vulnerabilities that:
+   - Have CVSS 0.0
+   - Are marked as "Log"
+   - Are repeated across multiple ports or services
+   - Lack a solution or references
