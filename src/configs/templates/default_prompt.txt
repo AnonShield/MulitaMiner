@@ -23,62 +23,36 @@ Return the output in valid JSON format using exactly these fields:
 
 INSTRUCTIONS
 
-1. Parse the OpenVAS report and extract each vulnerability entry as one JSON object.
+INSTRUCTIONS FOR EXTRACTION
 
-2. Use only the 11 fields shown above — do not add, rename, or remove any fields.
+---
+OPENVAS REPORTS:
+1. For each vulnerability, extract a JSON object using the fields above.
+2. Use the value of the "NVT" field as the "Name". Only one vulnerability per NVT block.
+3. Do NOT use summary, plugin, or instance blocks as vulnerabilities.
+4. Ignore any block that is not a main vulnerability (e.g., do not extract blocks named "Summary", "Instances", "Plugin Output", "Scan Information", etc.).
+5. Example of valid Name: "SSL/TLS: Deprecated SSLv3 Protocol Detection"
+6. Example of invalid Name: "SSL/TLS: Deprecated SSLv3 Protocol Detection Instances", "Scan Information", "Summary"
 
-3. Include **all vulnerabilities**, even those with severity "Log" or CVSS 0.0.
+---
+TENABLE WAS REPORTS:
+1. Extract only vulnerabilities whose titles match EXACTLY a heading listed under the "Scan Results" section of the Table of Contents.
+2. Do NOT extract any block whose title contains or ends with: "Instances", "Detected", "Disclosure", "Information", "Collected", "Sitemap", "Scan Information", "Interesting Response", "Technologies", "Cookies", "Common Files", "Common Directories", "Private IP", "E-mail", "Target Information", "Screenshot", "Form", "External URLs", "Performance Telemetry", "HTML Comments", "Input Reflected", "Path Relative Stylesheet Import", "SSL/TLS", "Allowed HTTP", "Security.txt", "Scan Notes", "Scan Summary", "Login Form", "Allowed HTTP Methods", "Network Timeout", "Missing", "Cookie", "Password Field", "HTTP Header", "Source Code", "Web Server Configuration", "Web.config", "robots.txt" — unless it is explicitly listed as a main vulnerability in the Table of Contents.
+3. Do NOT extract any block whose title contains "Instances" or is a sub-section of a main vulnerability. Only extract the main vulnerability block as listed in the Table of Contents.
+4. If a block is not listed as a main vulnerability in the Table of Contents, IGNORE it completely, even if it appears elsewhere in the report.
+5. Example of valid Name: "Apache 2.4.x < 2.4.41 Multiple Vulnerabilities"
+6. Example of invalid Name: "Apache 2.4.x < 2.4.41 Multiple Vulnerabilities Instances", "Web Application Sitemap", "Scan Information"
 
-4. CVSS extraction:
-   - Extract all CVSS scores mentioned (e.g., CVSS: 5.0, CVSS: 7.5).
-   - Format each as 'CVSS BASE SCORE - <score>'.
-   - If none are found, use: ['-', '-', '-'].
-
-5. CWE extraction:
-   - Extract all CWE identifiers (e.g., CWE-79).
-   - If none are found, set "cwe": null.
-
-6. WASC extraction:
-   - Extract any WASC identifiers or categories mentioned.
-   - If none are found, set "WASC": null.
-
-7. OWASP extraction:
-   - Extract any OWASP categories or references.
-   - If none are found, set "OWASP": null.
-
-8. CVE extraction:
-   - Extract all CVE identifiers (e.g., CVE-2021-34527).
-   - If none are found, set "CVE": null.
-
-9. Naming:
-   - For OpenVAS reports, use the "NVT" field as the "Name".
-
-10. Port and protocol:
-   - Extract port number and protocol (e.g., 443 and "tcp").
-   - If not specified, set both to null.
-
-11. References:
-   - Extract all URLs under “References”, “Other”, or “See Also”.
-   - If none are found, set "references": null.
-
-12. Solution:
-   - Extract the “Solution” or “Solution type” section verbatim.
-
-13. Severity:
-   - Use the highest severity mentioned (e.g., if both Medium and High appear, use High).
-   - Map to one of: Low, Medium, High, Critical.
-   - Include vulnerabilities marked as "Log" and treat them as "Low" severity.
-
-14. JSON formatting:
-   - Output must be strictly valid JSON.
-   - No comments, markdown, or text outside the JSON array.
-   - Merge duplicate vulnerabilities by combining CVSS scores, CWEs, and references.
-
-15. Description:
-   - Include the full vulnerability summary, detection method, impact, and insight from the report.
-
-16. Do not skip vulnerabilities that:
+---
+GENERAL RULES (APPLY TO BOTH):
+• Use only the 11 fields shown above — do not add, rename, or remove any fields.
+• Include all vulnerabilities, even those with severity "Log" or CVSS 0.0.
+• Extract all CVSS, CWE, WASC, OWASP, CVE, references, solution, severity, port, protocol, and description as specified above.
+• Output must be strictly valid JSON. No comments, markdown, or text outside the JSON array.
+• Merge duplicate vulnerabilities by combining CVSS scores, CWEs, and references.
+• Do not skip vulnerabilities that:
    - Have CVSS 0.0
    - Are marked as "Log"
    - Are repeated across multiple ports or services
    - Lack a solution or references
+• Description: Include the full vulnerability summary, detection method, impact, and insight from the report.
