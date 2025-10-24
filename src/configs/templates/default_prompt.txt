@@ -55,6 +55,13 @@ TENABLE WAS REPORTS:
 5. Use "Solution" field as "solution".
 6. Use "Plugin Details" field as "plugin_detail".
 7. Use "Reference Information" for "CWE", "WASC", "OWASP", "CVE", "BID" fields.
+8. Use "detection" field in json is "null"
+9. Use "detection_method" field in json is "null"
+10. Use "production_method" field in json is "null"
+11. Use "impact" field in json is "null"
+
 ---
 GENERAL RULES (APPLY TO BOTH):
 • Output must be strictly valid JSON. No comments, markdown, or text outside the JSON array.
+• Use the fields in TENABLE WAS like Name, Description, Solution, Plugin Details, Risk Information and Reference Information
+• Use the fields in OPENVAS like NVT, Summary, Vulnerability Detection Result, Vulnerability Detection Method, Product Detection Result, Impact, Solution, Vulnerability insight and CVSS.
