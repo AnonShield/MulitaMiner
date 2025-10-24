@@ -6,18 +6,26 @@ Return the output in valid JSON format using exactly these fields:
 
 [
   {
-    "Name": "<string>",
+    "Name": "<vulnerability name as found in the report>",
     "description": "<detailed full description of the vulnerability as found in the report>",
-    "cvss": [<list of all CVSS scores found, e.g. 'CVSS BASE SCORE - 5.0', 'CVSSv3 BASE SCORE - 7.5', 'CVSSv4 BASE SCORE - 9.8'>],
-    "severity": "<Low|Medium|High|Critical>",
+    "detection": "<detailed full detection of the vulnerability as found in the report>",
+    "detection_method": "<detailed full detection method of the vulnerability as found in the report>",
+    "product_detection_result": "<detailed full product detection result of the vulnerability as found in the report>",
+    "impact": "<detailed full impact of the vulnerability as found in the report>",
+    "insight": "<detailed full insight of the vulnerability as found in the report>",
+    "cvss": "[<list of all CVSS scores found>, e.g. 'CVSSV4 BASE SCORE - number', 'CSSV4 VECTOR - string', 'CVSSv3 BASE SCORE - number', 'CVSSv3 VECTOR - string','CVSSv2 BASE SCORE - number', 'CVSS BASE SCORE - number', 'CVSS VECTOR - string', or null]",
+    "severity": "<Log|Low|Medium|High|Critical>",
     "solution": "<recommended action or fix verbatim from the report>",
-    "port": <number or null>,
-    "protocol": "<tcp|udp|null>",
-    "cwe": ["<CWE-ID1>", "<CWE-ID2>", ... or null],
-    "WASC": [string or null],
-    "OWASP": [string or null],
-    "CVE": [string or null],
-    "references": ["<URL1>", "<URL2>", ... or null]
+    "plugin_detail": "<string or null>",
+    "port": "<number or null>"",
+    "protocol": "<protocol|null>",
+    "CWE": "[list of <CWE-ID1>, <CWE-ID2>, ... or null]",
+    "WASC": "[string or null]",
+    "OWASP": "[string or null]",
+    "CVE": "[list of <cve-2023-1234>, <cve-2023-1235>,... or null]",
+    "BID": "[string or null]",
+    "source": "<OPENVAS|TENABLE_WAS>"  
+
   }
 ]
 
@@ -27,32 +35,26 @@ INSTRUCTIONS FOR EXTRACTION
 
 ---
 OPENVAS REPORTS:
-1. For each vulnerability, extract a JSON object using the fields above.
-2. Use the value of the "NVT" field as the "Name". Only one vulnerability per NVT block.
-3. Do NOT use summary, plugin, or instance blocks as vulnerabilities.
-4. Ignore any block that is not a main vulnerability (e.g., do not extract blocks named "Summary", "Instances", "Plugin Output", "Scan Information", etc.).
-5. Example of valid Name: "SSL/TLS: Deprecated SSLv3 Protocol Detection"
-6. Example of invalid Name: "SSL/TLS: Deprecated SSLv3 Protocol Detection Instances", "Scan Information", "Summary"
-
+1. For each "NVT" is a block of vulnerability, extract a JSON object using the fields above.
+2. Use "NVT" field as "Name".
+3. Use "Summary" field as "description". 
+4. Port and Protocol: Extract from above the CVSS.
+5. Use "Vulnerability Detection Result" as "detection".
+6. Use "Vulnerability Detection Method" as "detection_method".
+7. Use "Product Detection Result" as "product_detection_result".
+8. Use "Impact" field as "impact".
+9. Use "Solution" field as "solution".
+10. Use "Vulnerability insight" field as "insight".
+11. Use "CVSS" field as unique "cvss".
 ---
 TENABLE WAS REPORTS:
-1. Extract only vulnerabilities whose titles match EXACTLY a heading listed under the "Scan Results" section of the Table of Contents.
-2. Do NOT extract any block whose title contains or ends with: "Instances", "Detected", "Disclosure", "Information", "Collected", "Sitemap", "Scan Information", "Interesting Response", "Technologies", "Cookies", "Common Files", "Common Directories", "Private IP", "E-mail", "Target Information", "Screenshot", "Form", "External URLs", "Performance Telemetry", "HTML Comments", "Input Reflected", "Path Relative Stylesheet Import", "SSL/TLS", "Allowed HTTP", "Security.txt", "Scan Notes", "Scan Summary", "Login Form", "Allowed HTTP Methods", "Network Timeout", "Missing", "Cookie", "Password Field", "HTTP Header", "Source Code", "Web Server Configuration", "Web.config", "robots.txt" — unless it is explicitly listed as a main vulnerability in the Table of Contents.
-3. Do NOT extract any block whose title contains "Instances" or is a sub-section of a main vulnerability. Only extract the main vulnerability block as listed in the Table of Contents.
-4. If a block is not listed as a main vulnerability in the Table of Contents, IGNORE it completely, even if it appears elsewhere in the report.
-5. Example of valid Name: "Apache 2.4.x < 2.4.41 Multiple Vulnerabilities"
-6. Example of invalid Name: "Apache 2.4.x < 2.4.41 Multiple Vulnerabilities Instances", "Web Application Sitemap", "Scan Information"
-
+1. Use "Description" field as "description".
+2. Use "Name" field as "Name of vulnerabilities".
+3. Example of valid Name: "Apache 2.4.x < 2.4.41 Multiple Vulnerabilities"
+4. Example of invalid Name: "Apache 2.4.x < 2.4.41 Multiple Vulnerabilities Instances", "Web Application Sitemap", "Scan Information"
+5. Use "Solution" field as "solution".
+6. Use "Plugin Details" field as "plugin_detail".
+7. Use "Reference Information" for "CWE", "WASC", "OWASP", "CVE", "BID" fields.
 ---
 GENERAL RULES (APPLY TO BOTH):
-• Use only the 11 fields shown above — do not add, rename, or remove any fields.
-• Include all vulnerabilities, even those with severity "Log" or CVSS 0.0.
-• Extract all CVSS, CWE, WASC, OWASP, CVE, references, solution, severity, port, protocol, and description as specified above.
 • Output must be strictly valid JSON. No comments, markdown, or text outside the JSON array.
-• Merge duplicate vulnerabilities by combining CVSS scores, CWEs, and references.
-• Do not skip vulnerabilities that:
-   - Have CVSS 0.0
-   - Are marked as "Log"
-   - Are repeated across multiple ports or services
-   - Lack a solution or references
-• Description: Include the full vulnerability summary, detection method, impact, and insight from the report.
