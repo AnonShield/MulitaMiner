@@ -63,5 +63,3 @@ TENABLE WAS REPORTS:
 ---
 GENERAL RULES (APPLY TO BOTH):
 • Output must be strictly valid JSON. No comments, markdown, or text outside the JSON array.
-• Use the fields in TENABLE WAS like Name, Description, Solution, Plugin Details, Risk Information and Reference Information
-• Use the fields in OPENVAS like NVT, Summary, Vulnerability Detection Result, Vulnerability Detection Method, Product Detection Result, Impact, Solution, Vulnerability insight and CVSS.
