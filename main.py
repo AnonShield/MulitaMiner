@@ -104,6 +104,8 @@ def process_vulnerabilities(doc_texts, llm, profile_config):
                     all_vulnerabilities.extend(vulnerabilities_chunk)
                 else:
                     print(f"Não foi possível extrair JSON válido do chunk {i+1}")
+            unique_names = set(v.get('Name') for v in vulnerabilities_chunk if isinstance(v, dict) and 'Name' in v)
+            print(f"[LOG] Chunk {i+1}/{total_chunks}: {len(vulnerabilities_chunk)} vulnerabilidades extraídas, {len(unique_names)} nomes únicos: {sorted(unique_names)}")
         except Exception as e:
             if 'quota' in str(e).lower() or '429' in str(e):
                 print(f"Limite de quota atingido no chunk {i+1}. Parando processamento.")
@@ -162,7 +164,6 @@ def main():
     doc_texts = text_splitter.split_documents(documents)
     print(f"Total de chunks a processar: {len(doc_texts)}")
     all_vulnerabilities = process_vulnerabilities(doc_texts, llm, profile_config)
-    all_vulnerabilities = merge_vulnerabilities_deepmerge(all_vulnerabilities)
     if save_results(all_vulnerabilities, output_file):
         handle_conversions(output_file, args, visual_file)
 
