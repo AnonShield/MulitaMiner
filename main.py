@@ -87,6 +87,7 @@ def process_vulnerabilities(doc_texts, llm, profile_config):
     total_chunks = len(doc_texts)
     for i, doc_chunk in enumerate(tqdm(doc_texts, desc="Processando chunks", unit="chunk")):
         prompt = build_prompt(doc_chunk, profile_config)
+        vulnerabilities_chunk = []
         try:
             resposta = llm.invoke(prompt).content
             try:
@@ -104,6 +105,9 @@ def process_vulnerabilities(doc_texts, llm, profile_config):
                     all_vulnerabilities.extend(vulnerabilities_chunk)
                 else:
                     print(f"Não foi possível extrair JSON válido do chunk {i+1}")
+            # Garante que vulnerabilities_chunk sempre existe
+            if not isinstance(vulnerabilities_chunk, list):
+                vulnerabilities_chunk = []
             unique_names = set(v.get('Name') for v in vulnerabilities_chunk if isinstance(v, dict) and 'Name' in v)
             print(f"[LOG] Chunk {i+1}/{total_chunks}: {len(vulnerabilities_chunk)} vulnerabilidades extraídas, {len(unique_names)} nomes únicos: {sorted(unique_names)}")
         except Exception as e:
