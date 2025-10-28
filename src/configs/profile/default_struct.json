@@ -1,0 +1,11 @@
+{
+  "reader": "default_struct",
+  "prompt_template": "src/configs/templates/default_prompt_struct.txt",
+  "retry_attempts": 3,
+  "delay_between_chunks": 20,
+  "remove_duplicates": true,
+  "output_file": "vulnerabilities_default.json",
+  "chunk_size": 512,
+  "chunk_overlap": 100,
+  "separator": "\n\n\n"
+}
