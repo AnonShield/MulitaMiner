@@ -50,14 +50,20 @@ class XLSXConverter(BaseConverter):
         Returns:
             Workbook formatado
         """
-        # Normalizar dados complexos antes de criar DataFrame
+        # Normalizar dados complexos antes de criar DataFrame (listas -> multi-linha, None -> vazio)
+        def normalize_for_xlsx(value):
+            if value is None:
+                return ''
+            if isinstance(value, list):
+                return '\n'.join(str(v) for v in value)
+            return str(value)
+
         normalized_data = []
         for item in data:
             normalized_item = {}
             for key, value in item.items():
-                normalized_item[key] = self.normalize_field_value(value)
+                normalized_item[key] = normalize_for_xlsx(value)
             normalized_data.append(normalized_item)
-        
         # Converter para DataFrame
         df = pd.DataFrame(normalized_data)
         

@@ -1,6 +1,5 @@
 import datetime
 from converters.csv_converter import CSVConverter, TSVConverter
-from converters.xlsx_converter import XLSXConverter
 from deepmerge import Merger
 
 def execute_conversions(json_file_path, args):
@@ -11,22 +10,19 @@ def execute_conversions(json_file_path, args):
         return []
     print(f"\n=== CONVERSÃO DE FORMATOS ===")
     converted_files = []
-    try:
-        if args.convert == 'all':
-            formats = ['csv', 'tsv', 'xlsx']
-            for format_type in formats:
-                try:
-                    result = convert_single_format(json_file_path, format_type, args)
-                    if result:
-                        converted_files.append(result)
-                except Exception as e:
-                    print(f"Erro ao converter para {format_type.upper()}: {e}")
-        else:
-            result = convert_single_format(json_file_path, args.convert, args)
-            if result:
-                converted_files.append(result)
-    except Exception as e:
-        print(f"Erro durante conversões: {e}")
+    if args.convert == 'all':
+        formats = ['csv', 'tsv']
+        for format_type in formats:
+            try:
+                result = convert_single_format(json_file_path, format_type, args)
+                if result:
+                    converted_files.append(result)
+            except Exception as e:
+                print(f"Erro ao converter para {format_type.upper()}: {e}")
+    else:
+        result = convert_single_format(json_file_path, args.convert, args)
+        if result:
+            converted_files.append(result)
     return converted_files
 
 def convert_single_format(json_file_path, format_type, args):
@@ -51,20 +47,11 @@ def convert_single_format(json_file_path, format_type, args):
             )
         elif format_type == 'tsv':
             converter = TSVConverter(encoding=args.csv_encoding, include_metadata=False)
-        elif format_type == 'xlsx':
-            converter = XLSXConverter()
         else:
             raise ValueError(f"Formato não suportado: {format_type}")
         result = converter.convert(json_file_path, output_file)
         print(f"{format_type.upper()}: {result}")
         return result
-    except ImportError as e:
-        if format_type == 'xlsx':
-            print(f"XLSX não disponível: {e}")
-            print("   Instale: pip install pandas openpyxl")
-        else:
-            print(f"Erro de importação para {format_type.upper()}: {e}")
-        return None
     except Exception as e:
         print(f" Erro ao converter para {format_type.upper()}: {e}")
         return None
@@ -131,8 +118,6 @@ def init_llm(llm_config):
         model=llm_config["model"],
         temperature=llm_config["temperature"],
         base_url=llm_config["endpoint"],
-        max_tokens=llm_config["max_tokens"],
-        timeout=llm_config["timeout"]
     )
 
 def load_prompt(prompt):
