@@ -8,8 +8,8 @@ Return the output in valid JSON format using exactly these fields:
   {
     "Name": "<vulnerability name as found in the report>",
     "description": "[<list of all description of the vulnerability as if found in the report>]",
-    "detection_result": "[<list of all Vulnerability Detection Result of the vulnerability as if found in the report OPENVAS only>",
-    "detection_method": "<list of all Vulnerability Detection Method of the vulnerability as if found in the report OPENVAS only>]",
+    "detection_result": "[<list of all Vulnerability Detection Result of the vulnerability as if found in the report OPENVAS only>]",
+    "detection_method": "[<list of all Vulnerability Detection Method of the vulnerability as if found in the report OPENVAS only>]",
     "impact": "[<list of all Impact of the vulnerability as if found in the report of OPENVAS only>]",
     "solution": "[<list of all solution from the report>]",
     "insight": "[<list of all full insight of the vulnerability as if found in the report OPENVAS only>]",
