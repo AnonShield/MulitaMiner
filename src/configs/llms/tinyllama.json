@@ -1,0 +1,9 @@
+{
+  "provider": "ollama",
+  "model": "tinyllama:latest",
+  "api_key": "ollama",
+  "endpoint": "http://localhost:11434",
+  "temperature": 0.0,
+  "max_tokens": 512,
+  "timeout": 120
+}
