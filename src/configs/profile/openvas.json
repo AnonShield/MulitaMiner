@@ -1,0 +1,11 @@
+{
+  "reader": "openvas",
+  "prompt_template": "src/configs/templates/default_prompt.txt",
+  "retry_attempts": 3,
+  "delay_between_chunks": 2,
+  "remove_duplicates": true,
+  "output_file": "vulnerabilities_openvas.json",
+  "chunk_size": 16000,
+  "chunk_overlap": 200,
+  "separator": "\n\n\n"
+}

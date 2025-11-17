@@ -1,300 +1,234 @@
-# PDF Vulnerability Extractor
+# 🔍 PDF Vulnerability Extractor
 
-## Resumo
+Uma ferramenta CLI para extrair vulnerabilidades de relatórios PDF de segurança usando LLMs (Large Language Models).
 
-Ferramenta profissional para extração automatizada de vulnerabilidades de relatórios PDF de segurança usando OpenAI GPT + LangChain + FAISS. Processa documentos grandes (305+ páginas) com busca vetorial inteligente, deduplicação automática e exportação em múltiplos formatos (JSON, CSV, Excel).
+## 📋 Descrição
 
-## Funcionalidades
+Esta ferramenta processa relatórios PDF de segurança e extrai vulnerabilidades estruturadas em formato JSON usando modelos de IA. Suporta diferentes provedores de LLM como OpenAI, Groq, e outros compatíveis com a API OpenAI.
 
-✅ **Extração automatizada** de vulnerabilidades de relatórios PDF  
-✅ **Processamento incremental** com recuperação de falhas  
-✅ **Busca vetorial avançada** com FAISS para maior precisão  
-✅ **Múltiplos formatos** de exportação (JSON, CSV, Excel)  
-✅ **Deduplicação inteligente** de vulnerabilidades duplicadas  
-✅ **Tratamento robusto** de erros e JSON malformado  
-✅ **Interface Docker** simplificada para portabilidade  
-✅ **Logs otimizados** com foco no progresso essencial  
+## ✨ Funcionalidades
 
-## Dependências
+- ✅ Extração automática de vulnerabilidades de PDFs
+- ✅ Remoção de duplicatas baseada no nome da vulnerabilidade
+- ✅ Suporte a múltiplos provedores de LLM (OpenAI, Groq, etc.)
+- ✅ Configuração via arquivo JSON
+- ✅ Interface de linha de comando (CLI)
+- ✅ Processamento em chunks para documentos grandes
+- ✅ Tratamento robusto de erros
 
-### Software
-- **Docker** e **Docker Compose** (recomendado)
-- **Python 3.11+** (para execução local)
-- **Git** para clonagem do repositório
+## 🚀 Instalação
 
-### APIs
-- **OpenAI API Key** com créditos disponíveis
-- Modelos suportados: `gpt-3.5-turbo`, `gpt-4`
-
-### Bibliotecas Python (instaladas automaticamente)
-```
-langchain>=0.1.0
-langchain-openai>=0.0.5
-faiss-cpu>=1.7.4
-PyPDF2>=3.0.1
-pandas>=2.0.0
-openpyxl>=3.1.0
-openai>=1.10.0
-```
-
-## Preocupações com Segurança
-
-⚠️ **Proteção da API Key**
-- Nunca commite `config.json` no controle de versão
-- Use variáveis de ambiente em produção
-- Rotacione chaves periodicamente
-
-⚠️ **Dados Sensíveis**
-- PDFs podem conter informações confidenciais
-- Execute em ambiente isolado/containerizado
-- Revise dados antes de compartilhar resultados
-
-⚠️ **Rede e Conectividade**
-- Ferramenta faz requisições para OpenAI API
-- Configure proxy corporativo se necessário
-- Monitore uso de API para evitar custos excessivos
-
-## Instalação
-
-### 1. Clone o Repositório
+### 1. Clone ou baixe os arquivos
 ```bash
-git clone https://github.com/AnonShield/pdf_reader_tenableWAS.git
-cd pdf_reader_tenableWAS
+git clone <repositório>
+cd pdf-vulnerability-extractor
 ```
 
-### 2. Configure a API OpenAI
-Edite o arquivo `config.json`:
-```json
-{
-  "OPENAI_API_KEY": "sk-sua-chave-api-aqui",
-  "MODEL_NAME": "gpt-3.5-turbo"
-}
-```
-
-### 3. Execute com Docker (Recomendado)
+### 2. Crie um ambiente virtual (recomendado)
 ```bash
-docker compose up
+python -m venv venv
+venv\Scripts\activate  # Windows
+# ou
+source venv/bin/activate  # Linux/Mac
 ```
 
-### 4. Instalação Local (Alternativa)
+### 3. Instale as dependências
 ```bash
-
-python3 -m venv .venv
-source .venv/bin/activate  # Linux/macOS
-.venv\Scripts\activate  # Windows
-
 pip install -r requirements.txt
-python main.py
 ```
 
-## Docker (Opcional)
+### Dependências principais:
+- `langchain` - Framework principal para LLM
+- `langchain-openai` - Interface para APIs OpenAI/Groq
+- `langchain-community` - Loaders e utilitários
+- `unstructured[pdf]` - Processamento de PDFs
 
-### Build e Execução
-```bash
-# Build da imagem
-docker compose build
+## ⚙️ Configuração
 
-# Execução padrão
-docker compose up
+### 1. Arquivo config.json
 
-# Execução em background
-docker compose up -d
+Crie ou edite o arquivo `config.json` com suas configurações:
 
-# Ver logs em tempo real
-docker compose logs -f
-
-# Parar containers
-docker compose down
-```
-
-### Execução com Parâmetros
-```bash
-# Salvar em todos os formatos
-docker compose run pdf-extractor --save-all
-
-# PDF específico
-docker compose run pdf-extractor --pdf "/app/host/meu_arquivo.pdf" --save-excel
-
-# Diretório customizado
-docker compose run pdf-extractor --output "/app/host/resultados" --save-csv
-```
-
-## Configuração
-
-### Arquivo config.json
 ```json
 {
-  "OPENAI_API_KEY": "sk-proj-xxxxxxxxxxxxxxxxx",
-  "MODEL_NAME": "gpt-3.5-turbo"
+  "api_key": "sua_api_key_aqui",
+  "endpoint": "https://api.groq.com/openai/v1",
+  "model": "llama-3.1-8b-instant",
+  "temperature": 0,
+  "max_tokens": null,
+  "chunk_size": 1500,
+  "chunk_overlap": 150,
+  "output_file": "vulnerabilities.json"
 }
 ```
 
-### Variáveis de Ambiente (Produção)
+### 2. Configurações disponíveis:
+
+| Campo | Descrição | Exemplo |
+|-------|-----------|---------|
+| `api_key` | Chave da API do provedor | `"gsk_xxx..."` |
+| `endpoint` | URL do endpoint da API | `"https://api.groq.com/openai/v1"` |
+| `model` | Nome do modelo a usar | `"llama-3.1-8b-instant"` |
+| `temperature` | Criatividade do modelo (0-1) | `0` |
+| `max_tokens` | Limite de tokens por resposta | `null` |
+| `chunk_size` | Tamanho dos chunks de texto | `1500` |
+| `chunk_overlap` | Sobreposição entre chunks | `150` |
+| `output_file` | Nome do arquivo de saída | `"vulnerabilities.json"` |
+
+### 3. Provedores suportados:
+
+#### Groq (Recomendado - Gratuito e rápido)
+```json
+{
+  "endpoint": "https://api.groq.com/openai/v1",
+  "model": "llama-3.1-8b-instant"
+}
+```
+
+**Modelos Groq disponíveis:**
+- `llama-3.1-70b-versatile` (mais inteligente)
+- `llama-3.1-8b-instant` (rápido)
+- `mixtral-8x7b-32768` (alternativa)
+- `gemma2-9b-it` (Google)
+
+#### OpenAI
+```json
+{
+  "endpoint": "https://api.openai.com/v1",
+  "model": "gpt-3.5-turbo"
+}
+```
+
+## 📖 Uso
+
+### Sintaxe básica:
 ```bash
-export OPENAI_API_KEY="sk-proj-xxxxxxxxxxxxxxxxx"
-export MODEL_NAME="gpt-3.5-turbo"
+python main.py <caminho_do_pdf> [opções]
 ```
 
-### Estrutura de Volumes Docker
-```yaml
-volumes:
-  - ./:/app/host              # Acesso aos arquivos do host
-  - ./output:/app/output      # Diretório de saída
-  - ./config.json:/app/config.json  # Configuração
-```
+### Exemplos:
 
-## Uso
-
-### Fluxo do Programa
-
-```mermaid
-graph TD
-    A[PDF Input] --> B[Carregamento PDF]
-    B --> C[Divisão em Chunks]
-    C --> D[Criação Vector Store FAISS]
-    D --> E[Processamento Incremental]
-    E --> F[Extração via LLM]
-    F --> G[Parsing JSON + Limpeza]
-    G --> H[Salvamento JSONL]
-    H --> I[Busca Final Abrangente]
-    I --> J[Consolidação + Deduplicação]
-    J --> K[Geração Formatos]
-    K --> L[JSON + CSV + Excel]
-```
-
-### Execução Básica
+#### Uso básico:
 ```bash
-# Processar PDF padrão
-python main.py
-
-# PDF específico
-python main.py --pdf "scan_report.pdf"
-
-# Com múltiplos formatos
-python main.py --pdf "vulnerability_scan.pdf" --save-all
+python main.py relatorio.pdf
 ```
 
-### Estrutura de Saída
-```
-output/
-├── vulnerabilities_extracted.json    # Resultado principal
-├── vulnerabilities_extracted.csv     # Formato planilha
-├── vulnerabilities_extracted.xlsx    # Excel com estatísticas
-└── vulnerabilities_incremental.jsonl # Log incremental
-```
-
-## Experimentos
-
-### Argumentos de Linha de Comando
-```
-usage: main.py [-h] [--pdf PDF] [--output OUTPUT] [--save-csv] [--save-excel] [--save-all]
-
-options:
-  --pdf PDF        Caminho para o arquivo PDF (padrão: arquivo de exemplo)
-  --output OUTPUT  Diretório de saída (padrão: ./output)
-  --save-csv       Salvar em formato CSV
-  --save-excel     Salvar em formato Excel
-  --save-all       Salvar em todos os formatos
-```
-
-### Exemplos de Uso
-
-#### Experimento 1: Processamento Básico
+#### Com arquivo de configuração personalizado:
 ```bash
-python main.py --pdf "nessus_scan.pdf"
+python main.py relatorio.pdf --config meu_config.json
 ```
-**Resultado**: JSON com vulnerabilidades estruturadas
 
-#### Experimento 2: Análise Comparativa
+#### Com path completo:
 ```bash
-python main.py --pdf "scan_antes.pdf" --output "./antes" --save-all
-python main.py --pdf "scan_depois.pdf" --output "./depois" --save-all
+python main.py ".\WAS_Web_app_scan_Juice_Shop___bWAAP-2[1].pdf"
 ```
-**Resultado**: Relatórios comparativos em múltiplos formatos
 
-#### Experimento 3: Processamento em Lote
+#### Ajuda:
 ```bash
-for pdf in scans/*.pdf; do
-  python main.py --pdf "$pdf" --output "./results/$(basename $pdf .pdf)" --save-excel
-done
-```
-**Resultado**: Excel individual para cada scan
-
-### Casos de Teste
-- **PDF pequeno**: < 50 páginas (~2-5 minutos)
-- **PDF médio**: 100-200 páginas (~10-15 minutos)  
-- **PDF grande**: 300+ páginas (~20-30 minutos)
-
-## Estrutura do Código
-
-```
-pdf_reader_tenableWAS/
-├── main.py                     # Ponto de entrada principal
-├── config.json                 # Configurações da aplicação
-├── requirements.txt            # Dependências Python
-├── Dockerfile                  # Configuração do container
-├── docker-compose.yml          # Orquestração Docker
-├── src/                        # Módulos da aplicação
-│   ├── __init__.py
-│   ├── config.py              # Gerenciamento de configuração
-│   ├── pdf_processor.py       # Processamento PDF e vetorização
-│   ├── vulnerability_extractor.py  # Extração e parsing
-│   ├── data_converter.py      # Conversão de formatos
-│   └── utils.py               # Utilitários e processamento
-└── output/                    # Resultados gerados
+python main.py --help
 ```
 
-### Módulos Principais
+### Opções disponíveis:
 
-#### `main.py`
-- Orquestração geral do fluxo
-- Interface de linha de comando
-- Tratamento de argumentos
+| Opção | Descrição |
+|-------|-----------|
+| `pdf_path` | Caminho para o arquivo PDF (obrigatório) |
+| `--config`, `-c` | Arquivo de configuração JSON (padrão: config.json) |
+| `--help`, `-h` | Mostra ajuda |
 
-#### `src/pdf_processor.py`
-- Carregamento de PDFs com PyPDF2
-- Divisão em chunks inteligente
-- Criação de vector store FAISS
+## 📄 Formato de saída
 
-#### `src/vulnerability_extractor.py`
-- Extração via modelos OpenAI
-- Parsing robusto de JSON
-- Processamento incremental
+A ferramenta gera um arquivo JSON com as vulnerabilidades encontradas:
 
-#### `src/data_converter.py`
-- Conversão JSON → CSV
-- Geração Excel com múltiplas abas
-- Preservação de todos os campos
-
-#### `src/utils.py`
-- Consolidação de resultados
-- Deduplicação de vulnerabilidades
-- Validação de arquivos
-
-## Extensibilidade
-
-### Adicionando Novos Formatos de Saída
-
-1. **Implementar conversor** em `src/data_converter.py`:
-```python
-def json_to_xml(self, json_file_path: str) -> str:
-    """Converter JSON para XML."""
-    # Implementação aqui
-    pass
+```json
+[
+  {
+    "name": "SQL Injection",
+    "plugin_id": "9",
+    "Description": "The web application is vulnerable to SQL injection attacks.",
+    "severity": "High",
+    "solution": "Implement proper input validation and sanitization.",
+    "Risk Information": "An attacker can exploit this vulnerability to gain unauthorized access.",
+    "Reference Information": "https://owasp.org/www-community/attacks/SQL_Injection"
+  }
+]
 ```
 
-2. **Adicionar parâmetro CLI** em `main.py`:
-```python
-parser.add_argument("--save-xml", action="store_true", 
-                   help="Salvar em formato XML")
+## 🔧 Resolução de problemas
+
+### Erro: "modelo descontinuado"
+```
+ERRO: O modelo 'llama3-8b-8192' foi descontinuado!
+```
+**Solução:** Atualize o modelo no `config.json` para um modelo válido.
+
+### Erro: "arquivo não encontrado"
+```
+Erro: Arquivo PDF não encontrado: arquivo.pdf
+```
+**Solução:** Verifique se o caminho do PDF está correto e o arquivo existe.
+
+### Erro: "API key inválida"
+```
+Erro: 401 - Unauthorized
+```
+**Solução:** Verifique se a API key no `config.json` está correta.
+
+### Erro: "limite de quota"
+```
+Limite de quota atingido no chunk X
+```
+**Solução:** Aguarde ou use um provedor diferente (ex: Groq gratuito).
+
+## 📁 Estrutura do projeto
+
+```
+pdf-vulnerability-extractor/
+├── main.py              # Script principal
+├── config.json          # Configurações
+├── requirements.txt     # Dependências
+├── README.md           # Este arquivo
+└── vulnerabilities.json # Saída (gerado após execução)
 ```
 
-3. **Integrar no fluxo** principal:
-```python
-if save_xml:
-    xml_path = self.data_converter.json_to_xml(final_path)
+## 🚀 Exemplo completo
+
+1. **Configurar API key no config.json:**
+```json
+{
+  "api_key": "gsk_sua_chave_aqui",
+  "endpoint": "https://api.groq.com/openai/v1",
+  "model": "llama-3.1-8b-instant",
+  "temperature": 0,
+  "max_tokens": null,
+  "chunk_size": 1500,
+  "chunk_overlap": 150,
+  "output_file": "vulnerabilities.json"
+}
 ```
 
-### Adicionando Novos Modelos LLM
+2. **Executar a ferramenta:**
+```bash
+python main.py "WAS_Web_app_scan_Juice_Shop___bWAAP-2[1].pdf"
+```
 
-1. **Configurar novo modelo** em `config.json`:
+3. **Resultado:**
+```
+Arquivo PDF: WAS_Web_app_scan_Juice_Shop___bWAAP-2[1].pdf
+Usando modelo: llama-3.1-8b-instant
+Endpoint: https://api.groq.com/openai/v1
+Carregando o PDF...
+Dividindo o texto em chunks...
+Processando todo o texto para extrair vulnerabilidades...
+Processando chunk 1/386...
+  Encontradas 2 vulnerabilidades no chunk 1
+...
+=== PROCESSAMENTO CONCLUÍDO ===
+Total original de vulnerabilidades: 470
+Duplicatas removidas: 15
+Vulnerabilidades únicas salvas: 455
+Arquivo salvo: vulnerabilities.json
+```
+## 📝 Licença
+
+Este projeto é fornecido como está, para fins educacionais e de pesquisa.

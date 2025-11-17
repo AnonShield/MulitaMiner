@@ -1,0 +1,19 @@
+REQUIRED JSON FORMAT (USE EXACTLY THESE FIELDS ONLY):
+[
+{
+"Name": <string>,
+"description": "<detailed description>",
+"cvss": <score or null>,
+"severity": "<Low|Medium|High|Critical>",
+"solution": "<recommended action>",
+"port": <number or null>,
+"protocol": "<tcp|udp|null>",
+"references": [<list of URLs or null>]
+}
+]
+
+Use the visual layout to identify structured sections
+Use ONLY the 8 fields shown above — no additional fields
+Put severity information in the "Risk" field
+If no vulnerabilities are found, return []
+IMPORTANT: Return ONLY valid JSON with exactly the fields shown above.

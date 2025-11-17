@@ -1,224 +1,175 @@
-#!/usr/bin/env python3
-"""
-PDF Vulnerability Extractor - Main Application
-
-A professional tool for extracting security vulnerabilities from PDF reports
-using OpenAI GPT models and LangChain framework with FAISS vector storage.
-
-Author: Security Team
-Version: 2.0.0
-License: MIT
-"""
-
+import os
 import sys
 import argparse
-import logging
-from pathlib import Path
+import json
+import datetime
 
-# Import our modular components
-from src.config import ConfigManager, setup_logging
-from src.pdf_processor import PDFProcessor
-from src.vulnerability_extractor import VulnerabilityExtractor
-from src.utils import ResultProcessor, FileValidator
-from src.data_converter import DataConverter
+# third-party
+from tqdm import tqdm
 
+# ensure local package imports resolve (adds project src to sys.path)
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'src'))
 
-class PDFVulnerabilityExtractorApp:
-    """Main application class that orchestrates the vulnerability extraction process."""
-    
-    def __init__(self, config_path: str = "config.json"):
-        """Initialize the application.
-        
-        Args:
-            config_path: Path to configuration file
-        """
-        # Setup logging first
-        setup_logging()
-        
-        # Initialize components
-        self.config_manager = ConfigManager(config_path)
-        self.pdf_processor = PDFProcessor(
-            chunk_size=200,
-            chunk_overlap=50
-        )
-        self.vulnerability_extractor = VulnerabilityExtractor(
-            model_name=self.config_manager.get_model_name(),
-            max_tokens=800
-        )
-        
-        # Initialize data converter
-        self.data_converter = DataConverter()
-        
-        logging.info("PDF Vulnerability Extractor initialized successfully")
-    
-    def process_pdf(self, pdf_path: str, output_dir: str, save_csv: bool = False, 
-                   save_excel: bool = False, save_all: bool = False) -> str:
-        """Main processing pipeline for PDF vulnerability extraction.
-        
-        Args:
-            pdf_path: Path to PDF file
-            output_dir: Output directory
-            save_csv: Save results in CSV format
-            save_excel: Save results in Excel format  
-            save_all: Save results in all formats
-            
-        Returns:
-            Path to final results file
-        """
-        try:
-            # Ensure output directory exists
-            ResultProcessor.ensure_output_directory(output_dir)
-            
-            # Process PDF
-            logging.info(f"Starting processing of PDF: {pdf_path}")
-            texts = self.pdf_processor.load_and_process_pdf(pdf_path)
-            
-            # Create vector store and QA chain
-            vector_store = self.pdf_processor.create_vector_store(texts)
-            qa_chain = self.vulnerability_extractor.setup_qa_chain(
-                vector_store, 
-                retrieval_k=5
-            )
-            
-            # Extract vulnerabilities incrementally
-            jsonl_path = self.vulnerability_extractor.extract_vulnerabilities_incremental(
-                texts, 
-                output_dir
-            )
-            
-            # Perform final comprehensive search
-            self.vulnerability_extractor.perform_final_search(qa_chain, jsonl_path)
-            
-            # Consolidate results
-            final_path = ResultProcessor.consolidate_results(jsonl_path, output_dir)
-            
-            # Load and display statistics
-            with open(final_path, "r", encoding="utf-8") as f:
-                import json
-                vulnerabilities = json.load(f)
-            
-            ResultProcessor.log_statistics(vulnerabilities)
-            
-            # Save in additional formats if requested
-            if save_all or save_csv or save_excel:
-                logging.info("Saving results in additional formats...")
-                
-                if save_all or save_csv:
-                    try:
-                        csv_path = self.data_converter.json_to_csv(final_path)
-                        logging.info(f"CSV file saved: {csv_path}")
-                    except Exception as e:
-                        logging.error(f"Error saving CSV: {e}")
-                
-                if save_all or save_excel:
-                    try:
-                        excel_path = self.data_converter.json_to_excel(final_path)
-                        logging.info(f"Excel file saved: {excel_path}")
-                    except Exception as e:
-                        logging.error(f"Error saving Excel: {e}")
-            
-            logging.info(f"Processing completed successfully!")
-            logging.info(f"Results saved to: {final_path}")
-            
-            return final_path
-            
-        except Exception as e:
-            logging.error(f"Error during processing: {e}")
-            raise
+# local imports (from src/)
+from utils.utils import (
+    load_profile, load_llm, init_llm, load_prompt, save_visual_layout,
+    merge_vulnerabilities_deepmerge, execute_conversions, convert_single_format
+)
+from utils.pdf_loader import extract_visual_layout_from_pdf, load_pdf_with_pypdf2
+from utils.text_splitter import get_text_splitter
 
 
-def setup_argument_parser() -> argparse.ArgumentParser:
-    """Setup command line argument parser.
-    
-    Returns:
-        Configured argument parser
-    """
+
+
+def parse_arguments():
+    """Parse argumentos da linha de comando"""
     parser = argparse.ArgumentParser(
-        description="Professional PDF Vulnerability Extractor using OpenAI GPT",
-        formatter_class=argparse.RawDescriptionHelpFormatter,
-        epilog="""
-Examples:
-  python main.py
-  python main.py --pdf "security_report.pdf"
-  python main.py --pdf "/path/to/report.pdf" --output "./results"
-  python main.py --pdf "report.pdf" --save-csv
-  python main.py --pdf "report.pdf" --save-excel
-  python main.py --pdf "report.pdf" --save-all
-        """
+        description='Extrai vulnerabilidades de relatórios PDF usando um LLM e salva em JSON/CSV/XLSX.'
     )
+    parser.add_argument('--profile', default='default', help='Perfil de configuração (padrão: default)')
     
-    parser.add_argument(
-        "--pdf", 
-        type=str, 
-        default="./WAS_Web_app_scan_Juice_Shop___bWAAP-2[1].pdf",
-        help="Path to PDF file to process (default: ./WAS_Web_app_scan_Juice_Shop___bWAAP-2[1].pdf)"
-    )
+    parser.add_argument('pdf_path', help='Caminho para o arquivo PDF')
     
-    parser.add_argument(
-        "--output", 
-        type=str, 
-        default="./output",
-        help="Output directory for results (default: ./output)"
-    )
     
-    # Export format options
-    parser.add_argument(
-        "--save-csv",
-        action="store_true",
-        help="Save results in CSV format alongside JSON"
-    )
+    # Opções de conversão
+    parser.add_argument('--convert',
+                        choices=['csv', 'xlsx', 'tsv', 'all', 'none'],
+                        default='none',
+                        help='Converter saída JSON para formato específico (padrão: none)')
+    parser.add_argument('--output',
+                        help='Caminho do arquivo de saída para a conversão (opcional)')
+    parser.add_argument('--output-dir',
+                        dest='output_dir',
+                        help='Diretório de saída para arquivos convertidos (opcional)')
+    parser.add_argument('--csv-delimiter',
+                        dest='csv_delimiter',
+                        default=',',
+                        help='Delimitador para CSV (padrão: ,)')
+    parser.add_argument('--csv-encoding',
+                        dest='csv_encoding',
+                        default='utf-8-sig',
+                        help='Codificação para CSV (padrão: utf-8-sig)')
     
-    parser.add_argument(
-        "--save-excel",
-        action="store_true",
-        help="Save results in Excel format alongside JSON"
-    )
-    
-    parser.add_argument(
-        "--save-all",
-        action="store_true", 
-        help="Save results in all formats (JSON, CSV, Excel)"
-    )
-    
-    return parser
+    # Argumentos essenciais
+    parser.add_argument('--LLM', default='gpt4', help='Nome do LLM a usar (padrão: gpt4)')
+    return parser.parse_args()
+def validate_pdf_path(pdf_path):
+    if not os.path.isfile(pdf_path):
+        print(f"Erro: Arquivo PDF não encontrado: {pdf_path}")
+        return False
+    return True
 
+def get_configs(args):
+    profile_config = load_profile(args.profile)
+    if profile_config is None:
+        print(f"Erro ao carregar configuração do perfil: {args.profile}")
+        return None, None
+    llm_config = load_llm(args.LLM)
+    if llm_config is None:
+        print(f"Erro ao carregar configuração do LLM: {args.LLM}")
+        return None, None
+    return profile_config, llm_config
 
-def main() -> None:
-    """Main entry point."""
+def build_prompt(doc_chunk, profile_config):
+    template_path = profile_config.get('prompt_template', '')
+    prompt_template_content = load_prompt(template_path)
+    
+    prompt = (
+        "Analyze this security report with preserved visual layout and extract vulnerabilities in JSON format:\n\n"
+        f"REPORT CONTENT:\n{doc_chunk.page_content}\n\n"
+        f"{prompt_template_content}"
+    )
+    
+    return prompt
+
+def process_vulnerabilities(doc_texts, llm, profile_config):
+    all_vulnerabilities = []
+    total_chunks = len(doc_texts)
+    for i, doc_chunk in enumerate(tqdm(doc_texts, desc="Processando chunks", unit="chunk")):
+        prompt = build_prompt(doc_chunk, profile_config)
+        vulnerabilities_chunk = []
+        try:
+            resposta = llm.invoke(prompt).content
+            try:
+                vulnerabilities_chunk = json.loads(resposta)
+                if isinstance(vulnerabilities_chunk, list):
+                    all_vulnerabilities.extend(vulnerabilities_chunk)
+                else:
+                    print(f"Resposta não é uma lista válida no chunk {i+1}")
+            except json.JSONDecodeError:
+                start = resposta.find('[')
+                end = resposta.rfind(']') + 1
+                if start != -1 and end > start:
+                    json_str = resposta[start:end]
+                    vulnerabilities_chunk = json.loads(json_str)
+                    all_vulnerabilities.extend(vulnerabilities_chunk)
+                else:
+                    print(f"Não foi possível extrair JSON válido do chunk {i+1}")
+            # Garante que vulnerabilities_chunk sempre existe
+            if not isinstance(vulnerabilities_chunk, list):
+                vulnerabilities_chunk = []
+            unique_names = set(v.get('Name') for v in vulnerabilities_chunk if isinstance(v, dict) and 'Name' in v)
+            print(f"[LOG] Chunk {i+1}/{total_chunks}: {len(vulnerabilities_chunk)} vulnerabilidades extraídas, {len(unique_names)} nomes únicos: {sorted(unique_names)}")
+        except Exception as e:
+            if 'quota' in str(e).lower() or '429' in str(e):
+                print(f"Limite de quota atingido no chunk {i+1}. Parando processamento.")
+                break
+            else:
+                print(f"Erro ao processar chunk {i+1}: {e}")
+    return all_vulnerabilities
+
+def save_results(all_vulnerabilities, output_file):
     try:
-        # commands arguments
-        commands = setup_argument_parser()
-        args = commands.parse_args()
-        
-        # Initialize application
-        app = PDFVulnerabilityExtractorApp()
-        
-        # Validate PDF file exists
-        if not FileValidator.validate_file_exists(args.pdf, "PDF file"):
-            sys.exit(1)
-        
-        # Validate PDF extension
-        if not FileValidator.ensure_file_extension(args.pdf, ".pdf"):
-            logging.warning(f"File '{args.pdf}' does not have .pdf extension")
-        
-        # Process PDF with format options
-        final_path = app.process_pdf(
-            args.pdf, 
-            args.output,
-            save_csv=args.save_csv,
-            save_excel=args.save_excel,
-            save_all=args.save_all
-        )
-        
-        logging.info("Application completed successfully!")
-        
-    except KeyboardInterrupt:
-        logging.info("Process interrupted by user")
-        sys.exit(1)
+        with open(output_file, 'w', encoding='utf-8') as f:
+            json.dump(all_vulnerabilities, f, indent=2, ensure_ascii=False)
+        print(f"Processamento concluído. Vulnerabilidades salvas em: {output_file}")
+        return True
     except Exception as e:
-        logging.error(f"Unexpected error: {e}")
-        sys.exit(1)
+        print(f"Erro ao salvar arquivo JSON: {e}")
+        return False
 
+def handle_conversions(output_file, args, visual_file):
+    print(f"Layout visual salvo em: {visual_file if visual_file else 'Erro ao salvar'}")
+    # Executa conversões conforme argumentos (csv/xlsx/tsv/all)
+    try:
+        converted = execute_conversions(output_file, args)
+        if converted:
+            print("Conversões geradas:")
+            for c in converted:
+                print(f" - {c}")
+        else:
+            print("Nenhuma conversão realizada.")
+    except Exception as e:
+        print(f"Erro ao executar conversões: {e}")
+
+def main():
+    args = parse_arguments()
+    if not validate_pdf_path(args.pdf_path):
+        return
+    profile_config, llm_config = get_configs(args)
+    if not profile_config or not llm_config:
+        return
+    llm = init_llm(llm_config)
+    chunk_size = profile_config.get('chunk_size', 2000)
+    chunk_overlap = profile_config.get('chunk_overlap', 200)
+    output_file = profile_config['output_file']
+    separator = profile_config.get('separator', None)
+    default_separators = ["\n\n\n\n", "\n\n\n", "\n\n", "\n"]
+    if separator:
+        separators = [separator] + default_separators
+    else:
+        separators = default_separators
+    text_splitter = get_text_splitter(chunk_size=chunk_size, chunk_overlap=chunk_overlap, separators=separators)
+    documents = load_pdf_with_pypdf2(args.pdf_path)
+    if documents is None:
+        print("Falha ao carregar o PDF. Verifique se o arquivo não está corrompido.")
+        return
+    visual_file = save_visual_layout(documents[0].page_content, args.pdf_path)
+    doc_texts = text_splitter.split_documents(documents)
+    print(f"Total de chunks a processar: {len(doc_texts)}")
+    all_vulnerabilities = process_vulnerabilities(doc_texts, llm, profile_config)
+    if save_results(all_vulnerabilities, output_file):
+        handle_conversions(output_file, args, visual_file)
 
 if __name__ == "__main__":
     main()

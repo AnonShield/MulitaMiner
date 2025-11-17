@@ -1,4 +1,11 @@
 {
-  "OPENAI_API_KEY": "sk-your-openai-key-here",
-  "MODEL_NAME": "gpt-3.5-turbo"
+  "api_key": "insira_key_aqui",
+  "endpoint": "https://api.openai.com/v1",
+  "model": "gpt-3.5-turbo",
+  "temperature": 0,
+  "max_tokens": null,
+  "chunk_size": 16000,
+  "chunk_overlap": 200,
+  "separator": "\n\n\n",
+  "output_file": "vulnerabilities_openai.json"
 }

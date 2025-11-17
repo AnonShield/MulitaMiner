@@ -1,0 +1,8 @@
+{
+  "api_key": "api_key",
+  "endpoint": "https://api.openai.com/v1",
+  "model": "gpt-4.1-2025-04-14",
+  "temperature": 0.2,
+  "max_tokens": null,
+  "timeout":120
+}
