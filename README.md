@@ -50,36 +50,206 @@ pip install -r requirements.txt
 A ferramenta foi projetada com uma arquitetura modular e extensível que permite personalização em três dimensões principais:
 
 #### 🧠 **Modelos LLM configuráveis**
-- Suporte a múltiplos provedores (OpenAI, Groq, Anthropic, etc.)
-- Configuração flexível de parâmetros (temperatura, tokens, endpoints)
-- Adaptação para diferentes capacidades de modelos
+
+A ferramenta suporta qualquer modelo compatível com a API OpenAI através de arquivos de configuração JSON.
+
+**Como adicionar um novo LLM:**
+
+1. **Crie um arquivo de configuração** em `src/configs/llms/`:
+```json
+// src/configs/llms/claude.json
+{
+  "api_key": "sk-ant-xxxxx",
+  "endpoint": "https://api.anthropic.com/v1",
+  "model": "claude-3-haiku-20240307",
+  "temperature": 0,
+  "max_tokens": 4096,
+  "timeout": 60
+}
+```
+
+2. **Estrutura suportada:**
+   - `api_key`: Chave de autenticação da API
+   - `endpoint`: URL do endpoint da API
+   - `model`: Nome do modelo específico
+   - `temperature`: Criatividade (0-1)
+   - `max_tokens`: Limite de tokens por resposta
+   - `timeout`: Tempo limite em segundos
+
+3. **Exemplos de provedores suportados:**
+   - **OpenAI**: `gpt-3.5-turbo`, `gpt-4`, `gpt-4-turbo`
+   - **Groq**: `llama-3.1-8b-instant`, `mixtral-8x7b-32768`
+   - **Anthropic**: `claude-3-haiku`, `claude-3-sonnet`
+   - **Qualquer API compatível** com formato OpenAI
 
 #### ⚙️ **Perfis de processamento adaptáveis**
-- Configuração de tamanho de chunks conforme complexidade do relatório
-- Ajuste de sobreposição para diferentes tipos de documentos
-- Controle de duplicação e intervalos de processamento
-- Personalização de arquivos de saída
+
+Os perfis controlam como o documento é processado e as vulnerabilidades são extraídas.
+
+**Como criar um novo perfil:**
+
+1. **Crie um arquivo de perfil** em `src/configs/profile/`:
+```json
+// src/configs/profile/nessus.json
+{
+  "reader": "nessus",
+  "prompt_template": "src/configs/templates/nessus_prompt.txt",
+  "retry_attempts": 3,
+  "delay_between_chunks": 5,
+  "remove_duplicates": true,
+  "output_file": "vulnerabilities_nessus.json",
+  "chunk_size": 12000,
+  "chunk_overlap": 300,
+  "separator": "\n\n---\n\n"
+}
+```
+
+2. **Parâmetros configuráveis:**
+   - `reader`: Identificador único do leitor
+   - `prompt_template`: Caminho para o template de prompt
+   - `retry_attempts`: Tentativas em caso de erro
+   - `delay_between_chunks`: Delay entre processamento (segundos)
+   - `remove_duplicates`: Remover duplicatas por nome
+   - `output_file`: Nome do arquivo de saída
+   - `chunk_size`: Tamanho dos chunks de texto
+   - `chunk_overlap`: Sobreposição entre chunks
+   - `separator`: Separador para divisão de texto
+
+3. **Configurações recomendadas por tipo:**
+   - **Relatórios pequenos** (< 50 páginas): `chunk_size: 4000-8000`
+   - **Relatórios médios** (50-200 páginas): `chunk_size: 8000-16000`
+   - **Relatórios grandes** (> 200 páginas): `chunk_size: 16000-32000`
+   - **Estruturas complexas**: `chunk_overlap: 200-500`
+   - **Estruturas simples**: `chunk_overlap: 0-200`
 
 #### 📋 **Templates de prompt customizáveis**
-- Templates específicos para diferentes ferramentas de segurança
-- Formatos de saída flexíveis (JSON estruturado, texto plano)
-- Mapeamento de campos específico por ferramenta
-- Facilidade para adicionar novos templates para outras ferramentas
 
-#### 🔧 **Como personalizar:**
+Os templates definem como as vulnerabilidades são extraídas e estruturadas.
 
-**Para novos tipos de relatório:**
-1. Crie um novo template em `src/configs/templates/`
-2. Configure um novo perfil em `src/configs/profile/`
-3. Ajuste os parâmetros conforme a estrutura do relatório
+**Como criar um novo template:**
 
-**Para novos LLMs:**
-1. Configure endpoint e parâmetros em `src/configs/llms/`
-2. Ajuste temperatura e tokens conforme capacidades do modelo
+1. **Crie um arquivo de template** em `src/configs/templates/`:
+```txt
+// src/configs/templates/nessus_prompt.txt
+You are an information extraction model for Nessus vulnerability reports.
 
-**Para novos formatos de saída:**
-1. Modifique o template de prompt para o formato desejado
-2. Ajuste os conversores em `src/converters/` se necessário
+Extract structured vulnerability information from the TEXT REPORT provided.
+
+**NESSUS SPECIFIC INSTRUCTIONS:**
+1. For each "Plugin Name" is a vulnerability block
+2. Use "Plugin Name" as "Name"
+3. Use "Description" field as "description"
+4. Use "Solution" field as "solution"
+5. Use "Risk Information" as "risk"
+6. Extract CVSS scores from "CVSS" section
+7. Get port from "Port" field
+8. Use "See Also" as "references"
+
+Return JSON format:
+[
+  {
+    "Name": "<plugin name>",
+    "description": "<description text>",
+    "solution": "<solution text>",
+    "risk": "<risk level>",
+    "cvss": "<cvss score>",
+    "port": "<port number>",
+    "references": ["<reference urls>"]
+  }
+]
+```
+
+2. **Elementos do template:**
+   - **Instruções gerais**: Como interpretar o documento
+   - **Mapeamento de campos**: Qual campo do relatório vai para qual campo JSON
+   - **Formato de saída**: Estrutura JSON ou texto esperada
+   - **Regras específicas**: Como tratar duplicatas, valores nulos, etc.
+
+3. **Tipos de template disponíveis:**
+   - **JSON estruturado** (`default_prompt.txt`): Saída em JSON completo
+   - **Texto estruturado** (`default_prompt_struct.txt`): Saída em texto formatado
+   - **Simplificado** (`openvas_prompt.txt`, `tenable_prompt.txt`): Campos básicos
+
+#### 🔧 **Guia completo de personalização**
+
+**Para adicionar suporte a uma nova ferramenta (ex: Nessus):**
+
+1. **Analise a estrutura do relatório:**
+```bash
+# Exemplo: estrutura típica do Nessus
+Plugin Name: SQL Injection
+Description: The application is vulnerable...
+Solution: Implement proper validation...
+CVSS: 7.5
+Port: 80/tcp
+See Also: https://...
+```
+
+2. **Crie o template de prompt:**
+```bash
+# src/configs/templates/nessus_prompt.txt
+# (conforme exemplo acima)
+```
+
+3. **Configure o perfil:**
+```bash
+# src/configs/profile/nessus.json
+# (conforme exemplo acima)
+```
+
+4. **Configure o LLM** (se necessário):
+```bash
+# src/configs/llms/specialized_model.json
+# (para modelos específicos se necessário)
+```
+
+5. **Teste e ajuste:**
+```bash
+python main.py relatorio_nessus.pdf --profile nessus
+```
+
+**Para adicionar um novo formato de saída:**
+
+1. **Modifique o template** para o formato desejado:
+```txt
+// Exemplo: saída em CSV
+Return CSV format with headers:
+Name,Severity,Description,Solution
+"SQL Injection","High","Description here","Solution here"
+```
+
+2. **Crie conversor customizado** (opcional):
+```python
+// src/converters/csv_converter.py
+def convert_to_csv(vulnerabilities):
+    # Lógica de conversão
+    pass
+```
+
+3. **Atualize o perfil** para usar o novo conversor:
+```json
+{
+  "output_format": "csv",
+  "converter": "csv_converter"
+}
+```
+
+#### 🚀 **Exemplos práticos de extensão**
+
+**Exemplo 1: Adicionando Rapid7 Nexpose**
+- Template focado em "Vulnerability Details" e "Remediation"
+- Perfil com chunks grandes devido à estrutura detalhada
+- Campos específicos: `asset`, `service`, `proof`
+
+**Exemplo 2: Adicionando Qualys VMDR** 
+- Template para estrutura XML/HTML
+- Perfil com overlap alto devido à formatação complexa
+- Campos específicos: `qid`, `category`, `pci_flag`
+
+**Exemplo 3: Adicionando relatórios personalizados**
+- Template genérico configurável
+- Perfil adaptável via parâmetros
+- Saída em múltiplos formatos (JSON, CSV, XML)
 
 ## 📖 Uso
 
