@@ -1,4 +1,4 @@
-# 🔍 PDF Vulnerability Extractor
+# 🔍 Vulnerability Extractor
 
 Uma ferramenta CLI para extrair vulnerabilidades de relatórios PDF de segurança usando LLMs (Large Language Models).
 
