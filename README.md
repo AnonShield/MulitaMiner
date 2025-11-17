@@ -81,60 +81,6 @@ A ferramenta foi projetada com uma arquitetura modular e extensível que permite
 1. Modifique o template de prompt para o formato desejado
 2. Ajuste os conversores em `src/converters/` se necessário
 
-### 2. Arquivo config.json
-
-Crie ou edite o arquivo `config.json` com suas configurações:
-
-```json
-{
-  "api_key": "sua_api_key_aqui",
-  "endpoint": "https://api.groq.com/openai/v1",
-  "model": "llama-3.1-8b-instant",
-  "temperature": 0,
-  "max_tokens": null,
-  "chunk_size": 1500,
-  "chunk_overlap": 150,
-  "output_file": "vulnerabilities.json"
-}
-```
-
-### 2. Configurações disponíveis:
-
-| Campo | Descrição | Exemplo |
-|-------|-----------|---------|
-| `api_key` | Chave da API do provedor | `"gsk_xxx..."` |
-| `endpoint` | URL do endpoint da API | `"https://api.groq.com/openai/v1"` |
-| `model` | Nome do modelo a usar | `"llama-3.1-8b-instant"` |
-| `temperature` | Criatividade do modelo (0-1) | `0` |
-| `max_tokens` | Limite de tokens por resposta | `null` |
-| `chunk_size` | Tamanho dos chunks de texto | `1500` |
-| `chunk_overlap` | Sobreposição entre chunks | `150` |
-| `output_file` | Nome do arquivo de saída | `"vulnerabilities.json"` |
-
-### 3. Provedores suportados:
-
-#### Groq (Recomendado - Gratuito e rápido)
-```json
-{
-  "endpoint": "https://api.groq.com/openai/v1",
-  "model": "llama-3.1-8b-instant"
-}
-```
-
-**Modelos Groq disponíveis:**
-- `llama-3.1-70b-versatile` (mais inteligente)
-- `llama-3.1-8b-instant` (rápido)
-- `mixtral-8x7b-32768` (alternativa)
-- `gemma2-9b-it` (Google)
-
-#### OpenAI
-```json
-{
-  "endpoint": "https://api.openai.com/v1",
-  "model": "gpt-3.5-turbo"
-}
-```
-
 ## 📖 Uso
 
 ### Sintaxe básica:
@@ -149,9 +95,9 @@ python main.py <caminho_do_pdf> [opções]
 python main.py relatorio.pdf
 ```
 
-#### Com arquivo de configuração personalizado:
+#### Com perfil personalizado:
 ```bash
-python main.py relatorio.pdf --config meu_config.json
+python main.py relatorio.pdf --profile custom_profile
 ```
 
 #### Com path completo:
@@ -169,7 +115,7 @@ python main.py --help
 | Opção | Descrição |
 |-------|-----------|
 | `pdf_path` | Caminho para o arquivo PDF (obrigatório) |
-| `--config`, `-c` | Arquivo de configuração JSON (padrão: config.json) |
+| `--profile`, `-p` | Perfil de configuração a usar |
 | `--help`, `-h` | Mostra ajuda |
 
 ## 📄 Formato de saída
@@ -252,7 +198,7 @@ A ferramenta gera um arquivo JSON com as vulnerabilidades encontradas. O formato
 ```
 ERRO: O modelo 'llama3-8b-8192' foi descontinuado!
 ```
-**Solução:** Atualize o modelo no `config.json` para um modelo válido.
+**Solução:** Atualize o modelo nas configurações de LLM para um modelo válido.
 
 ### Erro: "arquivo não encontrado"
 ```
@@ -264,7 +210,7 @@ Erro: Arquivo PDF não encontrado: arquivo.pdf
 ```
 Erro: 401 - Unauthorized
 ```
-**Solução:** Verifique se a API key no `config.json` está correta.
+**Solução:** Verifique se a API key nas configurações está correta.
 
 ### Erro: "limite de quota"
 ```
@@ -277,50 +223,15 @@ Limite de quota atingido no chunk X
 ```
 pdf-vulnerability-extractor/
 ├── main.py              # Script principal
-├── config.json          # Configurações
 ├── requirements.txt     # Dependências
 ├── README.md           # Este arquivo
-└── vulnerabilities.json # Saída (gerado após execução)
+├── src/                 # Código fonte modular
+│   ├── configs/         # Configurações (LLMs, perfis, templates)
+│   ├── converters/      # Conversores de saída
+│   └── utils/           # Utilitários de processamento
+└── data/               # Dados de entrada e saída
 ```
 
-## 🚀 Exemplo completo
-
-1. **Configurar API key no config.json:**
-```json
-{
-  "api_key": "gsk_sua_chave_aqui",
-  "endpoint": "https://api.groq.com/openai/v1",
-  "model": "llama-3.1-8b-instant",
-  "temperature": 0,
-  "max_tokens": null,
-  "chunk_size": 1500,
-  "chunk_overlap": 150,
-  "output_file": "vulnerabilities.json"
-}
-```
-
-2. **Executar a ferramenta:**
-```bash
-python main.py "WAS_Web_app_scan_Juice_Shop___bWAAP-2[1].pdf"
-```
-
-3. **Resultado:**
-```
-Arquivo PDF: WAS_Web_app_scan_Juice_Shop___bWAAP-2[1].pdf
-Usando modelo: llama-3.1-8b-instant
-Endpoint: https://api.groq.com/openai/v1
-Carregando o PDF...
-Dividindo o texto em chunks...
-Processando todo o texto para extrair vulnerabilidades...
-Processando chunk 1/386...
-  Encontradas 2 vulnerabilidades no chunk 1
-...
-=== PROCESSAMENTO CONCLUÍDO ===
-Total original de vulnerabilidades: 470
-Duplicatas removidas: 15
-Vulnerabilidades únicas salvas: 455
-Arquivo salvo: vulnerabilities.json
-```
-## 📝 Licença
+##  Licença
 
 Este projeto é fornecido como está, para fins educacionais e de pesquisa.
