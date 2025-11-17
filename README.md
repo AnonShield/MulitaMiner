@@ -279,16 +279,6 @@ python main.py relatorio.pdf --convert csv
 python main.py relatorio.pdf --convert all --output-dir ./resultados
 ```
 
-#### Configuração completa:
-```bash
-python main.py "relatorio_vulnerabilidades.pdf" \
-  --profile tenable \
-  --LLM llama3 \
-  --convert xlsx \
-  --output "analise_final.xlsx" \
-  --output-dir "./exports"
-```
-
 #### CSV com configuração personalizada:
 ```bash
 python main.py relatorio.pdf \
