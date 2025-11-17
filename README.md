@@ -205,7 +205,7 @@ See Also: https://...
 
 5. **Teste e ajuste:**
 ```bash
-python main.py relatorio_nessus.pdf --profile nessus
+python main.py relatorio_nessus.pdf --profile nessus --LLM specialized_model
 ```
 
 #### 🚀 **Exemplos práticos de extensão**
