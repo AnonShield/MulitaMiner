@@ -208,32 +208,6 @@ See Also: https://...
 python main.py relatorio_nessus.pdf --profile nessus
 ```
 
-**Para adicionar um novo formato de saída:**
-
-1. **Modifique o template** para o formato desejado:
-```txt
-// Exemplo: saída em CSV
-Return CSV format with headers:
-Name,Severity,Description,Solution
-"SQL Injection","High","Description here","Solution here"
-```
-
-2. **Crie conversor customizado** (opcional):
-```python
-// src/converters/csv_converter.py
-def convert_to_csv(vulnerabilities):
-    # Lógica de conversão
-    pass
-```
-
-3. **Atualize o perfil** para usar o novo conversor:
-```json
-{
-  "output_format": "csv",
-  "converter": "csv_converter"
-}
-```
-
 #### 🚀 **Exemplos práticos de extensão**
 
 **Exemplo 1: Adicionando Rapid7 Nexpose**
