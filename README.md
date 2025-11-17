@@ -227,40 +227,101 @@ python main.py relatorio_nessus.pdf --profile nessus
 
 ## 📖 Uso
 
-### Sintaxe básica:
+### Sintaxe completa:
 ```bash
-python main.py <caminho_do_pdf> [opções]
+python main.py <pdf_path> [opções]
 ```
 
-### Exemplos:
+### Argumentos obrigatórios:
+- `pdf_path` - Caminho para o arquivo PDF a ser processado
+
+### Opções de configuração:
+
+| Opção | Descrição | Padrão | Exemplo |
+|-------|-----------|--------|---------|
+| `--profile` | Perfil de configuração a usar | `default` | `--profile openvas` |
+| `--LLM` | Modelo LLM a usar | `gpt4` | `--LLM llama3` |
+
+### Opções de conversão de saída:
+
+| Opção | Descrição | Valores | Exemplo |
+|-------|-----------|---------|---------|
+| `--convert` | Formato de conversão da saída | `csv`, `xlsx`, `tsv`, `all`, `none` | `--convert csv` |
+| `--output` | Caminho específico do arquivo convertido | Caminho do arquivo | `--output relatorio.csv` |
+| `--output-dir` | Diretório para arquivos convertidos | Caminho do diretório | `--output-dir ./resultados` |
+| `--csv-delimiter` | Delimitador para arquivos CSV | `,` (vírgula) | `--csv-delimiter ";"` |
+| `--csv-encoding` | Codificação para arquivos CSV | `utf-8-sig` | `--csv-encoding utf-8` |
+
+### Exemplos de uso:
 
 #### Uso básico:
 ```bash
 python main.py relatorio.pdf
 ```
 
-#### Com perfil personalizado:
+#### Com perfil específico:
 ```bash
-python main.py relatorio.pdf --profile custom_profile
+python main.py relatorio.pdf --profile openvas
 ```
 
-#### Com path completo:
+#### Com modelo LLM específico:
 ```bash
-python main.py ".\WAS_Web_app_scan_Juice_Shop___bWAAP-2[1].pdf"
+python main.py relatorio.pdf --LLM deepseek
 ```
 
-#### Ajuda:
+#### Com conversão para CSV:
+```bash
+python main.py relatorio.pdf --convert csv
+```
+
+#### Com conversão para todos os formatos:
+```bash
+python main.py relatorio.pdf --convert all --output-dir ./resultados
+```
+
+#### Configuração completa:
+```bash
+python main.py "relatorio_vulnerabilidades.pdf" \
+  --profile tenable \
+  --LLM llama3 \
+  --convert xlsx \
+  --output "analise_final.xlsx" \
+  --output-dir "./exports"
+```
+
+#### CSV com configuração personalizada:
+```bash
+python main.py relatorio.pdf \
+  --convert csv \
+  --csv-delimiter ";" \
+  --csv-encoding "iso-8859-1" \
+  --output "relatorio_pt.csv"
+```
+
+#### Processamento em lote (múltiplos perfis):
+```bash
+# OpenVAS
+python main.py relatorio_openvas.pdf --profile openvas --convert all
+
+# Tenable
+python main.py relatorio_tenable.pdf --profile tenable --convert csv
+
+# Nessus (customizado)
+python main.py relatorio_nessus.pdf --profile nessus --LLM gpt4
+```
+
+### Fluxo de arquivos:
+
+1. **Entrada**: PDF especificado em `pdf_path`
+2. **Processamento**: Usando perfil e LLM configurados
+3. **Saída primária**: JSON conforme `output_file` do perfil
+4. **Conversões**: Formatos adicionais conforme `--convert`
+5. **Layout visual**: Arquivo `.txt` com layout preservado (mesmo diretório do PDF)
+
+### Ajuda:
 ```bash
 python main.py --help
 ```
-
-### Opções disponíveis:
-
-| Opção | Descrição |
-|-------|-----------|
-| `pdf_path` | Caminho para o arquivo PDF (obrigatório) |
-| `--profile`, `-p` | Perfil de configuração a usar |
-| `--help`, `-h` | Mostra ajuda |
 
 ## 📄 Formato de saída
 
