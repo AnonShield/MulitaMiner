@@ -45,7 +45,43 @@ pip install -r requirements.txt
 
 ## ⚙️ Configuração
 
-### 1. Arquivo config.json
+### 1. Arquitetura extensível
+
+A ferramenta foi projetada com uma arquitetura modular e extensível que permite personalização em três dimensões principais:
+
+#### 🧠 **Modelos LLM configuráveis**
+- Suporte a múltiplos provedores (OpenAI, Groq, Anthropic, etc.)
+- Configuração flexível de parâmetros (temperatura, tokens, endpoints)
+- Adaptação para diferentes capacidades de modelos
+
+#### ⚙️ **Perfis de processamento adaptáveis**
+- Configuração de tamanho de chunks conforme complexidade do relatório
+- Ajuste de sobreposição para diferentes tipos de documentos
+- Controle de duplicação e intervalos de processamento
+- Personalização de arquivos de saída
+
+#### 📋 **Templates de prompt customizáveis**
+- Templates específicos para diferentes ferramentas de segurança
+- Formatos de saída flexíveis (JSON estruturado, texto plano)
+- Mapeamento de campos específico por ferramenta
+- Facilidade para adicionar novos templates para outras ferramentas
+
+#### 🔧 **Como personalizar:**
+
+**Para novos tipos de relatório:**
+1. Crie um novo template em `src/configs/templates/`
+2. Configure um novo perfil em `src/configs/profile/`
+3. Ajuste os parâmetros conforme a estrutura do relatório
+
+**Para novos LLMs:**
+1. Configure endpoint e parâmetros em `src/configs/llms/`
+2. Ajuste temperatura e tokens conforme capacidades do modelo
+
+**Para novos formatos de saída:**
+1. Modifique o template de prompt para o formato desejado
+2. Ajuste os conversores em `src/converters/` se necessário
+
+### 2. Arquivo config.json
 
 Crie ou edite o arquivo `config.json` com suas configurações:
 
@@ -138,21 +174,77 @@ python main.py --help
 
 ## 📄 Formato de saída
 
-A ferramenta gera um arquivo JSON com as vulnerabilidades encontradas:
+A ferramenta gera um arquivo JSON com as vulnerabilidades encontradas. O formato completo inclui campos específicos para diferentes tipos de relatórios:
+
+### Estrutura JSON de saída:
 
 ```json
 [
   {
-    "name": "SQL Injection",
-    "plugin_id": "9",
-    "Description": "The web application is vulnerable to SQL injection attacks.",
-    "severity": "High",
-    "solution": "Implement proper input validation and sanitization.",
-    "Risk Information": "An attacker can exploit this vulnerability to gain unauthorized access.",
-    "Reference Information": "https://owasp.org/www-community/attacks/SQL_Injection"
+    "Name": "SQL Injection",
+    "description": ["Detailed description of the vulnerability"],
+    "detection_result": ["Vulnerability detection result (OpenVAS only)"],
+    "detection_method": ["Vulnerability detection method (OpenVAS only)"],
+    "impact": ["Impact description (OpenVAS only)"],
+    "solution": ["Recommended solutions"],
+    "insight": ["Vulnerability insight (OpenVAS only)"],
+    "product_detection_result": ["Product detection result (OpenVAS only)"],
+    "log_method": ["Log method (OpenVAS only)"],
+    "cvss": [
+      "CVSSV4 BASE SCORE - number",
+      "CVSSV4 VECTOR - string",
+      "CVSSv3 BASE SCORE - number", 
+      "CVSSv3 VECTOR - string",
+      "CVSSv2 BASE SCORE - number",
+      "CVSS BASE SCORE - number",
+      "CVSS VECTOR - string"
+    ],
+    "port": "80",
+    "protocol": "tcp",
+    "severity": "HIGH",
+    "references": ["List of references"],
+    "plugin": ["Plugin details (Tenable WAS only)"],
+    "source": "OPENVAS"
   }
 ]
 ```
+
+### Mapeamento de campos por ferramenta:
+
+| Campo | OpenVAS | Tenable WAS | Ambos | Descrição |
+|-------|---------|-------------|-------|-----------|
+| `Name` | ✅ | ✅ | ✅ | Nome da vulnerabilidade |
+| `description` | ✅ | ✅ | ✅ | Descrição detalhada |
+| `detection_result` | ✅ | ❌ (null) | ❌ | Resultado da detecção (apenas OpenVAS) |
+| `detection_method` | ✅ | ❌ (null) | ❌ | Método de detecção (apenas OpenVAS) |
+| `impact` | ✅ | ❌ (null) | ❌ | Impacto da vulnerabilidade (apenas OpenVAS) |
+| `solution` | ✅ | ✅ | ✅ | Soluções recomendadas |
+| `insight` | ✅ | ❌ (null) | ❌ | Insights da vulnerabilidade (apenas OpenVAS) |
+| `product_detection_result` | ✅ | ❌ (null) | ❌ | Resultado detecção do produto (apenas OpenVAS) |
+| `log_method` | ✅ | ❌ (null) | ❌ | Método de log (apenas OpenVAS) |
+| `cvss` | ✅ | ✅ | ✅ | Scores CVSS (múltiplas versões) |
+| `port` | ✅ | ✅ | ✅ | Porta da vulnerabilidade |
+| `protocol` | ✅ | ✅ | ✅ | Protocolo (tcp/udp) |
+| `severity` | ✅ | ✅ | ✅ | Severidade (LOG/LOW/MEDIUM/HIGH/CRITICAL) |
+| `references` | ✅ | ✅ | ✅ | Referências e links |
+| `plugin` | ❌ (null) | ✅ | ❌ | Detalhes do plugin (apenas Tenable WAS) |
+| `source` | ✅ | ✅ | ✅ | Fonte do relatório (OPENVAS/TENABLEWAS) |
+
+### Campos específicos por ferramenta:
+
+#### OpenVAS exclusivos:
+- `detection_result` - Resultado da detecção da vulnerabilidade
+- `detection_method` - Método usado para detectar a vulnerabilidade  
+- `impact` - Descrição do impacto da vulnerabilidade
+- `insight` - Insights sobre a vulnerabilidade
+- `product_detection_result` - Resultado da detecção do produto
+- `log_method` - Método de logging utilizado
+
+#### Tenable WAS exclusivos:
+- `plugin` - Informações detalhadas do plugin
+
+#### Campos compartilhados:
+- `Name`, `description`, `solution`, `cvss`, `port`, `protocol`, `severity`, `references`, `source`
 
 ## 🔧 Resolução de problemas
 
