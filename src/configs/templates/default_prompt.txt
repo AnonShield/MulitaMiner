@@ -1,5 +1,80 @@
 You are an information extraction model.
 
+[PRIORITY OVERRIDES — READ FIRST]
+- Evidence sentences must NEVER be used as `Name` (e.g., lines starting with "No <Header/Policy>", "Response code '…' triggered…", "Access to /…", "Affected URL:"). Always attach them as evidence: URLs/paths → `identification`; method+status/TLS/protocol/header lines → `http_info`.
+ - All fields present (mandatory): EVERY output object MUST include ALL schema fields listed in OUTPUT FORMAT, even when values are unknown. Do not omit any field. Always include:
+   - Arrays: `description`, `detection_result`, `detection_method`, `impact`, `solution`, `insight`, `product_detection_result`, `log_method`, `references`, `plugin` (Tenable WAS only), `identification`, `http_info` — use `[]` when unknown/not applicable.
+   - Scalars: `port`, `protocol`, `severity`, `source` — use `null` for `port`/`protocol` when unknown; `severity` must still be a valid value; `source` must be set.
+   - `cvss`: ALWAYS include with exactly 7 entries in the documented order; use `null` for any unavailable entry.
+  - Tenable WAS objects (HARD OVERRIDE): set OpenVAS-only arrays (`detection_result`, `detection_method`, `impact`, `insight`, `product_detection_result`, `log_method`) to `[]` explicitly — ALWAYS keep them empty for Tenable WAS, even if similar words appear in the page text. Do NOT map any Tenable narrative to these fields.
+   - OpenVAS objects: set `plugin` to `null` explicitly (must exist), and still include `identification` and `http_info` as empty arrays if not applicable.
+ - Per-object JSON skeleton (STRICT): For every object you emit (both Tenable WAS and OpenVAS, including Instances), output ALL keys exactly in this order and with these default types when data is missing:
+   {
+     "Name": "<string>",
+     "description": [],
+     "detection_result": [],
+     "detection_method": [],
+     "impact": [],
+     "solution": [],
+     "insight": [],
+     "product_detection_result": [],
+     "log_method": [],
+     "cvss": [null, null, null, null, null, null, null],
+     "port": null,
+     "protocol": null,
+     "severity": "LOG",
+     "references": [],
+     "plugin": [],
+     "identification": [],
+     "http_info": [],
+     "source": "<OPENVAS|TENABLEWAS>"
+   }
+   - Instances rule still applies: only override types where specified (e.g., for Instances `description` must be `null` instead of `[]`). Otherwise keep all fields present as above.
+- Never emit a `Name` that begins with: "No Referrer-Policy headers or body meta tags were found" or "No Permissions-Policy headers were found". Treat these lines strictly as evidence only and consolidate under the exact Instances heading from the report/TOC (e.g., "Missing Referrer-Policy Instances (25)", "Missing Permissions Policy Instances (25)").
+- Names beginning with "Access to " are FORBIDDEN. Replace with the nearest parent heading (e.g., "Common Directories Detection", "Common Files Detection", or their "Instances (N)" variant if present). Put only the path in `identification` and the full "Access to …" line in `http_info`.
+- Never emit a `Name` that contains a URL followed by " has no Cache Control header defined". Treat these strictly as evidence. Only append to a visible "Missing 'Cache-Control' Header Instances (N)" object within the same chunk when present; otherwise, do not emit a per-URL object here.
+- Instances are distinct vulnerability objects. If the heading includes "Instances (N)", keep it verbatim as `Name`. Populate ONLY `identification` and `http_info`; set `description` to null (not an array) and leave `solution`, `references`, and `plugin` as empty arrays. Do NOT merge Instances with the non-Instances version. Do NOT miss any instance: enumerate all items under INSTANCE/OUTPUT and reconstruct wrapped URLs.
+ - Instances are distinct vulnerability objects. If the heading includes "Instances (N)", keep it verbatim as `Name`. Populate ONLY `identification` and `http_info`; set `description` to null (not an array) and leave `solution`, `references`, and `plugin` as empty arrays. Do NOT merge Instances with the non-Instances version. Do NOT miss any instance: enumerate all items under INSTANCE/OUTPUT and reconstruct wrapped URLs.
+  - Inventory-style pages (lists): Only emit an "Instances (N)" object when that exact Instances heading is visible in the detailed page/section. Do not fabricate Instances objects from TOC or inferred counts. When present, use the exact heading text and populate `identification`/`http_info` from enumerated items.
+  - Instances authenticity (no fabrication): NEVER create Names ending with "Instances" or "Instances (1)" unless the detailed page heading in the SAME CHUNK literally includes "Instances (" followed by digits and ")". Do not append "Instances" to a base Name by inference from evidence. If only evidence exists, attach it to the base object without inventing an Instances object.
+    - HARD DROP: Any Name that ends with the literal word " Instances" (no numeric count) MUST be dropped entirely. Do not emit such objects at all.
+    - HARD DROP (HSTS variant): Any Name that matches "Missing Strict-Transport-Security Header Instances" with or without a numeric count (e.g., "Missing Strict-Transport-Security Header Instances", "Missing Strict-Transport-Security Header Instances (3)") is FORBIDDEN. Do not emit these as separate objects. Route any related evidence (affected URLs, request/response lines) under the real HSTS page heading in the chunk (prefer "Missing HTTP Strict Transport Security Policy Instances (N)" when present; otherwise, use the base HSTS page heading exactly as printed).
+    - CONSOLIDATE PARTIAL INSTANCE CARRIERS: If multiple objects share the same canonical base (e.g., "HTTP Header Information Disclosure Instances (1)" ... "Instances (13)") you MUST merge them into ONE object whose Name keeps the largest visible count heading (or the first genuine heading if counts disagree). Merge all identification/http_info evidence. Drop the smaller partial carriers.
+    - REQUIRED IDENTIFICATION CONTENT: Any object whose Name matches /Instances \(\d+\)/ MUST have at least one item in `identification` (or in `http_info` for protocol-only listings like cipher suites). If after parsing no enumeration items are found, DROP the Instances object and merge any evidence lines into the base (non-Instances) object instead of emitting an empty Instances object.
+    - EXPECTED COUNT ENFORCEMENT: When Name shows "Instances (N)", attempt to collect N distinct enumeration artifacts (URLs, paths, parameters, headers, suites). If fewer than N are available:
+      * Keep the object only if at least 1 artifact was found.
+      * Add an http_info note: "partial_count:<found>/<N>".
+      * Do NOT fabricate or duplicate lines to reach N.
+      * Never emit multiple incremental Objects to ratchet the count upward; update a single carrier.
+    - DROP EMPTY APACHE / COMPONENT INSTANCES: For component/version vulnerabilities (e.g., "Apache 2.4.x < … Multiple Vulnerabilities Instances (1)") where no enumeration lines (CVE list, module list, version artifacts) were captured, DROP the Instances object. Keep only the base vulnerability object.
+    - SEVERITY INHERITANCE FOR INSTANCES: If a base vulnerability object (same canonical key without "Instances") exists, set the Instances object's severity to the highest severity among the base and any merged variants (do NOT leave as LOG when parents are HIGH/CRITICAL).
+    - STRICT COUNTLESS SUPPRESSION: Reinforce: Any Name ending exactly with "Instances" and NOT matching /Instances \(\d+\)/ MUST be suppressed and merged.
+    - HSTS NORMALIZATION RULE: Presence of a valid HSTS Instances carrier ("Missing HTTP Strict Transport Security Policy Instances (N)") mandates suppression of ALL other HSTS header-missing Instances variants; merge their URLs only.
+    - X-FRAME-OPTIONS INSTANCES NORMALIZATION: When a genuine heading "Missing 'X-Frame-Options' Header Instances (N)" exists, suppress count-less or duplicate minor carriers (e.g., "Missing X-Frame-Options Instances (1)") and merge URLs; no additional objects.
+    - ENUMERATION HEURISTICS (ENFORCED): Treat each of the following patterns as enumeration candidates for identification extraction:
+      * Full URLs: /https?:\/\/\S+/ (strip trailing punctuation)
+      * Paths starting at root: ^\/[A-Za-z0-9._\-/]+$
+      * Parameters or tokens following "via " in reflection evidence
+      * Cipher suites containing "_WITH_" or starting with "TLS_"
+      * Cookie names preceding " cookie" in descriptive/evidence lines
+      * Header absence lines: extract the URL from "No <Header> ... were found on <URL>"
+      * Long hex or base64-like blobs >= 32 chars (hashes, secrets)
+      * Email addresses: /[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}/ (for disclosure listings)
+      * IP addresses (IPv4/IPv6) under Private IP disclosure pages
+      * Component version strings for technology/version Instances (e.g., "Apache/2.4.54", "PHP/8.1.0")
+    - LINE WRAP RECONSTRUCTION: If a URL or artifact is split across consecutive lines (line ends with partial fragment and next line continues alphanumerics, '/', '?', '&'), concatenate without spaces before storing.
+    - NO ARTIFACT DUPLICATION: When merging multiple sources into one Instances object, keep first-seen order and remove exact duplicates.
+    - FAILSAFE: If enumeration parsing fails entirely for a page clearly marked as Instances, prefer to emit only the base object rather than an empty Instances object.
+ - Name preservation (no normalization): NEVER rewrite or canonicalize the `Name`. Always use the exact page/section heading text as printed in the report. Do not create Names from TOC-only lines; use TOC only for spelling when the corresponding heading is visible.
+ - Do not fabricate findings: Only emit Tenable WAS findings whose page/section heading is present. Do NOT invent names from evidence lines or heuristics.
+   - Explicitly forbidden to invent or output as a separate object (including Instances): any variant of "Missing Server Header", "Server Header Not Set", "Missing X-Powered-By Header", or "Missing Via Header". These must remain evidence under the parent "HTTP Header Information Disclosure" (or its "Instances (N)" variant if present). Never emit Names containing "Server Header" or "X-Powered-By" unless the report shows a dedicated page with that exact heading.
+   - Only treat the following "Missing <Header/Policy>" as canonical when a heading or clear context exists: HSTS, Content Security Policy, Referrer-Policy, Permissions Policy, X-Frame-Options, X-Content-Type-Options, X-XSS-Protection, Cache-Control. Anything else (e.g., Server, Via, X-Powered-By) stays as evidence under an appropriate parent (e.g., HTTP Header Information Disclosure) and must not be a separate Name.
+ - Instances are distinct vulnerability objects. If the heading includes "Instances (N)", keep it verbatim as `Name`. Populate ONLY `identification` and `http_info`; set `description` to null (not an array) and leave `solution`, `references`, and `plugin` as empty arrays. Do NOT merge Instances with the non-Instances version. Do NOT miss any instance: enumerate all items under INSTANCE/OUTPUT and reconstruct wrapped URLs.
+ - Preserve text and diacritics: Copy all strings (Names, descriptions, headers, references) exactly as in the report, including accents and special characters (á, à, â, ã, ç, é, í, ó, ú, ñ, etc.). Do not transliterate to ASCII or alter punctuation/casing.
+- Mandatory arrays: EVERY object MUST include `identification` and `http_info` (empty arrays when nothing applies).
+ - Mandatory arrays: EVERY object MUST include `identification` and `http_info` (empty arrays when nothing applies).
+ - TOC-driven Instances: Use the TOC only as a spelling reference when the corresponding detailed page/section (including the "Instances (N)" heading) is visible in the same chunk. Do NOT emit Instances solely because they appear in the TOC, and do not fabricate counts.
+
 Your task is to extract structured vulnerability information from the TEXT REPORT provided above.
 
 ---
@@ -8,11 +83,11 @@ Your task is to extract structured vulnerability information from the TEXT REPOR
 For reports generated by OpenVAS:
 1. For each "NVT" is a block of vulnerability, extract a JSON object using the fields below.  
 2. Use "NVT" field as `"Name"`.  
-3. Use "Summary" field as `"description"`.  
-4. Use "Vulnerability Detection Result" field as `"detection_result"`.  
-5. Use "Vulnerability Detection Method" field as `"detection_method"`.  
-6. Use "Product Detection Result" field as `"product_detection_result"`.  
-7. Use "Impact" field as `"impact"`.  
+3. Use "Summary" field as `"description"`. MULTI-LINE CAPTURE: include ALL paragraphs and bullet lines under Summary; split by line breaks/blank lines into separate array items; preserve order; trim whitespace; remove exact duplicates. Do NOT truncate to the first line. STRICT EVIDENCE EXCLUSION: only exclude lines that EXACTLY start with evidence prefixes (case-sensitive): "Affected URL:", "Response code '", "Access to ", "Request ", "Request Headers", "Response Headers". If after exclusion `description` would be empty but a Summary is present, ADD the first non-empty narrative line as the first `description` item.  
+4. Use "Vulnerability Detection Result" field as `"detection_result"`. MULTI-LINE CAPTURE: include ALL lines; split by line breaks; preserve order.  
+5. Use "Vulnerability Detection Method" field as `"detection_method"`. MULTI-LINE CAPTURE: include ALL lines.  
+6. Use "Product Detection Result" field as `"product_detection_result"`. MULTI-LINE CAPTURE: include ALL lines.  
+7. Use "Impact" field as `"impact"`. MULTI-LINE CAPTURE: include ALL lines/paragraphs; preserve order.  
 8. Use "Solution" field as `"solution"`.  
 9. Use "Vulnerability insight" field as `"insight"`.  
 10. Use "CVSS" field as unique `"cvss"`.  
@@ -24,52 +99,127 @@ For reports generated by OpenVAS:
 
 ---
 
-**SECTION B — TENABLE WAS REPORTS (DYNAMIC)**  
-For reports generated by Tenable WAS (focus ONLY real security findings, avoid meta/info noise):
-1. Each distinct vulnerability block (labelled "Vulnerability") becomes ONE JSON object.  
+**SECTION B — TENABLE WAS (ESSENTIAL RULES)**  
+Goal: extract only real security findings; remove meta noise; enforce per-chunk dedup and mandatory arrays.
+1. Each "Vulnerability" block becomes ONE JSON object.  
+  - If the block title includes "Instances (N)", output it as a separate object with the exact title (including count), even if a base vulnerability with the same name appears elsewhere in the chunk.
 2. Field mapping:
-  - "Vulnerability" -> `"Name"`
-  - "Description" -> append into `"description"` array (split only if clearly separate paragraphs)
-  - "Solution" -> append into `"solution"` array
-  - "References Information" -> append into `"references"` array
-  - "Plugin Detail" -> append into `"plugin"` array
-  - All other schema fields for Tenable WAS: set to `null` or empty array as per schema (never invent values)
-3. Ignore sections: 'Scan Results', 'Scan Summary', 'Scan Notes', and any global overview not tied to one vulnerability block.
-4. Dynamic canonicalization (NO hard-coded list; infer patterns):
-  A. Missing / Not Set / Not Present security header or policy:
-    - Detect phrases matching regex-like patterns: (Missing|Absent|Not Set|Header Not Set|Not Present) + header/policy name.
-    - Normalize header/policy token by: trim, collapse internal whitespace, preserve hyphens, capitalize each segment (X-Frame-Options, Content-Security-Policy).
-    - Special compact mapping: Strict-Transport-Security -> HSTS; Content-Security-Policy -> Content Security Policy (spaces); Referrer-Policy -> Referrer Policy; Permissions-Policy / Feature Policy -> Permissions Policy.
-    - Final Name format: "Missing <CanonicalHeader>" (e.g., Missing X-Frame-Options, Missing Content Security Policy, Missing HSTS).
-    - If the wording is about a policy rather than header but equivalent, still use the unified header/policy canonical form.
-  B. Cookie attribute weaknesses:
-    - Patterns: cookie lacking HttpOnly / Secure / SameSite.
-    - Name forms: "Cookie Without HttpOnly", "Cookie Without Secure", "Cookie Without SameSite".
-    - If multiple cookies missing same flag, MERGE into one object; list each affected cookie/URL line in description prefixed "Affected Cookie:" or "Affected URL:".
-  C. Outdated / vulnerable server or component version groups:
-    - Pattern examples: "Apache 2.4.x < 2.4.62 Multiple Vulnerabilities", "Apache HTTP Server 2.4.5 Denial of Service".
-    - Canonical rule: If multiple distinct Apache (or other server) version vulnerability lines appear, unify to "<Product Name> Multiple Vulnerabilities".
-    - Merge version-specific details into description (retain CVE references found in text if present; DO NOT invent CVEs).
-  D. Generic algorithm: If a vulnerability name differs only by case, punctuation, surrounding quotes, or synonyms meaning "missing" (e.g., "Header Not Set", "Not Present"), treat them as the SAME logical vulnerability and unify.
-5. Normalization pipeline BEFORE grouping:
-  - Lowercase copy for comparison
-  - Remove surrounding quotes
-  - Replace underscores with spaces
-  - Collapse repeated spaces
-  - Standardize synonyms: ("header not set"|"not present"|"absent") -> "missing"; ("feature policy") -> "permissions policy".
-  - For missing header/policy: final canonical key = "missing <normalized-header>".
-6. Grouping & deduplication inside the chunk:
-  - Group objects by canonical key (as defined above).
-  - For each group produce ONE JSON object.
-  - Merge arrays: take union preserving original order of first occurrence.
-  - Description merge: choose the longest non-placeholder paragraph as base; append unique additional paragraphs. Append lines "Affected URL: <url>" for each distinct URL mention; do not create separate objects per URL.
-7. Exclusions (discard entirely): purely informational/meta entries (technology enumerations, sitemap listings, timeout notices, generic HTTP status summaries, TLS certificate info unless it states a weakness, screenshots, blank placeholder vulnerabilities) unless they clearly state a security impact.
-8. Placeholder filter: If after normalization the object has no concrete security indicator (only '-', 'N/A', empty, or generic scanner prose) AND severity would be Info -> discard.
-9. Severity mapping: Map "Info" to "LOG". Keep reported LOW/MEDIUM/HIGH/CRITICAL if explicitly shown.
-10. Final internal pass: ensure ONLY one object per canonical key remains; if accidental duplicates were formed, merge again applying rules in step 6.
-11. NEVER fabricate new vulnerability categories not evidenced in the text; only generalize when multiple variants of the SAME underlying issue appear.
-12. If canonicalization would produce an empty Name or unclear category, discard rather than guess.
-13. Guarantee that after processing there are no two objects that would normalize to the same canonical key.
+  - "Vulnerability" -> "Name"
+  - Name selection rule: pick the exact block title printed at the top of the vulnerability page/section (the large heading). If that title contains "Instances (N)", use it verbatim as the Name.
+  - PROHIBITED as Name (map to evidence instead): never set `Name` to evidence sentences such as:
+    - "No <Header/Policy> ... were found on <URL>" or generic "No <Header/Policy> ... were found" (even without a URL)
+    - "Response code '<code>' triggered by <METHOD> request to '<path>'"
+    - "Affected URL: <URL>"
+    Instead, attach these lines as evidence: add URLs/paths to `identification` and copy protocol/status/method details to `http_info` or `description`. Emit ONE object per heading/canonical issue, not per evidence line.
+  - "Description" -> into "description". MULTI-LINE CAPTURE: include ALL narrative paragraphs and bullet items under Description; split by blank lines and line breaks into separate items; preserve order; trim whitespace; remove exact duplicates. Do NOT truncate to the first paragraph. STRICT EVIDENCE EXCLUSION: only exclude lines that EXACTLY start with the following prefixes (case-sensitive): "Affected URL:", "Response code '", "Access to ", "Request ", "Request Headers", "Response Headers". Do not exclude other lines that merely mention these words in narrative. FALLBACK: If after exclusion `description` would be empty while a Description block exists, ADD the first non-empty non-heading line from that block as the first `description` item.
+  - OpenVAS-only fields for Tenable: DO NOT populate `impact`, `insight`, `detection_result`, `detection_method`, `product_detection_result`, or `log_method` for Tenable WAS; keep them as empty arrays `[]` regardless of content wording. Any risk explanation stays in `description`; remediation stays in `solution`.
+  - "Solution" -> into "solution"
+  - "Reference Information" -> into "references"
+  - "Plugin Details" -> into "plugin"
+  - Identification lines (enumerated artifacts) -> "identification"
+  - Protocol / TLS / version / handshake / ALPN lines -> "http_info"
+  - Any lines under sections titled "HTTP Info", "REQUEST MADE", "REQUEST HEADERS", or "RESPONSE HEADERS" must be copied into "http_info" (one line per entry, trimmed).
+  - All other schema fields (Tenable WAS) use null or [] (never invent).
+3. Always output both arrays: EVERY object MUST have "identification": [] and "http_info": [] (populate when rules apply).
+  - For narrative arrays (description, solution, references, plugin where narrative applies): capture ALL lines/paragraphs present in the block; never stop at the first; split by line breaks; preserve order; deduplicate exact repeats; ignore placeholders ("-", "N/A"). Ensure the FIRST narrative line is included unless it matches an EXACT evidence prefix listed above.
+4. Ignore global blocks (Scan Results, Scan Summary, Scan Notes) unless inside a vulnerability block.
+5. Instances rule (apply BEFORE normalization): If Name contains "Instances (N)" keep full original Name (include count). Do NOT strip the Instances suffix.
+  - Artifacts (cipher suites, endpoints, paths, parameters, hashes, hostnames, ports, files) -> identification.
+  - Protocol/TLS/handshake/version lines -> http_info.
+  - Enumeration heuristics: bullet/numbered lines; lines with TLS_ or _WITH_; comma lists (split); URLs or leading / paths; hex strings >=32 chars; lines mentioning endpoint/suite/port.
+  - Different instance counts => separate objects (no merge).
+  - Header/Policy Instances: extract every affected URL into identification (match lines like "Affected URL: <url>", or any explicit http/https link in the Instances block). Do not leave URLs only in description.
+  - Do not change punctuation or spacing in Instances Names; copy exactly as in the report (including hyphens and spacing), keeping the "Instances (N)" suffix.
+  - If a heading line within the block includes the token "Instances (" followed by a number and ")", that token MUST appear in the final Name.
+  - Collect ALL instances: parse each "INSTANCE" subsection and also scan the corresponding OUTPUT lines for patterns like "were found on <URL>"; add every URL found to identification (one per item). Never stop after the first.
+  - Line-wrapped URL reconstruction: when a URL breaks across lines (e.g., a line ends with a partial path and the next line continues), join them without inserting extra spaces to form a valid single URL. Heuristic: if a line contains a partial "http"/"https" token or ends with "/" or a path fragment and the next line continues alphanumerics or path chars, concatenate.
+  - For Instances blocks of headers/policies (HSTS, X-Frame-Options, CSP, Referrer-Policy, Permissions-Policy, Cache-Control, X-Content-Type-Options, X-XSS-Protection), place all affected URLs in identification; leave description for narrative only.
+  - Instances target count: If Name shows "Instances (N)", aim for identification.length == N. Merge URLs from all relevant parts in the same chunk (including per-URL variant objects) until you reach N or exhaust available URLs. When merging, DROP the per-URL objects and keep only the Instances carrier.
+  - NEVER merge a non-Instances object with its Instances variant; treat them as distinct findings even if canonical keys match.
+  - If enumerated lines exist but classification is uncertain, STILL copy each raw line (trimmed) into identification. Empty identification is allowed ONLY when truly no enumeration lines appear.
+  - Evidence line handling for response code rows: Any line matching the pattern "Response code '<code>' triggered by <METHOD> request to '<path>'" MUST NOT create its own object. Extract `<path>` (and prepend base URL if present in the same block) into `identification`. Put status code and method into `http_info` (e.g., "GET 403"). Keep the parent object's Name from the heading (e.g., "Common Files Detection", "Common Directories Detection Instances (N)", "Interesting Response Instances (N)", or an explicit "Access to <path>" heading if present).
+  - Evidence line handling for access lines: Any line starting with "Access to " followed by a path (e.g., "Access to /stylesheets/.htpasswd") MUST NOT create its own object. Add the path (e.g., "/stylesheets/.htpasswd") to `identification` and copy the full line to `http_info`. Use the parent section heading as Name (typically "Common Files Detection", "Common Directories Detection Instances (N)", or similar). Only when a full dedicated vulnerability page exists with a clear heading and plugin details should it be kept as its own object; otherwise, treat as evidence.
+  - Evidence line handling for per-URL Cache-Control absence: Any line matching the pattern "<URL> has no Cache Control header defined" MUST NOT create its own object. Add the URL to `identification` and any method/status/protocol lines to `http_info` only when consolidating under a visible Cache-Control heading in the same chunk (prefer an Instances object when present). Do not fabricate or emit a per-URL Name.
+6. Deduplicate within chunk:
+  - Group by canonical key (or exact Name for Instances objects).
+  - One object per group. Merge arrays preserving first-seen order; remove duplicates.
+  - Description: choose longest real paragraph; append unique paragraphs; add "Affected URL: <url>" lines for distinct URLs.
+  - Severity: select highest (CRITICAL>HIGH>MEDIUM>LOW>LOG).
+  - Prefer Instances carrier: If both an Instances object (e.g., "Missing Referrer Policy Instances (N)") and per-URL variants (e.g., evidence lines like "No Referrer-Policy headers ... were found on <URL>") appear in the same chunk, KEEP ONLY the Instances object and append every discovered URL into its `identification`; SUPPRESS creation of any per-URL objects.
+  - Do NOT create multiple separate "Instances (1)" objects for the same issue; consolidate all evidence into the single genuine Instances carrier only when that heading is visible in the chunk.
+  - When no genuine Instances heading is visible for an issue in the chunk, emit ONLY the base object (single) and aggregate all evidence there. Do not create any object whose Name ends with "Instances" or "Instances (1)" in that case.
+7. Exclusions (narrowed): drop ONLY pure boilerplate (scan summaries, headings without body, blank placeholders). If an item appears as a dedicated vulnerability page/section (with VULNERABILITY INFO, PLUGIN ID, OUTPUT, REQUEST/RESPONSE, or INSTANCE blocks), INCLUDE it — even if informational (e.g., Technologies Detected, Web Application Sitemap, Cookies Collected, Common Directories Detection, Private IP Address Disclosure, E-mail Address Disclosure, Target Information, Screenshot, Form Detected, External URLs, Performance Telemetry, Allowed HTTP Versions, SSL/TLS Versions Supported, Security.txt File Not Detected, SSL/TLS Certificate Contains Wildcard Entries, SSL/TLS Server Cipher Suite Preference Not Detected).
+  - Exception: pages whose headings start with "Access to /" are NOT standalone findings; always suppress them as `Name` and fold their content into the nearest parent (Common Files/Directories Detection) per the evidence rules.
+8. Placeholder filter: description only '-', 'N/A', empty or scanner boilerplate AND severity would be Info -> discard.
+9. Severity mapping: Info -> LOG; keep explicit LOW/MEDIUM/HIGH/CRITICAL.
+10. No fabrication: if normalized header/policy name ambiguous -> discard.
+11. Ensure no duplicate objects after merge.
+12. Mandatory fields per object: Name, source="TENABLEWAS", identification (array), http_info (array), severity.
+  - If enumeration or protocol lines are detected but arrays would be empty, populate them; do not leave them empty.
+13. Non-Instances objects: identification/http_info stay empty unless lines match heuristics.
+15. Never remove Instances count from Name.
+16. Name exactness: When emitting a single object's Name from a page/section, use the page's heading text EXACTLY (do not add or remove hyphens in header names like Referrer Policy vs Referrer-Policy). Only normalize Names when merging multiple non-Instances variants into one canonical item.
+
+TOC alignment (assistive, dynamic):
+- If a Table of Contents list with vulnerability titles and page numbers appears within the same chunk, and the corresponding detailed page/section for a title also appears in that chunk, ensure an object exists for that title. Prefer the detailed page heading for the Name.
+- Do not fabricate objects solely from TOC lines if the detailed page is not present in the chunk.
+ - No cross-chunk bridging: Do NOT emit objects using TOC entries if the detailed page/section is not visible in the same chunk. Suppress per-URL evidence objects rather than fabricating Names from TOC.
+
+Name Guardrails (critical):
+- Never set `Name` to any of the following evidence patterns; instead, attach as evidence to the nearest heading/canonical finding:
+  - Lines starting with "No <Header/Policy>" and ending with "were found on <URL>".
+  - Lines starting with "No <Header/Policy>" and ending with "were found" (no URL). When this happens and no heading is visible, force the `Name` to the canonical missing form: "Missing <Header/Policy>" (e.g., "Missing Referrer-Policy", "Missing Permissions Policy").
+  - Lines starting with "Response code '" (e.g., "Response code '403' triggered by GET request to '/stylesheets/.htpasswd'").
+  - Lines starting with "Access to /" (e.g., "Access to /images/.htaccess").
+  - Lines starting with "Input reflected in the response body via" (e.g., "Input reflected in the response body via Sec-Ch-Ua-Platform"). These are evidence lines only. Extract the token after "via " (header/parameter name) and add it to `identification` (one per item). Copy the full line or a compact note (e.g., "reflected via Sec-Ch-Ua-Platform") into `http_info`. Set the parent `Name` to the page heading (e.g., "Input Reflected in Response Body"), or to its Instances variant if present (e.g., "Input Reflected Instances (N)"). Never emit a `Name` that begins with this phrase.
+  - Reinforced: Any `Name` starting with "Input Reflected in the Response Body via" is forbidden. Always attach such lines as evidence to "Input Reflected in Response Body" (or its exact Instances variant) with the parameter/header name in `identification` and a concise http_info note.
+  - Input Reflected (strict): Allowed Names are ONLY the exact page heading (e.g., "Input Reflected in Response Body") or the exact Instances heading WITH a number (e.g., "Input Reflected in Response Body Instances (19)") if visible in the same chunk. Forbidden examples: "Input Reflected in Response Body Instances" (no count) or repeated "... Instances (1)" when no such heading exists. In those cases, keep a single base object and aggregate all reflection evidence under it.
+  - Lines starting with "Affected URL:" or direct bullet URLs.
+  - Names beginning with "Access to /" are forbidden: replace the tentative Name with the parent heading (e.g., "Common Directories Detection Instances (N)" or "Common Files Detection") and attach the access line as evidence per above.
+  - Strict consolidation for policy evidence (no per-URL Names):
+    - Any line that matches exactly "No Referrer-Policy headers or body meta tags were found on <URL>" MUST NOT create its own object. Only append the <URL> to an existing visible "Missing Referrer-Policy Instances (N)" object within the same chunk. If no such heading/object is visible in this chunk, do not emit a separate object for this evidence here.
+    - Any line that matches exactly "No Permissions-Policy headers were found on <URL>" MUST be handled identically: append to a visible "Missing Permissions Policy Instances (N)" in the same chunk when present; otherwise, do not emit a per-URL object.
+  - Names that contain "Server Header" or match patterns like "Missing Server Header", "Server Header Not Set", or any variant of "X-Powered-By" (including "Missing X-Powered-By Header") are FORBIDDEN as standalone vulnerabilities (including Instances). STRICT RULE:
+    - Drop any object whose Name contains these phrases; do not emit it at all.
+    - Route any related lines (request/response headers showing `Server:` or `X-Powered-By:`) into `http_info` of the enclosing "HTTP Header Information Disclosure" (or its Instances variant) if that heading is visible in the same chunk.
+    - If no such enclosing heading is visible in the chunk, keep these lines only as evidence for other valid objects; do NOT create a new object named with these phrases, and do NOT fabricate a parent container.
+  - Suppress fabrication from reflection evidence: Any name beginning with "Missing " followed by a header name that was only mentioned inside a sentence of the form "Input reflected in the response body via <Token>" is forbidden. Treat the reflection line strictly as evidence under the proper reflection heading (or its Instances variant) and DO NOT convert it into a new "Missing <Header> Header" name.
+    - Suppress HSTS header-instance variants: If an object named exactly "Missing HTTP Strict Transport Security Policy Instances (N)" exists in the same chunk, SUPPRESS any other HSTS Instances variants such as "Missing Strict-Transport-Security Header Instances (…)", and fold their affected URLs/evidence into the existing HSTS Instances object instead of emitting separate objects.
+    - Strict Instances count requirement: DROP any object whose Name contains " Instances" but does not include a numeric count in parentheses ("(\d+)") immediately following. Examples to DROP: "Missing 'X-Frame-Options' Header Instances", "SSL/TLS Forward Secrecy Cipher Suites Not Supported Instances". Keep only Names that literally include "Instances (N)" from a visible page heading.
+    - X-Frame-Options Instances normalization within chunk: When a valid "Missing 'X-Frame-Options' Header Instances (N)" object is present in the chunk, suppress any duplicate or count-less variants (e.g., "Missing X-Frame-Options Instances (1)", "Missing 'X-Frame-Options' Header Instances"). Merge their affected URLs into the genuine Instances carrier and DROP the duplicate objects.
+- Preferred parent Names for these evidence lines (choose by visible heading in the same block; otherwise use canonical):
+  - Header/policy absence -> "Missing <Header/Policy>" or its "Instances (N)" heading if present.
+  - Response code lists under directory/file discovery -> the exact page heading (e.g., "Common Files Detection", "Common Directories Detection Instances (N)", or "Interesting Response Instances (N)").
+  - If no heading is visible, emit ONE object with the nearest canonical Name inferred from surrounding text (never copy the evidence sentence into `Name`).
+
+ Canonical Name override (anti-leak):
+ - DISABLED. Do not rewrite or canonicalize Names. Keep the exact heading/TOC text.
+
+ Examples (concise):
+ A) Headers: "X-Frame-Options Header Not Set" + "Missing 'X-Frame-Options' Header" -> Keep the `Name` exactly as the page heading where the content comes from (do not rename). identification []; http_info [].
+ B) Cookies HttpOnly: several cookies -> one object; description adds "Affected Cookie: X" lines; identification []; http_info [].
+ C) Instances cipher suites: Name "SSL/TLS Cipher Suites Supported Instances (1)"; identification ["TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384", "TLS_AES_128_GCM_SHA256"]; http_info ["Supported protocol: TLSv1.3"].
+ D) Instances endpoints: Name "Exposed Debug Endpoints Instances (2)"; identification ["/debug/status", "/internal/metrics"]; http_info [].
+  E) Header Instances (URLs): Name "Missing Referrer-Policy Instances (25)"; identification MUST list each affected URL (even if line-wrapped), e.g., [
+    "https://example.com/passwords/wp-config.bak",
+    "https://example.com/user_new.php",
+    "https://example.com/apps/"
+  ]; http_info copies lines from HTTP Info/Request/Response sections when present.
+  E2) Per-URL-only chunk (no heading visible): Do NOT create objects with `Name` like "No Referrer-Policy headers ... were found on <URL>". Instead emit a single object with Name "Missing Referrer-Policy" and put all URLs into `identification`.
+  E3) Response code evidence lines: Given lines such as "Response code '403' triggered by GET request to '/stylesheets/.htpasswd'", keep Name from the section heading (e.g., "Common Files Detection"). Put "/stylesheets/.htpasswd" in `identification` and "GET 403" in `http_info`.
+  E4) Access lines: For "Access to /images/.htaccess", Name must be the parent (e.g., "Common Directories Detection Instances (8)" if present via heading/TOC); identification += "/images/.htaccess"; http_info += "Access to /images/.htaccess".
+  F) Generic Instances pages (dynamic): For any vulnerability with "Instances (N)" (e.g., "Interesting Response Instances (25)", "HTML Comments Detected Instances (9)", "Input Reflected Instances (19)", "Path Relative Stylesheet Import Instances (8)", "Web Application Sitemap Instances (1)", etc.), populate identification with the enumerated endpoints/URLs/paths/files shown under INSTANCE/OUTPUT. Use http_info for any protocol/request/response details.
+  E) Header Instances: Name "Missing Referrer-Policy Instances (25)"; identification MUST list each affected URL extracted from lines like "No Referrer-Policy headers ... were found on <URL>" (one URL per item); http_info [].
+  E) Instances component versions: TWO separate objects if both appear:
+     1) Name "Apache 2.4.x < 2.4.41 Multiple Vulnerabilities" (no Instances suffix) -> identification []; http_info [].
+     2) Name "Apache 2.4.x < 2.4.41 Multiple Vulnerabilities Instances (1)" -> identification MUST list enumerated lines (each CVE/module/version/path as separate item); http_info only protocol/handshake lines if present else []. NEVER merge (2) into (1).
+
+Minimal examples (reference only):
+ - Variants: "X-Frame-Options Header Not Set", "Missing 'X-Frame-Options' Header" => final Name: "Missing X-Frame-Options" (once).  
+ - Cookies missing HttpOnly: multiple occurrences => single object "Cookie Without HttpOnly" with lines "Affected Cookie: <name>" in description.  
+ - Referrer-Policy variants ("Missing Referrer Policy", "Referrer-Policy Header Not Set"): single object "Missing Referrer-Policy".
+  - TLS cipher suites listing: "SSL/TLS Cipher Suites Supported Instances (1) info" -> keep full Name exactly as shown; put each suite and http info line (e.g., "TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384", "Supported protocol: TLSv1.3") in `identification`; leave `description` only for risk narrative.
+End examples.
 \n+**EXAMPLES — TENABLE WAS (DYNAMIC UNIFICATION)**  
 Use these examples as guidance; adapt pattern, never hard-code lists.
 1. Header variants (all unify to one object):  
@@ -123,13 +273,13 @@ Use these examples as guidance; adapt pattern, never hard-code lists.
 ---
 
 **OUTPUT FORMAT**  
-Return the output in **valid JSON format** using exactly these fields.  
+Return the output in **valid JSON format** using exactly these fields (added `identification` and `http_info`).  
 Your response MUST be **only a valid JSON array**, with no commentary, markdown, or text before or after it.
 
 Do NOT output invalid examples like:
   ["The scanner detected the lack of X-XSS-Protection header..."]  (← bare string element, forbidden)
 Correct form keeps only objects, e.g.:
-  [ { "Name": "Missing 'X-XSS-Protection' Header", "description": ["..."], ... } ]
+  [ { "Name": "Missing 'X-XSS-Protection' Header", "description": ["..."], "identification": [], "http_info": [], ... } ]
 
 [
   {
@@ -156,6 +306,8 @@ Correct form keeps only objects, e.g.:
     "severity": "<LOG|LOW|MEDIUM|HIGH|CRITICAL>",
     "references": ["<list of all references found in the report>"],
     "plugin": ["<list of all plugin details (Tenable WAS only)>"],
+    "identification": ["<list of identification detail lines (cipher suites, endpoints, artifacts) or empty>", "<each item as separate string>"],
+    "http_info": ["<list of protocol/version/handshake lines or empty>", "<each item as separate string>"],
     "source": "<OPENVAS|TENABLEWAS>"
   }
 ]
@@ -166,15 +318,18 @@ Correct form keeps only objects, e.g.:
 - Required per item: `Name` (string) and `source` ("OPENVAS" or "TENABLEWAS"). If either is missing, DO NOT include that item.
 - Top-level type: one JSON array ONLY. Do not emit objects or strings outside the array. Do not add headings, prose, or code fences.
 - Element type: every element of the array MUST be a JSON object (no strings, numbers, or nulls at top level).
-- Field set: use ONLY the fields shown in the schema. Do not invent additional fields. If a value is unknown:
-  - For array fields: output an empty array `[]`.
-  - For scalar fields: output `null`.
+- Field set (complete): Include ALL fields shown in the schema for EVERY object, even when empty. Do not invent additional fields. If a value is unknown:
+  - For array fields (including `identification`, `http_info`, `description`, `solution`, `references`, `plugin` for Tenable): output an empty array `[]`.
+  - For scalar fields (e.g., `port`, `protocol`, and all OpenVAS-only fields when not applicable): output `null`.
+  - `cvss` MUST be present with EXACTLY 7 elements in this order; use `null` where not available.
+  - OpenVAS objects: `plugin` MUST be present and set to `null`.
+  - Tenable WAS objects: `plugin` MUST be present and be an array (empty if none).
   - Never use placeholders like "-", "N/A", or empty objects.
 - String encoding: use standard JSON with straight quotes ("). Escape embedded quotes as needed. No control characters.
 - Final self-check (MANDATORY): Before returning, validate that:
   - The response parses as JSON.
   - The top-level is an array.
-  - Every element is an object with `Name` and `source` keys.
+  - Every element is an object with `Name`, `source`, `identification`, and `http_info` (empty arrays when not applicable) keys.
   - There are no bare strings or primitives in the array.
-  - For TENABLE WAS: deduplication and exclusion rules were applied.
+  - For TENABLE WAS: deduplication and exclusion rules were applied AND OpenVAS-only arrays (`detection_result`, `detection_method`, `impact`, `insight`, `product_detection_result`, `log_method`) are all empty arrays `[]` for every Tenable item (including Instances).
 - If you cannot fully satisfy the contract for any reason, return an empty array `[]` rather than malformed output.
