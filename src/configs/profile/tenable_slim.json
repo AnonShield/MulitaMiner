@@ -1,0 +1,12 @@
+{
+  "reader": "tenable",
+  "prompt_template": "src/configs/templates/tenable_slim_prompt.txt",
+  "retry_attempts": 3,
+  "delay_between_chunks": 1,
+  "remove_duplicates": false,
+  "output_file": "vulnerabilities_tenable_slim.json",
+  "chunk_size": 9000,
+  "chunk_overlap": 0,
+  "separator": "\n\n\n",
+  "postprocess": true
+}

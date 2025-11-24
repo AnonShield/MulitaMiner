@@ -1,6 +1,8 @@
+import os
+import json
 import datetime
 from converters.csv_converter import CSVConverter, TSVConverter
-from deepmerge import Merger
+from langchain_openai import ChatOpenAI
 
 def execute_conversions(json_file_path, args):
     """
@@ -55,29 +57,7 @@ def convert_single_format(json_file_path, format_type, args):
     except Exception as e:
         print(f" Erro ao converter para {format_type.upper()}: {e}")
         return None
-def remove_duplicates_by_name(vulnerabilities):
-    """Remove duplicatas baseadas no campo 'name'"""
-    seen_names = set()
-    unique_vulnerabilities = []
-    for vulnerability in vulnerabilities:
-        if not isinstance(vulnerability, dict):
-            unique_vulnerabilities.append(vulnerability)
-            continue
 
-        # Normalizar: se a entrada usar 'name' em minúsculas, converte para 'Name'
-        if 'name' in vulnerability and 'Name' not in vulnerability:
-            vulnerability['Name'] = vulnerability.pop('name')
-
-        if 'Name' in vulnerability:
-            name = vulnerability['Name']
-            if name not in seen_names:
-                seen_names.add(name)
-                unique_vulnerabilities.append(vulnerability)
-        else:
-            # Se não houver campo name/Name, mantém o item, mas avisa
-            unique_vulnerabilities.append(vulnerability)
-    return unique_vulnerabilities
-import datetime
 
 def save_visual_layout(content, pdf_path):
     """
@@ -98,10 +78,6 @@ def save_visual_layout(content, pdf_path):
     except Exception as e:
         print(f"Erro ao salvar layout visual: {e}")
         return None
-import os
-import json
-from langchain_openai import ChatOpenAI
-
 def load_profile(profile_name):
     path = f"src/configs/Profile/{profile_name}.json"
     with open(path, "r", encoding="utf-8") as f:
@@ -132,31 +108,4 @@ def load_prompt(prompt):
     return prompt
 
 
-# Estratégia: para listas, une; para dicts, faz merge; para outros, mantém o valor mais longo
 
-
-merger = Merger(
-    [(list, "append"), (dict, "merge")],
-    ["override"],
-    ["override"]
-)
-
-def merge_vulnerabilities_deepmerge(vuln_list):
-    merged = {}
-    for vuln in vuln_list:
-        # Aceita tanto 'Name' quanto 'name' e normaliza para 'Name'
-        if not isinstance(vuln, dict):
-            continue
-
-        if 'Name' not in vuln and 'name' in vuln:
-            vuln['Name'] = vuln.pop('name')
-
-        name = vuln.get("Name")
-        if name is None:
-            # Ignorar ou usar uma representação fallback
-            continue
-        if name not in merged:
-            merged[name] = vuln.copy()
-        else:
-            merged[name] = merger.merge(merged[name], vuln)
-    return list(merged.values())

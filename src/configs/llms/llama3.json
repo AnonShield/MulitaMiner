@@ -1,5 +1,5 @@
 {
-  "api_key": "api_key",
+  "api_key": "insert_llama3_api_key_here",
   "endpoint": "https://api.groq.com/openai/v1",
   "model": "llama-3.3-70b-versatile",
   "temperature": 0.0,
