@@ -4,8 +4,5 @@
   "retry_attempts": 3,
   "delay_between_chunks": 2,
   "remove_duplicates": true,
-  "output_file": "vulnerabilities_default.json",
-  "chunk_size": 9000,
-  "chunk_overlap": 200,
-  "separator": "\n\n\n"
+  "output_file": "vulnerabilities_default.json"
 }

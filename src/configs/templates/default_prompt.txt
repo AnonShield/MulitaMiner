@@ -70,120 +70,66 @@ References: [URLs/CVEs]             ← Extract to references[]
 
 **🚨 MOST IMPORTANT RULE - HOW TO FIND VULNERABILITY NAMES:**
 
-In Tenable WAS PDFs, each vulnerability block has this structure:
+The vulnerability Name is the **SINGLE LINE immediately before** "VULNERABILITY [SEVERITY] PLUGIN ID [number]"
+
+**CRITICAL - INSTANCE blocks:**
+Multiple INSTANCE blocks = ONE vulnerability with evidence in identification[]
+
+Example:
 ```
-[Vulnerability Name]                        ← Extract THIS as the Name
-VULNERABILITY [SEVERITY] PLUGIN ID [number] ← This marker line
-[everything below is evidence/data]
+Interesting Response Instances (25)          ← Name (ONE vulnerability)
+VULNERABILITY INFO PLUGIN ID 98050
+INSTANCE
+https://.../passwords/.htpasswd              ← Evidence (goes in identification[])
+INSTANCE
+https://.../passwords/.htaccess              ← Evidence (goes in identification[])
 ```
 
-**NAME EXTRACTION RULE:**
-- The vulnerability Name is the SINGLE LINE immediately before "VULNERABILITY [SEVERITY] PLUGIN ID"
-- If a line contains "https://", "Page ", "has no", "detected on", or "The following" → it's NOT a Name, it's evidence text
-- Names are short (2-10 words), not full sentences with URLs
+**REJECTION PATTERNS - NOT valid Names:**
 
-**CRITICAL - INSTANCE blocks are NOT separate vulnerabilities:**
-When you see "Interesting Response Instances (25)" followed by multiple INSTANCE blocks:
+❌ **Pattern 1:** Contains "https://", "http://", "://", "www.", "CVE-", "function()", "method()"
+
+❌ **Pattern 2:** Begins with "Page ", "The ", "A ", "An ", "No ", "This ", "It ", "There " OR contains "The scanner did not find"
+
+❌ **Pattern 3:** Contains "has no", "detected on", "were found", "have been", "was detected", "is missing", "should be" OR starts with numbers like "2 HTML comments"
+
+❌ **Pattern 4:** Contains ": " (colon-space) OR matches "HTTP/[0-9]", "GET ", "POST ", "TRACE ", "DEBUG "
+
+❌ **Pattern 5:** Starts with "Access to", "Path to", "File ", "Directory " OR contains "/.ht", "/.git", "/web.", "/config", "/install"
+
+❌ **Pattern 6:** Ends with " flaw", " vulnerability", " issue", " weakness", " bug" OR contains "pointer", "buffer", "overflow", "injection", "bypass" (when alone)
+
+✅ **VALID Names:**
+- Short (2-10 words), capitalized heading before "VULNERABILITY [SEVERITY] PLUGIN ID"
+- May end with "Instances (N)"
+- Examples: "Missing 'X-Frame-Options' Header", "Apache 2.4.x < 2.4.60 Multiple Vulnerabilities"
+
+**CVE HANDLING - "Multiple Vulnerabilities" = ONE object:**
+
+When Name contains "Multiple Vulnerabilities", extract ONLY that Name with ALL bullets in description[]
+
+Example:
 ```
-Interesting Response Instances (25)          ← This is the Name (ONE vulnerability)
-VULNERABILITY INFO PLUGIN ID 98050           ← Confirms Name above
-INSTANCE                                     ← NOT a new vulnerability
-https://.../passwords/.htpasswd              ← Evidence URL (goes in identification[])
-INSTANCE                                     ← NOT a new vulnerability
-https://.../passwords/.htaccess              ← Evidence URL (goes in identification[])
-```
-✅ **CORRECT**: Create ONE object named "Interesting Response Instances (25)" with ALL URLs in identification[]
-❌ **WRONG**: Creating separate vulnerabilities named "Access to .htpasswd", "Access to .htaccess", "Abnormal HTTP Response"
-
-**REJECTION PATTERNS - If text matches ANY pattern below, it's NOT a Name:**
-
-❌ **Pattern 1: Contains special indicators**
-   → "https://", "http://", "://", "www.", "CVE-", "function()", "method()"
-
-❌ **Pattern 2: Sentence starters (full sentences, not headings)**
-   → Begins with: "Page ", "The ", "A ", "An ", "No ", "This ", "It ", "There "
-
-❌ **Pattern 3: Descriptive phrases (evidence descriptions)**
-   → Contains: "has no", "detected on", "were found", "have been", "was detected", "is missing", "should be"
-
-❌ **Pattern 4: Technical formats (headers/codes/values)**
-   → Contains ": " (colon-space pattern) → "Server: value", "X-Header: value"
-   → Matches "HTTP/[0-9]", "GET ", "POST ", "TRACE ", "DEBUG "
-
-❌ **Pattern 5: File/path references (evidence from INSTANCE blocks)**
-   → Starts with "Access to", "Path to", "File ", "Directory "
-   → Contains "/.ht", "/.git", "/web.", "/config", "/install"
-
-❌ **Pattern 6: Partial technical terms (description bullet fragments)**
-   → Ends with: " flaw", " vulnerability", " issue", " weakness", " bug"
-   → Contains: "pointer", "buffer", "overflow", "injection", "bypass" (when alone, not in full title)
-
-✅ **VALID Names follow this pattern:**
-   - Short (2-10 words), capitalized heading
-   - Located IMMEDIATELY before "VULNERABILITY [SEVERITY] PLUGIN ID"
-   - May end with "Instances (N)" suffix
-   - Examples: "Missing 'X-Frame-Options' Header", "Apache 2.4.x < 2.4.16 Multiple Vulnerabilities"
-
-**NAMES - Extract from heading line BEFORE "VULNERABILITY [SEVERITY] PLUGIN ID":**
-
-✅ VALID Names:
-- `Missing 'X-Frame-Options' Header`
-- `Apache 2.4.x < 2.4.41 Multiple Vulnerabilities`
-- `PHP Unsupported Version Instances (14)`
-
-❌ NEVER extract as Names:
-- Description bullets: "lua_websocket_read() function flaw", "NULL pointer dereference flaw" → these are bullets INSIDE Description section
-- Sentences with URLs: "Page https://...has no header defined" → goes in identification[]
-- HTTP headers: "Server: Google Frontend" → goes in http_info[]
-- URLs: "https://example.com/install.php" → goes in identification[]
-- OUTPUT text: "The following header information..." → goes in identification[]
-- CVE IDs: "CVE-2024-36387" → goes in description[] and references[]
-
-**CVE HANDLING - Description bullets are NOT separate vulnerabilities:**
-
-**🚨 CRITICAL:** When you see "Multiple Vulnerabilities" in the Name, there is only ONE vulnerability with multiple bullets in Description section.
-
-Example from PDF:
-```
-Apache 2.4.x < 2.4.60 Multiple Vulnerabilities    ← This is the Name (ONE vulnerability)
+Apache 2.4.x < 2.4.60 Multiple Vulnerabilities    ← Name (ONE vulnerability)
 VULNERABILITY CRITICAL PLUGIN ID 114360
 Description
-- Serving WebSocket protocol upgrades... (CVE-2024-36387)     ← Description bullet (NOT a Name)
-- SSRF in Apache HTTP Server on Windows... (CVE-2024-38472)   ← Description bullet (NOT a Name)
-- Encoding problem in mod_proxy... (CVE-2024-38473)           ← Description bullet (NOT a Name)
-- Substitution encoding issue in mod_rewrite... (CVE-2024-38474) ← Description bullet (NOT a Name)
-- Null pointer dereference in mod_proxy... (CVE-2024-38477)   ← Description bullet (NOT a Name)
+- Serving WebSocket protocol upgrades... (CVE-2024-36387)     ← Bullet in description[]
+- SSRF in Apache HTTP Server... (CVE-2024-38472)              ← Bullet in description[]
+- Encoding problem in mod_proxy... (CVE-2024-38473)           ← Bullet in description[]
 ```
 
-✅ CORRECT: Create ONE object
-```json
-{
-  "Name": "Apache 2.4.x < 2.4.60 Multiple Vulnerabilities",
-  "description": [
-    "- Serving WebSocket protocol upgrades over a HTTP/2 connection could result in a Null Pointer dereference... (CVE-2024-36387)",
-    "- SSRF in Apache HTTP Server on Windows allows... (CVE-2024-38472)",
-    "- Encoding problem in mod_proxy... (CVE-2024-38473)",
-    "... all other bullets ..."
-  ],
-  "references": ["CVE-2024-36387", "CVE-2024-38472", "CVE-2024-38473", ...]
-}
-```
+✅ CORRECT: ONE object with all bullets in description[], CVEs in references[]
 
-❌ WRONG: Creating 8 separate objects with Names:
+❌ WRONG: Multiple objects with bullet fragments as Names like:
 - "WebSocket Protocol Upgrade Null Pointer Dereference"
 - "SSRF NTML Hash Leakage on Windows"
 - "mod_proxy Encoding Authentication Bypass"
-- "Null pointer dereference in mod_proxy"
 
-**RULE:** If Name contains "Multiple Vulnerabilities", extract ONLY that Name, put all bullets in description[].
-
-**DEDUPLICATION:**
+**DEDUPLICATION & FIELD EXTRACTION:**
 - Same Name in chunk → merge into ONE object
 - Base + "Instances (N)" → TWO separate objects
-
-**FIELD EXTRACTION:**
-- BASE (no "Instances"): description, solution, references, severity, plugin
-- INSTANCES ("Instances (N)"): identification (URL then OUTPUT per INSTANCE block), http_info (REQUEST + RESPONSE headers)
+- BASE: description, solution, references, severity, plugin
+- INSTANCES: identification (URLs + OUTPUT), http_info (REQUEST/RESPONSE headers)
 
 ---
 
