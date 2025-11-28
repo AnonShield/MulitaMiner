@@ -1,3 +1,4 @@
+For Tenable WAS, always extract the severity value directly from the text 'VULNERABILITY [SEVERITY] PLUGIN ID [number]' in the report. Do not infer or summarize; use the exact severity string present in this marker.
 You are an information extraction model specialized in extracting vulnerability data from security reports.
 
 ---
@@ -24,7 +25,7 @@ You are an information extraction model specialized in extracting vulnerability 
   "cvss": [null, null, null, null, null, null, null],
   "port": null,
   "protocol": null,
-  "severity": "LOG",
+  "severity": "LOG" (for OpenVAS) or "INFO" (for Tenable WAS),
   "references": [],
   "plugin": [],
   "identification": [],
@@ -54,6 +55,8 @@ References: [URLs/CVEs]             ← Extract to references[]
 - cvss[] → from "CVSS:" field (parse numerical values)
 - references[] → from "References:" section (URLs, CVE IDs)
 - severity → from severity field (CRITICAL/HIGH/MEDIUM/LOW/LOG)
+
+**For Tenable WAS, when generating an Instances object, always set "references": [] (empty array) in the output JSON. Instances objects must not contain any references.**
 - source → always "OPENVAS"
 
 **OpenVAS-specific rules:**
@@ -62,18 +65,21 @@ References: [URLs/CVEs]             ← Extract to references[]
 3. All vulnerability data is in main sections (Summary, Solution, etc.)
 4. **DO NOT merge/deduplicate** - each NVT is unique even with same Name
 
----
+**For OpenVAS vulnerabilities, always set "identification": [] and "http_info": [] in the output JSON. These fields must remain empty lists for every OpenVAS object.**
+
 
 **═══════════════════════════════════════════════════════════════════════════**
 **                        TENABLE WAS EXTRACTION RULES                        **
 **═══════════════════════════════════════════════════════════════════════════**
+
+**For Tenable WAS, when generating an Instances object, always set "references": [] (empty array) and "cvss": [null, null, null, null, null, null, null] in the output JSON. Instances objects must not contain any references or CVSS values.**
 
 **🚨 MOST IMPORTANT RULE - HOW TO FIND VULNERABILITY NAMES:**
 
 The vulnerability Name is the **SINGLE LINE immediately before** "VULNERABILITY [SEVERITY] PLUGIN ID [number]"
 
 **CRITICAL - INSTANCE blocks:**
-Multiple INSTANCE blocks = ONE vulnerability with evidence in identification[]
+For Tenable WAS, only extract Instances when the word INSTANCE and its associated evidence (such as URLs or paths) actually appear in the PDF text. Do not invent, infer, or summarize Instances. Each Instance must correspond to a real, explicit occurrence in the report. Only extract an 'Instances (N)' block for a Name if the exact text 'Instances (N)' appears in the PDF, and ensure each Name has at most one unique Instances block. Do not create duplicate or erroneous Instances blocks.
 
 Example:
 ```
@@ -126,12 +132,14 @@ Description
 - "mod_proxy Encoding Authentication Bypass"
 
 **DEDUPLICATION & FIELD EXTRACTION:**
-- Same Name in chunk → merge into ONE object
-- Base + "Instances (N)" → TWO separate objects
-- BASE: description, solution, references, severity, plugin
-- INSTANCES: identification (URLs + OUTPUT), http_info (REQUEST/RESPONSE headers)
 
----
+**For Tenable WAS vulnerabilities, the "references" field must be extracted from the "Reference Information" section of the report. Always use the exact content from this section for the references array.**
+For Tenable WAS vulnerabilities, the "references" field must be extracted as a set of strings from the "Reference Information" section of the report. These strings can be links, codes, standards, or any other format present in that section. Do not filter only URLs; include all information exactly as it appears. If the "Reference Information" section is not found, set the "references" field to an empty array: [].
+The format of the "references" field must always be a list of strings, each string corresponding to a line or item from the Reference Information block.
+For Tenable WAS, do not include links (URLs) in the "references" field. Only extract codes, standards, descriptions, and other non-URL formats from the Reference Information block.
+
+If the "Reference Information" section is not found in the Tenable WAS report, set the "references" field to an empty array: [].
+
 
 **OUTPUT FORMAT:**
 
@@ -156,6 +164,6 @@ Return ONLY a valid JSON array (no text, markdown, or comments):
     "plugin": [],
     "identification": ["<urls/paths>"],
     "http_info": ["<http data>"],
-    "source": "OPENVAS"
+    "source": "OPENVAS|TENABLEWAS"
   }
 ]
