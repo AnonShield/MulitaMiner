@@ -2,6 +2,7 @@ import os
 import sys
 import argparse
 import json
+import re
 import tiktoken
 
 # third-party
@@ -13,7 +14,7 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'src'))
 # local imports (from src/)
 from utils.utils import (
     load_profile, load_llm, init_llm, load_prompt, save_visual_layout,
-    execute_conversions
+    execute_conversions, parse_json_response, validate_and_normalize_vulnerability
 )
 from utils.pdf_loader import load_pdf_with_pypdf2
 
@@ -22,23 +23,52 @@ class _TokenChunk:
     def __init__(self, page_content):
         self.page_content = page_content
 
-def get_token_based_chunks(text, max_tokens):
-    """Divide texto em chunks baseado em tokens seguindo a lógica especificada."""
+def get_token_based_chunks(text, max_tokens, reserve_for_response=1000):
+    """
+    Divide texto em chunks baseado em tokens.
+    
+    Args:
+        text: Texto a dividir
+        max_tokens: Max tokens do modelo
+        reserve_for_response: Tokens reservados para a resposta do LLM (padrão: 1000)
+    
+    O cálculo considera:
+    - Prompt template (~500 tokens)
+    - Reserve para resposta (~1000 tokens)
+    - Espaço para o contexto do chunk
+    """
     # Usar tokenizer do GPT por padrão (compatível com a maioria dos modelos)
     try:
         tokenizer = tiktoken.encoding_for_model("gpt-3.5-turbo")
     except:
         tokenizer = tiktoken.get_encoding("cl100k_base")
     
+    # Calcular tokens disponíveis para conteúdo
+    # max_tokens = tokens de prompt + tokens de resposta
+    # Reservamos espaço para: prompt template (~500) + resposta (~1000)
+    prompt_overhead = 500  # Estimativa do prompt template
+    available_for_content = max_tokens - prompt_overhead - reserve_for_response
+    
+    # Garantir mínimo de 1000 tokens para conteúdo
+    available_for_content = max(1000, available_for_content)
+    
     tokens = tokenizer.encode(text)
     n_tokens = len(tokens)
     chunks = []
     
-    # Seguir a lógica: for i in range(0, n_tokens, MAX_TOKENS)
-    for i in range(0, n_tokens, max_tokens):
-        chunk_tokens = tokens[i:i + max_tokens]
+    print(f"[TOKEN CALC] Max tokens do modelo: {max_tokens}")
+    print(f"[TOKEN CALC] Overhead do prompt: ~{prompt_overhead} tokens")
+    print(f"[TOKEN CALC] Reserve para resposta: ~{reserve_for_response} tokens")
+    print(f"[TOKEN CALC] Tokens disponíveis para conteúdo: ~{available_for_content} tokens")
+    print(f"[TOKEN CALC] Total de tokens no texto: {n_tokens}")
+    
+    # Dividir o texto em chunks
+    for i in range(0, n_tokens, available_for_content):
+        chunk_tokens = tokens[i:i + available_for_content]
         chunk_text = tokenizer.decode(chunk_tokens)
         chunks.append(_TokenChunk(chunk_text))
+    
+    print(f"[TOKEN CALC] Total de chunks criados: {len(chunks)}")
     
     return chunks
 
@@ -151,20 +181,11 @@ def _fallback_process_large_chunk(doc_chunk, llm, profile_config, max_subchunk_c
             print(f"[FALLBACK] → Enviando subchunk {idx} para LLM...")
             resposta = llm.invoke(prompt).content
             print(f"[FALLBACK] ← Resposta recebida do LLM para subchunk {idx}")
-            try:
-                parsed = json.loads(resposta)
-            except json.JSONDecodeError:
-                start = resposta.find('[')
-                end = resposta.rfind(']') + 1
-                parsed = []
-                if start != -1 and end > start:
-                    try:
-                        parsed = json.loads(resposta[start:end])
-                        print(f"[FALLBACK] ✓ JSON extraído com sucesso do subchunk {idx}")
-                    except Exception:
-                        print(f"[FALLBACK] ✗ Falha ao extrair JSON do subchunk {idx}")
-                        pass
-            if isinstance(parsed, list):
+            
+            # Use flexible parsing from utils
+            parsed = parse_json_response(resposta, f" subchunk {idx}")
+            
+            if parsed and isinstance(parsed, list):
                 sub_vulns.extend(parsed)
                 print(f"[FALLBACK] ✓ Subchunk {idx}: {len(parsed)} vulnerabilidades extraídas")
             else:
@@ -202,24 +223,14 @@ def _retry_chunk_with_subdivision(doc_chunk, llm, profile_config, max_retries=3)
                     print(f"[AVISO] Resposta não é uma lista, tentando extrair JSON...")
                     raise json.JSONDecodeError("Resposta não é uma lista", resposta, 0)
             except json.JSONDecodeError as json_err:
-                # Fallback: buscar JSON entre colchetes
-                start = resposta.find('[')
-                end = resposta.rfind(']') + 1
-                if start != -1 and end > start:
-                    json_str = resposta[start:end]
-                    try:
-                        vulnerabilities = json.loads(json_str)
-                        if isinstance(vulnerabilities, list):
-                            return vulnerabilities
-                        else:
-                            print(f"[AVISO] JSON extraído não é uma lista")
-                            raise json_err
-                    except json.JSONDecodeError as parse_err:
-                        print(f"[AVISO] Falha ao parsear JSON extraído: {str(parse_err)[:100]}")
-                        raise parse_err
-                else:
-                    print(f"[AVISO] Não foi possível encontrar array JSON válido na resposta")
-                    raise json_err
+                # Use flexible parsing strategy from utils
+                vulnerabilities = parse_json_response(resposta, f" chunk")
+                if vulnerabilities:
+                    return vulnerabilities
+                
+                # If still no luck, try subdividir
+                print(f"[AVISO] Não foi possível encontrar array JSON válido na resposta")
+                raise json_err
                     
         except Exception as e:
             retry_count += 1
@@ -256,9 +267,16 @@ def process_vulnerabilities(doc_texts, llm, profile_config):
             vulnerabilities_chunk = _retry_chunk_with_subdivision(doc_chunk, llm, profile_config, max_retries)
             
             if vulnerabilities_chunk:
-                all_vulnerabilities.extend(vulnerabilities_chunk)
-                nomes_vulns = [v.get('Name') for v in vulnerabilities_chunk if isinstance(v, dict) and v.get('Name')]
-                print(f"[LOG] Chunk {i+1}/{total_chunks}: {len(vulnerabilities_chunk)} vulnerabilidades extraídas: {nomes_vulns}")
+                # Validate and normalize each vulnerability using utils function
+                validated_vulns = []
+                for vuln in vulnerabilities_chunk:
+                    normalized = validate_and_normalize_vulnerability(vuln)
+                    if normalized:
+                        validated_vulns.append(normalized)
+                
+                all_vulnerabilities.extend(validated_vulns)
+                nomes_vulns = [v.get('Name') for v in validated_vulns if isinstance(v, dict) and v.get('Name')]
+                print(f"[LOG] Chunk {i+1}/{total_chunks}: {len(validated_vulns)}/{len(vulnerabilities_chunk)} vulnerabilidades válidas: {nomes_vulns}")
             else:
                 print(f"[LOG] Chunk {i+1}/{total_chunks}: 0 vulnerabilidades extraídas: []")
                 
@@ -397,8 +415,15 @@ def main():
     llm = init_llm(llm_config)
     output_file = profile_config['output_file']
     
-    # Usar max_tokens diretamente da configuração do LLM
-    max_tokens = llm_config.get('max_tokens', 4000)  # Fallback padrão
+    # Obter max_tokens da configuração do LLM
+    max_tokens = llm_config.get('max_tokens', 4096)
+    reserve_for_response = llm_config.get('reserve_for_response', 1000)
+    
+    print(f"\n{'='*60}")
+    print(f"[CONFIGURAÇÃO] LLM: {llm_config.get('model')}")
+    print(f"[CONFIGURAÇÃO] Max tokens: {max_tokens}")
+    print(f"[CONFIGURAÇÃO] Reserve para resposta: {reserve_for_response}")
+    print(f"{'='*60}\n")
     
     # Carregamento do documento PDF
     documents = load_pdf_with_pypdf2(args.pdf_path)
@@ -408,10 +433,12 @@ def main():
     visual_file = save_visual_layout(documents[0].page_content, args.pdf_path)
     
     # Divisão baseada em tokens do LLM
-    doc_texts = get_token_based_chunks(documents[0].page_content, max_tokens)
-    # Divisão baseada em tokens do LLM
-    doc_texts = get_token_based_chunks(documents[0].page_content, max_tokens)
-    print(f"Total de chunks a processar: {len(doc_texts)}")
+    doc_texts = get_token_based_chunks(
+        documents[0].page_content, 
+        max_tokens,
+        reserve_for_response
+    )
+    print(f"Total de chunks a processar: {len(doc_texts)}\n")
     all_vulnerabilities = process_vulnerabilities(doc_texts, llm, profile_config)
     if save_results(all_vulnerabilities, output_file):
         handle_conversions(output_file, args, visual_file)
