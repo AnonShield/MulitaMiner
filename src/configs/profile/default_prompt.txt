@@ -101,12 +101,21 @@ RULE: Extract Names EXACTLY from SHORT HEADINGS that appear directly before "VUL
 
 THAT'S IT. Simple rules:
 1. Find the heading text IMMEDIATELY BEFORE "VULNERABILITY"
-2. Extract exactly what you see (no paraphrasing)
-3. Short text (2-10 words typically, max 15 words)
-4. If uncertain it's a heading → REJECT IT
+2. Extract EXACTLY what you see (no paraphrasing, no removing quotes)
+3. SHORT text (2-10 words typically, max 15 words)
+4. ⚠️ PRESERVE ALL CHARACTERS including quotes (single ' and double ")
+5. If uncertain it's a heading → REJECT IT
+
+IMPORTANT - Preserve Quotes:
+✅ "Missing 'X-Frame-Options' Header" ← Keep the single quotes around X-Frame-Options
+✅ "Missing \"X-Frame-Options\" Header" ← If PDF has double quotes, keep them
+✅ 'Missing "Cache-Control" Header' ← Preserve exactly as appears in PDF
+❌ "Missing X-Frame-Options Header" ← WRONG: removed the quotes!
+❌ Missing X-Frame-Options Header ← WRONG: quotes are part of the heading!
 
 VALID Names (examples from PDF headings):
-✅ "Missing X-Frame-Options Header"
+✅ "Missing 'X-Frame-Options' Header" (with single quotes)
+✅ "Missing 'X-Content-Type-Options' Header" (with single quotes)
 ✅ "Server HTTP Header Information Disclosure"
 ✅ "Apache 2.4.x < 2.4.60 Multiple Vulnerabilities"
 ✅ "Interesting Response"
@@ -123,6 +132,58 @@ ABSOLUTELY REJECT - These do NOT appear as headings in PDF:
 ❌ Any text with "The ", "No ", "Access to", "was found", "may require" ← description language
 ❌ URLs: "https://", "/passwords/", etc. ← URLs go in identification[]
 ❌ Text longer than 15 words ← usually description
+
+═══════════════════════════════════════════════════════════════════════════════════
+PART 4B: NAME CONSOLIDATION & CLEANUP RULES
+═══════════════════════════════════════════════════════════════════════════════════
+
+⚠️ MANDATORY NAME CONSOLIDATIONS ⚠️
+
+IF you extract similar names, CONSOLIDATE them using these rules:
+
+1. Policy headers - STANDARDIZE to "Missing [Policy Name]" format:
+   ✅ "Missing Content Security Policy" ← CORRECT
+   ❌ "Missing 'Content Security Policy' Header" ← WRONG - remove " Header" suffix
+   ❌ "Content Security Policy (CSP) Not Implemented" ← WRONG - use standard format
+
+2. Referrer Policy - ALWAYS use "Missing Referrer Policy":
+   ✅ "Missing Referrer Policy" ← CORRECT
+   ❌ "No Referrer-Policy Header" ← WRONG - use standard format
+   ❌ "No Referrer-Policy headers or body meta tags were found" ← WRONG - use standard format
+
+3. Permissions Policy - ALWAYS use "Missing Permissions Policy":
+   ✅ "Missing Permissions Policy" ← CORRECT
+   ❌ "No Permissions-Policy Header" ← WRONG - use standard format
+   ❌ "No Permissions-Policy headers were found" ← WRONG - use standard format
+
+4. Cache Control - ALWAYS use "Missing 'Cache-Control' Header":
+   ✅ "Missing 'Cache-Control' Header" ← CORRECT (with quotes)
+   ❌ "Missing Cache Control Header" ← WRONG - add quotes and 'Cache-Control'
+   ❌ "Cache Control Header Missing" ← WRONG - use standard format
+
+5. X-XSS-Protection - ALWAYS use "Missing 'X-XSS-Protection' Header":
+   ✅ "Missing 'X-XSS-Protection' Header" ← CORRECT (with quotes)
+   ❌ "The scanner detected the lack of X-XSS-Protection header" ← WRONG - use standard format
+   ❌ "X-XSS-Protection header not found" ← WRONG - use standard format
+
+6. Transport Security - ALWAYS use "Missing 'Strict-Transport-Security' Header":
+   ✅ "Missing 'Strict-Transport-Security' Header" ← CORRECT (with quotes)
+   ❌ "Missing Strict-Transport-Security Header" ← WRONG - add quotes
+   ❌ "Missing HTTP Strict Transport Security Policy" ← WRONG - use standard format
+
+7. Header Information Disclosure - STANDARDIZE name:
+   ✅ "HTTP Header Information Disclosure" ← CORRECT
+   ❌ "Header Information Disclosure" ← WRONG - add "HTTP" prefix
+   ❌ "Server HTTP Header Information Disclosure" ← WRONG - remove "Server" prefix
+   ❌ "X-Powered-By Header Information Disclosure" ← WRONG - use generic name
+
+8. Input Reflection - STANDARDIZE name:
+   ✅ "Input Reflected" ← CORRECT
+   ❌ "Input Reflected in Response Body" ← WRONG - use short form
+
+9. PHP Version - STANDARDIZE name:
+   ✅ "PHP Unsupported Version" ← CORRECT
+   ❌ "PHP Version Disclosure" ← WRONG - use "PHP Unsupported Version"
 
 ═══════════════════════════════════════════════════════════════════════════════════
 PART 5: INSTANCES HANDLING (TENABLE WAS ONLY)
@@ -542,6 +603,35 @@ Return ONLY a valid JSON array:
 - No comments or explanations
 - No text before or after the JSON
 - Valid JSON syntax with proper escaping
+
+⚠️ FINAL CHECKLIST BEFORE RETURNING JSON ⚠️
+
+Before you submit the JSON, verify:
+
+1. ✅ NAME CONSOLIDATION:
+   - "Missing Content Security Policy" (NOT "Missing 'Content Security Policy' Header")
+   - "Missing Referrer Policy" (NOT "No Referrer-Policy..." or "...headers or body meta tags...")
+   - "Missing Permissions Policy" (NOT "No Permissions-Policy Header")
+   - "Missing 'Cache-Control' Header" (with quotes, NOT "Cache Control Header Missing")
+   - "Missing 'X-XSS-Protection' Header" (with quotes, NOT "The scanner detected...")
+   - "Missing 'Strict-Transport-Security' Header" (with quotes)
+   - "HTTP Header Information Disclosure" (NOT "Header Information Disclosure" or "Server HTTP..." or "X-Powered-By...")
+   - "Input Reflected" (NOT "Input Reflected in Response Body")
+   - "PHP Unsupported Version" (NOT "PHP Version Disclosure")
+
+2. ✅ IDENTIFICATION FIELD:
+   - If Name does NOT contain "Instances (N)" → identification: []
+   - If Name DOES contain "Instances (N)" → identification: [all instances/URLs]
+
+3. ✅ INSTANCES CONSOLIDATION:
+   - NEVER create multiple Instances objects for the same base name
+   - Create EXACTLY 2 objects: one with "Instances (N)" and one without
+   - CONSOLIDATE all instance items into ONE array with ONE total count
+
+4. ✅ QUOTES PRESERVATION:
+   - "Missing 'X-Frame-Options' Header" ← keep the single quotes!
+   - "Missing 'Cache-Control' Header" ← keep the single quotes!
+   - Extract EXACTLY as appears in PDF heading
 
 ⚠️ IMPORTANT RULE - identification field:
 - For vulnerabilities WITHOUT instances → "identification": [] (empty array)
