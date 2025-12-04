@@ -19,13 +19,22 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'src'))
 
 from utils.utils import (
     load_profile, load_llm, init_llm, save_visual_layout,
-    execute_conversions, validate_and_normalize_vulnerability
+    execute_conversions, validate_and_normalize_vulnerability,
+    validate_cais_vulnerability
 )
 from utils.pdf_loader import load_pdf_with_pypdf2
 from utils.processing import (
     get_token_based_chunks, retry_chunk_with_subdivision,
-    consolidate_duplicates
+    consolidate_duplicates, is_cais_profile, get_consolidation_field
 )
+
+
+def get_validator(profile_config: dict):
+    """Obter validador apropriado baseado no perfil."""
+    if is_cais_profile(profile_config):
+        return validate_cais_vulnerability
+    return validate_and_normalize_vulnerability
+
 
 def parse_arguments() -> argparse.Namespace:
     """Parse argumentos da linha de comando."""
@@ -100,14 +109,19 @@ def process_vulnerabilities(doc_texts: list, llm, profile_config: dict) -> list:
             vulns_chunk = retry_chunk_with_subdivision(doc_chunk, llm, profile_config, max_retries)
             
             if vulns_chunk:
+                # Validate vulnerabilities based on profile type
+                validator = get_validator(profile_config)
                 validated_vulns = [
-                    validate_and_normalize_vulnerability(v)
+                    validator(v)
                     for v in vulns_chunk
-                    if validate_and_normalize_vulnerability(v)
+                    if validator(v)
                 ]
                 
+                # Determine name field from profile or auto-detect
+                name_field = get_consolidation_field(validated_vulns, profile_config)
+                
                 all_vulnerabilities.extend(validated_vulns)
-                names = [v.get('Name') for v in validated_vulns if isinstance(v, dict) and v.get('Name')]
+                names = [v.get(name_field) for v in validated_vulns if isinstance(v, dict) and v.get(name_field)]
                 
                 print(f"[LOG] Chunk {i+1}/{len(doc_texts)}: {len(validated_vulns)}/{len(vulns_chunk)} vulnerabilidades extraídas")
                 if names:
@@ -132,7 +146,7 @@ def process_vulnerabilities(doc_texts: list, llm, profile_config: dict) -> list:
     return all_vulnerabilities
 
 
-def save_results(vulnerabilities: list, output_file: str) -> bool:
+def save_results(vulnerabilities: list, output_file: str, profile_config: dict = None) -> bool:
     """
     Salva vulnerabilidades em JSON.
     Consolida duplicatas para Tenable WAS.
@@ -140,6 +154,7 @@ def save_results(vulnerabilities: list, output_file: str) -> bool:
     Args:
         vulnerabilities: Lista de vulnerabilidades
         output_file: Caminho do arquivo de saída
+        profile_config: Configuração do perfil (opcional)
     
     Returns:
         True se sucesso, False caso contrário
@@ -155,26 +170,19 @@ def save_results(vulnerabilities: list, output_file: str) -> bool:
             print(f"\nConsolidando vulnerabilidades duplicadas (Tenable WAS)...")
             final_vulns = consolidate_duplicates(vulnerabilities)
             print(f"Total: {len(vulnerabilities)} → {len(final_vulns)} após consolidação")
-            
-            # Mostrar resumo de nomes únicos
-            unique_names = sorted(set(v.get('Name', 'SEM NOME') for v in final_vulns if isinstance(v, dict)))
-            print(f"\nTotal de vulnerabilidades únicas: {len(unique_names)}")
-            print(f"\nResumo de vulnerabilidades encontradas:")
-            for idx, name in enumerate(unique_names, 1):
-                count = sum(1 for v in final_vulns if isinstance(v, dict) and v.get('Name') == name)
-                instances = " (com instâncias)" if "Instances" in name else ""
-                print(f"  {idx:3d}. [{count:2d}x] {name}{instances}")
         else:
             print(f"\nSem consolidação (OpenVAS) - {len(vulnerabilities)} vulnerabilidades")
             final_vulns = vulnerabilities
-            
-            # Mostrar resumo de nomes únicos
-            unique_names = sorted(set(v.get('Name', 'SEM NOME') for v in final_vulns if isinstance(v, dict)))
-            print(f"\nTotal de vulnerabilidades únicas: {len(unique_names)}")
-            print(f"\nResumo de vulnerabilidades encontradas:")
-            for idx, name in enumerate(unique_names, 1):
-                count = sum(1 for v in final_vulns if isinstance(v, dict) and v.get('Name') == name)
-                print(f"  {idx:3d}. [{count:2d}x] {name}")
+        
+        # Detectar campo de consolidação do profile ou auto-detectar
+        name_field = get_consolidation_field(final_vulns, profile_config)
+        
+        unique_names = sorted(set(v.get(name_field, 'SEM NOME') for v in final_vulns if isinstance(v, dict)))
+        print(f"\nTotal de vulnerabilidades únicas: {len(unique_names)}")
+        print(f"\nResumo de vulnerabilidades encontradas:")
+        for idx, name in enumerate(unique_names, 1):
+            count = sum(1 for v in final_vulns if isinstance(v, dict) and v.get(name_field) == name)
+            print(f"  {idx:3d}. [{count:2d}x] {name}")
         
         with open(output_file, 'w', encoding='utf-8') as f:
             json.dump(final_vulns, f, indent=2, ensure_ascii=False)
@@ -231,7 +239,7 @@ def main():
     
     # Salvar resultados e conversões
     output_file = profile_config['output_file']
-    if save_results(all_vulnerabilities, output_file):
+    if save_results(all_vulnerabilities, output_file, profile_config):
         try:
             converted = execute_conversions(output_file, args)
             if converted:

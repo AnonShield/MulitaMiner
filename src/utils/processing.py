@@ -9,8 +9,59 @@ import tiktoken
 from collections import defaultdict
 from typing import List, Dict, Any, Optional
 
-from utils.utils import parse_json_response, validate_and_normalize_vulnerability, load_prompt
-from utils.scanner_strategies import consolidate_by_scanner
+from utils.utils import parse_json_response, load_prompt
+
+
+def is_cais_profile(profile_config: Dict[str, Any]) -> bool:
+    """Check if profile is CAIS-based."""
+    if not profile_config:
+        return False
+    prompt_template = profile_config.get('prompt_template', '').lower()
+    return 'cais' in prompt_template
+
+
+def get_consolidation_field(vulnerabilities: List[Dict], profile_config: Dict[str, Any] = None) -> str:
+    """
+    Detecta qual campo usar para consolidação.
+    
+    Prioridade:
+    1. Campo configurado no profile (consolidation_field)
+    2. Detecção automática baseada nos dados
+    
+    Args:
+        vulnerabilities: Lista de vulnerabilidades
+        profile_config: Configuração do perfil (opcional)
+    
+    Returns:
+        Nome do campo a usar para consolidação
+    """
+    # Prioridade 1: Usar campo do profile se configurado
+    if profile_config and 'consolidation_field' in profile_config:
+        configured_field = profile_config.get('consolidation_field')
+        # Verificar se o campo existe nos dados
+        if vulnerabilities and any(
+            configured_field in v for v in vulnerabilities if isinstance(v, dict)
+        ):
+            return configured_field
+    
+    if not vulnerabilities:
+        return 'Name'
+    
+    # Prioridade 2: Detecção automática
+    for vuln in vulnerabilities:
+        if not isinstance(vuln, dict):
+            continue
+        
+        # Prioridade: name_consolidated → definition.name → Name
+        if 'name_consolidated' in vuln:
+            return 'name_consolidated'
+        if 'definition.name' in vuln:
+            return 'definition.name'
+        if 'Name' in vuln:
+            return 'Name'
+    
+    # Fallback
+    return 'Name'
 
 
 class TokenChunk:
@@ -222,15 +273,52 @@ def retry_chunk_with_subdivision(doc_chunk: TokenChunk, llm, profile_config: Dic
 
 def consolidate_duplicates(vulnerabilities: List[Dict]) -> List[Dict]:
     """
-    Consolida vulnerabilidades usando estratégia específica de cada scanner.
+    Consolida vulnerabilidades (sem duplicação de Tenable WAS).
     
-    - OpenVAS: Sem consolidação
-    - Tenable WAS: Consolida por base name, usa nome exato da última instância
+    - Se tem Tenable WAS (source='TENABLEWAS'): consolida por name_consolidated
+    - Se é OpenVAS: retorna como está
     
     Args:
         vulnerabilities: Lista de vulnerabilidades
     
     Returns:
-        Lista consolidada de acordo com a estratégia de cada scanner
+        Lista consolidada
     """
-    return consolidate_by_scanner(vulnerabilities)
+    # Verificar se tem Tenable WAS
+    has_tenable = any(
+        v.get('source') == 'TENABLEWAS' 
+        for v in vulnerabilities 
+        if isinstance(v, dict)
+    )
+    
+    if not has_tenable:
+        # OpenVAS: sem consolidação
+        return vulnerabilities
+    
+    # Tenable WAS: consolidar por name_consolidated
+    consolidated = {}
+    
+    for vuln in vulnerabilities:
+        if not isinstance(vuln, dict):
+            continue
+        
+        # Usar name_consolidated se disponível, senão usar definição original
+        if 'name_consolidated' in vuln:
+            # Formato CAIS com name_consolidated
+            key = vuln.get('name_consolidated', 'UNKNOWN')
+        elif 'definition.name' in vuln:
+            # Formato CAIS sem name_consolidated (fallback)
+            name = vuln.get('definition.name', 'UNKNOWN')
+            key = re.sub(r'\s+Instances\s*\(\d+\)\s*$', '', name)
+        else:
+            # Formato Sistema
+            name = vuln.get('Name', 'UNKNOWN')
+            key = re.sub(r'\s+Instances\s*\(\d+\)\s*$', '', name)
+        
+        if key not in consolidated:
+            consolidated[key] = vuln
+        else:
+            # Manter a última instância extraída
+            consolidated[key] = vuln
+    
+    return list(consolidated.values())

@@ -11,11 +11,19 @@ INSTRUCTIONS: EXTRACTION RULES
    ✅ Names from headings ONLY: Short text (2-15 words) before "VULNERABILITY [SEVERITY] PLUGIN ID"
 
 2. ABSOLUTE REJECTION PATTERNS (NEVER EXTRACT):
-   ❌ "Access to .htpasswd file", "Access to .htaccess file"
+   ⚠️ CRITICAL ERROR - Do NOT extract these:
+   ❌ "Access to .htpasswd file denied" ← From OUTPUT/PROOF section (inside vulnerability)
+   ❌ "Access to .htaccess file denied" ← From OUTPUT/PROOF section (inside vulnerability)
+   ❌ "Access to .htpasswd file" ← Any variant with "file denied" or "file resulted"
+   ❌ "Access to .htaccess file" ← Any variant with "file denied" or "file resulted"
+   ❌ "Access to web.config file resulted in" ← More examples
+   ❌ "Abnormal HTTP Response Code" ← Fabricated, NOT in PDF
+   
+   Other rejection patterns:
    ❌ "Page has no X-Frame-Options header defined"
-   ❌ "Abnormal HTTP Response Code"
-   ❌ Anything starting with: "The", "No ", "Access to", "File", "Page"
-   ❌ Anything containing URLs: "https://", "/passwords/"
+   ❌ Anything starting with: "The", "No ", "Access to", "File", "Page", "Abnormal HTTP"
+   ❌ Anything containing URLs: "https://", "/passwords/", "/.htaccess"
+   ❌ Anything containing "HTTP/2 403" or HTTP status codes
    ✅ When unsure → REJECT IT
 
 3. EXTRACT NAMES EXACTLY FROM PDF HEADINGS
@@ -34,33 +42,62 @@ INSTRUCTIONS: EXTRACTION RULES
    ❌ "Input Reflected in Response Body" → ✅ "Input Reflected"
    ❌ "PHP Version Disclosure" → ✅ "PHP Unsupported Version"
 
-5. INSTANCES HANDLING (CRITICAL - NEW VULNERABILITY BLOCK)
-   ⚠️ WHEN YOU SEE "Name Instances (N)" → THIS IS A SEPARATE VULNERABILITY BLOCK
+5. INSTANCES HANDLING (CRITICAL)
+   ⚠️ DEFINITION: An object IS AN INSTANCE if and only if it has:
+      - http_info array WITH DATA (not empty)
+      - identification array WITH DATA (not empty)
+      - If both arrays are empty → NOT an instance
+   
+   ⚠️ RULE: If you extract http_info + identification with data → extract ONLY ONCE
+      - DO NOT create 2 versions (with "Instances (N)" and without)
+      - Create ONLY 1 object with the EXACT name from PDF heading
+      - That 1 object contains ALL the instance data
    
    DO THIS:
-   1. Count ALL "INSTANCE" lines under this heading (each "INSTANCE" = 1 URL)
-   2. Extract URL after each "INSTANCE" keyword
-   3. Create EXACTLY 2 JSON objects:
-      - Object 1: "Name Instances (N)" ← Use EXACT count from heading (e.g., 14)
-                   identification: [all N URLs] ← ALL URLS in one array
-      - Object 2: "Name" (no "Instances")
-                   identification: [SAME URLs as Object 1]
+   1. Identify vulnerability heading: "PHP Unsupported Version Instances (14)"
+   2. Check if PDF section below has INSTANCE blocks with data:
+      ✓ Multiple "INSTANCE" lines with URLs
+      ✓ "Identification" sections with OUTPUT/HTTP_INFO data
+      → YES: This is an instance vulnerability, extract as SINGLE object
+      → NO: This is NOT an instance, extract normally
+   
+   3. For INSTANCE vulnerabilities:
+      - Extract EXACT name from heading: "PHP Unsupported Version Instances (14)"
+      - Count all INSTANCE blocks = N
+      - Extract all N URLs → identification: [url1, url2, ..., urlN]
+      
+      FOR HTTP_INFO EXTRACTION:
+      For each INSTANCE block:
+        1. Find "HTTP Info" section BELOW the INSTANCE
+        2. Extract ALL text from "HTTP Info" until next "INSTANCE" line
+        3. Include: REQUEST MADE, REQUEST HEADERS, RESPONSE HEADERS, HTTP status codes
+        4. Combine all HTTP Info sections → http_info: [http_info_1, http_info_2, ...]
+      
+      FOR IDENTIFICATION EXTRACTION:
+      For each INSTANCE block:
+        1. Find "Identification" section BELOW the INSTANCE URL
+        2. Extract ALL text from "Identification" until "PROOF" line
+        3. Include: PROOF, OUTPUT, response codes, descriptions
+        4. Combine all Identification sections → identification: [id_1, id_2, ...]
+      
+      - Create EXACTLY 1 JSON object with this name
+      - Name stays as-is: "PHP Unsupported Version Instances (14)"
    
    ❌ CRITICAL ERRORS TO AVOID:
-      - Creating "Instances (8)" + "Instances (12)" + "Instances (14)" = WRONG
-        → Only use 1 "Instances (N)" with the count from the PDF heading
-      - Creating "Instances (1)", "(2)", "(3)" = WRONG
+      - Creating 2 objects with "Instances (14)" and "PHP Unsupported Version" = WRONG
+        → If it has http_info + identification, extract ONLY ONCE
+      - Empty arrays with "Instances" suffix = WRONG
+        → If no data in http_info/identification, don't mark as Instances
       - Missing any INSTANCE line = WRONG
-      - Not capturing all N URLs in identification[] = WRONG
-      - Making 3+ separate objects for same base name = WRONG
+      - Splitting one vulnerability into multiple = WRONG
    
    ✅ CORRECT APPROACH:
-      a) Read PDF heading: "PHP Unsupported Version Instances (14)"
-      b) Extract N = 14 from the heading
-      c) Count INSTANCE lines below = must equal 14
-      d) Extract all 14 URLs: https://url1, https://url2, ..., https://url14
-      e) Create Object 1: {"Name": "PHP Unsupported Version Instances (14)", "identification": [14 URLs]}
-      f) Create Object 2: {"Name": "PHP Unsupported Version", "identification": [SAME 14 URLs]}
+      IF has http_info + identification data:
+         Create 1 object: "PHP Unsupported Version Instances (14)"
+         (with all instances consolidated into the arrays)
+      ELSE (no instance data):
+         Create 1 object: "PHP Unsupported Version"
+         (with empty http_info and identification)
    
    ✅ EXAMPLE FROM PDF:
    PDF Heading: "PHP Unsupported Version Instances (14)"
@@ -76,24 +113,65 @@ INSTRUCTIONS: EXTRACTION RULES
    }
 
 6. BEFORE RETURNING JSON - FINAL VERIFICATION
-   ☐ For EACH vulnerability heading with "Instances (N)":
-      - Count how many "INSTANCE" + URL lines appear in PDF = should equal N
-      - If count < N → you missed some instances, search harder for INSTANCE lines
-      - If count > N → you extracted duplicates, remove them
+   ☐ For EACH vulnerability:
+      - If name has "Instances (N)":
+        → Check: http_info is NOT empty? (must have data)
+        → Check: identification is NOT empty? (must have data)
+        → Check: http_info entries contain "REQUEST MADE", "REQUEST HEADERS", "RESPONSE HEADERS"?
+        → Check: identification entries contain "PROOF", "OUTPUT", "HTTP/2" codes?
+        → If ALL checks pass: CORRECT - keep 1 object
+        → If any check fails: WRONG - review extraction
+        → If any is empty: WRONG - remove "Instances (N)" from name, make arrays empty
    
-   ☐ For EACH base vulnerability name (without "Instances (N)" suffix):
-      - Should have EXACTLY 2 objects:
-        1) One with "Name Instances (N)" 
-        2) One with just "Name"
-      - Both must have IDENTICAL identification[] arrays
-      - If different → fix them to match
+   ☐ Count verification for INSTANCE vulnerabilities:
+      - Count all "INSTANCE" lines in PDF section = N
+      - Count entries in identification[] = should equal N
+      - Count entries in http_info[] = should equal N
+      - If different → search harder or correct the count
+   
+   ☐ One object per vulnerability:
+      - Each vulnerability = 1 JSON object (NOT 2)
+      - Name is EXACT from PDF heading (with or without Instances)
+      - If has http_info + identification data → keep "Instances (N)"
+      - If both arrays empty → remove "Instances (N)" from name
    
    ☐ Final checks:
-      - No duplicate Names in output
-      - No "Instances (X)" with different X values for same base name
-      - identification[] count matches N value from heading
-      - All INSTANCE URLs from PDF are in identification[]
-      - No missing or incomplete URLs
+      - No duplicate Names
+      - No "Instances (X)" with empty arrays
+      - No "Instances (X)" AND separate "base name" object
+      - All instance URLs are captured
+
+═══════════════════════════════════════════════════════════════════════════════════
+═══════════════════════════════════════════════════════════════════════════════════
+HOW TO IDENTIFY PDF HEADING (CRITICAL!)
+═══════════════════════════════════════════════════════════════════════════════════
+
+A PDF heading is ALWAYS followed by "VULNERABILITY [SEVERITY] PLUGIN ID"
+
+STRUCTURE IN PDF:
+┌─────────────────────────────────────────────────────┐
+│ PHP Unsupported Version Instances (14)    ← HEADING │
+│ VULNERABILITY INFO PLUGIN ID 98050        ← MARKER  │
+├─────────────────────────────────────────────────────┤
+│ Description...                                      │
+│ INSTANCE                                            │
+│ https://juice-shop.../...                           │
+│ ...                                                 │
+└─────────────────────────────────────────────────────┘
+
+⚠️ CRITICAL: The heading ends RIGHT BEFORE "VULNERABILITY"
+
+❌ WRONG: Extracting from middle of vulnerability:
+   - "Access to .htaccess file denied" ← This is INSIDE the vulnerability data
+   - "Abnormal HTTP Response Code" ← This is description
+   - "/passwords/.htaccess" ← This is a URL, not a name
+
+✅ CORRECT: Extract the full line before "VULNERABILITY":
+   - "Interesting Response Instances (25)" ← Full heading
+   - "HTTP Header Information Disclosure" ← Full heading
+   - "Access to .htpasswd File Instances (4)" ← Full heading (if before VULNERABILITY)
+
+RULE: If a line does NOT have "VULNERABILITY [SEVERITY] PLUGIN ID" after it → IT'S NOT A HEADING
 
 ═══════════════════════════════════════════════════════════════════════════════════
 SEARCH STRATEGY FOR INSTANCES
@@ -101,12 +179,13 @@ SEARCH STRATEGY FOR INSTANCES
 
 When extracting "Name Instances (N)":
 
-1. Locate the heading in PDF (e.g., "PHP Unsupported Version Instances (14)")
-2. Search for ALL lines containing the word "INSTANCE" after this heading
-3. Count how many times you find "INSTANCE" = this is the total instances
-4. Extract URL that comes AFTER each "INSTANCE" line
-5. Add all URLs to identification[] array
-6. REPEAT: If heading says "Instances (14)" but you only found 10 INSTANCE lines
+1. FIRST: Identify the heading → must have "VULNERABILITY" marker after it
+2. Locate heading in PDF (e.g., "PHP Unsupported Version Instances (14)")
+3. Search for ALL lines containing the word "INSTANCE" after this heading
+4. Count how many times you find "INSTANCE" = this is the total instances
+5. Extract URL that comes AFTER each "INSTANCE" line
+6. Add all URLs to identification[] array
+7. REPEAT: If heading says "Instances (14)" but you only found 10 INSTANCE lines
            → Search again! Some are on next pages or formatted differently
    
 Common patterns:
@@ -115,6 +194,55 @@ Common patterns:
 ✅ "INSTANCE   \nhttps://..." (extra spaces)
 ❌ "Instance" (wrong case) - use only "INSTANCE"
 ❌ Incomplete URLs without "https://" - these are not valid
+❌ Any line without preceding "VULNERABILITY" marker - it's NOT a heading
+
+═══════════════════════════════════════════════════════════════════════════════════
+IDENTIFYING AN INSTANCE - KEY MARKERS
+═══════════════════════════════════════════════════════════════════════════════════
+
+What makes a vulnerability an "INSTANCE" vulnerability?
+
+NOT just the name - check the ACTUAL DATA:
+
+INSTANCE VULNERABILITY (has instance data):
+✓ PDF heading: "Vulnerability Name Instances (N)"
+✓ Multiple INSTANCE blocks with URLs
+✓ Multiple Identification sections with OUTPUT data
+✓ Result: http_info array with DATA (filled)
+✓ Result: identification array with DATA (filled)
+→ Extract 1 object with name "Vulnerability Name Instances (N)"
+
+NOT AN INSTANCE (no instance data):
+✗ Name might say "Instances" but has NO INSTANCE blocks
+✗ No multiple URLs to extract
+✗ No Identification sections with data
+✓ Result: http_info array is EMPTY []
+✓ Result: identification array is EMPTY []
+→ Extract 1 object with name "Vulnerability Name"
+
+DECISION RULE:
+IF (http_info has data) AND (identification has data):
+   → This IS an instance → Use name with "Instances (N)"
+   → Extract ONLY 1 object
+ELSE:
+   → This is NOT an instance → Use name without "Instances"
+   → Extract ONLY 1 object
+
+JSON STRUCTURE FOR INSTANCE:
+{
+  "Name": "PHP Unsupported Version Instances (14)",  ← Name says Instances
+  "identification": [url1, url2, ..., url14],        ← Has data (14 URLs)
+  "http_info": [data1, data2, ..., data14],          ← Has data (14 infos)
+  "source": "TENABLEWAS"
+}
+
+JSON STRUCTURE FOR NON-INSTANCE:
+{
+  "Name": "Security Header Missing",  ← Name NO Instances
+  "identification": [],               ← No data (empty)
+  "http_info": [],                    ← No data (empty)
+  "source": "TENABLEWAS"
+}
 
 ═══════════════════════════════════════════════════════════════════════════════════
 ═══════════════════════════════════════════════════════════════════════════════════
@@ -122,20 +250,188 @@ Common patterns:
 OPENVAS Vulnerabilities:
 - source: "OPENVAS"
 - severity: "LOG"
-- identification: [] (always empty)
-- http_info: [] (always empty)
+- identification: [] (always empty - no instances)
+- http_info: [] (always empty - no instances)
+- No "Instances (N)" suffix - each is independent
 
 Tenable WAS Vulnerabilities:
 - source: "TENABLEWAS"
-- severity: Extract from "VULNERABILITY [SEVERITY] PLUGIN ID" (CRITICAL, HIGH, MEDIUM, LOW, INFO)
-- identification: [] if no instances, [URLs] if has instances
-- For Instances objects: severity = "INFO", references = []
+Tenable WAS Vulnerabilities:
+- source: "TENABLEWAS"
+- severity: Extract from "VULNERABILITY [SEVERITY] PLUGIN ID"
+- For vulnerabilities WITH instances:
+  → name has "Instances (N)" suffix (from PDF heading)
+  → identification: populated with all N URLs
+  → http_info: populated with all N http data
+  → Create ONLY 1 object (not 2)
+- For vulnerabilities WITHOUT instances:
+  → name does NOT have "Instances" (just the base name)
+  → identification: empty []
+  → http_info: empty []
+  → Create 1 object
 
 ═══════════════════════════════════════════════════════════════════════════════════
-JSON STRUCTURE TEMPLATE
+⚠️ COMMON ERROR TO AVOID: "Access to .htaccess file denied"
 ═══════════════════════════════════════════════════════════════════════════════════
 
-Every vulnerability object must have ALL these fields:
+WRONG EXTRACTION:
+```
+PDF shows:
+  Interesting Response Instances (25)
+  VULNERABILITY INFO PLUGIN ID 98050
+  
+  INSTANCE
+  https://juice-shop-388277804329.us-west1.run.app/passwords/.htaccess
+  
+  Identification
+  PROOF
+  HTTP/2 403
+  OUTPUT
+  Access to .htaccess file denied ← This looks like a name but IT'S NOT!
+
+❌ WRONG: Extracting "Access to .htaccess file denied" as a vulnerability name
+```
+
+✅ CORRECT EXTRACTION:
+```
+HEADING: "Interesting Response Instances (25)"
+- Line before "VULNERABILITY" marker = HEADING
+- Everything inside the vulnerability (PROOF, OUTPUT, etc) = DATA, NOT a heading
+- Extract ONLY: "Interesting Response Instances (25)"
+- "Access to .htaccess file denied" goes inside http_info[] array, NOT as a name
+```
+
+RULE: If you see "VULNERABILITY [SEVERITY] PLUGIN ID" BEFORE a text → it's a heading
+      If you see "PROOF", "OUTPUT", "HTTP/2 403" → it's inside instance data → DON'T extract as name
+
+═══════════════════════════════════════════════════════════════════════════════════
+HOW TO EXTRACT HTTP_INFO AND IDENTIFICATION STRINGS
+═══════════════════════════════════════════════════════════════════════════════════
+
+PDF STRUCTURE FOR ONE INSTANCE:
+
+INSTANCE
+https://juice-shop-388277804329.us-west1.run.app/passwords/.htaccess  ← URL goes to identification[]
+
+Identification                                                           ← START extracting here
+
+PROOF
+HTTP/2 403
+OUTPUT
+A response has been received with a response code '403' which may require further investigation...
+The response has been triggered by an HTTP GET request...              ← Extract this text
+
+                                                                        ← END Identification section
+HTTP Info                                                                ← START extracting here
+
+REQUEST MADE
+GET /passwords/.htaccess HTTP/2
+
+REQUEST HEADERS
+Host: juice-shop-388277804329.us-west1.run.app
+Accept-Encoding: gzip, deflate, br
+User-Agent: Mozilla/5.0...
+
+RESPONSE HEADERS
+HTTP/2 403
+content-type: text/html; charset=iso-8859-1
+content-length: 326                                                    ← Extract all this text
+
+                                                                        ← END HTTP Info section
+
+EXTRACTION RULES:
+
+For identification[] array:
+  1. Locate "Identification" section AFTER INSTANCE URL
+  2. Extract ALL text from "Identification" UNTIL "HTTP Info" line
+  3. Include: PROOF, OUTPUT, HTTP status, description text
+  4. Store as: "PROOF HTTP/2 403 OUTPUT A response has been received... content..."
+  5. Add to array: identification: ["full text from Identification 1", "full text from Identification 2", ...]
+
+For http_info[] array:
+  1. Locate "HTTP Info" section AFTER Identification
+  2. Extract ALL text from "HTTP Info" UNTIL next "INSTANCE" line (or end of block)
+  3. Include: REQUEST MADE, REQUEST HEADERS, RESPONSE HEADERS, all details
+  4. Store as: "REQUEST MADE GET /path HTTP/2 REQUEST HEADERS ... RESPONSE HEADERS ..."
+  5. Add to array: http_info: ["full HTTP info 1", "full HTTP info 2", ...]
+
+⚠️ IMPORTANT:
+  - Extract the FULL STRING, not just parts
+  - Don't abbreviate or summarize
+  - Include headers, status codes, URLs, everything
+  - Maintain text order as it appears in PDF
+  - One entry per INSTANCE block
+
+═══════════════════════════════════════════════════════════════════════════════════
+DETAILED EXAMPLE: PDF → JSON
+═══════════════════════════════════════════════════════════════════════════════════
+
+EXAMPLE 1: WITH INSTANCES (has http_info + identification data)
+
+PDF CONTENT:
+
+PHP Unsupported Version Instances (14)
+
+VULNERABILITY CRITICAL PLUGIN ID 98230
+
+INSTANCE
+https://juice-shop-388277804329.us-west1.run.app/#/
+
+Identification
+OUTPUT
+Technology PHP version 5.5.9 has been detected. Upgrade to the last supported version of PHP: 8.1
+
+INSTANCE
+https://juice-shop-388277804329.us-west1.run.app/info_install.php
+
+Identification
+OUTPUT
+Technology PHP version 5.5.9 has been detected. Upgrade to the last supported version of PHP: 8.1
+
+[... 12 more INSTANCE blocks ...]
+
+RESULTING JSON (ONLY 1 OBJECT):
+
+{
+  "Name": "PHP Unsupported Version Instances (14)",  ← EXACT name from PDF (HAS Instances)
+  "source": "TENABLEWAS",
+  "severity": "CRITICAL",
+  "identification": [
+    "https://juice-shop-388277804329.us-west1.run.app/#/",
+    "https://juice-shop-388277804329.us-west1.run.app/info_install.php",
+    ... (14 URLs total)
+  ],
+  "http_info": [
+    "Technology PHP version 5.5.9 has been detected...",
+    "Technology PHP version 5.5.9 has been detected...",
+    ... (14 entries total)
+  ],
+  "plugin": ["98230"]
+}
+
+EXAMPLE 2: WITHOUT INSTANCES (no http_info/identification data)
+
+PDF CONTENT:
+
+Security.txt File Not Detected
+
+VULNERABILITY INFO PLUGIN ID 98xxx
+
+[No INSTANCE blocks found]
+[No Identification sections with data]
+
+RESULTING JSON (ONLY 1 OBJECT):
+
+{
+  "Name": "Security.txt File Not Detected",  ← Name WITHOUT Instances
+  "source": "TENABLEWAS",
+  "severity": "INFO",
+  "identification": [],  ← Empty (no instances)
+  "http_info": [],       ← Empty (no instances)
+  "plugin": ["98xxx"]
+}
+
+═══════════════════════════════════════════════════════════════════════════════════
 
 {
   "Name": "<exact text from PDF heading>",
