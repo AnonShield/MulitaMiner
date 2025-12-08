@@ -1,447 +1,254 @@
+"""
+PDF Vulnerability Extractor - Main Entry Point
+
+Extrai vulnerabilidades de relatórios PDF (OpenVAS/Tenable WAS) usando LLM
+e converte para formatos estruturados (JSON/CSV/XLSX).
+
+Usage:
+    python main.py <pdf_path> [--LLM <model>] [--convert <format>]
+"""
+
 import os
 import sys
 import argparse
 import json
-import re
-import tiktoken
-
-# third-party
 from tqdm import tqdm
 
-# ensure local package imports resolve (adds project src to sys.path)
+# Adicionar src ao path para imports locais
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'src'))
 
-# local imports (from src/)
 from utils.utils import (
-    load_profile, load_llm, init_llm, load_prompt, save_visual_layout,
-    execute_conversions, parse_json_response, validate_and_normalize_vulnerability
+    load_profile, load_llm, init_llm, save_visual_layout,
+    execute_conversions, validate_and_normalize_vulnerability,
+    validate_cais_vulnerability
 )
 from utils.pdf_loader import load_pdf_with_pypdf2
-
-class _TokenChunk:
-    """Objeto simples compatível com doc_chunk esperado (atributo page_content)."""
-    def __init__(self, page_content):
-        self.page_content = page_content
-
-def get_token_based_chunks(text, max_tokens, reserve_for_response=1000):
-    """
-    Divide texto em chunks baseado em tokens.
-    
-    Args:
-        text: Texto a dividir
-        max_tokens: Max tokens do modelo
-        reserve_for_response: Tokens reservados para a resposta do LLM (padrão: 1000)
-    
-    O cálculo considera:
-    - Prompt template (~500 tokens)
-    - Reserve para resposta (~1000 tokens)
-    - Espaço para o contexto do chunk
-    """
-    # Usar tokenizer do GPT por padrão (compatível com a maioria dos modelos)
-    try:
-        tokenizer = tiktoken.encoding_for_model("gpt-3.5-turbo")
-    except:
-        tokenizer = tiktoken.get_encoding("cl100k_base")
-    
-    # Calcular tokens disponíveis para conteúdo
-    # max_tokens = tokens de prompt + tokens de resposta
-    # Reservamos espaço para: prompt template (~500) + resposta (~1000)
-    prompt_overhead = 500  # Estimativa do prompt template
-    available_for_content = max_tokens - prompt_overhead - reserve_for_response
-    
-    # Garantir mínimo de 1000 tokens para conteúdo
-    available_for_content = max(1000, available_for_content)
-    
-    tokens = tokenizer.encode(text)
-    n_tokens = len(tokens)
-    chunks = []
-    
-    print(f"[TOKEN CALC] Max tokens do modelo: {max_tokens}")
-    print(f"[TOKEN CALC] Overhead do prompt: ~{prompt_overhead} tokens")
-    print(f"[TOKEN CALC] Reserve para resposta: ~{reserve_for_response} tokens")
-    print(f"[TOKEN CALC] Tokens disponíveis para conteúdo: ~{available_for_content} tokens")
-    print(f"[TOKEN CALC] Total de tokens no texto: {n_tokens}")
-    
-    # Dividir o texto em chunks
-    for i in range(0, n_tokens, available_for_content):
-        chunk_tokens = tokens[i:i + available_for_content]
-        chunk_text = tokenizer.decode(chunk_tokens)
-        chunks.append(_TokenChunk(chunk_text))
-    
-    print(f"[TOKEN CALC] Total de chunks criados: {len(chunks)}")
-    
-    return chunks
+from utils.processing import (
+    get_token_based_chunks, retry_chunk_with_subdivision,
+    consolidate_duplicates, is_cais_profile, get_consolidation_field
+)
 
 
+def get_validator(profile_config: dict):
+    """Obter validador apropriado baseado no perfil."""
+    if is_cais_profile(profile_config):
+        return validate_cais_vulnerability
+    return validate_and_normalize_vulnerability
 
 
-def parse_arguments():
-    """Parse argumentos da linha de comando"""
+def parse_arguments() -> argparse.Namespace:
+    """Parse argumentos da linha de comando."""
     parser = argparse.ArgumentParser(
-        description='Extrai vulnerabilidades de relatórios PDF usando um LLM e salva em JSON/CSV/XLSX.'
+        description='Extrai vulnerabilidades de relatórios PDF usando LLM'
     )
-    parser.add_argument('--profile', default='default', help='Perfil de configuração (padrão: default)')
-    
     parser.add_argument('pdf_path', help='Caminho para o arquivo PDF')
-    
+    parser.add_argument('--profile', default='default', 
+                       help='Perfil de configuração (padrão: default)')
+    parser.add_argument('--LLM', default='gpt4', 
+                       help='Nome do LLM a usar (padrão: gpt4)')
     
     # Opções de conversão
-    parser.add_argument('--convert',
-                        choices=['csv', 'xlsx', 'tsv', 'all', 'none'],
-                        default='none',
-                        help='Converter saída JSON para formato específico (padrão: none)')
-    parser.add_argument('--output',
-                        help='Caminho do arquivo de saída para a conversão (opcional)')
-    parser.add_argument('--output-dir',
-                        dest='output_dir',
-                        help='Diretório de saída para arquivos convertidos (opcional)')
-    parser.add_argument('--csv-delimiter',
-                        dest='csv_delimiter',
-                        default=',',
-                        help='Delimitador para CSV (padrão: ,)')
-    parser.add_argument('--csv-encoding',
-                        dest='csv_encoding',
-                        default='utf-8-sig',
-                        help='Codificação para CSV (padrão: utf-8-sig)')
+    parser.add_argument('--convert', choices=['csv', 'xlsx', 'tsv', 'all', 'none'],
+                       default='none',
+                       help='Converter saída JSON para formato específico (padrão: none)')
+    parser.add_argument('--output', help='Caminho do arquivo de saída para conversão')
+    parser.add_argument('--output-dir', dest='output_dir',
+                       help='Diretório de saída para arquivos convertidos')
+    parser.add_argument('--csv-delimiter', dest='csv_delimiter', default=',',
+                       help='Delimitador para CSV (padrão: ,)')
+    parser.add_argument('--csv-encoding', dest='csv_encoding', default='utf-8-sig',
+                       help='Codificação para CSV (padrão: utf-8-sig)')
     
-    # Argumentos essenciais
-    parser.add_argument('--LLM', default='gpt4', help='Nome do LLM a usar (padrão: gpt4)')
     return parser.parse_args()
-def validate_pdf_path(pdf_path):
-    if not os.path.isfile(pdf_path):
-        print(f"Erro: Arquivo PDF não encontrado: {pdf_path}")
+
+
+def validate_inputs(args: argparse.Namespace) -> bool:
+    """Valida inputs do usuário."""
+    if not os.path.isfile(args.pdf_path):
+        print(f"Erro: Arquivo PDF não encontrado: {args.pdf_path}")
         return False
     return True
 
-def get_configs(args):
+
+def load_configs(args: argparse.Namespace) -> tuple:
+    """Carrega configurações de perfil e LLM."""
     profile_config = load_profile(args.profile)
-    if profile_config is None:
-        print(f"Erro ao carregar configuração do perfil: {args.profile}")
+    if not profile_config:
+        print(f"Erro ao carregar perfil: {args.profile}")
         return None, None
+    
     llm_config = load_llm(args.LLM)
-    if llm_config is None:
-        print(f"Erro ao carregar configuração do LLM: {args.LLM}")
+    if not llm_config:
+        print(f"Erro ao carregar LLM: {args.LLM}")
         return None, None
+    
     return profile_config, llm_config
 
-def build_prompt(doc_chunk, profile_config):
-    template_path = profile_config.get('prompt_template', '')
-    prompt_template_content = load_prompt(template_path)
-    
-    prompt = (
-        "Analyze this security report with preserved visual layout and extract vulnerabilities in JSON format:\n\n"
-        f"REPORT CONTENT:\n{doc_chunk.page_content}\n\n"
-        f"{prompt_template_content}"
-    )
-    
-    return prompt
 
-def _split_text_to_subchunks(text, target_size):
-    """Divide um texto grande em subchunks menores aproximando target_size em caracteres.
-    Mantém quebras de linha para preservar contexto lógico.
+def process_vulnerabilities(doc_texts: list, llm, profile_config: dict) -> list:
     """
-    if len(text) <= target_size:
-        return [text]
-    lines = text.splitlines(keepends=True)
-    subchunks = []
-    current = []
-    current_len = 0
-    for line in lines:
-        line_len = len(line)
-        # Se adicionar esta linha extrapola o target, fecha chunk atual
-        if current_len + line_len > target_size and current:
-            subchunks.append(''.join(current))
-            current = [line]
-            current_len = line_len
-        else:
-            current.append(line)
-            current_len += line_len
-    if current:
-        subchunks.append(''.join(current))
-    return subchunks
-
-class _AdHocChunk:
-    """Objeto simples compatível com doc_chunk esperado (atributo page_content)."""
-    def __init__(self, page_content):
-        self.page_content = page_content
-
-def _fallback_process_large_chunk(doc_chunk, llm, profile_config, max_subchunk_chars=4000):
-    """Processa um chunk grande dividindo-o em subchunks quando há erro de contexto ou tamanho.
-    Retorna lista de vulnerabilidades extraídas dos subchunks.
+    Processa todos os chunks e extrai vulnerabilidades.
+    
+    Args:
+        doc_texts: Lista de chunks de documento
+        llm: Instância do LLM inicializada
+        profile_config: Configuração do perfil
+    
+    Returns:
+        Lista de todas as vulnerabilidades extraídas
     """
-    sub_vulns = []
-    sub_texts = _split_text_to_subchunks(doc_chunk.page_content, max_subchunk_chars)
-    print(f"[FALLBACK] Dividindo chunk em {len(sub_texts)} subchunks de ~{max_subchunk_chars} caracteres...")
-    
-    for idx, sub_text in enumerate(sub_texts, start=1):
-        sub_chunk = _AdHocChunk(sub_text)
-        prompt = build_prompt(sub_chunk, profile_config)
-        print(f"[FALLBACK] Processando subchunk {idx}/{len(sub_texts)} (tamanho: {len(sub_text)} chars)...")
-        try:
-            print(f"[FALLBACK] → Enviando subchunk {idx} para LLM...")
-            resposta = llm.invoke(prompt).content
-            print(f"[FALLBACK] ← Resposta recebida do LLM para subchunk {idx}")
-            
-            # Use flexible parsing from utils
-            parsed = parse_json_response(resposta, f" subchunk {idx}")
-            
-            if parsed and isinstance(parsed, list):
-                sub_vulns.extend(parsed)
-                print(f"[FALLBACK] ✓ Subchunk {idx}: {len(parsed)} vulnerabilidades extraídas")
-            else:
-                print(f"[FALLBACK] ✗ Subchunk {idx} não retornou lista JSON válida.")
-        except Exception as e:
-            print(f"[FALLBACK] ✗ Erro ao processar subchunk {idx}: {e}")
-    
-    print(f"[FALLBACK] Processamento completo: {len(sub_vulns)} vulnerabilidades totais extraídas")
-    return sub_vulns
-
-def _retry_chunk_with_subdivision(doc_chunk, llm, profile_config, max_retries=3):
-    """Processa um chunk com retry automático e subdivisão progressiva em caso de erro."""
-    retry_count = 0
-    current_size = 4000  # Tamanho inicial para subdivisão
-    last_error = None
-    
-    while retry_count < max_retries:
-        try:
-            if retry_count == 0:
-                # Primeira tentativa: chunk original
-                prompt = build_prompt(doc_chunk, profile_config)
-                resposta = llm.invoke(prompt).content
-            else:
-                # Tentativas subsequentes: dividir em subchunks
-                print(f"[RETRY {retry_count}] Subdividindo chunk com tamanho {current_size}...")
-                sub_vulns = _fallback_process_large_chunk(doc_chunk, llm, profile_config, current_size)
-                return sub_vulns
-            
-            # Tentar parsear JSON
-            try:
-                vulnerabilities = json.loads(resposta)
-                if isinstance(vulnerabilities, list):
-                    return vulnerabilities
-                else:
-                    print(f"[AVISO] Resposta não é uma lista, tentando extrair JSON...")
-                    raise json.JSONDecodeError("Resposta não é uma lista", resposta, 0)
-            except json.JSONDecodeError as json_err:
-                # Use flexible parsing strategy from utils
-                vulnerabilities = parse_json_response(resposta, f" chunk")
-                if vulnerabilities:
-                    return vulnerabilities
-                
-                # If still no luck, try subdividir
-                print(f"[AVISO] Não foi possível encontrar array JSON válido na resposta")
-                raise json_err
-                    
-        except Exception as e:
-            retry_count += 1
-            error_msg = str(e)
-            error_type = type(e).__name__
-            last_error = e
-            print(f"[RETRY {retry_count}/{max_retries}] {error_type}: {error_msg[:150]}...")
-            
-            # Se é erro de quota/rate limit/timeout, não retry
-            if any(keyword in error_msg.lower() for keyword in ['quota', '429', 'rate limit', 'timeout', 'timed out']):
-                print(f"[ERRO CRÍTICO] Detectado erro de quota/timeout/rate limit. Interrompendo.")
-                raise e
-                
-            # Reduzir tamanho para próxima tentativa
-            current_size = max(1000, current_size // 2)
-            
-            if retry_count >= max_retries:
-                print(f"[ERRO] Máximo de tentativas ({max_retries}) excedido. Último erro: {error_type}")
-                return []
-    
-    print(f"[ERRO] Saiu do loop de retry sem retornar vulnerabilidades")
-    return []
-
-def process_vulnerabilities(doc_texts, llm, profile_config):
     all_vulnerabilities = []
-    total_chunks = len(doc_texts)
     max_retries = profile_config.get('retry_attempts', 3)
     
     for i, doc_chunk in enumerate(tqdm(doc_texts, desc="Processando chunks", unit="chunk")):
         print(f"\n{'='*60}")
-        print(f"Processando chunk {i+1}/{total_chunks}")
+        print(f"Processando chunk {i+1}/{len(doc_texts)}")
         print(f"{'='*60}")
+        
         try:
-            vulnerabilities_chunk = _retry_chunk_with_subdivision(doc_chunk, llm, profile_config, max_retries)
+            vulns_chunk = retry_chunk_with_subdivision(doc_chunk, llm, profile_config, max_retries)
             
-            if vulnerabilities_chunk:
-                # Validate and normalize each vulnerability using utils function
-                validated_vulns = []
-                for vuln in vulnerabilities_chunk:
-                    normalized = validate_and_normalize_vulnerability(vuln)
-                    if normalized:
-                        validated_vulns.append(normalized)
+            if vulns_chunk:
+                # Validate vulnerabilities based on profile type
+                validator = get_validator(profile_config)
+                validated_vulns = [
+                    validator(v)
+                    for v in vulns_chunk
+                    if validator(v)
+                ]
+                
+                # Determine name field from profile or auto-detect
+                name_field = get_consolidation_field(validated_vulns, profile_config)
                 
                 all_vulnerabilities.extend(validated_vulns)
-                nomes_vulns = [v.get('Name') for v in validated_vulns if isinstance(v, dict) and v.get('Name')]
-                print(f"[LOG] Chunk {i+1}/{total_chunks}: {len(validated_vulns)}/{len(vulnerabilities_chunk)} vulnerabilidades válidas: {nomes_vulns}")
+                names = [v.get(name_field) for v in validated_vulns if isinstance(v, dict) and v.get(name_field)]
+                
+                print(f"[LOG] Chunk {i+1}/{len(doc_texts)}: {len(validated_vulns)}/{len(vulns_chunk)} vulnerabilidades extraídas")
+                if names:
+                    print(f"[NOMES]")
+                    for idx, name in enumerate(names, 1):
+                        print(f"  {idx:2d}. {name}")
             else:
-                print(f"[LOG] Chunk {i+1}/{total_chunks}: 0 vulnerabilidades extraídas: []")
+                print(f"[LOG] Chunk {i+1}/{len(doc_texts)}: 0 vulnerabilidades")
                 
         except Exception as e:
-            error_text = str(e).lower()
-            error_type = type(e).__name__
+            error_msg = str(e).lower()
             
-            # Verificar erros críticos que devem parar o processamento
-            if any(keyword in error_text for keyword in ['quota', '429', 'rate limit', 'timeout', 'timed out', 'connection', 'ssl']):
-                print(f"\n[ERRO CRÍTICO] {error_type}: {str(e)[:200]}")
-                print(f"Chunk {i+1}/{total_chunks} - Parando processamento.")
+            # Erros críticos que interrompem processamento
+            if any(kw in error_msg for kw in ['quota', '429', 'rate limit', 'timeout', 'connection']):
+                print(f"\n[ERRO CRÍTICO] {type(e).__name__}: {str(e)[:200]}")
+                print(f"Parando processamento no chunk {i+1}/{len(doc_texts)}")
                 break
             else:
-                print(f"\n[ERRO] {error_type} no chunk {i+1}: {str(e)[:200]}")
-                print(f"[LOG] Chunk {i+1}/{total_chunks}: 0 vulnerabilidades extraídas: []")
-                print(f"Continuando com próximo chunk...\n")
-                
+                print(f"\n[ERRO] {type(e).__name__}: {str(e)[:200]}")
+                print(f"Continuando com próximo chunk...")
+    
     return all_vulnerabilities
 
-def consolidate_duplicates(vulnerabilities):
-    """
-    Consolida vulnerabilidades com mesmo Name em um único objeto.
-    Mescla arrays (description, solution, references, identification, http_info, plugin)
-    mantendo valores únicos. Mantém highest severity.
-    """
-    from collections import defaultdict
-    
-    # Agrupar por Name
-    by_name = defaultdict(list)
-    for vuln in vulnerabilities:
-        name = (vuln.get('Name') or '').strip()
-        if name:
-            by_name[name].append(vuln)
-    
-    consolidated = []
-    severity_order = {'CRITICAL': 4, 'HIGH': 3, 'MEDIUM': 2, 'LOW': 1, 'LOG': 0}
-    
-    for name, vulns in by_name.items():
-        if len(vulns) == 1:
-            consolidated.append(vulns[0])
-            continue
-        
-        # Mesclar múltiplas instâncias
-        base = vulns[0].copy()
-        
-        # Arrays para mesclar (unique values)
-        array_fields = ['description', 'solution', 'references', 'identification', 
-                       'http_info', 'plugin', 'detection_result', 'detection_method',
-                       'impact', 'insight', 'product_detection_result', 'log_method']
-        
-        for field in array_fields:
-            all_values = []
-            for v in vulns:
-                val = v.get(field, [])
-                if isinstance(val, list):
-                    all_values.extend(val)
-                elif val is not None:
-                    all_values.append(val)
-            # Remove duplicatas mantendo ordem
-            unique = []
-            seen = set()
-            for item in all_values:
-                # Para strings, usar lowercase para dedup case-insensitive
-                key = item.lower() if isinstance(item, str) else str(item)
-                if key not in seen:
-                    seen.add(key)
-                    unique.append(item)
-            base[field] = unique
-        
-        # Severity: pegar o maior
-        severities = [v.get('severity', 'LOG') for v in vulns]
-        base['severity'] = max(severities, key=lambda s: severity_order.get(s, 0))
-        
-        # CVSS: pegar primeiro não-null
-        cvss_vals = [v.get('cvss') for v in vulns if v.get('cvss') and any(v.get('cvss'))]
-        if cvss_vals:
-            base['cvss'] = cvss_vals[0]
-        
-        # Port/protocol: pegar primeiro não-null
-        ports = [v.get('port') for v in vulns if v.get('port')]
-        if ports:
-            base['port'] = ports[0]
-        
-        protocols = [v.get('protocol') for v in vulns if v.get('protocol')]
-        if protocols:
-            base['protocol'] = protocols[0]
-        
-        consolidated.append(base)
-    
-    return consolidated
 
-def save_results(all_vulnerabilities, output_file):
+def save_results(vulnerabilities: list, output_file: str, profile_config: dict = None) -> bool:
+    """
+    Salva vulnerabilidades em JSON.
+    Consolida duplicatas para Tenable WAS.
+    
+    Args:
+        vulnerabilities: Lista de vulnerabilidades
+        output_file: Caminho do arquivo de saída
+        profile_config: Configuração do perfil (opcional)
+    
+    Returns:
+        True se sucesso, False caso contrário
+    """
     try:
-        # Verificar se há vulnerabilidades de Tenable WAS
-        has_tenable = any(v.get('source') == 'TENABLEWAS' for v in all_vulnerabilities if isinstance(v, dict))
+        has_tenable = any(
+            v.get('source') == 'TENABLEWAS' 
+            for v in vulnerabilities 
+            if isinstance(v, dict)
+        )
         
         if has_tenable:
-            # Consolidar duplicatas apenas para Tenable WAS
             print(f"\nConsolidando vulnerabilidades duplicadas (Tenable WAS)...")
-            unique_vulns = consolidate_duplicates(all_vulnerabilities)
-            print(f"Total antes: {len(all_vulnerabilities)} | Após consolidação: {len(unique_vulns)}")
+            final_vulns = consolidate_duplicates(vulnerabilities)
+            print(f"Total: {len(vulnerabilities)} → {len(final_vulns)} após consolidação")
         else:
-            # OpenVAS: não consolidar
-            print(f"\nSem consolidação (OpenVAS) - {len(all_vulnerabilities)} vulnerabilidades")
-            unique_vulns = all_vulnerabilities
+            print(f"\nSem consolidação (OpenVAS) - {len(vulnerabilities)} vulnerabilidades")
+            final_vulns = vulnerabilities
+        
+        # Detectar campo de consolidação do profile ou auto-detectar
+        name_field = get_consolidation_field(final_vulns, profile_config)
+        
+        unique_names = sorted(set(v.get(name_field, 'SEM NOME') for v in final_vulns if isinstance(v, dict)))
+        print(f"\nTotal de vulnerabilidades únicas: {len(unique_names)}")
+        print(f"\nResumo de vulnerabilidades encontradas:")
+        for idx, name in enumerate(unique_names, 1):
+            count = sum(1 for v in final_vulns if isinstance(v, dict) and v.get(name_field) == name)
+            print(f"  {idx:3d}. [{count:2d}x] {name}")
         
         with open(output_file, 'w', encoding='utf-8') as f:
-            json.dump(unique_vulns, f, indent=2, ensure_ascii=False)
-        print(f"Processamento concluído. Vulnerabilidades salvas em: {output_file}")
+            json.dump(final_vulns, f, indent=2, ensure_ascii=False)
+        
+        print(f"Vulnerabilidades salvas em: {output_file}")
         return True
+        
     except Exception as e:
-        print(f"Erro ao salvar arquivo JSON: {e}")
+        print(f"Erro ao salvar JSON: {e}")
         return False
 
-def handle_conversions(output_file, args, visual_file):
-    print(f"Layout visual salvo em: {visual_file if visual_file else 'Erro ao salvar'}")
-    # Executa conversões conforme argumentos (csv/xlsx/tsv/all)
-    try:
-        converted = execute_conversions(output_file, args)
-        if converted:
-            print("Conversões geradas:")
-            for c in converted:
-                print(f" - {c}")
-        else:
-            print("Nenhuma conversão realizada.")
-    except Exception as e:
-        print(f"Erro ao executar conversões: {e}")
 
 def main():
+    """Fluxo principal de extração."""
+    # Parse e validação
     args = parse_arguments()
-    if not validate_pdf_path(args.pdf_path):
+    if not validate_inputs(args):
         return
-    profile_config, llm_config = get_configs(args)
+    
+    # Carregar configs
+    profile_config, llm_config = load_configs(args)
     if not profile_config or not llm_config:
         return
-    llm = init_llm(llm_config)
-    output_file = profile_config['output_file']
     
-    # Obter max_tokens da configuração do LLM
+    # Inicializar LLM
+    llm = init_llm(llm_config)
     max_tokens = llm_config.get('max_tokens', 4096)
-    reserve_for_response = llm_config.get('reserve_for_response', 1000)
+    reserve_response = llm_config.get('reserve_for_response', 1000)
     
     print(f"\n{'='*60}")
-    print(f"[CONFIGURAÇÃO] LLM: {llm_config.get('model')}")
-    print(f"[CONFIGURAÇÃO] Max tokens: {max_tokens}")
-    print(f"[CONFIGURAÇÃO] Reserve para resposta: {reserve_for_response}")
+    print(f"[CONFIG] LLM: {llm_config.get('model')}")
+    print(f"[CONFIG] Max tokens: {max_tokens}")
+    print(f"[CONFIG] Reserve para resposta: {reserve_response}")
     print(f"{'='*60}\n")
     
-    # Carregamento do documento PDF
+    # Carregamento do PDF
     documents = load_pdf_with_pypdf2(args.pdf_path)
-    if documents is None:
-        print("Falha ao carregar o PDF. Verifique se o arquivo não está corrompido.")
+    if not documents:
+        print("Erro: Falha ao carregar PDF")
         return
-    visual_file = save_visual_layout(documents[0].page_content, args.pdf_path)
     
-    # Divisão baseada em tokens do LLM
+    visual_file = save_visual_layout(documents[0].page_content, args.pdf_path)
+    print(f"Layout visual salvo em: {visual_file}\n")
+    
+    # Divisão em chunks e processamento
     doc_texts = get_token_based_chunks(
-        documents[0].page_content, 
+        documents[0].page_content,
         max_tokens,
-        reserve_for_response
+        reserve_response
     )
-    print(f"Total de chunks a processar: {len(doc_texts)}\n")
+    print(f"Total de chunks: {len(doc_texts)}\n")
+    
     all_vulnerabilities = process_vulnerabilities(doc_texts, llm, profile_config)
-    if save_results(all_vulnerabilities, output_file):
-        handle_conversions(output_file, args, visual_file)
+    
+    # Salvar resultados e conversões
+    output_file = profile_config['output_file']
+    if save_results(all_vulnerabilities, output_file, profile_config):
+        try:
+            converted = execute_conversions(output_file, args)
+            if converted:
+                print(f"\nConversões geradas: {len(converted)}")
+                for c in converted:
+                    print(f"  - {c}")
+        except Exception as e:
+            print(f"Erro ao executar conversões: {e}")
+
 
 if __name__ == "__main__":
     main()
