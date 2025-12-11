@@ -240,13 +240,38 @@ def load_llm(llm_name):
 
 def init_llm(llm_config):
     os.environ["OPENAI_API_KEY"] = llm_config["api_key"]
-    return ChatOpenAI(
-        model=llm_config["model"],
-        temperature=llm_config["temperature"],
-        base_url=llm_config["endpoint"],
-        max_tokens=llm_config.get("max_tokens", 4096),
-        timeout=llm_config.get("timeout", 120),
-    )
+    
+    # Garantir que temperature não é None
+    temperature = llm_config.get("temperature", 1.0)
+    if temperature is None:
+        temperature = 1.0
+    temperature = float(temperature)
+    
+    # Resolver max_tokens/max_completion_tokens
+    max_tokens = None
+    if "max_completion_tokens" in llm_config:
+        max_tokens = llm_config["max_completion_tokens"]
+    elif "max_tokens" in llm_config:
+        max_tokens = llm_config["max_tokens"]
+    else:
+        max_tokens = 4096
+    
+    if max_tokens is None:
+        max_tokens = 4096
+    max_tokens = int(max_tokens)
+    
+    # LangChain ChatOpenAI: max_completion_tokens vai em model_kwargs
+    kwargs = {
+        "model": llm_config["model"],
+        "temperature": temperature,
+        "base_url": llm_config["endpoint"],
+        "timeout": llm_config.get("timeout", 120),
+        "model_kwargs": {
+            "max_completion_tokens": max_tokens,
+        }
+    }
+    
+    return ChatOpenAI(**kwargs)
 
 
 

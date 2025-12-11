@@ -15,40 +15,55 @@ SECTION A: OPENVAS EXTRACTION
 
 NVT EXTRACTION RULES
 
-1. Find lines that start with "NVT: "
-   - Each "NVT: " line marks the start of a vulnerability block
-   - Extract the Name from what comes after "NVT: "
-   - Continue reading until the next "NVT: " line (end of this vulnerability)
-   - Extract EVERY NVT you find - do NOT skip or filter
+1. IDENTIFY NVT BLOCKS - Only extract lines that START with "NVT: "
+   ⚠️ ABSOLUTE REQUIREMENT:
+   - Name MUST ONLY come from lines that literally start with "NVT: "
+   - Do NOT use any other text as Name, including:
+     * Technical details like "Certificate details: subject ...: C=DE,L=..."
+     * Section headers like "High 25/tcp", "Medium 443/tcp"
+     * Configuration details like "valid from: 2018-08-21"
+     * Keys/values like "serial ....: 5B7C65801F8422EBBDAD2299"
+     * Any line not starting with "NVT: "
+   
+   CORRECT EXAMPLES:
+   - Line in PDF: "NVT: SMTP too long line" → Name = "SMTP too long line"
+   - Line in PDF: "NVT: SSL/TLS: Certificate Expired" → Name = "SSL/TLS: Certificate Expired"
+   - Line in PDF: "NVT: OpenVAS / Greenbone Vulnerability Manager Detection" → Name = "OpenVAS / Greenbone Vulnerability Manager Detection"
+   
+   PROCESS:
+   - Find each line that starts with "NVT: "
+   - Extract EXACTLY what comes after "NVT: " (the complete text on that line)
+   - This is the vulnerability Name
+   - Continue reading all sections (Summary, Detection Result, Solution, etc.) until the next "NVT: " line
+   - Extract ALL section content into appropriate fields
 
 2. Extract all fields from each NVT block:
-   - Name: text after "NVT: "
-   - severity: from "[SEVERITY (CVSS: X.X)]" header
-     ⚠️ IMPORTANT: Check the header carefully:
-     - If it says "Info (CVSS:" or "[Info" → severity is "INFO"
-     - If it says "Log (CVSS:" or "[Log" → severity is "LOG"
-     - If it says "High", "Medium", "Low", "Critical" → use that value
-     - Do NOT use "INFO" and "LOG" interchangeably - check which one appears in PDF
-   - port: from section header like "High 25/tcp" (extract 25)
-   - protocol: from section header like "High 25/tcp" (extract tcp)
-   - cvss: from "CVSS: X.X" value
-   - description: from "Summary" section (MULTI-LINE: include ALL paragraphs and bullet lines; split by line breaks; preserve order; trim whitespace; remove exact duplicates)
-   - detection_result: from "Vulnerability Detection Result" section (MULTI-LINE: include ALL lines)
-   - detection_method: from "Vulnerability Detection Method" section (MULTI-LINE: include ALL lines)
-   - product_detection_result: from "Product Detection Result" section (MULTI-LINE: include ALL lines)
-   - impact: from "Impact" section (MULTI-LINE: include ALL lines/paragraphs)
-   - solution: from "Solution" section
-   - insight: from "Vulnerability Insight" section (if present)
-   - log_method: from "Log Method" section
-   - references: from "References" section
+   - Name: ONLY from "NVT: " lines - EXACT copy of text after "NVT: " prefix (do not include "NVT: " itself)
+   - severity: from the header line like "High (CVSS: 7.5)", "Medium", "Low", "CRITICAL", or "Log (CVSS:"
+   - port: from severity header like "High 25/tcp" (extract port number 25)
+   - protocol: from severity header like "High 25/tcp" (extract protocol: tcp)
+   - cvss: from "CVSS: X.X" value in severity header
+   - description: from "Summary" section (all paragraphs and bullet points; split by line breaks; trim whitespace)
+   - detection_result: from "Vulnerability Detection Result" section (all lines - exclude technical details like certificate subject/serial/fingerprint)
+   - detection_method: from "Vulnerability Detection Method" section (all lines)
+   - product_detection_result: from "Product Detection Result" section (all lines)
+   - impact: from "Impact" section (all lines/paragraphs)
+   - solution: from "Solution" section (all lines)
+   - insight: from "Vulnerability Insight" section (all lines)
+   - log_method: from "Log Method" section (all lines)
+   - references: from "References" section (all lines)
 
 3. Build JSON object with all 18 fields:
-   - plugin: null (always null for OpenVAS)
+   - plugin: [] (always empty for OpenVAS)
    - identification: [] (always empty for OpenVAS)
    - http_info: [] (always empty for OpenVAS)
    - source: "OPENVAS"
 
-4. Extract ALL NVT blocks you find - do NOT skip any, do NOT filter, extract everything
+4. Extract ALL NVT blocks you find
+   - Process EVERY line that starts with "NVT: "
+   - Do NOT skip any
+   - Include: CRITICAL, HIGH, MEDIUM, LOW, LOG severities
+   - Include: Service detections, Configuration checks, Banner grabs, System information
 
 ═══════════════════════════════════════════════════════════════════════════════════
 SECTION B: TENABLEWAS EXTRACTION
