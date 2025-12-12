@@ -152,10 +152,38 @@ def process_vulnerabilities(doc_texts: list, llm, profile_config: dict) -> list:
     return all_vulnerabilities
 
 
+def load_previous_vulnerabilities(output_file: str) -> dict:
+    """
+    Carrega vulnerabilidades previamente salvas para comparação.
+    
+    Args:
+        output_file: Caminho do arquivo de saída
+    
+    Returns:
+        Dicionário com vulnerabilidades anteriores por nome
+    """
+    previous = {}
+    if os.path.isfile(output_file):
+        try:
+            with open(output_file, 'r', encoding='utf-8') as f:
+                data = json.load(f)
+                if isinstance(data, list):
+                    for v in data:
+                        if isinstance(v, dict) and v.get('Name'):
+                            name = v.get('Name')
+                            if name not in previous:
+                                previous[name] = []
+                            previous[name].append(v)
+        except Exception as e:
+            print(f"[AVISO] Não foi possível carregar arquivo anterior: {e}")
+    return previous
+
+
 def save_results(vulnerabilities: list, output_file: str, profile_config: dict = None) -> bool:
     """
     Salva vulnerabilidades em JSON.
     Consolida duplicatas para Tenable WAS.
+    Mostra apenas as vulnerabilidades NOVAS encontradas.
     
     Args:
         vulnerabilities: Lista de vulnerabilidades
@@ -166,6 +194,9 @@ def save_results(vulnerabilities: list, output_file: str, profile_config: dict =
         True se sucesso, False caso contrário
     """
     try:
+        # Carregar vulnerabilidades anteriores para comparação
+        previous_vulns = load_previous_vulnerabilities(output_file)
+        
         has_tenable = any(
             v.get('source') == 'TENABLEWAS' 
             for v in vulnerabilities 
@@ -183,6 +214,27 @@ def save_results(vulnerabilities: list, output_file: str, profile_config: dict =
         # Detectar campo de consolidação do profile ou auto-detectar
         name_field = get_consolidation_field(final_vulns, profile_config)
         
+        # Identificar vulnerabilidades NOVAS vs ANTIGAS
+        new_vulns = []
+        updated_vulns = []
+        repeated_vulns = []
+        
+        for v in final_vulns:
+            if isinstance(v, dict):
+                name = v.get(name_field, 'SEM NOME')
+                if name in previous_vulns:
+                    # Verificar se é igual à versão anterior
+                    is_duplicate = any(
+                        v == prev_v 
+                        for prev_v in previous_vulns[name]
+                    )
+                    if is_duplicate:
+                        repeated_vulns.append(v)
+                    else:
+                        updated_vulns.append(v)
+                else:
+                    new_vulns.append(v)
+        
         # Para Tenable WAS: mostrar vulnerabilidades únicas
         # Para OpenVAS: mostrar todas (permitir duplicatas)
         if has_tenable:
@@ -193,19 +245,35 @@ def save_results(vulnerabilities: list, output_file: str, profile_config: dict =
                 count = sum(1 for v in final_vulns if isinstance(v, dict) and v.get(name_field) == name)
                 print(f"  {idx:3d}. [{count:2d}x] {name}")
         else:
-            # OpenVAS: listar todas as vulnerabilidades (permitindo duplicatas)
-            print(f"\nTotal de vulnerabilidades (OpenVAS - sem consolidação): {len(final_vulns)}")
-            print(f"\nVulnerabilidades encontradas:")
-            for idx, v in enumerate(final_vulns, 1):
-                if isinstance(v, dict):
-                    name = v.get(name_field, 'SEM NOME')
-                    severity = v.get('severity', 'UNKNOWN')
-                    print(f"  {idx:3d}. [{severity:8s}] {name}")
+            # OpenVAS: listar separando NOVAS de REPETIDAS
+            print(f"\nTotal de vulnerabilidades (OpenVAS): {len(final_vulns)}")
+            print(f"  - NOVAS: {len(new_vulns)}")
+            print(f"  - ATUALIZADAS: {len(updated_vulns)}")
+            print(f"  - REPETIDAS (sem mudança): {len(repeated_vulns)}")
+            
+            if new_vulns:
+                print(f"\nVulnerabilidades NOVAS encontradas:")
+                for idx, v in enumerate(new_vulns, 1):
+                    if isinstance(v, dict):
+                        name = v.get(name_field, 'SEM NOME')
+                        severity = v.get('severity', 'UNKNOWN')
+                        print(f"  {idx:3d}. [NOVO     ] [{severity:8s}] {name}")
+            
+            if updated_vulns:
+                print(f"\nVulnerabilidades ATUALIZADAS:")
+                for idx, v in enumerate(updated_vulns, 1):
+                    if isinstance(v, dict):
+                        name = v.get(name_field, 'SEM NOME')
+                        severity = v.get('severity', 'UNKNOWN')
+                        print(f"  {idx:3d}. [ATUALIZADO] [{severity:8s}] {name}")
+            
+            if repeated_vulns:
+                print(f"\nVulnerabilidades REPETIDAS (sem mudança): {len(repeated_vulns)}")
         
         with open(output_file, 'w', encoding='utf-8') as f:
             json.dump(final_vulns, f, indent=2, ensure_ascii=False)
         
-        print(f"Vulnerabilidades salvas em: {output_file}")
+        print(f"\nVulnerabilidades salvas em: {output_file}")
         return True
         
     except Exception as e:

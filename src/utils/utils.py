@@ -94,9 +94,42 @@ def validate_and_normalize_vulnerability(vuln):
     Validate and normalize a single vulnerability object.
     Ensures all required fields exist with correct types.
     Removes invalid vulnerabilities (missing Name, wrong types, etc).
+    
+    CRITICAL: Rejects vulnerabilities with invalid names (metadata, headings, etc)
+    CRITICAL FIX: Validates that INSTANCES vulnerabilities have "Instances (N)" in Name
     """
     if not isinstance(vuln, dict):
         return None
+    
+    # REJECT invalid name patterns - metadata or index entries
+    name = vuln.get("Name", "").strip()
+    
+    # Reject "VULNERABILITY ... PLUGIN ID ..." pattern (these are metadata, not vulnerability names)
+    if re.match(r'^\s*VULNERABILITY\s+(CRITICAL|HIGH|MEDIUM|LOW|INFO|LOG)\s+PLUGIN\s+ID\s+\d+', name, re.IGNORECASE):
+        return None
+    
+    # Reject if name is empty
+    if not name:
+        return None
+    
+    # CRITICAL FIX: Check if this should be an INSTANCES vulnerability
+    # If it has identification array with URLs, it should have "Instances" in name
+    identification = vuln.get('identification', [])
+    has_urls = any(isinstance(u, str) and (u.startswith('http://') or u.startswith('https://')) for u in identification)
+    
+    if has_urls and 'Instances' not in name:
+        # This has URLs (typical of INSTANCES) but lacks "Instances" in name
+        # This is likely the prompt returning incomplete Name
+        # We can try to fix it if we have HTTP info to count instances
+        http_info = vuln.get('http_info', [])
+        count = len(identification) if identification else len(http_info) if http_info else 0
+        
+        if count > 0:
+            # Try to infer: append "Instances (N)" to the name
+            vuln['Name'] = f"{name} Instances ({count})"
+        else:
+            # Can't determine count, reject as malformed
+            return None
     
     # Required fields with their expected types
     required_structure = {
@@ -148,9 +181,9 @@ def validate_and_normalize_vulnerability(vuln):
         elif isinstance(expected_type, tuple) and not isinstance(value, expected_type):
             vuln[field] = None
     
-    # Validate Name is not empty
-    if not vuln.get("Name") or not str(vuln.get("Name")).strip():
-        return None
+    # Map "Info" severity to "LOG" (per SECTION B of prompt)
+    if vuln.get("severity", "").upper() == "INFO":
+        vuln["severity"] = "LOG"
     
     return vuln
 
