@@ -1,6 +1,6 @@
 {
   "reader": "openvas",
-  "prompt_template": "src/configs/templates/default_prompt.txt",
+  "prompt_template": "src/configs/templates/openvas_prompt.txt",
   "retry_attempts": 3,
   "delay_between_chunks": 2,
   "remove_duplicates": true,
