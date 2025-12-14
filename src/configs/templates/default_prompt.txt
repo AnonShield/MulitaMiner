@@ -1,11 +1,38 @@
 You are an information extraction model.
 
+🚨 CRITICAL BUG FIX - NAME FIELD FOR INSTANCES VULNERABILITIES 🚨
+
+PREVIOUS ERROR: LLM was extracting "Name" WITHOUT "Instances (N)" suffix.
+  ❌ WRONG: {"Name": "PHP Unsupported Version"}
+  ✅ CORRECT: {"Name": "PHP Unsupported Version Instances (14)"}
+
+THIS MUST BE FIXED IN THIS RUN:
+  - For EVERY Instances (N) vulnerability found
+  - The Name field MUST contain the complete "Instances (N)" part
+  - NEVER output Instances vulnerabilities with Name lacking "Instances (N)"
+  - ALWAYS verify before outputting JSON
+
+EXAMPLES OF CORRECT Names FOR INSTANCES:
+  ✅ "PHP Unsupported Version Instances (14)"
+  ✅ "Missing HTTP Strict Transport Security Policy Instances (25)"
+  ✅ "Directory Listing Instances (8)"
+  ✅ "Apache 2.4.x < 2.4.41 Multiple Vulnerabilities Instances (1)"
+  ✅ "Cookie Without Secure Flag Detected Instances (1)"
+  ✅ "Input Reflected Instances (19)"
+
+EXAMPLES OF WRONG Names (DO NOT OUTPUT THESE):
+  ❌ "PHP Unsupported Version" (missing "Instances (14)")
+  ❌ "Missing HTTP Strict Transport Security Policy" (incomplete!)
+  ❌ "Directory Listing" (no Instances part!)
+  ❌ "Apache 2.4.x < 2.4.41 Multiple Vulnerabilities" (missing Instances!)
+
+═════════════════════════════════════════════════════════════════════════════════════
+
 [PRIORITY OVERRIDES — READ FIRST]
 - Evidence sentences must NEVER be used as `Name` (e.g., lines starting with "No <Header/Policy>", "Response code '...' triggered...", "Access to /...", "Affected URL:"). Always attach them as evidence: URLs/paths → `identification`; method+status/TLS/protocol/header lines → `http_info`.
 - All fields present (mandatory): EVERY output object MUST include ALL schema fields listed in OUTPUT FORMAT, even when values are unknown. Do not omit any field. Always include:
-  - Arrays: `description`, `detection_result`, `detection_method`, `impact`, `solution`, `insight`, `product_detection_result`, `log_method`, `references`, `plugin` (Tenable WAS only), `identification`, `http_info` — use `[]` when unknown/not applicable.
+  - Arrays: `description`, `detection_result`, `detection_method`, `impact`, `solution`, `insight`, `product_detection_result`, `log_method`, `references`, `plugin` (Tenable WAS only), `identification`, `http_info`, `cvss` — use `[]` when unknown/not applicable.
   - Scalars: `port`, `protocol`, `severity`, `source` — use `null` for `port`/`protocol` when unknown; `severity` must still be a valid value; `source` must be set.
-  - `cvss`: ALWAYS include with exactly 7 entries in the documented order; use `null` for any unavailable entry.
 - Tenable WAS objects (HARD OVERRIDE): set OpenVAS-only arrays (`detection_result`, `detection_method`, `impact`, `insight`, `product_detection_result`, `log_method`) to `[]` explicitly — ALWAYS keep them empty for Tenable WAS, even if similar words appear in the page text. Do NOT map any Tenable narrative to these fields.
 - OpenVAS objects: set `plugin` to `null` explicitly (must exist), and still include `identification` and `http_info` as empty arrays if not applicable.
 
@@ -15,114 +42,282 @@ SECTION A: OPENVAS EXTRACTION
 
 NVT EXTRACTION RULES
 
-1. Find lines that start with "NVT: "
-   - Each "NVT: " line marks the start of a vulnerability block
-   - Extract the Name from what comes after "NVT: "
-   - Continue reading until the next "NVT: " line (end of this vulnerability)
-   - Extract EVERY NVT you find - do NOT skip or filter
+1. IDENTIFY NVT BLOCKS - Only extract lines that START with "NVT: "
+   ⚠️ ABSOLUTE REQUIREMENT:
+   - Name MUST ONLY come from lines that literally start with "NVT: "
+   - Do NOT use any other text as Name, including:
+     * Technical details like "Certificate details: subject ...: C=DE,L=..."
+     * Section headers like "High 25/tcp", "Medium 443/tcp"
+     * Configuration details like "valid from: 2018-08-21"
+     * Keys/values like "serial ....: 5B7C65801F8422EBBDAD2299"
+     * Any line not starting with "NVT: "
+   
+   CORRECT EXAMPLES:
+   - Line in PDF: "NVT: SMTP too long line" → Name = "SMTP too long line"
+   - Line in PDF: "NVT: SSL/TLS: Certificate Expired" → Name = "SSL/TLS: Certificate Expired"
+   - Line in PDF: "NVT: OpenVAS / Greenbone Vulnerability Manager Detection" → Name = "OpenVAS / Greenbone Vulnerability Manager Detection"
+   
+   PROCESS:
+   - Find each line that starts with "NVT: "
+   - Extract EXACTLY what comes after "NVT: " (the complete text on that line)
+   - This is the vulnerability Name
+   - Continue reading all sections (Summary, Detection Result, Solution, etc.) until the next "NVT: " line
+   - Extract ALL section content into appropriate fields
 
 2. Extract all fields from each NVT block:
-   - Name: text after "NVT: "
-   - severity: from "[SEVERITY (CVSS: X.X)]" header
-     ⚠️ IMPORTANT: Check the header carefully:
-     - If it says "Info (CVSS:" or "[Info" → severity is "INFO"
-     - If it says "Log (CVSS:" or "[Log" → severity is "LOG"
-     - If it says "High", "Medium", "Low", "Critical" → use that value
-     - Do NOT use "INFO" and "LOG" interchangeably - check which one appears in PDF
-   - port: from section header like "High 25/tcp" (extract 25)
-   - protocol: from section header like "High 25/tcp" (extract tcp)
-   - cvss: from "CVSS: X.X" value
-   - description: from "Summary" section (MULTI-LINE: include ALL paragraphs and bullet lines; split by line breaks; preserve order; trim whitespace; remove exact duplicates)
-   - detection_result: from "Vulnerability Detection Result" section (MULTI-LINE: include ALL lines)
-   - detection_method: from "Vulnerability Detection Method" section (MULTI-LINE: include ALL lines)
-   - product_detection_result: from "Product Detection Result" section (MULTI-LINE: include ALL lines)
-   - impact: from "Impact" section (MULTI-LINE: include ALL lines/paragraphs)
-   - solution: from "Solution" section
-   - insight: from "Vulnerability Insight" section (if present)
-   - log_method: from "Log Method" section
-   - references: from "References" section
+   - Name: ONLY from "NVT: " lines - EXACT copy of text after "NVT: " prefix (do not include "NVT: " itself)
+   - severity: from the header line like "High (CVSS: 7.5)", "Medium", "Low", "CRITICAL", or "Log (CVSS:"
+     Example: "High (CVSS: 7.5)" → severity = "HIGH"
+   - port: from severity header like "High 25/tcp" (extract port number 25)
+     Example: "High 25/tcp" → port = 25
+   - protocol: from severity header like "High 25/tcp" (extract protocol: tcp)
+     Example: "High 25/tcp" → protocol = "tcp"
+   - cvss: EXTRACT THE SCORE NUMBER from "CVSS: X.X" in the severity header line
+     Example: "High (CVSS: 7.5)" → cvss = [7.5, null, null, null, null, null, null]
+     Example: "Log (CVSS: 0.0)" → cvss = [0.0, null, null, null, null, null, null]
+     Example: "Medium (CVSS: 5.0)" → cvss = [5.0, null, null, null, null, null, null]
+     CRITICAL: Always extract the numeric value after "CVSS: " as the first element
+   - description: from "Summary" section (all paragraphs and bullet points; split by line breaks; trim whitespace)
+   - detection_result: from "Vulnerability Detection Result" section (all lines)
+   - detection_method: from "Vulnerability Detection Method" section (all lines)
+   - product_detection_result: from "Product Detection Result" section (all lines)
+   - impact: from "Impact" section (all lines/paragraphs)
+   - solution: from "Solution" section (all lines)
+   - insight: from "Vulnerability Insight" section (all lines)
+   - log_method: from "Log Method" section (all lines)
+   - references: from "References" section (all lines)
 
 3. Build JSON object with all 18 fields:
-   - plugin: null (always null for OpenVAS)
+   - plugin: [] (always empty for OpenVAS)
    - identification: [] (always empty for OpenVAS)
    - http_info: [] (always empty for OpenVAS)
    - source: "OPENVAS"
 
-4. Extract ALL NVT blocks you find - do NOT skip any, do NOT filter, extract everything
+4. Extract ALL NVT blocks you find
+   - Process EVERY line that starts with "NVT: "
+   - Do NOT skip any
+   - Include: CRITICAL, HIGH, MEDIUM, LOW, LOG severities
+   - Include: Service detections, Configuration checks, Banner grabs, System information
 
 ═══════════════════════════════════════════════════════════════════════════════════
 SECTION B: TENABLEWAS EXTRACTION
 ═══════════════════════════════════════════════════════════════════════════════════
 
-Goal: extract only real security findings; remove meta noise; enforce per-chunk dedup and mandatory arrays.
-1. Each "Vulnerability" block becomes ONE JSON object.
-  - If the block title includes "Instances (N)", output it as a separate object with the exact title (including count), even if a base vulnerability with the same name appears elsewhere in the chunk.
-2. Field mapping:
-  - "Vulnerability" -> "Name"
-  - Name selection rule: pick the exact block title printed at the top of the vulnerability page/section (the large heading). If that title contains "Instances (N)", use it verbatim as the Name.
-  - PROHIBITED as Name (map to evidence instead): never set `Name` to evidence sentences such as:
-    - "No <Header/Policy> ... were found on <URL>" or generic "No <Header/Policy> ... were found" (even without a URL)
-    - "Response code '<code>' triggered by <METHOD> request to '<path>'"
-    - "Affected URL: <URL>"
-    Instead, attach these lines as evidence: add URLs/paths to `identification` and copy protocol/status/method details to `http_info` or `description`. Emit ONE object per heading/canonical issue, not per evidence line.
-  - "Description" -> into "description". MULTI-LINE CAPTURE: include ALL narrative paragraphs and bullet items under Description; split by blank lines and line breaks into separate items; preserve order; trim whitespace; remove exact duplicates. Do NOT truncate to the first paragraph. STRICT EVIDENCE EXCLUSION: only exclude lines that EXACTLY start with the following prefixes (case-sensitive): "Affected URL:", "Response code '", "Access to ", "Request ", "Request Headers", "Response Headers". Do not exclude other lines that merely mention these words in narrative. FALLBACK: If after exclusion `description` would be empty while a Description block exists, ADD the first non-empty non-heading line from that block as the first `description` item.
-  - OpenVAS-only fields for Tenable: DO NOT populate `impact`, `insight`, `detection_result`, `detection_method`, `product_detection_result`, or `log_method` for Tenable WAS; keep them as empty arrays `[]` regardless of content wording. Any risk explanation stays in `description`; remediation stays in `solution`.
-  - "Solution" -> into "solution"
-  - "Reference Information" -> into "references"
-  - "Plugin Details" -> into "plugin"
-  - Identification lines (enumerated artifacts) -> "identification"
-  - Protocol / TLS / version / handshake / ALPN lines -> "http_info"
-  - Any lines under sections titled "HTTP Info", "REQUEST MADE", "REQUEST HEADERS", or "RESPONSE HEADERS" must be copied into "http_info" (one line per entry, trimmed).
-  - All other schema fields (Tenable WAS) use null or [] (never invent).
-3. Always output both arrays: EVERY object MUST have "identification": [] and "http_info": [] (populate when rules apply).
-  - For narrative arrays (description, solution, references, plugin where narrative applies): capture ALL lines/paragraphs present in the block; never stop at the first; split by line breaks; preserve order; deduplicate exact repeats; ignore placeholders ("-", "N/A"). Ensure the FIRST narrative line is included unless it matches an EXACT evidence prefix listed above.
-4. Ignore global blocks (Scan Results, Scan Summary, Scan Notes) unless inside a vulnerability block.
-5. Instances rule (apply BEFORE normalization): If Name contains "Instances (N)" keep full original Name (include count). Do NOT strip the Instances suffix.
-  - Artifacts (cipher suites, endpoints, paths, parameters, hashes, hostnames, ports, files) -> identification.
-  - Protocol/TLS/handshake/version lines -> http_info.
-  - Enumeration heuristics: bullet/numbered lines; lines with TLS_ or _WITH_; comma lists (split); URLs or leading / paths; hex strings >=32 chars; lines mentioning endpoint/suite/port.
-  - Different instance counts => separate objects (no merge).
-  - Header/Policy Instances: extract every affected URL into identification (match lines like "Affected URL: <url>", or any explicit http/https link in the Instances block). Do not leave URLs only in description.
-  - Do not change punctuation or spacing in Instances Names; copy exactly as in the report (including hyphens and spacing), keeping the "Instances (N)" suffix.
-  - If a heading line within the block includes the token "Instances (" followed by a number and ")", that token MUST appear in the final Name.
-  - Collect ALL instances: parse each "INSTANCE" subsection and also scan the corresponding OUTPUT lines for patterns like "were found on <URL>"; add every URL found to identification (one per item). Never stop after the first.
-  - Line-wrapped URL reconstruction: when a URL breaks across lines (e.g., a line ends with a partial path and the next line continues), join them without inserting extra spaces to form a valid single URL. Heuristic: if a line contains a partial "http"/"https" token or ends with "/" or a path fragment and the next line continues alphanumerics or path chars, concatenate.
-  - For Instances blocks of headers/policies (HSTS, X-Frame-Options, CSP, Referrer-Policy, Permissions-Policy, Cache-Control, X-Content-Type-Options, X-XSS-Protection), place all affected URLs in identification; leave description for narrative only.
-  - Instances target count: If Name shows "Instances (N)", aim for identification.length == N. Merge URLs from all relevant parts in the same chunk (including per-URL variant objects) until you reach N or exhaust available URLs. When merging, DROP the per-URL objects and keep only the Instances carrier.
-  - NEVER merge a non-Instances object with its Instances variant; treat them as distinct findings even if canonical keys match.
-  - If enumerated lines exist but classification is uncertain, STILL copy each raw line (trimmed) into identification. Empty identification is allowed ONLY when truly no enumeration lines appear.
-  - Evidence line handling for response code rows: Any line matching the pattern "Response code '<code>' triggered by <METHOD> request to '<path>'" MUST NOT create its own object. Extract `<path>` (and prepend base URL if present in the same block) into `identification`. Put status code and method into `http_info` (e.g., "GET 403"). Keep the parent object's Name from the heading (e.g., "Common Files Detection", "Common Directories Detection Instances (N)", "Interesting Response Instances (N)", or an explicit "Access to <path>" heading if present).
-  - Evidence line handling for access lines: Any line starting with "Access to " followed by a path (e.g., "Access to /stylesheets/.htpasswd") MUST NOT create its own object. Add the path (e.g., "/stylesheets/.htpasswd") to `identification` and copy the full line to `http_info`. Use the parent section heading as Name (typically "Common Files Detection", "Common Directories Detection Instances (N)", or similar). Only when a full dedicated vulnerability page exists with a clear heading and plugin details should it be kept as its own object; otherwise, treat as evidence.
-  - Evidence line handling for per-URL Cache-Control absence: Any line matching the pattern "<URL> has no Cache Control header defined" MUST NOT create its own object. Add the URL to `identification` and any method/status/protocol lines to `http_info` only when consolidating under a visible Cache-Control heading in the same chunk (prefer an Instances object when present). Do not fabricate or emit a per-URL Name.
-6. Deduplicate within chunk:
-  - Group by canonical key (or exact Name for Instances objects).
-  - One object per group. Merge arrays preserving first-seen order; remove duplicates.
-  - Description: choose longest real paragraph; append unique paragraphs; add "Affected URL: <url>" lines for distinct URLs.
-  - Severity: select highest (CRITICAL>HIGH>MEDIUM>LOW>LOG).
-  - Prefer Instances carrier: If both an Instances object (e.g., "Missing Referrer Policy Instances (N)") and per-URL variants (e.g., evidence lines like "No Referrer-Policy headers ... were found on <URL>") appear in the same chunk, KEEP ONLY the Instances object and append every discovered URL into its `identification`; SUPPRESS creation of any per-URL objects.
-  - Do NOT create multiple separate "Instances (1)" objects for the same issue; consolidate all evidence into the single genuine Instances carrier only when that heading is visible in the chunk.
-  - When no genuine Instances heading is visible for an issue in the chunk, emit ONLY the base object (single) and aggregate all evidence there. Do not create any object whose Name ends with "Instances" or "Instances (1)" in that case.
-7. Exclusions (narrowed): drop ONLY pure boilerplate (scan summaries, headings without body, blank placeholders). If an item appears as a dedicated vulnerability page/section (with VULNERABILITY INFO, PLUGIN ID, OUTPUT, REQUEST/RESPONSE, or INSTANCE blocks), INCLUDE it — even if informational (e.g., Technologies Detected, Web Application Sitemap, Cookies Collected, Common Directories Detection, Private IP Address Disclosure, E-mail Address Disclosure, Target Information, Screenshot, Form Detected, External URLs, Performance Telemetry, Allowed HTTP Versions, SSL/TLS Versions Supported, Security.txt File Not Detected, SSL/TLS Certificate Contains Wildcard Entries, SSL/TLS Server Cipher Suite Preference Not Detected).
-  - Exception: pages whose headings start with "Access to /" are NOT standalone findings; always suppress them as `Name` and fold their content into the nearest parent (Common Files/Directories Detection) per the evidence rules.
-8. Placeholder filter: description only '-', 'N/A', empty or scanner boilerplate AND severity would be Info -> discard.
-9. Severity mapping: Info -> LOG; keep explicit LOW/MEDIUM/HIGH/CRITICAL.
-10. No fabrication: if normalized header/policy name ambiguous -> discard.
-11. Ensure no duplicate objects after merge.
-12. Mandatory fields per object: Name, source="TENABLEWAS", identification (array), http_info (array), severity.
-  - If enumeration or protocol lines are detected but arrays would be empty, populate them; do not leave them empty.
-13. Non-Instances objects: identification/http_info stay empty unless lines match heuristics.
-15. Never remove Instances count from Name.
-16. Name exactness: When emitting a single object's Name from a page/section, use the page's heading text EXACTLY (do not add or remove hyphens in header names like Referrer Policy vs Referrer-Policy). Only normalize Names when merging multiple non-Instances variants into one canonical item.
+The PDF contains vulnerabilities in TWO types that must be extracted separately:
 
+INSTANCES VULNERABILITIES - Contain URLs and HTTP Info
+  - Name pattern: "[NAME] Instances (N)"
+  - Have INSTANCE blocks with URLs
+  - Have HTTP Info sections
+
+BASE VULNERABILITIES - Contain descriptions and solutions
+  - Name pattern: "[NAME]" (without Instances)
+  - Have Description, Solution, Plugin Details sections
+  - Have Risk Information with CVSS scores
+
+EXTRACTION REQUIREMENT:
+  1. Extract ALL Instances vulnerabilities (B.1)
+  2. Extract ALL Base vulnerabilities (B.2)  
+  3. Output in pairs: BASE first, then matching INSTANCES
+  4. Match by same name and plugin ID
+
+═══════════════════════════════════════════════════════════════════════════════════
+
+SECTION B.1: INSTANCES VULNERABILITIES - EXTRACT URLs AND HTTP INFO
+═══════════════════════════════════════════════════════════════════════════════════
+
+1. IDENTIFY INSTANCES BLOCKS - Only extract headings with "Instances (N)" pattern
+   ⚠️ ABSOLUTE REQUIREMENT:
+   - Name MUST contain "Instances (N)" suffix
+   - Look for "VULNERABILITY [SEVERITY] PLUGIN ID [number]" line
+   - Extract from INSTANCE markers and Identification sections
+   
+   EXAMPLES:
+   - "PHP Unsupported Version Instances (14)"
+   - "Missing HTTP Strict Transport Security Policy Instances (25)"
+   - "Directory Listing Instances (8)"
+
+2. Extract all fields from each INSTANCES block:
+   - Name: EXACTLY from heading including "Instances (N)"
+   - severity: from "VULNERABILITY [SEVERITY] PLUGIN ID" line (CRITICAL/HIGH/MEDIUM/LOW/LOG)
+   - identification: Extract ALL URLs from:
+     * Every INSTANCE block
+     * Identification sections
+     * Remove duplicates
+   - http_info: from HTTP Info sections (if present):
+     * REQUEST: GET/POST + URL
+     * REQUEST HEADERS: header lines
+     * RESPONSE HEADERS: response lines
+   
+3. Build JSON object with all 18 fields:
+   - plugin: [] (always empty for Instances)
+   - description, solution, cvss, references: [] (empty for Instances)
+   - identification: [array of URLs]
+   - http_info: [array of HTTP data] or []
+   - source: "TENABLEWAS"
+
+═══════════════════════════════════════════════════════════════════════════════════
+
+SECTION B.2: BASE VULNERABILITIES - EXTRACT DESCRIPTIONS AND SOLUTIONS  
+═══════════════════════════════════════════════════════════════════════════════════
+
+1. IDENTIFY BASE BLOCKS - Only extract headings WITHOUT "Instances (N)" pattern
+   ⚠️ ABSOLUTE REQUIREMENT:
+   - Name MUST NOT contain "Instances (N)" suffix
+   - Look for "VULNERABILITY [SEVERITY] PLUGIN ID [number]" line
+   - Must have Description/Solution/Plugin Details sections
+   
+   EXAMPLES:
+   - "PHP Unsupported Version" (base for "PHP Unsupported Version Instances (14)")
+   - "Missing HTTP Strict Transport Security Policy"
+   - "Directory Listing"
+
+2. Extract all fields from each BASE block:
+   - Name: EXACTLY from heading WITHOUT "Instances (N)"
+   - severity: from "VULNERABILITY [SEVERITY] PLUGIN ID" line
+   - description: from Description section (all paragraphs)
+   - solution: from Solution section (all remediation steps)
+   - plugin: from Plugin Details section (ID, Family, dates, etc.)
+   - cvss: from Risk Information section (CVSS scores and vectors)
+   - references: from Reference Information section (CVEs, URLs)
+
+3. Build JSON object with all 18 fields:
+   - identification: [] (always empty for Base)
+   - http_info: [] (always empty for Base)
+   - detection_result, detection_method, impact, insight, product_detection_result, log_method: [] (empty for Tenable WAS)
+   - source: "TENABLEWAS"
+
+4. Pairing requirement:
+   - Each BASE must have matching INSTANCES with same name (minus "Instances (N)") and plugin ID
+   - Output only matched pairs
+   - Remove unpaired entries
 ═══════════════════════════════════════════════════════════════════════════════════
 OUTPUT FORMAT
 ═══════════════════════════════════════════════════════════════════════════════════
 
-Return ONLY valid JSON array. Use this exact schema for each vulnerability:
+🔴 CRITICAL INSTRUCTION FOR JSON OUTPUT - PAIR PATTERN MANDATORY:
 
+OUTPUT STRUCTURE (NON-NEGOTIABLE):
+  ✓ ONLY valid JSON array
+  ✓ ALWAYS pairs: BASE then INSTANCES (alternating)
+  ✓ EVEN number of entries (no incomplete pairs)
+  ✓ Each pair: same Name (one with "Instances (N)", one without)
+  ✓ Each pair: same Severity and Plugin ID
+
+VALIDATION BEFORE OUTPUT:
+  ☑ Count total entries
+  ☑ If ODD number → REMOVE the incomplete last entry
+  ☑ If last entry is BASE without INSTANCES → REMOVE it
+  ☑ If last entry is INSTANCES without BASE before it → REMOVE it
+  ☑ Only output if you have COMPLETE PAIRS
+
+EXAMPLES OF CORRECT OUTPUT:
+
+✓ VALID (2 pairs = 4 entries):
+[
+  {"Name": "PHP Unsupported Version", "description": [...], ...},
+  {"Name": "PHP Unsupported Version Instances (14)", "identification": [...], ...},
+  {"Name": "Apache 2.4.x < 2.4.41 Multiple Vulnerabilities", "description": [...], ...},
+  {"Name": "Apache 2.4.x < 2.4.41 Multiple Vulnerabilities Instances (1)", "identification": [...], ...}
+]
+
+✗ INVALID (3 entries - incomplete pair - DO NOT OUTPUT):
+[
+  {"Name": "PHP Unsupported Version", "description": [...], ...},
+  {"Name": "PHP Unsupported Version Instances (14)", "identification": [...], ...},
+  {"Name": "Apache 2.4.x < 2.4.41 Multiple Vulnerabilities", "description": [...], ...}
+]
+← Remove the 3rd entry (BASE without INSTANCES)
+
+✗ INVALID (INSTANCES without BASE - DO NOT OUTPUT):
+[
+  {"Name": "PHP Unsupported Version Instances (14)", "identification": [...], ...}
+]
+← This is invalid because there's no BASE before it
+
+✓ VALID (1 pair = 2 entries):
+[
+  {"Name": "PHP Unsupported Version", "description": [...], ...},
+  {"Name": "PHP Unsupported Version Instances (14)", "identification": [...], ...}
+]
+
+═══════════════════════════════════════════════════════════════════════════════════
+FINAL VALIDATION BEFORE OUTPUT - CRITICAL CHECKLIST
+═══════════════════════════════════════════════════════════════════════════════════
+
+Before you output JSON, you MUST validate every single pair:
+
+STEP 1 - Count validation:
+  ☐ Total entries in output = EVEN number (no ODD entries)
+  ☐ Number of BASE entries = Number of INSTANCES entries
+  ☐ Example: 5 BASE + 5 INSTANCES = 10 total ✓
+  ☐ Example: 5 BASE + 4 INSTANCES = INVALID ✗ (Remove 1 BASE)
+
+STEP 2 - For EACH pair in output:
+  ☐ BASE Name = "X" (no "Instances (N)")
+  ☐ INSTANCES Name = "X Instances (N)" (has "Instances (N)")
+  ☐ BASE.Plugin_ID == INSTANCES.Plugin_ID (EXACTLY same!)
+  ☐ BASE.severity == INSTANCES.severity (EXACTLY same!)
+  ☐ BASE comes BEFORE INSTANCES in order
+
+  If ANY check fails → REMOVE that pair (both BASE and INSTANCES)
+
+STEP 3 - Verify special vulnerabilities were found:
+  ☐ Searched for "Allowed HTTP Methods Instances (N)"?
+  ☐ Searched for "Login Form Detected Instances (N)"?
+  ☐ Searched for "Network Timeout Encountered Instances (N)"?
+  ☐ Searched for "Scan Information Instances (N)"?
+  ☐ Searched for "Web Application Sitemap Instances (N)"?
+  ☐ Searched for "Performance Telemetry Instances (N)"?
+  
+  If found any, they MUST have matching BASE with LOG severity
+
+STEP 4 - Final sanity check:
+  ☐ No INSTANCES without BASE
+  ☐ No BASE without INSTANCES
+  ☐ All Plugin IDs match within pairs
+  ☐ All Severities match within pairs
+  ☐ All Names follow pattern (BASE, INSTANCES, BASE, INSTANCES...)
+
+If ANY validation fails → Fix it before outputting JSON!
+
+═══════════════════════════════════════════════════════════════════════════════════
+EXTRACTION COUNTS EXPECTATION:
+═══════════════════════════════════════════════════════════════════════════════════
+
+CRITICAL COUNTING RULE:
+
+Your output should have equal numbers of BASE and INSTANCES.
+
+Count rule:
+  BASE_count = number of vulnerabilities found in LOCATION 2 (base versions)
+  INSTANCES_count = number of vulnerabilities found in LOCATION 1 (instances)
+  TOTAL_output = BASE_count + INSTANCES_count (must be EVEN)
+  
+  Example:
+    Found 10 INSTANCES in LOCATION 1
+    Found 10 BASE in LOCATION 2
+    Output: 10 BASE entries + 10 INSTANCES entries = 20 TOTAL (paired as BASE→INSTANCES)
+  
+  If mismatch:
+    Found 10 INSTANCES in LOCATION 1
+    Found only 8 BASE in LOCATION 2
+    Action: Remove 2 unmatched INSTANCES from output
+    Output: 8 BASE entries + 8 INSTANCES entries = 16 TOTAL
+
+EXPECTED EXTRACTION RANGES:
+  Good: 5-10 pairs (10-20 entries: 5-10 BASE + 5-10 INSTANCES)
+  Better: 10-20 pairs (20-40 entries: 10-20 BASE + 10-20 INSTANCES)
+  Excellent: 20+ pairs (40+ entries)
+
+═══════════════════════════════════════════════════════════════════════════════════
+
+Return ONLY valid JSON array with separate schemas for each source type.
+
+OPENVAS VULNERABILITIES:
 [
   {
-    "Name": "<vulnerability name as found in the report>",
+    "Name": "<vulnerability name>",
     "description": [<array of description text or empty>],
     "detection_result": [<array or empty>],
     "detection_method": [<array or empty>],
@@ -131,14 +326,186 @@ Return ONLY valid JSON array. Use this exact schema for each vulnerability:
     "solution": [<array or empty>],
     "insight": [<array or empty>],
     "log_method": [<array or empty>],
-    "cvss": [<score>, "<vector>", null, null, null, null, null],
+    "cvss": [<score>, none, none, none, none, none, none],
     "port": <number or null>,
     "protocol": "<tcp or udp or null>",
-    "severity": "CRITICAL|HIGH|MEDIUM|LOW|INFO|LOG",
+    "severity": "CRITICAL|HIGH|MEDIUM|LOW|LOG",
     "references": [<array or empty>],
-    "plugin": [<array or empty - Tenable WAS only>],
-    "identification": [<array or empty>],
-    "http_info": [<array or empty>],
-    "source": "OPENVAS|TENABLEWAS"
+    "plugin": null,
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
   }
 ]
+
+═══════════════════════════════════════════════════════════════════════════════════
+TENABLEWAS B.1 - INSTANCES VULNERABILITIES (WITH HTTP INFO):
+═══════════════════════════════════════════════════════════════════════════════════
+
+[
+  {
+    "Name": "XXX Instances (N)",
+    "description": [],
+    "detection_result": [],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [],
+    "cvss": [],
+    "port": null,
+    "protocol": null,
+    "severity": "CRITICAL|HIGH|MEDIUM|LOW|LOG",
+    "references": [],
+    "plugin": [],
+    "identification": ["https://url1", "https://url2", ..., "https://urlN"],
+    "http_info": [
+      {
+        "request": "GET https://url1 HTTP/1.1",
+        "request_headers": ["Accept: */*", "Accept-Encoding: gzip, deflate", "User-Agent: Mozilla/5.0 ..."],
+        "response_headers": ["HTTP/1.1 200 OK", "Content-Type: text/html", "Server: Apache/2.4.41"]
+      },
+      {
+        "request": "GET https://url2 HTTP/2",
+        "request_headers": [...],
+        "response_headers": [...]
+      }
+    ],
+    "source": "TENABLEWAS"
+  }
+]
+
+NOTES FOR B.1 INSTANCES:
+  - Name: MUST contain "Instances (N)" suffix
+  - identification: array of ALL URLs from INSTANCE blocks AND Identification sections
+  - http_info: array of HTTP Info entries (optional, can be empty [])
+  - severity: from VULNERABILITY line (CRITICAL|HIGH|MEDIUM|LOW|LOG)
+  - All other array fields: [] (empty) - EXCEPT identification and http_info
+  - port and protocol: null
+  - source: always "TENABLEWAS"
+
+═══════════════════════════════════════════════════════════════════════════════════
+TENABLEWAS B.2 - BASE VERSION VULNERABILITIES (WITH DESCRIPTION/SOLUTION/PLUGIN):
+═══════════════════════════════════════════════════════════════════════════════════
+
+[
+  {
+    "Name": "XXX",
+    "description": [
+      "This vulnerability occurs when...",
+      "It can lead to...",
+      "The affected systems..."
+    ],
+    "detection_result": [],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [
+      "Update to version X.X.X",
+      "Or apply patch from vendor",
+      "Verify with: curl https://..."
+    ],
+    "insight": [],
+    "log_method": [],
+    "cvss": [
+      7.5,
+      "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:U/C:H/I:N/A:N",
+      "Base Score: 7.5 (High)",
+      "Temporal Score: 7.1"
+    ],
+    "port": null,
+    "protocol": null,
+    "severity": "CRITICAL|HIGH|MEDIUM|LOW|LOG",
+    "references": [
+      "CVE-2020-1234",
+      "https://nvd.nist.gov/vuln/detail/CVE-2020-1234",
+      "https://www.example.com/advisory"
+    ],
+    "plugin": [
+      "Plugin ID: 12345",
+      "Family: Web Servers",
+      "Created: 2020-01-15",
+      "Updated: 2023-10-20",
+      "Plugin Version: 1.2.3",
+      "Check Type: Remote"
+    ],
+    "identification": [],
+    "http_info": [],
+    "source": "TENABLEWAS"
+  }
+]
+
+NOTES FOR B.2 BASE VERSIONS:
+  - Name: MUST NOT contain "Instances (N)" suffix - just vulnerability name
+  - description: text from "Description" section of base version
+  - solution: text from "Solution" section
+  - plugin: metadata from "Plugin Details" section (as key: value pairs)
+  - cvss: score and vector from "Risk Information" section
+  - references: CVEs and URLs from "Reference Information" section
+  - identification: [] (empty for base versions - no instances)
+  - http_info: [] (empty for base versions - no HTTP data)
+  - All OpenVAS-only fields: [] (empty) - detection_result, detection_method, product_detection_result, log_method
+  - port and protocol: null
+  - severity: from VULNERABILITY line
+  - source: always "TENABLEWAS"
+
+═══════════════════════════════════════════════════════════════════════════════════
+MIXED OUTPUT EXAMPLE (Both B.1 and B.2 from same chunk):
+═══════════════════════════════════════════════════════════════════════════════════
+
+[
+  {
+    "Name": "PHP Unsupported Version Instances (14)",
+    "description": [],
+    "cvss": [],
+    "severity": "HIGH",
+    "identification": ["https://app.example.com", "https://api.example.com", ...],
+    "http_info": [...14 entries from INSTANCE blocks...],
+    "plugin": [],
+    "solution": [],
+    "source": "TENABLEWAS"
+    ...other fields empty...
+  },
+  {
+    "Name": "PHP Unsupported Version",
+    "description": ["PHP has reached end-of-life...", "This version is vulnerable to..."],
+    "solution": ["Update to PHP 8.1 or newer", "Contact vendor for support"],
+    "plugin": ["Plugin ID: 12345", "Family: Development", ...],
+    "cvss": [7.5, "CVSS:3.1/AV:N/AC:L/..."],
+    "references": ["CVE-2023-0000", "https://nvd.nist.gov/..."],
+    "severity": "HIGH",
+    "identification": [],
+    "http_info": [],
+    "source": "TENABLEWAS"
+    ...other fields empty...
+  }
+]
+
+═══════════════════════════════════════════════════════════════════════════════════
+CRITICAL EXTRACTION RULES FOR OUTPUT:
+═══════════════════════════════════════════════════════════════════════════════════
+
+1. DUAL EXTRACTION: Extract BOTH B.1 and B.2 from SAME chunks
+   - If chunk has "PHP Unsupported Version Instances (14)" → create B.1 entry
+   - If SAME chunk has "PHP Unsupported Version" section → create SEPARATE B.2 entry
+   - Output BOTH in same JSON array
+
+2. FIELD DIFFERENTIATION:
+   - B.1 INSTANCES: identification + http_info filled, description/solution/plugin/cvss empty
+   - B.2 BASE: description + solution + plugin + cvss + references filled, identification + http_info empty
+
+3. NAME DIFFERENTIATION:
+   - B.1: "XXX Instances (N)" - WITH suffix and count
+   - B.2: "XXX" - WITHOUT suffix, just name
+
+4. DO NOT SKIP:
+   - Extract ALL "Instances (N)" headings for B.1
+   - Extract ALL base vulnerability sections for B.2
+   - If both exist in chunk, output BOTH
+
+5. DO NOT MIX:
+   - Do NOT put INSTANCE URLs in description field
+   - Do NOT put description text in identification field
+   - Keep B.1 and B.2 data clearly separated
+

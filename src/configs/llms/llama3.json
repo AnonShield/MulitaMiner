@@ -1,8 +1,9 @@
 {
-  "api_key": "insert_llama3_api_key_here",
+  "api_key": "key",
   "endpoint": "https://api.groq.com/openai/v1",
   "model": "llama-3.3-70b-versatile",
   "temperature": 0.0,
   "max_tokens": 4096,
-  "timeout":60
+  "timeout": 60,
+  "reserve_for_response": 1000
 }
