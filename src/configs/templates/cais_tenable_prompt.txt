@@ -1,0 +1,37 @@
+Extract vulnerabilities and return valid JSON.
+
+Find vulnerability names from text like "SQL Injection VULNERABILITY [HIGH] PLUGIN ID [12345]".
+Remove "Instances (N)" from names.
+
+Return this JSON structure:
+[
+  {
+    "id": "vuln_1",
+    "asset.name": "domain.com",
+    "asset.display_fqdn": "domain.com",
+    "asset.display_ipv4_address": null,
+    "asset.host_name": "domain",
+    "asset.operating_system": null,
+    "asset.system_type": "Web Application",
+    "definition.name": "Vulnerability Name",
+    "name_consolidated": "Vulnerability Name",
+    "definition.severity": "HIGH",
+    "definition.description": "Description",
+    "definition.solution": "Solution",
+    "definition.id": "12345",
+    "definition.cve": null,
+    "definition.cwe": null,
+    "definition.cvss3.base_score": null,
+    "definition.cvss3.base_vector": null,
+    "output": "Technical details",
+    "port": 443,
+    "protocol": "https",
+    "identification": [],
+    "http_info": [],
+    "scan.target": "https://domain.com",
+    "source": "TENABLEWAS",
+    "severity": "HIGH",
+    "state": "Open"
+  }
+]
+

@@ -1,0 +1,9 @@
+{
+  "reader": "cais",
+  "prompt_template": "src/configs/templates/cais_tenable_prompt.txt",
+  "retry_attempts": 2,
+  "delay_between_chunks": 1,
+  "remove_duplicates": false,
+  "output_file": "vulnerabilities_cais_tenable.json",
+  "consolidation_field": "name_consolidated"
+}

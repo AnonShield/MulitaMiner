@@ -57,55 +57,171 @@ Apply extraction rules adapted for each scanner type:
 CAIS FIELD MAPPING - TENABLE WAS
 ═══════════════════════════════════════════════════════════════════════════════════
 
-Extract CAIS fields from Tenable WAS vulnerabilities:
+CRITICAL: Tenable WAS has TWO types of vulnerabilities that must be extracted and consolidated:
 
-CRITICAL - TENABLE WAS NAME EXTRACTION:
-  Tenable WAS reports show vulnerabilities in TWO formats in table of contents and body:
-  1. "PHP Unsupported Version" (main heading)
-  2. "PHP Unsupported Version Instances (14)" (detail heading with instance count)
-  
-  ALWAYS extract using FIRST FORMAT (without "Instances")
-  - Do NOT create separate entries for "with Instances" and "without Instances" variants
-  - Strip "Instances (N)" suffix if present: "Name Instances (5)" → "Name"
-  - Consolidate both variants into single vulnerability entry with base name
-  - This ensures: "PHP Unsupported Version" and "PHP Unsupported Version Instances (14)" → one entry as "PHP Unsupported Version"
+TYPE 1: INSTANCES VULNERABILITIES (URLs and HTTP Info)
+🔸 Name pattern: "Vulnerability Name Instances (N)"
+🔸 Contains INSTANCE blocks with URLs and HTTP technical data
+🔸 Focus: identification and http_info arrays for evidence
+
+TYPE 2: BASE VULNERABILITIES (Descriptions and Solutions)  
+🔸 Name pattern: "Vulnerability Name" (no "Instances" suffix)
+🔸 Contains Description, Solution, Plugin Details sections
+🔸 Contains Risk Information with CVSS scores and references
+🔸 Focus: description, solution, plugin, cvss, references arrays
+
+CONSOLIDATION STRATEGY:
+🔹 ALWAYS use BASE name (without "Instances (N)") as definition.name
+🔹 Merge data from both INSTANCES and BASE into single CAIS object
+🔹 Fill identification/http_info from INSTANCES sections
+🔹 Fill description/solution/plugin/cvss from BASE sections
+🔹 Result: One comprehensive vulnerability entry per unique base name
+
+TENABLE WAS NAME EXTRACTION RULES:
+📋 Look for "VULNERABILITY [SEVERITY] PLUGIN ID [number]" headers
+📋 Extract vulnerability name from text BEFORE the VULNERABILITY keyword
+📋 Strip "Instances (N)" suffix for consolidation: "PHP Unsupported Version Instances (14)" → "PHP Unsupported Version"
+📋 Validate name appears in actual PDF headings, not description text
+📋 Reject technical evidence like "Access to .htaccess file denied" (use in output field instead)
+
+EXAMPLES OF VALID TENABLE WAS EXTRACTION:
+✅ "Cross-Site Scripting (XSS) - Stored"
+✅ "SQL Injection"  
+✅ "PHP Unsupported Version" (from both base and instances sections)
+✅ "Missing HTTP Strict Transport Security Policy"
+✅ "Directory Listing" (from both base and instances sections)
+✅ "Apache 2.4.x < 2.4.41 Multiple Vulnerabilities"
+✅ "Cookie Without Secure Flag Detected"
+
+EXAMPLES OF INVALID TENABLE WAS EXTRACTION:
+❌ "Access to .htaccess file denied" (technical evidence, not vulnerability name)
+❌ "Response code '200' triggered by request" (technical output, not vulnerability name)
+❌ "Affected URL: https://example.com" (evidence line, not vulnerability name)
+❌ "The scanner detected..." (description text, not heading)
 
 ASSET INFORMATION (Tenable WAS):
-  asset.name → Application/target name from scan header
-  asset.display_fqdn → Domain extracted from URL (e.g., juice-shop.herokuapp.com from https://juice-shop.herokuapp.com/path)
-  asset.display_ipv4_address → IP if resolved in report (usually null for web apps)
-  asset.host_name → Hostname portion of FQDN
-  asset.operating_system → null (typically not available for web apps)
-  asset.system_type = "Web Application" (always for Tenable WAS)
+📍 asset.name → Application/target name from scan header or main URL domain
+📍 asset.display_fqdn → Domain extracted from URLs (e.g., juice-shop.herokuapp.com from https://juice-shop.herokuapp.com/path)
+📍 asset.display_ipv4_address → IP if resolved in report (usually null for web apps)
+📍 asset.host_name → Hostname portion of FQDN (e.g., "juice-shop" from "juice-shop.herokuapp.com")
+📍 asset.operating_system → null (typically not available for web applications)
+📍 asset.system_type = "Web Application" (always for Tenable WAS scans)
+
+DEFINITION FIELDS - CORE (consolidated from both INSTANCES and BASE):
+🔸 definition.name → Base vulnerability name (without "Instances (N)" suffix)
+🔸 name_consolidated → Same as definition.name for deduplication logic
+🔸 definition.severity → Severity level from VULNERABILITY header (CRITICAL|HIGH|MEDIUM|LOW|LOG)
+🔸 definition.description → Description text from BASE vulnerability sections
+🔸 definition.solution → Solution steps from BASE vulnerability sections
+🔸 definition.id → Plugin ID from VULNERABILITY header (e.g., "12345")
+
+DEFINITION FIELDS - DETAILED (extract if available from BASE sections):
+🔍 definition.cve → CVE identifier (CVE-YYYY-XXXXX format) from references or description
+🔍 definition.cwe → CWE identifier (CWE-XXXXX format) from references or description  
+🔍 definition.family → Issue category based on vulnerability type:
+    • "Cross-Site Scripting" for XSS vulnerabilities
+    • "SQL Injection" for SQL injection vulnerabilities
+    • "Information Disclosure" for data exposure issues
+    • "Authentication" for login/auth issues
+    • "Authorization" for access control issues
+    • "Configuration" for server/app misconfigurations
+    • "Encryption" for crypto/TLS issues
+🔍 definition.type → Specific vulnerability type matching definition.family
+🔍 definition.references → URLs from "See Also", "References", or "Reference Information" sections
+🔍 definition.synopsis → First sentence or brief summary from description
+🔍 definition.cvss3.base_score → CVSS v3 base score (numeric value)
+🔍 definition.cvss3.base_vector → CVSS v3 vector string (CVSS:3.1/AV:N/AC:L/...)
+🔍 definition.cvss2.base_score → CVSS v2 score if available (less common)
+🔍 definition.cvss2.base_vector → CVSS v2 vector if available
+🔍 definition.see_also → Additional reference URLs or documentation links
+🔍 definition.plugin_published → Plugin creation/publication date if mentioned
+🔍 definition.vulnerability_published → Original CVE disclosure date if available
+🔍 definition.patch_published → Vendor patch release date if mentioned
+
+DETECTION FIELDS (consolidated from INSTANCES sections):
+🎯 output → Technical proof/evidence from INSTANCES findings and HTTP responses
+🎯 port → Port number extracted from URLs (443 for https://, 80 for http://, or custom port)
+🎯 protocol → Protocol scheme from URLs ("https" or "http")
+
+EVIDENCE FIELDS (from INSTANCES sections):
+📊 identification → Array of ALL affected URLs from INSTANCE blocks and Identification sections
+📊 http_info → Array of HTTP technical details:
+    • REQUEST method and URL (e.g., "GET https://example.com/path HTTP/1.1")
+    • REQUEST HEADERS (Accept, User-Agent, Cookie, etc.)
+    • RESPONSE HEADERS (Server, Content-Type, Set-Cookie, etc.)
+    • RESPONSE STATUS (e.g., "HTTP/1.1 200 OK")
+
+SCAN METADATA:
+🔬 scan.id → Scan identifier or report ID if available
+🔬 scan.target → Main target URL or application URL being scanned
+
+TIMING FIELDS (if available):
+⏰ first_observed → First detection date if mentioned in scan metadata
+⏰ last_seen → Last detection date or scan completion date
+⏰ age_in_days → Days since first observation (calculated if dates available)
+
+STATE & TRACKING:
+📈 severity → Same as definition.severity (for consistency)
+📈 state → Vulnerability state ("Open", "Fixed", "Verified", etc.) if mentioned
+📈 id → Unique identifier for this vulnerability instance
+📈 source → Always "TENABLEWAS" for Tenable WAS reports
+
+TENABLE WAS EXTRACTION WORKFLOW:
+1️⃣ Scan report for "VULNERABILITY [SEVERITY] PLUGIN ID" headers
+2️⃣ For each header, extract base vulnerability name (remove "Instances (N)" if present)
+3️⃣ Look for corresponding INSTANCES section with same base name + "Instances (N)"
+4️⃣ Look for corresponding BASE section with same base name (no "Instances")
+5️⃣ Consolidate data from both INSTANCES and BASE into single CAIS object:
+    • Use base name as definition.name
+    • Fill identification/http_info from INSTANCES
+    • Fill description/solution/plugin from BASE
+    • Fill CVSS and references from BASE Risk Information
+6️⃣ Set asset.system_type = "Web Application"
+7️⃣ Extract port/protocol from URLs in identification array
+8️⃣ Set source = "TENABLEWAS"
+
+═══════════════════════════════════════════════════════════════════════════════════
+CAIS FIELD MAPPING - OPENVAS
+═══════════════════════════════════════════════════════════════════════════════════
+
+Extract CAIS fields from OpenVAS vulnerabilities:
+
+ASSET INFORMATION (OpenVAS):
+  asset.name → Scan target name or IP
+  asset.display_fqdn → Hostname if available (otherwise same as IP)
+  asset.display_ipv4_address → IPv4 address from target or scan header
+  asset.host_name → Hostname portion (if FQDN available)
+  asset.operating_system → OS detected from scan (if mentioned)
+  asset.system_type = "Network Service" (always for OpenVAS)
 
 DEFINITION - CORE (same as system fields):
   definition.name → Name field (vulnerability title)
   name_consolidated → Consolidated name for deduplication (remove "Instances (N)" suffix if present)
-    - For "PHP Unsupported Version Instances (14)" → name_consolidated = "PHP Unsupported Version"
-    - For "Missing Cache Control" → name_consolidated = "Missing Cache Control"
+    - For "Abnormal HTTP Response Code Instances (2)" → name_consolidated = "Abnormal HTTP Response Code"
+    - For "Port Configuration Issue" → name_consolidated = "Port Configuration Issue"
     - Use this field to group and consolidate duplicate vulnerabilities
   definition.severity → severity field
   definition.description → description array
   definition.solution → solution array
-  definition.id → plugin field
+  definition.id → plugin field (OID format)
 
 DEFINITION - CAIS FIELDS (extract if available):
   definition.cve → CVE identifier (search in description/references)
   definition.cwe → CWE identifier (search in description/references)
-  definition.family → Issue category (XSS, SQL Injection, Information Disclosure, etc)
-  definition.type → Specific type (e.g., "Cross-Site Scripting", "SQL Injection")
-  definition.references → Extract URLs from "See Also" or "References"
+  definition.family → Vulnerability family (SMTP, SSL/TLS, HTTP, DNS, etc)
+  definition.type → Specific type (e.g., "Denial of Service", "Information Disclosure")
+  definition.references → Extract URLs from references
   definition.cvss3.base_score → CVSS v3 score
   definition.cvss3.base_vector → CVSS v3 vector
 
-DETECTION - TENABLE WAS:
-  output → Technical proof/evidence from findings
-  port → Port from URL (443 for https, 80 for http, or custom)
-  protocol → Protocol (http or https from URL scheme)
+DETECTION - OPENVAS:
+  output → Technical proof/output from scan
+  port → Port number (numeric, specific TCP/UDP port)
+  protocol → Protocol type (tcp or udp)
 
 SCAN:
   scan.id → Scan identifier
-  scan.target → Full URL scanned
+  scan.target → Scan target (IP or hostname)
 
 TIMING:
   first_observed → Detection date if available
