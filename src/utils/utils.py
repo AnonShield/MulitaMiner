@@ -262,7 +262,7 @@ def save_visual_layout(content, pdf_path):
         print(f"Erro ao salvar layout visual: {e}")
         return None
 def load_profile(profile_name):
-    path = f"src/configs/profile/{profile_name}.json"
+    path = f"src/configs/scanners/{profile_name}.json"
     with open(path, "r", encoding="utf-8") as f:
         return json.load(f)
 

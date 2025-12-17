@@ -48,8 +48,8 @@ def parse_arguments() -> argparse.Namespace:
         description='Extrai vulnerabilidades de relatórios PDF usando LLM'
     )
     parser.add_argument('pdf_path', help='Caminho para o arquivo PDF')
-    parser.add_argument('--profile', default='default', 
-                       help='Perfil de configuração (padrão: default)')
+    parser.add_argument('--scanner', default='default', 
+                       help='Scanner de configuração (padrão: default)')
     parser.add_argument('--LLM', default='gpt4', 
                        help='Nome do LLM a usar (padrão: gpt4)')
     
@@ -78,9 +78,9 @@ def validate_inputs(args: argparse.Namespace) -> bool:
 
 def load_configs(args: argparse.Namespace) -> tuple:
     """Carrega configurações de perfil e LLM."""
-    profile_config = load_profile(args.profile)
+    profile_config = load_profile(args.scanner)
     if not profile_config:
-        print(f"Erro ao carregar perfil: {args.profile}")
+        print(f"Erro ao carregar perfil: {args.scanner}")
         return None, None
     
     llm_config = load_llm(args.LLM)
