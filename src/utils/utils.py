@@ -11,6 +11,7 @@ if _src_dir not in sys.path:
     sys.path.insert(0, _src_dir)
 
 from converters.csv_converter import CSVConverter, TSVConverter
+from converters.xlsx_converter import XLSXConverter
 from langchain_openai import ChatOpenAI
 
 def parse_json_response(resposta, chunk_id=""):
@@ -196,7 +197,7 @@ def execute_conversions(json_file_path, args):
     print(f"\n=== CONVERSÃO DE FORMATOS ===")
     converted_files = []
     if args.convert == 'all':
-        formats = ['csv', 'tsv']
+        formats = ['csv', 'tsv', 'xlsx']
         for format_type in formats:
             try:
                 result = convert_single_format(json_file_path, format_type, args)
@@ -232,6 +233,8 @@ def convert_single_format(json_file_path, format_type, args):
             )
         elif format_type == 'tsv':
             converter = TSVConverter(encoding=args.csv_encoding, include_metadata=False)
+        elif format_type == 'xlsx':
+            converter = XLSXConverter()
         else:
             raise ValueError(f"Formato não suportado: {format_type}")
         result = converter.convert(json_file_path, output_file)
