@@ -3,10 +3,8 @@
   "prompt_template": "src/configs/templates/tenable_prompt.txt",
   "retry_attempts": 3,
   "delay_between_chunks": 2,
-  "remove_duplicates": true,
   "output_file": "vulnerabilities_default_tenable.json",
   "consolidation_field": "Name",
-  "merge_instances_with_same_base": true,
-  "use_highest_instance_count": true
+  "merge_instances_with_same_base": true
 }
 

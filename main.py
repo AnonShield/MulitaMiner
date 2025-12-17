@@ -197,18 +197,15 @@ def save_results(vulnerabilities: list, output_file: str, profile_config: dict =
         # Carregar vulnerabilidades anteriores para comparação
         previous_vulns = load_previous_vulnerabilities(output_file)
         
-        has_tenable = any(
-            v.get('source') == 'TENABLEWAS' 
-            for v in vulnerabilities 
-            if isinstance(v, dict)
-        )
+        # Verificar se o merge está habilitado na configuração
+        merge_instances_with_same_base = profile_config.get('merge_instances_with_same_base', False)
         
-        if has_tenable:
-            print(f"\nConsolidando vulnerabilidades duplicadas (Tenable WAS)...")
+        if merge_instances_with_same_base:
+            print(f"\nConsolidando vulnerabilidades duplicadas...")
             final_vulns = consolidate_duplicates(vulnerabilities, profile_config)
             print(f"Total: {len(vulnerabilities)} → {len(final_vulns)} após consolidação")
         else:
-            print(f"\nSem consolidação (OpenVAS) - {len(vulnerabilities)} vulnerabilidades")
+            print(f"\nSem consolidação - {len(vulnerabilities)} vulnerabilidades")
             final_vulns = vulnerabilities
         
         # Detectar campo de consolidação do profile ou auto-detectar
@@ -235,9 +232,9 @@ def save_results(vulnerabilities: list, output_file: str, profile_config: dict =
                 else:
                     new_vulns.append(v)
         
-        # Para Tenable WAS: mostrar vulnerabilidades únicas
-        # Para OpenVAS: mostrar todas (permitir duplicatas)
-        if has_tenable:
+        # Com merge: mostrar vulnerabilidades únicas
+        # Sem merge: mostrar todas (permitir duplicatas)
+        if merge_instances_with_same_base:
             unique_names = sorted(set(v.get(name_field, 'SEM NOME') for v in final_vulns if isinstance(v, dict)))
             print(f"\nTotal de vulnerabilidades únicas: {len(unique_names)}")
             print(f"\nResumo de vulnerabilidades encontradas:")
@@ -245,8 +242,8 @@ def save_results(vulnerabilities: list, output_file: str, profile_config: dict =
                 count = sum(1 for v in final_vulns if isinstance(v, dict) and v.get(name_field) == name)
                 print(f"  {idx:3d}. [{count:2d}x] {name}")
         else:
-            # OpenVAS: listar separando NOVAS de REPETIDAS
-            print(f"\nTotal de vulnerabilidades (OpenVAS): {len(final_vulns)}")
+            # Sem merge: listar separando NOVAS de REPETIDAS
+            print(f"\nTotal de vulnerabilidades: {len(final_vulns)}")
             print(f"  - NOVAS: {len(new_vulns)}")
             print(f"  - ATUALIZADAS: {len(updated_vulns)}")
             print(f"  - REPETIDAS (sem mudança): {len(repeated_vulns)}")

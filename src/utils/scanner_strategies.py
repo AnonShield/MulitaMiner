@@ -102,7 +102,7 @@ class TenableWASStrategy(ScannerStrategy):
         if merge_instances:
             # Agrupar instances por nome base (sem o número N)
             instance_groups = {}
-            base_vulns = []
+            base_groups = {}
             
             for v in vulns:
                 name = v.get('Name', '')
@@ -113,22 +113,37 @@ class TenableWASStrategy(ScannerStrategy):
                         instance_groups[base_name] = []
                     instance_groups[base_name].append(v)
                 else:
-                    base_vulns.append(v)
+                    # Agrupar bases por nome exato também
+                    if name not in base_groups:
+                        base_groups[name] = []
+                    base_groups[name].append(v)
             
             # Consolidar cada grupo de instances
             consolidated_instances = []
             for base_name, instances in instance_groups.items():
                 if len(instances) > 1:
                     # Múltiplas instances do mesmo tipo - consolidar
-                    consolidated = self._merge_instances_group(instances, use_highest_count)
+                    consolidated = self._merge_instances_group(instances, use_highest_count, profile_config)
                     if consolidated:
                         consolidated_instances.append(consolidated)
                 else:
                     # Só uma instance, manter como está
                     consolidated_instances.extend(instances)
             
-            # Retornar instances consolidadas + bases não afetadas
-            return consolidated_instances + base_vulns
+            # Consolidar cada grupo de bases também
+            consolidated_bases = []
+            for base_name, bases in base_groups.items():
+                if len(bases) > 1:
+                    # Múltiplas bases do mesmo nome - consolidar
+                    consolidated = self._merge_base_group(bases, profile_config)
+                    if consolidated:
+                        consolidated_bases.append(consolidated)
+                else:
+                    # Só uma base, manter como está
+                    consolidated_bases.extend(bases)
+            
+            # Retornar instances consolidadas + bases consolidadas
+            return consolidated_instances + consolidated_bases
         
         # Lógica original - separar em grupos
         with_instances = []
@@ -216,16 +231,17 @@ class TenableWASStrategy(ScannerStrategy):
         
         return result
 
-    def _merge_instances_group(self, instances: List[Dict], use_highest_count: bool = True) -> Dict:
+    def _merge_instances_group(self, instances: List[Dict], use_highest_count: bool = True, profile_config: Dict = None) -> Dict:
         """
         Mescla múltiplas instances do mesmo tipo base.
         
         Args:
             instances: Lista de instances com mesmo nome base
             use_highest_count: Se True, usa o nome com maior (N)
+            profile_config: Configuração do perfil para merge settings
         
         Returns:
-            Vulnerabilidade consolidada
+            Vulnerabilidade consolidada com todos os campos mesclados
         """
         if not instances:
             return None
@@ -247,15 +263,25 @@ class TenableWASStrategy(ScannerStrategy):
                         max_n = n
                         target_instance = instance
         
-        # Criar vulnerabilidade consolidada
+        # Criar vulnerabilidade consolidada baseada na instance com maior N
         consolidated = target_instance.copy()
         
-        # Mesclar arrays de todas as instances
-        array_fields = ['identification', 'http_info', 'description', 'solution', 
-                       'references', 'plugin', 'detection_result', 'detection_method',
-                       'impact', 'insight', 'product_detection_result', 'log_method']
+        # Obter configurações de merge do profile_config se disponível
+        merge_all_fields = profile_config.get('merge_all_fields', True) if profile_config else True
+        preserve_highest_severity = profile_config.get('preserve_highest_severity', True) if profile_config else True
+        merge_scalar_fields = profile_config.get('merge_scalar_fields', ['port', 'protocol']) if profile_config else ['port', 'protocol']
+        merge_array_fields = profile_config.get('merge_array_fields', [
+            'identification', 'http_info', 'description', 'solution', 
+            'references', 'plugin', 'cvss', 'detection_result', 'detection_method',
+            'impact', 'insight', 'product_detection_result', 'log_method'
+        ]) if profile_config else [
+            'identification', 'http_info', 'description', 'solution', 
+            'references', 'plugin', 'cvss', 'detection_result', 'detection_method',
+            'impact', 'insight', 'product_detection_result', 'log_method'
+        ]
         
-        for field in array_fields:
+        # Mesclar arrays de todas as instances
+        for field in merge_array_fields:
             all_values = []
             for instance in instances:
                 val = instance.get(field, [])
@@ -275,14 +301,113 @@ class TenableWASStrategy(ScannerStrategy):
             
             consolidated[field] = unique
         
-        # Usar severity máxima
-        severities = [v.get('severity', 'LOG') for v in instances]
-        severity_order = {'CRITICAL': 4, 'HIGH': 3, 'MEDIUM': 2, 'LOW': 1, 'INFO': 0.5, 'LOG': 0}
+        # Mesclar campos escalares (usar valores não-null da instance com maior N primeiro)
+        for field in merge_scalar_fields:
+            # Tentar usar valor da target_instance primeiro
+            if consolidated.get(field) in [None, "", 0]:
+                for instance in sorted(instances, key=lambda x: self._extract_instance_number(x.get('Name', '')), reverse=True):
+                    val = instance.get(field)
+                    if val not in [None, "", 0]:
+                        consolidated[field] = val
+                        break
+        
+        # Usar severity máxima se configurado
+        if preserve_highest_severity:
+            severities = [v.get('severity', 'LOG') for v in instances]
+            severity_order = {'CRITICAL': 4, 'HIGH': 3, 'MEDIUM': 2, 'LOW': 1, 'INFO': 0.5, 'LOG': 0}
+            consolidated['severity'] = max(severities, key=lambda s: severity_order.get(s, 0))
+        
+        # Garantir que campos críticos não fiquem vazios
+        if not consolidated.get('identification'):
+            # Se identification vazio, tentar coletar de qualquer instance
+            for instance in instances:
+                ident = instance.get('identification', [])
+                if ident and len(ident) > 0:
+                    consolidated['identification'] = ident
+                    break
+        
+        if not consolidated.get('http_info'):
+            # Se http_info vazio, tentar coletar de qualquer instance
+            for instance in instances:
+                http = instance.get('http_info', [])
+                if http and len(http) > 0:
+                    consolidated['http_info'] = http
+                    break
         consolidated['severity'] = max(severities, key=lambda s: severity_order.get(s, 0))
         
         print(f"[MERGE] Mescladas {len(instances)} instances do tipo '{self.get_base_name(target_instance.get('Name', ''))}' → Nome final: '{consolidated['Name']}'")
         
         return consolidated
+    
+    def _merge_base_group(self, vulnerabilities, profile_config):
+        """
+        Consolida múltiplas vulnerabilidades base com o mesmo nome.
+        
+        Args:
+            vulnerabilities: Lista de vulnerabilidades com o mesmo nome base
+            profile_config: Configuração do profile para personalizações
+            
+        Returns:
+            dict: Vulnerabilidade consolidada ou None
+        """
+        if not vulnerabilities:
+            return None
+            
+        if len(vulnerabilities) == 1:
+            return vulnerabilities[0]
+        
+        # Usar a primeira vulnerabilidade como base
+        consolidated = vulnerabilities[0].copy()
+        
+        # Obter configurações de merge do profile_config se disponível
+        merge_all_fields = profile_config.get('merge_all_fields', True) if profile_config else True
+        preserve_highest_severity = profile_config.get('preserve_highest_severity', True) if profile_config else True
+        merge_array_fields = profile_config.get('merge_array_fields', [
+            'identification', 'http_info', 'description', 'solution', 
+            'references', 'plugin', 'cvss', 'detection_result', 'detection_method',
+            'impact', 'insight', 'product_detection_result', 'log_method'
+        ]) if profile_config else [
+            'identification', 'http_info', 'description', 'solution', 
+            'references', 'plugin', 'cvss', 'detection_result', 'detection_method',
+            'impact', 'insight', 'product_detection_result', 'log_method'
+        ]
+        
+        # Mesclar arrays de todas as vulnerabilidades
+        for field in merge_array_fields:
+            all_values = []
+            for vuln in vulnerabilities:
+                val = vuln.get(field, [])
+                if isinstance(val, list):
+                    all_values.extend(val)
+                elif val is not None:
+                    all_values.append(val)
+            
+            # Remover duplicatas mantendo ordem
+            unique = []
+            seen = set()
+            for item in all_values:
+                key = item.lower() if isinstance(item, str) else str(item)
+                if key not in seen:
+                    seen.add(key)
+                    unique.append(item)
+            
+            consolidated[field] = unique
+        
+        # Usar severidade mais alta
+        if preserve_highest_severity:
+            severities = [v.get('severity', 'LOG') for v in vulnerabilities]
+            severity_order = {'CRITICAL': 4, 'HIGH': 3, 'MEDIUM': 2, 'LOW': 1, 'INFO': 0.5, 'LOG': 0}
+            consolidated['severity'] = max(severities, key=lambda s: severity_order.get(s, 0))
+        
+        print(f"[MERGE] Mescladas {len(vulnerabilities)} bases com mesmo nome '{consolidated['Name']}'")
+        
+        return consolidated
+
+    def _extract_instance_number(self, name: str) -> int:
+        """Extrai o número N de 'Instances (N)' do nome."""
+        import re
+        match = re.search(r'Instances \((\d+)\)', name)
+        return int(match.group(1)) if match else 0
 
 
 # Registry de estratégias por scanner
