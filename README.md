@@ -471,10 +471,6 @@ python main.py test_report.pdf --LLM deepseek # Eficiência (1750 tokens)
 - **Duplicata removal**: 94.7% de redução em relatórios TenableWAS
 - **Instance merging**: 89.3% de consolidação efetiva
 
-## Docker
-
-O sistema pode ser executado em containers Docker para isolamento e portabilidade.
-
 ## Estrutura do Código
 
 ```
