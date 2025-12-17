@@ -25,7 +25,7 @@ O Vulnerability Extractor é uma ferramenta CLI desenvolvida para extrair e proc
 - **Remoção de duplicatas** baseada em múltiplos critérios
 
 ### Multi-LLM com Otimização
-- **6 LLMs suportados** com configurações otimizadas individuais:
+- **5 LLMs suportados** com configurações otimizadas individuais:
   - **DeepSeek**: Ultra-eficiente para análise técnica
   - **GPT-4**: Balanceado para uso geral
   - **GPT-5**: Ultra-seguro para processamento crítico
