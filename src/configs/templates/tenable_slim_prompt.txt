@@ -26,7 +26,9 @@ cvss ALWAYS length 7 (use null where missing).
 
 FOCUS EXTRACTION (TENABLE WAS):
 1. Name: EXACT page heading. Do NOT invent names from evidence lines.
+   🔥 PRESERVE ALL apostrophes/quotes in names: "Missing 'X-Content-Type-Options' Header"
 2. Instances: Heading with "Instances (N)" => separate object, ONLY identification + http_info; description MUST be null; solution/references/plugin empty arrays.
+   🔥 When consolidating, use HIGHEST N number if multiple exist
 3. Base object MUST exist if narrative (Description/Solution/References/Plugin Details) present.
 4. Headers/Policies allowed as Names (base + optional Instances):
    Missing HTTP Strict Transport Security Policy

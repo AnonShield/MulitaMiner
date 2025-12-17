@@ -205,7 +205,7 @@ def save_results(vulnerabilities: list, output_file: str, profile_config: dict =
         
         if has_tenable:
             print(f"\nConsolidando vulnerabilidades duplicadas (Tenable WAS)...")
-            final_vulns = consolidate_duplicates(vulnerabilities)
+            final_vulns = consolidate_duplicates(vulnerabilities, profile_config)
             print(f"Total: {len(vulnerabilities)} → {len(final_vulns)} após consolidação")
         else:
             print(f"\nSem consolidação (OpenVAS) - {len(vulnerabilities)} vulnerabilidades")

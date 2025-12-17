@@ -1,9 +1,9 @@
 {
-  "api_key": "key",
+  "api_key": "key_gpt4",
   "endpoint": "https://api.openai.com/v1",
-  "model": "gpt-4.1-nano-2025-04-14",
+  "model": "gpt-4.1-2025-04-14",
   "temperature": 0.0,
-  "max_completion_tokens": 4096,
-  "timeout": 120,
-  "reserve_for_response": 1000
+  "max_tokens": 12000,
+  "timeout":120,
+  "reserve_for_response": 4000
 }

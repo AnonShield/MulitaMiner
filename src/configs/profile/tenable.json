@@ -5,6 +5,8 @@
   "delay_between_chunks": 2,
   "remove_duplicates": true,
   "output_file": "vulnerabilities_default_tenable.json",
-  "consolidation_field": "Name"
+  "consolidation_field": "Name",
+  "merge_instances_with_same_base": true,
+  "use_highest_instance_count": true
 }
 

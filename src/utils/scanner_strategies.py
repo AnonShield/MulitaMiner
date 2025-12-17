@@ -80,20 +80,57 @@ class TenableWASStrategy(ScannerStrategy):
         """Remove ' Instances (N)' do final"""
         return re.sub(r'\s+Instances\s*\(\d+\)$', '', name)
     
-    def consolidate_group(self, vulns: List[Dict]) -> List[Dict]:
+    def consolidate_group(self, vulns: List[Dict], profile_config: Dict = None) -> List[Dict]:
         """
         Consolida grupo de Tenable WAS.
         MANTÉM AMBAS as versões: com Instances(N) e base name.
         
         Lógica:
-        1. Separar em 2 grupos: com "Instances (N)" e sem
-        2. Consolidar DENTRO de cada grupo
-        3. Retornar ambos os grupos consolidados (máx 2 objetos)
+        1. Se merge_instances_with_same_base=True: consolida todas as instances do mesmo tipo
+        2. Separar em 2 grupos: com "Instances (N)" e sem
+        3. Consolidar DENTRO de cada grupo
+        4. Retornar ambos os grupos consolidados (máx 2 objetos)
         """
         if len(vulns) == 1:
             return vulns
+
+        # Configurações do perfil
+        merge_instances = profile_config.get('merge_instances_with_same_base', False) if profile_config else False
+        use_highest_count = profile_config.get('use_highest_instance_count', True) if profile_config else True
+
+        # Se merge_instances está habilitado, agrupar instances do mesmo tipo
+        if merge_instances:
+            # Agrupar instances por nome base (sem o número N)
+            instance_groups = {}
+            base_vulns = []
+            
+            for v in vulns:
+                name = v.get('Name', '')
+                if 'Instances (' in name:
+                    # Extrair nome base sem o (N)
+                    base_name = re.sub(r'\s+Instances\s*\(\d+\)$', '', name)
+                    if base_name not in instance_groups:
+                        instance_groups[base_name] = []
+                    instance_groups[base_name].append(v)
+                else:
+                    base_vulns.append(v)
+            
+            # Consolidar cada grupo de instances
+            consolidated_instances = []
+            for base_name, instances in instance_groups.items():
+                if len(instances) > 1:
+                    # Múltiplas instances do mesmo tipo - consolidar
+                    consolidated = self._merge_instances_group(instances, use_highest_count)
+                    if consolidated:
+                        consolidated_instances.append(consolidated)
+                else:
+                    # Só uma instance, manter como está
+                    consolidated_instances.extend(instances)
+            
+            # Retornar instances consolidadas + bases não afetadas
+            return consolidated_instances + base_vulns
         
-        # Separar em 2 grupos: com Instances e sem
+        # Lógica original - separar em grupos
         with_instances = []
         without_instances = []
         
@@ -117,9 +154,31 @@ class TenableWASStrategy(ScannerStrategy):
             if len(group) == 1:
                 return group[0]
             
-            # Usar NOME EXATO da ÚLTIMA item do grupo
+            # Para Instances com (N), usar o que tem MAIOR N
+            # Para outros, usar o último item do grupo  
             consolidated = group[0].copy()
-            consolidated['Name'] = group[-1].get('Name')
+            
+            # Encontrar item com maior N se for Instances
+            instances_items = [v for v in group if 'Instances (' in v.get('Name', '')]
+            if instances_items:
+                # Extrair números N e encontrar o maior
+                max_n = 0
+                best_item = instances_items[0]
+                
+                for item in instances_items:
+                    name = item.get('Name', '')
+                    import re
+                    match = re.search(r'Instances \((\d+)\)', name)
+                    if match:
+                        n = int(match.group(1))
+                        if n > max_n:
+                            max_n = n
+                            best_item = item
+                
+                consolidated['Name'] = best_item.get('Name')
+            else:
+                # Não é Instances, usar último item
+                consolidated['Name'] = group[-1].get('Name')
             
             # Mesclar arrays
             for field in array_fields:
@@ -157,6 +216,74 @@ class TenableWASStrategy(ScannerStrategy):
         
         return result
 
+    def _merge_instances_group(self, instances: List[Dict], use_highest_count: bool = True) -> Dict:
+        """
+        Mescla múltiplas instances do mesmo tipo base.
+        
+        Args:
+            instances: Lista de instances com mesmo nome base
+            use_highest_count: Se True, usa o nome com maior (N)
+        
+        Returns:
+            Vulnerabilidade consolidada
+        """
+        if not instances:
+            return None
+        
+        if len(instances) == 1:
+            return instances[0]
+        
+        # Encontrar a instance com maior N se configurado
+        target_instance = instances[0]
+        
+        if use_highest_count:
+            max_n = 0
+            for instance in instances:
+                name = instance.get('Name', '')
+                match = re.search(r'Instances \((\d+)\)', name)
+                if match:
+                    n = int(match.group(1))
+                    if n > max_n:
+                        max_n = n
+                        target_instance = instance
+        
+        # Criar vulnerabilidade consolidada
+        consolidated = target_instance.copy()
+        
+        # Mesclar arrays de todas as instances
+        array_fields = ['identification', 'http_info', 'description', 'solution', 
+                       'references', 'plugin', 'detection_result', 'detection_method',
+                       'impact', 'insight', 'product_detection_result', 'log_method']
+        
+        for field in array_fields:
+            all_values = []
+            for instance in instances:
+                val = instance.get(field, [])
+                if isinstance(val, list):
+                    all_values.extend(val)
+                elif val is not None:
+                    all_values.append(val)
+            
+            # Remover duplicatas mantendo ordem
+            unique = []
+            seen = set()
+            for item in all_values:
+                key = item.lower() if isinstance(item, str) else str(item)
+                if key not in seen:
+                    seen.add(key)
+                    unique.append(item)
+            
+            consolidated[field] = unique
+        
+        # Usar severity máxima
+        severities = [v.get('severity', 'LOG') for v in instances]
+        severity_order = {'CRITICAL': 4, 'HIGH': 3, 'MEDIUM': 2, 'LOW': 1, 'INFO': 0.5, 'LOG': 0}
+        consolidated['severity'] = max(severities, key=lambda s: severity_order.get(s, 0))
+        
+        print(f"[MERGE] Mescladas {len(instances)} instances do tipo '{self.get_base_name(target_instance.get('Name', ''))}' → Nome final: '{consolidated['Name']}'")
+        
+        return consolidated
+
 
 # Registry de estratégias por scanner
 SCANNER_STRATEGIES = {
@@ -178,7 +305,7 @@ def get_strategy(source: str) -> ScannerStrategy:
     return SCANNER_STRATEGIES.get(source.upper())
 
 
-def consolidate_by_scanner(vulnerabilities: List[Dict]) -> List[Dict]:
+def consolidate_by_scanner(vulnerabilities: List[Dict], profile_config: Dict = None) -> List[Dict]:
     """
     Consolida vulnerabilidades usando estratégia específica de cada scanner.
     
@@ -189,6 +316,7 @@ def consolidate_by_scanner(vulnerabilities: List[Dict]) -> List[Dict]:
     
     Args:
         vulnerabilities: Lista de vulnerabilidades mistas
+        profile_config: Configuração do perfil (para Tenable WAS merge options)
         
     Returns:
         Lista consolidada por estratégia de cada scanner
@@ -224,9 +352,12 @@ def consolidate_by_scanner(vulnerabilities: List[Dict]) -> List[Dict]:
                 base_name = strategy.get_base_name(name)
                 by_name[base_name].append(vuln)
         
-        # Consolidar cada grupo
+        # Consolidar cada grupo - passar profile_config para Tenable WAS
         for base_name, group in by_name.items():
-            result = strategy.consolidate_group(group)
+            if source == 'TENABLEWAS':
+                result = strategy.consolidate_group(group, profile_config)
+            else:
+                result = strategy.consolidate_group(group)
             consolidated.extend(result)
     
     return consolidated

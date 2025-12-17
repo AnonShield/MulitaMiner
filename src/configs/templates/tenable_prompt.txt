@@ -15,6 +15,20 @@ MANDATORY OUTPUT FORMAT:
 ✅ NEVER truncate any field content - include ALL information found
 ✅ NEVER summarize or abbreviate - extract FULL text from source
 
+🔥 CRITICAL NAME PRESERVATION:
+✅ PRESERVE ALL APOSTROPHES/QUOTES in vulnerability names as-is
+✅ Example: "Missing 'X-Content-Type-Options' Header" (keep the single quotes)
+✅ Example: "Missing 'X-Frame-Options' Header" (keep the single quotes)
+✅ Example: "Missing 'Cache-Control' Header" (keep the single quotes)
+✅ NEVER remove or modify apostrophes/quotes that are part of vulnerability names
+
+🚨 CONSOLIDATION RULES FOR INSTANCES:
+🔥 When multiple "Vulnerability Name Instances (N)" with different N numbers exist:
+   ✅ Use the HIGHEST N number for final consolidation
+   ✅ Example: "Missing 'X-Content-Type-Options' Header Instances (5)" + "Missing 'X-Content-Type-Options' Header Instances (12)" → Keep "Missing 'X-Content-Type-Options' Header Instances (12)"
+   ✅ Merge ALL URLs and HTTP info from all instances
+🔥 ALWAYS preserve apostrophes/quotes in names during consolidation
+
 FORBIDDEN OUTPUT:
 ❌ "Here's the JSON array:" or explanatory text
 ❌ Markdown formatting or code blocks
@@ -66,8 +80,8 @@ STEP 1 - IDENTIFY INSTANCES BLOCKS:
 
 EXAMPLES:
 ✅ "PHP Unsupported Version Instances (14)"
-✅ "Missing HTTP Strict Transport Security Policy Instances (25)"  
-✅ "Directory Listing Instances (8)"
+✅ "Missing 'X-Content-Type-Options' Header Instances (25)"  
+✅ "Missing 'X-Frame-Options' Header Instances (8)"
 ✅ "Apache 2.4.x < 2.4.41 Multiple Vulnerabilities Instances (1)"
 
 STEP 2 - EXTRACT INSTANCES DATA:

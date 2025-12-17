@@ -976,7 +976,7 @@ def retry_chunk_with_subdivision(doc_chunk: TokenChunk, llm, profile_config: Dic
     return []
 
 
-def consolidate_duplicates(vulnerabilities: List[Dict]) -> List[Dict]:
+def consolidate_duplicates(vulnerabilities: List[Dict], profile_config: Dict = None) -> List[Dict]:
     """
     Consolida vulnerabilidades removendo duplicatas E mesclando URLs.
     Remove entradas incompletas (BASE sem INSTANCES ou vice-versa).
@@ -986,16 +986,33 @@ def consolidate_duplicates(vulnerabilities: List[Dict]) -> List[Dict]:
     - Mescla os arrays de identification (combina URLs únicas)
     - Mantém apenas 1 entrada por vulnerability com TODAS as URLs
     - Remove pares incompletos
+    - Se merge_instances_with_same_base=True: consolida instances com mesmo base name
 
     Para OpenVAS:
     - Consolida por (Name, port, protocol)
     
     Args:
         vulnerabilities: Lista de vulnerabilidades
+        profile_config: Configuração do perfil
     
     Returns:
         Lista consolidada com URLs mescladas (apenas pares válidos)
     """
+    if not vulnerabilities:
+        return []
+
+    # Usar nova estratégia de consolidação por scanner
+    from utils.scanner_strategies import consolidate_by_scanner
+    
+    try:
+        return consolidate_by_scanner(vulnerabilities, profile_config)
+    except Exception as e:
+        print(f"[CONSOLIDATE] Erro na nova consolidação, usando método fallback: {str(e)}")
+        return _consolidate_duplicates_legacy(vulnerabilities)
+
+
+def _consolidate_duplicates_legacy(vulnerabilities: List[Dict]) -> List[Dict]:
+    """Método legado de consolidação para fallback."""
     if not vulnerabilities:
         return []
     
