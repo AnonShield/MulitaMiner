@@ -11,12 +11,27 @@ MANDATORY OUTPUT FORMAT:
 ✅ Arrays use [] even when empty
 ✅ Use null (not "null") for missing scalar values
 ✅ Numbers without quotes: 443, not "443"
+✅ NEVER use "..." or ellipsis in ANY field - extract COMPLETE content always
+✅ NEVER truncate any field content - include ALL information found
+✅ NEVER summarize or abbreviate - extract FULL text from source
 
 FORBIDDEN OUTPUT:
 ❌ "Here's the JSON array:" or explanatory text
 ❌ Markdown formatting or code blocks
 ❌ Comments inside JSON structure
 ❌ Invalid JSON syntax
+❌ "..." or ellipsis anywhere in the output
+❌ Truncated or abbreviated content
+❌ Summarized information instead of complete extraction
+
+🚨 ANTI-TRUNCATION RULES:
+- NEVER write "..." in any field
+- NEVER abbreviate content with "and more"
+- NEVER use "etc." to indicate missing content
+- EXTRACT COMPLETE information from source
+- IF content is long, include ALL of it in the array
+- SPLIT long content into multiple array elements if needed
+- ALWAYS preserve original information integrity
 
 ═══════════════════════════════════════════════════════════════════════════════════
 TENABLE WAS EXTRACTION RULES
@@ -58,12 +73,14 @@ EXAMPLES:
 STEP 2 - EXTRACT INSTANCES DATA:
 🔹 Name: Keep FULL name including "Instances (N)" suffix
 🔹 severity: From "VULNERABILITY [SEVERITY] PLUGIN ID" line
-🔹 identification: Extract ALL URLs from INSTANCE blocks and Identification sections
-🔹 http_info: From HTTP Info sections (REQUEST, REQUEST HEADERS, RESPONSE HEADERS)
+🔹 identification: Extract ALL Identification sections found in the vulnerability - COMPLETE content from EVERY Identification section (descriptive text AND URLs as separate array elements)
+🔹 http_info: Extract ALL HTTP Info sections found in the vulnerability - COMPLETE content from EVERY HTTP Info section (REQUEST MADE, REQUEST HEADERS, RESPONSE HEADERS as separate array elements)
+
+⚠️ CRITICAL FOR INSTANCES: Both identification and http_info are ARRAYS - extract ALL occurrences, not just the first one found!
 
 STEP 3 - BUILD INSTANCES JSON:
-🔹 Fill: identification (URLs), http_info (HTTP data), severity
-🔹 Empty: description=[], solution=[], plugin=[], cvss=[], references=[]
+🔹 Fill: identification[] (ALL Identification content from ALL sections: text + URLs), http_info[] (ALL HTTP data from ALL sections), severity
+🔹 Empty: description=[], solution=[], plugin=[], cvss=[], references=[
 🔹 Empty OpenVAS fields: detection_result=[], detection_method=[], impact=[], insight=[], product_detection_result=[], log_method=[]
 🔹 Set: source="TENABLEWAS"
 
@@ -85,8 +102,20 @@ STEP 2 - EXTRACT BASE DATA:
 🔹 description: From Description section (all paragraphs)
 🔹 solution: From Solution section (remediation steps)
 🔹 plugin: From Plugin Details section (ID, Family, dates)
-🔹 cvss: From Risk Information section (scores and vectors)
-🔹 references: From Reference Information section (CVEs, URLs)
+🔹 cvss: From Risk Information section - extract CVSS scores in these formats:
+  • "CVSSV4 BASE SCORE X.X"
+  • "CVSSV4 VECTOR CVSS:4.0/..."
+  • "CVSSV3 BASE SCORE X.X"
+  • "CVSSV3 VECTOR CVSS:3.0/..."
+  • "CVSS BASE SCORE X.X"
+  • "CVSS VECTOR CVSS2#..."
+🔹 references: From Reference Information section - extract as separate elements:
+  • CWE references (CWE-XXX)
+  • WASC references (WASC-XX)
+  • OWASP references
+  • CVE references (CVE-YYYY-XXXXX)
+  • BID references
+  • URLs
 
 STEP 3 - BUILD BASE JSON:
 🔹 Fill: description, solution, plugin, cvss, references, severity
@@ -122,6 +151,11 @@ CRITICAL TENABLE WAS RULES:
 🚨 Keep INSTANCES and BASE data completely separate
 🚨 Include full "Instances (N)" in INSTANCES names
 🚨 Remove "Instances (N)" from BASE names
+🚨 CVSS EXTRACTION: Extract from Risk Information section in format "CVSSV4 BASE SCORE", "CVSSV3 BASE SCORE", "CVSS BASE SCORE" with vectors
+🚨 REFERENCES EXTRACTION: From Reference Information section extract CWE, WASC, OWASP, CVE, BID as separate elements
+🚨 HTTP INFO EXTRACTION: Extract ALL content from HTTP Info section - REQUEST MADE, all REQUEST HEADERS, all RESPONSE HEADERS, Content-Type, etc. as separate array elements
+🚨 IDENTIFICATION EXTRACTION: Extract COMPLETE content from Identification section (descriptive text AND URLs as separate elements)
+🚨 INSTANCES ARRAYS: For INSTANCES vulnerabilities, identification[] and http_info[] must capture ALL occurrences found in the entire vulnerability report - do not stop at first occurrence
 
 JSON VALIDATION CHECKLIST:
 ☐ JSON starts with [ and ends with ]
@@ -145,14 +179,26 @@ EXAMPLE VALID TENABLE JSON:
     "insight": [],
     "product_detection_result": [],
     "log_method": [],
-    "cvss": [7.5, "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:N"],
+    "cvss": [
+      "CVSSV4 BASE SCORE 6.9",
+      "CVSSV4 VECTOR CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:L/VI:N/VA:N/SC:N/SI:N/SA:N",
+      "CVSSV3 BASE SCORE 5.3", 
+      "CVSSV3 VECTOR CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:U/C:L/I:N/A:N",
+      "CVSS BASE SCORE 5.0",
+      "CVSS VECTOR CVSS2#AV:N/AC:L/Au:N/C:P/I:N/A:N"
+    ],
     "port": null,
     "protocol": null,
     "severity": "HIGH",
     "references": ["CVE-2024-0001", "https://www.php.net/supported-versions.php"],
     "plugin": ["Plugin ID: 12345", "Family: Web Servers", "Created: 2020-01-15"],
     "identification": [],
-    "http_info": [],
+    "http_info": [
+      "REQUEST MADE: GET https://example.com/app",
+      "REQUEST HEADERS: Accept=*/*, User-Agent=Mozilla/5.0...",
+      "RESPONSE HEADERS: HTTP/1.1 200 OK, Server=Apache/2.4.41",
+      "Content-Type=text/html, Date=..., X-Powered-By=PHP/5.5.9"
+    ],
     "source": "TENABLEWAS"
   },
   {
@@ -171,8 +217,18 @@ EXAMPLE VALID TENABLE JSON:
     "severity": "HIGH",
     "references": [],
     "plugin": [],
-    "identification": ["https://app.example.com", "https://api.example.com"],
-    "http_info": ["GET /index.php HTTP/1.1", "Server: Apache/2.4.41"],
+    "identification": [
+      "The scanner did not find any Strict-Transport-Security header in the response returned by the target when querying URL",
+      "https://juice-shop-388277804329.us-west1.run.app/apps/movie_search"
+    ],
+    "http_info": [
+      "REQUEST MADE: GET https://juice-shop-388277804329.us-west1.run.app/soap/nusoap.php",
+      "REQUEST HEADERS: Accept=*/*, Accept-Encoding=gzip, deflate, br",
+      "Accept-Language=en-US,en;q=0.5, Cookie=PHPSESSID=711vt1tpgrucudl1kaq9t074f5",
+      "User-Agent=Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36",
+      "RESPONSE HEADERS: HTTP/1.1 200 OK, Server=Google Frontend",
+      "Content-Type=text/html, X-Powered-By=PHP/5.5.9-1ubuntu4.14"
+    ],
     "source": "TENABLEWAS"
   }
 ]
@@ -182,6 +238,12 @@ CRITICAL REMINDERS:
 - Keep "Instances (N)" in INSTANCES names
 - Remove "Instances (N)" from BASE names  
 - Fill appropriate arrays based on type
+- For "cvss" field: Extract from Risk Information using formats CVSSV4/CVSSV3/CVSS BASE SCORE with vectors
+- For "references" field: Extract from Reference Information section (CWE, WASC, OWASP, CVE, BID as separate elements)
+- For "identification" field: Extract COMPLETE content from Identification section (descriptive text AND URLs as separate array elements)
+- For "http_info" field: Extract ALL content from HTTP Info section (REQUEST MADE, REQUEST HEADERS, RESPONSE HEADERS, etc. as separate array elements)
+- For INSTANCES vulnerabilities: Both identification[] and http_info[] are ARRAYS - extract ALL occurrences from the entire vulnerability report, not just first one
+- NEVER use "..." or truncate any content - extract COMPLETE information always
 - Return ONLY the JSON array, no other text
 
 Now extract Tenable WAS vulnerabilities from this report:
