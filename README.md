@@ -230,6 +230,142 @@ python main.py relatorio_nessus.pdf --profile nessus --LLM specialized_model
 - Perfil adaptável via parâmetros
 - Saída em múltiplos formatos (JSON, CSV, XML)
 
+## 🧮 Sistema de Cálculo de Tokens
+
+O Vulnerability Extractor implementa um sistema inteligente de otimização de tokens que calcula automaticamente o tamanho máximo dos chunks para cada LLM, garantindo zero exceedances e máxima eficiência.
+
+### 📏 Fórmula de Cálculo
+
+**Fórmula Universal:**
+```
+max_chunk_size = max_tokens - reserve_for_response - prompt_overhead - system_overhead - safety_buffer
+```
+
+**Componentes da Fórmula:**
+- **`max_tokens`**: Limite máximo de tokens do modelo
+- **`reserve_for_response`**: Tokens reservados para a resposta do LLM
+- **`prompt_overhead`**: Tokens do template de prompt
+- **`system_overhead`**: Tokens de metadados e sistema
+- **`safety_buffer`**: Buffer de segurança para variações
+
+### 🔧 Configurações por LLM
+
+#### **GPT-4 (OpenAI)**
+```json
+{
+  "max_completion_tokens": 12000,
+  "reserve_for_response": 4000,
+  "prompt_overhead": 300,
+  "system_overhead": 200,
+  "safety_buffer": 200,
+  "max_chunk_size": 7300
+}
+```
+**Cálculo:** `7300 = 12000 - 4000 - 300 - 200 - 200`
+- **Eficiência:** 60.8% do limite utilizado para chunks
+- **Segurança:** Configuração balanceada
+
+#### **GPT-5 (OpenAI)**
+```json
+{
+  "max_completion_tokens": 16000,
+  "reserve_for_response": 6000,
+  "prompt_overhead": 600,
+  "system_overhead": 500,
+  "safety_buffer": 600,
+  "max_chunk_size": 8300
+}
+```
+**Cálculo:** `8300 = 16000 - 6000 - 600 - 500 - 600`
+- **Eficiência:** 51.9% do limite utilizado para chunks
+- **Segurança:** Ultra-seguro para máxima estabilidade
+
+#### **Llama 3 (Groq)**
+```json
+{
+  "max_tokens": 8192,
+  "reserve_for_response": 4000,
+  "prompt_overhead": 300,
+  "system_overhead": 200,
+  "safety_buffer": 200,
+  "max_chunk_size": 3492
+}
+```
+**Cálculo:** `3492 = 8192 - 4000 - 300 - 200 - 200`
+- **Eficiência:** 42.6% do limite utilizado para chunks
+- **Segurança:** Configuração conservadora
+
+#### **Llama 4 (Groq)**
+```json
+{
+  "max_tokens": 8192,
+  "reserve_for_response": 5000,
+  "prompt_overhead": 600,
+  "system_overhead": 500,
+  "safety_buffer": 600,
+  "max_chunk_size": 1492
+}
+```
+**Cálculo:** `1492 = 8192 - 5000 - 600 - 500 - 600`
+- **Eficiência:** 18.2% do limite utilizado para chunks
+- **Segurança:** Máxima segurança para zero perdas
+
+#### **Qwen3 (Groq)**
+```json
+{
+  "max_tokens": 8192,
+  "reserve_for_response": 4000,
+  "prompt_overhead": 300,
+  "system_overhead": 200,
+  "safety_buffer": 200,
+  "max_chunk_size": 3492
+}
+```
+**Cálculo:** `3492 = 8192 - 4000 - 300 - 200 - 200`
+- **Eficiência:** 42.6% do limite utilizada para chunks
+- **Segurança:** Configuração balanceada
+
+### 🎯 Estratégias de Otimização
+
+#### **Nível Conservador** (Llama4)
+- Buffer de segurança: **600 tokens**
+- Eficiência: ~18% dos tokens para chunks
+- **Quando usar:** Modelos instáveis, documentos críticos
+
+#### **Nível Balanceado** (GPT-4, Llama3, Qwen3)  
+- Buffer de segurança: **200 tokens**
+- Eficiência: ~43-61% dos tokens para chunks
+- **Quando usar:** Uso geral, boa relação eficiência/segurança
+
+#### **Nível Ultra-Seguro** (GPT-5)
+- Buffer de segurança: **600 tokens**
+- Reserva para resposta: **6000 tokens**
+- Eficiência: ~52% dos tokens para chunks
+- **Quando usar:** Processamento crítico, máxima confiabilidade
+
+### 📊 Benefícios do Sistema
+
+✅ **Zero Exceedances Garantidas**: Nunca ultrapassa limites de tokens
+✅ **Otimização Automática**: Calcula tamanhos ideais para cada modelo
+✅ **Flexibilidade**: Configurações ajustáveis por LLM
+✅ **Confiabilidade**: Múltiplas camadas de segurança
+✅ **Eficiência**: Maximiza uso de tokens sem desperdício
+✅ **Escalabilidade**: Suporta qualquer modelo compatível
+
+### 🔬 Como Personalizar
+
+Para ajustar os cálculos para suas necessidades:
+
+1. **Edite o arquivo JSON** do LLM em `src/configs/llms/`
+2. **Modifique os parâmetros:**
+   - Aumente `safety_buffer` para máxima segurança
+   - Reduza `reserve_for_response` para chunks maiores
+   - Ajuste `prompt_overhead` conforme seus templates
+3. **Teste a configuração** com documentos reais
+4. **Monitore os logs** para validar eficiência
+
+**Dica:** Use configurações conservadoras inicialmente e otimize gradualmente conforme a estabilidade observada.
+
 ## 📖 Uso
 
 ### Sintaxe completa:
@@ -238,6 +374,17 @@ python main.py <pdf_path> [opções]
 ```
 
 ### Argumentos obrigatórios:
+- **`pdf_path`**: Caminho para o arquivo PDF do relatório de vulnerabilidades
+
+### Argumentos opcionais:
+- **`--scanner <tipo>`**: Estratégia de scanner (default, tenable, openvas, cais_tenable, cais_openvas)
+- **`--LLM <modelo>`**: Modelo LLM (deepseek, gpt4, gpt5, llama3, llama4, qwen3, tinyllama)
+- **`--convert <formato>`**: Formato de conversão (csv, xlsx, all)
+- **`--output <arquivo>`**: Nome do arquivo de saída personalizado
+- **`--output-dir <diretório>`**: Diretório de saída para conversões
+- **`--csv-delimiter <delim>`**: Delimitador CSV (padrão: ',')
+- **`--csv-encoding <codif>`**: Codificação CSV (padrão: 'utf-8')
+- **`--help`**: Exibe ajuda completa
 - `pdf_path` - Caminho para o arquivo PDF a ser processado
 
 ### Opções de configuração:
@@ -293,28 +440,37 @@ python main.py relatorio.pdf \
   --output "relatorio_pt.csv"
 ```
 
-#### Processamento em lote (múltiplas estratégias):
+#### Processamento com diferentes scanners:
 ```bash
-# TenableWAS com merge habilitado
-python main.py relatorio_tenable.pdf --scanner tenable --convert all
+# TenableWAS com otimização de tokens
+python main.py relatorio_tenable.pdf --scanner tenable --LLM gpt4
 
-# OpenVAS
-python main.py relatorio_openvas.pdf --scanner openvas --convert all
+# OpenVAS com modelo Groq gratuito
+python main.py relatorio_openvas.pdf --scanner openvas --LLM llama3
 
-# Tenable
-python main.py relatorio_tenable.pdf --profile tenable --convert csv
+# Scanner genérico com DeepSeek
+python main.py relatorio_custom.pdf --scanner default --LLM deepseek
 
-# Nessus (customizado)
-python main.py relatorio_nessus.pdf --profile nessus --LLM gpt4
+# Processamento com chunking otimizado
+python main.py relatorio_grande.pdf --scanner tenable --LLM gpt5 --convert all
 ```
 
-### Fluxo de arquivos:
+### 📁 Fluxo de arquivos:
 
-1. **Entrada**: PDF especificado em `pdf_path`
-2. **Processamento**: Usando perfil e LLM configurados
-3. **Saída primária**: JSON conforme `output_file` do perfil
-4. **Conversões**: Formatos adicionais conforme `--convert`
-5. **Layout visual**: Arquivo `.txt` com layout preservado (mesmo diretório do PDF)
+1. **📥 Entrada**: PDF especificado em `pdf_path`
+2. **🧮 Cálculo de chunks**: Sistema otimizado calcula tamanhos ideais por LLM
+3. **⚙️ Processamento**: Usando scanner e LLM configurados com chunks otimizados
+4. **🛡️ Validação de tokens**: Garantia de zero exceedances durante processamento
+5. **📋 Extração**: Vulnerabilidades extraídas com retry inteligente
+6. **🔄 Consolidação**: Remoção de duplicatas e merge de instances (TenableWAS)
+7. **💾 Saída primária**: JSON conforme `output_file` do scanner
+8. **🔄 Conversões**: Formatos adicionais (CSV, XLSX) conforme `--convert`
+9. **👁️ Layout visual**: Arquivo `.txt` com layout preservado (mesmo diretório do PDF)
+
+### 🎯 Arquivos gerados:
+- **JSON principal**: `vulnerabilities_<scanner>.json`
+- **Layout visual**: `visual_layout_extracted_<nome_arquivo>.txt`
+- **Conversões opcionais**: Arquivos CSV/XLSX na pasta especificada
 
 ### Ajuda:
 ```bash
@@ -397,43 +553,121 @@ A ferramenta gera um arquivo JSON com as vulnerabilidades encontradas. O formato
 
 ## 🔧 Resolução de problemas
 
-### Erro: "modelo descontinuado"
+### ⚠️ Erros de Tokens
+
+#### Erro: "Setting 'max_tokens' and 'max_completion_tokens'"
+```
+Error code: 400 - Setting 'max_tokens' and 'max_completion_tokens' at the same time
+```
+**Solução:** O sistema foi corrigido para usar apenas `max_completion_tokens` nos modelos OpenAI.
+
+#### Erro: "Token limit exceeded"
+```
+MAX TOKENS EXCEEDED: chunk tem X tokens, limite Y
+```
+**Solução:** O sistema de chunks otimizados resolve automaticamente. Se persistir, reduza `max_chunk_size` na configuração do LLM.
+
+### 🌐 Erros de Conectividade
+
+#### Erro: SSL/Network
+```
+SSL: CERTIFICATE_VERIFY_FAILED
+```
+**Solução:** Problema de rede temporário. Tente novamente ou aumente o `timeout` na configuração do LLM.
+
+#### Erro: "API key inválida"
+```
+Error: 401 - Unauthorized
+```
+**Solução:** Verifique se a API key nas configurações está correta e ativa.
+
+### 🤖 Erros de Modelo
+
+#### Erro: "modelo descontinuado"
 ```
 ERRO: O modelo 'llama3-8b-8192' foi descontinuado!
 ```
 **Solução:** Atualize o modelo nas configurações de LLM para um modelo válido.
 
-### Erro: "arquivo não encontrado"
+#### Erro: "limite de quota"
+```
+Limite de quota atingido no chunk X
+```
+**Solução:** Use um provedor gratuito (Groq) ou aguarde reset da quota.
+
+### 📄 Erros de Arquivo
+
+#### Erro: "arquivo não encontrado"
 ```
 Erro: Arquivo PDF não encontrado: arquivo.pdf
 ```
 **Solução:** Verifique se o caminho do PDF está correto e o arquivo existe.
 
-### Erro: "API key inválida"
+#### Erro: "PDF corrupto"
 ```
-Erro: 401 - Unauthorized
+Erro ao processar PDF: arquivo corrompido
 ```
-**Solução:** Verifique se a API key nas configurações está correta.
+**Solução:** Verifique a integridade do PDF ou converta para uma versão mais recente.
 
-### Erro: "limite de quota"
-```
-Limite de quota atingido no chunk X
-```
-**Solução:** Aguarde ou use um provedor diferente (ex: Groq gratuito).
+### 🎯 Dicas de Otimização
+
+- **Para PDFs grandes**: Use GPT-4 ou GPT-5 (chunks maiores)
+- **Para economia**: Use Llama3 ou Qwen3 (Groq gratuito)
+- **Para máxima precisão**: Use Llama4 (chunks menores, mais precisos)
+- **Para debugging**: Monitore logs para identificar problemas de token
 
 ## 📁 Estrutura do projeto
 
 ```
-pdf-vulnerability-extractor/
-├── main.py              # Script principal
-├── requirements.txt     # Dependências
-├── README.md           # Este arquivo
-├── src/                 # Código fonte modular
-│   ├── configs/         # Configurações (LLMs, perfis, templates)
-│   ├── converters/      # Conversores de saída
-│   └── utils/           # Utilitários de processamento
-└── data/               # Dados de entrada e saída
+Vulnerability_Extractor/
+├── main.py                          # 🎯 Script principal CLI
+├── requirements.txt                 # 📦 Dependências Python
+├── README.md                       # 📖 Esta documentação
+├── src/                            # 🧩 Código fonte modular
+│   ├── __init__.py                 # 📋 Inicialização do módulo
+│   ├── configs/                    # ⚙️ Configurações do sistema
+│   │   ├── llms/                   # 🤖 Configurações dos LLMs
+│   │   │   ├── deepseek.json       # • DeepSeek (tokens otimizados)
+│   │   │   ├── gpt4.json           # • GPT-4 (OpenAI)
+│   │   │   ├── gpt5.json           # • GPT-5 (OpenAI ultra-seguro)
+│   │   │   ├── llama3.json         # • Llama 3 (Groq balanceado)
+│   │   │   ├── llama4.json         # • Llama 4 (Groq conservador)
+│   │   │   ├── qwen3.json          # • Qwen3 (Groq)
+│   │   │   └── tinyllama.json      # • TinyLlama (teste)
+│   │   ├── scanners/               # 📊 Estratégias de scanner
+│   │   │   ├── default.json        # • Scanner genérico
+│   │   │   ├── tenable.json        # • Tenable WAS
+│   │   │   ├── openvas.json        # • OpenVAS
+│   │   │   ├── cais_tenable.json   # • CAIS Tenable WAS
+│   │   │   └── cais_openvas.json   # • CAIS OpenVAS
+│   │   └── templates/              # 📝 Templates de prompts
+│   │       ├── default_prompt.txt   # • Prompt genérico
+│   │       ├── tenable_prompt.txt   # • Tenable WAS otimizado
+│   │       ├── openvas_prompt.txt   # • OpenVAS especializado
+│   │       └── cais_*.txt          # • Prompts CAIS
+│   ├── converters/                 # 🔄 Conversores de formato
+│   │   ├── base_converter.py       # • Classe base
+│   │   ├── csv_converter.py        # • Exportação CSV
+│   │   └── xlsx_converter.py       # • Exportação Excel
+│   └── utils/                      # 🛠️ Utilitários core
+│       ├── utils.py                # • LLM loading e configuração
+│       ├── processing.py           # • Sistema de chunks otimizados
+│       ├── scanner_strategies.py   # • Estratégias de scanning
+│       └── profile_registry.py     # • Registry de perfis
+└── data/                           # 📂 Dados e resultados
+    ├── *.pdf                       # • Relatórios de entrada
+    ├── vulnerabilities_*.json      # • Resultados JSON
+    ├── visual_layout_*.txt         # • Layouts extraídos
+    └── exports/                    # • Conversões CSV/XLSX
 ```
+
+### 🔧 Componentes principais:
+
+- **🎯 main.py**: Interface CLI com parsing de argumentos e orquestração
+- **🧮 processing.py**: Sistema de chunking com cálculo otimizado de tokens
+- **🤖 utils.py**: Loading de LLMs com configurações customizadas
+- **📊 scanner_strategies.py**: Lógica de processamento por tipo de scanner
+- **🔄 converters/**: Exportação para múltiplos formatos de saída
 
 ##  Licença
 
