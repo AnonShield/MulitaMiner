@@ -124,7 +124,7 @@ class TokenChunk:
 
 def get_token_based_chunks(text: str, max_tokens: int, reserve_for_response: int = 1000) -> List[TokenChunk]:
     """
-    Divide texto em chunks baseado em tokens.
+    Divide texto em chunks baseado em tokens - VERSÃO OTIMIZADA.
     
     Args:
         text: Texto a dividir
@@ -143,16 +143,21 @@ def get_token_based_chunks(text: str, max_tokens: int, reserve_for_response: int
     except:
         tokenizer = tiktoken.get_encoding("cl100k_base")
     
-    prompt_overhead = 500  # Estimativa do prompt template
-    available_for_content = max(1000, max_tokens - prompt_overhead - reserve_for_response)
+    # OTIMIZAÇÃO BASEADA NA ANÁLISE:
+    # Prompt do Tenable é muito maior (~800-1000 tokens)
+    prompt_overhead = 1200  # Aumentado para prompts complexos
+    # Reduzir ainda mais o limite para garantir que chunks funcionem
+    available_for_content = max(600, max_tokens - prompt_overhead - reserve_for_response)
     
-    print(f"[TOKEN CALC] Max tokens do modelo: {max_tokens}")
-    print(f"[TOKEN CALC] Overhead do prompt: ~{prompt_overhead} tokens")
-    print(f"[TOKEN CALC] Reserve para resposta: ~{reserve_for_response} tokens")
-    print(f"[TOKEN CALC] Tokens disponíveis para conteúdo: ~{available_for_content} tokens")
+    # Para GPT-4 (4096 tokens): 4096 - 1200 - 1000 = 1896 tokens disponíveis
+    # Isso é MUITO mais seguro que os 2296 anteriores
     
-    # Dividir por blocos de vulnerabilidades (NVT:, VULNERABILITY, ou Vulnerability:)
-    # Isso preserva integridade em vez de quebrar no meio de uma vuln
+    print(f"[TOKEN CALC OTIMIZADO] Max tokens do modelo: {max_tokens}")
+    print(f"[TOKEN CALC OTIMIZADO] Overhead do prompt: ~{prompt_overhead} tokens")
+    print(f"[TOKEN CALC OTIMIZADO] Reserve para resposta: ~{reserve_for_response} tokens")
+    print(f"[TOKEN CALC OTIMIZADO] Tokens disponíveis para conteúdo: ~{available_for_content} tokens")
+    
+    # Dividir por blocos de vulnerabilidades
     lines = text.split('\n')
     chunks = []
     current_chunk = []
@@ -163,8 +168,11 @@ def get_token_based_chunks(text: str, max_tokens: int, reserve_for_response: int
         # Match: "NVT:", "VULNERABILITY", "Vulnerability:" com espaço opcional antes
         is_vuln_start = re.search(r'^\s*(?:NVT:|VULNERABILITY|Vulnerability:)', line.strip())
         
-        # Se é início de vuln E chunk não vazio E excederia limite
-        if is_vuln_start and current_chunk and (current_tokens + line_tokens > available_for_content):
+        # ESTRATÉGIA AGRESSIVA: Forçar quebra quando atinge 80% do limite
+        force_break = current_tokens > (available_for_content * 0.8)
+        
+        # Se é início de vuln E (chunk não vazio E (excederia limite OU forçar quebra))
+        if is_vuln_start and current_chunk and (current_tokens + line_tokens > available_for_content or force_break):
             chunk_text = '\n'.join(current_chunk)
             chunks.append(TokenChunk(chunk_text))
             current_chunk = [line]
@@ -172,12 +180,30 @@ def get_token_based_chunks(text: str, max_tokens: int, reserve_for_response: int
         else:
             current_chunk.append(line)
             current_tokens += line_tokens
+            
+            # PROTEÇÃO CRÍTICA: Se chunk fica muito grande MESMO sem marcador
+            if current_tokens > available_for_content:  # 100% do limite
+                chunk_text = '\n'.join(current_chunk)
+                chunks.append(TokenChunk(chunk_text))
+                current_chunk = []
+                current_tokens = 0
     
     if current_chunk:
         chunk_text = '\n'.join(current_chunk)
         chunks.append(TokenChunk(chunk_text))
     
-    print(f"[TOKEN CALC] Total de chunks criados (respeitando blocos): {len(chunks)}")
+    print(f"[TOKEN CALC OTIMIZADO] Total de chunks criados: {len(chunks)}")
+    
+    # VALIDAÇÃO PÓS-CRIAÇÃO: Verificar se algum chunk ainda está grande
+    oversized_count = 0
+    for i, chunk in enumerate(chunks):
+        chunk_tokens = len(tokenizer.encode(chunk.page_content))
+        if chunk_tokens > available_for_content:
+            oversized_count += 1
+    
+    if oversized_count > 0:
+        print(f"[AVISO] {oversized_count}/{len(chunks)} chunks ainda excedem o limite - serão subdivididos durante processamento")
+    
     return chunks
 
 
@@ -316,7 +342,7 @@ def detect_scanner_pattern(text: str) -> dict:
 
 
 def register_scanner_pattern(scanner_name: str, marker_pattern: str, has_pairs: bool = False):
-    """
+    r"""
     Função helper para registrar novos padrões de scanner (extensível para futuros scanners).
     
     Uso:
@@ -340,21 +366,20 @@ def register_scanner_pattern(scanner_name: str, marker_pattern: str, has_pairs: 
 
 def split_text_to_subchunks(text: str, target_size: int) -> List[str]:
     """
-    Divide texto grande em subchunks menores com divisão JUSTA e extensível.
+    Divide texto grande em subchunks menores - VERSÃO OTIMIZADA baseada na análise.
     
-    Estratégia:
-    1. Detecta tipo de scanner (OpenVAS, Tenable WAS, etc)
-    2. Encontra blocos baseado no padrão detectado
-    3. Processa blocos respeitando tamanho alvo
-    4. Se há pares (Tenable WAS), mantém pares completos
-    5. Se não há pares (OpenVAS), quebra simplesmente por tamanho
+    Estratégia melhorada:
+    1. Usa target_size menor (baseado na análise: ~7,763 chars funcionou melhor)
+    2. Detecta tipo de scanner mais precisamente
+    3. Força criação de mais chunks menores
+    4. Evita chunks grandes problemáticos
     
     Args:
         text: Texto a dividir
         target_size: Tamanho alvo em caracteres
     
     Returns:
-        Lista de subchunks (respeitando limites de padrão detectado)
+        Lista de subchunks otimizados
     """
     if len(text) <= target_size:
         return [text]
@@ -363,12 +388,16 @@ def split_text_to_subchunks(text: str, target_size: int) -> List[str]:
     if not lines:
         return [text]
     
+    # OTIMIZAÇÃO: Reduzir target_size para evitar chunks grandes
+    # Análise mostrou que chunks de ~7,763 chars funcionaram melhor
+    optimized_target = min(target_size, 8000)  # Máximo 8K chars por chunk
+    
     # Detectar padrão
     pattern_info = detect_scanner_pattern(text)
     
-    # Se não encontrou padrão, fazer fallback simples
+    # Se não encontrou padrão, fazer divisão simples otimizada
     if pattern_info['marker_pattern'] is None:
-        return [text] if len(text) <= target_size else _simple_split_by_size(text, target_size)
+        return _simple_split_by_size(text, optimized_target)
     
     # Encontrar índices de linhas com marcador detectado
     marker_lines = []
@@ -378,51 +407,60 @@ def split_text_to_subchunks(text: str, target_size: int) -> List[str]:
     
     # Se não encontrou marcadores mesmo após detecção, fallback
     if not marker_lines:
-        return [text] if len(text) <= target_size else _simple_split_by_size(text, target_size)
+        return _simple_split_by_size(text, optimized_target)
     
     subchunks = []
     current_lines = []
     current_size = 0
     
-    # Processar marcadores (blocos)
+    # NOVA ESTRATÉGIA: Processar em grupos menores de vulnerabilidades
+    vulns_per_chunk = 2 if pattern_info['has_pairs'] else 3  # Tenable: 2 vulns, OpenVAS: 3 vulns
+    
     i = 0
     while i < len(marker_lines):
-        # Determinar fim do bloco atual (próximo marcador ou fim do arquivo)
-        block_start = marker_lines[i]
-        block_end = marker_lines[i + 1] if i + 1 < len(marker_lines) else len(lines)
+        # Determinar quantas vulns incluir neste chunk
+        vulns_in_chunk = 0
+        chunk_lines = []
+        chunk_size = 0
         
-        block_lines = lines[block_start:block_end]
-        block_text = ''.join(block_lines)
-        block_size = len(block_text)
-        
-        # Se bloco sozinho é maior que target_size, dividir o bloco
-        if block_size > target_size:
-            # Salvar current se não vazio
-            if current_lines:
-                subchunks.append(''.join(current_lines))
-                current_lines = []
-                current_size = 0
+        while i < len(marker_lines) and vulns_in_chunk < vulns_per_chunk:
+            # Determinar fim do bloco atual
+            block_start = marker_lines[i]
+            block_end = marker_lines[i + 1] if i + 1 < len(marker_lines) else len(lines)
             
-            # Subdividir o bloco internamente
-            sub_blocks = _split_block_by_size(block_text, target_size)
-            subchunks.extend(sub_blocks)
+            block_lines = lines[block_start:block_end]
+            block_text = ''.join(block_lines)
+            block_size = len(block_text)
+            
+            # Se adicionar este bloco excede target otimizado E já temos pelo menos 1 vuln
+            if vulns_in_chunk > 0 and (chunk_size + block_size > optimized_target):
+                break
+            
+            # Se bloco sozinho é maior que target, dividir internamente
+            if block_size > optimized_target:
+                # Salvar chunk atual se não vazio
+                if chunk_lines:
+                    subchunks.append(''.join(chunk_lines))
+                
+                # Dividir o bloco grande
+                sub_blocks = _split_block_by_size(block_text, optimized_target)
+                subchunks.extend(sub_blocks)
+                
+                # Resetar para próximo chunk
+                chunk_lines = []
+                chunk_size = 0
+                vulns_in_chunk = 0
+            else:
+                # Adicionar bloco ao chunk atual
+                chunk_lines.extend(block_lines)
+                chunk_size += block_size
+                vulns_in_chunk += 1
+            
             i += 1
-            continue
         
-        # Se adicionar bloco ultrapassa target_size, salvar current antes
-        if current_lines and (current_size + block_size > target_size):
-            subchunks.append(''.join(current_lines))
-            current_lines = []
-            current_size = 0
-        
-        # Adicionar bloco ao current
-        current_lines.extend(block_lines)
-        current_size += block_size
-        i += 1
-    
-    # Adicionar restante
-    if current_lines:
-        subchunks.append(''.join(current_lines))
+        # Salvar chunk se não vazio
+        if chunk_lines:
+            subchunks.append(''.join(chunk_lines))
     
     return subchunks if subchunks else [text]
 
@@ -430,30 +468,32 @@ def split_text_to_subchunks(text: str, target_size: int) -> List[str]:
 def _split_block_by_size(text: str, target_size: int) -> List[str]:
     """
     Divide um bloco de texto em subchunks.
-    Estratégia: Divide pela METADE do texto (não pelo target_size).
-    Isso evita subdivisões excessivas até 2000 caracteres.
+    Estratégia melhorada: Evita recursão infinita com limite de profundidade.
     
     Usado quando um bloco individual é maior que target_size.
     """
     if len(text) <= target_size:
         return [text]
     
-    # NOVA ESTRATÉGIA: Dividir pela metade do texto
-    # Ao invés de ir diminuindo até target_size (que causa muitas subdivisões)
-    # Dividir só pela metade reduz o número de chunks drasticamente
-    half_size = len(text) // 2
+    # Proteção contra recursão infinita
+    if target_size < 1000:  # Mínimo absoluto
+        # Se target_size muito pequeno, forçar divisão simples
+        chunks = []
+        for i in range(0, len(text), 1000):
+            chunks.append(text[i:i+1000])
+        return chunks
     
     subchunks = []
     lines = text.splitlines(keepends=True)
     current = []
     current_len = 0
     
-    # Procurar ponto de divisão próximo à metade
+    # Usar target_size direto ao invés de metade (evita recursão excessiva)
     for line in lines:
         line_len = len(line)
         
-        # Se atingiu a metade, salvar
-        if current and current_len >= half_size:
+        # Se adicionando esta linha excede target_size, salvar chunk atual
+        if current and (current_len + line_len > target_size):
             subchunks.append(''.join(current))
             current = []
             current_len = 0
@@ -464,16 +504,9 @@ def _split_block_by_size(text: str, target_size: int) -> List[str]:
     if current:
         subchunks.append(''.join(current))
     
-    # Se resultado ainda é grande, fazer recursão (divide novamente pela metade)
-    result = []
-    for subchunk in subchunks:
-        if len(subchunk) > target_size:
-            # Recursivamente divide este subchunk também pela metade
-            result.extend(_split_block_by_size(subchunk, target_size))
-        else:
-            result.append(subchunk)
-    
-    return result if result else [text]
+    # EVITAR RECURSÃO - se resultado ainda tem chunks grandes, aceitar como está
+    # Melhor ter chunks grandes que loop infinito
+    return subchunks if subchunks else [text]
 
 
 def _simple_split_by_size(text: str, target_size: int) -> List[str]:
@@ -505,8 +538,230 @@ def _simple_split_by_size(text: str, target_size: int) -> List[str]:
     return subchunks if subchunks else [text]
 
 
-def fallback_process_large_chunk(doc_chunk: TokenChunk, llm, profile_config: Dict[str, Any], 
-                                max_subchunk_chars: int = 4000) -> List[Dict]:
+def validate_json_and_tokens(response: str, chunk_content: str, max_tokens: int, prompt_template: str = "") -> Dict[str, Any]:
+    """
+    Valida resposta JSON e verifica limites de tokens.
+    
+    Args:
+        response: Resposta da LLM
+        chunk_content: Conteúdo do chunk
+        max_tokens: Máximo de tokens permitido
+        prompt_template: Template do prompt usado
+    
+    Returns:
+        Dict com resultado da validação: {
+            'json_valid': bool,
+            'json_data': list/None,
+            'token_valid': bool,
+            'token_count': int,
+            'errors': list,
+            'needs_redivision': bool
+        }
+    """
+    try:
+        tokenizer = tiktoken.encoding_for_model("gpt-3.5-turbo")
+    except:
+        tokenizer = tiktoken.get_encoding("cl100k_base")
+    
+    result = {
+        'json_valid': False,
+        'json_data': None,
+        'token_valid': True,
+        'token_count': 0,
+        'errors': [],
+        'needs_redivision': False
+    }
+    
+    # 1. VALIDAÇÃO DE JSON
+    try:
+        # Tentar extrair JSON da resposta
+        json_data = parse_json_response(response)
+        if json_data and isinstance(json_data, list):
+            result['json_valid'] = True
+            result['json_data'] = json_data
+        else:
+            result['errors'].append("JSON inválido ou não é uma lista")
+    except Exception as e:
+        result['errors'].append(f"Erro ao fazer parse do JSON: {str(e)}")
+    
+    # 2. VALIDAÇÃO DE TOKENS
+    # Calcular tokens do prompt completo (template + chunk + overhead)
+    prompt_tokens = len(tokenizer.encode(prompt_template)) if prompt_template else 800
+    chunk_tokens = len(tokenizer.encode(chunk_content))
+    response_tokens = len(tokenizer.encode(response))
+    total_tokens = prompt_tokens + chunk_tokens + response_tokens
+    
+    result['token_count'] = total_tokens
+    
+    # Verificar se excede limite (deixar margem de 500 tokens)
+    if total_tokens > (max_tokens - 500):
+        result['token_valid'] = False
+        result['errors'].append(f"Excede limite de tokens: {total_tokens}/{max_tokens}")
+        result['needs_redivision'] = True
+    
+    # 3. DETECTAR NECESSIDADE DE REDIVISIÃO
+    # Se JSON inválido OU excede tokens OU chunk muito grande
+    if not result['json_valid'] or not result['token_valid'] or chunk_tokens > (max_tokens * 0.6):
+        result['needs_redivision'] = True
+    
+    # 4. ANÁLISE ESPECÍFICA DE ERROS JSON
+    if not result['json_valid']:
+        if "..." in response or "truncated" in response.lower():
+            result['errors'].append("Resposta truncada detectada")
+        if response.count('[') != response.count(']'):
+            result['errors'].append("JSON mal formado - colchetes desbalanceados")
+        if response.count('{') != response.count('}'):
+            result['errors'].append("JSON mal formado - chaves desbalanceadas")
+    
+    return result
+
+
+def intelligent_chunk_redivision(chunk_content: str, max_tokens: int, error_context: Dict[str, Any]) -> List[str]:
+    """
+    Redivide chunk de forma inteligente baseado no tipo de erro detectado.
+    
+    Args:
+        chunk_content: Conteúdo do chunk problemático
+        max_tokens: Máximo de tokens permitido
+        error_context: Contexto do erro da validação
+    
+    Returns:
+        Lista de novos chunks menores
+    """
+    try:
+        tokenizer = tiktoken.encoding_for_model("gpt-3.5-turbo")
+    except:
+        tokenizer = tiktoken.get_encoding("cl100k_base")
+    
+    # Calcular target size mais conservador baseado no erro
+    base_target = max_tokens - 2000  # Margem maior para prompt + resposta
+    chars_per_token = len(chunk_content) / len(tokenizer.encode(chunk_content))
+    target_chars = int(base_target * chars_per_token * 0.7)  # 70% de segurança
+    
+    print(f"[REDIVISION] Erro detectado, redividindo chunk de {len(chunk_content)} chars")
+    print(f"[REDIVISION] Target conservador: {target_chars} chars (~{base_target} tokens)")
+    print(f"[REDIVISION] Erros: {error_context.get('errors', [])}")
+    
+    # ESTRATÉGIA 1: Se erro de tokens, dividir em partes menores
+    if not error_context.get('token_valid', True):
+        # Dividir em 3 partes para garantir que caiba
+        target_chars = min(target_chars, len(chunk_content) // 3)
+        print(f"[REDIVISION] Erro de tokens - usando target muito conservador: {target_chars} chars")
+    
+    # ESTRATÉGIA 2: Se JSON mal formado, tentar divisores diferentes
+    if "JSON mal formado" in str(error_context.get('errors', [])):
+        print(f"[REDIVISION] JSON mal formado - forçando divisão por vulnerabilidades")
+        # Forçar divisão bem pequena para evitar JSON quebrado
+        target_chars = min(target_chars, len(chunk_content) // 4)
+    
+    # ESTRATÉGIA 3: Se resposta truncada, dividir muito conservadoramente
+    if "truncada" in str(error_context.get('errors', [])):
+        print(f"[REDIVISION] Resposta truncada - divisão máxima")
+        target_chars = min(target_chars, len(chunk_content) // 5)
+    
+    # Usar sistema de divisão otimizado
+    new_chunks = split_text_to_subchunks(chunk_content, target_chars)
+    
+    print(f"[REDIVISION] Chunk original dividido em {len(new_chunks)} novos chunks")
+    
+    # VALIDAÇÃO DOS NOVOS CHUNKS
+    validated_chunks = []
+    for i, chunk in enumerate(new_chunks):
+        chunk_tokens = len(tokenizer.encode(chunk))
+        if chunk_tokens > base_target:
+            print(f"[REDIVISION WARNING] Chunk {i+1} ainda grande ({chunk_tokens} tokens), forçando divisão")
+            # Se ainda está grande, forçar divisão simples
+            simple_chunks = _simple_split_by_size(chunk, target_chars // 2)
+            validated_chunks.extend(simple_chunks)
+        else:
+            validated_chunks.append(chunk)
+    
+    print(f"[REDIVISION] Validação final: {len(validated_chunks)} chunks seguros")
+    return validated_chunks
+
+
+def robust_chunk_processing(doc_chunk: TokenChunk, llm, profile_config: Dict[str, Any], 
+                           max_retries: int = 3) -> List[Dict]:
+    """
+    Processamento robusto de chunk com recuperação automática de erros.
+    
+    Fluxo:
+    1. Tentar processar chunk normal
+    2. Se erro JSON/tokens -> validar e diagnosticar
+    3. Se necessário -> redividir inteligentemente
+    4. Reprocessar chunks menores
+    5. Consolidar resultados
+    
+    Args:
+        doc_chunk: Chunk de documento
+        llm: Instância do LLM
+        profile_config: Configuração do perfil
+        max_retries: Máximo de tentativas
+    
+    Returns:
+        Lista de vulnerabilidades extraídas com validação
+    """
+    max_tokens = getattr(llm, 'max_tokens', 4096) or 4096
+    all_vulnerabilities = []
+    
+    try:
+        # TENTATIVA 1: Processamento normal
+        prompt = build_prompt(doc_chunk, profile_config)
+        print(f"[ROBUST] Tentativa 1 - chunk normal ({len(doc_chunk.page_content)} chars)")
+        
+        response = llm.invoke(prompt).content
+        
+        # VALIDAÇÃO COMPLETA
+        validation = validate_json_and_tokens(response, doc_chunk.page_content, max_tokens, prompt)
+        
+        if validation['json_valid'] and validation['token_valid']:
+            print(f"[ROBUST] ✅ Sucesso normal - {len(validation['json_data'])} vulnerabilidades")
+            return validation['json_data']
+        
+        # DIAGNÓSTICO DO PROBLEMA
+        print(f"[ROBUST] ⚠️ Problemas detectados: {validation['errors']}")
+        
+        if not validation['needs_redivision']:
+            # Se JSON inválido mas não precisa redividir, tentar retry simples
+            print(f"[ROBUST] Tentando retry simples...")
+            for retry in range(2):
+                response = llm.invoke(prompt).content
+                validation = validate_json_and_tokens(response, doc_chunk.page_content, max_tokens, prompt)
+                if validation['json_valid']:
+                    print(f"[ROBUST] ✅ Sucesso no retry {retry+1}")
+                    return validation['json_data']
+        
+        # REDIVISIÃO INTELIGENTE
+        print(f"[ROBUST] 🔄 Redividindo chunk inteligentemente...")
+        new_chunks = intelligent_chunk_redivision(doc_chunk.page_content, max_tokens, validation)
+        
+        # PROCESSAMENTO DOS NOVOS CHUNKS
+        for i, chunk_content in enumerate(new_chunks):
+            sub_chunk = TokenChunk(chunk_content)
+            sub_prompt = build_prompt(sub_chunk, profile_config)
+            
+            print(f"[ROBUST] Processando subchunk {i+1}/{len(new_chunks)} ({len(chunk_content)} chars)")
+            
+            try:
+                sub_response = llm.invoke(sub_prompt).content
+                sub_validation = validate_json_and_tokens(sub_response, chunk_content, max_tokens, sub_prompt)
+                
+                if sub_validation['json_valid']:
+                    all_vulnerabilities.extend(sub_validation['json_data'])
+                    print(f"[ROBUST] ✅ Subchunk {i+1} - {len(sub_validation['json_data'])} vulns")
+                else:
+                    print(f"[ROBUST] ❌ Subchunk {i+1} falhou: {sub_validation['errors']}")
+                    
+            except Exception as e:
+                print(f"[ROBUST] ❌ Erro no subchunk {i+1}: {str(e)[:100]}")
+                continue
+        
+        print(f"[ROBUST] 🏁 Processamento robusto finalizado: {len(all_vulnerabilities)} vulnerabilidades totais")
+        return all_vulnerabilities
+        
+    except Exception as e:
+        print(f"[ROBUST] 💥 Erro crítico no processamento robusto: {str(e)}")
+        return []
     """
     Processa chunk grande dividindo em subchunks quando há erro.
     Valida que cada subchunk retorna pares BASE+INSTANCES completos.
@@ -830,4 +1085,276 @@ def consolidate_duplicates(vulnerabilities: List[Dict]) -> List[Dict]:
                 consolidated[key] = vuln
         
         return list(consolidated.values())
+
+
+# ============================================================================
+# SISTEMA ROBUSTO DE RECUPERAÇÃO DE ERROS JSON E VALIDAÇÃO DE TOKENS
+# ============================================================================
+
+def validate_json_and_tokens(response: str, chunk_content: str, max_tokens: int, prompt_template: str = "") -> Dict[str, Any]:
+    """
+    Valida resposta JSON e verifica limites de tokens.
+    
+    Args:
+        response: Resposta da LLM
+        chunk_content: Conteúdo do chunk
+        max_tokens: Máximo de tokens permitido
+        prompt_template: Template do prompt usado
+    
+    Returns:
+        Dict com resultado da validação: {
+            'json_valid': bool,
+            'json_data': list/None,
+            'token_valid': bool,
+            'token_count': int,
+            'errors': list,
+            'needs_redivision': bool
+        }
+    """
+    try:
+        tokenizer = tiktoken.encoding_for_model("gpt-3.5-turbo")
+    except:
+        tokenizer = tiktoken.get_encoding("cl100k_base")
+    
+    result = {
+        'json_valid': False,
+        'json_data': None,
+        'token_valid': True,
+        'token_count': 0,
+        'errors': [],
+        'needs_redivision': False
+    }
+    
+    # 1. VALIDAÇÃO DE JSON
+    try:
+        # Tentar extrair JSON da resposta
+        json_data = parse_json_response(response)
+        if json_data and isinstance(json_data, list):
+            result['json_valid'] = True
+            result['json_data'] = json_data
+        else:
+            result['errors'].append("JSON inválido ou não é uma lista")
+    except Exception as e:
+        result['errors'].append(f"Erro ao fazer parse do JSON: {str(e)}")
+    
+    # 2. VALIDAÇÃO DE TOKENS
+    # Calcular tokens do prompt completo (template + chunk + overhead)
+    prompt_tokens = len(tokenizer.encode(prompt_template)) if prompt_template else 800
+    chunk_tokens = len(tokenizer.encode(chunk_content))
+    response_tokens = len(tokenizer.encode(response))
+    total_tokens = prompt_tokens + chunk_tokens + response_tokens
+    
+    result['token_count'] = total_tokens
+    
+    # Verificar se excede limite (deixar margem de 500 tokens)
+    if total_tokens > (max_tokens - 500):
+        result['token_valid'] = False
+        result['errors'].append(f"Excede limite de tokens: {total_tokens}/{max_tokens}")
+        result['needs_redivision'] = True
+    
+    # 3. DETECTAR NECESSIDADE DE REDIVISÃO
+    # Se JSON inválido OU excede tokens OU chunk muito grande
+    if not result['json_valid'] or not result['token_valid'] or chunk_tokens > (max_tokens * 0.6):
+        result['needs_redivision'] = True
+    
+    # 4. ANÁLISE ESPECÍFICA DE ERROS JSON
+    if not result['json_valid']:
+        if "..." in response or "truncated" in response.lower():
+            result['errors'].append("Resposta truncada detectada")
+        if response.count('[') != response.count(']'):
+            result['errors'].append("JSON mal formado - colchetes desbalanceados")
+        if response.count('{') != response.count('}'):
+            result['errors'].append("JSON mal formado - chaves desbalanceadas")
+    
+    return result
+
+
+def intelligent_chunk_redivision(chunk_content: str, max_tokens: int, error_context: Dict[str, Any]) -> List[str]:
+    """
+    Redivide chunk de forma inteligente baseado no tipo de erro detectado.
+    
+    Args:
+        chunk_content: Conteúdo do chunk problemático
+        max_tokens: Máximo de tokens permitido
+        error_context: Contexto do erro da validação
+    
+    Returns:
+        Lista de novos chunks menores
+    """
+    try:
+        tokenizer = tiktoken.encoding_for_model("gpt-3.5-turbo")
+    except:
+        tokenizer = tiktoken.get_encoding("cl100k_base")
+    
+    # Calcular target size mais conservador baseado no erro
+    base_target = max_tokens - 2000  # Margem maior para prompt + resposta
+    chars_per_token = len(chunk_content) / len(tokenizer.encode(chunk_content))
+    target_chars = int(base_target * chars_per_token * 0.7)  # 70% de segurança
+    
+    print(f"[REDIVISION] Erro detectado, redividindo chunk de {len(chunk_content)} chars")
+    print(f"[REDIVISION] Target conservador: {target_chars} chars (~{base_target} tokens)")
+    print(f"[REDIVISION] Erros: {error_context.get('errors', [])}")
+    
+    # ESTRATÉGIA 1: Se erro de tokens, dividir em partes menores
+    if not error_context.get('token_valid', True):
+        # Dividir em 3 partes para garantir que caiba
+        target_chars = min(target_chars, len(chunk_content) // 3)
+        print(f"[REDIVISION] Erro de tokens - usando target muito conservador: {target_chars} chars")
+    
+    # ESTRATÉGIA 2: Se JSON mal formado, tentar divisores diferentes
+    if "JSON mal formado" in str(error_context.get('errors', [])):
+        print(f"[REDIVISION] JSON mal formado - forçando divisão por vulnerabilidades")
+        # Forçar divisão bem pequena para evitar JSON quebrado
+        target_chars = min(target_chars, len(chunk_content) // 4)
+    
+    # ESTRATÉGIA 3: Se resposta truncada, dividir muito conservadoramente
+    if "truncada" in str(error_context.get('errors', [])):
+        print(f"[REDIVISION] Resposta truncada - divisão máxima")
+        target_chars = min(target_chars, len(chunk_content) // 5)
+    
+    # Usar sistema de divisão otimizado
+    new_chunks = split_text_to_subchunks(chunk_content, target_chars)
+    
+    print(f"[REDIVISION] Chunk original dividido em {len(new_chunks)} novos chunks")
+    
+    # VALIDAÇÃO DOS NOVOS CHUNKS
+    validated_chunks = []
+    for i, chunk in enumerate(new_chunks):
+        chunk_tokens = len(tokenizer.encode(chunk))
+        if chunk_tokens > base_target:
+            print(f"[REDIVISION WARNING] Chunk {i+1} ainda grande ({chunk_tokens} tokens), forçando divisão")
+            # Se ainda está grande, forçar divisão simples
+            simple_chunks = _simple_split_by_size(chunk, target_chars // 2)
+            validated_chunks.extend(simple_chunks)
+        else:
+            validated_chunks.append(chunk)
+    
+    print(f"[REDIVISION] Validação final: {len(validated_chunks)} chunks seguros")
+    return validated_chunks
+
+
+def robust_chunk_processing(doc_chunk: TokenChunk, llm, profile_config: Dict[str, Any], 
+                           max_retries: int = 3) -> List[Dict]:
+    """
+    Processamento robusto de chunk com recuperação automática de erros.
+    
+    Fluxo:
+    1. Tentar processar chunk normal
+    2. Se erro JSON/tokens -> validar e diagnosticar
+    3. Se necessário -> redividir inteligentemente
+    4. Reprocessar chunks menores
+    5. Consolidar resultados
+    
+    Args:
+        doc_chunk: Chunk de documento
+        llm: Instância do LLM
+        profile_config: Configuração do perfil
+        max_retries: Máximo de tentativas
+    
+    Returns:
+        Lista de vulnerabilidades extraídas com validação
+    """
+    max_tokens = getattr(llm, 'max_tokens', 4096) or 4096
+    all_vulnerabilities = []
+    
+    try:
+        # TENTATIVA 1: Processamento normal
+        prompt = build_prompt(doc_chunk, profile_config)
+        print(f"[ROBUST] Tentativa 1 - chunk normal ({len(doc_chunk.page_content)} chars)")
+        
+        response = llm.invoke(prompt).content
+        
+        # VALIDAÇÃO COMPLETA
+        validation = validate_json_and_tokens(response, doc_chunk.page_content, max_tokens, prompt)
+        
+        if validation['json_valid'] and validation['token_valid']:
+            print(f"[ROBUST] ✅ Sucesso normal - {len(validation['json_data'])} vulnerabilidades")
+            return validation['json_data']
+        
+        # DIAGNÓSTICO DO PROBLEMA
+        print(f"[ROBUST] ⚠️ Problemas detectados: {validation['errors']}")
+        
+        if not validation['needs_redivision']:
+            # Se JSON inválido mas não precisa redividir, tentar retry simples
+            print(f"[ROBUST] Tentando retry simples...")
+            for retry in range(2):
+                response = llm.invoke(prompt).content
+                validation = validate_json_and_tokens(response, doc_chunk.page_content, max_tokens, prompt)
+                if validation['json_valid']:
+                    print(f"[ROBUST] ✅ Sucesso no retry {retry+1}")
+                    return validation['json_data']
+        
+        # REDIVISÃO INTELIGENTE
+        print(f"[ROBUST] 🔄 Redividindo chunk inteligentemente...")
+        new_chunks = intelligent_chunk_redivision(doc_chunk.page_content, max_tokens, validation)
+        
+        # PROCESSAMENTO DOS NOVOS CHUNKS
+        for i, chunk_content in enumerate(new_chunks):
+            sub_chunk = TokenChunk(chunk_content)
+            sub_prompt = build_prompt(sub_chunk, profile_config)
+            
+            print(f"[ROBUST] Processando subchunk {i+1}/{len(new_chunks)} ({len(chunk_content)} chars)")
+            
+            try:
+                sub_response = llm.invoke(sub_prompt).content
+                sub_validation = validate_json_and_tokens(sub_response, chunk_content, max_tokens, sub_prompt)
+                
+                if sub_validation['json_valid']:
+                    all_vulnerabilities.extend(sub_validation['json_data'])
+                    print(f"[ROBUST] ✅ Subchunk {i+1} - {len(sub_validation['json_data'])} vulns")
+                else:
+                    print(f"[ROBUST] ❌ Subchunk {i+1} falhou: {sub_validation['errors']}")
+                    
+            except Exception as e:
+                print(f"[ROBUST] ❌ Erro no subchunk {i+1}: {str(e)[:100]}")
+                continue
+        
+        print(f"[ROBUST] 🏁 Processamento robusto finalizado: {len(all_vulnerabilities)} vulnerabilidades totais")
+        return all_vulnerabilities
+        
+    except Exception as e:
+        print(f"[ROBUST] 💥 Erro crítico no processamento robusto: {str(e)}")
+        return []
+
+
+def retry_chunk_with_subdivision_robust(doc_chunk: TokenChunk, llm, profile_config: Dict[str, Any], 
+                                       max_retries: int = 3) -> List[Dict]:
+    """
+    Processa chunk com retry automático e subdivisão inteligente.
+    
+    NOVA VERSÃO: Usa sistema robusto de validação e recuperação de erros.
+    
+    Args:
+        doc_chunk: Chunk de documento
+        llm: Instância do LLM
+        profile_config: Configuração do perfil
+        max_retries: Máximo de tentativas (mantido por compatibilidade)
+    
+    Returns:
+        Lista de vulnerabilidades extraídas com validação completa
+    """
+    # Detectar scanner no início para log
+    pattern_info = detect_scanner_pattern(doc_chunk.page_content)
+    print(f"[SCANNER] Detectado: {pattern_info['scanner_type'].upper()} ({pattern_info['markers_found']} blocos)")
+    
+    # Usar sistema robusto que inclui validação e recuperação
+    vulnerabilities = robust_chunk_processing(doc_chunk, llm, profile_config, max_retries)
+    
+    # Validação final conforme tipo de scanner
+    if vulnerabilities:
+        if pattern_info['has_pairs']:
+            # Tenable WAS: validar pares
+            validated = validate_base_instances_pairs(vulnerabilities)
+            if len(validated) != len(vulnerabilities):
+                print(f"[VALIDATION] Pares validados: {len(vulnerabilities)} → {len(validated)}")
+            return validated
+        else:
+            # OpenVAS: validação simples
+            return vulnerabilities
+    
+    return []
+
+
+# Alias para compatibilidade - usar sistema robusto como padrão
+# retry_chunk_with_subdivision = retry_chunk_with_subdivision_robust
 
