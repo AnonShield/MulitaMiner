@@ -122,14 +122,16 @@ class TokenChunk:
         self.page_content = page_content
 
 
-def get_token_based_chunks(text: str, max_tokens: int, reserve_for_response: int = 1000) -> List[TokenChunk]:
+def get_token_based_chunks(text: str, max_tokens: int, reserve_for_response: int = 1000, 
+                          llm_config: dict = None) -> List[TokenChunk]:
     """
-    Divide texto em chunks baseado em tokens - VERSÃO OTIMIZADA.
+    Divide texto em chunks baseado em tokens - VERSÃO ULTRA-OTIMIZADA COM CONFIG LLM.
     
     Args:
         text: Texto a dividir
         max_tokens: Max tokens do modelo
         reserve_for_response: Tokens reservados para resposta (padrão: 1000)
+        llm_config: Configuração do LLM com parâmetros específicos
     
     Returns:
         Lista de TokenChunk com conteúdo dividido
@@ -143,19 +145,24 @@ def get_token_based_chunks(text: str, max_tokens: int, reserve_for_response: int
     except:
         tokenizer = tiktoken.get_encoding("cl100k_base")
     
-    # OTIMIZAÇÃO BASEADA NA ANÁLISE:
-    # Prompt do Tenable é muito maior (~800-1000 tokens)
-    prompt_overhead = 1200  # Aumentado para prompts complexos
-    # Reduzir ainda mais o limite para garantir que chunks funcionem
-    available_for_content = max(600, max_tokens - prompt_overhead - reserve_for_response)
+    # USAR CONFIGURAÇÃO DO LLM SE DISPONÍVEL
+    if llm_config:
+        max_chunk_size = llm_config.get('max_chunk_size', 1000)
+        prompt_overhead = llm_config.get('prompt_overhead', 300)
+        system_overhead = llm_config.get('system_overhead', 200)
+        safety_buffer = llm_config.get('safety_buffer', 300)
+        reserve_for_response = llm_config.get('reserve_for_response', reserve_for_response)
+        
+        # USAR CHUNK SIZE DIRETO DA CONFIGURAÇÃO
+        available_for_content = max_chunk_size
+    else:
+        # FALLBACK PARA CONFIGURAÇÃO ANTIGA
+        prompt_overhead = 1200
+        available_for_content = max(600, max_tokens - prompt_overhead - reserve_for_response)
     
-    # Para GPT-4 (4096 tokens): 4096 - 1200 - 1000 = 1896 tokens disponíveis
-    # Isso é MUITO mais seguro que os 2296 anteriores
-    
-    print(f"[TOKEN CALC OTIMIZADO] Max tokens do modelo: {max_tokens}")
-    print(f"[TOKEN CALC OTIMIZADO] Overhead do prompt: ~{prompt_overhead} tokens")
-    print(f"[TOKEN CALC OTIMIZADO] Reserve para resposta: ~{reserve_for_response} tokens")
-    print(f"[TOKEN CALC OTIMIZADO] Tokens disponíveis para conteúdo: ~{available_for_content} tokens")
+    print(f"[TOKEN CALC ULTRA-OTIMIZADO] Max tokens do modelo: {max_tokens}")
+    print(f"[TOKEN CALC ULTRA-OTIMIZADO] Max chunk size (config): {available_for_content}")
+    print(f"[TOKEN CALC ULTRA-OTIMIZADO] Reserve para resposta: ~{reserve_for_response} tokens")
     
     # Dividir por blocos de vulnerabilidades
     lines = text.split('\n')
@@ -163,16 +170,25 @@ def get_token_based_chunks(text: str, max_tokens: int, reserve_for_response: int
     current_chunk = []
     current_tokens = 0
     
+    # FORÇAR QUEBRAS MAIS AGRESSIVAS SE USANDO CONFIG DO LLM
+    # Para maximizar chunks, usar threshold mais alto
+    if llm_config and llm_config.get('maximize_chunk_size', False):
+        force_break_threshold = 0.95  # 95% para maximizar tamanho
+        max_absolute_limit = available_for_content
+    else:
+        force_break_threshold = 0.8 if not llm_config else 0.7  # 70% se usando config LLM
+        max_absolute_limit = available_for_content * 0.9 if llm_config else available_for_content
+    
     for line in lines:
         line_tokens = len(tokenizer.encode(line))
         # Match: "NVT:", "VULNERABILITY", "Vulnerability:" com espaço opcional antes
         is_vuln_start = re.search(r'^\s*(?:NVT:|VULNERABILITY|Vulnerability:)', line.strip())
         
-        # ESTRATÉGIA AGRESSIVA: Forçar quebra quando atinge 80% do limite
-        force_break = current_tokens > (available_for_content * 0.8)
+        # ESTRATÉGIA ULTRA-AGRESSIVA com config LLM
+        force_break = current_tokens > (available_for_content * force_break_threshold)
         
         # Se é início de vuln E (chunk não vazio E (excederia limite OU forçar quebra))
-        if is_vuln_start and current_chunk and (current_tokens + line_tokens > available_for_content or force_break):
+        if is_vuln_start and current_chunk and (current_tokens + line_tokens > max_absolute_limit or force_break):
             chunk_text = '\n'.join(current_chunk)
             chunks.append(TokenChunk(chunk_text))
             current_chunk = [line]
@@ -181,18 +197,60 @@ def get_token_based_chunks(text: str, max_tokens: int, reserve_for_response: int
             current_chunk.append(line)
             current_tokens += line_tokens
             
-            # PROTEÇÃO CRÍTICA: Se chunk fica muito grande MESMO sem marcador
-            if current_tokens > available_for_content:  # 100% do limite
+            # PROTEÇÃO ULTRA-CRÍTICA: Quebrar ANTES de atingir o limite
+            if current_tokens > max_absolute_limit:
+                # Remover última linha para ficar dentro do limite
+                if len(current_chunk) > 1:
+                    current_chunk.pop()
+                    current_tokens -= line_tokens
+                
                 chunk_text = '\n'.join(current_chunk)
                 chunks.append(TokenChunk(chunk_text))
-                current_chunk = []
-                current_tokens = 0
+                current_chunk = [line]
+                current_tokens = line_tokens
     
     if current_chunk:
         chunk_text = '\n'.join(current_chunk)
         chunks.append(TokenChunk(chunk_text))
     
-    print(f"[TOKEN CALC OTIMIZADO] Total de chunks criados: {len(chunks)}")
+    print(f"[TOKEN CALC ULTRA-OTIMIZADO] Total de chunks criados: {len(chunks)}")
+    
+    # VALIDAÇÃO FINAL E SUBDIVISÃO FORÇADA DE CHUNKS GRANDES
+    if llm_config and llm_config.get('zero_exceedance_guarantee', False):
+        final_chunks = []
+        max_allowed = llm_config.get('max_chunk_size', 850)
+        subdivisions_made = 0
+        
+        for i, chunk in enumerate(chunks):
+            chunk_tokens = len(tokenizer.encode(chunk.page_content))
+            
+            if chunk_tokens <= max_allowed:
+                final_chunks.append(chunk)
+            else:
+                print(f"[SUBDIVISÃO] Chunk {i+1} com {chunk_tokens} tokens -> subdividindo")
+                subdivisions_made += 1
+                
+                # Estratégia simples: dividir o texto em partes menores
+                text = chunk.page_content
+                text_length = len(text)
+                
+                # Calcular quantas divisões são necessárias
+                num_parts = (chunk_tokens // max_allowed) + 1
+                chars_per_part = text_length // num_parts
+                
+                # Dividir o texto
+                for part_num in range(num_parts):
+                    start_idx = part_num * chars_per_part
+                    end_idx = (part_num + 1) * chars_per_part if part_num < num_parts - 1 else text_length
+                    
+                    part_text = text[start_idx:end_idx]
+                    if part_text.strip():  # Só adicionar se não estiver vazio
+                        final_chunks.append(TokenChunk(part_text))
+                        part_tokens = len(tokenizer.encode(part_text))
+                        print(f"[SUBDIVISÃO] Parte {part_num+1}: {part_tokens} tokens")
+        
+        chunks = final_chunks
+        print(f"[ZERO EXCEEDANCE] {subdivisions_made} chunks subdivididos -> Total: {len(chunks)} chunks")
     
     # VALIDAÇÃO PÓS-CRIAÇÃO: Verificar se algum chunk ainda está grande
     oversized_count = 0

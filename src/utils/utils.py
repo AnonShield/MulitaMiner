@@ -307,7 +307,13 @@ def init_llm(llm_config):
         }
     }
     
-    return ChatOpenAI(**kwargs)
+    llm = ChatOpenAI(**kwargs)
+    
+    # PRESERVAR CONFIGURAÇÕES CUSTOMIZADAS NO OBJETO LLM
+    # Não definir max_tokens diretamente - conflita com max_completion_tokens
+    # Removido llm.llm_config - causava ValueError com ChatOpenAI
+    
+    return llm
 
 
 

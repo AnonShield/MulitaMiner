@@ -328,7 +328,8 @@ def main():
     doc_texts = get_token_based_chunks(
         documents[0].page_content,
         max_tokens,
-        reserve_response
+        reserve_response,
+        llm_config  # Passar configuração completa do LLM
     )
     print(f"Total de chunks: {len(doc_texts)}\n")
     

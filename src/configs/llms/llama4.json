@@ -4,6 +4,18 @@
   "model": "meta-llama/llama-4-maverick-17b-128e-instruct",
   "temperature": 0.0,
   "max_tokens": 8192,
-  "timeout":60,
-  "reserve_for_response": 4000
+  "timeout": 60,
+  "reserve_for_response": 5000,
+  "prompt_overhead": 600,
+  "system_overhead": 500,
+  "safety_buffer": 600,
+  "max_chunk_size": 1492,
+  "context_window": 128000,
+  "chunk_overlap": 50,
+  "calculation_formula": "max_chunk_size = max_tokens - reserve_for_response - prompt_overhead - system_overhead - safety_buffer",
+  "calculated_verification": "1492 + 5000 + 600 + 500 + 600 = 8192 (maximum-safety)",
+  "strict_enforcement": true,
+  "never_exceed_limit": true,
+  "maximize_chunk_size": true,
+  "zero_exceedance_guarantee": true
 }

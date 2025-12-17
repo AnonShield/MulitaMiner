@@ -24,7 +24,16 @@ class ChunkValidator:
         self.pdf_path = pdf_path
         self.profile_config = load_profile(profile_name)
         self.llm_config = load_llm(llm_name)
-        self.max_tokens = self.llm_config.get('max_tokens', 4096)
+        
+        # USAR CONFIGURAÇÃO DIRETA DO DEEPSEEK
+        if 'max_chunk_size' in self.llm_config:
+            # Usar configuração específica do LLM
+            chars_per_token = 3.2  # Estimativa conservadora
+            max_chunk_tokens = self.llm_config['max_chunk_size']
+            self.max_tokens = max_chunk_tokens + self.llm_config.get('reserve_for_response', 1500)
+        else:
+            # Fallback para configuração padrão
+            self.max_tokens = self.llm_config.get('max_tokens', 4096)
         
         try:
             self.tokenizer = tiktoken.encoding_for_model("gpt-3.5-turbo")
@@ -35,6 +44,10 @@ class ChunkValidator:
         print(f"📄 PDF: {os.path.basename(pdf_path)}")
         print(f"⚙️  Profile: {profile_name}")
         print(f"🧠 LLM: {llm_name} (max_tokens: {self.max_tokens})")
+        
+        if 'max_chunk_size' in self.llm_config:
+            print(f"🎯 Chunk size configurado: {self.llm_config['max_chunk_size']} tokens")
+        
         print(f"{'='*70}")
     
     def load_and_analyze_document(self):
@@ -75,7 +88,8 @@ class ChunkValidator:
         print(f"{'='*70}")
         
         # Gerar chunks usando sistema atual
-        chunks = get_token_based_chunks(text, self.max_tokens)
+        chunks = get_token_based_chunks(text, self.max_tokens, 
+                                       llm_config=self.llm_config)
         
         print(f"📊 Total de chunks gerados: {len(chunks)}")
         print(f"\n📝 ANÁLISE DETALHADA DOS CHUNKS:\n")

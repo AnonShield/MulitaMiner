@@ -1,9 +1,21 @@
 {
-  "api_key": "key_gpt5",
+  "api_key": "api_key_gpt5",
   "endpoint": "https://api.openai.com/v1",
   "model": "gpt-5-mini-2025-08-07",
-  "temperature": 0.0,
+  "temperature": 1.0,
   "max_completion_tokens": 16000,
-  "timeout": 120,
-  "reserve_for_response": 4000
+  "timeout": 180,
+  "reserve_for_response": 6000,
+  "prompt_overhead": 600,
+  "system_overhead": 500,
+  "safety_buffer": 600,
+  "max_chunk_size": 8300,
+  "context_window": 200000,
+  "chunk_overlap": 50,
+  "calculation_formula": "max_chunk_size = max_completion_tokens - reserve_for_response - prompt_overhead - system_overhead - safety_buffer",
+  "calculated_verification": "8300 + 6000 + 600 + 500 + 600 = 16000 (ultra-safe)",
+  "strict_enforcement": true,
+  "never_exceed_limit": true,
+  "maximize_chunk_size": true,
+  "zero_exceedance_guarantee": true
 }
