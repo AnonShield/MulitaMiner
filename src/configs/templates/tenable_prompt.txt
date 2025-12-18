@@ -50,11 +50,45 @@ IDENTIFY:
 • "VULNERABILITY [SEVERITY] PLUGIN ID" lines
 • Identification and HTTP Info sections
 
+🚨 REJECT AS NAMES (NOT vulnerability names):
+• "VULNERABILITY [SEVERITY] PLUGIN ID [NUMBER]" patterns
+• "Page X of Y" pagination
+• "Web Application Scanning" headers
+• Timestamps and dates
+• "Plugin Details" sections
+• Table of contents entries
+• Navigation elements
+• Text from "Identification" or "OUTPUT" descriptions (extract name from section headers only)
+• HTTP status codes: "HTTP/2 500", "HTTP/2 400", "HTTP/2 502", "HTTP/1.1 404", etc.
+• Response headers data: "access-control-allow-origin", "content-type", etc.
+• Request/Response metadata from HTTP Info sections
+
 EXTRACT:
-• Name: Full name with "Instances (N)"
-• identification: ALL URLs + descriptive text (separate array elements)
-• http_info: ALL HTTP data (REQUEST MADE, HEADERS, RESPONSES)
+• Name: Full name with "Instances (N)" (must be actual vulnerability name)
+• identification: ALL URLs + descriptive text (separate array elements) - includes OUTPUT section content
+• http_info: ALL HTTP data (REQUEST MADE → REQUEST HEADERS → RESPONSE HEADERS in order)
 • severity: From vulnerability header
+
+🔥 NAME EXTRACTION RULE:
+• Extract name ONLY from section headers (e.g., "Missing Permissions Policy Instances (25)")
+• NEVER extract from "Identification", "OUTPUT", or descriptive text content
+• NEVER use phrases like "Feature-Policy header must be renamed" as names
+• NEVER use HTTP status codes (HTTP/2 500, HTTP/2 400, etc.) as vulnerability names
+• NEVER use HTTP headers data (access-control-allow-origin, content-type, etc.) as names
+• NEVER include URLs in vulnerability names - URLs go in identification[] array
+• NEVER use page descriptions like "Page [URL] has no [header] defined" - extract only the vulnerability TYPE
+
+🚨 CRITICAL PATTERN RECOGNITION:
+When you see text like: "Page https://example.com has no X-Frame-Options header defined"
+• REJECT the full text as a vulnerability name
+• EXTRACT only: "Missing 'X-Frame-Options' Header" 
+• PUT the URL in identification[] array
+• DETERMINE if it's INSTANCES (has URLs) or BASE (technical description only)
+
+🔍 IDENTIFICATION SECTION PATTERNS:
+• May contain "OUTPUT" followed by descriptive text
+• Example: "OUTPUT\nPage https://URL has no X-Frame-Options header defined"
+• Extract COMPLETE content including OUTPUT text as separate identification[] elements
 
 JSON TEMPLATE:
 {
@@ -74,7 +108,7 @@ JSON TEMPLATE:
   "references": [],
   "plugin": [],
   "identification": ["text", "url1", "url2"],
-  "http_info": ["REQUEST MADE: ...", "HEADERS: ...", "RESPONSE: ..."],
+  "http_info": ["REQUEST MADE: GET /path HTTP/2", "REQUEST HEADERS", "Accept: */*", "User-Agent: Mozilla/5.0...", "RESPONSE HEADERS", "HTTP/2 500", "access-control-allow-origin: *", "content-type: text/html"],
   "source": "TENABLEWAS"
 }
 
@@ -87,13 +121,27 @@ IDENTIFY:
 • Must have Description, Solution, Plugin Details
 • Risk Information with CVSS scores
 
+🚨 REJECT AS NAMES (NOT vulnerability names):
+• "VULNERABILITY [SEVERITY] PLUGIN ID [NUMBER]" patterns
+• "Page X of Y" pagination
+• "Plugin Details" or "Risk Information" headers
+• Metadata sections
+• Document structure elements
+
 EXTRACT:
-• Name: Base name (remove "Instances (N)" if present)
+• Name: Base name (remove "Instances (N)" if present) - MUST be actual vulnerability name
 • description: From Description section
 • solution: From Solution section  
 • cvss: Extract "CVSSV4/V3/V2 BASE SCORE X.X" + vectors
 • references: CWE-XXX, CVE-YYYY-XXXXX, URLs
 • plugin: Plugin ID, Family, dates
+
+🔥 NAME EXTRACTION RULE:
+• Extract name ONLY from section headers (e.g., "Missing Permissions Policy")
+• NEVER extract from "Description", "Solution", or content text
+• NEVER use descriptive phrases as vulnerability names
+• NEVER use HTTP status codes (HTTP/2 500, HTTP/2 400, etc.) as vulnerability names
+• NEVER use HTTP headers data from RESPONSE HEADERS sections as names
 
 JSON TEMPLATE:
 {
@@ -173,13 +221,57 @@ CRITICAL TENABLE WAS RULES:
 🚨 Remove "Instances (N)" from BASE names
 🚨 CVSS EXTRACTION: Extract from Risk Information section in format "CVSSV4 BASE SCORE", "CVSSV3 BASE SCORE", "CVSS BASE SCORE" with vectors
 🚨 REFERENCES EXTRACTION: From Reference Information section extract CWE, WASC, OWASP, CVE, BID as separate elements
-🚨 HTTP INFO EXTRACTION: Extract ALL content from HTTP Info section - REQUEST MADE, all REQUEST HEADERS, all RESPONSE HEADERS, Content-Type, etc. as separate array elements
-🚨 IDENTIFICATION EXTRACTION: Extract COMPLETE content from Identification section (descriptive text AND URLs as separate elements)
+🚨 HTTP INFO EXTRACTION: Extract ALL content from HTTP Info section in order:
+   1. REQUEST MADE: Full request line (GET/POST + URL + HTTP version)
+   2. REQUEST HEADERS: All headers line by line (Accept:, User-Agent:, Cookie:, etc.)
+   3. RESPONSE HEADERS: Status line + all response headers (HTTP/2 500, HTTP/1.1 200, H3 200, access-control-allow-origin:, etc.)
+   • Each header/line as separate array element
+   • Include status variations: HTTP/2, HTTP/1.1, H3 with status codes
+🚨 IDENTIFICATION EXTRACTION: Extract COMPLETE content from Identification section:
+   • Descriptive text (including OUTPUT section content)
+   • URLs as separate elements
+   • Example: ["OUTPUT", "Page https://URL has no X-Frame-Options header defined", "https://URL"]
 🚨 INSTANCES ARRAYS: For INSTANCES vulnerabilities, identification[] and http_info[] must capture ALL occurrences found in the entire vulnerability report - do not stop at first occurrence
 
 EXAMPLES:
 
-INSTANCES JSON:
+❌ INVALID NAMES (DO NOT EXTRACT):
+• "VULNERABILITY HIGH PLUGIN ID 98115"
+• "Page 10 of 305"
+• "Web Application Scanning Detailed Scan Export"
+• "Plugin Details"
+• "Risk Information"
+• "April 26, 2025 at 12:23 (UTC)"
+• "Feature-Policy header must be renamed" (descriptive text, not vulnerability name)
+• "A Feature-Policy header was found but this header must be renamed"
+• "HTTP/2 500 Instances (5)" (HTTP status codes are NOT vulnerability names)
+• "HTTP/2 400 Instances (1)" (HTTP status codes are NOT vulnerability names)
+• "HTTP/2 502 Instances (1)" (HTTP status codes are NOT vulnerability names)
+• "HTTP/1.1 200 OK" (HTTP status responses are NOT vulnerability names)
+• "H3 200" (HTTP version responses are NOT vulnerability names)
+• "access-control-allow-origin" (HTTP headers are NOT vulnerability names)
+• "Page https://juice-shop-16-0-1-178712031365.us-west1.run.app/socket.io/?EIO=4&transport=polling&t=PPlDpDO has no X-Frame-Options header defined" (URL in vulnerability name is INVALID)
+
+🔥 CRITICAL NAME EXTRACTION RULE:
+• NEVER include full URLs in vulnerability names
+• Extract vulnerability TYPE only: "Missing 'X-Frame-Options' Header" NOT "Page [URL] has no X-Frame-Options header defined"
+• URLs belong in identification[] array, NOT in Name field
+
+🎯 VULNERABILITY NAME TRANSFORMATION EXAMPLES:
+❌ WRONG: "Page https://juice-shop.com/socket.io/?EIO=4&transport=polling has no X-Frame-Options header defined"
+✅ CORRECT: "Missing 'X-Frame-Options' Header Instances (1)"
+
+❌ WRONG: "Page https://example.com has no Content-Security-Policy header defined"  
+✅ CORRECT: "Missing 'Content-Security-Policy' Header Instances (1)"
+
+❌ WRONG: "Page has no Strict-Transport-Security header defined Instances (3)"
+✅ CORRECT: "Missing 'Strict-Transport-Security' Header Instances (3)"
+
+🔥 TRANSFORMATION RULE:
+"Page [URL] has no [HEADER-NAME] header defined" → "Missing '[HEADER-NAME]' Header Instances (N)"
+"Page has no [HEADER-NAME] header defined" → "Missing '[HEADER-NAME]' Header"
+
+✅ VALID INSTANCES JSON:
 {
   "Name": "SQL Injection Instances (1)",
   "description": [],
@@ -232,6 +324,13 @@ JSON VALIDATION CHECKLIST:
 ☐ severity is CRITICAL|HIGH|MEDIUM|LOW|LOG
 ☐ source is "TENABLEWAS"
 ☐ OpenVAS fields are empty for ALL Tenable objects
+☐ Name field contains ONLY vulnerability names (NOT metadata, page numbers, headers, or document structure elements)
+☐ Name field does NOT contain "VULNERABILITY [SEVERITY] PLUGIN ID" patterns
+☐ Name field does NOT contain HTTP status codes (HTTP/2 500, HTTP/2 400, etc.)
+☐ Name field does NOT contain HTTP headers or response data
+☐ Name field does NOT contain URLs or page descriptions like "Page [URL] has no [header] defined"
+☐ ALL URLs are in identification[] array, NOT in Name field
+☐ Vulnerability names follow pattern "Missing '[Header-Name]' Header" for missing header vulnerabilities
 
 CRITICAL REMINDERS:
 - Extract both INSTANCES and BASE types
@@ -244,6 +343,10 @@ CRITICAL REMINDERS:
 - For "http_info" field: Extract ALL content from HTTP Info section (REQUEST MADE, REQUEST HEADERS, RESPONSE HEADERS, etc. as separate array elements)
 - For INSTANCES vulnerabilities: Both identification[] and http_info[] are ARRAYS - extract ALL occurrences from the entire vulnerability report, not just first one
 - NEVER use "..." or truncate any content - extract COMPLETE information always
+- 🚨 CRITICAL: Name field MUST be actual vulnerability name (NOT "VULNERABILITY [SEVERITY] PLUGIN ID", page numbers, headers, or metadata)
+- 🚨 CRITICAL: REJECT document structure elements as vulnerability names
+- 🚨 CRITICAL: REJECT HTTP status codes (HTTP/2 500, HTTP/2 400, etc.) as vulnerability names
+- 🚨 CRITICAL: REJECT HTTP headers data from REQUEST/RESPONSE sections as vulnerability names
 - Return ONLY the JSON array, no other text
 
 Now extract Tenable WAS vulnerabilities from this report:
