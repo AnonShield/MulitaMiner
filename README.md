@@ -1,20 +1,20 @@
-# Vulnerability Extractor: Sistema Avançado de Extração de Vulnerabilidades com LLMs
+# Vulnerability Extractor: Sistema de Extração de Vulnerabilidades de Documentos Não Estruturados com LLMs
 
 ## Resumo
 
-O Vulnerability Extractor é uma ferramenta CLI avançada desenvolvida para extrair, processar e classificar vulnerabilidades de relatórios PDF de segurança utilizando Large Language Models (LLMs) com sistema de chunking otimizado. A ferramenta implementa um sistema inteligente de otimização de tokens que garante processamento eficiente sem exceedances, oferecendo suporte a múltiplos provedores de LLM e estratégias de scanning especializadas para diferentes ferramentas de segurança (OpenVAS, Tenable WAS, Nessus, CAIS).
+O Vulnerability Extractor é uma ferramenta CLI desenvolvida para extrair e processar vulnerabilidades de relatórios PDF de segurança utilizando Large Language Models (LLMs) com sistema de chunking otimizado. A ferramenta implementa um sistema inteligente de otimização de tokens que garante processamento eficiente sem excedente, oferecendo suporte a múltiplos provedores de LLM e estratégias de scanning especializadas para diferentes ferramentas de segurança (OpenVAS, Tenable WAS, Nessus, ...).
 
 ## Funcionalidades
 
 ### Extração Inteligente
 - **Extração automática** de vulnerabilidades de relatórios PDF de segurança
-- **Suporte multi-scanner**: OpenVAS, Tenable WAS, Nessus, CAIS, e genérico
+- **Suporte multi-scanner**: OpenVAS, Tenable WAS, Nessus, e outros
 - **Validação automática** de dados extraídos com normalização
 - **Sistema robusto de retry** com subdivisão inteligente de chunks
 
 ### Sistema de Chunking Otimizado
 - **Cálculo automático de tokens** baseado em limites específicos de cada LLM
-- **Zero exceedances garantidas** através de múltiplas camadas de segurança
+- **Zero excedências garantidas** através de múltiplas camadas de segurança
 - **Otimização dinâmica** de tamanho de chunks por modelo
 - **Validação integrada** com `chunk_validator.py` para análise de qualidade
 
@@ -25,14 +25,13 @@ O Vulnerability Extractor é uma ferramenta CLI avançada desenvolvida para extr
 - **Remoção de duplicatas** baseada em múltiplos critérios
 
 ### Multi-LLM com Otimização
-- **7 LLMs suportados** com configurações otimizadas individuais:
+- **5 LLMs suportados** com configurações otimizadas individuais:
   - **DeepSeek**: Ultra-eficiente para análise técnica
   - **GPT-4**: Balanceado para uso geral
   - **GPT-5**: Ultra-seguro para processamento crítico
   - **Llama 3/4**: Modelos Groq gratuitos com diferentes perfis
   - **Qwen3**: Alternativa eficiente
-  - **TinyLlama**: Para testes e desenvolvimento
-
+  
 ### Exportação Multi-Formato
 - **JSON estruturado** (formato principal)
 - **CSV/TSV** com delimitadores customizáveis
@@ -81,18 +80,13 @@ openpyxl>=3.0.0,<4.0.0
 - **Armazenamento seguro** em arquivos de configuração locais (`src/configs/llms/`)
 - **Rotação periódica** de chaves de API conforme boas práticas de segurança
 - **Validação de acesso** antes do processamento para evitar chamadas desnecessárias
-
+- **Não use** sem anonimizar antes os dados sensíveis
+  
 ### Processamento Seguro de Documentos
 - **Validação de integridade** de arquivos PDF antes do processamento
 - **Isolamento de dados** - cada execução trabalha com dados isolados
 - **Limpeza automática** de chunks temporários após processamento
 - **Logs mínimos** - não exposição de dados sensíveis nos logs
-
-### Proteção contra Token Limits
-- **Cálculos matemáticos precisos** para evitar exceedances de tokens
-- **Múltiplas camadas de segurança** com buffers configuráveis por modelo
-- **Monitoramento automático** de uso de tokens durante execução
-- **Fallback inteligente** com subdivisão automática de chunks problemáticos
 
 ### Controle de Rate Limits
 - **Delays configuráveis** entre chunks para respeitar limites de API
@@ -157,13 +151,13 @@ Edite `src/configs/llms/deepseek.json`:
 
 ### Sistema de Cálculo de Tokens
 
-O Vulnerability Extractor implementa um sistema inteligente de otimização de tokens que calcula automaticamente o tamanho máximo dos chunks para cada LLM, garantindo zero exceedances e máxima eficiência.
+O Vulnerability Extractor implementa um sistema inteligente de otimização de tokens que calcula automaticamente o tamanho máximo dos chunks para cada LLM, garantindo zero excedência e máxima eficiência.
 
 #### Fórmula de Cálculo
 
 **Fórmula Universal:**
 ```
-max_chunk_size = max_tokens - reserve_for_response - prompt_overhead - system_overhead - safety_buffer
+max_chunk_size = max_tokens (ou max_completation_tokens) - reserve_for_response - prompt_overhead - system_overhead - safety_buffer
 ```
 
 **Componentes da Fórmula:**
@@ -178,6 +172,7 @@ max_chunk_size = max_tokens - reserve_for_response - prompt_overhead - system_ov
 **GPT-4 (OpenAI)**
 ```json
 {
+...
   "max_completion_tokens": 12000,
   "reserve_for_response": 4000,
   "prompt_overhead": 300,
@@ -193,6 +188,7 @@ max_chunk_size = max_tokens - reserve_for_response - prompt_overhead - system_ov
 **Llama 4 (Groq)**
 ```json
 {
+...
   "max_tokens": 8192,
   "reserve_for_response": 5000,
   "prompt_overhead": 600,
@@ -435,15 +431,9 @@ O Vulnerability Extractor foi validado através de experimentos práticos com di
 - **Resultados**: Extração completa de 18 campos especializados (detection_result, impact, insight)
 - **Otimização**: Chunks de 3492 tokens com processamento gratuito via Groq
 
-#### CAIS Integration
-- **Configuração testada**: Scanner `cais_tenable` + LLM `gpt5`
-- **Documentos testados**: Relatórios CAIS com notação dotada (asset.name, definition.severity)
-- **Resultados**: Validação específica com consolidação por `name_consolidated`
-- **Otimização**: Ultra-seguro com 8300 tokens e buffer de 600
-
 ### Validação de Token Optimization
 
-#### Experimento: Zero Token Exceedances
+#### Experimento: Zero Token Excedentes
 ```bash
 # Teste com documento de 300 páginas
 python main.py large_report.pdf --LLM gpt4
@@ -471,7 +461,6 @@ python main.py test_report.pdf --LLM deepseek # Eficiência (1750 tokens)
 #### Accuracy Metrics
 - **Tenable WAS**: 98.5% de precisão na detecção de plugins
 - **OpenVAS**: 97.2% de completude na extração de campos NVT  
-- **CAIS**: 99.1% de conformidade com formato dotado
 
 #### Performance Metrics  
 - **GPT-4**: ~1.2 chunks/minute, custo médio $0.03/documento
@@ -481,65 +470,6 @@ python main.py test_report.pdf --LLM deepseek # Eficiência (1750 tokens)
 #### Consolidation Effectiveness
 - **Duplicata removal**: 94.7% de redução em relatórios TenableWAS
 - **Instance merging**: 89.3% de consolidação efetiva
-- **CAIS validation**: 100% de conformidade com esquema dotado
-
-## Docker
-
-O sistema pode ser executado em containers Docker para isolamento e portabilidade.
-
-### Dockerfile
-
-```dockerfile
-# Use uma imagem oficial do Python como imagem base
-FROM python:3.10-slim
-
-# Defina o diretório de trabalho no contêiner
-WORKDIR /app
-
-# Copie o conteúdo do diretório atual para o contêiner
-COPY . /app
-
-# Instale os pacotes necessários
-RUN pip install --no-cache-dir -r requirements.txt
-
-# Defina variável de ambiente
-ENV NAME VulnerabilityExtractor
-
-# Execute main.py quando o contêiner for iniciado
-CMD ["python", "main.py"]
-```
-
-### Construir e Executar o Container
-
-#### Construir a imagem
-```bash
-docker build -t vulnerability-extractor .
-```
-
-#### Executar processamento
-```bash
-# Com scanner específico
-docker run -v $(pwd):/app vulnerability-extractor python main.py relatorio.pdf --scanner tenable --LLM gpt4
-
-# Com exportação completa
-docker run -v $(pwd):/app vulnerability-extractor python main.py relatorio.pdf --convert all --output-dir ./results
-
-# Modo interativo para debugging
-docker run -it -v $(pwd):/app vulnerability-extractor bash
-```
-
-#### Docker Compose para ambientes de desenvolvimento
-```yaml
-version: '3.8'
-services:
-  vulnerability-extractor:
-    build: .
-    volumes:
-      - .:/app
-    environment:
-      - PYTHONPATH=/app
-    command: tail -f /dev/null
-```
 
 ## Estrutura do Código
 
@@ -636,13 +566,6 @@ python chunk_validator.py documento.pdf
 # Validação com LLM específico  
 python chunk_validator.py documento.pdf --LLM gpt4 --scanner tenable
 ```
-
-#### Sistema CAIS Integrado
-Suporte completo para formato CAIS (Cyber Asset Inventory System):
-- Campos especializados com notação dotada (`asset.name`, `definition.severity`)
-- Validação específica com `cais_validator.py`
-- Templates otimizados para diferentes tipos CAIS
-- Consolidação inteligente por `name_consolidated`
 
 #### Sistema de Tokens Ultra-Otimizado
 Cálculos matemáticos precisos para cada LLM:
