@@ -5,5 +5,15 @@
   "delay_between_chunks": 2,
   "remove_duplicates": true,
   "output_file": "vulnerabilities_default_gpt4_2.json",
-  "consolidation_field": "Name"
+  "consolidation_field": "Name",
+  "chunking": {
+    "scanner_type": "generic",
+    "marker_pattern": "^\\s*Vulnerability:",
+    "has_pairs": false,
+    "min_chunk_tokens": 1000,
+    "force_break_at_markers": false,
+    "preserve_vulnerability_blocks": false,
+    "max_vulnerabilities_per_chunk": 4,
+    "description": "Configuração genérica para scanners não específicos"
+  }
 }

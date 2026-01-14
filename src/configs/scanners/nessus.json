@@ -1,0 +1,19 @@
+{
+  "reader": "nessus",
+  "prompt_template": "src/configs/templates/default_prompt.txt",
+  "retry_attempts": 3,
+  "delay_between_chunks": 2,
+  "output_file": "vulnerabilities_nessus.json",
+  "consolidation_field": "Name",
+  "remove_duplicates": true,
+  "chunking": {
+    "scanner_type": "nessus",
+    "marker_pattern": "^\\s*Plugin ID:\\s*\\d+",
+    "has_pairs": false,
+    "min_chunk_tokens": 1200,
+    "force_break_at_markers": true,
+    "preserve_vulnerability_blocks": true,
+    "max_vulnerabilities_per_chunk": 4,
+    "description": "Nessus scanner com marcadores Plugin ID"
+  }
+}

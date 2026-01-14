@@ -1,0 +1,19 @@
+{
+  "reader": "qualys",
+  "prompt_template": "src/configs/templates/default_prompt.txt",
+  "retry_attempts": 3,
+  "delay_between_chunks": 2,
+  "output_file": "vulnerabilities_qualys.json",
+  "consolidation_field": "Name",
+  "remove_duplicates": true,
+  "chunking": {
+    "scanner_type": "qualys",
+    "marker_pattern": "^\\s*QID:\\s*\\d+",
+    "has_pairs": false,
+    "min_chunk_tokens": 1000,
+    "force_break_at_markers": true,
+    "preserve_vulnerability_blocks": true,
+    "max_vulnerabilities_per_chunk": 4,
+    "description": "Qualys scanner com marcadores QID"
+  }
+}

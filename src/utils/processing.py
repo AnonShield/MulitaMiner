@@ -123,15 +123,16 @@ class TokenChunk:
 
 
 def get_token_based_chunks(text: str, max_tokens: int, reserve_for_response: int = 1000, 
-                          llm_config: dict = None) -> List[TokenChunk]:
+                          llm_config: dict = None, profile_config: dict = None) -> List[TokenChunk]:
     """
-    Divide texto em chunks baseado em tokens - VERSÃO ULTRA-OTIMIZADA COM CONFIG LLM.
+    Divide texto em chunks baseado em tokens com configurações customizáveis por scanner.
     
     Args:
         text: Texto a dividir
         max_tokens: Max tokens do modelo
         reserve_for_response: Tokens reservados para resposta (padrão: 1000)
         llm_config: Configuração do LLM com parâmetros específicos
+        profile_config: Configuração do perfil/scanner com configurações de chunking
     
     Returns:
         Lista de TokenChunk com conteúdo dividido
@@ -145,59 +146,78 @@ def get_token_based_chunks(text: str, max_tokens: int, reserve_for_response: int
     except:
         tokenizer = tiktoken.get_encoding("cl100k_base")
     
-    # USAR CONFIGURAÇÃO DO LLM SE DISPONÍVEL
-    if llm_config:
-        max_chunk_size = llm_config.get('max_chunk_size', 1000)
-        prompt_overhead = llm_config.get('prompt_overhead', 300)
-        system_overhead = llm_config.get('system_overhead', 200)
-        safety_buffer = llm_config.get('safety_buffer', 300)
+    # CÁLCULO SIMPLIFICADO - Usar configuração do LLM se disponível
+    if llm_config and 'max_chunk_size' in llm_config:
+        available_for_content = llm_config['max_chunk_size']
         reserve_for_response = llm_config.get('reserve_for_response', reserve_for_response)
-        
-        # USAR CHUNK SIZE DIRETO DA CONFIGURAÇÃO
-        available_for_content = max_chunk_size
     else:
-        # FALLBACK PARA CONFIGURAÇÃO ANTIGA
-        prompt_overhead = 1200
-        available_for_content = max(600, max_tokens - prompt_overhead - reserve_for_response)
+        # Fallback simples
+        available_for_content = max(600, max_tokens - 1200 - reserve_for_response)
     
-    print(f"[TOKEN CALC ULTRA-OTIMIZADO] Max tokens do modelo: {max_tokens}")
-    print(f"[TOKEN CALC ULTRA-OTIMIZADO] Max chunk size (config): {available_for_content}")
-    print(f"[TOKEN CALC ULTRA-OTIMIZADO] Reserve para resposta: ~{reserve_for_response} tokens")
+    print(f"[CHUNKING] Max tokens: {max_tokens}, Chunk size: {available_for_content}")
     
-    # Dividir por blocos de vulnerabilidades
+    # Detectar padrão do scanner com configurações customizáveis
+    pattern_info = detect_scanner_pattern(text, profile_config)
+    scanner_type = pattern_info.get('scanner_type', 'unknown').upper()
+    using_custom = 'CUSTOM' if profile_config and 'chunking' in profile_config else 'AUTO'
+    print(f"[SCANNER] {scanner_type} ({using_custom})")
+
+    # Dividir por blocos de vulnerabilidades - VERSÃO CUSTOMIZÁVEL
     lines = text.split('\n')
     chunks = []
     current_chunk = []
     current_tokens = 0
     
-    # FORÇAR QUEBRAS MAIS AGRESSIVAS SE USANDO CONFIG DO LLM
-    # Para maximizar chunks, usar threshold mais alto
-    if llm_config and llm_config.get('maximize_chunk_size', False):
-        force_break_threshold = 0.95  # 95% para maximizar tamanho
-        max_absolute_limit = available_for_content
-    else:
-        force_break_threshold = 0.8 if not llm_config else 0.7  # 70% se usando config LLM
-        max_absolute_limit = available_for_content * 0.9 if llm_config else available_for_content
+    # CONFIGURAÇÕES PERSONALIZÁVEIS POR SCANNER
+    min_chunk_tokens = pattern_info.get('min_chunk_tokens', 1000)
+    force_break_at_markers = pattern_info.get('force_break_at_markers', True)
+    max_vulns_per_chunk = pattern_info.get('max_vulnerabilities_per_chunk', 3)
+    marker_pattern = pattern_info.get('marker_pattern')
+    
+    # Limite absoluto de tokens por chunk
+    max_absolute_limit = available_for_content * 0.9  # 90% do limite para segurança
+    
+    print(f"[CONFIG] Min: {min_chunk_tokens}, Max vulns: {max_vulns_per_chunk}, Force break: {force_break_at_markers}")
+
+    # Contador de vulnerabilidades no chunk atual
+    current_vulns_count = 0
     
     for line in lines:
         line_tokens = len(tokenizer.encode(line))
-        # Match: "NVT:", "VULNERABILITY", "Vulnerability:" com espaço opcional antes
-        is_vuln_start = re.search(r'^\s*(?:NVT:|VULNERABILITY|Vulnerability:)', line.strip())
         
-        # ESTRATÉGIA ULTRA-AGRESSIVA com config LLM
-        force_break = current_tokens > (available_for_content * force_break_threshold)
+        # DETECÇÃO DE MARCADORES CUSTOMIZÁVEL
+        is_vuln_start = False
+        if marker_pattern:
+            is_vuln_start = bool(re.search(marker_pattern, line))
         
-        # Se é início de vuln E (chunk não vazio E (excederia limite OU forçar quebra))
-        if is_vuln_start and current_chunk and (current_tokens + line_tokens > max_absolute_limit or force_break):
+        # ESTRATÉGIA CUSTOMIZÁVEL: Usar configurações do scanner
+        should_break = False
+        
+        if is_vuln_start and current_chunk:
+            current_vulns_count += 1
+            
+            # Quebrar se:
+            # 1. Force break está ativado E chunk tem conteúdo mínimo, OU
+            # 2. Excedeu máximo de vulnerabilidades por chunk, OU  
+            # 3. Vai exceder limite de tokens
+            should_break = (
+                (force_break_at_markers and current_tokens >= min_chunk_tokens) or
+                (current_vulns_count > max_vulns_per_chunk) or
+                (current_tokens + line_tokens > max_absolute_limit)
+            )
+        
+        if should_break:
+            # Finalizar chunk atual ANTES do marcador
             chunk_text = '\n'.join(current_chunk)
             chunks.append(TokenChunk(chunk_text))
-            current_chunk = [line]
+            current_chunk = [line]  # Começar novo chunk COM o marcador
             current_tokens = line_tokens
+            current_vulns_count = 1  # Reset contador
         else:
             current_chunk.append(line)
             current_tokens += line_tokens
             
-            # PROTEÇÃO ULTRA-CRÍTICA: Quebrar ANTES de atingir o limite
+            # PROTEÇÃO: Se exceder limite absoluto, forçar quebra
             if current_tokens > max_absolute_limit:
                 # Remover última linha para ficar dentro do limite
                 if len(current_chunk) > 1:
@@ -208,59 +228,20 @@ def get_token_based_chunks(text: str, max_tokens: int, reserve_for_response: int
                 chunks.append(TokenChunk(chunk_text))
                 current_chunk = [line]
                 current_tokens = line_tokens
+                current_vulns_count = 1 if is_vuln_start else 0
     
     if current_chunk:
         chunk_text = '\n'.join(current_chunk)
         chunks.append(TokenChunk(chunk_text))
     
-    print(f"[TOKEN CALC ULTRA-OTIMIZADO] Total de chunks criados: {len(chunks)}")
+    print(f"[RESULTADO] {len(chunks)} chunks criados")
     
-    # VALIDAÇÃO FINAL E SUBDIVISÃO FORÇADA DE CHUNKS GRANDES
-    if llm_config and llm_config.get('zero_exceedance_guarantee', False):
-        final_chunks = []
-        max_allowed = llm_config.get('max_chunk_size', 850)
-        subdivisions_made = 0
-        
-        for i, chunk in enumerate(chunks):
-            chunk_tokens = len(tokenizer.encode(chunk.page_content))
-            
-            if chunk_tokens <= max_allowed:
-                final_chunks.append(chunk)
-            else:
-                print(f"[SUBDIVISÃO] Chunk {i+1} com {chunk_tokens} tokens -> subdividindo")
-                subdivisions_made += 1
-                
-                # Estratégia simples: dividir o texto em partes menores
-                text = chunk.page_content
-                text_length = len(text)
-                
-                # Calcular quantas divisões são necessárias
-                num_parts = (chunk_tokens // max_allowed) + 1
-                chars_per_part = text_length // num_parts
-                
-                # Dividir o texto
-                for part_num in range(num_parts):
-                    start_idx = part_num * chars_per_part
-                    end_idx = (part_num + 1) * chars_per_part if part_num < num_parts - 1 else text_length
-                    
-                    part_text = text[start_idx:end_idx]
-                    if part_text.strip():  # Só adicionar se não estiver vazio
-                        final_chunks.append(TokenChunk(part_text))
-                        part_tokens = len(tokenizer.encode(part_text))
-                        print(f"[SUBDIVISÃO] Parte {part_num+1}: {part_tokens} tokens")
-        
-        chunks = final_chunks
-        print(f"[ZERO EXCEEDANCE] {subdivisions_made} chunks subdivididos -> Total: {len(chunks)} chunks")
-    
-    # VALIDAÇÃO PÓS-CRIAÇÃO: Verificar se algum chunk ainda está grande
-    oversized_count = 0
-    for i, chunk in enumerate(chunks):
-        chunk_tokens = len(tokenizer.encode(chunk.page_content))
-        if chunk_tokens > available_for_content:
-            oversized_count += 1
+    # VALIDAÇÃO PÓS-CRIAÇÃO: Verificar chunks grandes
+    oversized_count = sum(1 for chunk in chunks 
+                         if len(tokenizer.encode(chunk.page_content)) > available_for_content)
     
     if oversized_count > 0:
-        print(f"[AVISO] {oversized_count}/{len(chunks)} chunks ainda excedem o limite - serão subdivididos durante processamento")
+        print(f"[AVISO] {oversized_count} chunks excedem limite - ajustar configurações se necessário")
     
     return chunks
 
@@ -352,50 +333,66 @@ def build_prompt(doc_chunk: TokenChunk, profile_config: Dict[str, Any]) -> str:
     return prompt
 
 
-def detect_scanner_pattern(text: str) -> dict:
+def detect_scanner_pattern(text: str, profile_config: dict = None) -> dict:
     """
-    Detecta padrão de scanner (OpenVAS, Tenable WAS, etc) baseado em markers no texto.
+    Detecta padrão de scanner baseado em markers no texto e configurações do perfil.
     
-    Estratégia extensível:
-    1. Tenta detectar padrões conhecidos (OpenVAS, Tenable WAS)
-    2. Se encontra, retorna configuração específica
-    3. Se não encontra, retorna 'generic' para fallback simples
+    Args:
+        text: Texto para análise
+        profile_config: Configuração do perfil/scanner (opcional)
     
     Returns:
-        Dict com:
-        {
-            'scanner_type': 'openvas' | 'tenable_was' | 'generic',
-            'marker_pattern': regex pattern para encontrar blocos (None se generic),
-            'has_pairs': bool (True se vulnerabilidades vêm em pares BASE+INSTANCES),
-            'markers_found': int (número de blocos detectados)
-        }
+        Dict com configurações de chunking específicas do scanner detectado
     """
+    # Se perfil tem configurações de chunking, usar diretamente
+    if profile_config and 'chunking' in profile_config:
+        chunking_config = profile_config['chunking'].copy()
+        
+        # Validar se o padrão realmente existe no texto
+        if chunking_config.get('marker_pattern'):
+            matches = re.findall(chunking_config['marker_pattern'], text, re.MULTILINE)
+            chunking_config['markers_found'] = len(matches)
+            
+            # Se encontrou marcadores, usar configuração do perfil
+            if matches:
+                return chunking_config
+    
+    # Fallback: Detectar automaticamente (comportamento anterior)
     # Detectar OpenVAS: começa com "NVT: "
     nvt_matches = re.findall(r'^\s*NVT:\s', text, re.MULTILINE)
     
-    # Detectar Tenable WAS: começa com "VULNERABILITY"
-    vuln_matches = re.findall(r'^\s*VULNERABILITY\s', text, re.MULTILINE)
+    # Detectar Tenable WAS: padrão "VULNERABILITY CRITICAL/HIGH/MEDIUM/LOW PLUGIN ID XXXX"
+    vuln_matches = re.findall(r'^\s*VULNERABILITY\s+(CRITICAL|HIGH|MEDIUM|LOW)\s+PLUGIN\s+ID\s+\d+', text, re.MULTILINE)
     
     if nvt_matches:
         return {
             'scanner_type': 'openvas',
             'marker_pattern': r'^\s*NVT:\s',
             'has_pairs': False,
-            'markers_found': len(nvt_matches)
+            'markers_found': len(nvt_matches),
+            'min_chunk_tokens': 800,
+            'force_break_at_markers': True,
+            'max_vulnerabilities_per_chunk': 5
         }
     elif vuln_matches:
         return {
             'scanner_type': 'tenable_was',
-            'marker_pattern': r'^\s*VULNERABILITY\s',
-            'has_pairs': True,  # Tenable WAS usa pares
-            'markers_found': len(vuln_matches)
+            'marker_pattern': r'^\s*VULNERABILITY\s+(CRITICAL|HIGH|MEDIUM|LOW)\s+PLUGIN\s+ID\s+\d+',
+            'has_pairs': True,
+            'markers_found': len(vuln_matches),
+            'min_chunk_tokens': 1000,
+            'force_break_at_markers': True,
+            'max_vulnerabilities_per_chunk': 3
         }
     else:
         return {
             'scanner_type': 'generic',
             'marker_pattern': None,
             'has_pairs': False,
-            'markers_found': 0
+            'markers_found': 0,
+            'min_chunk_tokens': 1000,
+            'force_break_at_markers': False,
+            'max_vulnerabilities_per_chunk': 4
         }
 
 
@@ -422,22 +419,17 @@ def register_scanner_pattern(scanner_name: str, marker_pattern: str, has_pairs: 
     pass
 
 
-def split_text_to_subchunks(text: str, target_size: int) -> List[str]:
+def split_text_to_subchunks(text: str, target_size: int, profile_config: dict = None) -> List[str]:
     """
-    Divide texto grande em subchunks menores - VERSÃO OTIMIZADA baseada na análise.
-    
-    Estratégia melhorada:
-    1. Usa target_size menor (baseado na análise: ~7,763 chars funcionou melhor)
-    2. Detecta tipo de scanner mais precisamente
-    3. Força criação de mais chunks menores
-    4. Evita chunks grandes problemáticos
+    Divide texto grande em subchunks menores - VERSÃO CUSTOMIZÁVEL.
     
     Args:
         text: Texto a dividir
         target_size: Tamanho alvo em caracteres
+        profile_config: Configuração do perfil/scanner (opcional)
     
     Returns:
-        Lista de subchunks otimizados
+        Lista de subchunks otimizados baseados nas configurações do scanner
     """
     if len(text) <= target_size:
         return [text]
@@ -446,12 +438,11 @@ def split_text_to_subchunks(text: str, target_size: int) -> List[str]:
     if not lines:
         return [text]
     
-    # OTIMIZAÇÃO: Reduzir target_size para evitar chunks grandes
-    # Análise mostrou que chunks de ~7,763 chars funcionaram melhor
+    # OTIMIZAÇÃO: Usar configurações do scanner se disponível
     optimized_target = min(target_size, 8000)  # Máximo 8K chars por chunk
     
-    # Detectar padrão
-    pattern_info = detect_scanner_pattern(text)
+    # Detectar padrão com configurações customizáveis
+    pattern_info = detect_scanner_pattern(text, profile_config)
     
     # Se não encontrou padrão, fazer divisão simples otimizada
     if pattern_info['marker_pattern'] is None:
@@ -471,8 +462,10 @@ def split_text_to_subchunks(text: str, target_size: int) -> List[str]:
     current_lines = []
     current_size = 0
     
-    # NOVA ESTRATÉGIA: Processar em grupos menores de vulnerabilidades
-    vulns_per_chunk = 2 if pattern_info['has_pairs'] else 3  # Tenable: 2 vulns, OpenVAS: 3 vulns
+    # NOVA ESTRATÉGIA CUSTOMIZÁVEL: Usar configurações do scanner
+    vulns_per_chunk = pattern_info.get('max_vulnerabilities_per_chunk', 3)
+    if pattern_info.get('has_pairs'):
+        vulns_per_chunk = max(2, vulns_per_chunk // 2)  # Reduzir para pares
     
     i = 0
     while i < len(marker_lines):

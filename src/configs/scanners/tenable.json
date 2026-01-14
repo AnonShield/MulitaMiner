@@ -5,6 +5,16 @@
   "delay_between_chunks": 2,
   "output_file": "vulnerabilities_default_tenable.json",
   "consolidation_field": "Name",
-  "merge_instances_with_same_base": true
+  "merge_instances_with_same_base": true,
+  "chunking": {
+    "scanner_type": "tenable_was",
+    "marker_pattern": "^\\s*VULNERABILITY\\s+(CRITICAL|HIGH|MEDIUM|LOW)\\s+PLUGIN\\s+ID\\s+\\d+",
+    "has_pairs": true,
+    "min_chunk_tokens": 1000,
+    "force_break_at_markers": true,
+    "preserve_vulnerability_blocks": true,
+    "max_vulnerabilities_per_chunk": 3,
+    "description": "Tenable WAS usa pares BASE+INSTANCES, quebra sempre antes de marcadores VULNERABILITY"
+  }
 }
 

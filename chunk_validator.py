@@ -25,14 +25,10 @@ class ChunkValidator:
         self.profile_config = load_profile(profile_name)
         self.llm_config = load_llm(llm_name)
         
-        # USAR CONFIGURAÇÃO DIRETA DO DEEPSEEK
+        # CONFIGURAÇÃO SIMPLIFICADA
         if 'max_chunk_size' in self.llm_config:
-            # Usar configuração específica do LLM
-            chars_per_token = 3.2  # Estimativa conservadora
-            max_chunk_tokens = self.llm_config['max_chunk_size']
-            self.max_tokens = max_chunk_tokens + self.llm_config.get('reserve_for_response', 1500)
+            self.max_tokens = self.llm_config['max_chunk_size'] + self.llm_config.get('reserve_for_response', 1500)
         else:
-            # Fallback para configuração padrão
             self.max_tokens = self.llm_config.get('max_tokens', 4096)
         
         try:
@@ -40,14 +36,8 @@ class ChunkValidator:
         except:
             self.tokenizer = tiktoken.get_encoding("cl100k_base")
             
-        print(f"🔍 Chunk Validator inicializado")
-        print(f"📄 PDF: {os.path.basename(pdf_path)}")
-        print(f"⚙️  Profile: {profile_name}")
-        print(f"🧠 LLM: {llm_name} (max_tokens: {self.max_tokens})")
-        
-        if 'max_chunk_size' in self.llm_config:
-            print(f"🎯 Chunk size configurado: {self.llm_config['max_chunk_size']} tokens")
-        
+        print(f"🔍 Validator: {os.path.basename(pdf_path)} | {profile_name} | {llm_name}")
+        print(f"🎯 Max tokens: {self.max_tokens}")
         print(f"{'='*70}")
     
     def load_and_analyze_document(self):
@@ -89,54 +79,38 @@ class ChunkValidator:
         
         # Gerar chunks usando sistema atual
         chunks = get_token_based_chunks(text, self.max_tokens, 
-                                       llm_config=self.llm_config)
+                                       llm_config=self.llm_config,
+                                       profile_config=self.profile_config)
         
-        print(f"📊 Total de chunks gerados: {len(chunks)}")
-        print(f"\n📝 ANÁLISE DETALHADA DOS CHUNKS:\n")
+        print(f"📊 Chunks: {len(chunks)}")
+        print(f"📝 ANÁLISE:\n")
         
         issues_found = []
+        max_content_tokens = self.max_tokens - 1500  # Reserve para prompt + resposta
         
         for i, chunk in enumerate(chunks, 1):
-            print(f"🧩 CHUNK {i}/{len(chunks)}")
-            print(f"{'─'*50}")
-            
-            # Análise básica
-            char_count = len(chunk.page_content)
             token_count = len(self.tokenizer.encode(chunk.page_content))
-            
-            print(f"📏 Tamanho: {char_count:,} caracteres, ~{token_count:,} tokens")
-            
-            # Verificar se está dentro dos limites
-            max_content_tokens = self.max_tokens - 1500  # Reserve para prompt + resposta
-            status = "✅ OK" if token_count <= max_content_tokens else "⚠️  MUITO GRANDE"
-            print(f"🎯 Status de tamanho: {status}")
-            
-            if token_count > max_content_tokens:
-                issues_found.append(f"Chunk {i}: {token_count} tokens > {max_content_tokens} (limite)")
-            
-            # Análise de estrutura
             markers = self._count_vulnerability_markers(chunk.page_content, pattern_info)
-            print(f"🏷️  Marcadores de vulnerabilidade: {markers}")
-            
-            # Verificar início e fim
             begins_cleanly = self._check_clean_beginning(chunk.page_content, pattern_info)
             ends_cleanly = self._check_clean_ending(chunk.page_content, pattern_info)
             
-            print(f"🟢 Início limpo: {'✅' if begins_cleanly else '❌'}")
-            print(f"🔚 Final limpo: {'✅' if ends_cleanly else '❌'}")
+            # Status simplificado
+            size_ok = token_count <= max_content_tokens
+            struct_ok = begins_cleanly and ends_cleanly
             
+            print(f"🧩 {i:2d}: {token_count:4d}t, {markers:2d}m, {'✅' if size_ok else '❌'}, {'✅' if struct_ok else '❌'}")
+            
+            # Coletar problemas
+            if not size_ok:
+                issues_found.append(f"Chunk {i}: {token_count} tokens > {max_content_tokens}")
             if not begins_cleanly:
-                issues_found.append(f"Chunk {i}: Início truncado ou incompleto")
+                issues_found.append(f"Chunk {i}: Início truncado")
             if not ends_cleanly:
-                issues_found.append(f"Chunk {i}: Final truncado ou incompleto")
-                
-            # Verificar pares para Tenable WAS
-            if pattern_info['has_pairs']:
-                pair_status = self._analyze_tenable_pairs(chunk.page_content)
-                print(f"👥 Análise de pares: {pair_status}")
-                
-            print(f"{'─'*50}\n")
+                issues_found.append(f"Chunk {i}: Final truncado")
+            if not ends_cleanly:
+                issues_found.append(f"Chunk {i}: Final truncado")
         
+        print(f"\n📈 Resumo: {len(issues_found)} problemas encontrados")
         return issues_found
     
     def _count_vulnerability_markers(self, text: str, pattern_info: dict) -> int:
@@ -153,11 +127,22 @@ class ChunkValidator:
         lines = text.strip().split('\n')
         if not lines:
             return False
-            
-        # Primeira linha não-vazia deve ser um marcador OU estar próxima de um
-        for line in lines[:5]:  # Verifica primeiras 5 linhas
+        
+        # CORREÇÃO: Para Tenable WAS, precisa encontrar o padrão completo nas primeiras linhas
+        # O título da vulnerabilidade pode estar antes do marcador VULNERABILITY [SEVERITY] PLUGIN ID
+        
+        # Primeira linha não-vazia deve ser um marcador OU estar próxima de um (até 10 linhas)
+        for i, line in enumerate(lines[:10]):  # Verifica primeiras 10 linhas
             if re.search(pattern_info['marker_pattern'], line):
                 return True
+            
+        # Se é Tenable WAS e não encontrou o marcador, pode ser título antes do marcador
+        if pattern_info['scanner_type'] == 'tenable_was':
+            # Verifica se nas primeiras 15 linhas há o padrão
+            search_text = '\n'.join(lines[:15])
+            if re.search(pattern_info['marker_pattern'], search_text, re.MULTILINE):
+                return True
+                
         return False
     
     def _check_clean_ending(self, text: str, pattern_info: dict) -> bool:
@@ -187,7 +172,8 @@ class ChunkValidator:
     
     def _analyze_tenable_pairs(self, text: str) -> str:
         """Analisa pares BASE+INSTANCES para Tenable WAS"""
-        base_vulns = re.findall(r'^VULNERABILITY.*?PLUGIN ID \d+', text, re.MULTILINE)
+        # CORREÇÃO: Usar o padrão correto para detectar vulnerabilidades BASE
+        base_vulns = re.findall(r'^\s*VULNERABILITY\s+(CRITICAL|HIGH|MEDIUM|LOW)\s+PLUGIN\s+ID\s+\d+', text, re.MULTILINE)
         instances_vulns = re.findall(r'Instances \(\d+\)', text)
         
         if not base_vulns:
@@ -199,107 +185,50 @@ class ChunkValidator:
     
     def suggest_improvements(self, issues: list, text: str, pattern_info: dict):
         """Sugere melhorias baseado nos problemas encontrados"""
-        print(f"\n{'='*70}")
-        print("💡 SUGESTÕES DE MELHORIAS")
-        print(f"{'='*70}")
-        
         if not issues:
-            print("🎉 Nenhum problema crítico encontrado!")
-            print("✅ Sistema de chunking está funcionando adequadamente")
+            print("✅ Sistema de chunking funcionando adequadamente")
             return
             
-        print(f"⚠️  Problemas identificados: {len(issues)}\n")
-        
-        # Categorizar problemas
-        size_issues = [i for i in issues if "tokens >" in i]
-        structure_issues = [i for i in issues if "truncado" in i or "incompleto" in i]
+        print(f"\n💡 PROBLEMAS ({len(issues)}):")
+        size_issues = sum(1 for i in issues if "tokens >" in i)
+        structure_issues = sum(1 for i in issues if "truncado" in i)
         
         if size_issues:
-            print("📏 PROBLEMAS DE TAMANHO:")
-            for issue in size_issues:
-                print(f"   • {issue}")
-            print("\n💡 Sugestões:")
-            print(f"   • Reduzir chunk_size em text_splitter.py")
-            print(f"   • Atual: usar {self.max_tokens-1500} tokens máximo por chunk")
-            print(f"   • Considerando overhead de prompt (~500) + resposta (~1000)")
-            
+            print(f"   • {size_issues} chunks muito grandes")
         if structure_issues:
-            print(f"\n🏗️  PROBLEMAS DE ESTRUTURA:")
-            for issue in structure_issues:
-                print(f"   • {issue}")
-            print("\n💡 Sugestões:")
-            print("   • Melhorar lógica de divisão em split_text_to_subchunks")
-            print("   • Garantir que chunks comecem/terminem em marcadores apropriados")
-            if pattern_info['has_pairs']:
-                print("   • Para Tenable: preservar pares BASE+INSTANCES completos")
-    
-    def test_alternative_chunking(self, text: str, pattern_info: dict):
-        """Testa estratégia alternativa de chunking"""
-        print(f"\n{'='*70}")
-        print("🧪 TESTE DE ESTRATÉGIA ALTERNATIVA")
-        print(f"{'='*70}")
+            print(f"   • {structure_issues} chunks com estrutura problemática")
         
-        # Calcular tamanho ideal baseado em tokens
+        print("💡 Soluções: Ajustar configurações do scanner em src/configs/scanners/")
+        
+    def test_alternative_chunking(self, text: str, pattern_info: dict):
+        """Testa estratégia alternativa simplificada"""
+        print(f"\n🧪 TESTE ALTERNATIVO:")
         max_content_tokens = self.max_tokens - 1500
         chars_per_token = len(text) / len(self.tokenizer.encode(text))
-        target_chars = int(max_content_tokens * chars_per_token * 0.9)  # 90% de segurança
+        target_chars = int(max_content_tokens * chars_per_token * 0.9)
         
-        print(f"📊 Análise de proporção:")
-        print(f"   • Total caracteres: {len(text):,}")
-        print(f"   • Total tokens: ~{len(self.tokenizer.encode(text)):,}")
-        print(f"   • Chars/token: ~{chars_per_token:.1f}")
-        print(f"   • Target chars por chunk: ~{target_chars:,}")
-        
-        # Testar nova divisão
-        alternative_chunks = split_text_to_subchunks(text, target_chars)
-        
-        print(f"\n🔄 Chunks alternativos gerados: {len(alternative_chunks)}")
-        
-        # Analisar qualidade dos chunks alternativos
-        print("\n📝 ANÁLISE DOS CHUNKS ALTERNATIVOS:\n")
-        
-        for i, chunk_text in enumerate(alternative_chunks[:3], 1):  # Só primeiros 3 para não poluir
-            token_count = len(self.tokenizer.encode(chunk_text))
-            markers = self._count_vulnerability_markers(chunk_text, pattern_info)
-            
-            print(f"🧩 Chunk alternativo {i}: {len(chunk_text):,} chars, ~{token_count:,} tokens, {markers} vulns")
-            
-            if token_count > max_content_tokens:
-                print("   ⚠️  Ainda muito grande")
-            else:
-                print("   ✅ Tamanho adequado")
-        
-        if len(alternative_chunks) > 3:
-            print(f"   ... e mais {len(alternative_chunks)-3} chunks")
+        alternative_chunks = split_text_to_subchunks(text, target_chars, self.profile_config)
+        print(f"Alternativo criaria {len(alternative_chunks)} chunks")
     
     def run_complete_analysis(self):
-        """Executa análise completa"""
-        print("🚀 Iniciando análise completa de chunks...\n")
+        """Executa análise simplificada"""
+        print("🚀 Analisando chunks...")
         
-        # 1. Carregar documento
+        # Carregar documento
         result = self.load_and_analyze_document()
         if not result:
             return
         text, pattern_info = result
         
-        # 2. Analisar chunks atuais
+        # Analisar chunks
         issues = self.analyze_chunks(text, pattern_info)
         
-        # 3. Sugerir melhorias
-        self.suggest_improvements(issues, text, pattern_info)
-        
-        # 4. Testar alternativa
+        # Resultado final
+        self.suggest_improvements(issues, text, pattern_info) 
         self.test_alternative_chunking(text, pattern_info)
         
-        print(f"\n{'='*70}")
-        print("🏁 ANÁLISE COMPLETA FINALIZADA")
-        print(f"{'='*70}")
-        
-        if not issues:
-            print("✅ Sistema de chunking está funcionando corretamente!")
-        else:
-            print(f"⚠️  Encontrados {len(issues)} problemas que podem afetar qualidade")
-            print("💡 Revise as sugestões acima para otimizar o sistema")
+        status = "✅ OK" if not issues else f"⚠️ {len(issues)} problemas"
+        print(f"\n🏁 RESULTADO: {status}")
 
 
 if __name__ == "__main__":

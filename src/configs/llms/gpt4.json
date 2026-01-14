@@ -1,21 +1,9 @@
 {
   "api_key": "api_key_gpt4",
   "endpoint": "https://api.openai.com/v1",
-  "model": "gpt-4.1-2025-04-14",
+  "model": "gpt-4o-mini-2024-07-18",
   "temperature": 0.0,
   "max_completion_tokens": 12000,
-  "timeout": 120,
-  "reserve_for_response": 4000,
-  "prompt_overhead": 300,
-  "system_overhead": 200,
-  "safety_buffer": 200,
   "max_chunk_size": 7300,
-  "context_window": 128000,
-  "chunk_overlap": 50,
-  "calculation_formula": "max_chunk_size = max_completion_tokens - reserve_for_response - prompt_overhead - system_overhead - safety_buffer",
-  "calculated_verification": "7300 + 4000 + 300 + 200 + 200 = 12000 (max_completion_tokens)",
-  "strict_enforcement": true,
-  "never_exceed_limit": true,
-  "maximize_chunk_size": true,
-  "zero_exceedance_guarantee": true
+  "reserve_for_response": 4000
 }

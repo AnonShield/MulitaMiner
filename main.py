@@ -329,7 +329,8 @@ def main():
         documents[0].page_content,
         max_tokens,
         reserve_response,
-        llm_config  # Passar configuração completa do LLM
+        llm_config,  # Passar configuração completa do LLM
+        profile_config  # Configuração do scanner
     )
     print(f"Total de chunks: {len(doc_texts)}\n")
     

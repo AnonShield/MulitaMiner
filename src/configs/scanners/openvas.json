@@ -5,5 +5,15 @@
   "delay_between_chunks": 2,
   "remove_duplicates": true,
   "output_file": "vulnerabilities_default_openvas.json",
-  "consolidation_field": "Name"
+  "consolidation_field": "Name",
+  "chunking": {
+    "scanner_type": "openvas",
+    "marker_pattern": "^\\s*NVT:\\s",
+    "has_pairs": false,
+    "min_chunk_tokens": 800,
+    "force_break_at_markers": true,
+    "preserve_vulnerability_blocks": true,
+    "max_vulnerabilities_per_chunk": 5,
+    "description": "OpenVAS usa marcadores NVT:, sem pares, permite mais vulnerabilidades por chunk"
+  }
 }

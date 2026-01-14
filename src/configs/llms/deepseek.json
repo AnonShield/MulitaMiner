@@ -4,19 +4,6 @@
   "model": "deepseek-coder",
   "temperature": 0.0,
   "max_tokens": 4096,
-  "timeout": 300,
-  "reserve_for_response": 1500,
-  "prompt_overhead": 300,
-  "system_overhead": 200,
-  "safety_buffer": 150,
   "max_chunk_size": 1750,
-  "context_window": 32768,
-  "chunk_overlap": 50,
-  "calculation_formula": "max_chunk_size = max_tokens - reserve_for_response - prompt_overhead - system_overhead - safety_buffer",
-  "calculated_verification": "1750 + 1500 + 300 + 200 + 150 = 3900 < 4096",
-  "strict_enforcement": true,
-  "never_exceed_limit": true,
-  "ultra_safe_mode": false,
-  "maximize_chunk_size": true,
-  "zero_exceedance_guarantee": true
+  "reserve_for_response": 1500
 }

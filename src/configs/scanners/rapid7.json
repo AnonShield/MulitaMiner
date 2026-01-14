@@ -1,0 +1,19 @@
+{
+  "reader": "rapid7",
+  "prompt_template": "src/configs/templates/default_prompt.txt",
+  "retry_attempts": 3,
+  "delay_between_chunks": 2,
+  "output_file": "vulnerabilities_rapid7.json",
+  "consolidation_field": "Name",
+  "remove_duplicates": true,
+  "chunking": {
+    "scanner_type": "rapid7",
+    "marker_pattern": "^\\s*Vulnerability:\\s",
+    "has_pairs": false,
+    "min_chunk_tokens": 900,
+    "force_break_at_markers": true,
+    "preserve_vulnerability_blocks": true,
+    "max_vulnerabilities_per_chunk": 5,
+    "description": "Rapid7 InsightVM scanner"
+  }
+}
