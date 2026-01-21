@@ -246,6 +246,11 @@ python main.py <pdf_path> [opções]
 - `--csv-delimiter <delim>`: Delimitador CSV (padrão: ',')
 - `--csv-encoding <codif>`: Codificação CSV (padrão: 'utf-8-sig')
 
+**Opções de Avaliação de Métricas:**
+- `--evaluate`: Ativa a avaliação de métricas (benchmarking) após a extração.
+- `--baseline <path>`: Caminho para o arquivo `.xlsx` de "ground truth" para comparação (obrigatório com `--evaluate`).
+- `--evaluation-method <method>`: Algoritmo de avaliação a ser usado (`bert` ou `rouge`). Padrão: `bert`.
+
 ### Exemplos de Uso
 
 #### Uso Básico
@@ -301,13 +306,26 @@ python main.py cais_tenable.pdf \
   --convert xlsx
 ```
 
+#### Uso Avançado: Extração com Avaliação de Métricas
+É possível executar a extração e, na mesma operação, avaliar a qualidade do resultado comparando-o com um arquivo de "ground truth" (baseline).
+
+```bash
+# Extrai vulnerabilidades e avalia a qualidade da extração usando o método 'bert'
+python main.py relatorio_tenable.pdf \
+  --scanner tenable \
+  --convert all \
+  --evaluate \
+  --baseline metrics/baselines/tenable/TenableWAS_JuiceShop.xlsx \
+  --evaluation-method bert
+```
+
 #### Validação e Debugging
 ```bash
 # Validação de chunks antes do processamento
-python chunk_validator.py relatorio.pdf
+python tools/chunk_validator.py relatorio.pdf
 
 # Análise detalhada de chunks por LLM
-python chunk_validator.py relatorio.pdf --LLM gpt4 --scanner tenable
+python tools/chunk_validator.py relatorio.pdf --LLM gpt4 --scanner tenable
 ```
 
 ### Fluxo de Processamento

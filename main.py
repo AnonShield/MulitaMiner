@@ -12,6 +12,7 @@ import os
 import sys
 import argparse
 import json
+import subprocess
 from tqdm import tqdm
 
 # Force UTF-8 encoding on Windows
@@ -47,23 +48,34 @@ def parse_arguments() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         description='Extrai vulnerabilidades de relatórios PDF usando LLM'
     )
+    # Grupo principal de argumentos
     parser.add_argument('pdf_path', help='Caminho para o arquivo PDF')
     parser.add_argument('--scanner', default='default', 
                        help='Scanner de configuração (padrão: default)')
     parser.add_argument('--LLM', default='gpt4', 
                        help='Nome do LLM a usar (padrão: gpt4)')
     
-    # Opções de conversão
-    parser.add_argument('--convert', choices=['csv', 'xlsx', 'tsv', 'all', 'none'],
+    # Grupo de opções de conversão
+    conversion_group = parser.add_argument_group('Opções de Conversão')
+    conversion_group.add_argument('--convert', choices=['csv', 'xlsx', 'tsv', 'all', 'none'],
                        default='none',
-                       help='Converter saída JSON para formato específico (padrão: none)')
-    parser.add_argument('--output', help='Caminho do arquivo de saída para conversão')
-    parser.add_argument('--output-dir', dest='output_dir',
+                       help='Converter saída JSON para formato específico. Use "all" ou "xlsx" para avaliação.')
+    conversion_group.add_argument('--output', help='Caminho do arquivo de saída para conversão')
+    conversion_group.add_argument('--output-dir', dest='output_dir',
                        help='Diretório de saída para arquivos convertidos')
-    parser.add_argument('--csv-delimiter', dest='csv_delimiter', default=',',
+    conversion_group.add_argument('--csv-delimiter', dest='csv_delimiter', default=',',
                        help='Delimitador para CSV (padrão: ,)')
-    parser.add_argument('--csv-encoding', dest='csv_encoding', default='utf-8-sig',
+    conversion_group.add_argument('--csv-encoding', dest='csv_encoding', default='utf-8-sig',
                        help='Codificação para CSV (padrão: utf-8-sig)')
+
+    # Grupo de opções de avaliação de métricas
+    evaluation_group = parser.add_argument_group('Opções de Avaliação de Métricas')
+    evaluation_group.add_argument('--evaluate', action='store_true',
+                                 help='Ativa a avaliação de métricas após a extração.')
+    evaluation_group.add_argument('--baseline', type=str,
+                                 help='Caminho para o arquivo .xlsx de ground truth para comparação.')
+    evaluation_group.add_argument('--evaluation-method', choices=['bert', 'rouge'], default='bert',
+                                 help='Método de avaliação a ser usado (padrão: bert).')
     
     return parser.parse_args()
 
@@ -73,6 +85,19 @@ def validate_inputs(args: argparse.Namespace) -> bool:
     if not os.path.isfile(args.pdf_path):
         print(f"Erro: Arquivo PDF não encontrado: {args.pdf_path}")
         return False
+    
+    # Validação para o modo de avaliação
+    if args.evaluate:
+        if not args.baseline:
+            print("Erro: O argumento --baseline é obrigatório quando --evaluate é usado.")
+            return False
+        if not os.path.isfile(args.baseline):
+            print(f"Erro: Arquivo de baseline não encontrado: {args.baseline}")
+            return False
+        if args.convert not in ['xlsx', 'all']:
+            print("Aviso: Para avaliação, a conversão para '.xlsx' é necessária. Ativando a conversão para 'all'.")
+            args.convert = 'all'
+
     return True
 
 
@@ -278,6 +303,56 @@ def save_results(vulnerabilities: list, output_file: str, profile_config: dict =
         return False
 
 
+def run_evaluation(args: argparse.Namespace, extraction_output_path: str):
+    """
+    Executa o script de avaliação de métricas como um processo separado.
+    
+    Args:
+        args: Argumentos da linha de comando, contendo --baseline e --evaluation-method.
+        extraction_output_path: Caminho para o arquivo .xlsx gerado pela extração.
+    """
+    print(f"\n{'='*60}")
+    print(f"Iniciando avaliação de métricas com o método: '{args.evaluation_method}'")
+    print(f"{'='*60}")
+
+    method = args.evaluation_method
+    script_path = os.path.join('metrics', method, f'compare_extractions_{method}.py')
+    
+    if not os.path.isfile(script_path):
+        print(f"Erro: Script de avaliação não encontrado em '{script_path}'")
+        return
+
+    # O diretório de saída será relativo ao script de métricas
+    output_dir = os.path.join('metrics', method, 'results')
+
+    command = [
+        sys.executable,  # Usa o mesmo interpretador Python que está executando o main
+        script_path,
+        '--baseline_file', args.baseline,
+        '--extraction_file', extraction_output_path,
+        '--output_dir', output_dir
+    ]
+    
+    try:
+        print(f"Executando comando: {' '.join(command)}")
+        subprocess.run(command, check=True, capture_output=True, text=True, encoding='utf-8')
+        print(f"\n[SUCESSO] Avaliação de métricas concluída.")
+        print(f"Resultados salvos no diretório: '{output_dir}'")
+        
+    except FileNotFoundError:
+        print(f"Erro: Python ou o script '{script_path}' não foi encontrado.")
+        print("Verifique se o ambiente virtual de 'metrics' está configurado corretamente.")
+    except subprocess.CalledProcessError as e:
+        print("\n[ERRO] A avaliação de métricas falhou.")
+        print(f"  Comando: {' '.join(e.cmd)}")
+        print(f"  Código de Saída: {e.returncode}")
+        print("\n--- Saída Padrão (stdout) do Script de Métricas ---\n")
+        print(e.stdout)
+        print("\n--- Saída de Erro (stderr) do Script de Métricas ---\n")
+        print(e.stderr)
+        print("-------------------------------------------------")
+
+
 def main():
     """Fluxo principal de extração."""
     # Parse e validação
@@ -341,14 +416,25 @@ def main():
         # Salvar resultados e conversões
         output_file = profile_config['output_file']
         if save_results(all_vulnerabilities, output_file, profile_config):
+            xlsx_output_path = None
             try:
-                converted = execute_conversions(output_file, args)
-                if converted:
-                    print(f"\nConversões geradas: {len(converted)}")
-                    for c in converted:
+                converted_files = execute_conversions(output_file, args)
+                if converted_files:
+                    print(f"\nConversões geradas: {len(converted_files)}")
+                    for c in converted_files:
                         print(f"  - {c}")
+                        if c.endswith('.xlsx'):
+                            xlsx_output_path = c
             except Exception as e:
                 print(f"Erro ao executar conversões: {e}")
+            
+            # Etapa de avaliação de métricas
+            if args.evaluate:
+                if xlsx_output_path and os.path.isfile(xlsx_output_path):
+                    run_evaluation(args, xlsx_output_path)
+                else:
+                    print("\n[AVISO] Avaliação de métricas pulada.")
+                    print("Motivo: A conversão para .xlsx não foi solicitada ou falhou.")
         else:
             print(f"\n[ERRO] Falha ao salvar resultados em {output_file}")
             

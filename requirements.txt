@@ -17,6 +17,9 @@ deepmerge>=1.1.0,<2.0.0
 pandas>=1.3.0,<3.0.0
 openpyxl>=3.0.0,<4.0.0
 
+# Optional Dependencies - For metrics evaluation
+rapidfuzz>=3.0.0,<4.0.0
+
 # =================================================================
 # Installation Instructions:
 # =================================================================
