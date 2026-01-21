@@ -1,6 +1,8 @@
 import re
 import warnings
 import sys
+import argparse
+import os
 from rapidfuzz import fuzz
 from typing import Dict, List, Tuple, Optional
 from collections import Counter
@@ -10,6 +12,17 @@ from tqdm import tqdm
 import pandas as pd
 
 warnings.filterwarnings("ignore")
+
+# Configuração de encoding UTF-8 para compatibilidade Windows/Linux
+if sys.platform.startswith('win'):
+    # Force UTF-8 encoding on Windows
+    if sys.stdout.encoding and sys.stdout.encoding.lower() != 'utf-8':
+        import io
+        sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
+        sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding='utf-8')
+    
+    # Set environment variable for subprocess
+    os.environ['PYTHONIOENCODING'] = 'utf-8'
 
 # Adiciona o diretório raiz ao path para importar o módulo comum
 sys.path.insert(0, str(Path(__file__).parents[1]))
@@ -22,7 +35,6 @@ from common.matching import best_fuzzy_match
 # =========================
 # CONFIG (específico para BERTScore)
 # =========================
-BASELINE_FILE = Path(__file__).parent / "TenableWAS_JuiceShop_with_extraction.xlsx"
 BASELINE_SHEET = "Vulnerabilities"
 
 # Abas de extração para comparar
@@ -385,52 +397,90 @@ def process_extraction_comparison_bertscore(baseline_df: pd.DataFrame, extractio
     return per_vuln_df, summary_df, mapping_debug_df, categorization_df, baseline_instances_matched, total_baseline_instances
 
 
+def parse_arguments():
+    """Parse argumentos da linha de comando."""
+    parser = argparse.ArgumentParser(
+        description='Compara extrações com baseline usando métricas BERT'
+    )
+    
+    parser.add_argument('--baseline_file', type=str, required=True,
+                       help='Caminho para o arquivo Excel da baseline')
+    parser.add_argument('--extraction_file', type=str, required=True,
+                       help='Caminho para o arquivo Excel com as extrações')
+    parser.add_argument('--output_dir', type=str, required=True,
+                       help='Diretório onde salvar os resultados')
+    
+    return parser.parse_args()
+
 def main():
+    # Parse argumentos da linha de comando
+    args = parse_arguments()
+    
+    baseline_file = args.baseline_file
+
+    output_dir = Path(args.output_dir)
+    
     global ALLOW_BASELINE_DUPLICATES
     
-    print("=== Comparação de Múltiplas Extrações com Baseline (BERTScore) ===")
+    print("=== Comparacao de Multiplas Extracoes com Baseline (BERTScore) ===")
     
-    # Pergunta interativa sobre duplicatas
-    print("\nA baseline pode conter duplicatas legítimas?")
+    # Configuração automática para duplicatas (sem interação manual)
+    ALLOW_BASELINE_DUPLICATES = True  # Permite duplicatas legítimas por padrão
+    print(f"\n[OK] Modo automatico: duplicatas legitimas permitidas")
     
-    while True:
-        user_input = input("\nPermitir duplicatas na baseline? [y/n]: ").strip().lower()
-        if user_input in ['y', 'yes', 's', 'sim']:
-            ALLOW_BASELINE_DUPLICATES = True
-            print("✅ Duplicatas permitidas")
-            break
-        elif user_input in ['n', 'no', 'não', 'nao']:
-            ALLOW_BASELINE_DUPLICATES = False
-            print("✅ Duplicatas não permitidas")
-            break
-        else:
-            print("⚠️  Por favor, responda 'y' (sim) ou 'n' (não)")
+    # Verifica se os arquivos existem
+    if not Path(baseline_file).exists():
+        print(f"[ERRO] Arquivo baseline nao encontrado: {baseline_file}")
+        sys.exit(1)
     
-    print(f"\nCarregando arquivo: {BASELINE_FILE}")
+    if not Path(args.extraction_file).exists():
+        print(f"[ERRO] Arquivo de extracao nao encontrado: {args.extraction_file}")
+        sys.exit(1)
+    
+    # Cria diretório de saída se não existir
+    args.output_dir = Path(args.output_dir)
+    args.output_dir.mkdir(parents=True, exist_ok=True)
+    
+    print(f"\nCarregando arquivo: {baseline_file}")
 
-    excel_data = pd.ExcelFile(BASELINE_FILE)
+    excel_data = pd.ExcelFile(baseline_file)
 
     print(f"Carregando aba baseline: {BASELINE_SHEET}")
-    baseline_df = pd.read_excel(BASELINE_FILE, sheet_name=BASELINE_SHEET)
+    baseline_df = pd.read_excel(baseline_file, sheet_name=BASELINE_SHEET)
 
     print(f"Baseline carregado - Shape: {baseline_df.shape}")
     print(f"Colunas baseline: {list(baseline_df.columns)}")
 
-    available_sheets = [sheet for sheet in EXTRACTION_SHEETS if sheet in excel_data.sheet_names]
-    missing_sheets = [sheet for sheet in EXTRACTION_SHEETS if sheet not in excel_data.sheet_names]
-
-    if missing_sheets:
-        print(f"\nAbas não encontradas: {missing_sheets}")
-
-    print(f"\nAbas de extração encontradas: {available_sheets}")
+    # Verifica se precisamos carregar do arquivo de extracao para comparacoes
+    extraction_excel_data = pd.ExcelFile(args.extraction_file)
+    
+    # Primeiro tenta encontrar abas de extração múltipla
+    available_sheets = [sheet for sheet in EXTRACTION_SHEETS if sheet in extraction_excel_data.sheet_names]
+    
+    # Se não encontrou abas de extração múltipla, verifica se é um arquivo de extração simples
+    if not available_sheets and 'Vulnerabilities' in extraction_excel_data.sheet_names:
+        print("Arquivo de extracao simples detectado - usando aba 'Vulnerabilities'")
+        available_sheets = ['Vulnerabilities']
+        EXTRACTION_SHEETS_TO_USE = ['Vulnerabilities']
+    else:
+        EXTRACTION_SHEETS_TO_USE = EXTRACTION_SHEETS
+    
+    missing_sheets = [sheet for sheet in EXTRACTION_SHEETS_TO_USE if sheet not in extraction_excel_data.sheet_names]
+    
+    if missing_sheets and available_sheets:
+        print(f"\nAbas nao encontradas: {missing_sheets}")
+    
+    print(f"\nAbas de extracao encontradas: {available_sheets}")
+    
+    if not available_sheets:
+        print("Nenhuma aba de extracao encontrada para comparacao!")
+        return
 
     general_summary = []
 
-    # prepara o diretório de saída por baseline (dentro de bert/results/<baseline_name>)
-    baseline_name = Path(BASELINE_FILE).stem
+    # prepara o diretório de saída por baseline
+    baseline_name = Path(baseline_file).stem
     baseline_name = "_".join(baseline_name.split())
-    output_dir = Path(__file__).parent / "results" / baseline_name
-    output_dir.mkdir(parents=True, exist_ok=True)
 
     for extraction_sheet in available_sheets:
         print(f"\n{'='*60}")
@@ -438,7 +488,7 @@ def main():
         print('='*60)
 
         try:
-            extraction_df = pd.read_excel(BASELINE_FILE, sheet_name=extraction_sheet)
+            extraction_df = pd.read_excel(args.extraction_file, sheet_name=extraction_sheet)
             print(f"Shape da extração: {extraction_df.shape}")
 
             per_vuln_df, summary_df, mapping_debug_df, categorization_df, baseline_instances_matched, total_baseline_instances = process_extraction_comparison_bertscore(
@@ -449,7 +499,7 @@ def main():
 
             clean_name = extraction_sheet.replace("Extração ", "").replace(" ", "_").lower()
             output_file = f"bert_comparison_{clean_name}.xlsx"
-            output_path = output_dir / output_file
+            output_path = args.output_dir / output_file
 
             with pd.ExcelWriter(output_path) as writer:
                 per_vuln_df.to_excel(writer, sheet_name="Per_Vulnerability", index=False)
@@ -524,7 +574,7 @@ def main():
 
     if general_summary:
         general_df = pd.DataFrame(general_summary)
-        summary_path = output_dir / "summary_all_extractions_bert.xlsx"
+        summary_path = args.output_dir / "summary_all_extractions_bert.xlsx"
         general_df.to_excel(summary_path, index=False)
         print(f"\n📊 Resumo geral salvo em: {summary_path}")
 
@@ -533,12 +583,12 @@ def main():
     print("\n📊 Arquivos gerados:")
     for extraction_sheet in available_sheets:
         clean_name = extraction_sheet.replace("Extração ", "").replace(" ", "_").lower()
-        print(f"   - {output_dir / f'bert_comparison_{clean_name}.xlsx'}")
+        print(f"   - {args.output_dir / f'bert_comparison_{clean_name}.xlsx'}")
         print(f"       • Per_Vulnerability: Scores BERTScore F1 detalhados por campo")
         print(f"       • Summary: Estatísticas agregadas (média, desvio, min, max, mediana)")
         print(f"       • Categorization: Classificação completa (Similarity + Absent + Non-existent)")
         print(f"       • Mapping_Debug: Debug do pareamento de nomes")
-    print(f"   - {output_dir / 'summary_all_extractions_bert.xlsx'} (comparação consolidada entre todos os modelos)")
+    print(f"   - {args.output_dir / 'summary_all_extractions_bert.xlsx'} (comparação consolidada entre todos os modelos)")
 
 
 if __name__ == "__main__":
