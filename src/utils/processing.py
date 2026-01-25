@@ -162,8 +162,22 @@ def get_token_based_chunks(text: str, max_tokens: int, reserve_for_response: int
     using_custom = 'CUSTOM' if profile_config and 'chunking' in profile_config else 'AUTO'
     print(f"[SCANNER] {scanner_type} ({using_custom})")
 
+    # FILTRAR TEXTO INICIAL PARA OPENVAS - Pular seções de índice/resumo
+    processed_text = text
+    if scanner_type == 'OPENVAS':
+        # Encontrar onde começam as vulnerabilidades reais (primeira linha com "NVT:")
+        # Ignorar as seções de índice que têm formato "8787/tcp High"
+        first_nvt_match = re.search(r'^\s*NVT:', text, re.MULTILINE)
+        if first_nvt_match:
+            # Começar a partir da primeira NVT real
+            start_pos = first_nvt_match.start()
+            processed_text = text[start_pos:]
+            print(f"[FILTER] Removidas {start_pos} caracteres de índice/resumo inicial")
+        else:
+            print(f"[FILTER] Nenhuma linha NVT: encontrada - processando texto completo")
+
     # Dividir por blocos de vulnerabilidades - VERSÃO CUSTOMIZÁVEL
-    lines = text.split('\n')
+    lines = processed_text.split('\n')
     chunks = []
     current_chunk = []
     current_tokens = 0

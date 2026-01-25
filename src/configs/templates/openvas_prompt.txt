@@ -27,12 +27,17 @@ STEP 1 - IDENTIFY NVT BLOCKS:
 🔹 Extract vulnerability name from text after "NVT: " prefix
 🔹 Do NOT use technical details, certificate info, or headers as names
 
-FORBIDDEN NAME SOURCES:
+FORBIDDEN NAME SOURCES (NEVER EXTRACT AS VULNERABILITIES):
 ❌ Technical details: "Certificate details: subject ...: C=DE,L=..."
 ❌ Section headers: "High 25/tcp", "Medium 443/tcp"  
+❌ Service summaries: "8787/tcp High", "80/tcp", "22/tcp"
+❌ Table of contents entries: "2.1.1 High 8787/tcp"
+❌ Port listings: "Service (Port) Threat Level"
 ❌ Configuration details: "valid from: 2018-08-21"
 ❌ Key/values: "serial ....: 5B7C65801F8422EBBDAD2299"
 ❌ Any line not starting with "NVT: "
+
+⚠️  CRITICAL: ONLY extract lines that literally begin with "NVT: " - these are the actual vulnerability findings!
 
 CORRECT NAME EXTRACTION:
 ✅ "NVT: SMTP too long line" → Name = "SMTP too long line"
