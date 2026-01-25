@@ -18,9 +18,11 @@ Each vulnerability may appear as:
 - MANDATORY: Convert HTML entities to normal characters in ALL extracted text:
   - &quot; → "
   - &#39; → '
-- CRITICAL: Preserve single quotes (') in vulnerability names exactly as shown
-  - Example: "Missing 'X-Frame-Options' Header Instances (1)" (keep the quotes around X-Frame-Options)
-  - Example: "Insecure 'Access-Control-Allow-Origin' Header Instances (25)" (keep the quotes)
+- CRITICAL: Preserve single quotes (') in vulnerability names exactly as shown (both BASE and INSTANCES)
+  - Example BASE: "Missing 'X-Frame-Options' Header" (keep the quotes around X-Frame-Options)
+  - Example INSTANCES: "Missing 'X-Frame-Options' Header Instances (1)" (keep the quotes)
+  - Example BASE: "Insecure 'Access-Control-Allow-Origin' Header" (keep the quotes)
+  - Example INSTANCES: "Insecure 'Access-Control-Allow-Origin' Header Instances (25)" (keep the quotes)
 - Extract vulnerability names from section titles without removing punctuation
 - Keep all special characters and punctuation exactly as they appear
   - &amp; → &
@@ -31,8 +33,24 @@ Each vulnerability may appear as:
 - When extracting error messages or SQL payloads, maintain exact format with quotes converted
 - Example: SQLITE_ERROR: near &quot;test&quot; becomes SQLITE_ERROR: near "test"
 
+**TABULAR FORMAT AWARENESS:**
+- CRITICAL: Many sections have tabular format with columns: [Severity] [PluginID] [Vulnerability Name] [Category] [Count]
+- Example line: "Low 98618 HTTP Header Information HTTP Security Header 25"
+  - Severity: "Low"
+  - Plugin: "98618"  
+  - Vulnerability Name: "HTTP Header Information" (continued on next line as "Disclosure")
+  - Category: "HTTP Security Header" (NOT part of vulnerability name)
+  - Count: "25"
+- DO NOT extract category names (like "HTTP Security Header", "Cross Site Scripting", "Data Exposure") as vulnerability names
+- DO NOT extract standalone protocol names (like "HTTP", "HTTPS", "SSL") as vulnerability names
+- Always combine broken lines to get the complete vulnerability name
+- Extract the actual vulnerability name from proper section headers, not from tabular summary lines
+
 **For BASE vulnerabilities:**
-- Section title is vulnerability name (e.g., "SQL Injection")
+- Section title is vulnerability name (e.g., "SQL Injection", "Missing 'X-Frame-Options' Header")
+- CRITICAL: Preserve ALL single quotes (') in BASE names exactly as they appear
+  - Example: "Missing 'X-Frame-Options' Header" (keep quotes around X-Frame-Options)
+  - Example: "Insecure 'Access-Control-Allow-Origin' Header" (keep quotes)
 - Followed by "VULNERABILITY [SEVERITY] PLUGIN ID [NUMBER]"
 - REQUIRED: Extract from "Description" section → description[]
 - REQUIRED: Extract from "Solution" section → solution[]  
