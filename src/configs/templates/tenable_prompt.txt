@@ -2,15 +2,56 @@ Extract Tenable WAS vulnerabilities and return ONLY a valid JSON array.
 
 ## OUTPUT FORMAT
 - Return ONLY JSON array: [ ... ]
-- No explanatory text
-- Maximum 2 vulnerabilities per response to avoid truncation
-- Complete JSON structure required
+- No explanatory text before or after JSON
+- Extract 1-2 related vulnerabilities (BASE + INSTANCES when both present)
+
+## TENABLE VULNERABILITY STRUCTURE
+
+Each vulnerability may appear as:
+1. **BASE section**: Technical details (Description, Solution, Plugin info)
+2. **INSTANCES section**: Specific findings (URLs, HTTP data)
+3. **Some appear as both, some as only one type**
 
 ## EXTRACTION RULES
-- Look for "VULNERABILITY [SEVERITY] PLUGIN ID [NUMBER]"
-- Extract both BASE and INSTANCES when present  
-- BASE: Name from section header, Description, Solution, CVSS, References, Plugin details
-- INSTANCES: Name with "Instances (N)", URLs in identification[], HTTP data in http_info[]
+
+**TEXT PROCESSING:**
+- MANDATORY: Convert HTML entities to normal characters in ALL extracted text:
+  - &quot; → "
+  - &#39; → '
+- CRITICAL: Preserve single quotes (') in vulnerability names exactly as shown
+  - Example: "Missing 'X-Frame-Options' Header Instances (1)" (keep the quotes around X-Frame-Options)
+  - Example: "Insecure 'Access-Control-Allow-Origin' Header Instances (25)" (keep the quotes)
+- Extract vulnerability names from section titles without removing punctuation
+- Keep all special characters and punctuation exactly as they appear
+  - &amp; → &
+  - &lt; → <
+  - &gt; → >
+- Keep all special characters and punctuation exactly as they appear after conversion
+- Do not remove or escape quotes in vulnerability names or data
+- When extracting error messages or SQL payloads, maintain exact format with quotes converted
+- Example: SQLITE_ERROR: near &quot;test&quot; becomes SQLITE_ERROR: near "test"
+
+**For BASE vulnerabilities:**
+- Section title is vulnerability name (e.g., "SQL Injection")
+- Followed by "VULNERABILITY [SEVERITY] PLUGIN ID [NUMBER]"
+- REQUIRED: Extract from "Description" section → description[]
+- REQUIRED: Extract from "Solution" section → solution[]  
+- Extract CVSS scores → cvss[]
+- Extract CWE, CVE, OWASP → references[]
+- Extract Plugin ID, Family → plugin[]
+- Set identification[] and http_info[] to empty []
+
+**For INSTANCES vulnerabilities:**
+- Section title ends with "Instances (N)" (e.g., "SQL Injection Instances (1)")
+- Followed by "VULNERABILITY [SEVERITY] PLUGIN ID [NUMBER]"
+- REQUIRED: Extract URLs from INSTANCE sections → identification[]
+- REQUIRED: Extract PAYLOAD, PROOF, OUTPUT from "Identification" section → identification[]
+- REQUIRED: Extract REQUEST/RESPONSE data from "HTTP Info" → http_info[]
+- Set description[], solution[], cvss[], references[] to empty []
+- May include Plugin ID in plugin[] if present
+- Convert HTML entities: &quot; to " and &#39; to ' in all extracted text
+
+**IMPORTANT: Only extract if you can find the required data. Skip empty vulnerabilities.**
 
 ## JSON STRUCTURE
 ```json
@@ -36,18 +77,47 @@ Extract Tenable WAS vulnerabilities and return ONLY a valid JSON array.
 }
 ```
 
-IMPORTANT: Always include ALL fields, use [] for empty arrays. Tenable fields detection_result, detection_method, impact, insight, product_detection_result, log_method are always empty [].
+## FIELD RULES
+- source: always "TENABLEWAS"
+- port/protocol: always null
+- severity: extract from VULNERABILITY line (CRITICAL|HIGH|MEDIUM|LOW|INFO)
+- Always include ALL 18 fields, use [] for empty arrays
+- Tenable specific: detection_result, detection_method, impact, insight, product_detection_result, log_method always []
 
-## TENABLE JSON STRUCTURE
+## EXAMPLES
 
+**BASE with full data:**
 ```json
 {
-  "Name": "Vulnerability Name",
-  "description": [],
-  "detection_result": [],
-  "detection_method": [],
-  "impact": [],
-  "solution": [],
+  "Name": "SQL Injection",
+  "description": ["Due to the requirement for dynamic content..."],
+  "solution": ["The only proven method to prevent against SQL injection..."],
+  "cvss": ["CVSS BASE SCORE 8.6"],
+  "references": ["CWE-89", "OWASP 2021-A3"],
+  "plugin": ["Plugin ID: 98115", "Family: Injection"],
+  "severity": "HIGH",
+  "source": "TENABLEWAS",
+  "identification": [], "http_info": [],
+  "detection_result": [], "detection_method": [], "impact": [], "insight": [], "product_detection_result": [], "log_method": [],
+  "port": null, "protocol": null
+}
+```
+
+**INSTANCES with URLs and HTTP:**
+```json
+{
+  "Name": "SQL Injection Instances (1)", 
+  "identification": ["https://juice-shop-16-0-1-178712031365.us-west1.run.app/rest/products/search"],
+  "http_info": ["REQUEST MADE: GET /rest/products/search?q=test", "RESPONSE HEADERS: HTTP/2 500"],
+  "severity": "HIGH",
+  "source": "TENABLEWAS",
+  "description": [], "solution": [], "cvss": [], "references": [], "plugin": [],
+  "detection_result": [], "detection_method": [], "impact": [], "insight": [], "product_detection_result": [], "log_method": [],
+  "port": null, "protocol": null
+}
+```
+
+**Extract severity from VULNERABILITY line and always set source to "TENABLEWAS"**
   "insight": [],
   "product_detection_result": [],
   "log_method": [],
