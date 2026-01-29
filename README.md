@@ -409,37 +409,29 @@ python metrics/rouge/compare_extractions_rouge.py \
 
 ### Geração de Gráficos
 
+> **Importante:** Passe o arquivo de baseline (ground truth) no parâmetro --baseline. **Não** utilize o arquivo de extração gerado pelo modelo aqui. O script de plotagem utiliza a baseline como referência para comparar automaticamente os resultados de todos os modelos/extrações disponíveis para aquele conjunto de dados.
+
 Use o CLI de plot para gerar gráficos comparativos de métricas de um ou mais modelos.
 
 #### Gráfico Individual
 
 ```bash
 # Gráfico simples de um modelo
-python metrics/plot/cli.py \
-  --metric bert \
-  --baseline TenableWAS_JuiceShop.xlsx \
-  --models gpt4
+python -m metrics.plot.cli --metric rouge --baseline tenable/TenableWAS_bWAAP.xlsx --models deepseek
 ```
 
 #### Comparação Múltipla
 
 ```bash
 # Comparação de três modelos
-python metrics/plot/cli.py \
-  --metric bert \
-  --baseline TenableWAS_JuiceShop.xlsx \
-  --models gpt4,llama3,deepseek
+python -m metrics.plot.cli --metric bert --baseline tenable/TenableWAS_bWAAP.xlsx --models deepseek,gpt4,llama3
 ```
 
 #### Gráfico com Filtros
 
 ```bash
 # Gráfico focado em métricas específicas
-python metrics/plot/cli.py \
-  --metric rouge \
-  --baseline OpenVAS_JuiceShop.xlsx \
-  --models tenable,openvas \
-  --baseline-sheet Vulnerabilities
+python -m metrics.plot.cli --metric rouge --baseline tenable/TenableWAS_bWAAP.xlsx --models deepseek --baseline-sheet Vulnerabilities
 ```
 
 ### Fluxo de Processamento

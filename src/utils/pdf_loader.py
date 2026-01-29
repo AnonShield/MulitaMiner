@@ -22,7 +22,7 @@ def merge_page_continuations(text_pages):
         skip_until_next_section = False
 
         for j, line in enumerate(lines):
-            # === ESTRATÉGIA 1: OpenVAS - Marcadores explícitos ===
+            # === ESTRATÉGIA 1: Marcadores explícitos ===
             if '. . . continues on next page' in line.lower() or '...continues on next page' in line.lower() or 'continues on next page' in line.lower():
                 continuation_found = False
                 for next_page_idx in range(i+1, len(text_pages)):
@@ -65,7 +65,7 @@ def merge_page_continuations(text_pages):
                 # Não adicionar o marcador
                 continue
 
-            # === ESTRATÉGIA 2: Tenable - Detecção por contexto ===
+            # === ESTRATÉGIA 2: Detecção por contexto ===
             elif _is_incomplete_line(line) and i+1 < len(text_pages):
                 # Linha parece incompleta - verificar se próxima página continua
                 next_page_text = text_pages[i+1][1]

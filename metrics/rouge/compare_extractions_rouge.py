@@ -569,25 +569,26 @@ def main():
             print(f"[ERRO] Erro ao processar {extraction_sheet}: {e}")
             continue
 
-    # Salva resumo geral de todas as extrações
+
+    # Salva resumo geral de todas as extrações e imprime mensagens finais apenas se houver resultados
     if general_summary:
         general_df = pd.DataFrame(general_summary)
         summary_path = output_dir / "summary_all_extractions.xlsx"
         general_df.to_excel(summary_path, index=False)
         print(f"\n📊 Resumo geral salvo em: {summary_path}")
 
-    print(f"\n{'='*60}")
-    print("Todas as comparacoes concluidas!")
-    print("\n📊 Arquivos gerados:")
-    for extraction_sheet in available_sheets:
-        extraction_name = 'vulnerabilities' if extraction_sheet == 'Vulnerabilities' else extraction_sheet.replace("Extração ", "").replace(" ", "_").lower()
-        model_suffix = f"_{model_name}" if model_name else ""
-        print(f"   - {output_dir / f'rouge_comparison_{extraction_name}{model_suffix}.xlsx'}")
-        print(f"       • Per_Vulnerability: Scores ROUGE-L detalhados por campo")
-        print(f"       • Summary: Estatísticas agregadas (média, desvio, min, max, mediana)")
-        print(f"       • Categorization: Classificação completa (Similarity + Absent + Non-existent)")
-        print(f"       • Mapping_Debug: Debug do pareamento de nomes")
-    print(f"   - {output_dir / 'summary_all_extractions.xlsx'} (comparação consolidada entre todos os modelos)")
+        print(f"\n{'='*60}")
+        print("Todas as comparacoes concluidas!")
+        print("\n📊 Arquivos gerados:")
+        for extraction_sheet in available_sheets:
+            extraction_name = 'vulnerabilities' if extraction_sheet == 'Vulnerabilities' else extraction_sheet.replace("Extração ", "").replace(" ", "_").lower()
+            model_suffix = f"_{model_name}" if model_name else ""
+            print(f"   - {output_dir / f'rouge_comparison_{extraction_name}{model_suffix}.xlsx'}")
+            print(f"       • Per_Vulnerability: Scores ROUGE-L detalhados por campo")
+            print(f"       • Summary: Estatísticas agregadas (média, desvio, min, max, mediana)")
+            print(f"       • Categorization: Classificação completa (Similarity + Absent + Non-existent)")
+            print(f"       • Mapping_Debug: Debug do pareamento de nomes")
+        print(f"   - {output_dir / 'summary_all_extractions.xlsx'} (comparação consolidada entre todos os modelos)")
 
 if __name__ == "__main__":
     main()

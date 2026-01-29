@@ -568,23 +568,24 @@ def main():
             print(f"❌ Erro ao processar {extraction_sheet}: {e}")
             continue
 
+
     if general_summary:
         general_df = pd.DataFrame(general_summary)
         summary_path = args.output_dir / "summary_all_extractions_bert.xlsx"
         general_df.to_excel(summary_path, index=False)
         print(f"\n📊 Resumo geral salvo em: {summary_path}")
 
-    print(f"\n{'='*60}")
-    print("✅ Todas as comparações BERT concluídas!")
-    print("\n📊 Arquivos gerados:")
-    for extraction_sheet in available_sheets:
-        clean_name = extraction_sheet.replace("Extração ", "").replace(" ", "_").lower()
-        print(f"   - {args.output_dir / f'bert_comparison_{clean_name}.xlsx'}")
-        print(f"       • Per_Vulnerability: Scores BERTScore F1 detalhados por campo")
-        print(f"       • Summary: Estatísticas agregadas (média, desvio, min, max, mediana)")
-        print(f"       • Categorization: Classificação completa (Similarity + Absent + Non-existent)")
-        print(f"       • Mapping_Debug: Debug do pareamento de nomes")
-    print(f"   - {args.output_dir / 'summary_all_extractions_bert.xlsx'} (comparação consolidada entre todos os modelos)")
+        print(f"\n{'='*60}")
+        print("✅ Todas as comparações BERT concluídas!")
+        print("\n📊 Arquivos gerados:")
+        for extraction_sheet in available_sheets:
+            clean_name = extraction_sheet.replace("Extração ", "").replace(" ", "_").lower()
+            print(f"   - {args.output_dir / f'bert_comparison_{clean_name}.xlsx'}")
+            print(f"       • Per_Vulnerability: Scores BERTScore F1 detalhados por campo")
+            print(f"       • Summary: Estatísticas agregadas (média, desvio, min, max, mediana)")
+            print(f"       • Categorization: Classificação completa (Similarity + Absent + Non-existent)")
+            print(f"       • Mapping_Debug: Debug do pareamento de nomes")
+        print(f"   - {args.output_dir / 'summary_all_extractions_bert.xlsx'} (comparação consolidada entre todos os modelos)")
 
 
 if __name__ == "__main__":

@@ -13,8 +13,7 @@
     "min_chunk_tokens": 1000,
     "force_break_at_markers": true,
     "preserve_vulnerability_blocks": true,
-    "max_vulnerabilities_per_chunk": 1,
+    "max_vulnerabilities_per_chunk": 3,
     "description": "Tenable WAS usa pares BASE+INSTANCES, quebra sempre antes de marcadores VULNERABILITY"
   }
 }
-
