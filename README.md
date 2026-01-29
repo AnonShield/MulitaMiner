@@ -3,7 +3,7 @@
 _Última atualização: Janeiro 2026_
 
 [![Python](https://img.shields.io/badge/Python-3.8+-blue.svg)](https://www.python.org/)
-[![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+[![License: CC BY-NC 4.0](https://img.shields.io/badge/License-CC%20BY--NC%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by-nc/4.0/)
 
 ## Sumário
 
@@ -184,7 +184,7 @@ Os arquivos de configuração JSON usam a sintaxe `${VARIABLE_NAME}` para refere
 }
 ```
 
-#### 3. 🌐 Provedores Suportados
+#### 3. Provedores Suportados
 
 | Provedor     | Modelos           | Custo    | Velocidade   |
 | ------------ | ----------------- | -------- | ------------ |
