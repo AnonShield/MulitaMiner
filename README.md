@@ -1016,22 +1016,10 @@ O sistema foi projetado para crescer organicamente conforme novas ferramentas de
 
 ## Licença
 
-Este projeto é fornecido **"como está"** para fins educacionais e de pesquisa. O código fonte é disponibilizado sob os termos que permitem uso, estudo e modificação para propósitos não comerciais.
+Este projeto está licenciado sob os termos da [Creative Commons BY-NC 4.0 Internacional](https://creativecommons.org/licenses/by-nc/4.0/deed.pt_BR).
 
-### Termos de Uso
+- **Uso permitido:** fins educacionais e de pesquisa, com modificações e redistribuição não comercial mantendo os créditos.
+- **Proibido:** uso comercial sem autorização expressa dos autores.
+- **Aviso:** fornecido "como está", sem garantias. O usuário é responsável pelo uso e pela configuração segura de dados e chaves.
 
-- **Uso educacional e de pesquisa** é fortemente encorajado
-- **Modificações e extensões** são permitidas e bem-vindas
-- **Redistribuição** deve manter os créditos originais
-- **Uso comercial** requer autorização expressa dos autores
-
-### Responsabilidades
-
-- O software é fornecido **sem garantias**, expressas ou implícitas
-- Os autores **não se responsabilizam** por dados processados ou resultados obtidos
-- Usuários são **responsáveis** pela configuração segura de API keys e dados sensíveis
-- **Compliance** com termos de serviço dos provedores de LLM é de responsabilidade do usuário
-
-### Contribuições
-
-Contribuições para o projeto são bem-vindas através de pull requests e issues. Ao contribuir, você concorda que suas contribuições serão licenciadas sob os mesmos termos.
+Consulte o arquivo [LICENSE](LICENSE) para o texto completo da licença.
