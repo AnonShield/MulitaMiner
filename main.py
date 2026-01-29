@@ -428,8 +428,13 @@ def main():
     print(f"\n[SUMMARY] Total de chunks: {total_chunks}")
     print(f"[SUMMARY] Total de vulnerabilidades extraídas: {len(all_vulnerabilities)}")
 
-    # Salvar resultados e conversões
-    output_file = profile_config['output_file']
+    # Definir nome do arquivo como output ou baseado no PDF 
+    if args.output:
+        output_file = args.output
+    else:
+        pdf_base = os.path.splitext(os.path.basename(args.pdf_path))[0]
+        output_file = f"{pdf_base}.json"
+
     if save_results(all_vulnerabilities, output_file, profile_config):
         xlsx_output_path = None
         try:
