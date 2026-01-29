@@ -76,6 +76,8 @@ def parse_arguments() -> argparse.Namespace:
                                  help='Caminho para o arquivo .xlsx de ground truth para comparação.')
     evaluation_group.add_argument('--evaluation-method', choices=['bert', 'rouge'], default='bert',
                                  help='Método de avaliação a ser usado (padrão: bert).')
+    evaluation_group.add_argument('--allow-duplicates', action='store_true',
+                                 help='Permite duplicatas legítimas na baseline durante avaliação')
     
     return parser.parse_args()
 
@@ -332,10 +334,17 @@ def run_evaluation(args: argparse.Namespace, extraction_output_path: str):
         '--extraction_file', extraction_output_path,
         '--output_dir', output_dir
     ]
+    # Passa o nome do modelo explicitamente se disponível
+    if hasattr(args, 'LLM') and args.LLM:
+        command += ['--model', args.LLM]
+    
+    # Passa configuração de duplicatas se especificada
+    if hasattr(args, 'allow_duplicates') and args.allow_duplicates:
+        command += ['--allow_duplicates']
     
     try:
         print(f"Executando comando: {' '.join(command)}")
-        subprocess.run(command, check=True, capture_output=True, text=True, encoding='utf-8')
+        subprocess.run(command, check=True)
         print(f"\n[SUCESSO] Avaliação de métricas concluída.")
         print(f"Resultados salvos no diretório: '{output_dir}'")
         
@@ -346,10 +355,6 @@ def run_evaluation(args: argparse.Namespace, extraction_output_path: str):
         print("\n[ERRO] A avaliação de métricas falhou.")
         print(f"  Comando: {' '.join(e.cmd)}")
         print(f"  Código de Saída: {e.returncode}")
-        print("\n--- Saída Padrão (stdout) do Script de Métricas ---\n")
-        print(e.stdout)
-        print("\n--- Saída de Erro (stderr) do Script de Métricas ---\n")
-        print(e.stderr)
         print("-------------------------------------------------")
 
 
@@ -390,59 +395,63 @@ def main():
     print(f"[CONFIG] Reserve para resposta: {reserve_response}")
     print(f"{'='*60}\n")
     
-    # Carregamento do PDF
+    # Carregamento do PDF em blocos (um Document por página)
     documents = load_pdf_with_pypdf2(args.pdf_path)
     if not documents:
         print("Erro: Falha ao carregar PDF")
         return
-    
+
+    # Salvar layout visual da primeira página como referência
     visual_file = save_visual_layout(documents[0].page_content, args.pdf_path)
     print(f"Layout visual salvo em: {visual_file}\n")
-    
-    # Divisão em chunks e processamento
-    doc_texts = get_token_based_chunks(
-        documents[0].page_content,
-        max_tokens,
-        reserve_response,
-        llm_config,  # Passar configuração completa do LLM
-        profile_config  # Configuração do scanner
-    )
-    print(f"Total de chunks: {len(doc_texts)}\n")
-    
-    try:
-        all_vulnerabilities = process_vulnerabilities(doc_texts, llm, profile_config)
-        print(f"\n[SUMMARY] Total de vulnerabilidades extraídas: {len(all_vulnerabilities)}")
-        
-        # Salvar resultados e conversões
-        output_file = profile_config['output_file']
-        if save_results(all_vulnerabilities, output_file, profile_config):
-            xlsx_output_path = None
-            try:
-                converted_files = execute_conversions(output_file, args)
-                if converted_files:
-                    print(f"\nConversões geradas: {len(converted_files)}")
-                    for c in converted_files:
-                        print(f"  - {c}")
-                        if c.endswith('.xlsx'):
-                            xlsx_output_path = c
-            except Exception as e:
-                print(f"Erro ao executar conversões: {e}")
-            
-            # Etapa de avaliação de métricas
-            if args.evaluate:
-                if xlsx_output_path and os.path.isfile(xlsx_output_path):
-                    run_evaluation(args, xlsx_output_path)
-                else:
-                    print("\n[AVISO] Avaliação de métricas pulada.")
-                    print("Motivo: A conversão para .xlsx não foi solicitada ou falhou.")
-        else:
-            print(f"\n[ERRO] Falha ao salvar resultados em {output_file}")
-            
-    except Exception as e:
-        print(f"\n[ERRO CRÍTICO] Falha durante processamento: {e}")
-        import traceback
-        traceback.print_exc()
-        return
+
+    all_vulnerabilities = []
+    total_chunks = 0
+    for doc in documents:
+        # Dividir cada bloco (página) em chunks
+        doc_texts = get_token_based_chunks(
+            doc.page_content,
+            max_tokens,
+            reserve_response,
+            llm_config,
+            profile_config
+        )
+        print(f"Páginas {doc.metadata.get('pages', doc.metadata.get('page', '?'))}: {len(doc_texts)} chunks")
+        total_chunks += len(doc_texts)
+        # Processar cada chunk normalmente
+        try:
+            vulns = process_vulnerabilities(doc_texts, llm, profile_config)
+            all_vulnerabilities.extend(vulns)
+        except Exception as e:
+            print(f"[ERRO] Falha ao processar página {doc.metadata.get('page', '?')}: {e}")
+
+    print(f"\n[SUMMARY] Total de chunks: {total_chunks}")
+    print(f"[SUMMARY] Total de vulnerabilidades extraídas: {len(all_vulnerabilities)}")
+
+    # Salvar resultados e conversões
+    output_file = profile_config['output_file']
+    if save_results(all_vulnerabilities, output_file, profile_config):
+        xlsx_output_path = None
+        try:
+            converted_files = execute_conversions(output_file, args)
+            if converted_files:
+                print(f"\nConversões geradas: {len(converted_files)}")
+                for c in converted_files:
+                    print(f"  - {c}")
+                    if c.endswith('.xlsx'):
+                        xlsx_output_path = c
+        except Exception as e:
+            print(f"Erro ao executar conversões: {e}")
+
+        # Etapa de avaliação de métricas
+        if args.evaluate:
+            if xlsx_output_path and os.path.isfile(xlsx_output_path):
+                run_evaluation(args, xlsx_output_path)
+            else:
+                print("\n[AVISO] Avaliação de métricas pulada.")
+                print("Motivo: A conversão para .xlsx não foi solicitada ou falhou.")
+    else:
+        print(f"\n[ERRO] Falha ao salvar resultados em {output_file}")
 
 
 if __name__ == "__main__":

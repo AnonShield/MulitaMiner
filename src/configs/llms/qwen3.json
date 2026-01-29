@@ -1,5 +1,5 @@
 {
-  "api_key": "api_key_qwen3",
+  "api_key": "${API_KEY_QWEN3}",
   "endpoint": "https://api.groq.com/openai/v1",
   "model": "qwen/qwen3-32b",
   "temperature": 0.0,

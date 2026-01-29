@@ -1,7 +1,10 @@
+import sys
+from pathlib import Path
+sys.path.insert(0, str(Path(__file__).parents[2]))
 import re
 import warnings
 import sys
-import argparse
+from metrics.common.cli import parse_arguments_common
 import os
 from rapidfuzz import fuzz
 from typing import Dict, List, Tuple, Optional
@@ -47,28 +50,60 @@ ALLOW_BASELINE_DUPLICATES = False
 
 # ---- BERTScore import (opcional)
 try:
-    from bert_score import score as _bert_score_score
+    from bert_score import BERTScorer
     BERTSCORE_AVAILABLE = True
 except Exception:
-    _bert_score_score = None
+    BERTScorer = None
     BERTSCORE_AVAILABLE = False
 
 # Configuração do BERTScore
 BERTSCORE_MODEL_CANDIDATES = [
+    "distilbert-base-uncased",  # Modelo que funciona - prioridade máxima
     "all-mpnet-base-v2",
     "sentence-transformers/all-mpnet-base-v2",
-    "distilbert-base-uncased",
     "roberta-large",
     "bert-base-uncased",
 ]
 BERTSCORE_LANG = "en"
+
+# Cache global para modelo BERTScore
+_bertscore_model_cache = None
+_bertscore_tokenizer_cache = None
+
+def get_bertscore_model():
+    """Carrega e retorna o modelo BERTScore uma vez, reutilizando em cache."""
+    global _bertscore_model_cache, _bertscore_tokenizer_cache
+
+    if _bertscore_model_cache is not None:
+        return _bertscore_model_cache, _bertscore_tokenizer_cache
+
+    if not BERTSCORE_AVAILABLE or BERTScorer is None:
+        return None, None
+
+    # Detecta dispositivo disponível
+    try:
+        import torch
+        device = 'cuda' if torch.cuda.is_available() else 'cpu'
+    except Exception:
+        device = 'cpu'
+
+    model_try = BERTSCORE_MODEL_CANDIDATES[0]
+    try:
+        print(f"Carregando modelo BERTScore: {model_try}...")
+        scorer = BERTScorer(model_type=model_try, lang=BERTSCORE_LANG, device=device, rescale_with_baseline=True)
+        _bertscore_model_cache = scorer
+        print("Modelo BERTScore carregado com sucesso!")
+        return scorer, None
+    except Exception as e:
+        print(f"Erro ao carregar modelo BERTScore {model_try}: {e}")
+        return None, None
 
 # =========================
 # BERTSCORE METRIC
 # =========================
 def bertscore_score(pred: str, ref: str) -> float:
     # Se a biblioteca não estiver disponível, retorna 0.0 (fallback seguro)
-    if not BERTSCORE_AVAILABLE or _bert_score_score is None:
+    if not BERTSCORE_AVAILABLE or BERTScorer is None:
         return 0.0
 
     if pred is None or ref is None:
@@ -79,63 +114,25 @@ def bertscore_score(pred: str, ref: str) -> float:
     if not pred_s or not ref_s:
         return 0.0
 
-    # Detecta dispositivo disponível
+    # Obtém o modelo do cache (carrega uma vez)
+    scorer, _ = get_bertscore_model()
+    if scorer is None:
+        return 0.0
+
     try:
-        import torch
-        device = 'cuda' if torch.cuda.is_available() else 'cpu'
-    except Exception:
-        device = 'cpu'
-
-    # Tenta múltiplos modelos e configurações para robustez
-    for model_try in BERTSCORE_MODEL_CANDIDATES:
-        for rescale in (True, False):
-            try:
-                P, R, F = _bert_score_score([pred_s], [ref_s], lang=BERTSCORE_LANG,
-                                            model_type=model_try,
-                                            rescale_with_baseline=rescale,
-                                            device=device)
-                f0 = F[0]
-                try:
-                    fval = float(f0.cpu().numpy()) if hasattr(f0, 'cpu') else float(f0)
-                except Exception:
-                    fval = float(f0)
-                if fval != fval:
-                    return 0.0
-                # successful computation
-                if model_try != BERTSCORE_MODEL_CANDIDATES[0]:
-                    print(f"ℹ️ Usando modelo alternativo para BERTScore: {model_try}")
-                return max(0.0, min(1.0, fval))
-            except RuntimeError as re:
-                msg = str(re)
-                if 'out of memory' in msg.lower() or 'CUDA' in msg:
-                    # Try forcing CPU once
-                    if device != 'cpu':
-                        try:
-                            P, R, F = _bert_score_score([pred_s], [ref_s], lang=BERTSCORE_LANG,
-                                                        model_type=model_try,
-                                                        rescale_with_baseline=False,
-                                                        device='cpu')
-                            f0 = F[0]
-                            fval = float(f0.cpu().numpy()) if hasattr(f0, 'cpu') else float(f0)
-                            return max(0.0, min(1.0, fval))
-                        except Exception:
-                            # Tenta próximo candidato
-                            pass
-                    print("⚠️ Erro de memória ao calcular BERTScore (possível OOM). Tente usar um modelo menor se o problema persistir.")
-                    continue
-                else:
-                    continue
-            except Exception as e:
-                err_msg = str(e)
-                if model_try in err_msg or 'Could not' in err_msg or 'not found' in err_msg.lower():
-                    continue
-                if rescale:
-                    continue
-                continue
-
-    # Caso nenhum dos candidatos tenha funcionado, retorna 0.0
-    print("⚠️ Nenhum modelo BERTScore disponível funcionou; retornando 0.0 para este par.")
-    return 0.0
+        # Usa o scorer pré-carregado
+        P, R, F = scorer.score([pred_s], [ref_s])
+        f0 = F[0]
+        try:
+            fval = float(f0.cpu().numpy()) if hasattr(f0, 'cpu') else float(f0)
+        except Exception:
+            fval = float(f0)
+        if fval != fval:  # Check for NaN
+            return 0.0
+        return max(0.0, min(1.0, fval))
+    except Exception as e:
+        print(f"Erro no cálculo BERTScore: {e}")
+        return 0.0
 
 
 def process_extraction_comparison_bertscore(baseline_df: pd.DataFrame, extraction_df: pd.DataFrame, extraction_name: str) -> Tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame, pd.DataFrame, int]:
@@ -397,24 +394,11 @@ def process_extraction_comparison_bertscore(baseline_df: pd.DataFrame, extractio
     return per_vuln_df, summary_df, mapping_debug_df, categorization_df, baseline_instances_matched, total_baseline_instances
 
 
-def parse_arguments():
-    """Parse argumentos da linha de comando."""
-    parser = argparse.ArgumentParser(
-        description='Compara extrações com baseline usando métricas BERT'
-    )
-    
-    parser.add_argument('--baseline_file', type=str, required=True,
-                       help='Caminho para o arquivo Excel da baseline')
-    parser.add_argument('--extraction_file', type=str, required=True,
-                       help='Caminho para o arquivo Excel com as extrações')
-    parser.add_argument('--output_dir', type=str, required=True,
-                       help='Diretório onde salvar os resultados')
-    
-    return parser.parse_args()
+
 
 def main():
-    # Parse argumentos da linha de comando
-    args = parse_arguments()
+    # Parse argumentos da linha de comando (centralizado)
+    args = parse_arguments_common(require_model=False)
     
     baseline_file = args.baseline_file
 
@@ -424,9 +408,12 @@ def main():
     
     print("=== Comparacao de Multiplas Extracoes com Baseline (BERTScore) ===")
     
-    # Configuração automática para duplicatas (sem interação manual)
-    ALLOW_BASELINE_DUPLICATES = True  # Permite duplicatas legítimas por padrão
-    print(f"\n[OK] Modo automatico: duplicatas legitimas permitidas")
+    # Configuração baseada no parâmetro CLI
+    ALLOW_BASELINE_DUPLICATES = args.allow_duplicates
+    if ALLOW_BASELINE_DUPLICATES:
+        print(f"\n[OK] Modo CLI: duplicatas legítimas permitidas")
+    else:
+        print(f"\n[OK] Modo CLI: sem duplicatas legítimas")
     
     # Verifica se os arquivos existem
     if not Path(baseline_file).exists():
@@ -482,6 +469,7 @@ def main():
     baseline_name = Path(baseline_file).stem
     baseline_name = "_".join(baseline_name.split())
 
+
     for extraction_sheet in available_sheets:
         print(f"\n{'='*60}")
         print(f"Processando (BERT): {extraction_sheet}")
@@ -497,9 +485,17 @@ def main():
                 extraction_sheet,
             )
 
-            clean_name = extraction_sheet.replace("Extração ", "").replace(" ", "_").lower()
-            output_file = f"bert_comparison_{clean_name}.xlsx"
-            output_path = args.output_dir / output_file
+            # Nome do relatório (baseline), aba e modelo
+            relatorio_nome = Path(baseline_file).stem.replace(" ", "_").lower()
+            aba_nome = extraction_sheet.replace("Extração ", "").replace(" ", "_").lower()
+            modelo_nome = args.model if args.model else aba_nome
+            if aba_nome == 'vulnerabilities' and not args.model:
+                modelo_nome = Path(args.extraction_file).stem.replace("vulnerabilities_", "").replace("_converted", "").lower()
+            # Cria subpasta do baseline dentro do diretório de resultados
+            baseline_dir = args.output_dir / Path(baseline_file).stem
+            baseline_dir.mkdir(parents=True, exist_ok=True)
+            output_file = f"bert_comparison_{aba_nome}_{modelo_nome}.xlsx"
+            output_path = baseline_dir / output_file
 
             with pd.ExcelWriter(output_path) as writer:
                 per_vuln_df.to_excel(writer, sheet_name="Per_Vulnerability", index=False)

@@ -43,9 +43,17 @@ def build_heatmap_df(metric: str, baseline_file: str, models: list) -> pd.DataFr
     data = {}
 
     for model in models:
-        file_path = results_dir / f"{metric}_comparison_{model}.xlsx"
-        if not file_path.exists():
-            print(f"⚠️  {model}: Arquivo não encontrado: {file_path}")
+        file_candidates = [
+            results_dir / f"{metric}_comparison_{model}.xlsx",
+            results_dir / f"{metric}_comparison_vulnerabilities_{model}.xlsx"
+        ]
+        file_path = None
+        for candidate in file_candidates:
+            if candidate.exists():
+                file_path = candidate
+                break
+        if not file_path:
+            print(f"⚠️  {model}: Arquivo não encontrado: {file_candidates}")
             continue
         try:
             df = pd.read_excel(file_path, sheet_name="Summary")
@@ -88,8 +96,12 @@ def build_errors_data_anymetric(baseline_file: str, models: list) -> tuple:
         # try rouge then bert, but use get_results_dir to respect existing folder variants
         rouge_dir = get_results_dir('rouge', baseline_file)
         bert_dir = get_results_dir('bert', baseline_file)
-        file_candidates = [rouge_dir / f"rouge_comparison_{model}.xlsx",
-                           bert_dir / f"bert_comparison_{model}.xlsx"]
+        file_candidates = [
+            rouge_dir / f"rouge_comparison_{model}.xlsx",
+            rouge_dir / f"rouge_comparison_vulnerabilities_{model}.xlsx",
+            bert_dir / f"bert_comparison_{model}.xlsx",
+            bert_dir / f"bert_comparison_vulnerabilities_{model}.xlsx"
+        ]
         found = None
         for c in file_candidates:
             if c.exists():
@@ -118,9 +130,17 @@ def load_categorization_data(metric: str, baseline_file: str, models: list) -> d
     results_dir = get_results_dir(metric, baseline_file)
 
     for model in models:
-        file_path = results_dir / f"{metric}_comparison_{model}.xlsx"
-        if not file_path.exists():
-            print(f"⚠️  File not found: {file_path}")
+        file_candidates = [
+            results_dir / f"{metric}_comparison_{model}.xlsx",
+            results_dir / f"{metric}_comparison_vulnerabilities_{model}.xlsx"
+        ]
+        file_path = None
+        for candidate in file_candidates:
+            if candidate.exists():
+                file_path = candidate
+                break
+        if not file_path:
+            print(f"⚠️  File not found: {file_candidates}")
             continue
         try:
             df = pd.read_excel(file_path, sheet_name="Categorization")

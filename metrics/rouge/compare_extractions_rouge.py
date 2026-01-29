@@ -1,9 +1,12 @@
+import sys
+from pathlib import Path
+sys.path.insert(0, str(Path(__file__).parents[2]))
 import pandas as pd
 from pathlib import Path
 import numpy as np
 import re
 import sys
-import argparse
+from metrics.common.cli import parse_arguments_common
 import os
 from typing import Dict, List, Tuple, Optional
 from tqdm import tqdm
@@ -381,41 +384,39 @@ def process_extraction_comparison(baseline_df: pd.DataFrame, extraction_df: pd.D
     
     return per_vuln_df, summary_df, mapping_debug_df, categorization_df, baseline_instances_matched, total_baseline_instances
 
-def parse_arguments():
-    """Parse argumentos da linha de comando."""
-    parser = argparse.ArgumentParser(
-        description='Compara extrações com baseline usando métricas ROUGE-L'
-    )
-    
-    parser.add_argument('--baseline_file', type=str, required=True,
-                       help='Caminho para o arquivo Excel da baseline')
-    parser.add_argument('--extraction_file', type=str, required=True,
-                       help='Caminho para o arquivo Excel com as extrações')
-    parser.add_argument('--output_dir', type=str, required=True,
-                       help='Diretório onde salvar os resultados')
-    
-    return parser.parse_args()
+
 
 def main():
-    # Parse argumentos da linha de comando
-    args = parse_arguments()
+    # Parse argumentos da linha de comando (centralizado)
+    args = parse_arguments_common(require_model=False)
     
     baseline_file = args.baseline_file
     extraction_file = args.extraction_file
-    output_dir = Path(args.output_dir)
-    
+
+    # Padronização: subpasta com nome da baseline e nome do arquivo igual ao BERT
+    # Exemplo: metrics/rouge/results/OpenVAS_bBWA/rouge_comparison_vulnerabilities_deepseek.xlsx
+    # Nome do modelo
+    model_name = getattr(args, 'model', None)
+    baseline_name = Path(baseline_file).stem
+    baseline_name = "_".join(baseline_name.split())
+    output_dir = Path(args.output_dir) / baseline_name
+    output_dir.mkdir(parents=True, exist_ok=True)
+
     print("=== Comparacao de Multiplas Extracoes com Baseline (ROUGE-L) ===")
-    
-    # Configuração automática para duplicatas (sem interação manual)
-    allow_duplicates = True  # Permite duplicatas legítimas por padrão
-    print(f"\n[OK] Modo automatico: duplicatas legitimas permitidas")
-    
+
+    # Configuração baseada no parâmetro CLI
+    allow_duplicates = args.allow_duplicates
+    if allow_duplicates:
+        print(f"\n[OK] Modo CLI: duplicatas legítimas permitidas")
+    else:
+        print(f"\n[OK] Modo CLI: sem duplicatas legítimas")
+
     # Atualiza a configuração globalmente
     global ALLOW_BASELINE_DUPLICATES
     ALLOW_BASELINE_DUPLICATES = allow_duplicates
-    
+
     print(f"\nCarregando arquivo: {baseline_file}")
-    
+
     # Verifica se os arquivos existem
     if not Path(baseline_file).exists():
         print(f"[ERRO] Arquivo baseline nao encontrado: {baseline_file}")
@@ -425,25 +426,22 @@ def main():
         print(f"[ERRO] Arquivo de extracao nao encontrado: {extraction_file}")
         sys.exit(1)
     
-    # Cria diretório de saída se não existir
-    output_dir.mkdir(parents=True, exist_ok=True)
-    
     # Carrega arquivo Excel
     excel_data = pd.ExcelFile(baseline_file)
-    
+
     # Carrega baseline
     print(f"Carregando aba baseline: {BASELINE_SHEET}")
     baseline_df = pd.read_excel(baseline_file, sheet_name=BASELINE_SHEET)
-    
+
     print(f"Baseline carregado - Shape: {baseline_df.shape}")
     print(f"Colunas baseline: {list(baseline_df.columns)}")
-    
+
     # Verifica se precisamos carregar do arquivo de extracao para comparacoes
     extraction_excel_data = pd.ExcelFile(extraction_file)
-    
+
     # Primeiro tenta encontrar abas de extração múltipla
     available_sheets = [sheet for sheet in EXTRACTION_SHEETS if sheet in extraction_excel_data.sheet_names]
-    
+
     # Se não encontrou abas de extração múltipla, verifica se é um arquivo de extração simples
     if not available_sheets and 'Vulnerabilities' in extraction_excel_data.sheet_names:
         print("Arquivo de extração simples detectado - usando aba 'Vulnerabilities'")
@@ -451,53 +449,46 @@ def main():
         EXTRACTION_SHEETS_TO_USE = ['Vulnerabilities']
     else:
         EXTRACTION_SHEETS_TO_USE = EXTRACTION_SHEETS
-    
+
     missing_sheets = [sheet for sheet in EXTRACTION_SHEETS_TO_USE if sheet not in extraction_excel_data.sheet_names]
-    
+
     if missing_sheets and available_sheets:
         print(f"\nAbas nao encontradas: {missing_sheets}")
-    
+
     print(f"\nAbas de extracao encontradas: {available_sheets}")
-    
+
     if not available_sheets:
         print("Nenhuma aba de extracao encontrada para comparacao!")
         return
 
-    # prepara o diretório de saída por baseline
-    baseline_name = Path(baseline_file).stem
-    # sanitize: replace spaces with underscore
-    baseline_name = "_".join(baseline_name.split())
-    
     # Cria resumo geral das comparações
     general_summary = []
-    
+
     # Processa cada aba de extração
     for extraction_sheet in available_sheets:
         print(f"\n{'='*60}")
         print(f"Processando: {extraction_sheet}")
         print('='*60)
-        
         try:
             # Carrega aba de extração
             extraction_df = pd.read_excel(extraction_file, sheet_name=extraction_sheet)
             print(f"Shape da extração: {extraction_df.shape}")
-            
+
             # Processa comparação
             per_vuln_df, summary_df, mapping_debug_df, categorization_df, baseline_instances_matched, total_baseline_instances = process_extraction_comparison(
                 baseline_df.copy(), 
                 extraction_df.copy(), 
                 extraction_sheet
             )
-            
-            # Gera nome do arquivo de saída
+
+            # Nome do arquivo de saída padronizado
             if extraction_sheet == 'Vulnerabilities':
-                # Para extração simples, usa o nome do arquivo
-                extraction_name = Path(extraction_file).stem.replace('vulnerabilities_', '').replace('_converted', '')
-                clean_name = extraction_name.lower()
+                extraction_name = 'vulnerabilities'
             else:
-                # Para extração múltipla, usa o nome da aba
-                clean_name = extraction_sheet.replace("Extração ", "").replace(" ", "_").lower()
-            output_file = f"rouge_comparison_{clean_name}.xlsx"
+                extraction_name = extraction_sheet.replace("Extração ", "").replace(" ", "_").lower()
+            # Usa nome do modelo se disponível
+            model_suffix = f"_{model_name}" if model_name else ""
+            output_file = f"rouge_comparison_{extraction_name}{model_suffix}.xlsx"
             output_path = output_dir / output_file
 
             # Salva tudo em um único arquivo Excel com 4 abas
@@ -506,16 +497,16 @@ def main():
                 summary_df.to_excel(writer, sheet_name="Summary", index=False)
                 categorization_df.to_excel(writer, sheet_name="Categorization", index=False)
                 mapping_debug_df.to_excel(writer, sheet_name="Mapping_Debug", index=False)
-            
+
             # Estatísticas do processamento
             unmatched_count = (per_vuln_df["_status"] == "UNMATCHED").sum()
             unmatched_excess_count = (per_vuln_df["_status"] == "UNMATCHED_EXCESS").sum()
             total_nonexistent = unmatched_count + unmatched_excess_count
             matched_count = len(per_vuln_df) - total_nonexistent
-            
+
             # Contagens de categorização
             cat_counts = categorization_df["Category"].value_counts().to_dict()
-            
+
             # Relatório de resultados
             print(f"✅ Comparação concluída!")
             print(f"   → Arquivo: {output_path}")
@@ -526,7 +517,7 @@ def main():
             if unmatched_excess_count > 0:
                 print(f"        ↳ Duplicatas excedentes: {unmatched_excess_count}")
                 print(f"        ↳ Invenções sem match: {unmatched_count}")
-            
+
             print(f"\n   📊 Categorização de Similaridade:")
             print(f"      • Highly Similar (>0.7): {cat_counts.get('Highly Similar', 0)}")
             print(f"      • Moderately Similar (0.6-0.7): {cat_counts.get('Moderately Similar', 0)}")
@@ -534,7 +525,7 @@ def main():
             print(f"      • Divergent (≤0.4): {cat_counts.get('Divergent', 0)}")
             print(f"      • Non-existent (inventadas): {cat_counts.get('Non-existent', 0)}")
             print(f"      • Absent (não extraídas): {cat_counts.get('Absent', 0)}")
-            
+
             # Calcular médias para TODOS os campos ROUGE-L
             rouge_columns = [col for col in per_vuln_df.columns if col.endswith('_rouge_l')]
             extraction_stats = {
@@ -543,18 +534,18 @@ def main():
                 'Matched_Vulnerabilities': matched_count,
                 'Match_Rate': matched_count / len(per_vuln_df) if len(per_vuln_df) > 0 else 0
             }
-            
+
             # Calcular média geral de todos os campos
             all_rouge_scores = []
             matched_data = per_vuln_df[per_vuln_df["_status"] == "OK"]
-            
+
             if len(matched_data) > 0:
                 for rouge_col in rouge_columns:
                     field_avg = matched_data[rouge_col].mean()
                     field_name = rouge_col.replace('_rouge_l', '')
                     extraction_stats[f'{field_name}_rouge_l'] = field_avg
                     all_rouge_scores.append(field_avg)
-                
+
                 # Média geral de todos os campos
                 extraction_stats['Overall_ROUGE_L_Mean'] = sum(all_rouge_scores) / len(all_rouge_scores) if all_rouge_scores else 0
             else:
@@ -562,35 +553,36 @@ def main():
                     field_name = rouge_col.replace('_rouge_l', '')
                     extraction_stats[f'{field_name}_rouge_l'] = 0.0
                 extraction_stats['Overall_ROUGE_L_Mean'] = 0.0
-            
+
             print(f"\n   Estatísticas por campo:")
             key_columns = ['description', 'impact', 'solution']
             for col in key_columns:
                 if f'{col}_rouge_l' in extraction_stats:
                     rouge_avg = extraction_stats[f'{col}_rouge_l']
                     print(f"   → {col}: ROUGE-L={rouge_avg:.3f}")
-            
+
             print(f"   → Média geral de todos os {len(rouge_columns)} campos: {extraction_stats['Overall_ROUGE_L_Mean']:.3f}")
-            
+
             general_summary.append(extraction_stats)
-            
+
         except Exception as e:
             print(f"[ERRO] Erro ao processar {extraction_sheet}: {e}")
             continue
-    
+
     # Salva resumo geral de todas as extrações
     if general_summary:
         general_df = pd.DataFrame(general_summary)
         summary_path = output_dir / "summary_all_extractions.xlsx"
         general_df.to_excel(summary_path, index=False)
         print(f"\n📊 Resumo geral salvo em: {summary_path}")
-    
+
     print(f"\n{'='*60}")
     print("Todas as comparacoes concluidas!")
     print("\n📊 Arquivos gerados:")
     for extraction_sheet in available_sheets:
-        clean_name = extraction_sheet.replace("Extração ", "").replace(" ", "_").lower()
-        print(f"   - {output_dir / f'rouge_comparison_{clean_name}.xlsx'}")
+        extraction_name = 'vulnerabilities' if extraction_sheet == 'Vulnerabilities' else extraction_sheet.replace("Extração ", "").replace(" ", "_").lower()
+        model_suffix = f"_{model_name}" if model_name else ""
+        print(f"   - {output_dir / f'rouge_comparison_{extraction_name}{model_suffix}.xlsx'}")
         print(f"       • Per_Vulnerability: Scores ROUGE-L detalhados por campo")
         print(f"       • Summary: Estatísticas agregadas (média, desvio, min, max, mediana)")
         print(f"       • Categorization: Classificação completa (Similarity + Absent + Non-existent)")

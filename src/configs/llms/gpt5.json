@@ -1,5 +1,5 @@
 {
-  "api_key": "api_key_gpt5",
+  "api_key": "${API_KEY_GPT5}",
   "endpoint": "https://api.openai.com/v1",
   "model": "gpt-5-mini-2025-08-07",
   "temperature": 1.0,

@@ -270,9 +270,20 @@ def load_profile(profile_name):
         return json.load(f)
 
 def load_llm(llm_name):
+    import re
+    from dotenv import load_dotenv
+    load_dotenv()
     path = f"src/configs/llms/{llm_name}.json"
     with open(path, "r", encoding="utf-8") as f:
-        return json.load(f)
+        config = json.load(f)
+    # Substitui variáveis de ambiente no formato ${NOME}
+    for k, v in config.items():
+        if isinstance(v, str):
+            match = re.fullmatch(r"\$\{([A-Z0-9_]+)\}", v)
+            if match:
+                env_var = match.group(1)
+                config[k] = os.getenv(env_var, "")
+    return config
 
 def init_llm(llm_config):
     os.environ["OPENAI_API_KEY"] = llm_config["api_key"]

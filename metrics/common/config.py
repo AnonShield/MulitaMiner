@@ -20,7 +20,7 @@ SPARSE_FIELDS = {"plugin"}
 
 # Abas de extração padrão para comparar
 DEFAULT_EXTRACTION_SHEETS = [
-    "Extração Deepseek",
+    "Extração DEEPSEEK",
     "Extração GPT4", 
     "Extração GPT4.1",
     "Extração GPT5",

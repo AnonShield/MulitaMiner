@@ -24,29 +24,38 @@ def normalize_name(s: str) -> str:
 
 def normalize_field_data(val) -> str:
     """Normalização avançada para garantir comparação consistente entre baseline e extração."""
-    if pd.isna(val):
+    # Verificar se é lista/tupla primeiro (antes de pd.isna)
+    if isinstance(val, (list, tuple)):
+        # Converte lista em texto separado por pontos
+        clean_items = []
+        for item in val:
+            item_str = str(item).strip()
+            if item_str and item_str.lower() not in ['none', 'null', '']:
+                clean_items.append(item_str)
+        text = ". ".join(clean_items) if clean_items else ""
+    elif pd.isna(val):
         return ""
-    
-    # Converter para string primeiro
-    text = str(val).strip()
-    
-    # Se parece com lista/array em formato string
-    if (text.startswith('[') and text.endswith(']')) or (text.startswith('(') and text.endswith(')')):
-        try:
-            import ast
-            parsed = ast.literal_eval(text)
-            if isinstance(parsed, (list, tuple, set)):
-                # Converte lista em texto separado por pontos
-                clean_items = []
-                for item in parsed:
-                    item_str = str(item).strip()
-                    if item_str and item_str.lower() not in ['none', 'null', '']:
-                        clean_items.append(item_str)
-                text = ". ".join(clean_items) if clean_items else ""
-        except (ValueError, SyntaxError):
-            # Se falhar o parse, trata como string normal
-            text = text.strip('[]()').replace("'", "").replace('"', '')
-            text = text.replace(',', ', ')
+    else:
+        # Converter para string primeiro
+        text = str(val).strip()
+        
+        # Se parece com lista/array em formato string
+        if (text.startswith('[') and text.endswith(']')) or (text.startswith('(') and text.endswith(')')):
+            try:
+                import ast
+                parsed = ast.literal_eval(text)
+                if isinstance(parsed, (list, tuple, set)):
+                    # Converte lista em texto separado por pontos
+                    clean_items = []
+                    for item in parsed:
+                        item_str = str(item).strip()
+                        if item_str and item_str.lower() not in ['none', 'null', '']:
+                            clean_items.append(item_str)
+                    text = ". ".join(clean_items) if clean_items else ""
+            except (ValueError, SyntaxError):
+                # Se falhar o parse, trata como string normal
+                text = text.strip('[]()').replace("'", "").replace('"', '')
+                text = text.replace(',', ', ')
     
     # Normalização de texto padrão
     text = text.replace("\r\n", " ").replace("\r", " ").replace("\n", " ")

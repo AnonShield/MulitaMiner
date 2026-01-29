@@ -45,21 +45,76 @@ class ScannerStrategy(ABC):
 
 
 class OpenVASStrategy(ScannerStrategy):
-    """OpenVAS não consolida, cada vulnerabilidade é independente."""
+    """OpenVAS consolida por nome + porta + protocolo."""
     
     @property
     def source_name(self) -> str:
         return 'OPENVAS'
     
     def should_consolidate(self) -> bool:
-        return False
+        return True
     
     def get_base_name(self, name: str) -> str:
-        return name
+        """Chave de consolidação: nome + porta + protocolo"""
+        return name  # A chave será construída no consolidate_by_scanner
     
     def consolidate_group(self, vulns: List[Dict]) -> List[Dict]:
-        # OpenVAS não consolida - retornar como está
-        return vulns
+        """
+        Consolida vulnerabilidades OpenVAS com mesmo nome, porta e protocolo.
+        Mescla arrays de campos quando apropriado.
+        """
+        if len(vulns) <= 1:
+            return vulns
+        
+        # Agrupar por (nome, porta, protocolo) para consolidar corretamente
+        from collections import defaultdict
+        by_key = defaultdict(list)
+        
+        for vuln in vulns:
+            name = vuln.get('Name', '').strip()
+            port = vuln.get('port')
+            protocol = vuln.get('protocol')
+            
+            # Chave de consolidação
+            key = (name, port, protocol)
+            by_key[key].append(vuln)
+        
+        consolidated = []
+        for key, group in by_key.items():
+            if len(group) == 1:
+                consolidated.extend(group)
+            else:
+                # Mesclar múltiplas ocorrências da mesma vulnerabilidade
+                base_vuln = group[0].copy()
+                
+                # Mesclar arrays
+                array_fields = ['description', 'detection_result', 'detection_method', 
+                               'product_detection_result', 'impact', 'solution', 
+                               'insight', 'log_method', 'references', 'cvss']
+                
+                for field in array_fields:
+                    all_values = []
+                    for vuln in group:
+                        values = vuln.get(field, [])
+                        if isinstance(values, list):
+                            all_values.extend(values)
+                        else:
+                            all_values.append(values)
+                    
+                    # Remover duplicatas mantendo ordem
+                    seen = set()
+                    unique_values = []
+                    for v in all_values:
+                        v_str = str(v) if not isinstance(v, (list, dict)) else str(sorted(v.items()) if isinstance(v, dict) else sorted(v))
+                        if v_str not in seen:
+                            unique_values.append(v)
+                            seen.add(v_str)
+                    
+                    base_vuln[field] = unique_values
+                
+                consolidated.append(base_vuln)
+        
+        return consolidated
 
 
 class TenableWASStrategy(ScannerStrategy):
@@ -74,7 +129,7 @@ class TenableWASStrategy(ScannerStrategy):
         return 'TENABLEWAS'
     
     def should_consolidate(self) -> bool:
-        return True
+        return False
     
     def get_base_name(self, name: str) -> str:
         """Remove ' Instances (N)' do final"""
@@ -469,20 +524,37 @@ def consolidate_by_scanner(vulnerabilities: List[Dict], profile_config: Dict = N
             consolidated.extend(vulns)
             continue
         
-        # Agrupar por base name
-        by_name = defaultdict(list)
-        for vuln in vulns:
-            name = vuln.get('Name', '').strip()
-            if name:
-                base_name = strategy.get_base_name(name)
-                by_name[base_name].append(vuln)
+        # Agrupar por base name ou chave composta (para OpenVAS: nome + porta + protocolo)
+        if source == 'OPENVAS':
+            # Para OpenVAS, usar chave composta
+            by_key = defaultdict(list)
+            for vuln in vulns:
+                name = vuln.get('Name', '').strip()
+                port = vuln.get('port')
+                protocol = vuln.get('protocol')
+                if name:
+                    key = (name, port, protocol)
+                    by_key[key].append(vuln)
+        else:
+            # Para outros scanners, usar base name
+            by_name = defaultdict(list)
+            for vuln in vulns:
+                name = vuln.get('Name', '').strip()
+                if name:
+                    base_name = strategy.get_base_name(name)
+                    by_name[base_name].append(vuln)
         
-        # Consolidar cada grupo - passar profile_config para Tenable WAS
-        for base_name, group in by_name.items():
-            if source == 'TENABLEWAS':
-                result = strategy.consolidate_group(group, profile_config)
-            else:
+        # Consolidar cada grupo
+        if source == 'OPENVAS':
+            for key, group in by_key.items():
                 result = strategy.consolidate_group(group)
-            consolidated.extend(result)
+                consolidated.extend(result)
+        else:
+            for base_name, group in by_name.items():
+                if source == 'TENABLEWAS':
+                    result = strategy.consolidate_group(group, profile_config)
+                else:
+                    result = strategy.consolidate_group(group)
+                consolidated.extend(result)
     
     return consolidated

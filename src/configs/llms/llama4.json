@@ -1,5 +1,5 @@
 {
-  "api_key": "api_key_llama4",
+  "api_key": "${API_KEY_LLAMA4}",
   "endpoint": "https://api.groq.com/openai/v1",
   "model": "meta-llama/llama-4-maverick-17b-128e-instruct",
   "temperature": 0.0,

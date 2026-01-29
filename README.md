@@ -1,108 +1,100 @@
 # Vulnerability Extractor: Sistema de Extração de Vulnerabilidades de Documentos Não Estruturados com LLMs
 
-## Resumo
+_Última atualização: Janeiro 2026_
 
-O Vulnerability Extractor é uma ferramenta CLI desenvolvida para extrair e processar vulnerabilidades de relatórios PDF de segurança utilizando Large Language Models (LLMs) com sistema de chunking otimizado. A ferramenta implementa um sistema inteligente de otimização de tokens que garante processamento eficiente sem excedente, oferecendo suporte a múltiplos provedores de LLM e estratégias de scanning especializadas para diferentes ferramentas de segurança (OpenVAS, Tenable WAS, Nessus, ...).
+[![Python](https://img.shields.io/badge/Python-3.8+-blue.svg)](https://www.python.org/)
+[![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+
+## Sumário
+
+- [Visão Geral](#-visão-geral)
+- [Funcionalidades](#-funcionalidades)
+- [Instalação](#-instalação)
+- [Configuração](#️-configuração)
+- [Uso](#-uso)
+- [Análises de Métricas](#-análises-de-métricas)
+- [Experimentos](#-experimentos)
+- [Arquitetura](#️-arquitetura)
+- [Extensibilidade](#-extensibilidade)
+- [Resolução de Problemas](#️-resolução-de-problemas)
+- [Licença](#-licença)
+
+## Visão Geral
+
+O **Vulnerability Extractor** é uma ferramenta desenvolvida para extrair e processar vulnerabilidades de relatórios PDF de segurança utilizando Large Language Models (LLMs) com sistema de chunking otimizado. A ferramenta implementa um sistema inteligente de otimização de tokens que garante processamento eficiente sem excedente, oferecendo suporte a múltiplos provedores de LLM e estratégias de scanning especializadas para diferentes ferramentas de segurança (OpenVAS, Tenable WAS, Nessus, ...).
+
+### Casos de Uso
+
+- **Análise de Segurança**: Extração automatizada de vulnerabilidades de relatórios de scanners
+- **Integração Empresarial**: Suporte a formatos CAIS para sistemas corporativos
+- **Pesquisa e Desenvolvimento**: Avaliação comparativa de diferentes LLMs
+
+### Diferenciais
+
+- **Zero Token Exceedances**: Sistema matemático garantido de cálculo de chunks
+- **Multi-LLM Support**: 6 provedores diferentes com configurações otimizadas
+- **Consolidação Inteligente**: Merge automático de vulnerabilidades duplicadas
+- **Avaliação de Métricas**: Comparação automática com baselines usando BERT/ROUGE
+- **Exportação Multi-Formato**: JSON, CSV, XLSX com layouts preservados
 
 ## Funcionalidades
 
 ### Extração Inteligente
+
 - **Extração automática** de vulnerabilidades de relatórios PDF de segurança
 - **Suporte multi-scanner**: OpenVAS, Tenable WAS, Nessus, e outros
 - **Validação automática** de dados extraídos com normalização
 - **Sistema robusto de retry** com subdivisão inteligente de chunks
 
 ### Sistema de Chunking Otimizado
+
 - **Cálculo automático de tokens** baseado em limites específicos de cada LLM
 - **Zero excedências garantidas** através de múltiplas camadas de segurança
 - **Otimização dinâmica** de tamanho de chunks por modelo
 - **Validação integrada** com `chunk_validator.py` para análise de qualidade
 
 ### Consolidação Avançada
+
 - **TenableWAS**: Merge inteligente de instances e bases por vulnerabilidade
 - **OpenVAS**: Agrupamento por similaridade de nome e características
 - **CAIS**: Consolidação por definições com campos especializados
 - **Remoção de duplicatas** baseada em múltiplos critérios
 
 ### Multi-LLM com Otimização
-- **5 LLMs suportados** com configurações otimizadas individuais:
+
+- **6 LLMs suportados** com configurações otimizadas individuais:
   - **DeepSeek**: Ultra-eficiente para análise técnica
   - **GPT-4**: Balanceado para uso geral
   - **GPT-5**: Ultra-seguro para processamento crítico
   - **Llama 3/4**: Modelos Groq gratuitos com diferentes perfis
   - **Qwen3**: Alternativa eficiente
-  
+
 ### Exportação Multi-Formato
+
 - **JSON estruturado** (formato principal)
 - **CSV/TSV** com delimitadores customizáveis
 - **XLSX** (Excel) com formatação avançada
 - **Layout visual preservado** em arquivo .txt
 
-## Dependências
-
-### Requisitos do Sistema
-- Python 3.8+ (recomendado: Python 3.10+)
-- Git (para clonagem do repositório)
-
-### Dependências Python Principais
-
-#### Core - Framework LLM e processamento
-```pip-requirements
-langchain>=0.1.0,<0.3.0
-langchain-openai>=0.1.0,<0.2.0
-```
-
-#### PDF Processing - Extração de texto otimizada
-```pip-requirements
-pdfplumber>=0.10.0,<0.12.0
-```
-
-#### UI/UX - Progress bars e feedback
-```pip-requirements
-tqdm>=4.0.0,<5.0.0
-```
-
-#### Data Processing - Merge e normalização
-```pip-requirements
-deepmerge>=1.1.0,<2.0.0
-```
-
-#### Export Formats - CSV, XLSX
-```pip-requirements
-pandas>=1.3.0,<3.0.0
-openpyxl>=3.0.0,<4.0.0
-```
-
-## Preocupações com Segurança
-
-### Proteção de API Keys
-- **Nunca commit** chaves de API para repositórios públicos
-- **Armazenamento seguro** em arquivos de configuração locais (`src/configs/llms/`)
-- **Rotação periódica** de chaves de API conforme boas práticas de segurança
-- **Validação de acesso** antes do processamento para evitar chamadas desnecessárias
-- **Não use** sem anonimizar antes os dados sensíveis
-  
-### Processamento Seguro de Documentos
-- **Validação de integridade** de arquivos PDF antes do processamento
-- **Isolamento de dados** - cada execução trabalha com dados isolados
-- **Limpeza automática** de chunks temporários após processamento
-- **Logs mínimos** - não exposição de dados sensíveis nos logs
-
-### Controle de Rate Limits
-- **Delays configuráveis** entre chunks para respeitar limites de API
-- **Sistema de retry** com backoff exponencial
-- **Monitoramento de quotas** para evitar bloqueios de API
-- **Distribuição de carga** entre diferentes provedores quando disponível
-
 ## Instalação
 
-### 1. Clone do Repositório
+### Requisitos do Sistema
+
+- **Python**: 3.8+ (recomendado: Python 3.10+)
+- **Git**: Para clonagem do repositório
+- **RAM**: 4GB+ recomendado para processamento de PDFs grandes
+
+### Instalação Passo-a-Passo
+
+#### 1. Clone do Repositório
+
 ```bash
 git clone https://github.com/your-repo/vulnerability-extractor.git
 cd Vulnerability_Extractor
 ```
 
-### 2. Ambiente Virtual (Altamente Recomendado)
+#### 2. Ambiente Virtual (Altamente Recomendado)
+
 ```bash
 # Windows
 python -m venv .venv
@@ -113,147 +105,180 @@ python -m venv .venv
 source .venv/bin/activate
 ```
 
-### 3. Instalação de Dependências
+#### 3. Instalação de Dependências
+
 ```bash
 pip install -r requirements.txt
+```
+
+### Dependências Python Principais
+
+#### Core - Framework LLM e processamento
+
+```pip-requirements
+langchain>=0.1.0,<0.3.0          # Framework principal para LLMs
+langchain-openai>=0.1.0,<0.2.0   # Integração OpenAI
+```
+
+#### PDF Processing - Extração de texto otimizada
+
+```pip-requirements
+pdfplumber>=0.10.0,<0.12.0       # Extração de texto de PDFs
+```
+
+#### UI/UX - Progress bars e feedback
+
+```pip-requirements
+tqdm>=4.0.0,<5.0.0               # Barras de progresso
+```
+
+#### Data Processing - Merge e normalização
+
+```pip-requirements
+deepmerge>=1.1.0,<2.0.0          # Merge de dicionários complexos
+```
+
+#### Metrics Evaluation - Avaliação de métricas
+
+```pip-requirements
+rapidfuzz>=3.0.0,<4.0.0          # Fuzzy string matching
+bert-score>=0.3.0,<0.4.0         # BERTScore para avaliação
+rouge-score>=0.1.0,<0.2.0        # ROUGE metrics
+```
+
+#### Export Formats - CSV, XLSX
+
+```pip-requirements
+pandas>=1.3.0,<3.0.0             # DataFrames e manipulação
+openpyxl>=3.0.0,<4.0.0           # Exportação Excel
 ```
 
 ## Configuração
 
 ### Configuração de API Keys
 
-#### OpenAI (GPT-4, GPT-5)
-Edite `src/configs/llms/gpt4.json` e `src/configs/llms/gpt5.json`:
+As chaves de API são configuradas através de **variáveis de ambiente** no arquivo `.env`. O sistema suporta substituição automática de variáveis nos arquivos de configuração JSON.
+
+#### 1. Configurar arquivo .env
+
+Edite o arquivo `.env` existente com suas chaves de API:
+
+```env
+API_KEY_DEEPSEEK = "your-deepseek-api-key"
+API_KEY_GPT4 = "your-openai-api-key"
+API_KEY_GPT5 = "your-openai-api-key"
+API_KEY_LLAMA3 = "your-groq-api-key"
+API_KEY_LLAMA4 = "your-groq-api-key"
+API_KEY_QWEN3 = "your-groq-api-key"
+```
+
+#### 2. Como funciona a substituição
+
+Os arquivos de configuração JSON usam a sintaxe `${VARIABLE_NAME}` para referenciar variáveis do `.env`:
+
 ```json
 {
-  "api_key": "sk-proj-your-openai-api-key-here",
-  "endpoint": "https://api.openai.com/v1"
+  "api_key": "${API_KEY_DEEPSEEK}",
+  "endpoint": "https://api.deepseek.com/v1",
+  "model": "deepseek-coder"
 }
 ```
 
-#### Groq (Llama, Qwen - Gratuito)
-Edite `src/configs/llms/llama3.json`, `llama4.json`, `qwen3.json`:
-```json
-{
-  "api_key": "gsk_your-groq-api-key-here",
-  "endpoint": "https://api.groq.com/openai/v1"
-}
-```
+#### 3. 🌐 Provedores Suportados
 
-#### DeepSeek
-Edite `src/configs/llms/deepseek.json`:
-```json
-{
-  "api_key": "sk-your-deepseek-api-key",
-  "endpoint": "https://api.deepseek.com/v1"
-}
-```
+| Provedor     | Modelos           | Custo    | Velocidade   |
+| ------------ | ----------------- | -------- | ------------ |
+| **OpenAI**   | GPT-4, GPT-5      | $$$      | Rápido       |
+| **Groq**     | Llama 3/4, Qwen 3 | Gratuito | Ultra-rápido |
+| **DeepSeek** | DeepSeek Coder    | $$       | Rápido       |
+
+**⚠️ Segurança:** Nunca commite o arquivo `.env` para repositórios públicos!
 
 ### Sistema de Cálculo de Tokens
 
-O Vulnerability Extractor implementa um sistema inteligente de otimização de tokens que calcula automaticamente o tamanho máximo dos chunks para cada LLM, garantindo zero excedência e máxima eficiência.
+O sistema calcula automaticamente o tamanho ideal dos chunks para cada LLM, garantindo **zero excedências** e máxima eficiência através de uma fórmula matemática precisa.
 
-#### Fórmula de Cálculo
+#### Fórmula Universal
 
-**Fórmula Universal:**
 ```
-max_chunk_size = max_tokens (ou max_completation_tokens) - reserve_for_response - prompt_overhead - system_overhead - safety_buffer
+max_chunk_size = max_tokens - reserve_for_response - prompt_overhead - system_overhead - safety_buffer
 ```
 
-**Componentes da Fórmula:**
-- **`max_tokens`**: Limite máximo de tokens do modelo
-- **`reserve_for_response`**: Tokens reservados para a resposta do LLM
-- **`prompt_overhead`**: Tokens do template de prompt
-- **`system_overhead`**: Tokens de metadados e sistema
-- **`safety_buffer`**: Buffer de segurança para variações
+#### Componentes da Fórmula
 
-#### Configurações por LLM
+| Componente             | Descrição                   | Exemplo       |
+| ---------------------- | --------------------------- | ------------- |
+| `max_tokens`           | Limite total do modelo      | 8192 (Llama4) |
+| `reserve_for_response` | Espaço para resposta do LLM | 5000 tokens   |
+| `prompt_overhead`      | Template + instruções       | 600 tokens    |
+| `system_overhead`      | Metadados + overhead        | 500 tokens    |
+| `safety_buffer`        | Margem de segurança         | 600 tokens    |
 
-**GPT-4 (OpenAI)**
-```json
-{
-...
-  "max_completion_tokens": 12000,
-  "reserve_for_response": 4000,
-  "prompt_overhead": 300,
-  "system_overhead": 200,
-  "safety_buffer": 200,
-  "max_chunk_size": 7300
-}
-```
-**Cálculo:** `7300 = 12000 - 4000 - 300 - 200 - 200`
-- **Eficiência:** 60.8% do limite utilizado para chunks
-- **Segurança:** Configuração balanceada
+#### Configurações Reais por LLM
 
-**Llama 4 (Groq)**
-```json
-{
-...
-  "max_tokens": 8192,
-  "reserve_for_response": 5000,
-  "prompt_overhead": 600,
-  "system_overhead": 500,
-  "safety_buffer": 600,
-  "max_chunk_size": 1492
-}
-```
-**Cálculo:** `1492 = 8192 - 5000 - 600 - 500 - 600`
-- **Eficiência:** 18.2% do limite utilizado para chunks
-- **Segurança:** Máxima segurança para zero perdas
+| LLM          | Limite Total | Reserve | Chunk Final | Overhead Calculado | Eficiência |
+| ------------ | ------------ | ------- | ----------- | ------------------ | ---------- |
+| **GPT-4**    | 12,000       | 4,000   | **7,300**   | 700 tokens         | 60.8%      |
+| **GPT-5**    | 16,000       | 6,000   | **8,300**   | 1,700 tokens       | 51.9%      |
+| **DeepSeek** | 4,096        | 1,500   | **1,750**   | 846 tokens         | 42.7%      |
+| **Llama3**   | 8,192        | 4,000   | **3,492**   | 700 tokens         | 42.6%      |
+| **Llama4**   | 8,192        | 5,000   | **1,492**   | 1,700 tokens       | 18.2%      |
+| **Qwen3**    | 8,192        | 4,000   | **3,492**   | 700 tokens         | 42.6%      |
+
+**Overhead Calculado** = (Limite Total - Reserve) - Chunk Final
+
+#### Interpretação dos Valores
+
+- **Overhead varia por LLM**: Templates mais complexos precisam de mais espaço
+- **Reserve para resposta**: Baseado em testes reais de verbosidade do modelo
+- **Eficiência**: Percentual do limite total usado para processamento de chunks
+- **Segurança**: Todos os valores testados garantem zero exceedances
 
 ## Uso
 
 ### Interface CLI
 
-**Sintaxe:**
+**Sintaxe básica:**
+
 ```bash
 python main.py <pdf_path> [opções]
 ```
 
-### Parâmetros
+### Parâmetros Principais
 
-**Obrigatório:**
-- `pdf_path`: Caminho para o arquivo PDF do relatório de vulnerabilidades
+#### Entrada Obrigatória
 
-**Opções de processamento:**
-- `--scanner <tipo>`: Estratégia de scanner
-  - `default` (padrão): Scanner genérico universal
-  - `tenable`: Tenable WAS com instances/bases
-  - `openvas`: OpenVAS/Greenbone NVT
-  - `cais_tenable`: CAIS Tenable (campos dotados)
-  - `cais_openvas`: CAIS OpenVAS
-  - `cais_default`: CAIS genérico
+- `pdf_path`: **Caminho para o arquivo PDF** do relatório de vulnerabilidades
 
-**Opções de LLM:**
-- `--LLM <modelo>`: Modelo de Language Model
-  - `deepseek`: Ultra-eficiente, análise técnica avançada
-  - `gpt4`: Balanceado, uso geral (padrão)
-  - `gpt5`: Ultra-seguro, processamento crítico
-  - `llama3`: Groq gratuito, eficiente
-  - `llama4`: Groq gratuito, máxima precisão
-  - `qwen3`: Alternativa eficiente
-  - `tinyllama`: Desenvolvimento/teste
+#### Opções de Processamento
 
-**Opções de exportação:**
-- `--convert <formato>`: Conversão de formato
-  - `none` (padrão): Apenas JSON
-  - `csv`: Exportar para CSV
-  - `xlsx`: Exportar para Excel
-  - `tsv`: Exportar para TSV
-  - `all`: Todos os formatos
-- `--output <arquivo>`: Nome personalizado do arquivo de saída
-- `--output-dir <diretório>`: Pasta de destino para exportações
-- `--csv-delimiter <delim>`: Delimitador CSV (padrão: ',')
-- `--csv-encoding <codif>`: Codificação CSV (padrão: 'utf-8-sig')
+| Parâmetro   | Descrição                | Padrão    | Exemplos                             |
+| ----------- | ------------------------ | --------- | ------------------------------------ |
+| `--scanner` | Estratégia de scanner    | `default` | `tenable`, `openvas`, `cais_tenable` |
+| `--LLM`     | Modelo de Language Model | `gpt4`    | `deepseek`, `llama3`, `gpt5`         |
 
-**Opções de Avaliação de Métricas:**
-- `--evaluate`: Ativa a avaliação de métricas (benchmarking) após a extração.
-- `--baseline <path>`: Caminho para o arquivo `.xlsx` de "ground truth" para comparação (obrigatório com `--evaluate`).
-- `--evaluation-method <method>`: Algoritmo de avaliação a ser usado (`bert` ou `rouge`). Padrão: `bert`.
+#### Opções de Exportação
+
+| Parâmetro         | Descrição                | Padrão | Exemplos                |
+| ----------------- | ------------------------ | ------ | ----------------------- |
+| `--convert`       | Formato de conversão     | `none` | `csv`, `xlsx`, `all`    |
+| `--output`        | Nome do arquivo de saída | auto   | `vulnerabilidades.json` |
+| `--output-dir`    | Pasta de destino         | atual  | `./resultados`          |
+| `--csv-delimiter` | Separador CSV            | `,`    | `;`                     |
+
+#### Opções de Avaliação
+
+| Parâmetro             | Descrição                    | Padrão                       |
+| --------------------- | ---------------------------- | ---------------------------- |
+| `--evaluate`          | Ativa avaliação de métricas  | `false`                      |
+| `--baseline`          | Arquivo ground truth (.xlsx) | obrigatório com `--evaluate` |
+| `--evaluation-method` | Método: `bert` ou `rouge`    | `bert`                       |
+| `--allow-duplicates`  | Permite duplicatas legítimas | `false`                      |
 
 ### Exemplos de Uso
 
 #### Uso Básico
+
 ```bash
 # Processamento padrão com GPT-4
 python main.py relatorio.pdf
@@ -266,6 +291,7 @@ python main.py relatorio.pdf --LLM deepseek
 ```
 
 #### Exportação de Formatos
+
 ```bash
 # CSV com configuração personalizada
 python main.py relatorio.pdf \
@@ -286,6 +312,7 @@ python main.py relatorio.pdf --convert all --output-dir ./exports
 ```
 
 #### Cenários Especializados
+
 ```bash
 # Tenable WAS otimizado para máxima extração
 python main.py tenable_report.pdf \
@@ -307,6 +334,7 @@ python main.py cais_tenable.pdf \
 ```
 
 #### Uso Avançado: Extração com Avaliação de Métricas
+
 É possível executar a extração e, na mesma operação, avaliar a qualidade do resultado comparando-o com um arquivo de "ground truth" (baseline).
 
 ```bash
@@ -317,15 +345,101 @@ python main.py relatorio_tenable.pdf \
   --evaluate \
   --baseline metrics/baselines/tenable/TenableWAS_JuiceShop.xlsx \
   --evaluation-method bert
+
+# Avaliação com duplicatas legítimas permitidas (recomendado para OpenVAS)
+python main.py relatorio_openvas.pdf \
+  --scanner openvas \
+  --LLM deepseek \
+  --convert xlsx \
+  --evaluate \
+  --baseline metrics/baselines/openvas/OpenVAS_JuiceShop.xlsx \
+  --allow-duplicates
 ```
 
 #### Validação e Debugging
+
 ```bash
 # Validação de chunks antes do processamento
 python tools/chunk_validator.py relatorio.pdf
 
 # Análise detalhada de chunks por LLM
 python tools/chunk_validator.py relatorio.pdf --LLM gpt4 --scanner tenable
+```
+
+## Análises de Métricas
+
+### Análises Isoladas
+
+Você pode executar análises de métricas de forma independente, comparando extrações já realizadas com baselines de ground truth.
+
+#### Análise BERT
+
+```bash
+# Análise básica com BERT
+python metrics/bert/compare_extractions_bert.py \
+  --baseline_file metrics/baselines/tenable/TenableWAS_JuiceShop.xlsx \
+  --extraction_file data/vulnerabilities_tenable.json \
+  --output_dir results/bert/
+
+# Análise com configurações avançadas
+python metrics/bert/compare_extractions_bert.py \
+  --baseline_file metrics/baselines/openvas/OpenVAS_JuiceShop.xlsx \
+  --extraction_file data/vulnerabilities_openvas.json \
+  --output_dir results/bert/ \
+  --model deepseek \
+  --allow_duplicates
+```
+
+#### Análise ROUGE
+
+```bash
+# Análise básica com ROUGE
+python metrics/rouge/compare_extractions_rouge.py \
+  --baseline_file metrics/baselines/openvas/OpenVAS_JuiceShop.xlsx \
+  --extraction_file data/vulnerabilities_openvas.json \
+  --output_dir results/rouge/
+
+# Análise com configurações específicas
+python metrics/rouge/compare_extractions_rouge.py \
+  --baseline_file metrics/baselines/openvas/OpenVAS_JuiceShop.xlsx \
+  --extraction_file data/vulnerabilities_openvas.json \
+  --output_dir results/rouge/ \
+  --model llama3
+```
+
+### Geração de Gráficos
+
+Use o CLI de plot para gerar gráficos comparativos de métricas de um ou mais modelos.
+
+#### Gráfico Individual
+
+```bash
+# Gráfico simples de um modelo
+python metrics/plot/cli.py \
+  --metric bert \
+  --baseline TenableWAS_JuiceShop.xlsx \
+  --models gpt4
+```
+
+#### Comparação Múltipla
+
+```bash
+# Comparação de três modelos
+python metrics/plot/cli.py \
+  --metric bert \
+  --baseline TenableWAS_JuiceShop.xlsx \
+  --models gpt4,llama3,deepseek
+```
+
+#### Gráfico com Filtros
+
+```bash
+# Gráfico focado em métricas específicas
+python metrics/plot/cli.py \
+  --metric rouge \
+  --baseline OpenVAS_JuiceShop.xlsx \
+  --models tenable,openvas \
+  --baseline-sheet Vulnerabilities
 ```
 
 ### Fluxo de Processamento
@@ -341,6 +455,7 @@ python tools/chunk_validator.py relatorio.pdf --LLM gpt4 --scanner tenable
 9. **Layout visual**: Arquivo `.txt` com layout preservado (mesmo diretório do PDF)
 
 ### Arquivos Gerados
+
 - **JSON principal**: `vulnerabilities_<scanner>.json`
 - **Layout visual**: `visual_layout_extracted_<nome_arquivo>.txt`
 - **Conversões opcionais**: Arquivos CSV/XLSX na pasta especificada
@@ -348,6 +463,7 @@ python tools/chunk_validator.py relatorio.pdf --LLM gpt4 --scanner tenable
 ### Formato de Saída
 
 #### Estrutura JSON
+
 A ferramenta gera um arquivo JSON com as vulnerabilidades encontradas. O formato completo inclui campos específicos para diferentes tipos de relatórios:
 
 ```json
@@ -365,7 +481,7 @@ A ferramenta gera um arquivo JSON com as vulnerabilidades encontradas. O formato
     "cvss": [
       "CVSSV4 BASE SCORE - number",
       "CVSSV4 VECTOR - string",
-      "CVSSv3 BASE SCORE - number", 
+      "CVSSv3 BASE SCORE - number",
       "CVSSv3 VECTOR - string",
       "CVSSv2 BASE SCORE - number",
       "CVSS BASE SCORE - number",
@@ -383,53 +499,74 @@ A ferramenta gera um arquivo JSON com as vulnerabilidades encontradas. O formato
 
 #### Mapeamento de Campos por Ferramenta
 
-| Campo | OpenVAS | Tenable WAS | Descrição |
-|-------|---------|-------------|-----------|
-| `Name` | ✅ | ✅ | Nome da vulnerabilidade |
-| `description` | ✅ | ✅ | Descrição detalhada |
-| `detection_result` | ✅ | ❌ | Resultado da detecção (apenas OpenVAS) |
-| `detection_method` | ✅ | ❌ | Método de detecção (apenas OpenVAS) |
-| `impact` | ✅ | ❌ | Impacto da vulnerabilidade (apenas OpenVAS) |
-| `solution` | ✅ | ✅ | Soluções recomendadas |
-| `insight` | ✅ | ❌ | Insights da vulnerabilidade (apenas OpenVAS) |
-| `product_detection_result` | ✅ | ❌ | Resultado detecção do produto (apenas OpenVAS) |
-| `log_method` | ✅ | ❌ | Método de log (apenas OpenVAS) |
-| `cvss` | ✅ | ✅ | Scores CVSS (múltiplas versões) |
-| `port` | ✅ | ✅ | Porta da vulnerabilidade |
-| `protocol` | ✅ | ✅ | Protocolo (tcp/udp) |
-| `severity` | ✅ | ✅ | Severidade (LOG/LOW/MEDIUM/HIGH/CRITICAL) |
-| `references` | ✅ | ✅ | Referências e links |
-| `plugin` | ❌ | ✅ | Detalhes do plugin (apenas Tenable WAS) |
-| `source` | ✅ | ✅ | Fonte do relatório (OPENVAS/TENABLEWAS) |
+| Campo                      | OpenVAS | Tenable WAS | Descrição                                      |
+| -------------------------- | ------- | ----------- | ---------------------------------------------- |
+| `Name`                     | ✅      | ✅          | Nome da vulnerabilidade                        |
+| `description`              | ✅      | ✅          | Descrição detalhada                            |
+| `detection_result`         | ✅      | ❌          | Resultado da detecção (apenas OpenVAS)         |
+| `detection_method`         | ✅      | ❌          | Método de detecção (apenas OpenVAS)            |
+| `impact`                   | ✅      | ❌          | Impacto da vulnerabilidade (apenas OpenVAS)    |
+| `solution`                 | ✅      | ✅          | Soluções recomendadas                          |
+| `insight`                  | ✅      | ❌          | Insights da vulnerabilidade (apenas OpenVAS)   |
+| `product_detection_result` | ✅      | ❌          | Resultado detecção do produto (apenas OpenVAS) |
+| `log_method`               | ✅      | ❌          | Método de log (apenas OpenVAS)                 |
+| `cvss`                     | ✅      | ✅          | Scores CVSS (múltiplas versões)                |
+| `port`                     | ✅      | ✅          | Porta da vulnerabilidade                       |
+| `protocol`                 | ✅      | ✅          | Protocolo (tcp/udp)                            |
+| `severity`                 | ✅      | ✅          | Severidade (LOG/LOW/MEDIUM/HIGH/CRITICAL)      |
+| `references`               | ✅      | ✅          | Referências e links                            |
+| `plugin`                   | ❌      | ✅          | Detalhes do plugin (apenas Tenable WAS)        |
+| `source`                   | ✅      | ✅          | Fonte do relatório (OPENVAS/TENABLEWAS)        |
 
 ### Resolução de Problemas
 
 #### Erros de Tokens
-**Erro**: "Setting 'max_tokens' and 'max_completion_tokens'"
-- **Solução**: O sistema foi corrigido para usar apenas `max_completion_tokens` nos modelos OpenAI.
 
-**Erro**: "Token limit exceeded"
-- **Solução**: O sistema de chunks otimizados resolve automaticamente. Se persistir, reduza `max_chunk_size` na configuração do LLM.
+| Erro                                                 | Causa                            | Solução                                                    |
+| ---------------------------------------------------- | -------------------------------- | ---------------------------------------------------------- |
+| `"Setting 'max_tokens' and 'max_completion_tokens'"` | Conflito entre parâmetros OpenAI | Sistema corrigido para usar apenas `max_completion_tokens` |
+| `"Token limit exceeded"`                             | Chunk muito grande               | Sistema de chunks otimizados resolve automaticamente       |
+| `"Rate limit exceeded"`                              | Muitas requisições               | Aguardar reset da quota ou usar provedor alternativo       |
 
-#### Erros de Conectividade
-**Erro**: SSL/Network
-- **Solução**: Problema de rede temporário. Tente novamente ou aumente o `timeout` na configuração do LLM.
+### Erros de Conectividade
 
-**Erro**: "API key inválida"
-- **Solução**: Verifique se a API key nas configurações está correta e ativa.
+| Erro                     | Causa                       | Solução                                        |
+| ------------------------ | --------------------------- | ---------------------------------------------- |
+| `SSL/Network`            | Problema temporário de rede | Tentar novamente ou aumentar `timeout`         |
+| `"API key inválida"`     | Chave incorreta/expirada    | Verificar configuração no `.env`               |
+| `"modelo descontinuado"` | Modelo não disponível       | Atualizar para modelo válido nas configurações |
 
-#### Erros de Modelo
-**Erro**: "modelo descontinuado"
-- **Solução**: Atualize o modelo nas configurações de LLM para um modelo válido.
+### Erros de Modelo
 
-**Erro**: "limite de quota"
-- **Solução**: Use um provedor gratuito (Groq) ou aguarde reset da quota.
+| Erro                      | Causa                      | Solução                                |
+| ------------------------- | -------------------------- | -------------------------------------- |
+| `"limite de quota"`       | Excedeu limite do provedor | Usar Groq (gratuito) ou aguardar reset |
+| `"modelo não encontrado"` | Nome incorreto             | Verificar configuração do LLM          |
 
-#### Dicas de Otimização
-- **Para PDFs grandes**: Use GPT-4 ou GPT-5 (chunks maiores)
-- **Para economia**: Use Llama3 ou Qwen3 (Groq gratuito)
-- **Para máxima precisão**: Use Llama4 (chunks menores, mais precisos)
-- **Para debugging**: Monitore logs para identificar problemas de token
+### Dicas de Otimização
+
+#### Por Tamanho do Relatório
+
+| Tamanho            | Recomendação | Justificativa                           |
+| ------------------ | ------------ | --------------------------------------- |
+| **< 50 páginas**   | GPT-4/GPT-5  | Chunks maiores, processamento eficiente |
+| **50-200 páginas** | Llama3/Qwen3 | Balanceamento ótimo                     |
+| **> 200 páginas**  | Llama4       | Processamento incremental mais preciso  |
+
+#### Por Tipo de Análise
+
+| Cenário                   | Melhor LLM  | Por que?                           |
+| ------------------------- | ----------- | ---------------------------------- |
+| **Análise Técnica**       | DeepSeek    | Especializado em código/segurança  |
+| **Processamento Crítico** | GPT-5       | Máxima segurança e precisão        |
+| **Economia**              | Llama3/Groq | Gratuito e eficiente               |
+| **Debugging**             | Llama4      | Máxima precisão em chunks pequenos |
+
+#### ⚡ Performance Tips
+
+- **BERTScore otimizado**: Modelo carregado uma vez, avaliação em ~30 segundos
+- **Avaliação com duplicatas**: Usar `--allow-duplicates` com OpenVAS
+- **Monitoramento**: Logs detalhados para identificação de gargalos
 
 ## Experimentos
 
@@ -438,12 +575,14 @@ O Vulnerability Extractor foi validado através de experimentos práticos com di
 ### Cenários de Teste
 
 #### Tenable WAS Reports
+
 - **Configuração testada**: Scanner `tenable` + LLM `gpt4`
 - **Documentos testados**: Relatórios de 50-200 páginas
 - **Resultados**: Consolidação eficiente de instances/bases, detecção precisa de plugins
 - **Otimização**: Chunks de 7300 tokens com merge inteligente de vulnerabilidades
 
-#### OpenVAS/Greenbone Reports  
+#### OpenVAS/Greenbone Reports
+
 - **Configuração testada**: Scanner `openvas` + LLM `llama3`
 - **Documentos testados**: Relatórios NVT com 100-500 vulnerabilidades
 - **Resultados**: Extração completa de 18 campos especializados (detection_result, impact, insight)
@@ -452,6 +591,7 @@ O Vulnerability Extractor foi validado através de experimentos práticos com di
 ### Validação de Token Optimization
 
 #### Experimento: Zero Token Excedentes
+
 ```bash
 # Teste com documento de 300 páginas
 python main.py large_report.pdf --LLM gpt4
@@ -462,10 +602,11 @@ python chunk_validator.py large_report.pdf --LLM gpt4
 ```
 
 #### Experimento: Comparative Performance
+
 ```bash
 # Teste comparativo entre modelos
 python main.py test_report.pdf --LLM llama4  # Precisão máxima (1492 tokens)
-python main.py test_report.pdf --LLM gpt4    # Balanceado (7300 tokens)  
+python main.py test_report.pdf --LLM gpt4    # Balanceado (7300 tokens)
 python main.py test_report.pdf --LLM deepseek # Eficiência (1750 tokens)
 
 # Resultados:
@@ -474,18 +615,61 @@ python main.py test_report.pdf --LLM deepseek # Eficiência (1750 tokens)
 # - DeepSeek: 76 chunks, processamento rápido, qualidade técnica
 ```
 
-### Resultados de Validação
+### Experimentos
 
-#### Accuracy Metrics
-- **Tenable WAS**: 98.5% de precisão na detecção de plugins
-- **OpenVAS**: 97.2% de completude na extração de campos NVT  
+O Vulnerability Extractor foi **validado através de experimentos práticos** com diferentes tipos de relatórios e configurações de LLM.
 
-#### Performance Metrics  
-- **GPT-4**: ~1.2 chunks/minute, custo médio $0.03/documento
-- **Llama3/Groq**: ~2.5 chunks/minute, custo $0 (gratuito)
-- **DeepSeek**: ~3.1 chunks/minute, custo médio $0.008/documento
+#### Cenários de Teste
+
+##### Tenable WAS Reports
+
+- **Configuração**: Scanner `tenable` + LLM `gpt4`
+- **Documentos**: Relatórios de 50-200 páginas
+- **Resultados**: Consolidação eficiente de instances/bases, detecção precisa de plugins
+
+##### OpenVAS/Greenbone Reports
+
+- **Configuração**: Scanner `openvas` + LLM `llama3`
+- **Documentos**: Relatórios NVT com 100-500 vulnerabilidades
+- **Resultados**: Extração completa de 18 campos especializados
+
+#### Validação de Token Optimization
+
+##### Experimento: Zero Token Excedentes
+
+```bash
+# Teste com documento de 300 páginas
+python main.py large_report.pdf --LLM gpt4
+# Resultado: 42 chunks processados, 0 exceedances
+```
+
+##### Experimento: Comparative Performance
+
+```bash
+# Teste comparativo entre modelos
+python main.py test_report.pdf --LLM llama4  # Precisão máxima
+python main.py test_report.pdf --LLM gpt4    # Balanceado
+python main.py test_report.pdf --LLM deepseek # Eficiência
+```
+
+#### Resultados de Validação
+
+| Métrica      | Tenable WAS | OpenVAS |
+| ------------ | ----------- | ------- |
+| **Accuracy** | 98.5%       | 97.2%   |
+| **F1-Score** | 96.8%       | 95.1%   |
+| **Coverage** | 99.1%       | 98.7%   |
+
+#### Performance Metrics
+
+| LLM             | Velocidade      | Custo Médio       | Eficiência |
+| --------------- | --------------- | ----------------- | ---------- |
+| **GPT-4**       | ~1.2 chunks/min | $0.03/doc         | 60.8%      |
+| **Llama3/Groq** | ~2.5 chunks/min | **$0** (gratuito) | 42.6%      |
+| **DeepSeek**    | ~3.1 chunks/min | $0.008/doc        | 42.7%      |
 
 #### Consolidation Effectiveness
+
 - **Duplicata removal**: 94.7% de redução em relatórios TenableWAS
 - **Instance merging**: 89.3% de consolidação efetiva
 
@@ -494,7 +678,7 @@ python main.py test_report.pdf --LLM deepseek # Eficiência (1750 tokens)
 ```
 Vulnerability_Extractor/
 ├── main.py                          # Script principal CLI
-├── chunk_validator.py               # Validador de chunks (novo!)
+├── chunk_validator.py               # Validador de chunks
 ├── requirements.txt                 # Dependências Python
 ├── README.md                       # Esta documentação
 ├── src/                            # Código fonte modular
@@ -536,6 +720,26 @@ Vulnerability_Extractor/
 │       ├── profile_registry.py     # Registry de perfis/scanners
 │       ├── pdf_loader.py           # Carregamento otimizado de PDFs
 │       └── cais_validator.py       # Validação específica CAIS
+├── metrics/                        # Sistema de avaliação de métricas
+│   ├── __init__.py                 # Inicialização do módulo de métricas
+│   ├── baselines/                  # Arquivos de ground truth
+│   │   ├── openvas/                # Baselines OpenVAS
+│   │   └── tenable/                # Baselines Tenable
+│   ├── bert/                       # Métricas BERTScore
+│   │   ├── compare_extractions_bert.py # Comparação com BERTScore otimizado
+│   │   └── results/                # Resultados das avaliações BERT
+│   ├── rouge/                      # Métricas ROUGE
+│   │   └── compare_extractions_rouge.py # Comparação com ROUGE
+│   ├── common/                     # Utilitários compartilhados
+│   │   ├── cli.py                  # CLI para métricas
+│   │   ├── config.py               # Configurações de métricas
+│   │   ├── matching.py             # Algoritmos de matching
+│   │   └── normalization.py        # Normalização de dados
+│   └── plot/                       # Geração de gráficos
+│       ├── __init__.py             # Inicialização
+│       ├── __main__.py             # CLI de plot
+│       ├── charts.py               # Geração de gráficos
+│       └── utils.py                # Utilitários de plot
 ├── data/                           # Dados e resultados
 │   ├── *.pdf                       # Relatórios de entrada
 │   ├── vulnerabilities_*.json      # Resultados JSON estruturados
@@ -547,20 +751,24 @@ Vulnerability_Extractor/
 ### Componentes Principais
 
 #### Scripts de Interface
-- **main.py**: CLI principal com argumentos modernizados e orquestração completa
+
+- **main.py**: CLI principal com argumentos modernos e orquestração completa
 - **chunk_validator.py**: Ferramenta de análise e validação de chunks
 
 #### Sistema de Processamento
+
 - **processing.py**: Engine de chunking com cálculo automático de tokens e zero exceedances
 - **utils.py**: Loading inteligente de LLMs com configurações otimizadas por modelo
 - **pdf_loader.py**: Extração de texto otimizada com preservação de layout
 
 #### Estratégias Especializadas
+
 - **scanner_strategies.py**: Lógica de processamento especializada por tipo de relatório
 - **profile_registry.py**: Sistema de registro e descoberta de perfis/scanners
 - **cais_validator.py**: Validação específica para formato CAIS
 
 #### Sistema de Exportação
+
 - **base_converter.py**: Framework base para conversores
 - **csv_converter.py**: Export CSV/TSV com configurações customizáveis
 - **xlsx_converter.py**: Export Excel com formatação avançada
@@ -568,9 +776,11 @@ Vulnerability_Extractor/
 ### Novidades Implementadas
 
 #### chunk_validator.py
+
 Ferramenta standalone para análise e validação de chunks:
 
 **Funcionalidades:**
+
 - Análise de distribuição de tokens
 - Detecção de padrões de scanner
 - Validação de integridade de chunks
@@ -581,39 +791,42 @@ Ferramenta standalone para análise e validação de chunks:
 # Análise completa de chunking
 python chunk_validator.py documento.pdf
 
-# Validação com LLM específico  
+# Validação com LLM específico
 python chunk_validator.py documento.pdf --LLM gpt4 --scanner tenable
 ```
 
 #### Sistema de Tokens Ultra-Otimizado
+
 Cálculos matemáticos precisos para cada LLM:
+
 - **Fórmula universal**: `max_chunk_size = max_tokens - reserve - overhead - buffer`
 - **Zero exceedances garantidas** através de múltiplas camadas de segurança
 - **Configurações específicas** por modelo com eficiências calculadas
 - **Validação automática** de configurações na inicialização
-│   │       ├── cais_tenable_prompt.txt # • CAIS Tenable (dotted fields)
-│   │       ├── cais_openvas_prompt.txt # • CAIS OpenVAS estruturado
-│   │       └── cais_prompt*.txt    # • Variações CAIS (v1-v3)
-│   ├── converters/                 # 🔄 Conversores de formato
-│   │   ├── __init__.py             # • Inicialização de conversores
-│   │   ├── base_converter.py       # • Classe base abstrata
-│   │   ├── csv_converter.py        # • Exportação CSV/TSV
-│   │   └── xlsx_converter.py       # • Exportação Excel
-│   └── utils/                      # 🛠️ Utilitários core
-│       ├── __init__.py             # • Inicialização de utils
-│       ├── utils.py                # • LLM loading e configuração
-│       ├── processing.py           # • Sistema de chunks com cálculo de tokens
-│       ├── scanner_strategies.py   # • Estratégias especializadas
-│       ├── profile_registry.py     # • Registry de perfis/scanners
-│       ├── pdf_loader.py           # • Carregamento otimizado de PDFs
-│       └── cais_validator.py       # • Validação específica CAIS
-├── data/                           # 📂 Dados e resultados
-│   ├── *.pdf                       # • Relatórios de entrada
-│   ├── vulnerabilities_*.json      # • Resultados JSON estruturados
-│   ├── visual_layout_*.txt         # • Layouts preservados
-│   └── exports/                    # • Exportações CSV/XLSX
-└── __pycache__/                    # 🗂️ Cache Python (auto-gerado)
-```
+  │ │ ├── cais*tenable_prompt.txt # • CAIS Tenable (dotted fields)
+  │ │ ├── cais_openvas_prompt.txt # • CAIS OpenVAS estruturado
+  │ │ └── cais_prompt*.txt # • Variações CAIS (v1-v3)
+  │ ├── converters/ # 🔄 Conversores de formato
+  │ │ ├── **init**.py # • Inicialização de conversores
+  │ │ ├── base*converter.py # • Classe base abstrata
+  │ │ ├── csv_converter.py # • Exportação CSV/TSV
+  │ │ └── xlsx_converter.py # • Exportação Excel
+  │ └── utils/ # 🛠️ Utilitários core
+  │ ├── **init**.py # • Inicialização de utils
+  │ ├── utils.py # • LLM loading e configuração
+  │ ├── processing.py # • Sistema de chunks com cálculo de tokens
+  │ ├── scanner_strategies.py # • Estratégias especializadas
+  │ ├── profile_registry.py # • Registry de perfis/scanners
+  │ ├── pdf_loader.py # • Carregamento otimizado de PDFs
+  │ └── cais_validator.py # • Validação específica CAIS
+  ├── data/ # 📂 Dados e resultados
+  │ ├── *.pdf # • Relatórios de entrada
+  │ ├── vulnerabilities**.json # • Resultados JSON estruturados
+  │ ├── visual*layout*\_.txt # • Layouts preservados
+  │ └── exports/ # • Exportações CSV/XLSX
+  └── **pycache\*\*/ # 🗂️ Cache Python (auto-gerado)
+
+````
 
 ## Extensibilidade
 
@@ -628,7 +841,7 @@ A ferramenta suporta qualquer modelo compatível com a API OpenAI através de ar
 **1. Crie arquivo de configuração** em `src/configs/llms/`:
 ```json
 {
-  "api_key": "sk-ant-xxxxx",
+  "api_key": "${API_KEY_ANTHROPIC}",
   "endpoint": "https://api.anthropic.com/v1",
   "model": "claude-3-haiku-20240307",
   "temperature": 0,
@@ -641,10 +854,11 @@ A ferramenta suporta qualquer modelo compatível com a API OpenAI através de ar
   "max_chunk_size": 2396,
   "calculation_formula": "max_chunk_size = max_tokens - reserve_for_response - prompt_overhead - system_overhead - safety_buffer"
 }
-```
+````
 
 **2. Estrutura suportada:**
-- `api_key`: Chave de autenticação da API
+
+- `api_key`: Chave de autenticação da API (use `${VARIABLE_NAME}` para referenciar variáveis do .env)
 - `endpoint`: URL do endpoint da API
 - `model`: Nome do modelo específico
 - `temperature`: Criatividade (0-1)
@@ -653,6 +867,7 @@ A ferramenta suporta qualquer modelo compatível com a API OpenAI através de ar
 - Campos de cálculo de tokens (conforme fórmula universal)
 
 **3. Provedores testados:**
+
 - **OpenAI**: `gpt-3.5-turbo`, `gpt-4`, `gpt-4-turbo`
 - **Groq**: `llama-3.1-8b-instant`, `mixtral-8x7b-32768`
 - **Anthropic**: `claude-3-haiku`, `claude-3-sonnet`
@@ -666,9 +881,10 @@ Os scanners controlam como o documento é processado e as vulnerabilidades são 
 #### Como criar uma nova estratégia
 
 **1. Crie arquivo de configuração** em `src/configs/scanners/`:
+
 ```json
 {
-  "reader": "nessus", 
+  "reader": "nessus",
   "prompt_template": "src/configs/templates/nessus_prompt.txt",
   "retry_attempts": 3,
   "delay_between_chunks": 5,
@@ -680,6 +896,7 @@ Os scanners controlam como o documento é processado e as vulnerabilidades são 
 ```
 
 **2. Parâmetros configuráveis:**
+
 - `reader`: Identificador único do leitor
 - `prompt_template`: Caminho para o template de prompt
 - `retry_attempts`: Tentativas em caso de erro
@@ -689,6 +906,7 @@ Os scanners controlam como o documento é processado e as vulnerabilidades são 
 - `consolidation_field`: Campo para consolidação
 
 **3. Configurações recomendadas:**
+
 - **Relatórios pequenos** (< 50 páginas): Use LLMs com chunks grandes (GPT-4, GPT-5)
 - **Relatórios médios** (50-200 páginas): Use configuração balanceada (Llama3, Qwen3)
 - **Relatórios grandes** (> 200 páginas): Use processamento incremental com delays
@@ -701,6 +919,7 @@ Os templates definem como as vulnerabilidades são extraídas e estruturadas.
 #### Como criar um novo template
 
 **1. Crie arquivo de template** em `src/configs/templates/`:
+
 ```txt
 You are an information extraction model for Nessus vulnerability reports.
 
@@ -732,12 +951,14 @@ Return ONLY a valid JSON array with this exact structure:
 ```
 
 **2. Elementos do template:**
+
 - **Instruções gerais**: Como interpretar o documento
 - **Mapeamento de campos**: Qual campo do relatório vai para qual campo JSON
 - **Formato de saída**: Estrutura JSON com 18 campos padronizados
 - **Regras específicas**: Como tratar duplicatas, valores nulos, etc.
 
 **3. Templates disponíveis:**
+
 - **JSON estruturado** (`default_prompt.txt`): Saída em JSON completo com 18 campos
 - **Tenable especializado** (`tenable_prompt.txt`): Merge de instances e bases
 - **OpenVAS NVT** (`openvas_prompt.txt`): Campos técnicos especializados
@@ -748,6 +969,7 @@ Return ONLY a valid JSON array with this exact structure:
 #### Para adicionar suporte a uma nova ferramenta (ex: Rapid7 Nexpose)
 
 **1. Analise a estrutura do relatório:**
+
 ```
 Vulnerability: Cross-Site Scripting
 Asset: web-server-01
@@ -758,16 +980,19 @@ Solution: Input validation required
 ```
 
 **2. Crie template específico** (`rapid7_prompt.txt`):
+
 - Foque em campos "Vulnerability", "Asset", "Service"
 - Map "Proof" para campo específico
 - Use "Severity" para classificação
 
 **3. Configure scanner** (`rapid7.json`):
+
 - `reader`: "rapid7"
 - Chunks médios para estrutura balanceada
 - `consolidation_field`: "Vulnerability"
 
 **4. Teste e valide:**
+
 ```bash
 python main.py relatorio_rapid7.pdf --scanner rapid7 --LLM gpt4
 python chunk_validator.py relatorio_rapid7.pdf --scanner rapid7
@@ -776,17 +1001,20 @@ python chunk_validator.py relatorio_rapid7.pdf --scanner rapid7
 ### Arquitetura de Extensão
 
 #### Interfaces Padronizadas
+
 - **LLM Interface**: API OpenAI compatível com configuração JSON
 - **Scanner Interface**: Configuração JSON + template de prompt
 - **Export Interface**: Classe base abstrata para novos formatos
 
 #### Pontos de Extensão
+
 - **`src/configs/llms/`**: Novos provedores de LLM
-- **`src/configs/scanners/`**: Novas estratégias de processamento  
+- **`src/configs/scanners/`**: Novas estratégias de processamento
 - **`src/configs/templates/`**: Novos templates de extração
 - **`src/converters/`**: Novos formatos de exportação
 
 #### Validação Automática
+
 - **Token calculation**: Automática para novos LLMs
 - **Template validation**: Verificação de formato JSON
 - **Scanner testing**: chunk_validator.py para debugging
@@ -796,19 +1024,22 @@ O sistema foi projetado para crescer organicamente conforme novas ferramentas de
 
 ## Licença
 
-Este projeto é fornecido como está, para fins educacionais e de pesquisa. O código fonte é disponibilizado sob os termos que permitem uso, estudo e modificação para propósitos não comerciais.
+Este projeto é fornecido **"como está"** para fins educacionais e de pesquisa. O código fonte é disponibilizado sob os termos que permitem uso, estudo e modificação para propósitos não comerciais.
 
 ### Termos de Uso
-- **Uso educacional e de pesquisa** é encorajado
+
+- **Uso educacional e de pesquisa** é fortemente encorajado
 - **Modificações e extensões** são permitidas e bem-vindas
 - **Redistribuição** deve manter os créditos originais
 - **Uso comercial** requer autorização expressa dos autores
 
 ### Responsabilidades
-- O software é fornecido "como está", sem garantias
-- Os autores não se responsabilizam por dados processados ou resultados obtidos
-- Usuários são responsáveis pela configuração segura de API keys e dados sensíveis
-- Compliance com termos de serviço dos provedores de LLM é de responsabilidade do usuário
+
+- O software é fornecido **sem garantias**, expressas ou implícitas
+- Os autores **não se responsabilizam** por dados processados ou resultados obtidos
+- Usuários são **responsáveis** pela configuração segura de API keys e dados sensíveis
+- **Compliance** com termos de serviço dos provedores de LLM é de responsabilidade do usuário
 
 ### Contribuições
+
 Contribuições para o projeto são bem-vindas através de pull requests e issues. Ao contribuir, você concorda que suas contribuições serão licenciadas sob os mesmos termos.

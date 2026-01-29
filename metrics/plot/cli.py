@@ -69,12 +69,38 @@ def cli_entry():
     p.add_argument('--models', help='Lista de modelos separados por vírgula (ex: deepseek,gpt4)')
     args = p.parse_args()
 
-    models = None
+
+    # Se --models não for passado, lista todos os arquivos de resultado na pasta do baseline
     if args.models:
         models = [m.strip() for m in args.models.split(',') if m.strip()]
     else:
-        # fallback to a sensible default list of models
-        models = ['deepseek', 'gpt4', 'gpt4.1', 'llama3', 'llama4']
+        # Busca todos os arquivos bert_comparison_*.xlsx e bert_comparison_vulnerabilities_*.xlsx na pasta do baseline
+        metric = args.metric or 'bert'
+        repo_root = Path(__file__).parents[1]
+        baseline_path = Path(args.baseline)
+        if not baseline_path.is_absolute():
+            if not baseline_path.suffix:
+                baseline_file_with_ext = f"{args.baseline}.xlsx"
+            else:
+                baseline_file_with_ext = args.baseline
+            baseline_path = repo_root / "baselines" / baseline_file_with_ext
+        results_dir = repo_root / metric / "results" / baseline_path.stem
+        if results_dir.exists():
+            models = []
+            # Pega modelos dos dois padrões de arquivo
+            for f in results_dir.glob(f"{metric}_comparison_*.xlsx"):
+                nome = f.stem.replace(f"{metric}_comparison_", "")
+                if nome.startswith("vulnerabilities_"):
+                    nome = nome.replace("vulnerabilities_", "")
+                models.append(nome)
+            if not models:
+                print(f"⚠️  Nenhum resultado encontrado em {results_dir}")
+        else:
+            print(f"⚠️  Pasta de resultados não encontrada: {results_dir}")
+            models = []
+        if not models:
+            # fallback para lista padrão se nada encontrado
+            models = ['deepseek', 'gpt4', 'gpt4.1', 'llama3', 'llama4']
 
     baseline = args.baseline
     if not baseline:
