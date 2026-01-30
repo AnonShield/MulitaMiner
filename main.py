@@ -5,15 +5,27 @@ Extrai vulnerabilidades de relatórios PDF (OpenVAS/Tenable WAS) usando LLM
 e converte para formatos estruturados (JSON/CSV/XLSX).
 
 Usage:
-    python main.py <pdf_path> [--LLM <model>] [--convert <format>]
+    python main.py <pdf_path> [--LLM <model>] [--convert <format>] [--scanner <name>]
 """
-
 import os
 import sys
+
+# Garante que o diretório 'src' esteja no sys.path para imports absolutos
+project_root = os.path.abspath(os.path.dirname(__file__))
+src_path = os.path.join(project_root, 'src')
+if src_path not in sys.path:
+    sys.path.insert(0, src_path)
+
 import argparse
 import json
 import subprocess
 from tqdm import tqdm
+from utils.cli_args import parse_arguments
+src_path = os.path.join(project_root, 'src')
+if src_path not in sys.path:
+    sys.path.insert(0, src_path)
+
+from utils.cli_args import parse_arguments
 
 # Force UTF-8 encoding on Windows
 if sys.stdout.encoding and sys.stdout.encoding.lower() != 'utf-8':
@@ -21,8 +33,7 @@ if sys.stdout.encoding and sys.stdout.encoding.lower() != 'utf-8':
     sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
     sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding='utf-8')
 
-# Adicionar src ao path para imports locais
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'src'))
+
 
 from utils.utils import (
     load_profile, load_llm, init_llm, save_visual_layout,
@@ -43,43 +54,6 @@ def get_validator(profile_config: dict):
     return validate_and_normalize_vulnerability
 
 
-def parse_arguments() -> argparse.Namespace:
-    """Parse argumentos da linha de comando."""
-    parser = argparse.ArgumentParser(
-        description='Extrai vulnerabilidades de relatórios PDF usando LLM'
-    )
-    # Grupo principal de argumentos
-    parser.add_argument('pdf_path', help='Caminho para o arquivo PDF')
-    parser.add_argument('--scanner', default='default', 
-                       help='Scanner de configuração (padrão: default)')
-    parser.add_argument('--LLM', default='gpt4', 
-                       help='Nome do LLM a usar (padrão: gpt4)')
-    
-    # Grupo de opções de conversão
-    conversion_group = parser.add_argument_group('Opções de Conversão')
-    conversion_group.add_argument('--convert', choices=['csv', 'xlsx', 'tsv', 'all', 'none'],
-                       default='none',
-                       help='Converter saída JSON para formato específico. Use "all" ou "xlsx" para avaliação.')
-    conversion_group.add_argument('--output', help='Caminho do arquivo de saída para conversão')
-    conversion_group.add_argument('--output-dir', dest='output_dir',
-                       help='Diretório de saída para arquivos convertidos')
-    conversion_group.add_argument('--csv-delimiter', dest='csv_delimiter', default=',',
-                       help='Delimitador para CSV (padrão: ,)')
-    conversion_group.add_argument('--csv-encoding', dest='csv_encoding', default='utf-8-sig',
-                       help='Codificação para CSV (padrão: utf-8-sig)')
-
-    # Grupo de opções de avaliação de métricas
-    evaluation_group = parser.add_argument_group('Opções de Avaliação de Métricas')
-    evaluation_group.add_argument('--evaluate', action='store_true',
-                                 help='Ativa a avaliação de métricas após a extração.')
-    evaluation_group.add_argument('--baseline', type=str,
-                                 help='Caminho para o arquivo .xlsx de ground truth para comparação.')
-    evaluation_group.add_argument('--evaluation-method', choices=['bert', 'rouge'], default='bert',
-                                 help='Método de avaliação a ser usado (padrão: bert).')
-    evaluation_group.add_argument('--allow-duplicates', action='store_true',
-                                 help='Permite duplicatas legítimas na baseline durante avaliação')
-    
-    return parser.parse_args()
 
 
 def validate_inputs(args: argparse.Namespace) -> bool:

@@ -275,6 +275,16 @@ python main.py <pdf_path> [opções]
 | `--evaluation-method` | Método: `bert` ou `rouge`    | `bert`                       |
 | `--allow-duplicates`  | Permite duplicatas legítimas | `false`                      |
 
+### Extração em Lote
+
+Para processar todos os PDFs de um diretório em lote:
+
+```bash
+python tools/batch_pdf_extractor.py <diretorio_pdfs> --convert <formato> --LLM <modelo> --scanner <scanner>
+```
+
+---
+
 ### Exemplos de Uso
 
 #### Uso Básico
