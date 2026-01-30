@@ -130,7 +130,7 @@ def merge_page_continuations(text_pages):
 
 def _is_incomplete_line(line):
     """
-    Verifica se uma linha parece estar incompleta (Tenable style).
+    Verifica se uma linha parece estar incompleta
     """
     line = line.strip()
     if not line:
@@ -189,6 +189,12 @@ def extract_visual_layout_from_pdf(pdf_path):
                     linhas = texto_pagina.split('\n')
                     texto_processado = ""
                     for linha in linhas:
+                        # Remove rodapés típicos de relatórios (ex: 'Page X of Y')
+                        if re.search(r'Page \d+ of \d+', linha):
+                            continue
+                        # Remove rodapés com nome do relatório e página
+                        if re.search(r'Web Application Scanning Detailed Scan Export:.*Page \d+ of \d+', linha):
+                            continue
                         linha_preservada = linha.replace('\t', '    ')
                         texto_processado += linha_preservada + '\n'
                     # Sanitização por página
@@ -201,24 +207,70 @@ def extract_visual_layout_from_pdf(pdf_path):
                 else:
                     paginas_texto.append((num_pagina, f"[Página {num_pagina} - Sem texto detectado]\n\n"))
 
+
+
+
             # MESCLAR SEÇÕES CORTADAS POR PAGE BREAKS
             paginas_texto = merge_page_continuations(paginas_texto)
 
-            # Agrupar de 2 em 2 páginas
-            i = 0
-            total = len(paginas_texto)
-            while i < total:
-                bloco_paginas = paginas_texto[i:i+2]
-                paginas_idx = [str(p[0]) for p in bloco_paginas]
-                texto_bloco = ''.join([p[1] for p in bloco_paginas])
-                meta = {
-                    "source": pdf_path,
-                    "pages": ','.join(paginas_idx),
-                    "extraction_method": "pdfplumber_visual"
-                }
-                documentos.append(Document(page_content=texto_bloco, metadata=meta))
-                i += 2
 
+            # Extrair o texto completo do PDF
+            texto_completo = ''.join([p[1] for p in paginas_texto])
+
+            # Encontrar início da primeira vulnerabilidade
+            # OpenVAS: marcador 'NVT:'
+            # Tenable: marcador 'VULNERABILITY <SEVERITY> PLUGIN ID <ID>'
+            # Unifica separação usando os mesmos padrões do chunking
+            marker_patterns = {
+                'openvas': r'^\s*NVT:',
+                'tenable': r'^\s*VULNERABILITY\s+(CRITICAL|HIGH|MEDIUM|LOW)\s+PLUGIN\s+ID\s+\d+',
+                # Adicionar outros scanners e padrões aqui
+            }
+            scanner = None
+            for key in marker_patterns:
+                if key in os.path.basename(pdf_path).lower():
+                    scanner = key
+                    break
+
+            marker_pattern = marker_patterns.get(scanner)
+            if marker_pattern:
+                match_inicio_vuln = re.search(marker_pattern, texto_completo, re.MULTILINE)
+                if match_inicio_vuln:
+                    start_pos = match_inicio_vuln.start()
+                    sumario = texto_completo[:start_pos]
+                    texto_extracao = texto_completo[start_pos:]
+                    print(f"[VISUAL] Sumário/índice extraído até {start_pos} caracteres usando marker '{marker_pattern}'.")
+                else:
+                    sumario = ''
+                    texto_extracao = texto_completo
+                    print(f"[VISUAL] Nenhum marcador '{marker_pattern}' encontrado. Sumário vazio.")
+            else:
+                sumario = ''
+                texto_extracao = texto_completo
+                print("[VISUAL] Scanner não identificado ou sem marker. Sumário vazio.")
+
+            # Salvar o layout visual (apenas sumário/índice)
+            if sumario.strip():
+                documentos.append(Document(
+                    page_content=sumario,
+                    metadata={
+                        "source": pdf_path,
+                        "pages": "SUMARIO",
+                        "extraction_method": "pdfplumber_visual_SUMMARY"
+                    }
+                ))
+
+            # Documento de extração (apenas conteúdo após sumário)
+            documentos.append(Document(
+                page_content=texto_extracao,
+                metadata={
+                    "source": pdf_path,
+                    "pages": "EXTRACAO",
+                    "extraction_method": "pdfplumber_visual_EXTRACTION"
+                }
+            ))
+
+            # Retornar documentos (primeiro sumário, depois extração)
             if not documentos or all(not d.page_content.strip() for d in documentos):
                 print("Aviso: Nenhum texto foi extraído do PDF. O arquivo pode estar corrompido ou ser apenas imagens.")
                 return None

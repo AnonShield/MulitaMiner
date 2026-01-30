@@ -180,11 +180,9 @@ def load_previous_vulnerabilities(output_file: str) -> dict:
     return previous
 
 
-def save_results(vulnerabilities: list, output_file: str, profile_config: dict = None) -> bool:
+def save_results(vulnerabilities: list, output_file: str, profile_config: dict = None, allow_duplicates: bool = False) -> bool:
     """
     Salva vulnerabilidades em JSON.
-    Consolida duplicatas para Tenable WAS.
-    Mostra apenas as vulnerabilidades NOVAS encontradas.
     
     Args:
         vulnerabilities: Lista de vulnerabilidades
@@ -197,16 +195,13 @@ def save_results(vulnerabilities: list, output_file: str, profile_config: dict =
     try:
         # Carregar vulnerabilidades anteriores para comparação
         previous_vulns = load_previous_vulnerabilities(output_file)
-        
-        # Verificar se o merge está habilitado na configuração
-        merge_instances_with_same_base = profile_config.get('merge_instances_with_same_base', False)
-        
-        if merge_instances_with_same_base:
+
+        if not allow_duplicates:
             print(f"\nConsolidando vulnerabilidades duplicadas...")
             final_vulns = consolidate_duplicates(vulnerabilities, profile_config)
             print(f"Total: {len(vulnerabilities)} → {len(final_vulns)} após consolidação")
         else:
-            print(f"\nSem consolidação - {len(vulnerabilities)} vulnerabilidades")
+            print(f"\nSem consolidação (permitindo duplicatas) - {len(vulnerabilities)} vulnerabilidades")
             final_vulns = vulnerabilities
         
         # Detectar campo de consolidação do profile ou auto-detectar
@@ -233,9 +228,8 @@ def save_results(vulnerabilities: list, output_file: str, profile_config: dict =
                 else:
                     new_vulns.append(v)
         
-        # Com merge: mostrar vulnerabilidades únicas
-        # Sem merge: mostrar todas (permitir duplicatas)
-        if merge_instances_with_same_base:
+        # Mostrar total de vulnerabilidades únicas apenas se não permitir duplicatas
+        if not allow_duplicates:
             unique_names = sorted(set(v.get(name_field, 'SEM NOME') for v in final_vulns if isinstance(v, dict)))
             print(f"\nTotal de vulnerabilidades únicas: {len(unique_names)}")
             print(f"\nResumo de vulnerabilidades encontradas:")
@@ -379,10 +373,13 @@ def main():
     visual_file = save_visual_layout(documents[0].page_content, args.pdf_path)
     print(f"Layout visual salvo em: {visual_file}\n")
 
+
     all_vulnerabilities = []
     total_chunks = 0
     for doc in documents:
-        # Dividir cada bloco (página) em chunks
+        # Processar apenas o documento de extração (ignorar sumário/visual layout)
+        if doc.metadata.get("extraction_method") != "pdfplumber_visual_EXTRACTION":
+            continue
         doc_texts = get_token_based_chunks(
             doc.page_content,
             max_tokens,
@@ -392,7 +389,6 @@ def main():
         )
         print(f"Páginas {doc.metadata.get('pages', doc.metadata.get('page', '?'))}: {len(doc_texts)} chunks")
         total_chunks += len(doc_texts)
-        # Processar cada chunk normalmente
         try:
             vulns = process_vulnerabilities(doc_texts, llm, profile_config)
             all_vulnerabilities.extend(vulns)
@@ -409,7 +405,7 @@ def main():
         pdf_base = os.path.splitext(os.path.basename(args.pdf_path))[0]
         output_file = f"{pdf_base}.json"
 
-    if save_results(all_vulnerabilities, output_file, profile_config):
+    if save_results(all_vulnerabilities, output_file, profile_config, getattr(args, 'allow_duplicates', False)):
         xlsx_output_path = None
         try:
             converted_files = execute_conversions(output_file, args)

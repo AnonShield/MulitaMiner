@@ -33,7 +33,7 @@ def parse_arguments() -> argparse.Namespace:
                                  help='Caminho para o arquivo .xlsx de ground truth para comparação.')
     evaluation_group.add_argument('--evaluation-method', choices=['bert', 'rouge'], default='bert',
                                  help='Método de avaliação a ser usado (padrão: bert).')
-    evaluation_group.add_argument('--allow-duplicates', action='store_true',
+    evaluation_group.add_argument('--allow-duplicates', dest='allow_duplicates', action='store_true',
                                  help='Permite duplicatas legítimas na baseline durante avaliação')
     
     return parser.parse_args()

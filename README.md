@@ -255,14 +255,14 @@ python main.py <pdf_path> [opções]
 | Parâmetro   | Descrição                | Padrão    | Exemplos                             |
 | ----------- | ------------------------ | --------- | ------------------------------------ |
 | `--scanner` | Estratégia de scanner    | `default` | `tenable`, `openvas`, `cais_tenable` |
-| `--LLM`     | Modelo de Language Model | `gpt4`    | `deepseek`, `llama3`, `gpt5`         |
+| `--llm`     | Modelo de Language Model | `gpt4`    | `deepseek`, `llama3`, `gpt5`         |
 
 #### Opções de Exportação
 
 | Parâmetro         | Descrição                | Padrão | Exemplos                |
 | ----------------- | ------------------------ | ------ | ----------------------- |
 | `--convert`       | Formato de conversão     | `none` | `csv`, `xlsx`, `all`    |
-| `--output`        | Nome do arquivo de saída | auto   | `vulnerabilidades.json` |
+| `--output-file`   | Nome do arquivo de saída | auto   | `vulnerabilidades.json` |
 | `--output-dir`    | Pasta de destino         | atual  | `./resultados`          |
 | `--csv-delimiter` | Separador CSV            | `,`    | `;`                     |
 
@@ -271,7 +271,7 @@ python main.py <pdf_path> [opções]
 | Parâmetro             | Descrição                    | Padrão                       |
 | --------------------- | ---------------------------- | ---------------------------- |
 | `--evaluate`          | Ativa avaliação de métricas  | `false`                      |
-| `--baseline`          | Arquivo ground truth (.xlsx) | obrigatório com `--evaluate` |
+| `--baseline-file`     | Arquivo ground truth (.xlsx) | obrigatório com `--evaluate` |
 | `--evaluation-method` | Método: `bert` ou `rouge`    | `bert`                       |
 | `--allow-duplicates`  | Permite duplicatas legítimas | `false`                      |
 
@@ -280,7 +280,7 @@ python main.py <pdf_path> [opções]
 Para processar todos os PDFs de um diretório em lote:
 
 ```bash
-python tools/batch_pdf_extractor.py <diretorio_pdfs> --convert <formato> --LLM <modelo> --scanner <scanner>
+python tools/batch_pdf_extractor.py <diretorio_pdfs> --convert <formato> --llm <modelo> --scanner <scanner>
 ```
 
 ---
@@ -297,7 +297,7 @@ python main.py relatorio.pdf
 python main.py relatorio_tenable.pdf --scanner tenable
 
 # Modelo específico
-python main.py relatorio.pdf --LLM deepseek
+python main.py relatorio.pdf --llm deepseek
 ```
 
 #### Exportação de Formatos
@@ -308,12 +308,12 @@ python main.py relatorio.pdf \
   --convert csv \
   --csv-delimiter ";" \
   --csv-encoding "iso-8859-1" \
-  --output "vulnerabilidades_pt.csv"
+  --output-file "vulnerabilidades_pt.csv"
 
 # Exportação completa para Excel
 python main.py relatorio_grande.pdf \
   --scanner tenable \
-  --LLM gpt5 \
+  --llm gpt5 \
   --convert xlsx \
   --output-dir ./resultados
 
@@ -327,19 +327,19 @@ python main.py relatorio.pdf --convert all --output-dir ./exports
 # Tenable WAS otimizado para máxima extração
 python main.py tenable_report.pdf \
   --scanner tenable \
-  --LLM gpt4 \
+  --llm gpt4 \
   --convert all
 
 # OpenVAS com modelo gratuito Groq
 python main.py openvas_scan.pdf \
   --scanner openvas \
-  --LLM llama3 \
+  --llm llama3 \
   --convert csv
 
 # CAIS Tenable para integração empresarial
 python main.py cais_tenable.pdf \
   --scanner cais_tenable \
-  --LLM gpt5 \
+  --llm gpt5 \
   --convert xlsx
 ```
 
@@ -353,16 +353,16 @@ python main.py relatorio_tenable.pdf \
   --scanner tenable \
   --convert all \
   --evaluate \
-  --baseline metrics/baselines/tenable/TenableWAS_JuiceShop.xlsx \
+  --baseline-file metrics/baselines/tenable/TenableWAS_JuiceShop.xlsx \
   --evaluation-method bert
 
 # Avaliação com duplicatas legítimas permitidas (recomendado para OpenVAS)
 python main.py relatorio_openvas.pdf \
   --scanner openvas \
-  --LLM deepseek \
+  --llm deepseek \
   --convert xlsx \
   --evaluate \
-  --baseline metrics/baselines/openvas/OpenVAS_JuiceShop.xlsx \
+  --baseline-file metrics/baselines/openvas/OpenVAS_JuiceShop.xlsx \
   --allow-duplicates
 ```
 
@@ -373,7 +373,7 @@ python main.py relatorio_openvas.pdf \
 python tools/chunk_validator.py relatorio.pdf
 
 # Análise detalhada de chunks por LLM
-python tools/chunk_validator.py relatorio.pdf --LLM gpt4 --scanner tenable
+python tools/chunk_validator.py relatorio.pdf --llm gpt4 --scanner tenable
 ```
 
 ## Análises de Métricas
@@ -385,36 +385,15 @@ Você pode executar análises de métricas de forma independente, comparando ext
 #### Análise BERT
 
 ```bash
-# Análise básica com BERT
-python metrics/bert/compare_extractions_bert.py \
-  --baseline_file metrics/baselines/tenable/TenableWAS_JuiceShop.xlsx \
-  --extraction_file data/vulnerabilities_tenable.json \
-  --output_dir results/bert/
-
-# Análise com configurações avançadas
-python metrics/bert/compare_extractions_bert.py \
-  --baseline_file metrics/baselines/openvas/OpenVAS_JuiceShop.xlsx \
-  --extraction_file data/vulnerabilities_openvas.json \
-  --output_dir results/bert/ \
-  --model deepseek \
-  --allow_duplicates
+# Análise com BERT
+python metrics/bert/compare_extractions_bert.py --baseline-file <caminho_relativo_do_arquivo_baseline> --extraction-file <caminho_relativo_do_arquivo_de_extração> --model <llm> --allow-duplicates
 ```
 
 #### Análise ROUGE
 
 ```bash
 # Análise básica com ROUGE
-python metrics/rouge/compare_extractions_rouge.py \
-  --baseline_file metrics/baselines/openvas/OpenVAS_JuiceShop.xlsx \
-  --extraction_file data/vulnerabilities_openvas.json \
-  --output_dir results/rouge/
-
-# Análise com configurações específicas
-python metrics/rouge/compare_extractions_rouge.py \
-  --baseline_file metrics/baselines/openvas/OpenVAS_JuiceShop.xlsx \
-  --extraction_file data/vulnerabilities_openvas.json \
-  --output_dir results/rouge/ \
-  --model llama3
+python metrics/rouge/compare_extractions_rouge.py --baseline-file <caminho_relativo_do_arquivo_baseline> --extraction-file <caminho_relativo_do_arquivo_de_extração> --model <llm> --allow-duplicates
 ```
 
 ### Geração de Gráficos
@@ -596,10 +575,10 @@ O Vulnerability Extractor foi validado através de experimentos práticos com di
 
 ```bash
 # Teste com documento de 300 páginas
-python main.py large_report.pdf --LLM gpt4
+python main.py large_report.pdf --llm gpt4
 # Resultado: 42 chunks processados, 0 exceedances
 
-python chunk_validator.py large_report.pdf --LLM gpt4
+python chunk_validator.py large_report.pdf --llm gpt4
 # Análise: Distribuição uniforme, eficiência 60.8%
 ```
 
@@ -607,9 +586,9 @@ python chunk_validator.py large_report.pdf --LLM gpt4
 
 ```bash
 # Teste comparativo entre modelos
-python main.py test_report.pdf --LLM llama4  # Precisão máxima (1492 tokens)
-python main.py test_report.pdf --LLM gpt4    # Balanceado (7300 tokens)
-python main.py test_report.pdf --LLM deepseek # Eficiência (1750 tokens)
+python main.py test_report.pdf --llm llama4  # Precisão máxima (1492 tokens)
+python main.py test_report.pdf --llm gpt4    # Balanceado (7300 tokens)
+python main.py test_report.pdf --llm deepseek # Eficiência (1750 tokens)
 
 # Resultados:
 # - Llama4: 83 chunks, processamento mais lento, máxima precisão
@@ -641,7 +620,7 @@ O Vulnerability Extractor foi **validado através de experimentos práticos** co
 
 ```bash
 # Teste com documento de 300 páginas
-python main.py large_report.pdf --LLM gpt4
+python main.py large_report.pdf --llm gpt4
 # Resultado: 42 chunks processados, 0 exceedances
 ```
 
@@ -649,9 +628,9 @@ python main.py large_report.pdf --LLM gpt4
 
 ```bash
 # Teste comparativo entre modelos
-python main.py test_report.pdf --LLM llama4  # Precisão máxima
-python main.py test_report.pdf --LLM gpt4    # Balanceado
-python main.py test_report.pdf --LLM deepseek # Eficiência
+python main.py test_report.pdf --llm llama4  # Precisão máxima
+python main.py test_report.pdf --llm gpt4    # Balanceado
+python main.py test_report.pdf --llm deepseek # Eficiência
 ```
 
 #### Resultados de Validação

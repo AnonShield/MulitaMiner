@@ -216,10 +216,19 @@ def convert_single_format(json_file_path, format_type, args):
     Converte para um formato específico
     """
     try:
+        base_name = os.path.splitext(os.path.basename(json_file_path))[0]
+        # Gera o nome do arquivo convertido com a extensão correta
         if args.output and args.convert != 'all':
-            output_file = args.output
+            # Se for xlsx, força extensão .xlsx
+            if format_type == 'xlsx':
+                output_file = os.path.splitext(args.output)[0] + '.xlsx'
+            elif format_type == 'csv':
+                output_file = os.path.splitext(args.output)[0] + '.csv'
+            elif format_type == 'tsv':
+                output_file = os.path.splitext(args.output)[0] + '.tsv'
+            else:
+                output_file = args.output
         else:
-            base_name = os.path.splitext(os.path.basename(json_file_path))[0]
             if args.output_dir:
                 output_file = os.path.join(args.output_dir, f"{base_name}_converted.{format_type}")
             else:
