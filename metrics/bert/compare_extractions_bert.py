@@ -44,9 +44,7 @@ BASELINE_SHEET = "Vulnerabilities"
 EXTRACTION_SHEETS = DEFAULT_EXTRACTION_SHEETS
 
 # Controle de duplicatas na baseline
-# False: sem duplicatas legítimas - dedup baseline antes de parear
-# True: duplicatas são legítimas - cada instância da baseline pode ser matched independentemente
-ALLOW_BASELINE_DUPLICATES = False
+# O valor é definido via CLI (args.allow_duplicates) na main()
 
 # ---- BERTScore import (opcional)
 try:

@@ -44,7 +44,8 @@ EXTRACTION_SHEETS = DEFAULT_EXTRACTION_SHEETS
 # Controle de duplicatas na baseline
 # False: sem duplicatas legítimas - dedup baseline antes de parear
 # True: duplicatas legítimas - cada instância da baseline pode ser matched independentemente
-ALLOW_BASELINE_DUPLICATES = False
+# Controle de duplicatas na baseline
+# O valor é definido via CLI (allow_duplicates) na main()
 
 # =========================
 # ROUGE-L METRIC

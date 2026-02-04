@@ -5,20 +5,6 @@ _Última atualização: Janeiro 2026_
 [![Python](https://img.shields.io/badge/Python-3.8+-blue.svg)](https://www.python.org/)
 [![License: CC BY-NC 4.0](https://img.shields.io/badge/License-CC%20BY--NC%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by-nc/4.0/)
 
-## Sumário
-
-- [Visão Geral](#-visão-geral)
-- [Funcionalidades](#-funcionalidades)
-- [Instalação](#-instalação)
-- [Configuração](#️-configuração)
-- [Uso](#-uso)
-- [Análises de Métricas](#-análises-de-métricas)
-- [Experimentos](#-experimentos)
-- [Arquitetura](#️-arquitetura)
-- [Extensibilidade](#-extensibilidade)
-- [Resolução de Problemas](#️-resolução-de-problemas)
-- [Licença](#-licença)
-
 ## Visão Geral
 
 O **Vulnerability Extractor** é uma ferramenta desenvolvida para extrair e processar vulnerabilidades de relatórios PDF de segurança utilizando Large Language Models (LLMs) com sistema de chunking otimizado. A ferramenta implementa um sistema inteligente de otimização de tokens que garante processamento eficiente sem excedente, oferecendo suporte a múltiplos provedores de LLM e estratégias de scanning especializadas para diferentes ferramentas de segurança (OpenVAS, Tenable WAS, Nessus, ...).
@@ -292,10 +278,8 @@ python tools/batch_pdf_extractor.py <diretorio_pdfs> --convert <formato> --llm <
 ```bash
 # Processamento padrão com GPT-4
 python main.py relatorio.pdf
-
 # Scanner específico
 python main.py relatorio_tenable.pdf --scanner tenable
-
 # Modelo específico
 python main.py relatorio.pdf --llm deepseek
 ```
@@ -304,19 +288,9 @@ python main.py relatorio.pdf --llm deepseek
 
 ```bash
 # CSV com configuração personalizada
-python main.py relatorio.pdf \
-  --convert csv \
-  --csv-delimiter ";" \
-  --csv-encoding "iso-8859-1" \
-  --output-file "vulnerabilidades_pt.csv"
-
+python main.py relatorio.pdf --convert csv --csv-delimiter ";" --csv-encoding "iso-8859-1" --output-file "vulnerabilidades_pt.csv"
 # Exportação completa para Excel
-python main.py relatorio_grande.pdf \
-  --scanner tenable \
-  --llm gpt5 \
-  --convert xlsx \
-  --output-dir ./resultados
-
+python main.py relatorio_grande.pdf --scanner tenable --llm gpt5 --convert xlsx --output-dir ./resultados
 # Todos os formatos simultâneos
 python main.py relatorio.pdf --convert all --output-dir ./exports
 ```
@@ -325,22 +299,11 @@ python main.py relatorio.pdf --convert all --output-dir ./exports
 
 ```bash
 # Tenable WAS otimizado para máxima extração
-python main.py tenable_report.pdf \
-  --scanner tenable \
-  --llm gpt4 \
-  --convert all
-
+python main.py tenable_report.pdf --scanner tenable --llm gpt4 --convert all
 # OpenVAS com modelo gratuito Groq
-python main.py openvas_scan.pdf \
-  --scanner openvas \
-  --llm llama3 \
-  --convert csv
-
+python main.py openvas_scan.pdf --scanner openvas --llm llama3 --convert csv
 # CAIS Tenable para integração empresarial
-python main.py cais_tenable.pdf \
-  --scanner cais_tenable \
-  --llm gpt5 \
-  --convert xlsx
+python main.py cais_tenable.pdf --scanner cais_tenable --llm gpt5 --convert xlsx
 ```
 
 #### Uso Avançado: Extração com Avaliação de Métricas
@@ -349,21 +312,9 @@ python main.py cais_tenable.pdf \
 
 ```bash
 # Extrai vulnerabilidades e avalia a qualidade da extração usando o método 'bert'
-python main.py relatorio_tenable.pdf \
-  --scanner tenable \
-  --convert all \
-  --evaluate \
-  --baseline-file metrics/baselines/tenable/TenableWAS_JuiceShop.xlsx \
-  --evaluation-method bert
-
+python main.py relatorio_tenable.pdf --scanner tenable --convert all --evaluate --baseline-file metrics/baselines/tenable/TenableWAS_JuiceShop.xlsx --evaluation-method bert
 # Avaliação com duplicatas legítimas permitidas (recomendado para OpenVAS)
-python main.py relatorio_openvas.pdf \
-  --scanner openvas \
-  --llm deepseek \
-  --convert xlsx \
-  --evaluate \
-  --baseline-file metrics/baselines/openvas/OpenVAS_JuiceShop.xlsx \
-  --allow-duplicates
+python main.py relatorio_openvas.pdf --scanner openvas --llm deepseek --convert xlsx --evaluate --baseline-file metrics/baselines/openvas/OpenVAS_JuiceShop.xlsx --allow-duplicates
 ```
 
 #### Validação e Debugging
@@ -371,7 +322,6 @@ python main.py relatorio_openvas.pdf \
 ```bash
 # Validação de chunks antes do processamento
 python tools/chunk_validator.py relatorio.pdf
-
 # Análise detalhada de chunks por LLM
 python tools/chunk_validator.py relatorio.pdf --llm gpt4 --scanner tenable
 ```

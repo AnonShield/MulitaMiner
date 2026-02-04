@@ -298,17 +298,17 @@ def run_evaluation(args: argparse.Namespace, extraction_output_path: str):
     command = [
         sys.executable,  # Usa o mesmo interpretador Python que está executando o main
         script_path,
-        '--baseline_file', args.baseline,
-        '--extraction_file', extraction_output_path,
-        '--output_dir', output_dir
+        '--baseline-file', args.baseline,
+        '--extraction-file', extraction_output_path,
+        '--output-dir', output_dir
     ]
     # Passa o nome do modelo explicitamente se disponível
     if hasattr(args, 'LLM') and args.LLM:
         command += ['--model', args.LLM]
-    
+
     # Passa configuração de duplicatas se especificada
     if hasattr(args, 'allow_duplicates') and args.allow_duplicates:
-        command += ['--allow_duplicates']
+        command += ['--allow-duplicates']
     
     try:
         print(f"Executando comando: {' '.join(command)}")
