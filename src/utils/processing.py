@@ -1,3 +1,242 @@
+import os
+import re
+import shutil
+def create_session_blocks_from_text(report_text: str, temp_dir: str = 'temp_blocks', visual_layout_path: str = None) -> list:
+    """
+    Cria arquivos temporários de blocos de sessão (por port/protocol) a partir do texto extraído.
+    Retorna uma lista de dicts: { 'file': caminho, 'port': ..., 'protocol': ..., 'severity': ... }
+    """
+    if os.path.exists(temp_dir):
+        shutil.rmtree(temp_dir)
+    os.makedirs(temp_dir, exist_ok=True)
+
+    # Regex para cabeçalho de sessão: ex "High 8787/tcp", "Medium general/tcp", "Log 443/tcp", etc
+    header_regex = re.compile(r"^(High|Medium|Low|Log) ((?:\d+)|general)/(tcp|udp)", re.IGNORECASE)
+    lines = report_text.splitlines()
+    blocks = []
+    current_block = []
+    # Inicializa variáveis de contexto ANTES de qualquer uso
+    initial_port = None
+    initial_protocol = None
+    initial_severity = None
+    block_idx = 0
+
+    # Extração do contexto do visual layout ocorre aqui
+    if visual_layout_path:
+        try:
+            with open(visual_layout_path, encoding="utf-8") as f:
+                layout_lines = [l.strip() for l in f.readlines() if l.strip()]
+            # Pega as duas últimas linhas não vazias como contexto inicial
+            if len(layout_lines) >= 2:
+                initial_context_lines = layout_lines[-2:]
+                print(f"[DEBUG] initial_context_lines (2 últimas linhas): {initial_context_lines}")
+            else:
+                initial_context_lines = layout_lines
+                print(f"[DEBUG] initial_context_lines (todas): {initial_context_lines}")
+            # Extrai severity, port e protocol apenas da primeira linha das duas últimas que bater com o regex
+            header_regex = re.compile(r"^(High|Medium|Low|Log) (\d+|general)/(tcp|udp)", re.IGNORECASE)
+            for line in reversed(initial_context_lines):
+                m = header_regex.match(line)
+                if m:
+                    initial_severity = m.group(1)
+                    initial_port = m.group(2)
+                    initial_protocol = m.group(3)
+                    print(f"[DEBUG] Contexto extraído do visual layout: severity={initial_severity}, port={initial_port}, protocol={initial_protocol}")
+                    break
+        except Exception as e:
+            print(f"[DEBUG] Erro ao ler visual_layout_path: {e}")
+
+    # Inicializa contexto com o extraído do layout visual, se houver (após extração)
+    current_port = initial_port if initial_port is not None else None
+    current_protocol = initial_protocol if initial_protocol is not None else None
+    current_severity = initial_severity if initial_severity is not None else None
+
+    # Inicializa contexto inicial como None para evitar UnboundLocalError
+    initial_context_lines = []
+    initial_port = None
+    initial_protocol = None
+    initial_severity = None
+    if visual_layout_path:
+        try:
+            with open(visual_layout_path, encoding="utf-8") as f:
+                layout_lines = [l.strip() for l in f.readlines() if l.strip()]
+            # Pega as duas últimas linhas não vazias como contexto inicial
+            if len(layout_lines) >= 2:
+                initial_context_lines = layout_lines[-2:]
+                print(f"[DEBUG] initial_context_lines (2 últimas linhas): {initial_context_lines}")
+            else:
+                initial_context_lines = layout_lines
+                print(f"[DEBUG] initial_context_lines (todas): {initial_context_lines}")
+
+            # Extrai severity, port e protocol apenas da primeira linha das duas últimas que bater com o regex
+            header_regex = re.compile(r"^(High|Medium|Low|Log) (\d+|general)/(tcp|udp)", re.IGNORECASE)
+            for line in reversed(initial_context_lines):
+                m = header_regex.match(line)
+                if m:
+                    initial_severity = m.group(1)
+                    initial_port = m.group(2)
+                    initial_protocol = m.group(3)
+                    print(f"[DEBUG] Contexto extraído do visual layout: severity={initial_severity}, port={initial_port}, protocol={initial_protocol}")
+                    break
+        except Exception as e:
+            print(f"[DEBUG] Erro ao ler visual_layout_path: {e}")
+    first_nvt_idx = next((i for i, l in enumerate(lines) if l.strip().startswith('NVT:')), None)
+    if first_nvt_idx is not None and first_nvt_idx >= 2:
+        port_line = lines[first_nvt_idx - 2].strip()
+        cvss_line = lines[first_nvt_idx - 1].strip()
+        port_match = header_regex.match(port_line)
+        if port_match:
+            current_severity = port_match.group(1)
+            current_port = port_match.group(2)
+            current_protocol = port_match.group(3)
+        else:
+            alt_match = re.match(r"^(\d+|general)/(tcp|udp)", port_line, re.IGNORECASE)
+            if alt_match:
+                current_port = alt_match.group(1)
+                current_protocol = alt_match.group(2)
+
+    for line in lines:
+        header_match = header_regex.match(line.strip())
+        if header_match:
+            # Salva bloco anterior, se existir, usando o contexto ANTES de atualizar
+            if current_block:
+                bloco_severity = current_severity
+                bloco_port = current_port
+                bloco_protocol = current_protocol
+                block_idx += 1
+                block_path = os.path.join(temp_dir, f"block_{bloco_severity}_{bloco_port}_{bloco_protocol}_{block_idx}.txt")
+                with open(block_path, 'w', encoding='utf-8') as f:
+                    # Sempre escreva contexto do layout visual no PRIMEIRO bloco criado
+                    if len(blocks) == 0 and initial_context_lines:
+                        for ctx_line in initial_context_lines:
+                            f.write(f"{ctx_line}\n")
+                        f.write("---\n")
+                    f.write('\n'.join(current_block))
+                if len(blocks) == 0:
+                    print(f"[DEBUG] Primeiro bloco salvo com contexto: port={bloco_port}, protocol={bloco_protocol}, severity={bloco_severity}")
+                blocks.append({
+                    'file': block_path,
+                    'port': bloco_port,
+                    'protocol': bloco_protocol,
+                    'severity': bloco_severity
+                })
+                current_block = []
+            # Só agora atualiza contexto para o próximo bloco
+            current_severity = header_match.group(1)
+            current_port = header_match.group(2)
+            current_protocol = header_match.group(3)
+        current_block.append(line)
+
+    # Salva último bloco (inclui caso de bloco sem cabeçalho reconhecido)
+    if current_block:
+        block_idx += 1
+        # Se for o primeiro bloco e não houver contexto, propaga do layout visual
+        bloco_is_first = (len(blocks) == 0)
+        bloco_port = current_port
+        bloco_protocol = current_protocol
+        bloco_severity = current_severity
+        if bloco_is_first:
+            if bloco_port is None and initial_port is not None:
+                bloco_port = initial_port
+            if bloco_protocol is None and initial_protocol is not None:
+                bloco_protocol = initial_protocol
+            if bloco_severity is None and initial_severity is not None:
+                bloco_severity = initial_severity
+        block_path = os.path.join(temp_dir, f"block_{bloco_severity}_{bloco_port}_{bloco_protocol}_{block_idx}.txt")
+        with open(block_path, 'w', encoding='utf-8') as f:
+            if bloco_is_first and initial_context_lines:
+                print(f"[DEBUG] Escrevendo initial_context_lines no início do bloco: {block_path}")
+                for ctx_line in initial_context_lines:
+                    f.write(f"{ctx_line}\n")
+                f.write("---\n")
+            f.write('\n'.join(current_block))
+        blocks.append({
+            'file': block_path,
+            'port': bloco_port,
+            'protocol': bloco_protocol,
+            'severity': bloco_severity
+        })
+
+    # Salva último bloco
+    if current_block and (current_port is not None or current_protocol is not None):
+        block_idx += 1
+        block_path = os.path.join(temp_dir, f"block_{current_severity}_{current_port}_{current_protocol}_{block_idx}.txt")
+        with open(block_path, 'w', encoding='utf-8') as f:
+            if block_idx == 1 and initial_context_lines:
+                for ctx_line in initial_context_lines:
+                    f.write(f"{ctx_line}\n")
+                f.write("---\n")
+            f.write('\n'.join(current_block))
+        blocks.append({
+            'file': block_path,
+            'port': current_port,
+            'protocol': current_protocol,
+            'severity': current_severity
+        })
+    return blocks
+
+def cleanup_temp_blocks(temp_dir: str = 'temp_blocks'):
+    """Remove todos os arquivos temporários de blocos de sessão."""
+    if os.path.exists(temp_dir):
+        shutil.rmtree(temp_dir)
+def extract_vulns_from_blocks(blocks: list, llm, profile_config: dict, chunk_func) -> list:
+    """
+    Para cada bloco de sessão, aplica chunking e extrai vulnerabilidades, propagando port/protocol.
+    chunk_func: função de chunking (ex: get_token_based_chunks)
+    """
+    all_vulns = []
+    for block_idx, block in enumerate(blocks):
+        with open(block['file'], 'r', encoding='utf-8') as f:
+            block_text = f.read()
+        # Chunking normal
+        chunks = chunk_func(block_text, max_tokens=4096, profile_config=profile_config)
+        for chunk in chunks:
+            vulns = retry_chunk_with_subdivision(chunk, llm, profile_config)
+            # Propaga contexto para cada vuln
+            for idx, v in enumerate(vulns):
+                # Permitir que port seja string (ex: 'general') ou número
+                port_val = block['port']
+                if port_val is not None:
+                    try:
+                        port_val = int(port_val)
+                    except Exception:
+                        pass
+                if block_idx == 0:
+                    # Sempre sobrescreve para o primeiro bloco (visual layout)
+                    print(f"[DEBUG] port sobrescrito do bloco (primeiro): {block['port']} -> vuln antes: {v.get('port')}")
+                    v['port'] = port_val
+                    print(f"[DEBUG] protocol sobrescrito do bloco (primeiro): {block['protocol']} -> vuln antes: {v.get('protocol')}")
+                    v['protocol'] = block['protocol']
+                    print(f"[DEBUG] severity sobrescrito do bloco (primeiro): {block['severity']} -> vuln antes: {v.get('severity')}")
+                    v['severity'] = block['severity']
+                else:
+                    # Para os demais blocos, só sobrescreve se estiver ausente, nulo, 0 ou não numérico
+                    port_is_invalid = False
+                    port_val_vuln = v.get('port')
+                    if 'port' not in v or port_val_vuln in (None, '', 'null', 0):
+                        port_is_invalid = True
+                    else:
+                        try:
+                            if isinstance(port_val_vuln, str) and port_val_vuln.isdigit():
+                                if int(port_val_vuln) == 0:
+                                    port_is_invalid = True
+                            elif isinstance(port_val_vuln, int) and port_val_vuln == 0:
+                                port_is_invalid = True
+                        except Exception:
+                            port_is_invalid = True
+                    if port_is_invalid:
+                        print(f"[DEBUG] port propagado do bloco: {block['port']} -> vuln antes: {v.get('port')}")
+                        v['port'] = port_val
+                    if 'protocol' not in v or v['protocol'] in (None, '', 'null'):
+                        print(f"[DEBUG] protocol propagado do bloco: {block['protocol']} -> vuln antes: {v.get('protocol')}")
+                        v['protocol'] = block['protocol']
+                    if 'severity' not in v or v['severity'] in (None, '', 'null'):
+                        print(f"[DEBUG] severity propagado do bloco: {block['severity']} -> vuln antes: {v.get('severity')}")
+                        v['severity'] = block['severity']
+                if len(all_vulns) == 0 and idx == 0:
+                    print(f"[DEBUG] Primeira vulnerabilidade propagada: port={v['port']}, protocol={v['protocol']}, severity={v['severity']}")
+            all_vulns.extend(vulns)
+    return all_vulns
 """
 Processamento de chunks e vulnerabilidades.
 Contém lógica de tokenização, splitting, retry e consolidação.
@@ -1069,6 +1308,27 @@ def consolidate_duplicates(vulnerabilities: List[Dict], profile_config: Dict = N
     # Usar nova estratégia de consolidação por scanner
     from utils.scanner_strategies import consolidate_by_scanner
     
+
+    # PROPAGAÇÃO DE CONTEXTO PARA OPENVAS
+    # Se for OpenVAS, propagar port/protocol do último cabeçalho válido para todas as vulnerabilidades até o próximo cabeçalho
+    if profile_config and profile_config.get('reader', '').lower() == 'openvas':
+        last_port = None
+        last_protocol = None
+        for vuln in vulnerabilities:
+            port = vuln.get('port')
+            protocol = vuln.get('protocol')
+            # Se port/protocol presentes, atualiza contexto
+            if port is not None:
+                last_port = port
+            if protocol is not None:
+                last_protocol = protocol
+            # Se ausente, propaga do último válido
+            if port is None and last_port is not None:
+                vuln['port'] = last_port
+            if protocol is None and last_protocol is not None:
+                vuln['protocol'] = last_protocol
+            # Se encontrar um novo bloco/cabeçalho (ex: Name muda drasticamente), pode resetar contexto se necessário
+
     try:
         return consolidate_by_scanner(vulnerabilities, profile_config)
     except Exception as e:

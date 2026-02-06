@@ -45,6 +45,7 @@ from utils.processing import (
     get_token_based_chunks, retry_chunk_with_subdivision,
     consolidate_duplicates, is_cais_profile, get_consolidation_field
 )
+from utils.scanner_strategies import remove_duplicates_by_key
 
 
 def get_validator(profile_config: dict):
@@ -202,7 +203,9 @@ def save_results(vulnerabilities: list, output_file: str, profile_config: dict =
             print(f"Total: {len(vulnerabilities)} → {len(final_vulns)} após consolidação")
         else:
             print(f"\nSem consolidação (permitindo duplicatas) - {len(vulnerabilities)} vulnerabilidades")
-            final_vulns = vulnerabilities
+            # Deduplicação em duas fases com log detalhado
+            final_vulns = remove_duplicates_by_key(vulnerabilities, log_path="merge_log.txt")
+            print(f"Total após deduplicação customizada: {len(final_vulns)} (veja merge_log.txt para detalhes)")
         
         # Detectar campo de consolidação do profile ou auto-detectar
         name_field = get_consolidation_field(final_vulns, profile_config)
@@ -230,11 +233,11 @@ def save_results(vulnerabilities: list, output_file: str, profile_config: dict =
         
         # Mostrar total de vulnerabilidades únicas apenas se não permitir duplicatas
         if not allow_duplicates:
-            unique_names = sorted(set(v.get(name_field, 'SEM NOME') for v in final_vulns if isinstance(v, dict)))
+            unique_names = sorted(set(str(v.get(name_field, 'SEM NOME') or 'SEM NOME') for v in final_vulns if isinstance(v, dict)))
             print(f"\nTotal de vulnerabilidades únicas: {len(unique_names)}")
             print(f"\nResumo de vulnerabilidades encontradas:")
             for idx, name in enumerate(unique_names, 1):
-                count = sum(1 for v in final_vulns if isinstance(v, dict) and v.get(name_field) == name)
+                count = sum(1 for v in final_vulns if isinstance(v, dict) and (str(v.get(name_field, 'SEM NOME') or 'SEM NOME') == name))
                 print(f"  {idx:3d}. [{count:2d}x] {name}")
         else:
             # Sem merge: listar separando NOVAS de REPETIDAS
@@ -247,16 +250,16 @@ def save_results(vulnerabilities: list, output_file: str, profile_config: dict =
                 print(f"\nVulnerabilidades NOVAS encontradas:")
                 for idx, v in enumerate(new_vulns, 1):
                     if isinstance(v, dict):
-                        name = v.get(name_field, 'SEM NOME')
-                        severity = v.get('severity', 'UNKNOWN')
+                        name = str(v.get(name_field, 'SEM NOME') or 'SEM NOME')
+                        severity = str(v.get('severity', 'UNKNOWN') or 'UNKNOWN')
                         print(f"  {idx:3d}. [NOVO     ] [{severity:8s}] {name}")
             
             if updated_vulns:
                 print(f"\nVulnerabilidades ATUALIZADAS:")
                 for idx, v in enumerate(updated_vulns, 1):
                     if isinstance(v, dict):
-                        name = v.get(name_field, 'SEM NOME')
-                        severity = v.get('severity', 'UNKNOWN')
+                        name = str(v.get(name_field, 'SEM NOME') or 'SEM NOME')
+                        severity = str(v.get('severity', 'UNKNOWN') or 'UNKNOWN')
                         print(f"  {idx:3d}. [ATUALIZADO] [{severity:8s}] {name}")
             
             if repeated_vulns:
@@ -374,28 +377,28 @@ def main():
     print(f"Layout visual salvo em: {visual_file}\n")
 
 
-    all_vulnerabilities = []
-    total_chunks = 0
-    for doc in documents:
-        # Processar apenas o documento de extração (ignorar sumário/visual layout)
-        if doc.metadata.get("extraction_method") != "pdfplumber_visual_EXTRACTION":
-            continue
-        doc_texts = get_token_based_chunks(
-            doc.page_content,
-            max_tokens,
-            reserve_response,
-            llm_config,
-            profile_config
-        )
-        print(f"Páginas {doc.metadata.get('pages', doc.metadata.get('page', '?'))}: {len(doc_texts)} chunks")
-        total_chunks += len(doc_texts)
-        try:
-            vulns = process_vulnerabilities(doc_texts, llm, profile_config)
-            all_vulnerabilities.extend(vulns)
-        except Exception as e:
-            print(f"[ERRO] Falha ao processar página {doc.metadata.get('page', '?')}: {e}")
 
-    print(f"\n[SUMMARY] Total de chunks: {total_chunks}")
+    # Novo fluxo: gerar texto completo de extração
+    extraction_text = ''
+    for doc in documents:
+        if doc.metadata.get("extraction_method") == "pdfplumber_visual_EXTRACTION":
+            extraction_text += doc.page_content + '\n'
+
+    # Criar blocos de sessão temporários
+    from utils.processing import create_session_blocks_from_text, extract_vulns_from_blocks, cleanup_temp_blocks
+    session_blocks = create_session_blocks_from_text(extraction_text, temp_dir='temp_blocks', visual_layout_path=visual_file)
+    print(f"[INFO] {len(session_blocks)} blocos de sessão criados em temp_blocks/")
+
+    # Processar cada bloco com chunking e extração, propagando contexto
+    all_vulnerabilities = extract_vulns_from_blocks(
+        session_blocks, llm, profile_config, get_token_based_chunks
+    )
+    total_chunks = len(session_blocks)
+
+    # Limpeza obrigatória dos temporários
+    cleanup_temp_blocks('temp_blocks')
+
+    print(f"\n[SUMMARY] Total de blocos: {total_chunks}")
     print(f"[SUMMARY] Total de vulnerabilidades extraídas: {len(all_vulnerabilities)}")
 
     # Definir nome do arquivo como output ou baseado no PDF 

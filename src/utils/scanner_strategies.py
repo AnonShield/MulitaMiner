@@ -6,6 +6,8 @@ Extensível para novos scanners: OpenVAS, Tenable WAS, Nessus, etc.
 from abc import ABC, abstractmethod
 from typing import List, Dict, Any
 import re
+import math
+from difflib import SequenceMatcher
 
 
 class ScannerStrategy(ABC):
@@ -558,3 +560,61 @@ def consolidate_by_scanner(vulnerabilities: List[Dict], profile_config: Dict = N
                 consolidated.extend(result)
     
     return consolidated
+
+
+def build_key(vuln):
+    name = str(vuln.get('Name', '')).strip().lower()
+    port = str(vuln.get('port', '')).strip()
+    protocol = str(vuln.get('protocol', '')).strip().lower()
+    host = str(vuln.get('host', '')).strip().lower()
+    severity = str(vuln.get('severity', '')).strip().lower()
+    description = str(vuln.get('description', '')).strip().lower()[:200]
+    references = '|'.join(sorted([str(r) for r in vuln.get('references', [])]))
+    if port and protocol:
+        return (name, port, protocol, severity)
+    else:
+        return (name, host, description, severity, references)
+
+def fuzzy_match(a, b, threshold=0.98):
+    from difflib import SequenceMatcher
+    return SequenceMatcher(None, a, b).ratio() >= threshold
+
+def remove_duplicates_by_key(vulnerabilities: list, log_path=None) -> list:
+    """
+    Deduplicação robusta:
+    - Casos com port/protocol: chave = (Name, port, protocol, severity)
+    - Casos sem port/protocol: chave expandida (Name, host, description[:200], severity, references)
+    - Matching fuzzy para nomes e descrições similares
+    - Log detalhado se log_path for fornecido
+    """
+    seen = []
+    result = []
+    duplicates_log = []
+    key_to_vulns = {}
+    for vuln in vulnerabilities:
+        name = str(vuln.get('Name', '')).strip().lower()
+        # Se for Services, exige igualdade total
+        if name == 'services':
+            is_duplicate = False
+            for v in result:
+                if vuln == v:
+                    is_duplicate = True
+                    break
+            if not is_duplicate:
+                result.append(vuln)
+        else:
+            key = (name, str(vuln.get('port', '')).strip(), str(vuln.get('protocol', '')).strip().lower(), str(vuln.get('severity', '')).strip().lower())
+            if key not in seen:
+                seen.append(key)
+                result.append(vuln)
+            else:
+                duplicates_log.append((key, vuln))
+    # Gera log se solicitado
+    if log_path and duplicates_log:
+        with open(log_path, 'w', encoding='utf-8') as f:
+            f.write("# Duplicatas agrupadas por chave composta (fuzzy):\n")
+            for key, vuln in duplicates_log:
+                f.write(f"Chave: {key}\n")
+                f.write(f"  - {vuln.get('Name', '')} | port: {vuln.get('port', '')} | protocol: {vuln.get('protocol', '')} | severity: {vuln.get('severity', '')} | host: {vuln.get('host', '')}\n")
+                f.write("\n")
+    return result

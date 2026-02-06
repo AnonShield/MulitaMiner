@@ -8,7 +8,7 @@
   "consolidation_field": "Name",
   "chunking": {
     "scanner_type": "openvas",
-    "marker_pattern": "^\\s*NVT:\\s",
+    "marker_pattern": "^\\s*(?:High|Medium|Low|Log|Critical)\\s+\\d+/\\w+|^\\s*NVT:",
     "has_pairs": false,
     "min_chunk_tokens": 800,
     "force_break_at_markers": true,
