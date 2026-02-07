@@ -2,8 +2,8 @@
   "api_key": "${API_KEY_GPT5}",
   "endpoint": "https://api.openai.com/v1",
   "model": "gpt-5-mini-2025-08-07",
-  "temperature": 1.0,
+  "temperature": 0.4,
   "max_completion_tokens": 16000,
-  "max_chunk_size": 8300,
-  "reserve_for_response": 6000
+  "max_chunk_size": 4096,
+  "reserve_for_response": 7000
 }
