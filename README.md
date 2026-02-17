@@ -1,6 +1,6 @@
 # Vulnerability Extractor: Sistema de Extração de Vulnerabilidades de Documentos Não Estruturados com LLMs
 
-_Última atualização: Janeiro 2026_
+_Última atualização: Fevereiro 2026_
 
 [![Python](https://img.shields.io/badge/Python-3.8+-blue.svg)](https://www.python.org/)
 [![License: CC BY-NC 4.0](https://img.shields.io/badge/License-CC%20BY--NC%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by-nc/4.0/)
@@ -19,7 +19,8 @@ O **Vulnerability Extractor** é uma ferramenta desenvolvida para extrair e proc
 
 - **Zero Token Exceedances**: Sistema matemático garantido de cálculo de chunks
 - **Multi-LLM Support**: 6 provedores diferentes com configurações otimizadas
-- **Consolidação Inteligente**: Merge automático de vulnerabilidades duplicadas
+- **Consolidação Inteligente**: Merge automático de vulnerabilidades duplicadas (ou apenas remoção, conforme configuração)
+- **Logs Detalhados**: Geração automática de logs de remoção e deduplicação (removed_log, duplicates_removed_log, merge_log)
 - **Avaliação de Métricas**: Comparação automática com baselines usando BERT/ROUGE
 - **Exportação Multi-Formato**: JSON, CSV, XLSX com layouts preservados
 
@@ -44,7 +45,6 @@ O **Vulnerability Extractor** é uma ferramenta desenvolvida para extrair e proc
 - **TenableWAS**: Merge inteligente de instances e bases por vulnerabilidade
 - **OpenVAS**: Agrupamento por similaridade de nome e características
 - **CAIS**: Consolidação por definições com campos especializados
-- **Remoção de duplicatas** baseada em múltiplos critérios
 
 ### Multi-LLM com Otimização
 
@@ -55,19 +55,22 @@ O **Vulnerability Extractor** é uma ferramenta desenvolvida para extrair e proc
   - **Llama 3/4**: Modelos Groq gratuitos com diferentes perfis
   - **Qwen3**: Alternativa eficiente
 
-### Exportação Multi-Formato
+### Exportação Multi-Formato e Logs
 
 - **JSON estruturado** (formato principal)
 - **CSV/TSV** com delimitadores customizáveis
 - **XLSX** (Excel) com formatação avançada
 - **Layout visual preservado** em arquivo .txt
+- **Logs detalhados**:
+  - `*_removed_log.txt`: Vulnerabilidades removidas por falta de descrição/campos essenciais
+  - `*_duplicates_removed_log.txt`: Vulnerabilidades removidas por serem duplicatas exatas (quando `--allow-duplicates`)
+  - `*_merge_log.txt`: Vulnerabilidades realmente mescladas (quando `--allow-duplicates` não está ativo)
 
 ## Instalação
 
 ### Requisitos do Sistema
 
 - **Python**: 3.8+ (recomendado: Python 3.10+)
-- **Git**: Para clonagem do repositório
 - **RAM**: 4GB+ recomendado para processamento de PDFs grandes
 
 ### Instalação Passo-a-Passo
@@ -266,7 +269,13 @@ python main.py <pdf_path> [opções]
 Para processar todos os PDFs de um diretório em lote:
 
 ```bash
-python tools/batch_pdf_extractor.py <diretorio_pdfs> --convert <formato> --llm <modelo> --scanner <scanner>
+python tools/batch_pdf_extractor.py <diretorio_pdfs> --convert <formato> --llm <modelo> --scanner <scanner> [--allow-duplicates] [--output-dir <dir>]
+```
+
+Todos os argumentos extras são repassados para o main.py. Exemplo:
+
+```bash
+python tools/batch_pdf_extractor.py pdfs --scanner openvas --LLM deepseek --allow-duplicates --output-dir jsons
 ```
 
 ---
@@ -607,75 +616,77 @@ python main.py test_report.pdf --llm deepseek # Eficiência
 
 ```
 Vulnerability_Extractor/
-├── main.py                          # Script principal CLI
-├── chunk_validator.py               # Validador de chunks
-├── requirements.txt                 # Dependências Python
-├── README.md                       # Esta documentação
-├── src/                            # Código fonte modular
-│   ├── __init__.py                 # Inicialização do módulo
-│   ├── configs/                    # Configurações do sistema
-│   │   ├── llms/                   # Configurações dos LLMs
-│   │   │   ├── deepseek.json       # DeepSeek (1750 tokens otimizados)
-│   │   │   ├── gpt4.json           # GPT-4 (7300 tokens balanceados)
-│   │   │   ├── gpt5.json           # GPT-5 (8300 tokens ultra-seguros)
-│   │   │   ├── llama3.json         # Llama 3 (3492 tokens Groq)
-│   │   │   ├── llama4.json         # Llama 4 (1492 tokens precisos)
-│   │   │   ├── qwen3.json          # Qwen3 (3492 tokens eficientes)
-│   │   │   └── tinyllama.json      # TinyLlama (desenvolvimento)
-│   │   ├── scanners/               # Estratégias de scanner
-│   │   │   ├── default.json        # Scanner genérico universal
-│   │   │   ├── tenable.json        # Tenable WAS (instances+bases)
-│   │   │   ├── openvas.json        # OpenVAS/Greenbone NVT
-│   │   │   ├── cais_tenable.json   # CAIS Tenable (campos dotados)
-│   │   │   ├── cais_openvas.json   # CAIS OpenVAS (integração)
-│   │   │   └── cais_default.json   # CAIS genérico
-│   │   └── templates/              # Templates de prompts especializados
-│   │       ├── default_prompt.txt   # Prompt genérico otimizado
-│   │       ├── tenable_prompt.txt   # Tenable WAS (estrutura 18 campos)
-│   │       ├── tenable_slim_prompt.txt # Tenable compacto (backup)
-│   │       ├── openvas_prompt.txt   # OpenVAS NVT especializado
-│   │       ├── cais_tenable_prompt.txt # CAIS Tenable (dotted fields)
-│   │       ├── cais_openvas_prompt.txt # CAIS OpenVAS estruturado
-│   │       └── cais_prompt*.txt    # Variações CAIS (v1-v3)
-│   ├── converters/                 # Conversores de formato
-│   │   ├── __init__.py             # Inicialização de conversores
-│   │   ├── base_converter.py       # Classe base abstrata
-│   │   ├── csv_converter.py        # Exportação CSV/TSV
-│   │   └── xlsx_converter.py       # Exportação Excel
-│   └── utils/                      # Utilitários core
-│       ├── __init__.py             # Inicialização de utils
-│       ├── utils.py                # LLM loading e configuração
-│       ├── processing.py           # Sistema de chunks com cálculo de tokens
-│       ├── scanner_strategies.py   # Estratégias especializadas
-│       ├── profile_registry.py     # Registry de perfis/scanners
-│       ├── pdf_loader.py           # Carregamento otimizado de PDFs
-│       └── cais_validator.py       # Validação específica CAIS
-├── metrics/                        # Sistema de avaliação de métricas
-│   ├── __init__.py                 # Inicialização do módulo de métricas
-│   ├── baselines/                  # Arquivos de ground truth
-│   │   ├── openvas/                # Baselines OpenVAS
-│   │   └── tenable/                # Baselines Tenable
-│   ├── bert/                       # Métricas BERTScore
-│   │   ├── compare_extractions_bert.py # Comparação com BERTScore otimizado
-│   │   └── results/                # Resultados das avaliações BERT
-│   ├── rouge/                      # Métricas ROUGE
-│   │   └── compare_extractions_rouge.py # Comparação com ROUGE
-│   ├── common/                     # Utilitários compartilhados
-│   │   ├── cli.py                  # CLI para métricas
-│   │   ├── config.py               # Configurações de métricas
-│   │   ├── matching.py             # Algoritmos de matching
-│   │   └── normalization.py        # Normalização de dados
-│   └── plot/                       # Geração de gráficos
-│       ├── __init__.py             # Inicialização
-│       ├── __main__.py             # CLI de plot
-│       ├── charts.py               # Geração de gráficos
-│       └── utils.py                # Utilitários de plot
-├── data/                           # Dados e resultados
-│   ├── *.pdf                       # Relatórios de entrada
-│   ├── vulnerabilities_*.json      # Resultados JSON estruturados
-│   ├── visual_layout_*.txt         # Layouts preservados
-│   └── exports/                    # Exportações CSV/XLSX
-└── __pycache__/                    # Cache Python (auto-gerado)
+├── main.py                        # Script principal CLI
+├── requirements.txt               # Dependências Python
+├── README.md                      # Documentação principal
+├── chunk_validator.py             # Validador de chunks (standalone)
+├── batch_pdf_extractor.py         # Extração em lote de PDFs (standalone)
+├── extract_pdf_text.py            # Extrai texto puro de PDFs
+├── extract_vuln_blocks.py         # Extrai blocos de vulnerabilidades de .txt
+├── compare_vuln_blocks.py         # Compara blocos extraídos para duplicatas
+├── tools/
+│   ├── run_experiments.py         # Execução massiva e avaliação automatizada
+│   ├── process_results.py         # Geração de gráficos e estatísticas
+│   ├── dataset_generator.py       # Consolidação de datasets (CSV/XLSX/JSON/JSONL)
+│   ├── sum_tokens_cost_all_llms.py# Soma tokens e estima custos por LLM
+│   ├── calc_tokens_cost.py        # Calcula tokens/custo para uma LLM específica
+│   ├── prepare_metrics_input.py   # Gera arquivos combinados para métricas
+│   └── chunk_validator.py         # (link para raiz, para compatibilidade)
+├── src/
+│   ├── __init__.py
+│   ├── configs/
+│   │   ├── llms/                  # Configurações dos LLMs (JSON)
+│   │   ├── scanners/              # Configurações de scanners (JSON)
+│   │   └── templates/             # Templates de prompts (TXT)
+│   ├── converters/
+│   │   ├── __init__.py
+│   │   ├── base_converter.py
+│   │   ├── csv_converter.py
+│   │   └── xlsx_converter.py
+│   └── utils/
+│       ├── __init__.py
+│       ├── block_creation.py
+│       ├── cais_validator.py
+│       ├── chunking.py
+│       ├── cli_args.py
+│       ├── convertions.py
+│       ├── llm_utils.py
+│       ├── pdf_loader.py
+│       ├── processing.py
+│       ├── profile_registry.py
+│       └── scanner_strategies.py
+├── metrics/
+│   ├── __init__.py
+│   ├── baselines/
+│   │   ├── openvas/
+│   │   └── tenable/
+│   ├── bert/
+│   │   ├── compare_extractions_bert.py
+│   │   └── results/
+│   ├── rouge/
+│   │   └── compare_extractions_rouge.py
+│   ├── common/
+│   │   ├── cli.py
+│   │   ├── config.py
+│   │   ├── matching.py
+│   │   └── normalization.py
+│   └── plot/
+│       ├── __init__.py
+│       ├── __main__.py
+│       ├── charts.py
+│       └── utils.py
+├── data/                          # Dados de entrada e exportações
+│   ├── *.pdf
+│   ├── vulnerabilities_*.json
+│   ├── visual_layout_*.txt
+│   └── exports/
+├── jsons/                         # Resultados intermediários (JSON)
+├── results_tokens/                # Arquivos de tokens por LLM
+├── results_runs/                  # Resultados de execuções experimentais
+├── results_runs_xlsx/             # Resultados em XLSX
+├── plot_runs/                     # Gráficos gerados
+├── temp_blocks/                   # Blocos temporários de vulnerabilidades
+└── __pycache__/                   # Cache Python (auto-gerado)
 ```
 
 ### Componentes Principais
@@ -703,7 +714,67 @@ Vulnerability_Extractor/
 - **csv_converter.py**: Export CSV/TSV com configurações customizáveis
 - **xlsx_converter.py**: Export Excel com formatação avançada
 
-### Novidades Implementadas
+## Scripts Avançados e Utilitários
+
+### `tools/run_experiments.py` — Execução Massiva e Avaliação Automatizada
+
+Automatiza experimentos em larga escala, processando múltiplos relatórios, LLMs e scanners, com checkpointing robusto e avaliação automática (BERT/ROUGE). Gera estatísticas, logs e organiza resultados em subpastas por baseline/modelo/run.
+
+**Principais recursos:**
+
+- Executa extração, exportação e avaliação para todos os pares (relatório, scanner, LLM, run)
+- Suporte a checkpoint: retoma execuções interrompidas sem repetir runs já concluídas
+- Gera logs detalhados, arquivos de saída, métricas e resumos automáticos
+- Organiza resultados em `results_runs/` e `results_runs_xlsx/`
+- Avaliação automática com BERT e ROUGE
+
+**Exemplo de uso:**
+
+```bash
+python tools/run_experiments.py [--checkpoint-file run_checkpoints_YYYY-MM-DDTHH-MM-SS.json]
+```
+
+### `tools/process_results.py` — Geração de Gráficos e Estatísticas
+
+Processa os resultados dos experimentos, gerando gráficos (stacked bar, heatmaps) e estatísticas de similaridade, cobertura e desempenho dos modelos.
+
+**Principais recursos:**
+
+- Gera gráficos de distribuição de categorias de similaridade (stacked bar)
+- Gera heatmaps de métricas (BERT/ROUGE) por LLM e baseline
+- Analisa e sumariza resultados de múltiplos experimentos
+- Salva gráficos em `plot_runs/`
+
+**Exemplo de uso:**
+
+```bash
+python tools/process_results.py
+```
+
+### `tools/dataset_generator.py` — Consolidação de Datasets
+
+Gera datasets consolidados (CSV, XLSX, JSON, JSONL) a partir de múltiplos arquivos de extração JSON, facilitando análises e treinamentos.
+
+**Principais recursos:**
+
+- Consolida todos os arquivos JSON de uma pasta em um único dataset
+- Suporte a múltiplos formatos de saída: CSV, XLSX, JSON, JSONL
+- Normaliza campos, adiciona IDs e padroniza severidades
+- Ideal para análises quantitativas e uso em ML
+
+**Exemplo de uso:**
+
+```bash
+python tools/dataset_generator.py --input-folder jsons --output-folder data --format xlsx
+```
+
+- **Gerar todos os formatos de uma vez:**
+
+```bash
+python tools/dataset_generator.py --input-folder jsons --output-folder data --format all
+```
+
+Isso irá criar arquivos CSV, XLSX, JSON e JSONL simultaneamente na pasta de saída.
 
 #### chunk_validator.py
 
@@ -725,11 +796,32 @@ python chunk_validator.py documento.pdf
 python chunk_validator.py documento.pdf --LLM gpt4 --scanner tenable
 ```
 
-#### Sistema de Tokens Ultra-Otimizado
+### `tools/sum_tokens_cost_all_llms.py` — Soma de Tokens e Estimativa de Custos
+
+Analisa todos os arquivos de tokens gerados (`*_tokens.json` em `results_tokens/`), somando o total de tokens processados por LLM e estimando o custo em dólares para cada modelo e no total.
+
+### Diferença: `run_experiments.py` vs `batch_pdf_extractor.py`
+
+- **`batch_pdf_extractor.py`**: Executa extração em lote de PDFs de um diretório, chamando `main.py` para cada arquivo. Útil para processar rapidamente muitos PDFs, mas não faz avaliação automática nem organização avançada dos resultados.
+- **`run_experiments.py`**: Orquestra experimentos completos, processando múltiplos relatórios, LLMs, scanners e runs, com checkpoint, avaliação automática (BERT/ROUGE), logs e organização detalhada dos resultados. Ideal para benchmarks, validação e experimentação.
+
+**Principais recursos:**
+
+- Soma tokens de entrada/saída por LLM
+- Calcula custo estimado por modelo e geral (usando tabela de preços interna)
+- Útil para análise de eficiência e planejamento de custos
+
+**Exemplo de uso:**
+
+```bash
+python tools/sum_tokens_cost_all_llms.py --tokens-dir results_tokens
+```
+
+#### Sistema de Tokens Otimizado
 
 Cálculos matemáticos precisos para cada LLM:
 
-- **Fórmula universal**: `max_chunk_size = max_tokens - reserve - overhead - buffer`
+- **Fórmula universal**: `max_chunk_size = max_tokens - reserve_for_response - prompt_overhead - system_overhead - safety_buffer`
 - **Zero exceedances garantidas** através de múltiplas camadas de segurança
 - **Configurações específicas** por modelo com eficiências calculadas
 - **Validação automática** de configurações na inicialização

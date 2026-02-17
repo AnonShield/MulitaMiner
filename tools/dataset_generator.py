@@ -27,7 +27,7 @@ def generate_csv(vulnerabilities, output_folder):
     output_file = os.path.join(output_folder, f"dataset_{timestamp}_{unique_id}.csv")
 
     fields = [
-        "ID", "Name", "description", "detection_result", "detection_method", "impact", "solution", "insight",
+        "id", "Name", "description", "detection_result", "detection_method", "impact", "solution", "insight",
         "product_detection_result", "log_method", "cvss", "port", "protocol", "severity", "references",
         "plugin", "identification", "http_info", "source"
     ]
@@ -49,7 +49,7 @@ def generate_csv(vulnerabilities, output_folder):
         writer = csv.DictWriter(csvfile, fieldnames=fields)
         writer.writeheader()
         for i, vuln in enumerate(vulnerabilities, start=1):
-            vuln["ID"] = i
+            vuln["id"] = i
             row = {k: process_field_fieldname(k, vuln.get(k, "")) for k in fields}
             writer.writerow(row)
 
@@ -61,8 +61,17 @@ def generate_json(vulnerabilities, output_folder):
     unique_id = uuid.uuid4()
     output_file = os.path.join(output_folder, f"dataset_{timestamp}_{unique_id}.json")
 
+    # Garante que o campo 'ID' seja o primeiro
+    fields = [
+        "id", "Name", "description", "detection_result", "detection_method", "impact", "solution", "insight",
+        "product_detection_result", "log_method", "cvss", "port", "protocol", "severity", "references",
+        "plugin", "identification", "http_info", "source"
+    ]
+    def order_fields(vuln):
+        return {k: vuln.get(k, "") for k in fields}
+    ordered_vulns = [order_fields(v) for v in vulnerabilities]
     with open(output_file, 'w', encoding='utf-8') as jsonfile:
-        json.dump(vulnerabilities, jsonfile, ensure_ascii=False, indent=4)
+        json.dump(ordered_vulns, jsonfile, ensure_ascii=False, indent=4)
 
     print(f"Dataset gerado com sucesso: {output_file}")
 
@@ -72,9 +81,16 @@ def generate_jsonl(vulnerabilities, output_folder):
     unique_id = uuid.uuid4()
     output_file = os.path.join(output_folder, f"dataset_{timestamp}_{unique_id}.jsonl")
 
+    fields = [
+        "id", "Name", "description", "detection_result", "detection_method", "impact", "solution", "insight",
+        "product_detection_result", "log_method", "cvss", "port", "protocol", "severity", "references",
+        "plugin", "identification", "http_info", "source"
+    ]
+    def order_fields(vuln):
+        return {k: vuln.get(k, "") for k in fields}
     with open(output_file, 'w', encoding='utf-8') as jsonlfile:
         for vuln in vulnerabilities:
-            jsonlfile.write(json.dumps(vuln, ensure_ascii=False) + '\n')
+            jsonlfile.write(json.dumps(order_fields(vuln), ensure_ascii=False) + '\n')
 
     print(f"Dataset gerado com sucesso: {output_file}")
 
@@ -85,7 +101,7 @@ def generate_xlsx(vulnerabilities, output_folder):
     output_file = os.path.join(output_folder, f"dataset_{timestamp}_{unique_id}.xlsx")
 
     fields = [
-        "ID", "Name", "description", "detection_result", "detection_method", "impact", "solution", "insight",
+        "id", "Name", "description", "detection_result", "detection_method", "impact", "solution", "insight",
         "product_detection_result", "log_method", "cvss", "port", "protocol", "severity", "references",
         "plugin", "identification", "http_info", "source"
     ]
@@ -94,7 +110,7 @@ def generate_xlsx(vulnerabilities, output_folder):
 
     # Adiciona IDs sequenciais
     for i, vuln in enumerate(vulnerabilities, start=1):
-        vuln["ID"] = i
+        vuln["id"] = i
 
     def process_field_fieldname(field, value):
         if field == "severity" and isinstance(value, str):
@@ -135,9 +151,9 @@ def main():
     parser.add_argument(
         "--format", 
         type=str, 
-        choices=["csv", "json", "jsonl", "xlsx"], 
+        choices=["csv", "json", "jsonl", "xlsx", "all"], 
         default="csv", 
-        help="Formato de saída do dataset (padrão: csv)."
+        help="Formato de saída do dataset (padrão: csv). Use 'all' para gerar todos os formatos."
     )
     args = parser.parse_args()
 
@@ -156,6 +172,11 @@ def main():
     elif args.format == "jsonl":
         generate_jsonl(vulnerabilities, args.output_folder)
     elif args.format == "xlsx":
+        generate_xlsx(vulnerabilities, args.output_folder)
+    elif args.format == "all":
+        generate_csv(vulnerabilities, args.output_folder)
+        generate_json(vulnerabilities, args.output_folder)
+        generate_jsonl(vulnerabilities, args.output_folder)
         generate_xlsx(vulnerabilities, args.output_folder)
 
 if __name__ == "__main__":
