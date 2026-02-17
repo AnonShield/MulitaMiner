@@ -186,6 +186,10 @@ def save_results(vulnerabilities: list, output_file: str, profile_config: dict =
         previous_vulns = load_previous_vulnerabilities(output_file)
         removed_log_path = os.path.join(os.path.dirname(output_file), os.path.splitext(os.path.basename(output_file))[0] + '_removed_log.txt')
         merge_log_path = os.path.join(os.path.dirname(output_file), os.path.splitext(os.path.basename(output_file))[0] + '_merge_log.txt')
+        duplicates_removed_log_path = os.path.join(
+            os.path.dirname(output_file),
+            os.path.splitext(os.path.basename(output_file))[0] + '_duplicates_removed_log.txt'
+        )
         if not allow_duplicates:
             print(f"\n🔄 Consolidando vulnerabilidades duplicadas...")
             from src.utils.processing import consolidate_duplicates_with_logs
@@ -194,10 +198,20 @@ def save_results(vulnerabilities: list, output_file: str, profile_config: dict =
             # Salvar logs
             if removed_vulns:
                 with open(removed_log_path, 'w', encoding='utf-8') as f:
-                    f.write("# Vulnerabilidades removidas por falta de descrição ou campos essenciais\n\n")
-                    for v in removed_vulns:
-                        f.write(json.dumps(v, ensure_ascii=False, indent=2))
-                        f.write("\n---\n")
+                    f.write("# LOG DE VULNERABILIDADES REMOVIDAS POR FALTA DE DESCRIÇÃO VÁLIDA\n")
+                    f.write("Estas vulnerabilidades foram descartadas por não possuírem descrição ou campos essenciais.\n\n")
+                    f.write(f"Total removidas: {len(removed_vulns)}\n\n")
+                    for idx, v in enumerate(removed_vulns, 1):
+                        f.write(f"Removida {idx}:\n")
+                        f.write(f"  Nome: {v.get('Name', '')}\n")
+                        f.write(f"  Porta: {v.get('port', '')} | Protocolo: {v.get('protocol', '')} | Severidade: {v.get('severity', '')}\n")
+                        desc = v.get('description', '')
+                        if desc:
+                            if isinstance(desc, list):
+                                desc = ' '.join([str(d) for d in desc if d])
+                            desc = str(desc).strip().replace('\n', ' ')
+                            f.write(f"  Descrição: {desc[:200]}{'...' if len(desc)>200 else ''}\n")
+                        f.write("-"*40 + "\n")
             if merged_pairs:
                 with open(merge_log_path, 'w', encoding='utf-8') as f:
                     f.write("# Vulnerabilidades mescladas/consolidadas\n\n")
@@ -209,8 +223,8 @@ def save_results(vulnerabilities: list, output_file: str, profile_config: dict =
                         f.write("---\n")
         else:
             print(f"\n⚠️ Sem consolidação (permitindo duplicatas) - {len(vulnerabilities)} vulnerabilidades")
-            final_vulns = remove_duplicates_by_key(vulnerabilities, log_path=merge_log_path)
-            print(f"📊 Total após deduplicação customizada: {len(final_vulns)} (veja {merge_log_path} para detalhes)")
+            final_vulns = remove_duplicates_by_key(vulnerabilities, log_path=duplicates_removed_log_path)
+            print(f"📊 Total após deduplicação customizada: {len(final_vulns)} (veja {duplicates_removed_log_path} para detalhes)")
         name_field = get_consolidation_field(final_vulns, profile_config)
         new_vulns = []
         updated_vulns = []

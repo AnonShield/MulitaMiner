@@ -662,38 +662,54 @@ def remove_duplicates_by_key(vulnerabilities: list, log_path=None) -> list:
             if v is not chosen:
                 duplicates_log.append((key, v))
     if log_path and duplicates_log:
+        from collections import defaultdict
+        grupos = defaultdict(list)
+        for key, vuln in duplicates_log:
+            grupos[str(key)].append(vuln)
+        # Encontrar a mantida de cada grupo
+        key_to_kept = {}
+        for key, vulns in key_to_all.items():
+            with_desc = [v for v in vulns if has_valid_description(v)]
+            if with_desc:
+                kept = max(with_desc, key=count_filled_fields)
+            else:
+                kept = max(vulns, key=count_filled_fields)
+            key_to_kept[str(key)] = kept
+        total_grupos = len(grupos)
+        total_dups = len(duplicates_log)
         with open(log_path, 'w', encoding='utf-8') as f:
-            f.write(
-                "# LOG DE DEDUPLICAÇÃO DE VULNERABILIDADES\n"
-                "Este arquivo lista todas as vulnerabilidades consideradas duplicatas e agrupadas durante o processo.\n"
-                "Cada grupo é identificado por uma chave composta (ex: nome, porta, protocolo).\n"
-                "Apenas a vulnerabilidade mais completa e com descrição válida foi mantida em cada grupo.\n\n"
-            )
-            total_grupos = len(set([str(key) for key, _ in duplicates_log]))
-            total_dups = len(duplicates_log)
-            f.write(f"Total de grupos de duplicatas: {total_grupos}\n")
-            f.write(f"Total de vulnerabilidades agrupadas (removidas): {total_dups}\n\n")
-            from collections import defaultdict
-            grupos = defaultdict(list)
-            for key, vuln in duplicates_log:
-                grupos[str(key)].append(vuln)
+            f.write("# LOG DE REMOÇÃO DE DUPLICATAS DE VULNERABILIDADES\n")
+            f.write("Este arquivo lista as vulnerabilidades removidas por serem duplicatas (allow_duplicates=True).\n")
+            f.write("Para cada grupo, apenas a vulnerabilidade mais completa foi mantida.\n\n")
+            f.write(f"Resumo:\n- Total de grupos de duplicatas: {total_grupos}\n- Total de vulnerabilidades removidas: {total_dups}\n\n")
+            f.write("="*50 + "\n")
             for idx, (key, vulns) in enumerate(grupos.items(), 1):
                 f.write(f"Grupo {idx}: Chave = {key}\n")
-                f.write(f"  Total de duplicatas neste grupo: {len(vulns)}\n")
+                kept = key_to_kept.get(key)
+                if kept:
+                    f.write("MANTIDA:\n")
+                    f.write(f"  Nome: {kept.get('Name', '')}\n")
+                    f.write(f"  Porta: {kept.get('port', '')} | Protocolo: {kept.get('protocol', '')} | Severidade: {kept.get('severity', '')}\n")
+                    desc = kept.get('description', '')
+                    if desc:
+                        if isinstance(desc, list):
+                            desc = ' '.join([str(d) for d in desc if d])
+                        desc = str(desc).strip().replace('\n', ' ')
+                        f.write(f"  Descrição: {desc[:200]}{'...' if len(desc)>200 else ''}\n")
                 for i, vuln in enumerate(vulns, 1):
-                    f.write(f"    {i}. Nome: {vuln.get('Name', '')}\n")
-                    f.write(f"       Porta: {vuln.get('port', '')} | Protocolo: {vuln.get('protocol', '')} | Severidade: {vuln.get('severity', '')}\n")
+                    f.write("REMOVIDA:\n")
+                    f.write(f"  Nome: {vuln.get('Name', '')}\n")
+                    f.write(f"  Porta: {vuln.get('port', '')} | Protocolo: {vuln.get('protocol', '')} | Severidade: {vuln.get('severity', '')}\n")
                     desc = vuln.get('description', '')
                     if desc:
                         if isinstance(desc, list):
                             desc = ' '.join([str(d) for d in desc if d])
                         desc = str(desc).strip().replace('\n', ' ')
-                        f.write(f"       Descrição: {desc[:200]}{'...' if len(desc)>200 else ''}\n")
-                    f.write("\n")
-                f.write("\n")
-            f.write("Resumo final:\n")
+                        f.write(f"  Descrição: {desc[:200]}{'...' if len(desc)>200 else ''}\n")
+                f.write("-"*40 + "\n")
+            f.write("\nResumo final:\n")
             f.write(f"Total de grupos de duplicatas: {total_grupos}\n")
-            f.write(f"Total de vulnerabilidades agrupadas (removidas): {total_dups}\n")
+            f.write(f"Total de vulnerabilidades removidas: {total_dups}\n")
     return result
 def merge_duplicates_by_name(vulnerabilities: list) -> list:
     """
