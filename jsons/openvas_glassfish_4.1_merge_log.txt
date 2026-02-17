@@ -1,0 +1,66 @@
+# LOG DE DEDUPLICAÇÃO DE VULNERABILIDADES
+Este arquivo lista todas as vulnerabilidades consideradas duplicatas e agrupadas durante o processo.
+Cada grupo é identificado por uma chave composta (ex: nome, porta, protocolo).
+Apenas a vulnerabilidade mais completa e com descrição válida foi mantida em cada grupo.
+
+Total de grupos de duplicatas: 8
+Total de vulnerabilidades agrupadas (removidas): 8
+
+Grupo 1: Chave = ('die-hellman ephemeral key exchange dos vulnerability (ssl/tls, d(he)ater)', '8181', 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Die-Hellman Ephemeral Key Exchange DoS Vulnerability (SSL/TLS, D(HE)ater)
+       Porta: 8181 | Protocolo: tcp | Severidade: HIGH
+       Descrição: The remote SSL/TLS server is supporting Die-Hellman ephemeral (DHE) Key Exchange algorithms and thus could be prone to a denial of service (DoS) vulnerability.
+
+
+Grupo 2: Chave = ('ssl/tls: report vulnerable cipher suites for https', '8181', 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: SSL/TLS: Report Vulnerable Cipher Suites for HTTPS
+       Porta: 8181 | Protocolo: tcp | Severidade: HIGH
+       Descrição: This routine reports all SSL/TLS cipher suites accepted by a service where attack vectors exists only on HTTPS services.
+
+
+Grupo 3: Chave = ('cleartext transmission of sensitive information via http', '4848', 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Cleartext Transmission of Sensitive Information via HTTP
+       Porta: 4848 | Protocolo: tcp | Severidade: MEDIUM
+       Descrição: The host / application transmits sensitive information (username, passwords) in cleartext via HTTP.
+
+
+Grupo 4: Chave = ('http server type and version', '8080', 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: HTTP Server type and version
+       Porta: 8080 | Protocolo: tcp | Severidade: LOG
+       Descrição: This script detects and reports the HTTP Server's banner which might provide the type and version of it.
+
+
+Grupo 5: Chave = ('http server banner enumeration', '8080', 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: HTTP Server Banner Enumeration
+       Porta: 8080 | Protocolo: tcp | Severidade: LOG
+
+
+Grupo 6: Chave = ('service detection (3 ascii digit codes like ftp, smtp, nntp...)', '7676', 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Service Detection (3 ASCII digit codes like FTP, SMTP, NNTP...)
+       Porta: 7676 | Protocolo: tcp | Severidade: LOG
+       Descrição: This plugin performs service detection. Quality of Detection (QoD): 80%
+
+
+Grupo 7: Chave = ('ssl/tls: report medium cipher suites', '8181', 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: SSL/TLS: Report Medium Cipher Suites
+       Porta: 8181 | Protocolo: tcp | Severidade: LOG
+       Descrição: This routine reports all Medium SSL/TLS cipher suites accepted by a service.
+
+
+Grupo 8: Chave = ('ssl/tls: version detection', '8181', 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: SSL/TLS: Version Detection
+       Porta: 8181 | Protocolo: tcp | Severidade: LOG
+       Descrição: Enumeration and reporting of SSL/TLS protocol versions supported by a remote service.
+
+
+Resumo final:
+Total de grupos de duplicatas: 8
+Total de vulnerabilidades agrupadas (removidas): 8

@@ -1,0 +1,1104 @@
+[
+  {
+    "Name": "Apache CouchDB < 3.2.2 Privilege Escalation Vulnerability - Linux - Version Check",
+    "description": [
+      "Apache CouchDB is prone to a privilege escalation vulnerability.   Quality of Detection (QoD): 30%"
+    ],
+    "detection_result": [
+      "Installed version: 1.6.1",
+      "Fixed version: 3.2.2",
+      "Installation",
+      "path / port: /"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: Apache CouchDB < 3.2.2 Privilege Escalation Vulnerability - Linux - Version Che.",
+      "->..",
+      "OID:1.3.6.1.4.1.25623.1.0.148035",
+      "Version used: 2025-01-21T05:37:33Z"
+    ],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 3.2.2 or later."
+    ],
+    "insight": [
+      "An attacker can access an improperly secured default installation without authenticating and gain admin privileges. The CouchDB documentation has always made recommendations for properly securing an installation, including recommending using a rewall in front of all CouchDB installations."
+    ],
+    "log_method": [],
+    "cvss": [
+      "9.8"
+    ],
+    "port": 5984,
+    "protocol": "tcp",
+    "severity": "Critical",
+    "references": [
+      "cve: CVE-2022-24706",
+      "cisa: Known Exploited Vulnerability (KEV) catalog",
+      "url: https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
+      "url: https://lists.apache.org/thread/w24wo0h8nlctfps65txvk0oc5hdcnv00"
+    ],
+    "plugin": null,
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Apache CouchDB 1.x < 1.7.0, 2.x < 2.1.1 Multiple Vulnerabilities - Linux",
+    "description": [
+      "Apache CouchDB is prone to multiple vulnerabilities."
+    ],
+    "detection_result": [
+      "Installed version: 1.6.1",
+      "Fixed version: 1.7.0",
+      "Installation",
+      "path / port: /"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: Apache CouchDB 1.x < 1.7.0, 2.x < 2.1.1 Multiple Vulnerabilities - Linux",
+      "OID:1.3.6.1.4.1.25623.1.0.107258",
+      "Version used: 2024-11-22T15:40:47Z"
+    ],
+    "product_detection_result": [],
+    "impact": [
+      "These vulnerabilities can be used to give non-admin users access to arbitrary shell commands on the server as the database system user."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 1.7.0, 2.1.1 or later."
+    ],
+    "insight": [
+      "The vulnerabilities are due to dierences in the Erlang-based JSON parser and JavaScript-based JSON parser."
+    ],
+    "log_method": [],
+    "cvss": [
+      "9.8"
+    ],
+    "port": 5984,
+    "protocol": "tcp",
+    "severity": "CRITICAL",
+    "references": [
+      "cve: CVE-2017-12635",
+      "cve: CVE-2017-12636",
+      "url: https://blog.couchdb.org/2017/11/14/apache-couchdb-cve-2017-12635-and-cve-2",
+      "->017-12636/",
+      "url: https://justi.cz/security/2017/11/14/couchdb-rce-npm.html",
+      "cert-bund: CB-K17/2004",
+      "dfn-cert: DFN-CERT-2018-1774",
+      "dfn-cert: DFN-CERT-2017-2094"
+    ],
+    "plugin": null,
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Apache CouchDB <= 3.1.1 Privilege Escalation Vulnerability - Linux",
+    "description": [
+      "Apache CouchDB is prone to a privilege escalation vulnerability.   Quality of Detection (QoD): 30%"
+    ],
+    "detection_result": [
+      "Installed version: 1.6.1",
+      "Fixed version: 3.1.2 / 3.2.0",
+      "Installation",
+      "path / port: /"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: Apache CouchDB <= 3.1.1 Privilege Escalation Vulnerability - Linux",
+      "OID:1.3.6.1.4.1.25623.1.0.146930",
+      "Version used: 2025-01-21T05:37:33Z"
+    ],
+    "product_detection_result": [],
+    "impact": [
+      "This privilege escalation vulnerability allows an attacker to add or remove data in any database or make conguration changes."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 3.1.2, 3.2.0 or later."
+    ],
+    "insight": [
+      "A malicious user with permission to create documents in a database is able to attach a HTML attachment to a document. If a CouchDB admin opens that attachment in a browser, e.g. via the CouchDB admin interface Fauxton, any JavaScript code embedded in that HTML attachment will be executed within the security context of that admin. A similar route is available with the already deprecated _show and _list functionality."
+    ],
+    "log_method": [],
+    "cvss": [
+      "7.3"
+    ],
+    "port": 5984,
+    "protocol": "tcp",
+    "severity": "HIGH",
+    "references": [
+      "cve: CVE-2021-38295",
+      "url: https://docs.couchdb.org/en/stable/cve/2021-38295.html"
+    ],
+    "plugin": null,
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Apache CouchDB < 2.3.0 Remote Privilege Escalation Vulnerability - Linux",
+    "description": [
+      "CouchDB is prone to a remote privilege escalation vulnerability.",
+      "Quality of Detection (QoD): 30%"
+    ],
+    "detection_result": [
+      "Installed version: 1.6.1",
+      "Fixed version: 2.3.0",
+      "Installation",
+      "path / port: /"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: Apache CouchDB < 2.3.0 Remote Privilege Escalation Vulnerability - Linux",
+      "OID:1.3.6.1.4.1.25623.1.0.112475",
+      "Version used: 2025-01-21T05:37:33Z"
+    ],
+    "product_detection_result": [],
+    "impact": [
+      "Together with other vulnerabilities, it allowed full system entry for unauthenticated users."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 2.3.0 or later."
+    ],
+    "insight": [
+      "CouchDB allowed for runtime-conguration of key components of the database. In some cases, this lead to vulnerabilities where CouchDB admin users could access the underlying operating system as the CouchDB user."
+    ],
+    "log_method": [],
+    "cvss": [
+      "7.2"
+    ],
+    "port": 5984,
+    "protocol": "tcp",
+    "severity": "HIGH",
+    "references": [
+      "cve: CVE-2018-17188",
+      "url: https://blog.couchdb.org/2018/12/17/cve-2018-17188/",
+      "dfn-cert: DFN-CERT-2020-0465"
+    ],
+    "plugin": null,
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Apache CouchDB 1.x < 1.7.2, 2.x < 2.1.2 Privilege Escalation Vulnerability - Linux",
+    "description": [
+      "Apache CouchDB is prone to a privilege escalation vulnerability.",
+      "Quality of Detection (QoD): 30%"
+    ],
+    "detection_result": [
+      "Installed version: 1.6.1",
+      "Fixed version: 1.7.2",
+      "Installation",
+      "path / port: /"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: Apache CouchDB 1.x < 1.7.2, 2.x < 2.1.2 Privilege Escalation Vulnerability - Li. ->..",
+      "OID:1.3.6.1.4.1.25623.1.0.813907",
+      "Version used: 2024-11-22T15:40:47Z"
+    ],
+    "product_detection_result": [],
+    "impact": [
+      "Successful exploitation will allow attackers to escalate their privileges to that of the operating system's and execute arbitrary code."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 1.7.2, 2.1.2 or later. Please see the references for more information."
+    ],
+    "insight": [
+      "The aw is due to an insucient validation of administrator-supplied conguration settings via the HTTP API."
+    ],
+    "log_method": [],
+    "cvss": [
+      "7.2"
+    ],
+    "port": 5984,
+    "protocol": "tcp",
+    "severity": "HIGH",
+    "references": [
+      "cve: CVE-2018-8007",
+      "url: https://blog.couchdb.org/2018/07/10/cve-2018-8007",
+      "url: http://www.securityfocus.com/bid/104741",
+      "dfn-cert: DFN-CERT-2020-0465",
+      "dfn-cert: DFN-CERT-2018-1774"
+    ],
+    "plugin": null,
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Apache CouchDB < 2.2.0 Privilege Escalation Vulnerability - Linux",
+    "description": [
+      "Apache CouchDB is prone to a privilege escalation vulnerability.",
+      "Quality of Detection (QoD): 30%"
+    ],
+    "detection_result": [
+      "Installed version: 1.6.1",
+      "Fixed version: 2.2.0",
+      "Installation",
+      "path / port: /"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: Apache CouchDB < 2.2.0 Privilege Escalation Vulnerability - Linux",
+      "OID:1.3.6.1.4.1.25623.1.0.813909",
+      "Version used: 2024-11-22T15:40:47Z"
+    ],
+    "product_detection_result": [],
+    "impact": [
+      "Successful exploitation will allow attackers to escalate their privileges to that of the operating system's and remotely execute arbitrary code."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 2.2.0 or later. Please see the references for more information."
+    ],
+    "insight": [
+      "The aw is due to an insucient validation of administrator-supplied conguration settings via the HTTP API."
+    ],
+    "log_method": [],
+    "cvss": [
+      "7.2"
+    ],
+    "port": 5984,
+    "protocol": "tcp",
+    "severity": "HIGH",
+    "references": [
+      "cve: CVE-2018-11769",
+      "url: https://lists.apache.org/thread.html/1052ad7a1b32b9756df4f7860f5cb5a96b739f ->444117325a19a4bf75@%3Cdev.couchdb.apache.org%3E",
+      "dfn-cert: DFN-CERT-2020-0465",
+      "dfn-cert: DFN-CERT-2019-0331"
+    ],
+    "plugin": null,
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Apache CouchDB < 3.3.3 Privilege Escalation Vulnerability - Linux",
+    "description": [
+      "Apache CouchDB is prone to a privilege escalation vulnerability."
+    ],
+    "detection_result": [
+      "Installed version: 1.6.1",
+      "Fixed version: 3.3.3",
+      "Installation",
+      "path / port: /"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: Apache CouchDB < 3.3.3 Privilege Escalation Vulnerability - Linux",
+      "OID:1.3.6.1.4.1.25623.1.0.114221",
+      "Version used: 2023-12-26T05:05:23Z"
+    ],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 3.3.3 or later."
+    ],
+    "insight": [
+      "Design document functions which receive a user http request object may expose authorization or session cookie headers of the user who accesses the document."
+    ],
+    "log_method": [],
+    "cvss": [
+      "5.7"
+    ],
+    "port": 5984,
+    "protocol": "tcp",
+    "severity": "MEDIUM",
+    "references": [
+      "cve: CVE-2023-45725",
+      "url: https://docs.couchdb.org/en/stable/cve/2023-45725.html"
+    ],
+    "plugin": null,
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Apache CouchDB: Multiple vulnerabilities (Linux)",
+    "description": [
+      "Apache CouchDB is a document-oriented NoSQL database that uses JSON to store data. Multiple vulnerabilities have been discovered in Apache CouchDB."
+    ],
+    "detection_result": [],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [
+      "An attacker might be able to exploit the vulnerabilities to cause a denial of service, obtain sensitive information, bypass security restrictions, or execute arbitrary code."
+    ],
+    "solution": [
+      "Updates are available. For more information see the referenced advisory."
+    ],
+    "insight": [],
+    "log_method": [],
+    "cvss": [
+      "7.5"
+    ],
+    "port": 5984,
+    "protocol": "tcp",
+    "severity": "HIGH",
+    "references": [
+      "cve: CVE-2018-11769",
+      "url: https://lists.apache.org/thread.html/1052ad7a1b32b9756df4f7860f5cb5a96b739f ->444117325a19a4bf75@%3Cdev.couchdb.apache.org%3E",
+      "dfn-cert: DFN-CERT-2020-0465",
+      "dfn-cert: DFN-CERT-2019-0331"
+    ],
+    "plugin": null,
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Apache CouchDB <= 3.2.2, 3.3.x <= 3.3.1 Information Disclosure Vulnerability - Linux",
+    "description": [
+      "Apache CouchDB is prone to an information disclosure vulnerability."
+    ],
+    "detection_result": [
+      "Installed version: 1.6.1",
+      "Fixed version: 3.2.3",
+      "Installation",
+      "path / port: /"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: Apache CouchDB <= 3.2.2, 3.3.x <= 3.3.1 Information Disclosure Vulnerability - .",
+      "->..",
+      "OID:1.3.6.1.4.1.25623.1.0.170462",
+      "Version used: 2023-10-12T05:05:32Z"
+    ],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 3.2.3, 3.3.2 or later."
+    ],
+    "insight": [
+      "Design documents with matching document IDs, from databases on the same cluster, may share a mutable Javascript environment when using these design document functions:",
+      "- validate_doc_update",
+      "- list",
+      "- lter",
+      "- lter views (using view functions as lters)",
+      "- rewrite",
+      "- update",
+      "This doesn't aect map/reduce or search (Dreyfus) index functions."
+    ],
+    "log_method": [],
+    "cvss": [
+      "5.3"
+    ],
+    "port": 5984,
+    "protocol": "tcp",
+    "severity": "MEDIUM",
+    "references": [
+      "cve: CVE-2023-26268",
+      "url: https://docs.couchdb.org/en/stable/cve/2023-26268.html"
+    ],
+    "plugin": null,
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "ICMP Timestamp Reply Information Disclosure",
+    "description": [
+      "The remote host responded to an ICMP timestamp request."
+    ],
+    "detection_result": [
+      "The following response / ICMP packet has been received:",
+      "- ICMP Type: 14",
+      "- ICMP Code: 0"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [
+      "This information could theoretically be used to exploit weak time-based random number generators in other services."
+    ],
+    "solution": [
+      "Solution type: Mitigation",
+      "Various mitigations are possible:",
+      "- Disable the support for ICMP timestamp on the remote host completely"
+    ],
+    "insight": [],
+    "log_method": [],
+    "cvss": [
+      "2.1"
+    ],
+    "port": 5984,
+    "protocol": "tcp",
+    "severity": "LOW",
+    "references": [],
+    "plugin": null,
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "ICMP Timestamp Reply Information Disclosure",
+    "description": [
+      "The remote host responded to an ICMP timestamp request."
+    ],
+    "detection_result": [
+      "The following response / ICMP packet has been received:",
+      "- ICMP Type: 14",
+      "- ICMP Code: 0"
+    ],
+    "detection_method": [
+      "Sends an ICMP Timestamp (Type 13) request and checks if a Timestamp Reply (Type 14) is received."
+    ],
+    "product_detection_result": [],
+    "impact": [
+      "This information could theoretically be used to exploit weak time-based random number generators in other services."
+    ],
+    "solution": [
+      "Solution type: Mitigation",
+      "Various mitigations are possible:",
+      "- Disable the support for ICMP timestamp on the remote host completely",
+      "- Protect the remote host by a rewall, and block ICMP packets passing through the rewall in either direction (either completely or only for untrusted networks)"
+    ],
+    "insight": [
+      "The Timestamp Reply is an ICMP message which replies to a Timestamp message. It consists of the originating timestamp sent by the sender of the Timestamp as well as a receive timestamp and a transmit timestamp."
+    ],
+    "log_method": [],
+    "cvss": [
+      "2.1"
+    ],
+    "port": "general",
+    "protocol": "icmp",
+    "severity": "LOW",
+    "references": [
+      "cve: CVE-1999-0524",
+      "url: https://datatracker.ietf.org/doc/html/rfc792",
+      "url: https://datatracker.ietf.org/doc/html/rfc2780",
+      "cert-bund: CB-K15/1514",
+      "cert-bund: CB-K14/0632",
+      "dfn-cert: DFN-CERT-2014-0658"
+    ],
+    "plugin": null,
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "TCP Timestamps Information Disclosure",
+    "description": [
+      "The remote host implements TCP timestamps and therefore allows to compute the uptime."
+    ],
+    "detection_result": [
+      "It was detected that the host implements RFC1323/RFC7323.",
+      "The following timestamps were retrieved with a delay of 1 seconds in-between:",
+      "Packet 1: 909682502",
+      "Packet 2: 909683610"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [
+      "A side effect of this feature is that the uptime of the remote host can sometimes be computed."
+    ],
+    "solution": [],
+    "insight": [],
+    "log_method": [],
+    "cvss": [
+      "2.6"
+    ],
+    "port": "general",
+    "protocol": "icmp",
+    "severity": "LOW",
+    "references": [],
+    "plugin": null,
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "TCP Timestamps Information Disclosure",
+    "description": [
+      "The remote host implements TCP timestamps and therefore allows to compute the uptime."
+    ],
+    "detection_result": [
+      "It was detected that the host implements RFC1323/RFC7323.",
+      "The following timestamps were retrieved with a delay of 1 seconds in-between:",
+      "Packet 1: 909682502",
+      "Packet 2: 909683610"
+    ],
+    "detection_method": [
+      "Special IP packets are forged and sent with a little delay in between to the target IP. The responses are searched for a timestamps. If found, the timestamps are reported."
+    ],
+    "product_detection_result": [],
+    "impact": [
+      "A side eect of this feature is that the uptime of the remote host can sometimes be computed."
+    ],
+    "solution": [
+      "Solution type: Mitigation",
+      "To disable TCP timestamps on linux add the line 'net.ipv4.tcp_timestamps = 0' to /etc/sysctl.conf. Execute 'sysctl -p' to apply the settings at runtime.",
+      "To disable TCP timestamps on Windows execute 'netsh int tcp set global timestamps=disabled'",
+      "Starting with Windows Server 2008 and Vista, the timestamp can not be completely disabled.",
+      "The default behavior of the TCP/IP stack on this Systems is to not use the Timestamp options when initiating TCP connections, but use them if the TCP peer that is initiating communication includes them in their synchronize (SYN) segment.",
+      "See the references for more information."
+    ],
+    "insight": [
+      "The remote host implements TCP timestamps, as dened by RFC1323/RFC7323."
+    ],
+    "log_method": [],
+    "cvss": [
+      "2.6"
+    ],
+    "port": "general",
+    "protocol": "tcp",
+    "severity": "LOW",
+    "references": [
+      "url: https://datatracker.ietf.org/doc/html/rfc1323",
+      "url: https://datatracker.ietf.org/doc/html/rfc7323",
+      "url: https://web.archive.org/web/20151213072445/http://www.microsoft.com/en-us/download/details.aspx?id=9152",
+      "url: https://www.fortiguard.com/psirt/FG-IR-16-090"
+    ],
+    "plugin": null,
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Services",
+    "description": [
+      "This plugin performs service detection."
+    ],
+    "detection_result": [],
+    "detection_method": [
+      "Special IP packets are forged and sent with a little delay in between to the target IP. The responses are searched for a timestamps. If found, the timestamps are reported.",
+      "Details: TCP Timestamps Information Disclosure",
+      "OID:1.3.6.1.4.1.25623.1.0.80091",
+      "Version used: 2023-12-15T16:10:08Z"
+    ],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [
+      "Solution type: Mitigation",
+      "To disable TCP timestamps on linux add the line 'net.ipv4.tcp_timestamps = 0' to /etc/sysctl.conf. Execute 'sysctl -p' to apply the settings at runtime.",
+      "To disable TCP timestamps on Windows execute 'netsh int tcp set global timestamps=disabled'",
+      "Starting with Windows Server 2008 and Vista, the timestamp can not be completely disabled.",
+      "The default behavior of the TCP/IP stack on this Systems is to not use the Timestamp options when initiating TCP connections, but use them if the TCP peer that is initiating communication includes them in their synchronize (SYN) segment.",
+      "See the references for more information."
+    ],
+    "insight": [
+      "The remote host implements TCP timestamps, as defined by RFC1323/RFC7323."
+    ],
+    "log_method": [],
+    "cvss": [
+      "0.0"
+    ],
+    "port": 5984,
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [
+      "url: https://datatracker.ietf.org/doc/html/rfc1323",
+      "url: https://datatracker.ietf.org/doc/html/rfc7323",
+      "url: https://web.archive.org/web/20151213072445/http://www.microsoft.com/en-us/download/details.aspx?id=9152",
+      "url: https://www.fortiguard.com/psirt/FG-IR-16-090"
+    ],
+    "plugin": null,
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Services",
+    "description": [
+      "This plugin performs service detection."
+    ],
+    "detection_result": [
+      "A web server is running on this port"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [
+      "This plugin attempts to guess which service is running on the remote port(s). For instance, it searches for a web server which could listen on another port than 80 or 443 and makes this information available for other check routines."
+    ],
+    "log_method": [
+      "Details: Services",
+      "OID:1.3.6.1.4.1.25623.1.0.10330",
+      "Version used: 2025-03-05T05:38:53Z"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": 5984,
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [],
+    "plugin": null,
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Apache CouchDB Detection (HTTP)",
+    "description": [
+      "HTTP based detection of Apache CouchDB."
+    ],
+    "detection_result": [
+      "Detected Apache CouchDB",
+      "Version: 1.6.1",
+      "Location: /",
+      "CPE: cpe:/a:apache:couchdb:1.6.1",
+      "Concluded from version/product identification result:",
+      "Server: CouchDB/1.6.1"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [
+      "Details: Apache CouchDB Detection (HTTP)",
+      "OID:1.3.6.1.4.1.25623.1.0.100571",
+      "Version used: 2025-03-04T05:38:25Z"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": 5984,
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [
+      "url: http://couchdb.apache.org/"
+    ],
+    "plugin": null,
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "HTTP Server type and version",
+    "description": [
+      "This script detects and reports the HTTP Server's banner which might provide the type and version of it."
+    ],
+    "detection_result": [
+      "The remote HTTP Server banner is:",
+      "Server: CouchDB/1.6.1 (Erlang OTP/17)"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [
+      "Details: HTTP Server type and version",
+      "OID:1.3.6.1.4.1.25623.1.0.10107",
+      "Version used: 2023-08-01T13:29:10Z"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": 5984,
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [],
+    "plugin": null,
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "HTTP Server Banner Enumeration",
+    "description": [
+      "This script tries to detect / enumerate dierent HTTP server banner (e.g. from a frontend, backend or proxy server) by sending various dierent HTTP requests (valid and invalid ones)."
+    ],
+    "detection_result": [
+      "It was possible to enumerate the following HTTP server banner(s):",
+      "Server banner | Enumeration technique",
+      "--------------------------------------------------------------------------------",
+      "->------------------------",
+      "Server: CouchDB/1.6.1 (Erlang OTP/17) | Invalid HTTP 00.5 GET request (non-exist",
+      "->ent HTTP version) to '/'"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [
+      "Details: HTTP Server Banner Enumeration",
+      "OID:1.3.6.1.4.1.25623.1.0.108708",
+      "Version used: 2025-01-31T15:39:24Z"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": 5984,
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [],
+    "plugin": null,
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "'favicon.ico' Based Fingerprinting (HTTP)",
+    "description": [
+      "HTTP based ngerprinting of web applications based on an exposed 'favicon.ico' le."
+    ],
+    "detection_result": [
+      "The following apps/services were identified:",
+      "\"couchdb (0.8.0-0.9.1)\" fingerprinted by the file: \"http://couchdb16.trabalho_vu\", \"->lnnet:5984/favicon.ico\""
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [
+      "Details: 'favicon.ico' Based Fingerprinting (HTTP)",
+      "OID:1.3.6.1.4.1.25623.1.0.20108",
+      "Version used: 2023-08-01T13:29:10Z"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": 5984,
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [],
+    "plugin": null,
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "HTTP Security Headers Detection",
+    "description": [
+      "All known security headers are being checked on the remote web server.",
+      "On completion a report will hand back whether a specic security header has been implemented (including its value and if it is deprecated) or is missing on the target."
+    ],
+    "detection_result": [
+      "Missing Headers | More Information",
+      "--------------------------------------------------------------------------------",
+      "->------------------------------------------------------------------------------",
+      "->------------------------------------------------",
+      "Content-Security-Policy | https://owasp.org/www-project-secure-headers",
+      "->/#content-security-policy",
+      "Cross-Origin-Embedder-Policy | https://scotthelme.co.uk/coop-and-coep/, Not",
+      "->e: This is an upcoming header",
+      "Cross-Origin-Opener-Policy | https://scotthelme.co.uk/coop-and-coep/, Not",
+      "->e: This is an upcoming header",
+      "Cross-Origin-Resource-Policy | https://scotthelme.co.uk/coop-and-coep/, Not",
+      "->e: This is an upcoming header",
+      "Document-Policy | https://w3c.github.io/webappsec-feature-poli",
+      "->cy/document-policy#document-policy-http-header",
+      "Feature-Policy | https://owasp.org/www-project-secure-headers",
+      "->/#feature-policy, Note: The Feature Policy header has been renamed to Permissi",
+      "->ons Policy",
+      "Permissions-Policy | https://w3c.github.io/webappsec-feature-poli",
+      "->cy/#permissions-policy-http-header-field",
+      "Referrer-Policy | https://owasp.org/www-project-secure-headers",
+      "->/#referrer-policy",
+      "Sec-Fetch-Dest | https://developer.mozilla.org/en-US/docs/Web",
+      "/HTTP/Headers#fetch_metadata_request_headers, Note: This is a new header suppo",
+      "->rted only in newer browsers like e.g. Firefox 90",
+      "Sec-Fetch-Mode | https://developer.mozilla.org/en-US/docs/Web",
+      "/HTTP/Headers#fetch_metadata_request_headers, Note: This is a new header suppo",
+      "->rted only in newer browsers like e.g. Firefox 90",
+      "Sec-Fetch-Site | https://developer.mozilla.org/en-US/docs/Web",
+      "/HTTP/Headers#fetch_metadata_request_headers, Note: This is a new header suppo",
+      "->rted only in newer browsers like e.g. Firefox 90",
+      "Sec-Fetch-User | https://developer.mozilla.org/en-US/docs/Web",
+      "/HTTP/Headers#fetch_metadata_request_headers, Note: This is a new header suppo",
+      "->rted only in newer browsers like e.g. Firefox 90",
+      "X-Content-Type-Options | https://owasp.org/www-project-secure-headers",
+      "->/#x-content-type-options",
+      "X-Frame-Options | https://owasp.org/www-project-secure-headers",
+      "->/#x-frame-options",
+      "X-Permitted-Cross-Domain-Policies | https://owasp.org/www-project-secure-headers",
+      "->/#x-permitted-cross-domain-policies",
+      "X-XSS-Protection | https://owasp.org/www-project-secure-headers",
+      "->/#x-xss-protection, Note: Most major browsers have dropped / deprecated suppor",
+      "->t for this header in 2020."
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [
+      "Details: HTTP Security Headers Detection",
+      "OID:1.3.6.1.4.1.25623.1.0.112081",
+      "Version used: 2025-03-21T15:40:43Z"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": 5984,
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [
+      "url: https://owasp.org/www-project-secure-headers/",
+      "url: https://owasp.org/www-project-secure-headers/#div-headers",
+      "url: https://securityheaders.com/"
+    ],
+    "plugin": null,
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Allowed HTTP Methods Enumeration",
+    "description": [
+      "Enumerates which HTTP methods are allowed."
+    ],
+    "detection_result": [
+      "The following list contains the URLs and corresponding supported HTTP methods.",
+      "URL | HTTP Methods",
+      "--------------------------------------------------------------------------------",
+      "http://couchdb16.trabalho_vulnnet:5984/ | GET,HEAD (obtained via HTTP OPTIONS method)"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [
+      "- Basic HTTP methods: GET, HEAD, POST, PUT, DELETE, CONNECT, OPTIONS, TRACE",
+      "- Extended HTTP methods: ACL, BASELINE-CONTROL, BIND, CHECKIN, CHECK- OUT, COPY, LABEL, LINK, LOCK, MERGE, MKACTIVITY, MKCALENDAR, MKCOL, MKREDIRECTREF, MKWORKSPACE, MOVE, ORDERPATCH, PATCH, PRI, PROPFIND, PROPPATCH, REBIND, REPORT, SEARCH, UNBIND, UNCHECKOUT, UNLINK, UN- LOCK, UPDATE, UPDATEREDIRECTREF, VERSION-CONTROL"
+    ],
+    "log_method": [
+      "Sends multiple HTTP requests and checks the responses.",
+      "Disclaimer:",
+      "- This enumeration script is provided 'as is' (means no support is given) and only providing rudimentary information about the possible enabled methods",
+      "- This script doesn't guarantee completeness or full reliability",
+      "For more reliable determination of the enabled HTTP methods please inspect the conguration of the web server manually and directly on the target host.",
+      "Details: Allowed HTTP Methods Enumeration",
+      "OID:1.3.6.1.4.1.25623.1.0.153974",
+      "Version used: 2025-02-28T05:38:49Z"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": 5984,
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [],
+    "plugin": null,
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "CPE Inventory",
+    "description": [
+      "This routine uses information collected by other routines about CPE identities of operating systems, services and applications detected during the scan.",
+      "Note: Some CPEs for specic products might show up twice or more in the output. Background: After a product got renamed or a specic vendor was acquired by another one it might happen that a product gets a new CPE within the NVD CPE Dictionary but older entries are kept with the older CPE."
+    ],
+    "detection_result": [
+      "172.31.1.35|cpe:/a:apache:couchdb:1.6.1",
+      "172.31.1.35|cpe:/o:linux:kernel"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [
+      "Details: CPE Inventory",
+      "OID:1.3.6.1.4.1.25623.1.0.810002",
+      "Version used: 2022-07-27T10:11:28Z"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": "general",
+    "protocol": "CPE-T",
+    "severity": "LOG",
+    "references": [
+      "url: https://nvd.nist.gov/products/cpe"
+    ],
+    "plugin": null,
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Hostname Determination Reporting",
+    "description": [
+      "The script reports information on how the hostname of the target was determined."
+    ],
+    "detection_result": [
+      "Hostname determination for IP 172.31.1.35:",
+      "Hostname|Source",
+      "couchdb16.trabalho_vulnnet|Reverse-DNS"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [
+      "Details: Hostname Determination Reporting",
+      "OID:1.3.6.1.4.1.25623.1.0.108449",
+      "Version used: 2022-07-27T10:11:28Z"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": "general",
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [],
+    "plugin": null,
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "OS Detection Consolidation and Reporting",
+    "description": [
+      "This script consolidates the OS information detected by several VTs and tries to nd the best matching OS.",
+      "Furthermore it reports all previously collected information leading to this best matching OS. It also reports possible additional information which might help to improve the OS detection.",
+      "If any of this information is wrong or could be improved please consider to report these to the referenced community forum."
+    ],
+    "detection_result": [
+      "Best matching OS:",
+      "OS: Linux Kernel",
+      "CPE: cpe:/o:linux:kernel",
+      "Found by VT: 1.3.6.1.4.1.25623.1.0.102002 (Operating System (OS) Detection (ICM ->P))",
+      "Concluded from ICMP based OS fingerprint",
+      "Setting key \"Host/runs_unixoide\" based on this information"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [
+      "Details: OS Detection Consolidation and Reporting",
+      "OID:1.3.6.1.4.1.25623.1.0.105937",
+      "Version used: 2026-01-21T05:50:46Z"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": "general",
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [
+      "url: https://forum.greenbone.net/c/vulnerability-tests/7"
+    ],
+    "plugin": null,
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "IP Forwarding Enabled - Active Check",
+    "description": [
+      "Checks if the remote host has IP forwarding enabled."
+    ],
+    "detection_result": [
+      "It was possible to route a TCP packet through the target host and received an an ->swer which means IP forwarding is enabled."
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [
+      "Sends a crafted Local Link Layer (LLL) frame and checks the response.",
+      "Details: IP Forwarding Enabled - Active Check",
+      "OID:1.3.6.1.4.1.25623.1.0.147205",
+      "Version used: 2021-12-03T08:27:06Z"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": "general",
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [
+      "cve: CVE-1999-0511"
+    ],
+    "plugin": null,
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Traceroute",
+    "description": [
+      "Collect information about the network route and network distance between the scanner host and the target host."
+    ],
+    "detection_result": [
+      "Network route from scanner (172.30.0.2) to target (172.31.1.35):",
+      "172.30.0.2",
+      "172.31.1.35",
+      "Network distance between scanner and target: 2"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [
+      "For internal networks, the distances are usually small, often less than 4 hosts between scanner and target. For public targets the distance is greater and might be 10 hosts or more."
+    ],
+    "log_method": [
+      "A combination of the protocols ICMP and TCP is used to determine the route. This method is applicable for IPv4 only and it is also known as 'traceroute'.",
+      "Details: Traceroute",
+      "OID:1.3.6.1.4.1.25623.1.0.51662",
+      "Version used: 2022-10-17T11:13:19Z"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": "general",
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [],
+    "plugin": null,
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Unknown OS and Service Banner Reporting",
+    "description": [
+      "This VT consolidates and reports the information collected by the following VTs:",
+      "- Collect banner of unknown services (OID: 1.3.6.1.4.1.25623.1.0.11154)",
+      "- Service Detection (unknown) with nmap (OID: 1.3.6.1.4.1.25623.1.0.66286)",
+      "- Service Detection (wrapped) with nmap (OID: 1.3.6.1.4.1.25623.1.0.108525)",
+      "- OS Detection Consolidation and Reporting (OID: 1.3.6.1.4.1.25623.1.0.105937)",
+      "If you know any of the information reported here, please send the full output to the referenced community forum."
+    ],
+    "detection_result": [
+      "Unknown banners have been collected which might help to identify the OS running ->on this host. If these banners containing information about the host OS please -> report the following information to https://forum.greenbone.net/c/vulnerabili ->ty-tests/7:",
+      "Banner: Server: CouchDB/1.6.1 (Erlang OTP/17)",
+      "Identified from: HTTP Server banner on port 5984/tcp"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [
+      "Details: Unknown OS and Service Banner Reporting",
+      "OID:1.3.6.1.4.1.25623.1.0.108441",
+      "Version used: 2023-06-22T10:34:15Z"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": "general",
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [
+      "url: https://forum.greenbone.net/c/vulnerability-tests/7"
+    ],
+    "plugin": null,
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  }
+]

@@ -1,8 +1,9 @@
 import os
 import json
 import re
-import datetime
 import sys
+import tiktoken
+from typing import Dict, Any
 
 # Ensure imports work from src/ context
 _current_dir = os.path.dirname(os.path.abspath(__file__))
@@ -10,8 +11,6 @@ _src_dir = os.path.dirname(_current_dir)
 if _src_dir not in sys.path:
     sys.path.insert(0, _src_dir)
 
-from converters.csv_converter import CSVConverter, TSVConverter
-from converters.xlsx_converter import XLSXConverter
 from langchain_openai import ChatOpenAI
 
 def parse_json_response(resposta, chunk_id=""):
@@ -89,6 +88,83 @@ def parse_json_response(resposta, chunk_id=""):
     
     print(f"[WARN{chunk_id}] Nenhuma estratégia de parse conseguiu extrair JSON válido")
     return []
+
+def validate_json_and_tokens(response: str, chunk_content: str, max_tokens: int, prompt_template: str = "") -> Dict[str, Any]:
+    """
+    Valida resposta JSON e verifica limites de tokens.
+    
+    Args:
+        response: Resposta da LLM
+        chunk_content: Conteúdo do chunk
+        max_tokens: Máximo de tokens permitido
+        prompt_template: Template do prompt usado
+    
+    Returns:
+        Dict com resultado da validação: {
+            'json_valid': bool,
+            'json_data': list/None,
+            'token_valid': bool,
+            'token_count': int,
+            'errors': list,
+            'needs_redivision': bool
+        }
+    """
+    try:
+        tokenizer = tiktoken.encoding_for_model("gpt-3.5-turbo")
+    except:
+        tokenizer = tiktoken.get_encoding("cl100k_base")
+    
+    result = {
+        'json_valid': False,
+        'json_data': None,
+        'token_valid': True,
+        'token_count': 0,
+        'errors': [],
+        'needs_redivision': False
+    }
+    
+    # 1. VALIDAÇÃO DE JSON
+    try:
+        # Tentar extrair JSON da resposta
+        json_data = parse_json_response(response)
+        if json_data and isinstance(json_data, list):
+            result['json_valid'] = True
+            result['json_data'] = json_data
+        else:
+            result['errors'].append("JSON inválido ou não é uma lista")
+    except Exception as e:
+        result['errors'].append(f"Erro ao fazer parse do JSON: {str(e)}")
+    
+    # 2. VALIDAÇÃO DE TOKENS
+    # Calcular tokens do prompt completo (template + chunk + overhead)
+    prompt_tokens = len(tokenizer.encode(prompt_template)) if prompt_template else 800
+    chunk_tokens = len(tokenizer.encode(chunk_content))
+    response_tokens = len(tokenizer.encode(response))
+    total_tokens = prompt_tokens + chunk_tokens + response_tokens
+    
+    result['token_count'] = total_tokens
+    
+    # Verificar se excede limite (deixar margem de 500 tokens)
+    if total_tokens > (max_tokens - 500):
+        result['token_valid'] = False
+        result['errors'].append(f"Excede limite de tokens: {total_tokens}/{max_tokens}")
+        result['needs_redivision'] = True
+    
+    # 3. DETECTAR NECESSIDADE DE REDIVISÃO
+    # Se JSON inválido OU excede tokens OU chunk muito grande
+    if not result['json_valid'] or not result['token_valid'] or chunk_tokens > (max_tokens * 0.6):
+        result['needs_redivision'] = True
+    
+    # 4. ANÁLISE ESPECÍFICA DE ERROS JSON
+    if not result['json_valid']:
+        if "..." in response or "truncated" in response.lower():
+            result['errors'].append("Resposta truncada detectada")
+        if response.count('[') != response.count(']'):
+            result['errors'].append("JSON mal formado - colchetes desbalanceados")
+        if response.count('{') != response.count('}'):
+            result['errors'].append("JSON mal formado - chaves desbalanceadas")
+    
+    return result
 
 def validate_and_normalize_vulnerability(vuln):
     """
@@ -188,91 +264,6 @@ def validate_and_normalize_vulnerability(vuln):
     
     return vuln
 
-def execute_conversions(json_file_path, args):
-    """
-    Executa conversões baseadas nos argumentos fornecidos
-    """
-    if args.convert == 'none':
-        return []
-    print(f"\n=== CONVERSÃO DE FORMATOS ===")
-    converted_files = []
-    if args.convert == 'all':
-        formats = ['csv', 'tsv', 'xlsx']
-        for format_type in formats:
-            try:
-                result = convert_single_format(json_file_path, format_type, args)
-                if result:
-                    converted_files.append(result)
-            except Exception as e:
-                print(f"Erro ao converter para {format_type.upper()}: {e}")
-    else:
-        result = convert_single_format(json_file_path, args.convert, args)
-        if result:
-            converted_files.append(result)
-    return converted_files
-
-def convert_single_format(json_file_path, format_type, args):
-    """
-    Converte para um formato específico
-    """
-    try:
-        base_name = os.path.splitext(os.path.basename(json_file_path))[0]
-        # Gera o nome do arquivo convertido com a extensão correta
-        if args.output and args.convert != 'all':
-            # Se for xlsx, força extensão .xlsx
-            if format_type == 'xlsx':
-                output_file = os.path.splitext(args.output)[0] + '.xlsx'
-            elif format_type == 'csv':
-                output_file = os.path.splitext(args.output)[0] + '.csv'
-            elif format_type == 'tsv':
-                output_file = os.path.splitext(args.output)[0] + '.tsv'
-            else:
-                output_file = args.output
-        else:
-            if args.output_dir:
-                output_file = os.path.join(args.output_dir, f"{base_name}_converted.{format_type}")
-            else:
-                timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-                output_file = f"{base_name}_converted_{timestamp}.{format_type}"
-        if format_type == 'csv':
-            converter = CSVConverter(
-                delimiter=args.csv_delimiter,
-                encoding=args.csv_encoding,
-                include_metadata=False
-            )
-        elif format_type == 'tsv':
-            converter = TSVConverter(encoding=args.csv_encoding, include_metadata=False)
-        elif format_type == 'xlsx':
-            converter = XLSXConverter()
-        else:
-            raise ValueError(f"Formato não suportado: {format_type}")
-        result = converter.convert(json_file_path, output_file)
-        print(f"{format_type.upper()}: {result}")
-        return result
-    except Exception as e:
-        print(f" Erro ao converter para {format_type.upper()}: {e}")
-        return None
-
-
-def save_visual_layout(content, pdf_path):
-    """
-    Salva o layout visual extraído em arquivo TXT para referência
-    """
-    base_name = os.path.splitext(os.path.basename(pdf_path))[0]
-    output_visual_path = f"visual_layout_extracted_{base_name}.txt"
-    try:
-        with open(output_visual_path, 'w', encoding='utf-8') as f:
-            # Cabeçalho informativo
-            f.write(f"Layout Visual Extraído: {os.path.basename(pdf_path)}\n")
-            f.write(f"Extraído em: {datetime.datetime.now().strftime('%d/%m/%Y às %H:%M:%S')}\n")
-            f.write("=" * 80 + "\n\n")
-            # Conteúdo visual principal
-            f.write(content)
-        print(f"Layout visual salvo em: {output_visual_path}")
-        return output_visual_path
-    except Exception as e:
-        print(f"Erro ao salvar layout visual: {e}")
-        return None
 def load_profile(profile_name):
     path = f"src/configs/scanners/{profile_name}.json"
     with open(path, "r", encoding="utf-8") as f:
@@ -347,113 +338,3 @@ def load_prompt(prompt):
         with open(rel_path, "r", encoding="utf-8") as f:
             return f.read()
     return prompt
-
-
-def validate_cais_vulnerability(vuln):
-    """
-    Validate CAIS vulnerability object with dotted field names.
-    
-    CAIS fields: definition.name, asset.display_fqdn, etc
-    Returns normalized vuln or None if invalid.
-    """
-    if not isinstance(vuln, dict):
-        return None
-    
-    # CAIS required fields
-    cais_fields = {
-        "id": str,
-        "asset.name": (type(None), str),
-        "asset.display_fqdn": (type(None), str),
-        "asset.display_ipv4_address": (type(None), str),
-        "asset.host_name": (type(None), str),
-        "asset.operating_system": (type(None), str),
-        "asset.system_type": (type(None), str),
-        
-        "definition.name": str,  # REQUIRED
-        "definition.severity": str,
-        "definition.description": (type(None), str),
-        "definition.solution": (type(None), str),
-        "definition.id": (type(None), str),
-        "definition.family": (type(None), str),
-        "definition.type": (type(None), str),
-        "definition.cve": (type(None), str),
-        "definition.cwe": (type(None), str),
-        "definition.cpe": (type(None), str),
-        "definition.references": (type(None), list),
-        "definition.see_also": (type(None), list),
-        "definition.cvss3.base_score": (type(None), int, float),
-        "definition.cvss3.base_vector": (type(None), str),
-        "definition.cvss2.base_score": (type(None), int, float),
-        "definition.cvss2.base_vector": (type(None), str),
-        "definition.synopsis": (type(None), str),
-        "definition.plugin_published": (type(None), str),
-        "definition.vulnerability_published": (type(None), str),
-        "definition.patch_published": (type(None), str),
-        "definition.epss.score": (type(None), int, float),
-        "definition.exploitability_ease": (type(None), str),
-        
-        "output": (type(None), str),
-        "port": (type(None), int, str),
-        "protocol": (type(None), str),
-        
-        "scan.id": (type(None), str),
-        "scan.target": (type(None), str),
-        
-        "severity": str,
-        "state": (type(None), str),
-        "first_observed": (type(None), str),
-        "last_seen": (type(None), str),
-        "age_in_days": (type(None), int),
-    }
-    
-    # Normalize all fields
-    for field, expected_type in cais_fields.items():
-        if field not in vuln:
-            # Set default
-            if expected_type == list:
-                vuln[field] = []
-            elif expected_type == str:
-                if field == "definition.name":  # Required
-                    return None  # Invalid: missing required name
-                vuln[field] = ""
-            elif expected_type == (type(None), str):
-                vuln[field] = None
-            elif expected_type == (type(None), int, float):
-                vuln[field] = None
-            elif expected_type == (type(None), int, str):
-                vuln[field] = None
-            elif expected_type == (type(None), list):
-                vuln[field] = []
-            continue
-        
-        value = vuln[field]
-        
-        # Type validation
-        if isinstance(expected_type, tuple):
-            if not isinstance(value, expected_type):
-                if expected_type == (type(None), str) and value is not None:
-                    vuln[field] = str(value)
-                elif expected_type == (type(None), int, str) and value is not None:
-                    if isinstance(value, str):
-                        vuln[field] = int(value) if value.isdigit() else None
-                elif expected_type == (type(None), int, float) and value is not None:
-                    try:
-                        vuln[field] = float(value)
-                    except (ValueError, TypeError):
-                        vuln[field] = None
-                else:
-                    vuln[field] = None
-        elif expected_type == str:
-            if not isinstance(value, str):
-                vuln[field] = str(value) if value is not None else ""
-        elif expected_type == list:
-            if not isinstance(value, list):
-                vuln[field] = [value] if value else []
-    
-    # Validate required field
-    if not vuln.get("definition.name") or not str(vuln.get("definition.name")).strip():
-        return None
-    
-    return vuln
-
-

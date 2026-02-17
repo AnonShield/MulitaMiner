@@ -1,0 +1,38 @@
+# LOG DE DEDUPLICAÇÃO DE VULNERABILIDADES
+Este arquivo lista todas as vulnerabilidades consideradas duplicatas e agrupadas durante o processo.
+Cada grupo é identificado por uma chave composta (ex: nome, porta, protocolo).
+Apenas a vulnerabilidade mais completa e com descrição válida foi mantida em cada grupo.
+
+Total de grupos de duplicatas: 4
+Total de vulnerabilidades agrupadas (removidas): 4
+
+Grupo 1: Chave = ('grafana csrf vulnerability (ghsa-cmf4-h3xc-jw8w)', '3000', 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Grafana CSRF Vulnerability (GHSA-cmf4-h3xc-jw8w)
+       Porta: 3000 | Protocolo: tcp | Severidade: HIGH
+
+
+Grupo 2: Chave = ('grafana privilege escalation vulnerability (ghsa-5c-938w-8c9q)', '3000', 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Grafana Privilege Escalation Vulnerability (GHSA-5c-938w-8c9q)
+       Porta: 3000 | Protocolo: tcp | Severidade: MEDIUM
+       Descrição: Grafana is prone to a privilege escalation vulnerability. Quality of Detection (QoD): 80%
+
+
+Grupo 3: Chave = ('grafana < 8.5.22, 9.2.x < 9.2.15, 9.3.x < 9.3.11, 9.4.x < 9.4.7 xss vulnerability (ghsa-qrrg-gw7w-vp76)', '3000', 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Grafana < 8.5.22, 9.2.x < 9.2.15, 9.3.x < 9.3.11, 9.4.x < 9.4.7 XSS Vulnerability (GHSA-qrrg-gw7w-vp76)
+       Porta: 3000 | Protocolo: tcp | Severidade: MEDIUM
+       Descrição: Grafana is prone to a cross-site scripting (XSS) vulnerability.
+
+
+Grupo 4: Chave = ('grafana idor vulnerability (ghsa-63g3-9jq3-mccv)', '3000', 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Grafana IDOR Vulnerability (GHSA-63g3-9jq3-mccv)
+       Porta: 3000 | Protocolo: tcp | Severidade: LOG
+       Descrição: An authenticated attacker can view unintended data by querying for the specific team ID. - /teams/:search - an authenticated attacker can search for teams and see the total number of available teams, ...
+
+
+Resumo final:
+Total de grupos de duplicatas: 4
+Total de vulnerabilidades agrupadas (removidas): 4

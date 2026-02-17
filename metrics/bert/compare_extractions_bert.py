@@ -35,6 +35,113 @@ from common.config import BASELINE_DIR, FUZZY_THRESHOLD, SPARSE_FIELDS, DEFAULT_
 from common.normalization import normalize_name, normalize_field_data
 from common.matching import best_fuzzy_match
 
+
+def detect_scanner_type(df: pd.DataFrame) -> str:
+    """Detecta o tipo de scanner baseado nos campos ou coluna source."""
+    if 'source' in df.columns:
+        sources = df['source'].dropna().str.upper().unique()
+        if 'OPENVAS' in sources:
+            return 'openvas'
+        elif 'TENABLE' in sources or 'NESSUS' in sources:
+            return 'tenable'
+    # Fallback: verifica campos típicos
+    if 'plugin' in df.columns:
+        return 'tenable'
+    if 'protocol' in df.columns and df['protocol'].notna().any():
+        return 'openvas'
+    return 'generic'
+
+
+def normalize_port(port_value) -> str:
+    """Normaliza porta removendo formatação numérica (vírgulas, pontos de milhar)."""
+    port_str = str(port_value).strip()
+    # Remove vírgulas e pontos usados como separadores de milhar
+    port_str = port_str.replace(',', '').replace('.', '')
+    # Se ficou vazio ou não é numérico (exceto 'general'), retorna wildcard
+    if not port_str or (not port_str.isdigit() and port_str.lower() != 'general'):
+        return '*'
+    return port_str
+
+
+def build_composite_key(row: pd.Series, scanner_type: str) -> str:
+    """
+    Gera chave composta para matching baseada no tipo de scanner.
+    - OpenVAS: nome + porta + protocolo
+    - Tenable: nome + severidade + plugin
+    - Generic: apenas nome
+    
+    Elementos null/vazios são representados como '*' (wildcard).
+    """
+    name = normalize_name(str(row.get('Name', '')))
+    
+    if scanner_type == 'openvas':
+        # Força port como string, protocol como lower, remove espaços
+        port = str(row.get('port', '')).strip()
+        protocol = str(row.get('protocol', '')).strip().lower() or '*'
+        # Lógica especial para 'Services': usar hash do conteúdo
+        if name == 'services':
+            import json
+            row_dict = {k: v for k, v in row.items() if pd.notnull(v)}
+            vuln_serialized = json.dumps(row_dict, sort_keys=True, default=str)
+            return f"services_exact|{hash(vuln_serialized)}"
+        return f"{name}|{port}|{protocol}"
+    elif scanner_type == 'tenable':
+        # Força severity e plugin como string/lower
+        severity = str(row.get('severity', '')).strip().lower() or '*'
+        plugin = str(row.get('plugin', '')).strip() or '*'
+        return f"{name}|{severity}|{plugin}"
+    else:
+        return name
+
+
+def keys_match(key1: str, key2: str) -> bool:
+    """
+    Verifica se duas chaves compostas são compatíveis.
+    Wildcards ('*') são compatíveis com qualquer valor.
+    """
+    parts1 = key1.split('|')
+    parts2 = key2.split('|')
+    
+    if len(parts1) != len(parts2):
+        return False
+    
+    for p1, p2 in zip(parts1, parts2):
+        # Wildcard é compatível com qualquer valor
+        if p1 == '*' or p2 == '*':
+            continue
+        # Valores diferentes = não match
+        if p1 != p2:
+            return False
+    
+    return True
+
+
+def key_match_score(key1: str, key2: str) -> float:
+    """
+    Calcula score de match entre duas chaves (0.0 a 1.0).
+    Quanto mais elementos concretos iguais, maior o score.
+    Wildcards contribuem parcialmente.
+    """
+    parts1 = key1.split('|')
+    parts2 = key2.split('|')
+    
+    if len(parts1) != len(parts2):
+        return 0.0
+    
+    score = 0.0
+    total = len(parts1)
+    
+    for p1, p2 in zip(parts1, parts2):
+        if p1 == '*' or p2 == '*':
+            # Wildcard: contribui parcialmente (0.3) - melhor que nada, pior que match exato
+            score += 0.3
+        elif p1 == p2:
+            # Match exato: contribui totalmente
+            score += 1.0
+        # Valores diferentes: não contribui (0.0)
+    
+    return score / total if total > 0 else 0.0
+
 # =========================
 # CONFIG (específico para BERTScore)
 # =========================
@@ -139,16 +246,41 @@ def process_extraction_comparison_bertscore(baseline_df: pd.DataFrame, extractio
     baseline_df["_Name_norm"] = baseline_df["Name"].map(normalize_name)
     extraction_df["_Name_norm"] = extraction_df["Name"].map(normalize_name)
 
+    # Detecta tipo de scanner para chaves compostas
+    scanner_type = detect_scanner_type(baseline_df)
+    print(f"   🔧 Scanner detectado: {scanner_type}")
+    
+    # Gera chaves compostas para matching mais preciso
+    baseline_df["_composite_key"] = baseline_df.apply(lambda r: build_composite_key(r, scanner_type), axis=1)
+    extraction_df["_composite_key"] = extraction_df.apply(lambda r: build_composite_key(r, scanner_type), axis=1)
+
     # Tratamento de duplicatas na baseline
     if not ALLOW_BASELINE_DUPLICATES:
         baseline_dedup = baseline_df.drop_duplicates(subset=["_Name_norm"], keep="first")
         if len(baseline_dedup) < len(baseline_df):
             dup_count = len(baseline_df) - len(baseline_dedup)
             print(f"   ℹ️ Removidas {dup_count} duplicatas da baseline (modo sem duplicatas legítimas)")
+        # Sempre cria _baseline_row_id, mesmo sem duplicatas legítimas
+        baseline_dedup["_baseline_row_id"] = range(len(baseline_dedup))
     else:
         baseline_dedup = baseline_df.copy()
         baseline_dedup["_baseline_row_id"] = range(len(baseline_dedup))
         print(f"   ℹ️ Mantendo {len(baseline_dedup)} instâncias da baseline (modo com duplicatas legítimas)")
+    
+    # FASE 1: Match por chave composta (suporta wildcards)
+    # Para cada chave de extração, encontra todas as chaves da baseline compatíveis
+    baseline_composite_list = baseline_dedup["_composite_key"].tolist()
+    composite_map: Dict[str, str] = {}
+    
+    for ext_key in extraction_df["_composite_key"]:
+        # Encontra matches compatíveis (considerando wildcards)
+        compatible_matches = [(bk, key_match_score(ext_key, bk)) for bk in baseline_composite_list if keys_match(ext_key, bk)]
+        if compatible_matches:
+            # Escolhe o match com maior score de chave
+            best_match = max(compatible_matches, key=lambda x: x[1])
+            composite_map[ext_key] = best_match[0]
+    
+    # FASE 2: Match exato por nome (fallback para casos sem chave composta completa)
     exact_map: Dict[str, str] = {}
     baseline_set = set(baseline_dedup["_Name_norm"].tolist())
     for n in extraction_df["_Name_norm"]:
@@ -158,6 +290,7 @@ def process_extraction_comparison_bertscore(baseline_df: pd.DataFrame, extractio
     baseline_norm_list = baseline_dedup["_Name_norm"].tolist()
     fuzzy_map: Dict[str, str] = {}
     
+    # FASE 3: Fuzzy matching apenas para não pareados
     fuzzy_candidates = [n for n in extraction_df["_Name_norm"] if n not in exact_map and n != ""]
     print(f"   🔍 Fuzzy matching: {len(fuzzy_candidates)} vulnerabilidades...")
     for n in tqdm(fuzzy_candidates, desc="   Fuzzy matching", leave=False, disable=len(fuzzy_candidates) < 10):
@@ -165,46 +298,119 @@ def process_extraction_comparison_bertscore(baseline_df: pd.DataFrame, extractio
         if match_norm and score >= FUZZY_THRESHOLD:
             fuzzy_map[n] = match_norm
 
+    # Monta mapa de chave composta da baseline -> nome normalizado da baseline
+    baseline_composite_to_name: Dict[str, str] = {}
+    for _, br in baseline_dedup.iterrows():
+        baseline_composite_to_name[br["_composite_key"]] = br["_Name_norm"]
+    
+    # Monta mapa final: prioridade para chave composta > nome exato > fuzzy
     final_map: Dict[str, Optional[str]] = {}
-    for n in extraction_df["_Name_norm"]:
-        if n in exact_map:
-            final_map[n] = exact_map[n]
-        elif n in fuzzy_map:
-            final_map[n] = fuzzy_map[n]
+    final_composite_map: Dict[str, Optional[str]] = {}  # Mapeia chave composta da extração -> chave composta da baseline
+    
+    for idx, r in extraction_df.iterrows():
+        n_norm = r["_Name_norm"]
+        comp_key = r["_composite_key"]
+        
+        # Prioridade 1: Match por chave composta
+        if comp_key in composite_map:
+            baseline_comp_key = composite_map[comp_key]
+            baseline_name_norm = baseline_composite_to_name.get(baseline_comp_key, n_norm)
+            final_map[n_norm] = baseline_name_norm  # Nome normalizado DA BASELINE
+            final_composite_map[comp_key] = baseline_comp_key
+        # Prioridade 2: Match exato por nome
+        elif n_norm in exact_map:
+            final_map[n_norm] = exact_map[n_norm]
+            final_composite_map[comp_key] = None  # Sem match composto
+        # Prioridade 3: Fuzzy match
+        elif n_norm in fuzzy_map:
+            final_map[n_norm] = fuzzy_map[n_norm]
+            final_composite_map[comp_key] = None
         else:
-            final_map[n] = None
+            final_map[n_norm] = None
+            final_composite_map[comp_key] = None
 
     debug_rows = []
     for idx, r in extraction_df.iterrows():
         n_show = r["Name"]
         n_norm = r["_Name_norm"]
+        comp_key = r["_composite_key"]
         m_norm = final_map.get(n_norm)
+        m_comp = final_composite_map.get(comp_key)
         if m_norm is None:
-            debug_rows.append([n_show, n_norm, None, 0.0, "UNMATCHED"])
+            debug_rows.append([n_show, n_norm, comp_key, None, 0.0, "UNMATCHED"])
         else:
             score = fuzz.ratio(n_norm, m_norm) / 100.0
             base_name_orig = baseline_dedup.loc[baseline_dedup["_Name_norm"] == m_norm, "Name"]
             base_name_orig = base_name_orig.iloc[0] if len(base_name_orig) else None
-            debug_rows.append([n_show, n_norm, base_name_orig, score, "MATCHED"])
+            match_type = "COMPOSITE" if m_comp else "NAME_ONLY"
+            debug_rows.append([n_show, n_norm, comp_key, base_name_orig, score, f"MATCHED_{match_type}"])
 
-    mapping_debug_df = pd.DataFrame(debug_rows, columns=["Extraction_Name", "Extraction_Name_norm", "Baseline_Name_matched", "match_score", "Status"])
+    mapping_debug_df = pd.DataFrame(debug_rows, columns=["Extraction_Name", "Extraction_Name_norm", "Composite_Key", "Baseline_Name_matched", "match_score", "Status"])
 
+    # Index por chave composta e por row_id para matching preciso
+    base_idx_composite = baseline_dedup.set_index("_composite_key")
     base_idx = baseline_dedup.set_index("_Name_norm")
+    base_idx_rowid = baseline_dedup.set_index("_baseline_row_id")
 
-    common_cols = [c for c in extraction_df.columns if c not in ["Name", "_Name_norm"] and c in baseline_dedup.columns]
+    common_cols = [c for c in extraction_df.columns if c not in ["Name", "_Name_norm", "_composite_key"] and c in baseline_dedup.columns]
 
     print(f"Colunas comparáveis encontradas (BERTScore): {len(common_cols)}")
 
     # Tracking de linhas já usadas da baseline (para matching 1:1)
-    used_baseline_rows = set()
+    used_baseline_rowids = set()  # Usa _baseline_row_id como identificador
+
+    # REORDENA: processa primeiro os que têm match composto (mais precisos)
+    # Isso evita que match por nome "roube" a baseline de um match composto mais preciso
+    extraction_rows = list(extraction_df.iterrows())
+    extraction_rows_sorted = sorted(
+        extraction_rows,
+        key=lambda x: (0 if final_composite_map.get(x[1]["_composite_key"]) else 1)
+    )
 
     print(f"   📊 Calculando scores BERTScore...")
     records = []
-    for _, row in tqdm(extraction_df.iterrows(), total=len(extraction_df), desc="   BERTScore scoring", leave=False):
+    for _, row in tqdm(extraction_rows_sorted, total=len(extraction_rows_sorted), desc="   BERTScore scoring", leave=False):
         name_show = row["Name"]
         key = row["_Name_norm"]
+        comp_key = row["_composite_key"]
+        match_comp = final_composite_map.get(comp_key)
         match_norm = final_map.get(key)
 
+        # Tenta primeiro por chave composta (mais preciso)
+        if match_comp and match_comp in base_idx_composite.index:
+            base_rows = base_idx_composite.loc[[match_comp]]
+            # Se só uma linha, transforma em DataFrame
+            if not isinstance(base_rows, pd.DataFrame):
+                base_rows = base_rows.to_frame().T
+            # Procura a primeira linha ainda não usada
+            found = False
+            for _, base_row in base_rows.iterrows():
+                rowid = base_row["_baseline_row_id"]
+                if rowid not in used_baseline_rowids:
+                    used_baseline_rowids.add(rowid)
+                    out = {"Name": name_show, "_status": "OK"}
+                    for col in common_cols:
+                        extraction_text = normalize_field_data(row[col])
+                        base_text = normalize_field_data(base_row[col])
+                        if extraction_text.strip() and base_text.strip():
+                            bert_val = bertscore_score(extraction_text, base_text)
+                        elif not extraction_text.strip() and not base_text.strip():
+                            bert_val = 1.0
+                        else:
+                            bert_val = 0.0
+                        out[f"{col}_bertscore_f1"] = bert_val
+                    records.append(out)
+                    found = True
+                    break
+            if not found:
+                # Todas as instâncias já usadas - duplicata excedente
+                out = {"Name": name_show, "_status": "UNMATCHED_EXCESS"}
+                for col in common_cols:
+                    out[f"{col}_bertscore_f1"] = 0.0
+                records.append(out)
+            continue
+
+        # Fallback: match por nome normalizado
         if match_norm is None or match_norm not in base_idx.index:
             out = {"Name": name_show, "_status": "UNMATCHED"}
             for col in common_cols:
@@ -212,18 +418,18 @@ def process_extraction_comparison_bertscore(baseline_df: pd.DataFrame, extractio
             records.append(out)
             continue
 
-        # Pega candidatos da baseline
+        # Pega candidatos da baseline (fallback por nome - quando chave composta não bateu)
         base_match = base_idx.loc[match_norm]
         
         if isinstance(base_match, pd.DataFrame):
             # Múltiplas linhas com mesmo nome (modo com duplicatas legítimas)
-            # Filtra apenas as que ainda não foram usadas
+            # Filtra apenas as que ainda não foram usadas (verifica por row_id)
             available_candidates = []
             for i in range(len(base_match)):
-                row_id = (match_norm, i)
-                if row_id not in used_baseline_rows:
-                    available_candidates.append((i, base_match.iloc[i]))
-            
+                candidate = base_match.iloc[i]
+                cand_rowid = candidate["_baseline_row_id"]
+                if cand_rowid not in used_baseline_rowids:
+                    available_candidates.append((i, candidate, cand_rowid))
             if not available_candidates:
                 # Todas as instâncias já foram usadas - extraction tem mais que baseline
                 out = {"Name": name_show, "_status": "UNMATCHED_EXCESS"}
@@ -231,41 +437,43 @@ def process_extraction_comparison_bertscore(baseline_df: pd.DataFrame, extractio
                     out[f"{col}_bertscore_f1"] = 0.0
                 records.append(out)
                 continue
-            
-            # Escolhe a candidata com maior similaridade
+            # Escolhe a candidata com maior similaridade (preferencialmente pela porta/protocolo)
             best_idx = 0
             best_candidate_idx = available_candidates[0][0]
+            best_rowid = available_candidates[0][2]
             best_score = -1
-            
-            for cand_idx, candidate in available_candidates:
+            ext_port = str(row.get('port', '')).strip()
+            ext_protocol = str(row.get('protocol', '')).strip().lower()
+            for cand_idx, candidate, cand_rowid in available_candidates:
+                cand_port = str(candidate.get('port', '')).strip()
+                cand_protocol = str(candidate.get('protocol', '')).strip().lower()
+                port_match_bonus = 0.5 if (ext_port == cand_port and ext_protocol == cand_protocol) else 0.0
                 scores = []
                 for col in common_cols:
                     ext_text = normalize_field_data(row[col])
                     base_text = normalize_field_data(candidate[col])
                     if ext_text.strip() and base_text.strip():
                         scores.append(bertscore_score(ext_text, base_text))
-                
                 if scores:
-                    avg_score = sum(scores) / len(scores)
+                    avg_score = sum(scores) / len(scores) + port_match_bonus
                     if avg_score > best_score:
                         best_score = avg_score
                         best_candidate_idx = cand_idx
-            
+                        best_rowid = cand_rowid
             base_row = base_match.iloc[best_candidate_idx]
-            used_baseline_rows.add((match_norm, best_candidate_idx))
+            used_baseline_rowids.add(best_rowid)
         else:
             # Única linha
-            row_id = (match_norm, 0)
-            if row_id in used_baseline_rows:
-                # Já foi usada (nao deveria acontecer sem duplicatas legítimas)
+            base_rowid = base_match["_baseline_row_id"]
+            if base_rowid in used_baseline_rowids:
+                # Já foi usada
                 out = {"Name": name_show, "_status": "UNMATCHED_EXCESS"}
                 for col in common_cols:
                     out[f"{col}_bertscore_f1"] = 0.0
                 records.append(out)
                 continue
-            
             base_row = base_match
-            used_baseline_rows.add(row_id)
+            used_baseline_rowids.add(base_rowid)
         
         out = {"Name": name_show, "_status": "OK"}
 
@@ -288,6 +496,7 @@ def process_extraction_comparison_bertscore(baseline_df: pd.DataFrame, extractio
 
     categorization_records = []
 
+    # Só considera como "Matched" e "Highly Similar" os que realmente foram pareados (status OK)
     for _, row in per_vuln_df.iterrows():
         if row["_status"] == "OK":
             bcols = [c for c in row.index if c.endswith("_bertscore_f1")]
@@ -316,49 +525,36 @@ def process_extraction_comparison_bertscore(baseline_df: pd.DataFrame, extractio
                 "Category": "Non-existent",
                 "Type": "Non-existent (excess duplicate)"
             })
-        else:
-            categorization_records.append({
-                "Vulnerability_Name": row["Name"],
-                "Avg_BERTScore_F1": 0.0,
-                "Category": "Non-existent",
-                "Type": "Non-existent (LLM invention)"
-            })
+        # UNMATCHED não marca absent, só baseline não pareada entra como absent
 
-    matched_counts = Counter()
-    for _, row in extraction_df.iterrows():
-        extraction_norm = row["_Name_norm"]
-        match_norm = final_map.get(extraction_norm)
-        if match_norm is not None:
-            matched_counts[match_norm] += 1
+    # Calcula matched_counts baseado nos matches REAIS (status OK), não em final_map
+    # Precisa rastrear qual baseline foi usada para cada extração OK
+    # DEBUG: Mostra os rowids da baseline e os usados
+    print(f"[DEBUG] baseline_dedup shape: {baseline_dedup.shape}")
+    print(f"[DEBUG] baseline_dedup _baseline_row_id:")
+    print(baseline_dedup["_baseline_row_id"].tolist())
+    print(f"[DEBUG] used_baseline_rowids (pareados):")
+    print(list(used_baseline_rowids))
 
-    baseline_counts = Counter(baseline_df["_Name_norm"])
-    for name_norm, total_baseline in baseline_counts.items():
-        if name_norm == "":
-            continue
-        matched = matched_counts.get(name_norm, 0)
-        matched = min(matched, total_baseline)
-        absent_count = total_baseline - matched
-        if absent_count > 0:
-            baseline_rows = baseline_df[baseline_df["_Name_norm"] == name_norm]
-            absent_rows = baseline_rows.iloc[matched:] if matched > 0 else baseline_rows
-            for _, base_row in absent_rows.iterrows():
-                categorization_records.append({
-                    "Vulnerability_Name": base_row["Name"],
-                    "Avg_BERTScore_F1": 0.0,
-                    "Category": "Absent",
-                    "Type": "Absent (not extracted)"
-                })
+    # Marca como ausente apenas as instâncias da baseline cujo rowid NÃO foi usado
+    baseline_rowids = set(baseline_dedup["_baseline_row_id"].tolist())
+    used_rowids = set(used_baseline_rowids)
+    absent_rowids = baseline_rowids - used_rowids
+    print(f"[DEBUG] absent_rowids (serão marcados como ausentes):")
+    print(list(absent_rowids))
+    for rowid in absent_rowids:
+        base_row = base_idx_rowid.loc[rowid]
+        categorization_records.append({
+            "Vulnerability_Name": base_row["Name"],
+            "Avg_BERTScore_F1": 0.0,
+            "Category": "Absent",
+            "Type": "Absent (not extracted)"
+        })
 
     categorization_df = pd.DataFrame(categorization_records)
 
-    # Calcula quantas INSTÂNCIAS da baseline foram pareadas 
-    # Limita cada nome ao máximo de instâncias disponíveis na baseline
-    baseline_instances_matched = 0
-    for name_norm, matched_count in matched_counts.items():
-        baseline_count = baseline_counts.get(name_norm, 0)
-        # Conta apenas até o limite da baseline (ignora duplicatas extras da extraction)
-        baseline_instances_matched += min(matched_count, baseline_count)
-    
+    # Calcula quantas INSTÂNCIAS da baseline foram pareadas (baseado em used_baseline_rows)
+    baseline_instances_matched = len(used_baseline_rowids)
     total_baseline_instances = len(baseline_dedup)
 
     summary_data = []
@@ -532,7 +728,9 @@ def main():
                 'Extraction': extraction_sheet,
                 'Total_Vulnerabilities': len(per_vuln_df),
                 'Matched_Vulnerabilities': matched_count,
-                'Match_Rate': matched_count / len(per_vuln_df) if len(per_vuln_df) > 0 else 0
+                'Match_Rate': matched_count / total_baseline_instances if total_baseline_instances > 0 else 0,
+                'Absent_Count': cat_counts.get('Absent', 0),
+                'NonExistent_Count': total_nonexistent
             }
 
             all_bert_scores = []
@@ -568,8 +766,14 @@ def main():
 
 
     if general_summary:
+
+        import datetime
         general_df = pd.DataFrame(general_summary)
-        summary_path = args.output_dir / "summary_all_extractions_bert.xlsx"
+        baseline_name = Path(args.baseline_file).stem.replace(" ", "_").lower() if hasattr(args, 'baseline_file') else "baseline"
+        model_name = args.model if hasattr(args, 'model') and args.model else "model"
+        # Sempre sobrescreve o summary principal para garantir só 1 por run
+        summary_name = f"summary_all_extractions_bert_{baseline_name}_{model_name}.xlsx"
+        summary_path = args.output_dir / summary_name
         general_df.to_excel(summary_path, index=False)
         print(f"\n📊 Resumo geral salvo em: {summary_path}")
 

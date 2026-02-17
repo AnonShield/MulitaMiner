@@ -1,0 +1,79 @@
+# LOG DE DEDUPLICAÇÃO DE VULNERABILIDADES
+Este arquivo lista todas as vulnerabilidades consideradas duplicatas e agrupadas durante o processo.
+Cada grupo é identificado por uma chave composta (ex: nome, porta, protocolo).
+Apenas a vulnerabilidade mais completa e com descrição válida foi mantida em cada grupo.
+
+Total de grupos de duplicatas: 10
+Total de vulnerabilidades agrupadas (removidas): 10
+
+Grupo 1: Chave = ('openssh <= 7.2p2 privilege escalation vulnerability (may 2016)', '22', 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: OpenSSH <= 7.2p2 Privilege Escalation Vulnerability (May 2016)
+       Porta: 22 | Protocolo: tcp | Severidade: HIGH
+       Descrição: OpenSSH is prone to a privilege escalation vulnerability.
+
+
+Grupo 2: Chave = ('die-hellman ephemeral key exchange dos vulnerability (ssh, d(he)ater)', '22', 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Die-Hellman Ephemeral Key Exchange DoS Vulnerability (SSH, D(HE)ater)
+       Porta: 22 | Protocolo: tcp | Severidade: HIGH
+       Descrição: The remote SSH server is supporting Die-Hellman ephemeral (DHE) Key Exchange (KEX) algorithms and thus could be prone to a denial of service (DoS) vulnerability.
+
+
+Grupo 3: Chave = ('gitlab uninitialized admin password (http) - active check', '80', 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: GitLab Uninitialized Admin Password (HTTP) - Active Check
+       Porta: 80 | Protocolo: tcp | Severidade: HIGH
+       Descrição: The remote GitLab instance is not initialized with an admin password.
+
+
+Grupo 4: Chave = ('openbsd openssh <= 7.9 multiple vulnerabilities', '22', 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: OpenBSD OpenSSH <= 7.9 Multiple Vulnerabilities
+       Porta: 22 | Protocolo: tcp | Severidade: MEDIUM
+       Descrição: OpenBSD OpenSSH is prone to multiple vulnerabilities.
+
+
+Grupo 5: Chave = ('openbsd openssh < 9.6 multiple vulnerabilities (terrapin attack)', '22', 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: OpenBSD OpenSSH < 9.6 Multiple Vulnerabilities (Terrapin Attack)
+       Porta: 22 | Protocolo: tcp | Severidade: MEDIUM
+       Descrição: OpenBSD OpenSSH is prone to multiple vulnerabilities.
+
+
+Grupo 6: Chave = ("openssh 'auth2-gss.c' user enumeration vulnerability - linux", '22', 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: OpenSSH 'auth2-gss.c' User Enumeration Vulnerability - Linux
+       Porta: 22 | Protocolo: tcp | Severidade: MEDIUM
+       Descrição: OpenSSH is prone to a user enumeration vulnerability.
+
+
+Grupo 7: Chave = ('openssh < 7.8 user enumeration vulnerability - linux', '22', 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: OpenSSH < 7.8 User Enumeration Vulnerability - Linux
+       Porta: 22 | Protocolo: tcp | Severidade: MEDIUM
+       Descrição: OpenSSH is prone to a user enumeration vulnerability. The vulnerability is due to a flaw in the authentication process that allows an attacker to determine valid usernames on the target system. This o...
+
+
+Grupo 8: Chave = ('weak mac algorithm(s) supported (ssh)', '22', 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Weak MAC Algorithm(s) Supported (SSH)
+       Porta: 22 | Protocolo: tcp | Severidade: LOW
+
+
+Grupo 9: Chave = ('ssh server type and version', '22', 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: SSH Server type and version
+       Porta: 22 | Protocolo: tcp | Severidade: LOG
+       Descrição: This detects the SSH Server's type and version by connecting to the server and processing the buffer received.
+
+
+Grupo 10: Chave = ('openvas / greenbone vulnerability manager detection', '80', 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: OpenVAS / Greenbone Vulnerability Manager Detection
+       Porta: 80 | Protocolo: tcp | Severidade: LOG
+
+
+Resumo final:
+Total de grupos de duplicatas: 10
+Total de vulnerabilidades agrupadas (removidas): 10

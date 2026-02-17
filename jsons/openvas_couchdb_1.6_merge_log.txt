@@ -1,0 +1,32 @@
+# LOG DE DEDUPLICAÇÃO DE VULNERABILIDADES
+Este arquivo lista todas as vulnerabilidades consideradas duplicatas e agrupadas durante o processo.
+Cada grupo é identificado por uma chave composta (ex: nome, porta, protocolo).
+Apenas a vulnerabilidade mais completa e com descrição válida foi mantida em cada grupo.
+
+Total de grupos de duplicatas: 3
+Total de vulnerabilidades agrupadas (removidas): 3
+
+Grupo 1: Chave = ('apache couchdb <= 3.1.1 privilege escalation vulnerability - linux', '5984', 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Apache CouchDB <= 3.1.1 Privilege Escalation Vulnerability - Linux
+       Porta: 5984 | Protocolo: tcp | Severidade: HIGH
+       Descrição: Apache CouchDB is prone to a privilege escalation vulnerability.
+
+
+Grupo 2: Chave = ('apache couchdb < 3.3.3 privilege escalation vulnerability - linux', '5984', 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Apache CouchDB < 3.3.3 Privilege Escalation Vulnerability - Linux
+       Porta: 5984 | Protocolo: tcp | Severidade: MEDIUM
+       Descrição: Apache CouchDB is prone to a privilege escalation vulnerability. Quality of Detection (QoD): 30%
+
+
+Grupo 3: Chave = ('hostname determination reporting', 'general', 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Hostname Determination Reporting
+       Porta: general | Protocolo: tcp | Severidade: LOG
+       Descrição: The script reports information on how the hostname of the target was determined.
+
+
+Resumo final:
+Total de grupos de duplicatas: 3
+Total de vulnerabilidades agrupadas (removidas): 3

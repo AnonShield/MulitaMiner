@@ -35,5 +35,7 @@ def parse_arguments() -> argparse.Namespace:
                                  help='Método de avaliação a ser usado (padrão: bert).')
     evaluation_group.add_argument('--allow-duplicates', dest='allow_duplicates', action='store_true',
                                  help='Permite duplicatas legítimas na baseline durante avaliação')
+    evaluation_group.add_argument('--run-experiments', action='store_true',
+                                 help='Indica execução em lote (run_experiments.py) para salvar arquivos em results_runs.')
     
     return parser.parse_args()

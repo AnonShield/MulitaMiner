@@ -1,0 +1,81 @@
+# LOG DE DEDUPLICAÇÃO DE VULNERABILIDADES
+Este arquivo lista todas as vulnerabilidades consideradas duplicatas e agrupadas durante o processo.
+Cada grupo é identificado por uma chave composta (ex: nome, porta, protocolo).
+Apenas a vulnerabilidade mais completa e com descrição válida foi mantida em cada grupo.
+
+Total de grupos de duplicatas: 10
+Total de vulnerabilidades agrupadas (removidas): 10
+
+Grupo 1: Chave = ('tcp timestamps information disclosure', 'general', 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: TCP Timestamps Information Disclosure
+       Porta: general | Protocolo: tcp | Severidade: LOW
+       Descrição: The remote host implements TCP timestamps and therefore allows to compute the uptime. Quality of Detection (QoD): 80%
+
+
+Grupo 2: Chave = ('ssl/tls: collect and report certicate details', '8080', 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: SSL/TLS: Collect and Report Certicate Details
+       Porta: 8080 | Protocolo: tcp | Severidade: LOG
+       Descrição: This script collects and reports the details of all SSL/TLS certicates. This data will be used by other tests to verify server certicates.
+
+
+Grupo 3: Chave = ('ssl/tls: http public key pinning (hpkp) missing', '8080', 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: SSL/TLS: HTTP Public Key Pinning (HPKP) Missing
+       Porta: 8080 | Protocolo: tcp | Severidade: LOG
+       Descrição: The remote web server is not enforcing HTTP Public Key Pinning (HPKP). Note: Most major browsers have dropped / deprecated support for this header in 2020.
+
+
+Grupo 4: Chave = ('ssl/tls: report medium cipher suites', '8080', 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: SSL/TLS: Report Medium Cipher Suites
+       Porta: 8080 | Protocolo: tcp | Severidade: LOG
+       Descrição: This routine reports all Medium SSL/TLS cipher suites accepted by a service.
+
+
+Grupo 5: Chave = ('ssl/tls: safe/secure renegotiation support status', '8080', 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: SSL/TLS: Safe/Secure Renegotiation Support Status
+       Porta: 8080 | Protocolo: tcp | Severidade: LOG
+       Descrição: Checks and reports if a remote SSL/TLS service supports safe/secure renegotiation. Quality of Detection (QoD): 98%
+
+
+Grupo 6: Chave = ('ssl/tls: version detection', '9090', 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: SSL/TLS: Version Detection
+       Porta: 9090 | Protocolo: tcp | Severidade: LOG
+       Descrição: Enumeration and reporting of SSL/TLS protocol versions supported by a remote service. Quality of Detection (QoD): 80%
+
+
+Grupo 7: Chave = ('ssl/tls: http public key pinning (hpkp) missing', '9090', 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: SSL/TLS: HTTP Public Key Pinning (HPKP) Missing
+       Porta: 9090 | Protocolo: tcp | Severidade: LOG
+       Descrição: The remote web server is not enforcing HTTP Public Key Pinning (HPKP).
+
+
+Grupo 8: Chave = ('ssl/tls: http strict transport security (hsts) missing', '9090', 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: SSL/TLS: HTTP Strict Transport Security (HSTS) Missing
+       Porta: 9090 | Protocolo: tcp | Severidade: LOG
+       Descrição: The remote web server is not enforcing HTTP Strict Transport Security (HSTS). Quality of Detection (QoD): 80%
+
+
+Grupo 9: Chave = ('ssl/tls: report non weak cipher suites', '9090', 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: SSL/TLS: Report Non Weak Cipher Suites
+       Porta: 9090 | Protocolo: tcp | Severidade: LOG
+       Descrição: This routine reports all Non Weak SSL/TLS cipher suites accepted by a service.
+
+
+Grupo 10: Chave = ('ssl/tls: untrusted certicate detection', '9090', 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: SSL/TLS: Untrusted Certicate Detection
+       Porta: 9090 | Protocolo: tcp | Severidade: LOG
+       Descrição: Checks and reports if a remote SSL/TLS service is using a certicate which is untrusted / the verication against the system wide trust store has failed. Quality of Detection (QoD): 98%
+
+
+Resumo final:
+Total de grupos de duplicatas: 10
+Total de vulnerabilidades agrupadas (removidas): 10

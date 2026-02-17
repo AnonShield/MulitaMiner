@@ -1,0 +1,4 @@
+# Vulnerabilidades removidas por falta de descrição válida:
+- OpenBSD OpenSSH prior to version 9.6. | port: 22 | protocol: tcp | severity: HIGH
+- OpenBSD OpenSSH 7.4 - 9.9 Unspecified Vulnerability | port: 22 | protocol: tcp | severity: LOW
+- OpenSSH Detection Consolidation | port: 22 | protocol: tcp | severity: LOG

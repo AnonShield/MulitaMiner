@@ -1,0 +1,46 @@
+# LOG DE DEDUPLICAÇÃO DE VULNERABILIDADES
+Este arquivo lista todas as vulnerabilidades consideradas duplicatas e agrupadas durante o processo.
+Cada grupo é identificado por uma chave composta (ex: nome, porta, protocolo).
+Apenas a vulnerabilidade mais completa e com descrição válida foi mantida em cada grupo.
+
+Total de grupos de duplicatas: 5
+Total de vulnerabilidades agrupadas (removidas): 5
+
+Grupo 1: Chave = ("elastic elasticsearch 'cve-2018-3831' information disclosure vulnerability - linux", '9200', 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Elastic Elasticsearch 'CVE-2018-3831' Information Disclosure Vulnerability - Linux
+       Porta: 9200 | Protocolo: tcp | Severidade: HIGH
+       Descrição: Elasticsearch is prone to an information disclosure vulnerability.
+
+
+Grupo 2: Chave = ('elastic elasticsearch dos vulnerability (esa-2021-15)', '9200', 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Elastic Elasticsearch DoS Vulnerability (ESA-2021-15)
+       Porta: 9200 | Protocolo: tcp | Severidade: MEDIUM
+       Descrição: Elasticsearch is prone to a denial of service (DoS) vulnerability.
+
+
+Grupo 3: Chave = ('elastic elasticsearch information disclosure vulnerability (esa-2021-03)', '9200', 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Elastic Elasticsearch Information Disclosure Vulnerability (ESA-2021-03)
+       Porta: 9200 | Protocolo: tcp | Severidade: MEDIUM
+       Descrição: Elasticsearch is prone to an information disclosure vulnerability.
+
+
+Grupo 4: Chave = ('elastic elasticsearch information disclosure vulnerability (esa-2020-13)', '9200', 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Elastic Elasticsearch Information Disclosure Vulnerability (ESA-2020-13)
+       Porta: 9200 | Protocolo: tcp | Severidade: LOW
+       Descrição: Elasticsearch is prone to an information disclosure vulnerability.
+
+
+Grupo 5: Chave = ('http security headers detection', '9200', 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: HTTP Security Headers Detection
+       Porta: 9200 | Protocolo: tcp | Severidade: LOG
+       Descrição: All known security headers are being checked on the remote web server. On completion a report will hand back whether a specic security header has been implemented (including its value and if it is dep...
+
+
+Resumo final:
+Total de grupos de duplicatas: 5
+Total de vulnerabilidades agrupadas (removidas): 5

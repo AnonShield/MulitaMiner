@@ -1,0 +1,55 @@
+# Duplicatas agrupadas por chave composta:
+Chave: ('php <= 7.1.5 multiple dos vulnerabilities', '80', 'tcp')
+  - PHP <= 7.1.5 Multiple DoS Vulnerabilities | port: 80 | protocol: tcp | severity: CRITICAL
+
+Chave: ('php < 7.1.33, 7.2.x < 7.2.24, 7.3.x < 7.3.11 rce vulnerability - version check', '80', 'tcp')
+  - PHP < 7.1.33, 7.2.x < 7.2.24, 7.3.x < 7.3.11 RCE Vulnerability - Version Check | port: 80 | protocol: tcp | severity: CRITICAL
+
+Chave: ('php < 5.6.31, 7.0.x < 7.0.21, 7.1.x < 7.1.7 multiple vulnerabilities (jul 2017) - linux', '80', 'tcp')
+  - PHP < 5.6.31, 7.0.x < 7.0.21, 7.1.x < 7.1.7 Multiple Vulnerabilities (Jul 2017) - Linux | port: 80 | protocol: tcp | severity: CRITICAL
+
+Chave: ('apache http server <= 2.4.52 multiple vulnerabilities - linux', '80', 'tcp')
+  - Apache HTTP Server <= 2.4.52 Multiple Vulnerabilities - Linux | port: 80 | protocol: tcp | severity: CRITICAL
+
+Chave: ('php < 5.5.36, 5.6.x < 5.6.22 multiple vulnerabilities (aug 2016) - linux', '80', 'tcp')
+  - PHP < 5.5.36, 5.6.x < 5.6.22 Multiple Vulnerabilities (Aug 2016) - Linux | port: 80 | protocol: tcp | severity: HIGH
+
+Chave: ('php < 8.2.30, 8.3.x < 8.3.29, 8.4.x < 8.4.16 multiple vulnerabilities - linux', '80', 'tcp')
+  - PHP < 8.2.30, 8.3.x < 8.3.29, 8.4.x < 8.4.16 Multiple Vulnerabilities - Linux | port: 80 | protocol: tcp | severity: HIGH
+
+Chave: ('php < 8.0.27, 8.1.x < 8.1.14, 8.2.x < 8.2.1 security update - linux', '80', 'tcp')
+  - PHP < 8.0.27, 8.1.x < 8.1.14, 8.2.x < 8.2.1 Security Update - Linux | port: 80 | protocol: tcp | severity: HIGH
+
+Chave: ('apache http server denial of service vulnerability-02 (apr 2018) - linux', '80', 'tcp')
+  - Apache HTTP Server Denial of Service Vulnerability-02 (Apr 2018) - Linux | port: 80 | protocol: tcp | severity: HIGH
+
+Chave: ('php < 7.2.30, 7.3 < 7.3.17, 7.4 < 7.4.5 dos vulnerability (apr 2020) - linux', '80', 'tcp')
+  - PHP < 7.2.30, 7.3 < 7.3.17, 7.4 < 7.4.5 DoS Vulnerability (Apr 2020) - Linux | port: 80 | protocol: tcp | severity: HIGH
+
+Chave: ("php 'cve-2017-7189' improper input validation vulnerability - linux", '80', 'tcp')
+  - PHP 'CVE-2017-7189' Improper Input Validation Vulnerability - Linux | port: 80 | protocol: tcp | severity: HIGH
+
+Chave: ('php 5.x < 5.6.39, 7.x < 7.0.33, 7.1.x < 7.1.26, 7.2.x < 7.2.14 dos vulnerability - linux', '80', 'tcp')
+  - PHP 5.x < 5.6.39, 7.x < 7.0.33, 7.1.x < 7.1.26, 7.2.x < 7.2.14 DoS Vulnerability - Linux | port: 80 | protocol: tcp | severity: HIGH
+
+Chave: ('php < 5.4.45, 5.5.x < 5.5.29, 5.6.x < 5.6.13 rce vulnerability (mar 2016) - linux', '80', 'tcp')
+  - PHP < 5.4.45, 5.5.x < 5.5.29, 5.6.x < 5.6.13 RCE Vulnerability (Mar 2016) - Linux | port: 80 | protocol: tcp | severity: HIGH
+
+Chave: ('php multiple vulnerabilities (sep 2019) - linux', '80', 'tcp')
+  - PHP Multiple Vulnerabilities (Sep 2019) - Linux | port: 80 | protocol: tcp | severity: MEDIUM
+
+Chave: ('php 5.x < 5.4.29, 5.5.x < 5.5.13 multiple dos vulnerabilities (jun 2014)', '80', 'tcp')
+  - PHP 5.x < 5.4.29, 5.5.x < 5.5.13 Multiple DoS Vulnerabilities (Jun 2014) | port: 80 | protocol: tcp | severity: MEDIUM
+
+Chave: ('apache http server multiple vulnerabilities (mar 2014) - linux', '80', 'tcp')
+  - Apache HTTP Server Multiple Vulnerabilities (Mar 2014) - Linux | port: 80 | protocol: tcp | severity: MEDIUM
+
+Chave: ("php <= 5.6.0 'pear' symlink attack vulnerability", '80', 'tcp')
+  - PHP <= 5.6.0 'PEAR' Symlink Attack Vulnerability | port: 80 | protocol: tcp | severity: LOW
+
+Chave: ('http security headers detection', '80', 'tcp')
+  - HTTP Security Headers Detection | port: 80 | protocol: tcp | severity: LOG
+
+Chave: ('allowed http methods enumeration', '80', 'tcp')
+  - Allowed HTTP Methods Enumeration | port: 80 | protocol: tcp | severity: LOG
+

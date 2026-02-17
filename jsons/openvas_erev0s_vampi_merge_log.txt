@@ -1,0 +1,51 @@
+# LOG DE DEDUPLICAÇÃO DE VULNERABILIDADES
+Este arquivo lista todas as vulnerabilidades consideradas duplicatas e agrupadas durante o processo.
+Cada grupo é identificado por uma chave composta (ex: nome, porta, protocolo).
+Apenas a vulnerabilidade mais completa e com descrição válida foi mantida em cada grupo.
+
+Total de grupos de duplicatas: 4
+Total de vulnerabilidades agrupadas (removidas): 7
+
+Grupo 1: Chave = ('python dos vulnerability (dec 2025) - linux', '5000', 'tcp')
+  Total de duplicatas neste grupo: 4
+    1. Nome: Python DoS Vulnerability (Dec 2025) - Linux
+       Porta: 5000 | Protocolo: tcp | Severidade: CRITICAL
+       Descrição: Python is prone to a denial of service (DoS) vulnerability. Quality of Detection (QoD): 30%
+
+    2. Nome: Python DoS Vulnerability (Dec 2025) - Linux
+       Porta: 5000 | Protocolo: tcp | Severidade: MEDIUM
+       Descrição: Python is prone to a denial of service (DoS) vulnerability.
+
+    3. Nome: Python DoS Vulnerability (Dec 2025) - Linux
+       Porta: 5000 | Protocolo: tcp | Severidade: MEDIUM
+       Descrição: Python is prone to a denial of service (DoS) vulnerability.
+
+    4. Nome: Python DoS Vulnerability (Dec 2025) - Linux
+       Porta: 5000 | Protocolo: tcp | Severidade: MEDIUM
+       Descrição: Python is prone to a denial of service (DoS) vulnerability.
+
+
+Grupo 2: Chave = ('python dos vulnerability (jul 2025) - linux', '5000', 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Python DoS Vulnerability (Jul 2025) - Linux
+       Porta: 5000 | Protocolo: tcp | Severidade: HIGH
+       Descrição: Python is prone to a denial of service (DoS) vulnerability.
+
+
+Grupo 3: Chave = ('python dos vulnerability (jun 2025) - linux', '5000', 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Python DoS Vulnerability (Jun 2025) - Linux
+       Porta: 5000 | Protocolo: tcp | Severidade: MEDIUM
+       Descrição: Python is prone to a denial of service (DoS) vulnerability.
+
+
+Grupo 4: Chave = ('tcp timestamps information disclosure', 'general', 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: TCP Timestamps Information Disclosure
+       Porta: general | Protocolo: tcp | Severidade: LOW
+       Descrição: The remote host implements TCP timestamps and therefore allows to compute the uptime. Quality of Detection (QoD): 80%
+
+
+Resumo final:
+Total de grupos de duplicatas: 4
+Total de vulnerabilidades agrupadas (removidas): 7

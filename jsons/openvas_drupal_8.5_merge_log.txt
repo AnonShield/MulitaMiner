@@ -1,0 +1,65 @@
+# LOG DE DEDUPLICAÇÃO DE VULNERABILIDADES
+Este arquivo lista todas as vulnerabilidades consideradas duplicatas e agrupadas durante o processo.
+Cada grupo é identificado por uma chave composta (ex: nome, porta, protocolo).
+Apenas a vulnerabilidade mais completa e com descrição válida foi mantida em cada grupo.
+
+Total de grupos de duplicatas: 8
+Total de vulnerabilidades agrupadas (removidas): 8
+
+Grupo 1: Chave = ('apache http server < 2.4.54 multiple vulnerabilities - linux', '80', 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Apache HTTP Server < 2.4.54 Multiple Vulnerabilities - Linux
+       Porta: 80 | Protocolo: tcp | Severidade: CRITICAL
+       Descrição: Apache HTTP Server is prone to multiple vulnerabilities.
+
+
+Grupo 2: Chave = ('apache http server memory access vulnerability - linux', '80', 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Apache HTTP Server Memory Access Vulnerability - Linux
+       Porta: 80 | Protocolo: tcp | Severidade: CRITICAL
+       Descrição: Using fuzzed network input, the http/2 session handling could be made to read memory after being freed during connection shutdown.
+
+
+Grupo 3: Chave = ('apache http server 2.4.7 - 2.4.51 multiple vulnerabilities - linux', '80', 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Apache HTTP Server 2.4.7 - 2.4.51 Multiple Vulnerabilities - Linux
+       Porta: 80 | Protocolo: tcp | Severidade: HIGH
+
+
+Grupo 4: Chave = ('apache http server denial of service vulnerability-02 (apr 2018) - linux', '80', 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Apache HTTP Server Denial of Service Vulnerability-02 (Apr 2018) - Linux
+       Porta: 80 | Protocolo: tcp | Severidade: HIGH
+       Descrição: Apache HTTP Server is prone to a denial of service vulnerability.
+
+
+Grupo 5: Chave = ('apache http server < 2.4.39 mod_auth_digest access control bypass vulnerability - linux', '80', 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Apache HTTP Server < 2.4.39 mod_auth_digest Access Control Bypass Vulnerability - Linux
+       Porta: 80 | Protocolo: tcp | Severidade: HIGH
+
+
+Grupo 6: Chave = ('apache http server 2.4.0 < 2.4.42 multiple vulnerabilities - linux', '80', 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Apache HTTP Server 2.4.0 < 2.4.42 Multiple Vulnerabilities - Linux
+       Porta: 80 | Protocolo: tcp | Severidade: MEDIUM
+       Descrição: Apache HTTP Server is prone to multiple vulnerabilities. Quality of Detection (QoD): 30%
+
+
+Grupo 7: Chave = ('apache http server < 2.4.38 http/2 dos vulnerability - linux', '80', 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Apache HTTP Server < 2.4.38 HTTP/2 DoS Vulnerability - Linux
+       Porta: 80 | Protocolo: tcp | Severidade: MEDIUM
+       Descrição: By sending request bodies in a slow loris way to plain resources, the h2 stream for that request unnecessarily occupied a server thread cleaning up that incoming data. This aects only HTTP/2 connectio...
+
+
+Grupo 8: Chave = ('apache http server detection consolidation', 'general', 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Apache HTTP Server Detection Consolidation
+       Porta: general | Protocolo: tcp | Severidade: LOG
+       Descrição: Consolidation of Apache HTTP Server detections. Quality of Detection (QoD): 80%
+
+
+Resumo final:
+Total de grupos de duplicatas: 8
+Total de vulnerabilidades agrupadas (removidas): 8

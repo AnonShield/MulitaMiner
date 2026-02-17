@@ -1,0 +1,1051 @@
+[
+  {
+    "Name": "Elasticsearch End of Life (EOL) Detection",
+    "description": [
+      "The Elasticsearch version on the remote host has reached the End of Life (EOL) and should not be used anymore."
+    ],
+    "detection_result": [
+      "The \"Elasticsearch\" version on the remote host has reached the end of life.",
+      "CPE: cpe:/a:elastic:elasticsearch:2.4.6",
+      "Installed version: 2.4.6",
+      "EOL version: 2.4",
+      "EOL date: 2018-02-28"
+    ],
+    "detection_method": [
+      "Checks if an EOL version is present on the target host.",
+      "Details: Elasticsearch End of Life (EOL) Detection",
+      "OID:1.3.6.1.4.1.25623.1.0.113131",
+      "Version used: 2025-09-03T08:26:15Z"
+    ],
+    "product_detection_result": [],
+    "impact": [
+      "An EOL version of Elasticsearch is not receiving any security updates from the vendor. Unxed security vulnerabilities might be leveraged by an attacker to compromise the security of this host."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update Elasticsearch to a version that still receives technical support and updates."
+    ],
+    "insight": [],
+    "log_method": [],
+    "cvss": [
+      "0.0"
+    ],
+    "port": 9200,
+    "protocol": "tcp",
+    "severity": "Critical",
+    "references": [
+      "url: https://www.elastic.co/support/eol"
+    ],
+    "plugin": null,
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Elastic Elasticsearch 'CVE-2018-3831' Information Disclosure Vulnerability - Linux",
+    "description": [
+      "Elasticsearch is prone to an information disclosure vulnerability."
+    ],
+    "detection_result": [
+      "Installed version: 2.4.6",
+      "Fixed version: 5.6.12"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: Elastic Elasticsearch 'CVE-2018-3831' Information Disclosure Vulnerability - Li.",
+      "->..",
+      "OID:1.3.6.1.4.1.25623.1.0.113275",
+      "Version used: 2025-09-03T08:26:15Z"
+    ],
+    "product_detection_result": [],
+    "impact": [
+      "Successful exploitation would allow an authenticated attacker to acquire valid login credentials."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 5.6.12 or 6.4.1 respectively."
+    ],
+    "insight": [
+      "The _cluster/settings API, when queried, could leak sensitive conguration information such as passwords, tokens or usernames."
+    ],
+    "log_method": [],
+    "cvss": [
+      "8.8"
+    ],
+    "port": 9200,
+    "protocol": "tcp",
+    "severity": "HIGH",
+    "references": [
+      "cve: CVE-2018-3831",
+      "url: https://discuss.elastic.co/t/elastic-stack-6-4-1-and-5-6-12-security-update",
+      "->/149035",
+      "url: https://www.elastic.co/community/security",
+      "dfn-cert: DFN-CERT-2025-2802",
+      "dfn-cert: DFN-CERT-2020-1653"
+    ],
+    "plugin": null,
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Elastic Elasticsearch Security < 5.6.15 / 6.x < 6.6.1 Permission Issue (ESA-2019-04)",
+    "description": [
+      "Elasticsearch Security is prone to a permission issue."
+    ],
+    "detection_result": [
+      "Installed version: 2.4.6",
+      "Fixed version: 5.6.15",
+      "Installation",
+      "path / port: /"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: Elastic Elasticsearch Security < 5.6.15 / 6.x < 6.6.1 Permission Issue (ESA-201.",
+      "->..",
+      "OID:1.3.6.1.4.1.25623.1.0.117170",
+      "Version used: 2025-09-03T08:26:15Z"
+    ],
+    "product_detection_result": [],
+    "impact": [
+      "This aw could result in an attacker gaining additional permissions against a restricted index."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 5.6.15, 6.6.1 or later.",
+      "Users unable to update can change the xpack.security.dls_s.enabled setting to true in their elasticsearch.yml le. The default setting for this option is true."
+    ],
+    "insight": [
+      "A permission issue was found in Elasticsearch when Field Level Security and Document Level Security are disabled and the _aliases, _shrink, or _split endpoints are used. If the elasticsearch.yml le has xpack.security.dls_s.enabled set to false, certain permission checks are skipped when users perform one of the actions mentioned above, to make existing data available under a new index/alias name."
+    ],
+    "log_method": [],
+    "cvss": [
+      "8.1"
+    ],
+    "port": 9200,
+    "protocol": "tcp",
+    "severity": "HIGH",
+    "references": [
+      "cve: CVE-2019-7611",
+      "url: https://discuss.elastic.co/t/elastic-stack-6-6-1-and-5-6-15-security-update",
+      "->/169077",
+      "url: https://www.elastic.co/community/security",
+      "dfn-cert: DFN-CERT-2025-0933"
+    ],
+    "plugin": null,
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Elastic Elasticsearch < 6.3.0 Information Exposure Vulnerability (ESA-2018-11)",
+    "description": [
+      "Elasticsearch is prone to an information exposure vulnerability."
+    ],
+    "detection_result": [
+      "Installed version: 2.4.6",
+      "Fixed version: 6.3.0",
+      "Installation",
+      "path / port: /"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: Elastic Elasticsearch < 6.3.0 Information Exposure Vulnerability (ESA-2018-11)",
+      "OID:1.3.6.1.4.1.25623.1.0.117168",
+      "Version used: 2025-09-03T08:26:15Z"
+    ],
+    "product_detection_result": [],
+    "impact": [
+      "When the repository-azure plugin is set to log at TRACE level Azure credentials can be inadvertently logged."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 6.3.0 or later."
+    ],
+    "insight": [
+      "A sensitive data disclosure aw was found in the Elasticsearch repository-azure (formerly elasticsearch-cloud-azure) plugin."
+    ],
+    "log_method": [],
+    "cvss": [
+      "8.1"
+    ],
+    "port": 9200,
+    "protocol": "tcp",
+    "severity": "HIGH",
+    "references": [
+      "cve: CVE-2018-3827",
+      "url: https://discuss.elastic.co/t/elastic-stack-6-3-0-and-5-6-10-security-update",
+      "->/135777",
+      "url: https://www.elastic.co/community/security"
+    ],
+    "plugin": null,
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Elastic Elasticsearch DoS Vulnerability (ESA-2021-15)",
+    "description": [
+      "Elasticsearch is prone to a denial of service (DoS) vulnerability."
+    ],
+    "detection_result": [
+      "Installed version: 2.4.6",
+      "Fixed version: 6.8.17",
+      "Installation path / port: /"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: Elastic Elasticsearch DoS Vulnerability (ESA-2021-15)",
+      "OID:1.3.6.1.4.1.25623.1.0.146386",
+      "Version used: 2025-09-03T08:26:15Z"
+    ],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 6.8.17, 7.13.3 or later."
+    ],
+    "insight": [
+      "An uncontrolled recursion vulnerability that could lead to a denial of service attack was identified in the Elasticsearch Grok parser. A user with the ability to submit arbitrary queries to Elasticsearch could create a malicious Grok query that will crash the Elasticsearch node."
+    ],
+    "log_method": [],
+    "cvss": [
+      "6.5"
+    ],
+    "port": 9200,
+    "protocol": "tcp",
+    "severity": "MEDIUM",
+    "references": [
+      "cve: CVE-2021-22144",
+      "url: https://discuss.elastic.co/t/elasticsearch-7-13-3-and-6-8-17-security-update/278100",
+      "cert-bund: WID-SEC-2022-1777",
+      "dfn-cert: DFN-CERT-2025-0933",
+      "dfn-cert: DFN-CERT-2022-2315"
+    ],
+    "plugin": null,
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Elastic Elasticsearch < 6.8.12, 7.x < 7.9.0 Information Disclosure Vulnerability - Linux",
+    "description": [
+      "Elasticsearch is prone to a field disclosure vulnerability."
+    ],
+    "detection_result": [
+      "Installed version: 2.4.6",
+      "Fixed version: 6.8.12",
+      "Installation path / port: /"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: Elastic Elasticsearch < 6.8.12, 7.x < 7.9.0 Information Disclosure Vulnerability...",
+      "OID:1.3.6.1.4.1.25623.1.0.144430",
+      "Version used: 2025-09-03T08:26:15Z"
+    ],
+    "product_detection_result": [],
+    "impact": [
+      "An attacker could gain additional permissions against a restricted index."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 6.8.12, 7.9.1 or later."
+    ],
+    "insight": [
+      "A field disclosure flaw was found in Elasticsearch when running a scrolling search with Field Level Security. If a user runs the same query another more privileged user recently ran, the scrolling search can leak fields that should be hidden."
+    ],
+    "log_method": [],
+    "cvss": [
+      "6.5"
+    ],
+    "port": 9200,
+    "protocol": "tcp",
+    "severity": "MEDIUM",
+    "references": [
+      "cve: CVE-2020-7019",
+      "url: https://discuss.elastic.co/t/elastic-stack-7-9-0-and-6-8-12-security-update/245456"
+    ],
+    "plugin": null,
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Elastic Elasticsearch < 6.8.2, 7.x < 7.2.1 Information Disclosure Vulnerability (ESA-2019-07) - Linux",
+    "description": [
+      "Elasticsearch is prone to an information disclosure vulnerability."
+    ],
+    "detection_result": [
+      "Installed version: 2.4.6",
+      "Fixed version: 6.8.2",
+      "Installation path / port: /"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: Elastic Elasticsearch < 6.8.2, 7.x < 7.2.1 Information Disclosure Vulnerability...",
+      "OID:1.3.6.1.4.1.25623.1.0.117161",
+      "Version used: 2025-09-03T08:26:15Z"
+    ],
+    "product_detection_result": [],
+    "impact": [
+      "On a system with multiple users submitting requests, it could be possible for an attacker to gain access to response header containing sensitive data from another user."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 6.8.2 or 7.2.1 respectively."
+    ],
+    "insight": [
+      "A race condition flaw was found in the response headers Elasticsearch returns to a request."
+    ],
+    "log_method": [],
+    "cvss": [
+      "5.9"
+    ],
+    "port": 9200,
+    "protocol": "tcp",
+    "severity": "MEDIUM",
+    "references": [
+      "cve: CVE-2019-7614",
+      "url: https://discuss.elastic.co/t/elastic-stack-6-8-2-and-7-2-1-security-update/192963",
+      "url: https://www.elastic.co/community/security/",
+      "cert-bund: WID-SEC-2024-3184"
+    ],
+    "plugin": null,
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Elastic Elasticsearch Multiple Vulnerabilities (ESA-2021-06, ESA-2021-08)",
+    "description": [
+      "Elasticsearch is prone to multiple vulnerabilities."
+    ],
+    "detection_result": [
+      "Installed version: 2.4.6",
+      "Fixed version: 6.8.15",
+      "Installation path / port: /"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: Elastic Elasticsearch Multiple Vulnerabilities (ESA-2021-06, ESA-2021-08)",
+      "OID:1.3.6.1.4.1.25623.1.0.145940",
+      "Version used: 2025-09-03T08:26:15Z"
+    ],
+    "product_detection_result": [],
+    "impact": [
+      "This could lead to disclosing the existence of documents and fields the attacker should not be able to view or result in an attacker gaining additional insight into potentially sensitive indices."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 6.8.15, 7.12.0 or later."
+    ],
+    "insight": [
+      "The following vulnerabilities exist:",
+      "- CVE-2021-22135: Suggester & Profile API information disclosure flaw",
+      "- CVE-2021-22137: Field disclosure flaw"
+    ],
+    "log_method": [],
+    "cvss": [
+      "5.3"
+    ],
+    "port": 9200,
+    "protocol": "tcp",
+    "severity": "MEDIUM",
+    "references": [
+      "cve: CVE-2021-22135",
+      "cve: CVE-2021-22137",
+      "url: https://discuss.elastic.co/t/elastic-stack-7-12-0-and-6-8-15-security-update/268125",
+      "cert-bund: WID-SEC-2022-0720",
+      "dfn-cert: DFN-CERT-2025-0933"
+    ],
+    "plugin": null,
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Elastic Elasticsearch Information Disclosure Vulnerability (ESA-2021-03)",
+    "description": [
+      "Elasticsearch is prone to an information disclosure vulnerability."
+    ],
+    "detection_result": [
+      "Installed version: 2.4.6",
+      "Fixed version: 6.8.14",
+      "Installation path / port: /"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host."
+    ],
+    "product_detection_result": [],
+    "impact": [
+      "This could allow an Elasticsearch administrator to view sensitive details."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 6.8.14, 7.10.0 or later."
+    ],
+    "insight": [
+      "Elasticsearch has an information disclosure issue when audit logging and the emit_request_body option is enabled. The Elasticsearch audit log could contain sensitive information such as password hashes or authentication tokens."
+    ],
+    "log_method": [],
+    "cvss": [
+      "4.9"
+    ],
+    "port": 9200,
+    "protocol": "tcp",
+    "severity": "MEDIUM",
+    "references": [
+      "cve: CVE-2021-22135",
+      "cve: CVE-2021-22137",
+      "url: https://discuss.elastic.co/t/elastic-stack-7-12-0-and-6-8-15-security-updat->e/268125",
+      "cert-bund: WID-SEC-2022-0720",
+      "dfn-cert: DFN-CERT-2025-0933"
+    ],
+    "plugin": null,
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "TCP Timestamps Information Disclosure",
+    "description": [
+      "The remote host implements TCP timestamps and therefore allows to compute the uptime."
+    ],
+    "detection_result": [
+      "It was detected that the host implements RFC1323/RFC7323.",
+      "The following timestamps were retrieved with a delay of 1 seconds in-between: Packet 1: 1842304558 Packet 2: 1842305646"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [
+      "A side effect of this feature is that the uptime of the remote host can sometimes be computed."
+    ],
+    "solution": [
+      "Solution type: Mitigation",
+      "To disable TCP timestamps on linux add the line 'net.ipv4.tcp_timestamps = 0' to /etc/sysctl.conf. Execute 'sysctl -p' to apply the settings at runtime.",
+      "To disable TCP timestamps on Windows execute 'netsh int tcp set global timestamps=disabled' Starting with Windows Server 2008 and Vista, the timestamp can not be completely disabled."
+    ],
+    "insight": [],
+    "log_method": [],
+    "cvss": [
+      "2.6"
+    ],
+    "port": 9200,
+    "protocol": "tcp",
+    "severity": "LOW",
+    "references": [],
+    "plugin": null,
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "TCP Timestamps Information Disclosure",
+    "description": [
+      "The remote host implements TCP timestamps and therefore allows to compute the uptime."
+    ],
+    "detection_result": [
+      "It was detected that the host implements RFC1323/RFC7323.",
+      "The following timestamps were retrieved with a delay of 1 seconds in-between:",
+      "Packet 1: 1842304558",
+      "Packet 2: 1842305646"
+    ],
+    "detection_method": [
+      "Special IP packets are forged and sent with a little delay in between to the target IP. The responses are searched for a timestamps. If found, the timestamps are reported.",
+      "Details: TCP Timestamps Information Disclosure",
+      "OID:1.3.6.1.4.1.25623.1.0.80091",
+      "Version used: 2023-12-15T16:10:08Z"
+    ],
+    "product_detection_result": [],
+    "impact": [
+      "A side eect of this feature is that the uptime of the remote host can sometimes be computed."
+    ],
+    "solution": [
+      "Solution type: Mitigation",
+      "To disable TCP timestamps on linux add the line 'net.ipv4.tcp_timestamps = 0' to /etc/sysctl.conf. Execute 'sysctl -p' to apply the settings at runtime.",
+      "To disable TCP timestamps on Windows execute 'netsh int tcp set global timestamps=disabled'",
+      "Starting with Windows Server 2008 and Vista, the timestamp can not be completely disabled.  The default behavior of the TCP/IP stack on this Systems is to not use the Timestamp options  when initiating TCP connections, but use them if the TCP peer that is initiating communication  includes them in their synchronize (SYN) segment.   See the references for more information.   Aected Software/OS   TCP implementations that implement RFC1323/RFC7323."
+    ],
+    "insight": [
+      "The remote host implements TCP timestamps, as dened by RFC1323/RFC7323."
+    ],
+    "log_method": [],
+    "cvss": [
+      "2.6"
+    ],
+    "port": "general",
+    "protocol": "tcp",
+    "severity": "LOW",
+    "references": [
+      "url: https://datatracker.ietf.org/doc/html/rfc1323",
+      "url: https://datatracker.ietf.org/doc/html/rfc7323",
+      "url: https://web.archive.org/web/20151213072445/http://www.microsoft.com/en-us/d ->ownload/details.aspx?id=9152",
+      "url: https://www.fortiguard.com/psirt/FG-IR-16-090"
+    ],
+    "plugin": null,
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Elastic Elasticsearch Information Disclosure Vulnerability (ESA-2020-13)",
+    "description": [
+      "Elasticsearch is prone to an information disclosure vulnerability."
+    ],
+    "detection_result": [
+      "Installed version: 2.4.6",
+      "Fixed version: 6.8.13",
+      "Installation path / port: /"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: Elastic Elasticsearch Information Disclosure Vulnerability (ESA-2020-13) OID:1.3.6.1.4.1.25623.1.0.117181",
+      "Version used: 2025-09-03T08:26:15Z"
+    ],
+    "product_detection_result": [],
+    "impact": [
+      "This could result in the search disclosing the existence of documents the attacker should not be able to view. This could result in an attacker gaining additional insight into potentially sensitive indices."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 6.8.13, 7.9.2 or later."
+    ],
+    "insight": [
+      "A document disclosure aw was found in Elasticsearch when Document or Field Level Security is used. Search queries do not properly preserve security permissions when executing certain complex queries."
+    ],
+    "log_method": [],
+    "cvss": [
+      "3.1"
+    ],
+    "port": 9200,
+    "protocol": "tcp",
+    "severity": "LOW",
+    "references": [
+      "cve: CVE-2020-7020",
+      "url: https://discuss.elastic.co/t/elastic-stack-7-9-3-and-6-8-13-security-update ->/253033",
+      "url: https://www.elastic.co/community/security",
+      "cert-bund: WID-SEC-2022-0607",
+      "dfn-cert: DFN-CERT-2025-0933",
+      "dfn-cert: DFN-CERT-2022-1530"
+    ],
+    "plugin": null,
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "ICMP Timestamp Reply Information Disclosure",
+    "description": [
+      "The remote host responded to an ICMP timestamp request."
+    ],
+    "detection_result": [],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [],
+    "cvss": [
+      "2.1"
+    ],
+    "port": 9200,
+    "protocol": "tcp",
+    "severity": "LOW",
+    "references": [],
+    "plugin": null,
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "ICMP Timestamp Reply Information Disclosure",
+    "description": [
+      "The remote host responded to an ICMP timestamp request."
+    ],
+    "detection_result": [
+      "The following response / ICMP packet has been received:",
+      "- ICMP Type: 14",
+      "- ICMP Code: 0"
+    ],
+    "detection_method": [
+      "Sends an ICMP Timestamp (Type 13) request and checks if a Timestamp Reply (Type 14) is received."
+    ],
+    "product_detection_result": [],
+    "impact": [
+      "This information could theoretically be used to exploit weak time-based random number generators in other services."
+    ],
+    "solution": [
+      "Solution type: Mitigation",
+      "Various mitigations are possible:",
+      "- Disable the support for ICMP timestamp on the remote host completely",
+      "- Protect the remote host by a rewall, and block ICMP packets passing through the rewall in either direction (either completely or only for untrusted networks)"
+    ],
+    "insight": [
+      "The Timestamp Reply is an ICMP message which replies to a Timestamp message. It consists of the originating timestamp sent by the sender of the Timestamp as well as a receive timestamp and a transmit timestamp."
+    ],
+    "log_method": [],
+    "cvss": [
+      "2.1"
+    ],
+    "port": "general",
+    "protocol": "icmp",
+    "severity": "LOW",
+    "references": [
+      "cve: CVE-1999-0524",
+      "url: https://datatracker.ietf.org/doc/html/rfc792",
+      "url: https://datatracker.ietf.org/doc/html/rfc2780",
+      "cert-bund: CB-K15/1514",
+      "cert-bund: CB-K14/0632",
+      "dfn-cert: DFN-CERT-2014-0658"
+    ],
+    "plugin": null,
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "IP Forwarding Enabled - Active Check",
+    "description": [
+      "Checks if the remote host has IP forwarding enabled."
+    ],
+    "detection_result": [],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [],
+    "cvss": [
+      "0.0"
+    ],
+    "port": "general",
+    "protocol": "icmp",
+    "severity": "LOG",
+    "references": [],
+    "plugin": null,
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "IP Forwarding Enabled - Active Check",
+    "description": [
+      "Checks if the remote host has IP forwarding enabled."
+    ],
+    "detection_result": [
+      "It was possible to route a TCP packet through the target host and received an answer which means IP forwarding is enabled."
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [
+      "Sends a crafted Local Link Layer (LLL) frame and checks the response."
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": "general",
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [
+      "cve: CVE-1999-0511"
+    ],
+    "plugin": null,
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Hostname Determination Reporting",
+    "description": [
+      "The script reports information on how the hostname of the target was determined."
+    ],
+    "detection_result": [
+      "Hostname determination for IP 172.31.1.64:",
+      "Hostname|Source",
+      "es24.trabalho_vulnnet|Reverse-DNS"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [],
+    "cvss": [
+      "0.0"
+    ],
+    "port": "general",
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [],
+    "plugin": null,
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Elastic Elasticsearch Detection Consolidation",
+    "description": [
+      "Consolidation of Elastic Elasticsearch detections."
+    ],
+    "detection_result": [
+      "Detected Elastic Elasticsearch",
+      "Version: 2.4.6",
+      "Location: /",
+      "CPE: cpe:/a:elastic:elasticsearch:2.4.6",
+      "Concluded from version/product identification result:",
+      "number\" : \"2.4.6\",",
+      "Extra information:",
+      "Collected information (truncated) from http://es24.trabalho_vulnnet:9200/_cat/indices?v :",
+      "health status index pri rep docs.count docs.deleted store.size pri.store.size",
+      "yellow open eval-stdin.php 5 1 0 0 795b 795b",
+      "yellow open index.cfm 5 1 0 0 795b 795b",
+      "yellow open php-cgi 5 1 0 0 795b 795b",
+      "yellow open cgi 5 1 0 0 795b 795b",
+      "yellow open fm 5 1 0 0 795b 795b",
+      "yellow open php4 5 1 0 0 795b 795b",
+      "yellow open php5 5 1 0 0 795b 795b",
+      "yellow open index.htm 5 1 0 0 795b 795b",
+      "yellow open admin 5 1 0 0 795b 795b",
+      "yellow open datalife 5 1"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [],
+    "cvss": [
+      "0.0"
+    ],
+    "port": "general",
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [
+      "url: https://www.elastic.co/"
+    ],
+    "plugin": null,
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "OS Detection Consolidation and Reporting",
+    "description": [
+      "This script consolidates the OS information detected by several VTs and tries to find the best matching OS.",
+      "Furthermore it reports all previously collected information leading to this best matching OS. It also reports possible additional information which might help to improve the OS detection.",
+      "If any of this information is wrong or could be improved please consider to report these to the referenced community forum."
+    ],
+    "detection_result": [
+      "Best matching OS:",
+      "OS: Linux Kernel",
+      "CPE: cpe:/o:linux:kernel",
+      "Found by VT: 1.3.6.1.4.1.25623.1.0.102002 (Operating System (OS) Detection (ICMP))",
+      "Concluded from ICMP based OS fingerprint",
+      "Setting key \"Host/runs_unixoide\" based on this information"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [],
+    "cvss": [
+      "0.0"
+    ],
+    "port": "general",
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [
+      "url: https://forum.greenbone.net/c/vulnerability-tests/7"
+    ],
+    "plugin": null,
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Traceroute",
+    "description": [
+      "Collect information about the network route and network distance between the scanner host and the target host."
+    ],
+    "detection_result": [
+      "Network route from scanner (172.30.0.2) to target (172.31.1.64):",
+      "172.30.0.2",
+      "172.31.1.64",
+      "Network distance between scanner and target: 2"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [
+      "For internal networks, the distances are usually small, often less than 4 hosts between scanner and target. For public targets the distance is greater and might be 10 hosts or more."
+    ],
+    "log_method": [
+      "A combination of the protocols ICMP and TCP is used to determine the route. This method is applicable for IPv4 only and it is also known as 'traceroute'."
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": "general",
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [],
+    "plugin": null,
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "HTTP Security Headers Detection",
+    "description": [
+      "All known security headers are being checked on the remote web server. On completion a report will hand back whether a specific security header has been implemented (including its value and if it is deprecated) or is missing on the target."
+    ],
+    "detection_result": [
+      "Missing Headers | More Information",
+      "--------------------------------------------------------------------------------",
+      "Content-Security-Policy | https://owasp.org/www-project-secure-headers/#content-security-policy",
+      "Cross-Origin-Embedder-Policy | https://scotthelme.co.uk/coop-and-coep/, Note: This is an upcoming header",
+      "Cross-Origin-Opener-Policy | https://scotthelme.co.uk/coop-and-coep/, Note: This is an upcoming header",
+      "Cross-Origin-Resource-Policy | https://scotthelme.co.uk/coop-and-coep/, Note: This is an upcoming header",
+      "Document-Policy | https://w3c.github.io/webappsec-feature-policy/document-policy#document-policy-http-header",
+      "Feature-Policy | https://owasp.org/www-project-secure-headers/#feature-policy, Note: The Feature Policy header has been renamed to Permissi"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [],
+    "cvss": [
+      "0.0"
+    ],
+    "port": 9200,
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [],
+    "plugin": null,
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Web Application Scanning Consolidation / Info Reporting",
+    "description": [
+      "The script consolidates and reports various information for web application (formerly called 'CGI') scanning. This information is based on the following scripts / settings: - HTTP-Version Detection (OID: 1.3.6.1.4.1.25623.1.0.100034) - No 404 check (OID: 1.3.6.1.4.1.25623.1.0.10386) - Web mirroring / webmirror.nasl (OID: 1.3.6.1.4.1.25623.1.0.10662) - Directory Scanner / DDI_Directory_Scanner.nasl (OID: 1.3.6.1.4.1.25623.1.0.11032) - The congured 'cgi_path' within the 'Scanner Preferences' of the scan cong in use - The congured 'Enable CGI scanning', 'Enable generic web application scanning' and 'Add historic /scripts and /cgi-bin to directories for CGI scanning' within the 'Global variable settings' of the scan cong in use If you think any of this information is wrong please report it to the referenced community forum. Quality of Detection (QoD): 80%"
+    ],
+    "detection_result": [
+      "The Hostname/IP \"es24.trabalho_vulnnet\" was used to access the remote host.",
+      "Generic web application scanning is disabled for this host via the \"Enable gener ->ic web application scanning\" option within the \"Global variable settings\" of t ->he scan config in use.",
+      "Requests to this service are done via HTTP/1.1.",
+      "This service seems to be able to host PHP scripts.",
+      "This service seems to be able to host ASP scripts.",
+      "The User-Agent \"Mozilla/5.0 [en] (X11, U; OpenVAS-VT <version replaced>)\" was us ->ed to access the remote host.",
+      "Historic /scripts and /cgi-bin are not added to the directories used for web app ->lication scanning. You can enable this again with the \"Add historic /scripts a ->nd /cgi-bin to directories for CGI scanning\" option within the \"Global variabl ->e settings\" of the scan config in use.",
+      "The following directories were used for web application scanning:",
+      "http://es24.trabalho_vulnnet:9200/",
+      "http://es24.trabalho_vulnnet:9200/admin",
+      "http://es24.trabalho_vulnnet:9200/ajaxfilemanager",
+      "http://es24.trabalho_vulnnet:9200/cgi",
+      "http://es24.trabalho_vulnnet:9200/cgi-bin",
+      "http://es24.trabalho_vulnnet:9200/file",
+      "http://es24.trabalho_vulnnet:9200/filemanager",
+      "http://es24.trabalho_vulnnet:9200/fm",
+      "http://es24.trabalho_vulnnet:9200/perl",
+      "http://es24.trabalho_vulnnet:9200/php",
+      "http://es24.trabalho_vulnnet:9200/php-cgi",
+      "While this is not, in and of itself, a bug, you should manually inspect these di ->rectories to ensure that they are in compliance with company security standard ->s",
+      "Solution:",
+      "Log Method   Details: Web Application Scanning Consolidation / Info Reporting   OID:1.3.6.1.4.1.25623.1.0.111038   Version used: 2026-01-13T05:47:36Z   References   url: https://forum.greenbone.net/c/vulnerability-tests/7"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [],
+    "cvss": [
+      "0.0"
+    ],
+    "port": 9200,
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [],
+    "plugin": null,
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Services",
+    "description": [
+      "This plugin performs service detection. Quality of Detection (QoD): 80%"
+    ],
+    "detection_result": [
+      "A web server is running on this port"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [
+      "This plugin attempts to guess which service is running on the remote port(s). For instance, it searches for a web server which could listen on another port than 80 or 443 and makes this information available for other check routines."
+    ],
+    "log_method": [
+      "Details: Services",
+      "OID:1.3.6.1.4.1.25623.1.0.10330",
+      "Version used: 2025-03-05T05:38:53Z"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": 9200,
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [],
+    "plugin": null,
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Services",
+    "description": [
+      "This plugin performs service detection."
+    ],
+    "detection_result": [
+      "A web server is running on this port"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [
+      "This plugin attempts to guess which service is running on the remote port(s). For instance, it searches for a web server which could listen on another port than 80 or 443 and makes this information available for other check routines."
+    ],
+    "log_method": [
+      "Details: Services",
+      "OID:1.3.6.1.4.1.25623.1.0.10330",
+      "Version used: 2025-03-05T05:38:53Z"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": 9200,
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [
+      "url: https://forum.greenbone.net/c/vulnerability-tests/7"
+    ],
+    "plugin": null,
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Service Detection with 'GET' Request",
+    "description": [
+      "This plugin performs service detection.",
+      "Quality of Detection (QoD): 80%"
+    ],
+    "detection_result": [
+      "An Elasticsearch Binary API / inter-cluster communication service seems to be running on this port."
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [
+      "This plugin is a complement of the plugin 'Services' (OID: 1.3.6.1.4.1.25623.1.0.10330). It sends a HTTP 'GET' request to the remaining unknown services and tries to identify them."
+    ],
+    "log_method": [
+      "Details: Service Detection with 'GET' Request",
+      "OID:1.3.6.1.4.1.25623.1.0.17975",
+      "Version used: 2025-09-12T15:39:53Z"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": 9300,
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [],
+    "plugin": null,
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "CPE Inventory",
+    "description": [
+      "This routine uses information collected by other routines about CPE identities of operating systems, services and applications detected during the scan.",
+      "Note: Some CPEs for specific products might show up twice or more in the output. Background: After a product got renamed or a specific vendor was acquired by another one it might happen that a product gets a new CPE within the NVD CPE Dictionary but older entries are kept with the older CPE.",
+      "Quality of Detection (QoD): 80%"
+    ],
+    "detection_result": [
+      "172.31.1.64|cpe:/a:elastic:elasticsearch:2.4.6",
+      "172.31.1.64|cpe:/a:elasticsearch:elasticsearch:2.4.6",
+      "172.31.1.64|cpe:/o:linux:kernel"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [
+      "Details: CPE Inventory",
+      "OID:1.3.6.1.4.1.25623.1.0.810002",
+      "Version used: 2022-07-27T10:11:28Z"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": 9300,
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [],
+    "plugin": null,
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "CPE Inventory",
+    "description": [
+      "This routine uses information collected by other routines about CPE identities of operating systems, services and applications detected during the scan.",
+      "Note: Some CPEs for specic products might show up twice or more in the output. Background: After a product got renamed or a specic vendor was acquired by another one it might happen that a product gets a new CPE within the NVD CPE Dictionary but older entries are kept with the older CPE.",
+      "Quality of Detection (QoD): 80%"
+    ],
+    "detection_result": [
+      "172.31.1.64|cpe:/a:elastic:elasticsearch:2.4.6",
+      "172.31.1.64|cpe:/a:elasticsearch:elasticsearch:2.4.6",
+      "172.31.1.64|cpe:/o:linux:kernel"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [
+      "Details: CPE Inventory",
+      "OID:1.3.6.1.4.1.25623.1.0.810002",
+      "Version used: 2022-07-27T10:11:28Z"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": "general",
+    "protocol": "CPE-T",
+    "severity": "LOG",
+    "references": [
+      "url: https://nvd.nist.gov/products/cpe"
+    ],
+    "plugin": null,
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  }
+]

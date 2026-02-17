@@ -1,7 +1,9 @@
 import os
 import re
+import unicodedata
 from langchain_core.documents import Document
 import pdfplumber
+import datetime
 
 def merge_page_continuations(text_pages):
     """
@@ -216,24 +218,23 @@ def extract_visual_layout_from_pdf(pdf_path):
 
             # Extrair o texto completo do PDF
             texto_completo = ''.join([p[1] for p in paginas_texto])
+            
+            # Normalizar ligaduras tipográficas (ﬁ → fi, ﬂ → fl, etc.)
+            # Isso é importante pois PDFs frequentemente usam ligaduras que são caracteres únicos
+            texto_completo = unicodedata.normalize('NFKC', texto_completo)
 
             # Encontrar início da primeira vulnerabilidade
             # OpenVAS: marcador 'NVT:'
-            # Tenable: marcador 'VULNERABILITY <SEVERITY> PLUGIN ID <ID>'
+            # Tenable: tudo até o primeiro 'Web Application Scanning Detailed Scan Export...' após 'Scan Results'
             # Unifica separação usando os mesmos padrões do chunking
-            marker_patterns = {
-                'openvas': r'^\s*NVT:',
-                'tenable': r'^\s*VULNERABILITY\s+(CRITICAL|HIGH|MEDIUM|LOW)\s+PLUGIN\s+ID\s+\d+',
-                # Adicionar outros scanners e padrões aqui
-            }
             scanner = None
-            for key in marker_patterns:
-                if key in os.path.basename(pdf_path).lower():
-                    scanner = key
-                    break
+            if 'openvas' in os.path.basename(pdf_path).lower():
+                scanner = 'openvas'
+            elif 'tenable' in os.path.basename(pdf_path).lower():
+                scanner = 'tenable'
 
-            marker_pattern = marker_patterns.get(scanner)
-            if marker_pattern:
+            if scanner == 'openvas':
+                marker_pattern = r'^\s*NVT:'
                 match_inicio_vuln = re.search(marker_pattern, texto_completo, re.MULTILINE)
                 if match_inicio_vuln:
                     start_pos = match_inicio_vuln.start()
@@ -244,6 +245,63 @@ def extract_visual_layout_from_pdf(pdf_path):
                     sumario = ''
                     texto_extracao = texto_completo
                     print(f"[VISUAL] Nenhum marcador '{marker_pattern}' encontrado. Sumário vazio.")
+            elif scanner == 'tenable':
+                # Para Tenable WAS: sumário = do início até o primeiro marcador de vulnerabilidade detalhada
+                # O marcador é "VULNERABILITY <SEVERITY> PLUGIN ID <ID>"
+                # Mas o NOME da vulnerabilidade vem na LINHA ANTERIOR ao marcador
+                # Então precisamos cortar DUAS linhas antes: o nome + o cabeçalho
+                vuln_detail_pattern = re.search(
+                    r'VULNERABILITY\s+(CRITICAL|HIGH|MEDIUM|LOW|INFO)\s+PLUGIN\s+ID\s+\d+',
+                    texto_completo,
+                    re.IGNORECASE
+                )
+                if vuln_detail_pattern:
+                    # Posição do marcador "VULNERABILITY..."
+                    marker_pos = vuln_detail_pattern.start()
+                    # Volta para encontrar o início da LINHA do marcador
+                    line_start = texto_completo.rfind('\n', 0, marker_pos)
+                    if line_start == -1:
+                        line_start = 0
+                    else:
+                        line_start += 1  # Pula o próprio \n
+                    
+                    # Agora volta UMA LINHA A MAIS (onde está o nome da vulnerabilidade)
+                    prev_line_end = texto_completo.rfind('\n', 0, line_start - 1) if line_start > 0 else -1
+                    if prev_line_end != -1:
+                        # Procura o início da linha anterior (onde está o nome da vuln)
+                        prev_line_start = texto_completo.rfind('\n', 0, prev_line_end)
+                        if prev_line_start == -1:
+                            prev_line_start = 0
+                        else:
+                            prev_line_start += 1
+                        cut_pos = prev_line_start
+                    else:
+                        cut_pos = line_start
+                    
+                    sumario = texto_completo[:cut_pos].rstrip()
+                    texto_extracao = texto_completo[cut_pos:]
+                    print(f"[VISUAL] Tenable WAS: Sumário extraído até {cut_pos} caracteres (antes do nome da vulnerabilidade).")
+                else:
+                    # Fallback: usa o marcador de exportação após Scan Results
+                    scan_results_pattern = re.search(r'Scan Results\s*\n\s*\n\s*\n\s*\n?\s*Vulnerabilities', texto_completo)
+                    if scan_results_pattern:
+                        pos_after = scan_results_pattern.end()
+                        export_marker = 'Web Application Scanning Detailed Scan Export:'
+                        export_match = texto_completo.find(export_marker, pos_after)
+                        if export_match != -1:
+                            end_of_line = texto_completo.find('\n', export_match)
+                            if end_of_line == -1:
+                                end_of_line = len(texto_completo)
+                            sumario = texto_completo[:end_of_line]
+                            texto_extracao = texto_completo[end_of_line:]
+                            print(f"[VISUAL] Tenable WAS (fallback): Sumário extraído até {end_of_line} caracteres.")
+                        else:
+                            sumario = texto_completo[:pos_after]
+                            texto_extracao = texto_completo[pos_after:]
+                    else:
+                        sumario = ''
+                        texto_extracao = texto_completo
+                        print("[VISUAL] Tenable WAS: Nenhum marcador encontrado. Sumário vazio.")
             else:
                 sumario = ''
                 texto_extracao = texto_completo
@@ -277,6 +335,24 @@ def extract_visual_layout_from_pdf(pdf_path):
             return documentos
     except Exception as e:
         print(f"Erro ao extrair layout visual: {e}")
+        return None
+    
+def save_visual_layout(content, pdf_path):
+    """
+    Salva o layout visual extraído em arquivo TXT para referência
+    """
+    base_name = os.path.splitext(os.path.basename(pdf_path))[0]
+    output_visual_path = f"visual_layout_extracted_{base_name}.txt"
+    try:
+        with open(output_visual_path, 'w', encoding='utf-8') as f:
+            # Cabeçalho informativo
+            f.write(f"Layout Visual Extraído: {os.path.basename(pdf_path)}\n")
+            f.write(f"Extraído em: {datetime.datetime.now().strftime('%d/%m/%Y às %H:%M:%S')}\n")
+            f.write("=" * 80 + "\n\n")
+            f.write(content)
+        return output_visual_path
+    except Exception as e:
+        print(f"Erro ao salvar layout visual: {e}")
         return None
 
 def load_pdf_with_pypdf2(pdf_path):

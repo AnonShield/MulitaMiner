@@ -1,3 +1,9 @@
+temp_blocks/
+# Resultados e saídas temporárias
+plot_runs/
+results_runs/
+results_runs_xlsx/
+results_tokens/
 # Ambientes virtuais
 .venv/
 metrics/.venv/

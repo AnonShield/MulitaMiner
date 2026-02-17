@@ -1,0 +1,39 @@
+# LOG DE DEDUPLICAÇÃO DE VULNERABILIDADES
+Este arquivo lista todas as vulnerabilidades consideradas duplicatas e agrupadas durante o processo.
+Cada grupo é identificado por uma chave composta (ex: nome, porta, protocolo).
+Apenas a vulnerabilidade mais completa e com descrição válida foi mantida em cada grupo.
+
+Total de grupos de duplicatas: 4
+Total de vulnerabilidades agrupadas (removidas): 4
+
+Grupo 1: Chave = ('die-hellman ephemeral key exchange dos vulnerability (ssh, d(he)ater)', '22', 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Die-Hellman Ephemeral Key Exchange DoS Vulnerability (SSH, D(HE)ater)
+       Porta: 22 | Protocolo: tcp | Severidade: HIGH
+       Descrição: The remote SSH server is supporting Die-Hellman ephemeral (DHE) Key Exchange (KEX) algorithms and thus could be prone to a denial of service (DoS) vulnerability.
+
+
+Grupo 2: Chave = ('openbsd openssh 6.8p1 - 9.9p1 mitm vulnerability', '22', 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: OpenBSD OpenSSH 6.8p1 - 9.9p1 MitM Vulnerability
+       Porta: 22 | Protocolo: tcp | Severidade: MEDIUM
+       Descrição: OpenBSD OpenSSH is prone to a man-in-the-middle (MitM) vulnerability. Quality of Detection (QoD): 30%
+
+
+Grupo 3: Chave = ("openssh 'auth2-gss.c' user enumeration vulnerability - linux", '22', 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: OpenSSH 'auth2-gss.c' User Enumeration Vulnerability - Linux
+       Porta: 22 | Protocolo: tcp | Severidade: MEDIUM
+       Descrição: OpenSSH is prone to a user enumeration vulnerability. Quality of Detection (QoD): 30%
+
+
+Grupo 4: Chave = ('allowed http methods enumeration', '3000', 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Allowed HTTP Methods Enumeration
+       Porta: 3000 | Protocolo: tcp | Severidade: LOG
+       Descrição: This script enumerates the allowed HTTP methods on the remote web server. It sends multiple HTTP requests and checks the responses. Disclaimer: - This enumeration script is provided 'as is' (means no ...
+
+
+Resumo final:
+Total de grupos de duplicatas: 4
+Total de vulnerabilidades agrupadas (removidas): 4

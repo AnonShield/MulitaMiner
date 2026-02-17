@@ -8,6 +8,9 @@ Usage:
     python main.py <pdf_path> [--LLM <model>] [--convert <format>] [--scanner <name>]
 """
 import os
+from src.utils.block_creation import create_session_blocks_from_text, extract_vulns_from_blocks, cleanup_temp_blocks
+
+import os
 import sys
 
 # Garante que o diretório 'src' esteja no sys.path para imports absolutos
@@ -19,13 +22,14 @@ if src_path not in sys.path:
 import argparse
 import json
 import subprocess
+import datetime
 from tqdm import tqdm
-from utils.cli_args import parse_arguments
+from src.utils.cli_args import parse_arguments
 src_path = os.path.join(project_root, 'src')
 if src_path not in sys.path:
     sys.path.insert(0, src_path)
 
-from utils.cli_args import parse_arguments
+from src.utils.cli_args import parse_arguments
 
 # Force UTF-8 encoding on Windows
 if sys.stdout.encoding and sys.stdout.encoding.lower() != 'utf-8':
@@ -35,17 +39,16 @@ if sys.stdout.encoding and sys.stdout.encoding.lower() != 'utf-8':
 
 
 
-from utils.utils import (
-    load_profile, load_llm, init_llm, save_visual_layout,
-    execute_conversions, validate_and_normalize_vulnerability,
-    validate_cais_vulnerability
+from src.utils.llm_utils import (
+    load_profile, load_llm, init_llm, validate_and_normalize_vulnerability
 )
-from utils.pdf_loader import load_pdf_with_pypdf2
-from utils.processing import (
-    get_token_based_chunks, retry_chunk_with_subdivision,
-    consolidate_duplicates, is_cais_profile, get_consolidation_field
-)
-from utils.scanner_strategies import remove_duplicates_by_key
+from src.utils.convertions import execute_conversions
+from src.utils.cais_validator import validate_cais_vulnerability
+from src.utils.pdf_loader import load_pdf_with_pypdf2, save_visual_layout
+from src.utils.chunking import get_token_based_chunks, retry_chunk_with_subdivision
+from src.utils.processing import consolidate_duplicates, get_consolidation_field
+from src.utils.profile_registry import is_cais_profile
+from src.utils.scanner_strategies import remove_duplicates_by_key
 
 
 def get_validator(profile_config: dict):
@@ -55,26 +58,22 @@ def get_validator(profile_config: dict):
     return validate_and_normalize_vulnerability
 
 
-
-
 def validate_inputs(args: argparse.Namespace) -> bool:
     """Valida inputs do usuário."""
     if not os.path.isfile(args.pdf_path):
-        print(f"Erro: Arquivo PDF não encontrado: {args.pdf_path}")
+        print(f"❌ Erro: Arquivo PDF não encontrado: {args.pdf_path}")
         return False
-    
     # Validação para o modo de avaliação
     if args.evaluate:
         if not args.baseline:
-            print("Erro: O argumento --baseline é obrigatório quando --evaluate é usado.")
+            print("❌ Erro: O argumento --baseline é obrigatório quando --evaluate é usado.")
             return False
         if not os.path.isfile(args.baseline):
-            print(f"Erro: Arquivo de baseline não encontrado: {args.baseline}")
+            print(f"❌ Erro: Arquivo de baseline não encontrado: {args.baseline}")
             return False
         if args.convert not in ['xlsx', 'all']:
-            print("Aviso: Para avaliação, a conversão para '.xlsx' é necessária. Ativando a conversão para 'all'.")
+            print("⚠️ Aviso: Para avaliação, a conversão para '.xlsx' é necessária. Ativando a conversão para 'all'.")
             args.convert = 'all'
-
     return True
 
 
@@ -82,14 +81,12 @@ def load_configs(args: argparse.Namespace) -> tuple:
     """Carrega configurações de perfil e LLM."""
     profile_config = load_profile(args.scanner)
     if not profile_config:
-        print(f"Erro ao carregar perfil: {args.scanner}")
+        print(f"❌ Erro ao carregar perfil: {args.scanner}")
         return None, None
-    
     llm_config = load_llm(args.LLM)
     if not llm_config:
-        print(f"Erro ao carregar LLM: {args.LLM}")
+        print(f"❌ Erro ao carregar LLM: {args.LLM}")
         return None, None
-    
     return profile_config, llm_config
 
 
@@ -107,50 +104,42 @@ def process_vulnerabilities(doc_texts: list, llm, profile_config: dict) -> list:
     """
     all_vulnerabilities = []
     max_retries = profile_config.get('retry_attempts', 3)
+    total_chunks = len(doc_texts)
     
-    for i, doc_chunk in enumerate(tqdm(doc_texts, desc="Processando chunks", unit="chunk")):
-        print(f"\n{'='*60}")
-        print(f"Processando chunk {i+1}/{len(doc_texts)}")
-        print(f"{'='*60}")
-        
+    with tqdm(total=total_chunks, desc="Processando chunks", unit="chunk", ncols=80) as pbar:
+      for i, doc_chunk in enumerate(doc_texts):
+        tqdm.write(f"\n{'='*60}")
+        tqdm.write(f"🔹 Processando chunk {i+1}/{total_chunks}")
+        tqdm.write(f"{'='*60}")
         try:
             vulns_chunk = retry_chunk_with_subdivision(doc_chunk, llm, profile_config, max_retries)
-            
             if vulns_chunk:
-                # Validar vulnerabilidades (CHAMADA ÚNICA per vuln)
                 validator = get_validator(profile_config)
                 validated_vulns = []
                 for v in vulns_chunk:
                     validated = validator(v)
                     if validated:
                         validated_vulns.append(validated)
-                
-                # Determinar campo de nome
                 name_field = get_consolidation_field(validated_vulns, profile_config)
-                
                 all_vulnerabilities.extend(validated_vulns)
                 names = [v.get(name_field) for v in validated_vulns if isinstance(v, dict) and v.get(name_field)]
-                
-                print(f"[LOG] Chunk {i+1}/{len(doc_texts)}: {len(validated_vulns)}/{len(vulns_chunk)} válidas")
+                tqdm.write(f"✅ [CHUNK {i+1}] {len(validated_vulns)}/{len(vulns_chunk)} vulnerabilidades válidas extraídas.")
                 if names:
-                    print(f"[NOMES] {len(names)}:")
+                    tqdm.write(f"   📋 Nomes extraídos:")
                     for idx, name in enumerate(names, 1):
-                        print(f"  {idx:2d}. {name}")
+                        tqdm.write(f"     {idx:2d}. {name}")
             else:
-                print(f"[LOG] Chunk {i+1}/{len(doc_texts)}: 0 extraídas")
-                
+                tqdm.write(f"⚠️ [CHUNK {i+1}] Nenhuma vulnerabilidade extraída.")
         except Exception as e:
             error_msg = str(e).lower()
-            
-            # Erros críticos que interrompem processamento
             if any(kw in error_msg for kw in ['quota', '429', 'rate limit', 'timeout', 'connection']):
-                print(f"\n[ERRO CRÍTICO] {type(e).__name__}: {str(e)[:200]}")
-                print(f"Parando processamento no chunk {i+1}/{len(doc_texts)}")
+                tqdm.write(f"\n🛑 [ERRO CRÍTICO] {type(e).__name__}: {str(e)[:200]}")
+                tqdm.write(f"⏹️ Parando processamento no chunk {i+1}/{total_chunks}")
                 break
             else:
-                print(f"\n[ERRO] {type(e).__name__}: {str(e)[:200]}")
-                print(f"Continuando com próximo chunk...")
-    
+                tqdm.write(f"\n❌ [ERRO] {type(e).__name__}: {str(e)[:200]}")
+                tqdm.write(f"➡️  Continuando com próximo chunk...")
+        pbar.update(1)
     return all_vulnerabilities
 
 
@@ -194,32 +183,42 @@ def save_results(vulnerabilities: list, output_file: str, profile_config: dict =
         True se sucesso, False caso contrário
     """
     try:
-        # Carregar vulnerabilidades anteriores para comparação
         previous_vulns = load_previous_vulnerabilities(output_file)
-
+        removed_log_path = os.path.join(os.path.dirname(output_file), os.path.splitext(os.path.basename(output_file))[0] + '_removed_log.txt')
+        merge_log_path = os.path.join(os.path.dirname(output_file), os.path.splitext(os.path.basename(output_file))[0] + '_merge_log.txt')
         if not allow_duplicates:
-            print(f"\nConsolidando vulnerabilidades duplicadas...")
-            final_vulns = consolidate_duplicates(vulnerabilities, profile_config)
-            print(f"Total: {len(vulnerabilities)} → {len(final_vulns)} após consolidação")
+            print(f"\n🔄 Consolidando vulnerabilidades duplicadas...")
+            from src.utils.processing import consolidate_duplicates_with_logs
+            final_vulns, removed_vulns, merged_pairs = consolidate_duplicates_with_logs(vulnerabilities, profile_config)
+            print(f"📊 Total: {len(vulnerabilities)} → {len(final_vulns)} após consolidação")
+            # Salvar logs
+            if removed_vulns:
+                with open(removed_log_path, 'w', encoding='utf-8') as f:
+                    f.write("# Vulnerabilidades removidas por falta de descrição ou campos essenciais\n\n")
+                    for v in removed_vulns:
+                        f.write(json.dumps(v, ensure_ascii=False, indent=2))
+                        f.write("\n---\n")
+            if merged_pairs:
+                with open(merge_log_path, 'w', encoding='utf-8') as f:
+                    f.write("# Vulnerabilidades mescladas/consolidadas\n\n")
+                    for group in merged_pairs:
+                        f.write("Grupo mesclado:\n")
+                        for v in group:
+                            f.write(json.dumps(v, ensure_ascii=False, indent=2))
+                            f.write("\n")
+                        f.write("---\n")
         else:
-            print(f"\nSem consolidação (permitindo duplicatas) - {len(vulnerabilities)} vulnerabilidades")
-            # Deduplicação em duas fases com log detalhado
-            final_vulns = remove_duplicates_by_key(vulnerabilities, log_path="merge_log.txt")
-            print(f"Total após deduplicação customizada: {len(final_vulns)} (veja merge_log.txt para detalhes)")
-        
-        # Detectar campo de consolidação do profile ou auto-detectar
+            print(f"\n⚠️ Sem consolidação (permitindo duplicatas) - {len(vulnerabilities)} vulnerabilidades")
+            final_vulns = remove_duplicates_by_key(vulnerabilities, log_path=merge_log_path)
+            print(f"📊 Total após deduplicação customizada: {len(final_vulns)} (veja {merge_log_path} para detalhes)")
         name_field = get_consolidation_field(final_vulns, profile_config)
-        
-        # Identificar vulnerabilidades NOVAS vs ANTIGAS
         new_vulns = []
         updated_vulns = []
         repeated_vulns = []
-        
         for v in final_vulns:
             if isinstance(v, dict):
                 name = v.get(name_field, 'SEM NOME')
                 if name in previous_vulns:
-                    # Verificar se é igual à versão anterior
                     is_duplicate = any(
                         v == prev_v 
                         for prev_v in previous_vulns[name]
@@ -230,49 +229,77 @@ def save_results(vulnerabilities: list, output_file: str, profile_config: dict =
                         updated_vulns.append(v)
                 else:
                     new_vulns.append(v)
-        
-        # Mostrar total de vulnerabilidades únicas apenas se não permitir duplicatas
         if not allow_duplicates:
             unique_names = sorted(set(str(v.get(name_field, 'SEM NOME') or 'SEM NOME') for v in final_vulns if isinstance(v, dict)))
-            print(f"\nTotal de vulnerabilidades únicas: {len(unique_names)}")
-            print(f"\nResumo de vulnerabilidades encontradas:")
+            print(f"\n📋 Total de vulnerabilidades únicas: {len(unique_names)}")
+            print(f"\n📋 Resumo de vulnerabilidades encontradas:")
             for idx, name in enumerate(unique_names, 1):
                 count = sum(1 for v in final_vulns if isinstance(v, dict) and (str(v.get(name_field, 'SEM NOME') or 'SEM NOME') == name))
                 print(f"  {idx:3d}. [{count:2d}x] {name}")
         else:
-            # Sem merge: listar separando NOVAS de REPETIDAS
-            print(f"\nTotal de vulnerabilidades: {len(final_vulns)}")
-            print(f"  - NOVAS: {len(new_vulns)}")
-            print(f"  - ATUALIZADAS: {len(updated_vulns)}")
-            print(f"  - REPETIDAS (sem mudança): {len(repeated_vulns)}")
-            
+            print(f"\n📋 Total de vulnerabilidades: {len(final_vulns)}")
+            print(f"  - 🆕 NOVAS: {len(new_vulns)}")
+            print(f"  - 🔄 ATUALIZADAS: {len(updated_vulns)}")
+            print(f"  - ♻️ REPETIDAS (sem mudança): {len(repeated_vulns)}")
             if new_vulns:
-                print(f"\nVulnerabilidades NOVAS encontradas:")
+                print(f"\n🆕 Vulnerabilidades NOVAS encontradas:")
                 for idx, v in enumerate(new_vulns, 1):
                     if isinstance(v, dict):
                         name = str(v.get(name_field, 'SEM NOME') or 'SEM NOME')
                         severity = str(v.get('severity', 'UNKNOWN') or 'UNKNOWN')
                         print(f"  {idx:3d}. [NOVO     ] [{severity:8s}] {name}")
-            
             if updated_vulns:
-                print(f"\nVulnerabilidades ATUALIZADAS:")
+                print(f"\n🔄 Vulnerabilidades ATUALIZADAS:")
                 for idx, v in enumerate(updated_vulns, 1):
                     if isinstance(v, dict):
                         name = str(v.get(name_field, 'SEM NOME') or 'SEM NOME')
                         severity = str(v.get('severity', 'UNKNOWN') or 'UNKNOWN')
                         print(f"  {idx:3d}. [ATUALIZADO] [{severity:8s}] {name}")
-            
             if repeated_vulns:
-                print(f"\nVulnerabilidades REPETIDAS (sem mudança): {len(repeated_vulns)}")
-        
+                print(f"\n♻️ Vulnerabilidades REPETIDAS (sem mudança): {len(repeated_vulns)}")
+        # Filtra vulnerabilidades sem descrição válida antes de salvar
+        def has_valid_description(vuln):
+            desc = vuln.get("description")
+            if not desc:
+                return False
+            if isinstance(desc, list):
+                return any(str(d).strip() for d in desc)
+            return bool(str(desc).strip())
+
+        removed_vulns = [v for v in final_vulns if not has_valid_description(v)]
+        final_vulns = [v for v in final_vulns if has_valid_description(v)]
+        # Salva log das vulnerabilidades removidas
+        if removed_vulns:
+            log_path = os.path.splitext(output_file)[0] + '_removed_log.txt'
+            with open(log_path, 'w', encoding='utf-8') as logf:
+                logf.write(
+                    "# LOG DE REMOÇÃO DE VULNERABILIDADES\n"
+                    "Este arquivo lista todas as vulnerabilidades removidas por falta de descrição válida.\n"
+                    "Cada item apresenta detalhes relevantes para rastreabilidade.\n\n"
+                )
+                logf.write(f"Total de vulnerabilidades removidas: {len(removed_vulns)}\n\n")
+                for idx, v in enumerate(removed_vulns, 1):
+                    name = str(v.get('Name', 'SEM NOME'))
+                    port = str(v.get('port', ''))
+                    protocol = str(v.get('protocol', ''))
+                    severity = str(v.get('severity', ''))
+                    logf.write(f"{idx}. Nome: {name}\n")
+                    logf.write(f"   Porta: {port} | Protocolo: {protocol} | Severidade: {severity}\n")
+                    desc = v.get('description', '')
+                    if desc:
+                        if isinstance(desc, list):
+                            desc = ' '.join([str(d) for d in desc if d])
+                        desc = str(desc).strip().replace('\n', ' ')
+                        logf.write(f"   Descrição original (inválida): {desc[:200]}{'...' if len(desc)>200 else ''}\n")
+                    logf.write("\n")
+                logf.write(f"Resumo final: {len(removed_vulns)} vulnerabilidades removidas por falta de descrição válida.\n")
+            print(f"\n🗑 Log de vulnerabilidades removidas salvo em: {log_path}")
         with open(output_file, 'w', encoding='utf-8') as f:
             json.dump(final_vulns, f, indent=2, ensure_ascii=False)
-        
-        print(f"\nVulnerabilidades salvas em: {output_file}")
+        print(f"\n💾 Vulnerabilidades salvas em: {output_file}")
         return True
-        
     except Exception as e:
-        print(f"Erro ao salvar JSON: {e}")
+        print(f"❌ Erro ao salvar JSON: {e}")
         return False
 
 
@@ -285,7 +312,7 @@ def run_evaluation(args: argparse.Namespace, extraction_output_path: str):
         extraction_output_path: Caminho para o arquivo .xlsx gerado pela extração.
     """
     print(f"\n{'='*60}")
-    print(f"Iniciando avaliação de métricas com o método: '{args.evaluation_method}'")
+    print(f"📊 Iniciando avaliação de métricas com o método: '{args.evaluation_method}'")
     print(f"{'='*60}")
 
     method = args.evaluation_method
@@ -314,16 +341,15 @@ def run_evaluation(args: argparse.Namespace, extraction_output_path: str):
         command += ['--allow-duplicates']
     
     try:
-        print(f"Executando comando: {' '.join(command)}")
+        print(f"⚙️ Executando comando: {' '.join(command)}")
         subprocess.run(command, check=True)
-        print(f"\n[SUCESSO] Avaliação de métricas concluída.")
-        print(f"Resultados salvos no diretório: '{output_dir}'")
-        
+        print(f"\n✅ [SUCESSO] Avaliação de métricas concluída.")
+        print(f"📁 Resultados salvos no diretório: '{output_dir}'")
     except FileNotFoundError:
-        print(f"Erro: Python ou o script '{script_path}' não foi encontrado.")
+        print(f"❌ Erro: Python ou o script '{script_path}' não foi encontrado.")
         print("Verifique se o ambiente virtual de 'metrics' está configurado corretamente.")
     except subprocess.CalledProcessError as e:
-        print("\n[ERRO] A avaliação de métricas falhou.")
+        print("\n❌ [ERRO] A avaliação de métricas falhou.")
         print(f"  Comando: {' '.join(e.cmd)}")
         print(f"  Código de Saída: {e.returncode}")
         print("-------------------------------------------------")
@@ -374,7 +400,7 @@ def main():
 
     # Salvar layout visual da primeira página como referência
     visual_file = save_visual_layout(documents[0].page_content, args.pdf_path)
-    print(f"Layout visual salvo em: {visual_file}\n")
+    print(f"🖼️  Layout visual salvo em: {visual_file}\n")
 
 
 
@@ -385,9 +411,13 @@ def main():
             extraction_text += doc.page_content + '\n'
 
     # Criar blocos de sessão temporários
-    from utils.processing import create_session_blocks_from_text, extract_vulns_from_blocks, cleanup_temp_blocks
-    session_blocks = create_session_blocks_from_text(extraction_text, temp_dir='temp_blocks', visual_layout_path=visual_file)
-    print(f"[INFO] {len(session_blocks)} blocos de sessão criados em temp_blocks/")
+    session_blocks = create_session_blocks_from_text(
+        extraction_text,
+        temp_dir='temp_blocks',
+        visual_layout_path=visual_file,
+        scanner=args.scanner
+    )
+    print(f"📦 [INFO] {len(session_blocks)} blocos de sessão criados em temp_blocks/")
 
     # Processar cada bloco com chunking e extração, propagando contexto
     all_vulnerabilities = extract_vulns_from_blocks(
@@ -398,38 +428,66 @@ def main():
     # Limpeza obrigatória dos temporários
     cleanup_temp_blocks('temp_blocks')
 
-    print(f"\n[SUMMARY] Total de blocos: {total_chunks}")
-    print(f"[SUMMARY] Total de vulnerabilidades extraídas: {len(all_vulnerabilities)}")
+    print(f"\n{'='*60}")
+    print(f"📊 [SUMMARY] Total de blocos: {total_chunks}")
+    print(f"📊 [SUMMARY] Total de vulnerabilidades extraídas: {len(all_vulnerabilities)}")
+    print(f"{'='*60}")
 
-    # Definir nome do arquivo como output ou baseado no PDF 
+    # Definir prefixo dos arquivos de saída
+    run_prefix = os.environ.get("RUN_PREFIX")
     if args.output:
         output_file = args.output
+        merge_log_file = args.output.replace('.json', '_merge_log.txt')
+        removed_log_file = args.output.replace('.json', '_removed_log.txt')
+        xlsx_file = args.output.replace('.json', '.xlsx')
     else:
         pdf_base = os.path.splitext(os.path.basename(args.pdf_path))[0]
-        output_file = f"{pdf_base}.json"
+        llm_name = getattr(args, 'LLM', None) or llm_config.get('model', 'unknown')
+        llm_name = str(llm_name).replace('/', '_').replace(':', '_')
+        timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
+        if getattr(args, 'run_experiments', False) or run_prefix:
+            output_dir = getattr(args, 'output_dir', None) or 'results_runs'
+            if not os.path.exists(output_dir):
+                os.makedirs(output_dir, exist_ok=True)
+            prefix = run_prefix if run_prefix else f"{pdf_base}_{llm_name}_{timestamp}"
+            output_file = os.path.join(output_dir, f"{prefix}.json")
+            merge_log_file = os.path.join(output_dir, f"{prefix}_merge_log.txt")
+            removed_log_file = os.path.join(output_dir, f"{prefix}_removed_log.txt")
+            xlsx_file = os.path.join(output_dir, f"{prefix}.xlsx")
+        else:
+            output_file = f"{pdf_base}_{llm_name}_{timestamp}.json"
 
     if save_results(all_vulnerabilities, output_file, profile_config, getattr(args, 'allow_duplicates', False)):
         xlsx_output_path = None
+        # Salva tokens_info se existir (gerado por extract_vulns_from_blocks)
+        import glob, shutil
+        os.makedirs('results_tokens', exist_ok=True)
+        # Procura tokens_info gerado pelo PID atual
+        pid = os.getpid()
+        tokens_candidates = glob.glob(f'results_tokens/tokens_info_{pid}.json')
+        if tokens_candidates:
+            # Renomeia para bater com o nome do output_file
+            tokens_final = os.path.join('results_tokens', os.path.splitext(os.path.basename(output_file))[0] + '_tokens.json')
+            shutil.move(tokens_candidates[0], tokens_final)
+            print(f"[TOKENS] Arquivo de tokens salvo em: {tokens_final}")
         try:
             converted_files = execute_conversions(output_file, args)
             if converted_files:
-                print(f"\nConversões geradas: {len(converted_files)}")
+                print(f"\n🔄 Conversões geradas: {len(converted_files)}")
                 for c in converted_files:
-                    print(f"  - {c}")
+                    print(f"  📄 {c}")
                     if c.endswith('.xlsx'):
                         xlsx_output_path = c
         except Exception as e:
-            print(f"Erro ao executar conversões: {e}")
-
-        # Etapa de avaliação de métricas
+            print(f"❌ Erro ao executar conversões: {e}")
         if args.evaluate:
             if xlsx_output_path and os.path.isfile(xlsx_output_path):
                 run_evaluation(args, xlsx_output_path)
             else:
-                print("\n[AVISO] Avaliação de métricas pulada.")
+                print("\n⚠️ [AVISO] Avaliação de métricas pulada.")
                 print("Motivo: A conversão para .xlsx não foi solicitada ou falhou.")
     else:
-        print(f"\n[ERRO] Falha ao salvar resultados em {output_file}")
+        print(f"\n❌ [ERRO] Falha ao salvar resultados em {output_file}")
 
 
 if __name__ == "__main__":

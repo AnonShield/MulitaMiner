@@ -1,0 +1,46 @@
+# LOG DE DEDUPLICAÇÃO DE VULNERABILIDADES
+Este arquivo lista todas as vulnerabilidades consideradas duplicatas e agrupadas durante o processo.
+Cada grupo é identificado por uma chave composta (ex: nome, porta, protocolo).
+Apenas a vulnerabilidade mais completa e com descrição válida foi mantida em cada grupo.
+
+Total de grupos de duplicatas: 5
+Total de vulnerabilidades agrupadas (removidas): 5
+
+Grupo 1: Chave = ('apache http server 2.4.7 - 2.4.51 multiple vulnerabilities - linux', '80', 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Apache HTTP Server 2.4.7 - 2.4.51 Multiple Vulnerabilities - Linux
+       Porta: 80 | Protocolo: tcp | Severidade: HIGH
+       Descrição: Apache HTTP Server is prone to multiple vulnerabilities.
+
+
+Grupo 2: Chave = ("apache http server 'mod_http2' null pointer dereference dos vulnerability - linux", '80', 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Apache HTTP Server 'mod_http2' null pointer dereference DoS Vulnerability - Linux
+       Porta: 80 | Protocolo: tcp | Severidade: HIGH
+       Descrição: Apache HTTP Server is prone to a denial of service (DoS) vulnerability. Quality of Detection (QoD): 30%
+
+
+Grupo 3: Chave = ('apache http server 2.4.0 - 2.4.40 multiple vulnerabilities - linux', '80', 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Apache HTTP Server 2.4.0 - 2.4.40 Multiple Vulnerabilities - Linux
+       Porta: 80 | Protocolo: tcp | Severidade: MEDIUM
+       Descrição: Apache HTTP Server is prone to multiple vulnerabilities.
+
+
+Grupo 4: Chave = ('apache http server 2.4.7 - 2.4.65 authentication bypass vulnerability - linux', '80', 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Apache HTTP Server 2.4.7 - 2.4.65 Authentication Bypass Vulnerability - Linux
+       Porta: 80 | Protocolo: tcp | Severidade: MEDIUM
+       Descrição: Apache HTTP Server is prone to an authentication bypass vulnerability.
+
+
+Grupo 5: Chave = ('apache http server 2.4.x < 2.4.66 improper neutralization vulnerability - linux', '80', 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Apache HTTP Server 2.4.x < 2.4.66 Improper Neutralization Vulnerability - Linux
+       Porta: 80 | Protocolo: tcp | Severidade: MEDIUM
+       Descrição: Apache HTTP Server is prone to an improper neutralization vulnerability.
+
+
+Resumo final:
+Total de grupos de duplicatas: 5
+Total de vulnerabilidades agrupadas (removidas): 5

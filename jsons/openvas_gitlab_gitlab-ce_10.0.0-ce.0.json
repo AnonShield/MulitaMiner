@@ -1,0 +1,2742 @@
+[
+  {
+    "Name": "OpenBSD OpenSSH < 9.3p2 RCE Vulnerability",
+    "description": [
+      "OpenBSD OpenSSH is prone to a remote code execution (RCE) vulnerability in OpenSSH's forwarded ssh-agent."
+    ],
+    "detection_result": [
+      "Installed version: 7.2p2",
+      "Fixed version: 9.3p2",
+      "Installation path / port: 22/tcp"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: OpenBSD OpenSSH < 9.3p2 RCE Vulnerability",
+      "OID:1.3.6.1.4.1.25623.1.0.104869",
+      "Version used: 2023-10-13T05:06:10Z"
+    ],
+    "product_detection_result": [
+      "cpe:/a:openbsd:openssh:7.2p2",
+      "Detected by OpenSSH Detection Consolidation (OID: 1.3.6.1.4.1.25623.1.0.108577)",
+      "Product: cpe:/a:openbsd:openssh:7.2p2",
+      "Method: OpenSSH Detection Consolidation",
+      "OID: 1.3.6.1.4.1.25623.1.0.108577)"
+    ],
+    "impact": [
+      "OpenBSD OpenSSH prior to version 9.3p2.",
+      "The following conditions needs to be met:",
+      "- Exploitation requires the presence of specic libraries on the victim system.",
+      "- Remote exploitation requires that the agent was forwarded to an attacker-controlled system."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 9.3p2 or later."
+    ],
+    "insight": [
+      "A condition where specic libraries loaded via ssh-agent(1)'s PKCS#11 support could be abused to achieve remote code execution via a forwarded agent socket."
+    ],
+    "log_method": [],
+    "cvss": [
+      "9.0"
+    ],
+    "port": 22,
+    "protocol": "tcp",
+    "severity": "Critical",
+    "references": [
+      "cve: CVE-2023-38408",
+      "url: https://www.openssh.com/releasenotes.html#9.3p2",
+      "url: https://www.qualys.com/2023/07/19/cve-2023-38408/rce-openssh-forwarded-ssh-agent.txt",
+      "cert-bund: WID-SEC-2024-3195",
+      "cert-bund: WID-SEC-2024-1248",
+      "cert-bund: WID-SEC-2024-1082",
+      "cert-bund: WID-SEC-2024-0064",
+      "cert-bund: WID-SEC-2023-2679",
+      "cert-bund: WID-SEC-2023-2625",
+      "cert-bund: WID-SEC-2023-2240",
+      "cert-bund: WID-SEC-2023-1843",
+      "cert-bund: WID-SEC-2023-1819",
+      "dfn-cert: DFN-CERT-2026-0097",
+      "dfn-cert: DFN-CERT-2025-2802",
+      "dfn-cert: DFN-CERT-2024-1260",
+      "dfn-cert: DFN-CERT-2024-0491",
+      "dfn-cert: DFN-CERT-2023-2792",
+      "dfn-cert: DFN-CERT-2023-2179",
+      "dfn-cert: DFN-CERT-2023-1961",
+      "dfn-cert: DFN-CERT-2023-1920",
+      "dfn-cert: DFN-CERT-2023-1845",
+      "dfn-cert: DFN-CERT-2023-1773",
+      "dfn-cert: DFN-CERT-2023-1665"
+    ],
+    "plugin": null,
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "OpenSSH <= 7.2p2 Privilege Escalation Vulnerability (May 2016)",
+    "description": [
+      "OpenSSH is prone to a privilege escalation vulnerability."
+    ],
+    "detection_result": [
+      "Installed version: 7.2p2",
+      "Fixed version: 7.2p2-3",
+      "Installation",
+      "path / port: 22/tcp"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: OpenSSH <= 7.2p2 Privilege Escalation Vulnerability (May 2016)",
+      "OID:1.3.6.1.4.1.25623.1.0.807574",
+      "Version used: 2024-12-13T05:05:32Z"
+    ],
+    "product_detection_result": [
+      "Product: cpe:/a:openbsd:openssh:7.2p2",
+      "Method: OpenSSH Detection Consolidation",
+      "OID: 1.3.6.1.4.1.25623.1.0.108577)"
+    ],
+    "impact": [
+      "Successfully exploiting this issue will allow local users to gain privileges."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 7.2p2-3 or later."
+    ],
+    "insight": [
+      "The aw exists due to an error in 'do_setup_env function' in the 'session.c' script in sshd which trigger a crafted environment for the /bin/login program when the UseLogin feature is enabled and PAM is congured to read .pam_environment les in user home directories."
+    ],
+    "log_method": [],
+    "cvss": [
+      "7.8"
+    ],
+    "port": 22,
+    "protocol": "tcp",
+    "severity": "HIGH",
+    "references": [
+      "cve: CVE-2015-8325",
+      "url: https://people.canonical.com/~ubuntu-security/cve/2015/CVE-2015-8325.html",
+      "url: https://anongit.mindrot.org/openssh.git/commit/?id=85bdcd7c92fe7ff133bbc4e1 ->0a65c91810f88755",
+      "cert-bund: WID-SEC-2024-1053",
+      "cert-bund: CB-K17/1725",
+      "cert-bund: CB-K17/0055",
+      "cert-bund: CB-K17/0054",
+      "cert-bund: CB-K16/1837",
+      "cert-bund: CB-K16/1487",
+      "cert-bund: CB-K16/1485",
+      "cert-bund: CB-K16/1221",
+      "cert-bund: CB-K16/0684",
+      "cert-bund: CB-K16/0577",
+      "dfn-cert: DFN-CERT-2019-1408",
+      "dfn-cert: DFN-CERT-2017-1807",
+      "dfn-cert: DFN-CERT-2017-0060",
+      "dfn-cert: DFN-CERT-2017-0059",
+      "dfn-cert: DFN-CERT-2016-1943",
+      "dfn-cert: DFN-CERT-2016-1576",
+      "dfn-cert: DFN-CERT-2016-1574",
+      "dfn-cert: DFN-CERT-2016-1243",
+      "dfn-cert: DFN-CERT-2016-0864",
+      "dfn-cert: DFN-CERT-2016-0733",
+      "dfn-cert: DFN-CERT-2016-0628"
+    ],
+    "plugin": null,
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "OpenSSH < 7.4 Multiple Vulnerabilities (Jan 2017) - Linux",
+    "description": [
+      "OpenSSH is prone to multiple vulnerabilities."
+    ],
+    "detection_result": [
+      "Installed version: 7.2p2",
+      "Fixed version: 7.4",
+      "Installation",
+      "path / port: 22/tcp"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: OpenSSH < 7.4 Multiple Vulnerabilities (Jan 2017) - Linux",
+      "OID:1.3.6.1.4.1.25623.1.0.8103256",
+      "Version used: 2024-12-13T05:05:32Z"
+    ],
+    "product_detection_result": [
+      "Product: cpe:/a:openbsd:openssh:7.2p2",
+      "Method: OpenSSH Detection Consolidation",
+      "OID: 1.3.6.1.4.1.25623.1.0.108577)"
+    ],
+    "impact": [
+      "Successfully exploiting this issue allows local users to obtain sensitive private-key information, to gain privileges, conduct a senial-of-service condition and allows remote attackers to execute arbitrary local PKCS#11 modules."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 7.4 or later."
+    ],
+    "insight": [
+      "Multiple aws exist due to:",
+      "- An 'authle.c' script does not properly consider the eects of realloc on buer contents.",
+      "- The shared memory manager (associated with pre-authentication compression) does not ensure that a bounds check is enforced by all compilers.",
+      "- The sshd in OpenSSH creates forwarded Unix-domain sockets as root, when privilege separation is not used.",
+      "- An untrusted search path vulnerability in ssh-agent.c in ssh-agent.",
+      "- NULL pointer dereference error due to an out-of-sequence NEWKEYS message."
+    ],
+    "log_method": [],
+    "cvss": [
+      "7.8"
+    ],
+    "port": 22,
+    "protocol": "tcp",
+    "severity": "HIGH",
+    "references": [
+      "cve: CVE-2016-10009",
+      "cve: CVE-2016-10010",
+      "cve: CVE-2016-10011",
+      "cve: CVE-2016-10012",
+      "cve: CVE-2016-10708",
+      "url: https://www.openssh.com/txt/release-7.4",
+      "url: http://www.securityfocus.com/bid/94968",
+      "url: http://www.securityfocus.com/bid/94972",
+      "url: http://www.securityfocus.com/bid/94977",
+      "url: http://www.securityfocus.com/bid/94975",
+      "url: http://www.openwall.com/lists/oss-security/2016/12/19/2",
+      "url: http://blog.swiecki.net/2018/01/fuzzing-tcp-servers.html",
+      "url: https://anongit.mindrot.org/openssh.git/commit/?id=28652bca29046f62c7045e93 ->3e6b931de1d16737",
+      "cert-bund: WID-SEC-2023-1996",
+      "cert-bund: CB-K18/0919",
+      "cert-bund: CB-K18/0591",
+      "cert-bund: CB-K18/0137",
+      "cert-bund: CB-K18/0041",
+      "cert-bund: CB-K17/2219",
+      "cert-bund: CB-K17/2112",
+      "cert-bund: CB-K17/1292",
+      "cert-bund: CB-K17/1061",
+      "cert-bund: CB-K17/0527",
+      "cert-bund: CB-K17/0377",
+      "cert-bund: CB-K17/0127",
+      "cert-bund: CB-K17/0041",
+      "cert-bund: CB-K16/1991",
+      "dfn-cert: DFN-CERT-2021-0776"
+    ],
+    "plugin": null,
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "OpenSSH < 7.3 DoS and User Enumeration Vulnerabilities - Linux",
+    "description": [
+      "OpenSSH is prone to denial of service (DoS) and user enumeration vulnerabilities."
+    ],
+    "detection_result": [
+      "Installed version: 7.2p2",
+      "Fixed version: 7.3",
+      "Installation",
+      "path / port: 22/tcp"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: OpenSSH < 7.3 DoS and User Enumeration Vulnerabilities - Linux",
+      "OID:1.3.6.1.4.1.25623.1.0.809154",
+      "Version used: 2024-12-13T05:05:32Z"
+    ],
+    "product_detection_result": [
+      "cpe:/a:openbsd:openssh:7.2p2",
+      "Detected by OpenSSH Detection Consolidation (OID: 1.3.6.1.4.1.25623.1.0.108577)"
+    ],
+    "impact": [
+      "Successfully exploiting this issue allows remote attackers to cause a denial of service (crypt CPU consumption) and to enumerate users by leveraging the timing dierence between responses when a large password is provided."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 7.3 or later."
+    ],
+    "insight": [
+      "Multiple aws exist due to:",
+      "- The auth_password function in 'auth-passwd.c' script does not limit password lengths for password authentication.",
+      "- The sshd in OpenSSH, when SHA256 or SHA512 are used for user password hashing uses BLOWFISH hashing on a static password when the username does not exist and it takes much longer to calculate SHA256/SHA512 hash than BLOWFISH hash."
+    ],
+    "log_method": [],
+    "cvss": [
+      "7.5"
+    ],
+    "port": 22,
+    "protocol": "tcp",
+    "severity": "HIGH",
+    "references": [
+      "cve: CVE-2016-6515",
+      "cve: CVE-2016-6210",
+      "url: http://www.openssh.com/txt/release-7.3",
+      "url: http://www.securityfocus.com/bid/92212",
+      "url: http://seclists.org/fulldisclosure/2016/Jul/51",
+      "url: https://security-tracker.debian.org/tracker/CVE-2016-6210",
+      "url: http://openwall.com/lists/oss-security/2016/08/01/2",
+      "cert-bund: WID-SEC-2023-0450",
+      "cert-bund: WID-SEC-2023-0449",
+      "cert-bund: CB-K18/0041",
+      "cert-bund: CB-K17/2219",
+      "cert-bund: CB-K17/2112",
+      "cert-bund: CB-K17/1753",
+      "cert-bund: CB-K17/1349",
+      "cert-bund: CB-K17/1292",
+      "cert-bund: CB-K17/0055",
+      "cert-bund: CB-K16/1837",
+      "cert-bund: CB-K16/1629",
+      "cert-bund: CB-K16/1487",
+      "cert-bund: CB-K16/1485",
+      "cert-bund: CB-K16/1252",
+      "cert-bund: CB-K16/1221",
+      "cert-bund: CB-K16/1082",
+      "dfn-cert: DFN-CERT-2023-1920",
+      "dfn-cert: DFN-CERT-2019-1408",
+      "dfn-cert: DFN-CERT-2018-1828",
+      "dfn-cert: DFN-CERT-2018-1070",
+      "dfn-cert: DFN-CERT-2018-0046",
+      "dfn-cert: DFN-CERT-2017-2320",
+      "dfn-cert: DFN-CERT-2017-2208",
+      "dfn-cert: DFN-CERT-2017-1831",
+      "dfn-cert: DFN-CERT-2017-1407",
+      "dfn-cert: DFN-CERT-2017-1340",
+      "dfn-cert: DFN-CERT-2017-0060",
+      "dfn-cert: DFN-CERT-2016-1943",
+      "dfn-cert: DFN-CERT-2016-1729",
+      "dfn-cert: DFN-CERT-2016-1576",
+      "dfn-cert: DFN-CERT-2016-1574",
+      "dfn-cert: DFN-CERT-2016-1331",
+      "dfn-cert: DFN-CERT-2016-1243",
+      "dfn-cert: DFN-CERT-2016-1149"
+    ],
+    "plugin": null,
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Die-Hellman Ephemeral Key Exchange DoS Vulnerability (SSH, D(HE)ater)",
+    "description": [
+      "The remote SSH server is supporting Die-Hellman ephemeral (DHE) Key Exchange (KEX) algorithms and thus could be prone to a denial of service (DoS) vulnerability."
+    ],
+    "detection_result": [
+      "The remote SSH server supports the following DHE KEX algorithm(s):",
+      "diffie-hellman-group14-sha1",
+      "diffie-hellman-group-exchange-sha256"
+    ],
+    "detection_method": [
+      "Checks the supported KEX algorithms of the remote SSH server.",
+      "Details: Diffie-Hellman Ephemeral Key Exchange DoS Vulnerability (SSH, D(HE)ater)",
+      "OID:1.3.6.1.4.1.25623.1.0.117839",
+      "Version used: 2024-10-03T05:05:33Z"
+    ],
+    "product_detection_result": [
+      "cpe:/a:ietf:secure_shell_protocol",
+      "Detected by SSH Protocol Algorithms Supported (OID: 1.3.6.1.4.1.25623.1.0.105565 ->)"
+    ],
+    "impact": [
+      "This vulnerability allows remote attackers (from the client side) to send arbitrary numbers that are actually not public keys, and trigger expensive server-side DHE modular-exponentiation calculations, also known as a D(HE)ater attack.",
+      "There could be an increase in CPU usage in the aected component. For OpenSSH, users may observe issues such as a slowdown in SSH connections."
+    ],
+    "solution": [
+      "Solution:",
+      "Solution type: Mitigation",
+      "- DHE key exchange should be disabled if no other mitigation mechanism can be used and either elliptic-curve variant of Die-Hellman (ECDHE) or RSA key exchange is supported by the clients. The fact that RSA key exchange is not forward secret should be considered.",
+      "- Limit the maximum number of concurrent connections in e.g. the conguration of the remote server. For OpenSSH this limit can be congured via the 'MaxStartups' option, for other products please refer to the manual of the product in question on conguration possibilities."
+    ],
+    "insight": [
+      "- CVE-2002-20001: The Die-Hellman Key Agreement Protocol allows remote attackers (from the client side) to send arbitrary numbers that are actually not public keys, and trigger expensive server-side DHE modular-exponentiation calculations, aka a D(HE)ater attack. The client needs very little CPU resources and network bandwidth. The attack may be more disruptive in cases where a client can require a server to select its largest supported key size. The basic attack scenario is that the client must claim that it can only communicate with DHE, and the server must be congured to allow DHE.",
+      "- CVE-2022-40735: The Die-Hellman Key Agreement Protocol allows use of long exponents that arguably make certain calculations unnecessarily expensive, because the 1996 van Oorschot and Wiener paper found that '(appropriately) short exponents' can be used when there are adequate subgroup constraints, and these short exponents can lead to less expensive calculations than for long exponents. This issue is dierent from CVE-2002-20001 because it is based on an observation about exponent size, rather than an observation about numbers that are not public keys. The specic situations in which calculation expense would constitute a server-side vulnerability depend on the protocol (e.g., TLS, SSH, or IKE) and the DHE implementation details. In general, there might be an availability concern because of server-side resource consumption from DHE modular-exponentiation calculations. Finally, it is possible for an attacker to exploit this vulnerability and CVE-2002-20001 together.",
+      "- CVE-2024-41996: Validating the order of the public keys in the Die-Hellman Key Agreement Protocol, when an approved safe prime is used, allows remote attackers (from the client side) to trigger unnecessarily expensive server-side DHE modular-exponentiation calculations. The client may cause asymmetric resource consumption. The basic attack scenario is that the client must claim that it can only communicate with DHE, and the server must be congured to allow DHE and validate the order of the public key."
+    ],
+    "log_method": [],
+    "cvss": [
+      "7.5"
+    ],
+    "port": 22,
+    "protocol": "tcp",
+    "severity": "HIGH",
+    "references": [
+      "cve: CVE-2002-20001",
+      "cve: CVE-2022-40735",
+      "cve: CVE-2024-41996",
+      "url: https://dheatattack.gitlab.io/",
+      "url: https://dheatattack.gitlab.io/details/",
+      "url: https://www.researchgate.net/profile/Anton-Stiglic-2/publication/2401745_Security_Issues_in_the_Diffie-Hellman_Key_Agreement_Protocol",
+      "url: https://github.com/Balasys/dheater",
+      "url: https://github.com/c0r0n3r/dheater",
+      "cert-bund: WID-SEC-2024-3056",
+      "cert-bund: WID-SEC-2023-1886",
+      "cert-bund: WID-SEC-2023-1352",
+      "cert-bund: WID-SEC-2022-2251",
+      "cert-bund: WID-SEC-2022-2000",
+      "cert-bund: CB-K22/0224",
+      "cert-bund: CB-K21/1276",
+      "dfn-cert: DFN-CERT-2025-3324",
+      "dfn-cert: DFN-CERT-2024-2847",
+      "dfn-cert: DFN-CERT-2024-2578",
+      "dfn-cert: DFN-CERT-2024-1671",
+      "dfn-cert: DFN-CERT-2023-1697",
+      "dfn-cert: DFN-CERT-2023-1332",
+      "dfn-cert: DFN-CERT-2022-2147",
+      "dfn-cert: DFN-CERT-2022-0437",
+      "dfn-cert: DFN-CERT-2021-2622"
+    ],
+    "plugin": null,
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "OpenBSD OpenSSH <= 8.6 Command Injection Vulnerability",
+    "description": [
+      "OpenBSD OpenSSH is prone to a command injection vulnerability."
+    ],
+    "detection_result": [
+      "Installed version: 7.2p2",
+      "Fixed version: None",
+      "Installation path / port: 22/tcp"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: OpenBSD OpenSSH <= 8.6 Command Injection Vulnerability",
+      "OID:1.3.6.1.4.1.25623.1.0.113736",
+      "Version used: 2025-07-29T05:44:59Z"
+    ],
+    "product_detection_result": [
+      "cpe:/a:openbsd:openssh:7.2p2",
+      "Detected by OpenSSH Detection Consolidation (OID: 1.3.6.1.4.1.25623.1.0.108577)"
+    ],
+    "impact": [
+      "Successful exploitation would allow an attacker to execute arbitrary code on the target machine."
+    ],
+    "solution": [
+      "Solution:",
+      "Solution type: WillNotFix",
+      "No known solution was made available for at least one year since the disclosure of this vulnerability. Likely none will be provided anymore. General solution options are to upgrade to a newer release, disable respective features, remove the product or replace the product by another one."
+    ],
+    "insight": [
+      "scp of OpenSSH allows command injection in spc.c via backtick characters in the destination argument."
+    ],
+    "log_method": [],
+    "cvss": [
+      "7.4"
+    ],
+    "port": 22,
+    "protocol": "tcp",
+    "severity": "HIGH",
+    "references": [],
+    "plugin": null,
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "OpenSSH 6.2 <= 8.7 Privilege Escalation Vulnerability",
+    "description": [
+      "OpenSSH is prone to a privilege scalation vulnerability in certain congurations."
+    ],
+    "detection_result": [
+      "Installed version: 7.2p2",
+      "Fixed version: 8.8",
+      "Installation path / port: 22/tcp"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: OpenSSH 6.2 <= 8.7 Privilege Escalation Vulnerability",
+      "OID:1.3.6.1.4.1.25623.1.0.117696",
+      "Version used: 2021-10-11T08:01:31Z"
+    ],
+    "product_detection_result": [
+      "Product: cpe:/a:openbsd:openssh:7.2p2",
+      "Method: OpenSSH Detection Consolidation",
+      "OID: 1.3.6.1.4.1.25623.1.0.108577)"
+    ],
+    "impact": [],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 8.8 or later."
+    ],
+    "insight": [
+      "sshd failed to correctly initialise supplemental groups when executing an AuthorizedKeysCommand or AuthorizedPrincipalsCommand, where a AuthorizedKeysCommandUser or AuthorizedPrincipalsCommandUser directive has been set to run the command as a dierent user. Instead these commands would inherit the groups that sshd was started with.",
+      "Depending on system conguration, inherited groups may allow AuthorizedKeysCommand/AuthorizedPrincipalsCommand helper programs to gain unintended privilege.",
+      "Neither AuthorizedKeysCommand nor AuthorizedPrincipalsCommand are enabled by default in sshd_cong."
+    ],
+    "log_method": [],
+    "cvss": [
+      "7.0"
+    ],
+    "port": 22,
+    "protocol": "tcp",
+    "severity": "HIGH",
+    "references": [
+      "cve: CVE-2021-41617",
+      "url: https://www.openssh.com/txt/release-8.8",
+      "cert-bund: WID-SEC-2024-1082",
+      "cert-bund: WID-SEC-2023-1969",
+      "cert-bund: WID-SEC-2023-0426",
+      "cert-bund: WID-SEC-2022-1308",
+      "cert-bund: WID-SEC-2022-0676",
+      "cert-bund: WID-SEC-2022-0534",
+      "cert-bund: CB-K22/0310",
+      "cert-bund: CB-K22/0011",
+      "cert-bund: CB-K21/1268",
+      "cert-bund: CB-K21/1017",
+      "dfn-cert: DFN-CERT-2024-1260",
+      "dfn-cert: DFN-CERT-2024-0022",
+      "dfn-cert: DFN-CERT-2023-3218",
+      "dfn-cert: DFN-CERT-2023-3210",
+      "dfn-cert: DFN-CERT-2022-1571",
+      "dfn-cert: DFN-CERT-2022-0579",
+      "dfn-cert: DFN-CERT-2021-2586",
+      "dfn-cert: DFN-CERT-2021-2017",
+      "dfn-cert: DFN-CERT-2021-2015"
+    ],
+    "plugin": null,
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "GitLab Uninitialized Admin Password (HTTP) - Active Check",
+    "description": [
+      "The remote GitLab instance is not initialized with an admin password."
+    ],
+    "detection_result": [
+      "Vulnerable URLs:",
+      "http://gitlab10.trabalho_vulnnet/users/sign_in",
+      "http://gitlab10.trabalho_vulnnet/users/password/edit?reset_password_token=JiRvy1",
+      "->5K87HRW-syVhdJ"
+    ],
+    "detection_method": [
+      "Sends a crafted HTTP GET request and checks the response.",
+      "Details: GitLab Uninitialized Admin Password (HTTP) - Active Check",
+      "OID:1.3.6.1.4.1.25623.1.0.117994",
+      "Version used: 2022-03-23T07:37:22Z"
+    ],
+    "product_detection_result": [],
+    "impact": [
+      "An unauthenticated remote user might nish the setup of the remote GitLab instance and take",
+      "full control over it."
+    ],
+    "solution": [
+      "Solution type: Mitigation",
+      "Finish the instance setup by setting an admin password."
+    ],
+    "insight": [],
+    "log_method": [],
+    "cvss": [
+      "7.5"
+    ],
+    "port": 80,
+    "protocol": "tcp",
+    "severity": "HIGH",
+    "references": [
+      "url: https://docs.gitlab.com/omnibus/installation/#set-up-the-initial-password",
+      "url: https://gitlab.com/gitlab-org/omnibus-gitlab/-/merge_requests/5331"
+    ],
+    "plugin": null,
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "OpenBSD OpenSSH <= 7.9 Multiple Vulnerabilities",
+    "description": [
+      "OpenBSD OpenSSH is prone to multiple vulnerabilities."
+    ],
+    "detection_result": [
+      "Installed version: 7.2p2",
+      "Fixed version: 8.0",
+      "Installation path / port: 22/tcp"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: OpenBSD OpenSSH <= 7.9 Multiple Vulnerabilities",
+      "OID:1.3.6.1.4.1.25623.1.0.117786",
+      "Version used: 2023-10-20T16:09:12Z"
+    ],
+    "product_detection_result": [
+      "Product: cpe:/a:openbsd:openssh:7.2p2",
+      "Method: OpenSSH Detection Consolidation",
+      "OID: 1.3.6.1.4.1.25623.1.0.108577)"
+    ],
+    "impact": [
+      "Aected Software/OS OpenBSD OpenSSH versions 7.9 and prior.",
+      "Vulnerability Insight The following aws exist:",
+      "- CVE-2018-20685: bypass of intended access restrictions in the scp client",
+      "- CVE-2019-6109, CVE-2019-6110: manipulation of the output in the scp client by a malicious server",
+      "- CVE-2019-6111: overwrite of arbitrary les in the scp client by a malicious server"
+    ],
+    "solution": [
+      "Solution type: VendorFix Update to version 8.0 or later."
+    ],
+    "insight": [
+      "The following aws exist:",
+      "- CVE-2018-20685: bypass of intended access restrictions in the scp client",
+      "- CVE-2019-6109, CVE-2019-6110: manipulation of the output in the scp client by a malicious server",
+      "- CVE-2019-6111: overwrite of arbitrary les in the scp client by a malicious server"
+    ],
+    "log_method": [],
+    "cvss": [
+      "6.8"
+    ],
+    "port": 22,
+    "protocol": "tcp",
+    "severity": "MEDIUM",
+    "references": [
+      "cve: CVE-2018-20685",
+      "cve: CVE-2019-6109",
+      "cve: CVE-2019-6110",
+      "cve: CVE-2019-6111",
+      "url: https://sintonen.fi/advisories/scp-client-multiple-vulnerabilities.txt",
+      "url: http://www.openwall.com/lists/oss-security/2019/04/18/1",
+      "cert-bund: WID-SEC-2024-1082",
+      "cert-bund: WID-SEC-2024-0872",
+      "cert-bund: WID-SEC-2023-1995",
+      "cert-bund: WID-SEC-2023-0561",
+      "cert-bund: CB-K19/0627",
+      "cert-bund: CB-K19/0312",
+      "cert-bund: CB-K19/0058",
+      "cert-bund: CB-K19/0037",
+      "dfn-cert: DFN-CERT-2024-1260",
+      "dfn-cert: DFN-CERT-2019-2157",
+      "dfn-cert: DFN-CERT-2019-1470",
+      "dfn-cert: DFN-CERT-2019-0970",
+      "dfn-cert: DFN-CERT-2019-0776",
+      "dfn-cert: DFN-CERT-2019-0563",
+      "dfn-cert: DFN-CERT-2019-0415",
+      "dfn-cert: DFN-CERT-2019-0357",
+      "dfn-cert: DFN-CERT-2019-0275",
+      "dfn-cert: DFN-CERT-2019-0136",
+      "dfn-cert: DFN-CERT-2019-0094"
+    ],
+    "plugin": null,
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "OpenBSD OpenSSH 6.8p1 - 9.9p1 MitM Vulnerability",
+    "description": [
+      "OpenBSD OpenSSH is prone to a man-in-the-middle (MitM) vulnerability."
+    ],
+    "detection_result": [
+      "Installed version: 7.2p2",
+      "Fixed version: 9.9p2",
+      "Installation path / port: 22/tcp"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: OpenBSD OpenSSH 6.8p1 - 9.9p1 MitM Vulnerability",
+      "OID:1.3.6.1.4.1.25623.1.0.114946",
+      "Version used: 2025-02-20T08:47:14Z"
+    ],
+    "product_detection_result": [
+      "Product: cpe:/a:openbsd:openssh:7.2p2",
+      "Method: OpenSSH Detection Consolidation",
+      "OID: 1.3.6.1.4.1.25623.1.0.108577)"
+    ],
+    "impact": [
+      "Aected Software/OS OpenBSD OpenSSH versions 6.8p1 through 9.9p1.",
+      "Vulnerability Insight ssh(1) in OpenSSH contained a logic error that allowed an on-path attacker (a.k.a MITM) to impersonate any server when the VerifyHostKeyDNS option is enabled. This option is o by default."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 9.9p2 or later."
+    ],
+    "insight": [
+      "ssh(1) in OpenSSH contained a logic error that allowed an on-path attacker (a.k.a MITM) to impersonate any server when the VerifyHostKeyDNS option is enabled. This option is o by default."
+    ],
+    "log_method": [],
+    "cvss": [
+      "6.8"
+    ],
+    "port": 22,
+    "protocol": "tcp",
+    "severity": "MEDIUM",
+    "references": [
+      "cve: CVE-2025-26465",
+      "url: https://www.openssh.com/txt/release-9.9p2",
+      "url: https://www.openssh.com/security.html",
+      "url: https://www.qualys.com/2025/02/18/openssh-mitm-dos.txt",
+      "url: https://blog.qualys.com/vulnerabilities-threat-research/2025/02/18/qualys-t ->ru-discovers-two-vulnerabilities-in-openssh-cve-2025-26465-cve-2025-26466",
+      "url: https://www.openwall.com/lists/oss-security/2025/02/18/1",
+      "url: https://www.openwall.com/lists/oss-security/2025/02/18/4",
+      "cert-bund: WID-SEC-2025-1439",
+      "cert-bund: WID-SEC-2025-1007",
+      "cert-bund: WID-SEC-2025-0394",
+      "dfn-cert: DFN-CERT-2026-0097",
+      "dfn-cert: DFN-CERT-2025-1201",
+      "dfn-cert: DFN-CERT-2025-1200",
+      "dfn-cert: DFN-CERT-2025-0993",
+      "dfn-cert: DFN-CERT-2025-0819",
+      "dfn-cert: DFN-CERT-2025-0470",
+      "dfn-cert: DFN-CERT-2025-0428"
+    ],
+    "plugin": null,
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "OpenBSD OpenSSH < 9.6 Multiple Vulnerabilities (Terrapin Attack)",
+    "description": [
+      "OpenBSD OpenSSH is prone to multiple vulnerabilities."
+    ],
+    "detection_result": [
+      "Installed version: 7.2p2",
+      "Fixed version: 9.6",
+      "Installation path / port: 22/tcp"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: OpenBSD OpenSSH < 9.6 Multiple Vulnerabilities (Terrapin Attack) OID:1.3.6.1.4.1.25623.1.0.118572",
+      "Version used: 2025-10-08T05:38:55Z"
+    ],
+    "product_detection_result": [
+      "Product: cpe:/a:openbsd:openssh:7.2p2",
+      "Method: OpenSSH Detection Consolidation",
+      "OID: 1.3.6.1.4.1.25623.1.0.108577)"
+    ],
+    "impact": [
+      "Note: Client and Server implementations need to run a fixed version to mitigate the Terrapin flaw.",
+      "Affected Software/OS OpenBSD OpenSSH prior to version 9.6."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 9.6 or later."
+    ],
+    "insight": [
+      "The following vulnerabilities exist:",
+      "- CVE-2023-48795: The SSH transport protocol with certain OpenSSH extensions allows remote attackers to bypass integrity checks such that some packets are omitted (from the extension negotiation message), and a client and server may consequently end up with a connection for which some security features have been downgraded or disabled, aka a 'Terrapin attack'.",
+      "- CVE-2023-51384: In ssh-agent certain destination constraints can be incompletely applied. When destination constraints are specified during addition of PKCS#11-hosted private keys, these constraints are only applied to the first key, even if a PKCS#11 token returns multiple keys.",
+      "- CVE-2023-51385: OS command injection might occur if a user name or host name has shell metacharacters, and this name is referenced by an expansion token in certain situations. For example, an untrusted Git repository can have a submodule with shell metacharacters in a user name or host name."
+    ],
+    "log_method": [],
+    "cvss": [
+      "7.0"
+    ],
+    "port": 22,
+    "protocol": "tcp",
+    "severity": "HIGH",
+    "references": [
+      "cve: CVE-2023-48795",
+      "cve: CVE-2023-51384",
+      "cve: CVE-2023-51385",
+      "url: https://www.openssh.com/txt/release-9.6",
+      "url: https://terrapin-attack.com",
+      "url: https://vin01.github.io/piptagole/ssh/security/openssh/libssh/remote-code-execution/2023/12/20/openssh-proxycommand-libssh-rce.html",
+      "url: https://github.com/vin01/poc-proxycommand-vulnerable",
+      "cert-bund: WID-SEC-2025-0810",
+      "cert-bund: WID-SEC-2025-0168",
+      "cert-bund: WID-SEC-2025-0144",
+      "cert-bund: WID-SEC-2025-0139",
+      "cert-bund: WID-SEC-2024-3377",
+      "cert-bund: WID-SEC-2024-3320",
+      "cert-bund: WID-SEC-2024-3198",
+      "cert-bund: WID-SEC-2024-3195",
+      "cert-bund: WID-SEC-2024-3140",
+      "cert-bund: WID-SEC-2024-1913",
+      "cert-bund: WID-SEC-2024-1781",
+      "cert-bund: WID-SEC-2024-1701",
+      "cert-bund: WID-SEC-2024-1656",
+      "cert-bund: WID-SEC-2024-1655",
+      "cert-bund: WID-SEC-2024-1643",
+      "cert-bund: WID-SEC-2024-1642",
+      "cert-bund: WID-SEC-2024-1639",
+      "cert-bund: WID-SEC-2024-1637",
+      "cert-bund: WID-SEC-2024-1630",
+      "cert-bund: WID-SEC-2024-1474",
+      "cert-bund: WID-SEC-2024-1248",
+      "cert-bund: WID-SEC-2024-1228",
+      "cert-bund: WID-SEC-2024-1186",
+      "cert-bund: WID-SEC-2024-1082",
+      "cert-bund: WID-SEC-2024-0899",
+      "cert-bund: WID-SEC-2024-0892",
+      "cert-bund: WID-SEC-2024-0889",
+      "cert-bund: WID-SEC-2024-0885",
+      "cert-bund: WID-SEC-2024-0874",
+      "cert-bund: WID-SEC-2024-0869",
+      "cert-bund: WID-SEC-2024-0578",
+      "cert-bund: WID-SEC-2024-0564",
+      "cert-bund: WID-SEC-2024-0523",
+      "cert-bund: WID-SEC-2023-3182",
+      "cert-bund: WID-SEC-2023-3174",
+      "dfn-cert: DFN-CERT-2026-0097",
+      "dfn-cert: DFN-CERT-2025-3629",
+      "dfn-cert: DFN-CERT-2025-3272",
+      "dfn-cert: DFN-CERT-2025-2058",
+      "dfn-cert: DFN-CERT-2025-2037",
+      "dfn-cert: DFN-CERT-2025-1447",
+      "dfn-cert: DFN-CERT-2025-1177",
+      "dfn-cert: DFN-CERT-2025-1025",
+      "dfn-cert: DFN-CERT-2025-0660",
+      "dfn-cert: DFN-CERT-2025-0502",
+      "dfn-cert: DFN-CERT-2025-0294",
+      "dfn-cert: DFN-CERT-2025-0173",
+      "dfn-cert: DFN-CERT-2025-0165",
+      "dfn-cert: DFN-CERT-2025-0024",
+      "dfn-cert: DFN-CERT-2024-3171",
+      "dfn-cert: DFN-CERT-2024-2818",
+      "dfn-cert: DFN-CERT-2024-2759",
+      "dfn-cert: DFN-CERT-2024-2741",
+      "dfn-cert: DFN-CERT-2024-2682",
+      "dfn-cert: DFN-CERT-2024-2602",
+      "dfn-cert: DFN-CERT-2024-2573",
+      "dfn-cert: DFN-CERT-2024-2392",
+      "dfn-cert: DFN-CERT-2024-2210",
+      "dfn-cert: DFN-CERT-2024-2209",
+      "dfn-cert: DFN-CERT-2024-2194",
+      "dfn-cert: DFN-CERT-2024-2169",
+      "dfn-cert: DFN-CERT-2024-2048",
+      "dfn-cert: DFN-CERT-2024-2030",
+      "dfn-cert: DFN-CERT-2024-2028",
+      "dfn-cert: DFN-CERT-2024-1930",
+      "dfn-cert: DFN-CERT-2024-1895",
+      "dfn-cert: DFN-CERT-2024-1869",
+      "dfn-cert: DFN-CERT-2024-1868",
+      "dfn-cert: DFN-CERT-2024-1865",
+      "dfn-cert: DFN-CERT-2024-1862",
+      "dfn-cert: DFN-CERT-2024-1854",
+      "dfn-cert: DFN-CERT-2024-1846",
+      "dfn-cert: DFN-CERT-2024-1817",
+      "dfn-cert: DFN-CERT-2024-1794",
+      "dfn-cert: DFN-CERT-2024-1715",
+      "dfn-cert: DFN-CERT-2024-1698"
+    ],
+    "plugin": null,
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Prex Truncation Attacks in SSH Specication (Terrapin Attack)",
+    "description": [
+      "The remote SSH server is supporting an specic encryption algorithm or MAC. Parts of their SSH specication are vulnerable to a novel prex truncation attack (a.k.a. Terrapin attack)."
+    ],
+    "detection_result": [
+      "The remote SSH server supports the following possible affected client-to-server ->encryption algorithm(s): chacha20-poly1305@openssh.com",
+      "The remote SSH server supports the following possible affected server-to-client ->encryption algorithm(s): chacha20-poly1305@openssh.com"
+    ],
+    "detection_method": [
+      "Checks the supported algorithms and MACs of the remote SSH server.",
+      "Note: This VT has a low QoD because mitigation is possible / available via software updates."
+    ],
+    "product_detection_result": [
+      "cpe:/a:ietf:secure_shell_protocol",
+      "Detected by SSH Protocol Algorithms Supported (OID: 1.3.6.1.4.1.25623.1.0.105565 ->)"
+    ],
+    "impact": [],
+    "solution": [
+      "Solution type: VendorFix",
+      "- Update OpenSSH to version 9.6 or later",
+      "- Update Apache MINA SSHD to version 2.12.0 or later",
+      "- For other products please contact the vendor for possible xes / updates",
+      "Mitigation:",
+      "- To mitigate this protocol vulnerability, OpenSSH suggested a so-called 'strict kex' which alters the SSH handshake to ensure a Man-in-the-Middle attacker cannot introduce unauthenticated messages as well as convey sequence number manipulation across handshakes. Support for strict key exchange has been added to a variety of SSH implementations, including OpenSSH itself, PuTTY, libssh, and more.",
+      "Warning: To take eect, both the client and server must support this countermeasure.",
+      "As a stop-gap measure, peers may also (temporarily) disable the aected algorithms and use unaected alternatives like AES-GCM instead until patches are available."
+    ],
+    "insight": [
+      "Parts of the SSH specication are vulnerable to a novel prex truncation attack (a.k.a. Terrapin attack), which allows a man-in-the-middle attacker to strip an arbitrary number of messages right after the initial key exchange, breaking SSH extension negotiation (RFC8308) in the process and thus downgrading connection security."
+    ],
+    "log_method": [],
+    "cvss": [
+      "5.9"
+    ],
+    "port": 22,
+    "protocol": "tcp",
+    "severity": "MEDIUM",
+    "references": [
+      "cve: CVE-2023-48795"
+    ],
+    "plugin": null,
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "SSH Terrapin Attack",
+    "description": [
+      "Parts of the SSH specification are vulnerable to a novel prefix truncation attack (a.k.a. Terrapin attack), which allows a man-in-the-middle attacker to strip an arbitrary number of messages right after the initial key exchange, breaking SSH extension negotiation (RFC8308) in the process and thus downgrading connection security."
+    ],
+    "detection_result": [],
+    "detection_method": [
+      "Checks the supported algorithms and MACs of the remote SSH server.",
+      "Note: This VT has a low QoD because mitigation is possible / available via software updates.",
+      "Details: Prefix Truncation Attacks in SSH Specification (Terrapin Attack)",
+      "OID:1.3.6.1.4.1.25623.1.0.114238",
+      "Version used: 2025-04-23T05:39:47Z"
+    ],
+    "product_detection_result": [
+      "Product: cpe:/a:ietf:secure_shell_protocol",
+      "Method: SSH Protocol Algorithms Supported",
+      "OID: 1.3.6.1.4.1.25623.1.0.105565)"
+    ],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [],
+    "cvss": [
+      "5.9"
+    ],
+    "port": 22,
+    "protocol": "tcp",
+    "severity": "MEDIUM",
+    "references": [
+      "cve: CVE-2023-48795",
+      "cve: CVE-2024-41909",
+      "url: https://terrapin-attack.com",
+      "url: https://www.openssh.com/txt/release-9.6",
+      "url: https://lists.apache.org/thread/vwf1ot8wx1njyy8n19j5j2tcnjnozt3b",
+      "url: https://github.com/apache/mina-sshd/issues/445",
+      "url: https://github.com/apache/mina-sshd/pull/449",
+      "cert-bund: WID-SEC-2025-2359",
+      "cert-bund: WID-SEC-2025-0810",
+      "cert-bund: WID-SEC-2025-0168",
+      "cert-bund: WID-SEC-2025-0144",
+      "cert-bund: WID-SEC-2025-0139",
+      "cert-bund: WID-SEC-2024-3377",
+      "cert-bund: WID-SEC-2024-3320",
+      "cert-bund: WID-SEC-2024-3221",
+      "cert-bund: WID-SEC-2024-3198",
+      "cert-bund: WID-SEC-2024-3195",
+      "cert-bund: WID-SEC-2024-1913",
+      "cert-bund: WID-SEC-2024-1781",
+      "cert-bund: WID-SEC-2024-1701",
+      "cert-bund: WID-SEC-2024-1656",
+      "cert-bund: WID-SEC-2024-1655",
+      "cert-bund: WID-SEC-2024-1643",
+      "cert-bund: WID-SEC-2024-1642",
+      "cert-bund: WID-SEC-2024-1639",
+      "cert-bund: WID-SEC-2024-1637",
+      "cert-bund: WID-SEC-2024-1630",
+      "cert-bund: WID-SEC-2024-1474",
+      "cert-bund: WID-SEC-2024-1248",
+      "cert-bund: WID-SEC-2024-1228",
+      "cert-bund: WID-SEC-2024-1186",
+      "cert-bund: WID-SEC-2024-1082",
+      "cert-bund: WID-SEC-2024-0899",
+      "cert-bund: WID-SEC-2024-0892",
+      "cert-bund: WID-SEC-2024-0889",
+      "cert-bund: WID-SEC-2024-0885",
+      "cert-bund: WID-SEC-2024-0874",
+      "cert-bund: WID-SEC-2024-0869",
+      "cert-bund: WID-SEC-2024-0578",
+      "cert-bund: WID-SEC-2024-0564",
+      "cert-bund: WID-SEC-2024-0523",
+      "cert-bund: WID-SEC-2023-3174",
+      "dfn-cert: DFN-CERT-2026-0097",
+      "dfn-cert: DFN-CERT-2025-3629",
+      "dfn-cert: DFN-CERT-2025-3272",
+      "dfn-cert: DFN-CERT-2025-2941",
+      "dfn-cert: DFN-CERT-2025-2058",
+      "dfn-cert: DFN-CERT-2025-2037",
+      "dfn-cert: DFN-CERT-2025-1447",
+      "dfn-cert: DFN-CERT-2025-1177",
+      "dfn-cert: DFN-CERT-2025-1025",
+      "dfn-cert: DFN-CERT-2025-0660",
+      "dfn-cert: DFN-CERT-2025-0502",
+      "dfn-cert: DFN-CERT-2025-0294",
+      "dfn-cert: DFN-CERT-2025-0173",
+      "dfn-cert: DFN-CERT-2025-0165",
+      "dfn-cert: DFN-CERT-2025-0024",
+      "dfn-cert: DFN-CERT-2024-3171",
+      "dfn-cert: DFN-CERT-2024-2818",
+      "dfn-cert: DFN-CERT-2024-2759",
+      "dfn-cert: DFN-CERT-2024-2741",
+      "dfn-cert: DFN-CERT-2024-2602",
+      "dfn-cert: DFN-CERT-2024-2573",
+      "dfn-cert: DFN-CERT-2024-2392",
+      "dfn-cert: DFN-CERT-2024-2210",
+      "dfn-cert: DFN-CERT-2024-2209",
+      "dfn-cert: DFN-CERT-2024-2194",
+      "dfn-cert: DFN-CERT-2024-2169",
+      "dfn-cert: DFN-CERT-2024-2048",
+      "dfn-cert: DFN-CERT-2024-2030",
+      "dfn-cert: DFN-CERT-2024-2028",
+      "dfn-cert: DFN-CERT-2024-1930",
+      "dfn-cert: DFN-CERT-2024-1895",
+      "dfn-cert: DFN-CERT-2024-1869",
+      "dfn-cert: DFN-CERT-2024-1868",
+      "dfn-cert: DFN-CERT-2024-1865",
+      "dfn-cert: DFN-CERT-2024-1862",
+      "dfn-cert: DFN-CERT-2024-1854",
+      "dfn-cert: DFN-CERT-2024-1846",
+      "dfn-cert: DFN-CERT-2024-1817",
+      "dfn-cert: DFN-CERT-2024-1715",
+      "dfn-cert: DFN-CERT-2024-1698",
+      "dfn-cert: DFN-CERT-2024-1688",
+      "dfn-cert: DFN-CERT-2024-1655",
+      "dfn-cert: DFN-CERT-2024-1600",
+      "dfn-cert: DFN-CERT-2024-1443",
+      "dfn-cert: DFN-CERT-2024-1442",
+      "dfn-cert: DFN-CERT-2024-1413",
+      "dfn-cert: DFN-CERT-2024-1382",
+      "dfn-cert: DFN-CERT-2024-1380",
+      "dfn-cert: DFN-CERT-2024-1373",
+      "dfn-cert: DFN-CERT-2024-1260",
+      "dfn-cert: DFN-CERT-2024-1259",
+      "dfn-cert: DFN-CERT-2024-1108",
+      "dfn-cert: DFN-CERT-2024-1061",
+      "dfn-cert: DFN-CERT-2024-1029",
+      "dfn-cert: DFN-CERT-2024-1003",
+      "dfn-cert: DFN-CERT-2024-1000",
+      "dfn-cert: DFN-CERT-2024-0896",
+      "dfn-cert: DFN-CERT-2024-0779",
+      "dfn-cert: DFN-CERT-2024-0762",
+      "dfn-cert: DFN-CERT-2024-0744",
+      "dfn-cert: DFN-CERT-2024-0698",
+      "dfn-cert: DFN-CERT-2024-0633",
+      "dfn-cert: DFN-CERT-2024-0619",
+      "dfn-cert: DFN-CERT-2024-0618",
+      "dfn-cert: DFN-CERT-2024-0616",
+      "dfn-cert: DFN-CERT-2024-0597",
+      "dfn-cert: DFN-CERT-2024-0545",
+      "dfn-cert: DFN-CERT-2024-0526",
+      "dfn-cert: DFN-CERT-2024-0491",
+      "dfn-cert: DFN-CERT-2024-0451",
+      "dfn-cert: DFN-CERT-2024-0440"
+    ],
+    "plugin": null,
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "OpenBSD OpenSSH Information Disclosure Vulnerability (CVE-2020-14145)",
+    "description": [
+      "OpenBSD OpenSSH is prone to an information disclosure vulnerability."
+    ],
+    "detection_result": [
+      "Installed version: 7.2p2",
+      "Fixed version: 8.5",
+      "Installation",
+      "path / port: 22/tcp"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: OpenBSD OpenSSH Information Disclosure Vulnerability (CVE-2020-14145)",
+      "OID:1.3.6.1.4.1.25623.1.0.117785",
+      "Version used: 2021-11-22T14:03:31Z"
+    ],
+    "product_detection_result": [
+      "cpe:/a:openbsd:openssh:7.2p2",
+      "Detected by OpenSSH Detection Consolidation (OID: 1.3.6.1.4.1.25623.1.0.108577)",
+      "Product: cpe:/a:openbsd:openssh:7.2p2",
+      "Method: OpenSSH Detection Consolidation",
+      "OID: 1.3.6.1.4.1.25623.1.0.108577)"
+    ],
+    "impact": [],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 8.5 or later."
+    ],
+    "insight": [
+      "The client side in OpenSSH has an Observable Discrepancy leading to an information leak in the algorithm negotiation. This allows man-in-the-middle attackers to target initial connection attempts (where no host key for the server has been cached by the client)."
+    ],
+    "log_method": [],
+    "cvss": [
+      "5.9"
+    ],
+    "port": 22,
+    "protocol": "tcp",
+    "severity": "MEDIUM",
+    "references": [
+      "cve: CVE-2020-14145",
+      "url: http://www.openwall.com/lists/oss-security/2020/12/02/1",
+      "cert-bund: WID-SEC-2024-1591",
+      "cert-bund: WID-SEC-2024-1082",
+      "cert-bund: WID-SEC-2023-1969",
+      "cert-bund: WID-SEC-2023-1599",
+      "cert-bund: WID-SEC-2023-0068",
+      "cert-bund: CB-K20/0995",
+      "dfn-cert: DFN-CERT-2024-1260",
+      "dfn-cert: DFN-CERT-2020-2691"
+    ],
+    "plugin": null,
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "OpenSSH 'auth2-gss.c' User Enumeration Vulnerability - Linux",
+    "description": [
+      "OpenSSH is prone to a user enumeration vulnerability."
+    ],
+    "detection_result": [
+      "Installed version: 7.2p2",
+      "Fixed version: None",
+      "Installation",
+      "path / port: 22/tcp"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: OpenSSH 'auth2-gss.c' User Enumeration Vulnerability - Linux",
+      "OID:1.3.6.1.4.1.25623.1.0.813888",
+      "Version used: 2021-05-28T07:06:21Z"
+    ],
+    "product_detection_result": [
+      "Product: cpe:/a:openbsd:openssh:7.2p2",
+      "Method: OpenSSH Detection Consolidation",
+      "OID: 1.3.6.1.4.1.25623.1.0.108577)"
+    ],
+    "impact": [
+      "Successfully exploitation will allow a remote attacker to harvest valid user accounts, which may aid in brute-force attacks."
+    ],
+    "solution": [
+      "Solution type: WillNotFix",
+      "No known solution was made available for at least one year since the disclosure of this vulnerability. Likely none will be provided anymore. General solution options are to upgrade to a newer release, disable respective features, remove the product or replace the product by another one."
+    ],
+    "insight": [
+      "The aw exists in the 'auth-gss2.c' source code le of the aected software and is due to insufficient validation of an authentication request packet when the Guide Star Server II (GSS2) component is used on an aected system."
+    ],
+    "log_method": [],
+    "cvss": [
+      "5.3"
+    ],
+    "port": 22,
+    "protocol": "tcp",
+    "severity": "MEDIUM",
+    "references": [
+      "cve: CVE-2018-15919",
+      "url: https://bugzilla.novell.com/show_bug.cgi?id=1106163",
+      "url: https://seclists.org/oss-sec/2018/q3/180",
+      "cert-bund: WID-SEC-2024-1082",
+      "cert-bund: CB-K18/0885",
+      "dfn-cert: DFN-CERT-2024-1260",
+      "dfn-cert: DFN-CERT-2018-2293",
+      "dfn-cert: DFN-CERT-2018-2191"
+    ],
+    "plugin": null,
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "OpenSSH < 7.6 'sftp-server' Security Bypass Vulnerability - Linux",
+    "description": [
+      "OpenSSH is prone to a security bypass vulnerability."
+    ],
+    "detection_result": [
+      "Installed version: 7.2p2",
+      "Fixed version: 7.6",
+      "Installation",
+      "path / port: 22/tcp"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: OpenSSH < 7.6 'sftp-server' Security Bypass Vulnerability - Linux",
+      "OID:1.3.6.1.4.1.25623.1.0.812051",
+      "Version used: 2024-12-13T05:05:32Z"
+    ],
+    "product_detection_result": [
+      "Product: cpe:/a:openbsd:openssh:7.2p2",
+      "Method: OpenSSH Detection Consolidation"
+    ],
+    "impact": [
+      "Successfully exploiting this issue allows local users to bypass certain security restrictions and perform unauthorized actions. This may lead to further attacks."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 7.6 or later."
+    ],
+    "insight": [
+      "The aw exists in the 'process_open' function in sftp-server.c script which does not properly prevent write operations in readonly mode."
+    ],
+    "log_method": [],
+    "cvss": [
+      "5.3"
+    ],
+    "port": 22,
+    "protocol": "tcp",
+    "severity": "MEDIUM",
+    "references": [
+      "cve: CVE-2017-15906",
+      "url: https://www.openssh.com/txt/release-7.6",
+      "url: http://www.securityfocus.com/bid/101552",
+      "url: https://github.com/openbsd/src/commit/a6981567e8e",
+      "cert-bund: WID-SEC-2024-1082",
+      "cert-bund: CB-K20/0041",
+      "cert-bund: CB-K18/0137",
+      "cert-bund: CB-K17/2126",
+      "cert-bund: CB-K17/2014",
+      "cert-bund: CB-K17/2002",
+      "dfn-cert: DFN-CERT-2024-1260",
+      "dfn-cert: DFN-CERT-2019-0362",
+      "dfn-cert: DFN-CERT-2018-2554",
+      "dfn-cert: DFN-CERT-2018-2191",
+      "dfn-cert: DFN-CERT-2018-2068",
+      "dfn-cert: DFN-CERT-2018-1828",
+      "dfn-cert: DFN-CERT-2018-1568",
+      "dfn-cert: DFN-CERT-2018-0150",
+      "dfn-cert: DFN-CERT-2017-2217",
+      "dfn-cert: DFN-CERT-2017-2100",
+      "dfn-cert: DFN-CERT-2017-2093"
+    ],
+    "plugin": null,
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "OpenSSH < 7.8 User Enumeration Vulnerability - Linux",
+    "description": [
+      "OpenSSH is prone to a user enumeration vulnerability."
+    ],
+    "detection_result": [
+      "Installed version: 7.2p2",
+      "Fixed version: 7.8",
+      "Installation",
+      "path / port: 22/tcp"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: OpenSSH < 7.8 User Enumeration Vulnerability - Linux",
+      "OID:1.3.6.1.4.1.25623.1.0.813864",
+      "Version used: 2024-12-13T05:05:32Z"
+    ],
+    "product_detection_result": [
+      "Product: cpe:/a:openbsd:openssh:7.2p2",
+      "Method: OpenSSH Detection Consolidation",
+      "OID: 1.3.6.1.4.1.25623.1.0.108577)"
+    ],
+    "impact": [
+      "Successfully exploitation will allow remote attacker to test whether a certain user exists or not (username enumeration) on a target OpenSSH server."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 7.8 or later."
+    ],
+    "insight": [
+      "The aw is due to not delaying bailout for an invalid authenticating user until after the packet containing the request has been fully parsed, related to auth2-gss.c, auth2-hostbased.c, and auth2-pubkey.c"
+    ],
+    "log_method": [],
+    "cvss": [
+      "5.3"
+    ],
+    "port": 22,
+    "protocol": "tcp",
+    "severity": "MEDIUM",
+    "references": [
+      "cve: CVE-2018-15473",
+      "url: https://0day.city/cve-2018-15473.html",
+      "url: https://github.com/openbsd/src/commit/779974d35b4859c07bc3cb8a12c74b43b0a7d ->1e0",
+      "cert-bund: WID-SEC-2024-1082",
+      "cert-bund: CB-K20/0041",
+      "cert-bund: CB-K18/1031",
+      "cert-bund: CB-K18/0873",
+      "dfn-cert: DFN-CERT-2024-1260",
+      "dfn-cert: DFN-CERT-2021-2178",
+      "dfn-cert: DFN-CERT-2020-2189",
+      "dfn-cert: DFN-CERT-2020-0228",
+      "dfn-cert: DFN-CERT-2019-2046",
+      "dfn-cert: DFN-CERT-2019-0857",
+      "dfn-cert: DFN-CERT-2019-0362",
+      "dfn-cert: DFN-CERT-2018-2293",
+      "dfn-cert: DFN-CERT-2018-2259",
+      "dfn-cert: DFN-CERT-2018-2191"
+    ],
+    "plugin": null,
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "OpenSSH Information Disclosure Vulnerability (CVE-2016-20012)",
+    "description": [
+      "OpenBSD OpenSSH is prone to an information disclosure vulnerability."
+    ],
+    "detection_result": [
+      "Installed version: 7.2p2",
+      "Fixed version: None",
+      "Installation",
+      "path / port: 22/tcp"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: OpenSSH Information Disclosure Vulnerability (CVE-2016-20012)",
+      "OID:1.3.6.1.4.1.25623.1.0.117777",
+      "Version used: 2022-11-24T10:18:54Z"
+    ],
+    "product_detection_result": [
+      "Product: cpe:/a:openbsd:openssh:7.2p2",
+      "Method: OpenSSH Detection Consolidation",
+      "OID: 1.3.6.1.4.1.25623.1.0.108577)"
+    ],
+    "impact": [
+      "All currently OpenSSH versions are known to be aected."
+    ],
+    "solution": [
+      "Solution type: WillNotFix",
+      "No known solution was made available for at least one year since the disclosure of this vulnerability. Likely none will be provided anymore. General solution options are to upgrade to a newer release, disable respective features, remove the product or replace the product by another one."
+    ],
+    "insight": [
+      "OpenSSH allows remote attackers, who have a suspicion that a certain combination of username and public key is known to an SSH server, to test whether this suspicion is correct. This occurs because a challenge is sent only when that combination could be valid for a login session."
+    ],
+    "log_method": [],
+    "cvss": [
+      "5.3"
+    ],
+    "port": 22,
+    "protocol": "tcp",
+    "severity": "MEDIUM",
+    "references": [
+      "cve: CVE-2016-20012",
+      "url: https://github.com/openssh/openssh-portable/pull/270",
+      "url: https://rushter.com/blog/public-ssh-keys/",
+      "url: https://utcc.utoronto.ca/~cks/space/blog/tech/SSHKeysAreInfoLeak",
+      "cert-bund: WID-SEC-2024-1082",
+      "cert-bund: WID-SEC-2024-0229",
+      "cert-bund: CB-K21/0979",
+      "dfn-cert: DFN-CERT-2024-1260"
+    ],
+    "plugin": null,
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "OpenBSD OpenSSH < 9.2 Unspecied Vulnerability",
+    "description": [
+      "OpenBSD OpenSSH is prone to an unspecied vulnerability."
+    ],
+    "detection_result": [
+      "Installed version: 7.2p2",
+      "Fixed version: 9.2",
+      "Installation",
+      "path / port: 22/tcp"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: OpenBSD OpenSSH < 9.2 Unspecified Vulnerability",
+      "OID:1.3.6.1.4.1.25623.1.0.104512",
+      "Version used: 2025-01-21T05:37:33Z"
+    ],
+    "product_detection_result": [
+      "Product: cpe:/a:openbsd:openssh:7.2p2",
+      "Method: OpenSSH Detection Consolidation",
+      "OID: 1.3.6.1.4.1.25623.1.0.108577)"
+    ],
+    "impact": [
+      "OpenBSD OpenSSH prior to version 9.2."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 9.2 or later."
+    ],
+    "insight": [
+      "If the CanonicalizeHostname and CanonicalizePermittedCNAMEs options were enabled, and the system/libc resolver did not check that names in DNS responses were valid, then use of these options could allow an attacker with control of DNS to include invalid characters (possibly including wildcards) in names added to known_hosts les when they were updated. These names would still have to match the CanonicalizePermittedCNAMEs allow-list, so practical exploitation appears unlikely."
+    ],
+    "log_method": [],
+    "cvss": [
+      "5.0"
+    ],
+    "port": 22,
+    "protocol": "tcp",
+    "severity": "MEDIUM",
+    "references": [
+      "url: https://www.openssh.com/releasenotes.html#9.2",
+      "url: https://www.openwall.com/lists/oss-security/2023/02/02/3"
+    ],
+    "plugin": null,
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "OpenBSD OpenSSH < 9.3 Unspecied Vulnerability",
+    "description": [
+      "OpenBSD OpenSSH is prone to an unspecied vulnerability."
+    ],
+    "detection_result": [
+      "Installed version: 7.2p2",
+      "Fixed version: 9.3",
+      "Installation",
+      "path / port: 22/tcp"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: OpenBSD OpenSSH < 9.3 Unspecified Vulnerability",
+      "OID:1.3.6.1.4.1.25623.1.0.104512",
+      "Version used: 2025-01-21T05:37:33Z"
+    ],
+    "product_detection_result": [
+      "Product: cpe:/a:openbsd:openssh:7.2p2",
+      "Method: OpenSSH Detection Consolidation",
+      "OID: 1.3.6.1.4.1.25623.1.0.108577)"
+    ],
+    "impact": [
+      "OpenBSD OpenSSH prior to version 9.3."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 9.3 or later."
+    ],
+    "insight": [
+      "ssh(1): Portable OpenSSH provides an implementation of the getrrsetbyname(3) function if the standard library does not provide it, for use by the VerifyHostKeyDNS feature. A specically crafted DNS response could cause this function to perform an out-of-bounds read of adjacent stack data, but this condition does not appear to be exploitable beyond denial-of-service to the ssh(1) client. The getrrsetbyname(3) replacement is only included if the system's standard library lacks this function and portable OpenSSH was not compiled with the ldns library (with-ldns). getrrsetbyname(3) is only invoked if using VerifyHostKeyDNS to fetch SSHFP records.This problem was found by"
+    ],
+    "log_method": [],
+    "cvss": [
+      "5.0"
+    ],
+    "port": 22,
+    "protocol": "tcp",
+    "severity": "MEDIUM",
+    "references": [],
+    "plugin": null,
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "OpenBSD OpenSSH < 9.3 Unspecified Vulnerability",
+    "description": [
+      "OpenBSD OpenSSH is prone to multiple vulnerabilities."
+    ],
+    "detection_result": [
+      "Installed version: 7.2p2"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: OpenBSD OpenSSH < 9.3 Unspecified Vulnerability",
+      "OID:1.3.6.1.4.1.25623.1.0.104635",
+      "Version used: 2025-01-21T05:37:33Z"
+    ],
+    "product_detection_result": [
+      "Product: cpe:/a:openbsd:openssh:7.2p2",
+      "Method: OpenSSH Detection Consolidation",
+      "OID: 1.3.6.1.4.1.25623.1.0.108577)"
+    ],
+    "impact": [],
+    "solution": [],
+    "insight": [
+      "ssh(1): Portable OpenSSH provides an implementation of the getrrsetbyname(3) function if the standard library does not provide it, for use by the VerifyHostKeyDNS feature. A specically crafted DNS response could cause this function to perform an out-of-bounds read of adjacent stack data, but this condition does not appear to be exploitable beyond denial-of-service to the ssh(1) client.",
+      "The getrrsetbyname(3) replacement is only included if the system's standard library lacks this function and portable OpenSSH was not compiled with the ldns library (with-ldns). getrrsetby- name(3) is only invoked if using VerifyHostKeyDNS to fetch SSHFP records.This problem was found by the Coverity static analyzer."
+    ],
+    "log_method": [],
+    "cvss": [
+      "4.0"
+    ],
+    "port": 22,
+    "protocol": "tcp",
+    "severity": "MEDIUM",
+    "references": [
+      "url: https://www.openssh.com/releasenotes.html#9.3",
+      "url: https://www.openwall.com/lists/oss-security/2023/03/15/8"
+    ],
+    "plugin": null,
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "OpenBSD OpenSSH < 9.1 Multiple Vulnerabilities",
+    "description": [
+      "OpenBSD OpenSSH is prone to multiple vulnerabilities."
+    ],
+    "detection_result": [
+      "Installed version: 7.2p2",
+      "Fixed version: 9.1",
+      "Installation",
+      "path / port: 22/tcp"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: OpenBSD OpenSSH < 9.1 Multiple Vulnerabilities",
+      "OID:1.3.6.1.4.1.25623.1.0.127244",
+      "Version used: 2025-01-21T05:37:33Z"
+    ],
+    "product_detection_result": [
+      "Product: cpe:/a:openbsd:openssh:7.2p2",
+      "Method: OpenSSH Detection Consolidation",
+      "OID: 1.3.6.1.4.1.25623.1.0.108577)"
+    ],
+    "impact": [],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 9.1 or later."
+    ],
+    "insight": [
+      "The following vulnerabilities exist:",
+      "- A one-byte overow in SSH- banner processing in ssh-keyscan.",
+      "- A double free() in error path of le hashing step in signing/verify code in ssh-keygen.",
+      "- A double-free in error path in ssh-keysign."
+    ],
+    "log_method": [],
+    "cvss": [
+      "4.0"
+    ],
+    "port": 22,
+    "protocol": "tcp",
+    "severity": "MEDIUM",
+    "references": [
+      "url: https://www.openssh.com/releasenotes.html#9.1"
+    ],
+    "plugin": null,
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Weak MAC Algorithm(s) Supported (SSH)",
+    "description": [
+      "The remote SSH server is configured to allow / support weak MAC algorithm(s).",
+      "Quality of Detection (QoD): 80%"
+    ],
+    "detection_result": [
+      "The remote SSH server supports the following weak client-to-server MAC algorithm(s):",
+      "umac-64-etm@openssh.com",
+      "umac-64@openssh.com",
+      "The remote SSH server supports the following weak server-to-client MAC algorithm(s):",
+      "umac-64-etm@openssh.com",
+      "umac-64@openssh.com"
+    ],
+    "detection_method": [
+      "Checks the supported MAC algorithms (client-to-server and server-to-client) of the remote SSH server.",
+      "Currently weak MAC algorithms are defined as the following:",
+      "- MD5 based algorithms",
+      "- 96-bit based algorithms",
+      "- 64-bit based algorithms",
+      "- 'none' algorithm",
+      "Details: Weak MAC Algorithm(s) Supported (SSH)",
+      "OID:1.3.6.1.4.1.25623.1.0.105610",
+      "Version used: 2024-06-14T05:05:48Z"
+    ],
+    "product_detection_result": [
+      "Product: cpe:/a:ietf:secure_shell_protocol",
+      "Method: SSH Protocol Algorithms Supported",
+      "OID: 1.3.6.1.4.1.25623.1.0.105565)"
+    ],
+    "impact": [],
+    "solution": [
+      "Solution type: Mitigation",
+      "Disable the reported weak MAC algorithm(s)."
+    ],
+    "insight": [],
+    "log_method": [],
+    "cvss": [
+      "2.6"
+    ],
+    "port": 22,
+    "protocol": "tcp",
+    "severity": "LOW",
+    "references": [
+      "url: https://www.rfc-editor.org/rfc/rfc6668",
+      "url: https://www.rfc-editor.org/rfc/rfc4253#section-6.4"
+    ],
+    "plugin": null,
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "OpenBSD OpenSSH < 10.1 Multiple Vulnerabilities",
+    "description": [
+      "OpenBSD OpenSSH is prone to multiple vulnerabilities.",
+      "Quality of Detection (QoD): 30%"
+    ],
+    "detection_result": [
+      "Installed version: 7.2p2",
+      "Fixed version: 10.1",
+      "Installation",
+      "path / port: 22/tcp"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: OpenBSD OpenSSH < 10.1 Multiple Vulnerabilities",
+      "OID:1.3.6.1.4.1.25623.1.0.119134",
+      "Version used: 2025-10-08T05:38:55Z"
+    ],
+    "product_detection_result": [
+      "Product: cpe:/a:openbsd:openssh:7.2p2",
+      "Method: OpenSSH Detection Consolidation",
+      "OID: 1.3.6.1.4.1.25623.1.0.108577)"
+    ],
+    "impact": [
+      "OpenBSD OpenSSH versions prior to 10.1."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 10.1 or later."
+    ],
+    "insight": [
+      "The following flaws exist:",
+      "- CVE-2025-61984: 'ssh' allows control characters in usernames that originate from certain possibly untrusted sources, potentially leading to code execution when a ProxyCommand is used. The untrusted sources are the command line and %-sequence expansion of a configuration file. (A configuration file that provides a complete literal username is not categorized as an untrusted source.)",
+      "- CVE-2025-61985: 'ssh' allows the '\\0' character in an ssh:// URI, potentially leading to code execution when a ProxyCommand is used."
+    ],
+    "log_method": [],
+    "cvss": [
+      "2.4"
+    ],
+    "port": 22,
+    "protocol": "tcp",
+    "severity": "LOW",
+    "references": [
+      "cve: CVE-2025-61984",
+      "cve: CVE-2025-61985",
+      "url: https://www.openssh.com/txt/release-10.1",
+      "url: https://www.openssh.com/security.html",
+      "url: https://www.openwall.com/lists/oss-security/2025/10/06/1",
+      "url: https://dgl.cx/2025/10/bash-a-newline-ssh-proxycommand-cve-2025-61984#_",
+      "cert-bund: WID-SEC-2025-2212",
+      "dfn-cert: DFN-CERT-2026-0218",
+      "dfn-cert: DFN-CERT-2025-3384",
+      "dfn-cert: DFN-CERT-2025-2768"
+    ],
+    "plugin": null,
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "ICMP Timestamp Reply Information Disclosure",
+    "description": [
+      "The remote host responded to an ICMP timestamp request.",
+      "Quality of Detection (QoD): 80%"
+    ],
+    "detection_result": [
+      "The following response / ICMP packet has been received:",
+      "- ICMP Type: 14",
+      "- ICMP Code: 0"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [
+      "This information could theoretically be used to exploit weak time-based random number generators in other services."
+    ],
+    "solution": [
+      "Solution type: Mitigation",
+      "Various mitigations are possible:",
+      "- Disable the support for ICMP timestamp on the remote host completely",
+      "- Protect the remote host by a firewall, and block ICMP packets passing through the firewall in either direction (either completely or only for untrusted networks)"
+    ],
+    "insight": [
+      "The Timestamp Reply is an ICMP message which replies to a Timestamp message. It consists of the originating timestamp sent by the sender of the Timestamp as well as a receive timestamp and a transmit timestamp."
+    ],
+    "log_method": [],
+    "cvss": [
+      "2.1"
+    ],
+    "port": 22,
+    "protocol": "tcp",
+    "severity": "LOW",
+    "references": [],
+    "plugin": null,
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "ICMP Timestamp Reply Information Disclosure",
+    "description": [
+      "The remote host responded to an ICMP timestamp request."
+    ],
+    "detection_result": [
+      "The following response / ICMP packet has been received:",
+      "- ICMP Type: 14",
+      "- ICMP Code: 0"
+    ],
+    "detection_method": [
+      "Sends an ICMP Timestamp (Type 13) request and checks if a Timestamp Reply (Type 14) is received.",
+      "Details: ICMP Timestamp Reply Information Disclosure",
+      "OID:1.3.6.1.4.1.25623.1.0.103190",
+      "Version used: 2025-01-21T05:37:33Z"
+    ],
+    "product_detection_result": [],
+    "impact": [
+      "This information could theoretically be used to exploit weak time-based random number generators in other services."
+    ],
+    "solution": [
+      "Solution type: Mitigation",
+      "Various mitigations are possible:",
+      "- Disable the support for ICMP timestamp on the remote host completely",
+      "- Protect the remote host by a rewall, and block ICMP packets passing through the rewall in either direction (either completely or only for untrusted networks)"
+    ],
+    "insight": [
+      "The Timestamp Reply is an ICMP message which replies to a Timestamp message. It consists of the originating timestamp sent by the sender of the Timestamp as well as a receive timestamp and a transmit timestamp."
+    ],
+    "log_method": [],
+    "cvss": [
+      "2.1"
+    ],
+    "port": "general",
+    "protocol": "icmp",
+    "severity": "LOW",
+    "references": [
+      "cve: CVE-1999-0524",
+      "url: https://datatracker.ietf.org/doc/html/rfc792",
+      "url: https://datatracker.ietf.org/doc/html/rfc2780",
+      "cert-bund: CB-K15/1514",
+      "cert-bund: CB-K14/0632",
+      "dfn-cert: DFN-CERT-2014-0658"
+    ],
+    "plugin": null,
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "TCP Timestamps Information Disclosure",
+    "description": [
+      "The remote host implements TCP timestamps and therefore allows to compute the uptime."
+    ],
+    "detection_result": [
+      "It was detected that the host implements RFC1323/RFC7323.",
+      "The following timestamps were retrieved with a delay of 1 seconds in-between:",
+      "Packet 1: 1893058594",
+      "Packet 2: 1893059701"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [
+      "A side effect of this feature is that the uptime of the remote host can sometimes be computed."
+    ],
+    "solution": [
+      "Solution type: Mitigation",
+      "To disable TCP timestamps on linux add the line 'net.ipv4.tcp_timestamps = 0' to /etc/sysctl.conf. Execute 'sysctl -p' to apply the settings at runtime.",
+      "To disable TCP timestamps on Windows execute 'netsh int tcp set global timestamps=disabled'",
+      "Starting with Windows Server 2008 and Vista, the timestamp can not be completely disabled. The default behavior of the TCP/IP stack on this Systems is to not use the Timestamp options when initiating TCP connections, but use them if the TCP peer that is initiating communication includes them in their synchronize (SYN) segment.",
+      "See the references for more information."
+    ],
+    "insight": [],
+    "log_method": [],
+    "cvss": [
+      "2.6"
+    ],
+    "port": "general",
+    "protocol": "icmp",
+    "severity": "LOW",
+    "references": [],
+    "plugin": null,
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "TCP Timestamps Information Disclosure",
+    "description": [
+      "The remote host implements TCP timestamps and therefore allows to compute the uptime.",
+      "Quality of Detection (QoD): 80%"
+    ],
+    "detection_result": [
+      "It was detected that the host implements RFC1323/RFC7323.",
+      "The following timestamps were retrieved with a delay of 1 seconds in-between:",
+      "Packet 1: 1893058594",
+      "Packet 2: 1893059701"
+    ],
+    "detection_method": [
+      "Special IP packets are forged and sent with a little delay in between to the target IP. The responses are searched for a timestamps. If found, the timestamps are reported.",
+      "Details: TCP Timestamps Information Disclosure",
+      "OID:1.3.6.1.4.1.25623.1.0.80091",
+      "Version used: 2023-12-15T16:10:08Z"
+    ],
+    "product_detection_result": [],
+    "impact": [
+      "A side eect of this feature is that the uptime of the remote host can sometimes be computed."
+    ],
+    "solution": [
+      "Solution type: Mitigation",
+      "To disable TCP timestamps on linux add the line 'net.ipv4.tcp_timestamps = 0' to /etc/sysctl.conf. Execute 'sysctl -p' to apply the settings at runtime.",
+      "To disable TCP timestamps on Windows execute 'netsh int tcp set global timestamps=disabled'",
+      "Starting with Windows Server 2008 and Vista, the timestamp can not be completely disabled.",
+      "The default behavior of the TCP/IP stack on this Systems is to not use the Timestamp options when initiating TCP connections, but use them if the TCP peer that is initiating communication includes them in their synchronize (SYN) segment.",
+      "See the references for more information."
+    ],
+    "insight": [
+      "The remote host implements TCP timestamps, as dened by RFC1323/RFC7323."
+    ],
+    "log_method": [],
+    "cvss": [
+      "2.6"
+    ],
+    "port": "general",
+    "protocol": "tcp",
+    "severity": "LOW",
+    "references": [
+      "url: https://datatracker.ietf.org/doc/html/rfc1323",
+      "url: https://datatracker.ietf.org/doc/html/rfc7323",
+      "url: https://web.archive.org/web/20151213072445/http://www.microsoft.com/en-us/d ->ownload/details.aspx?id=9152",
+      "url: https://www.fortiguard.com/psirt/FG-IR-16-090"
+    ],
+    "plugin": null,
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "CPE Inventory",
+    "description": [
+      "This routine uses information collected by other routines about CPE identities of operating systems, services and applications detected during the scan.",
+      "Note: Some CPEs for specic products might show up twice or more in the output. Background: After a product got renamed or a specic vendor was acquired by another one it might happen that a product gets a new CPE within the NVD CPE Dictionary but older entries are kept with the older CPE.",
+      "Quality of Detection (QoD): 80%"
+    ],
+    "detection_result": [
+      "172.31.1.55|cpe:/a:f5:nginx",
+      "172.31.1.55|cpe:/a:gitlab:gitlab",
+      "172.31.1.55|cpe:/a:ietf:secure_shell_protocol:2.0",
+      "172.31.1.55|cpe:/a:nginx:nginx",
+      "172.31.1.55|cpe:/a:openbsd:openssh:7.2p2"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [],
+    "cvss": [
+      "0.0"
+    ],
+    "port": "general",
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [],
+    "plugin": null,
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "CPE Inventory",
+    "description": [
+      "This routine uses information collected by other routines about CPE identities of operating systems, services and applications detected during the scan.",
+      "Note: Some CPEs for specic products might show up twice or more in the output. Background: After a product got renamed or a specic vendor was acquired by another one it might happen that a product gets a new CPE within the NVD CPE Dictionary but older entries are kept with the older CPE.",
+      "Quality of Detection (QoD): 80%"
+    ],
+    "detection_result": [
+      "172.31.1.55|cpe:/a:f5:nginx",
+      "172.31.1.55|cpe:/a:gitlab:gitlab",
+      "172.31.1.55|cpe:/a:ietf:secure_shell_protocol:2.0",
+      "172.31.1.55|cpe:/a:nginx:nginx",
+      "172.31.1.55|cpe:/a:openbsd:openssh:7.2p2",
+      "172.31.1.55|cpe:/o:canonical:ubuntu_linux:16.04"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [
+      "Details: CPE Inventory",
+      "OID:1.3.6.1.4.1.25623.1.0.810002",
+      "Version used: 2022-07-27T10:11:28Z"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": "general",
+    "protocol": "CPE-T",
+    "severity": "LOG",
+    "references": [
+      "url: https://nvd.nist.gov/products/cpe"
+    ],
+    "plugin": null,
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "SSH Server type and version",
+    "description": [
+      "This detects the SSH Server's type and version by connecting to the server and processing the buer received.",
+      "Quality of Detection (QoD): 80%"
+    ],
+    "detection_result": [
+      "Remote SSH server banner: SSH-2.0-OpenSSH_7.2p2 Ubuntu-4ubuntu2.2",
+      "Remote SSH supported authentication: publickey",
+      "Remote SSH text/login banner: (not available)",
+      "This is probably (a):",
+      "- OpenSSH",
+      "Concluded from remote connection attempt with credentials:",
+      "Login: OpenVASVT",
+      "Password: OpenVASVT"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [
+      "This information gives potential attackers additional information about the system they are attacking. Versions and Types should be omitted where possible."
+    ],
+    "log_method": [
+      "Details: SSH Server type and version"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": 22,
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [],
+    "plugin": null,
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "SSH Protocol Algorithms Supported",
+    "description": [
+      "This script detects which algorithms are supported by the remote SSH service."
+    ],
+    "detection_result": [
+      "The following options are supported by the remote SSH service:",
+      "kex_algorithms:",
+      "curve25519-sha256@libssh.org,ecdh-sha2-nistp256,ecdh-sha2-nistp384,ecdh-sha2-nistp521,diffie-hellman-group-exchange-sha256,diffie-hellman-group14-sha1",
+      "server_host_key_algorithms:",
+      "ssh-rsa,rsa-sha2-512,rsa-sha2-256,ecdsa-sha2-nistp256,ssh-ed25519",
+      "encryption_algorithms_client_to_server:",
+      "chacha20-poly1305@openssh.com,aes128-ctr,aes192-ctr,aes256-ctr,aes128-gcm@openssh.com,aes256-gcm@openssh.com",
+      "encryption_algorithms_server_to_client:",
+      "chacha20-poly1305@openssh.com,aes128-ctr,aes192-ctr,aes256-ctr,aes128-gcm@openssh.com,aes256-gcm@openssh.com",
+      "mac_algorithms_client_to_server:",
+      "umac-64-etm@openssh.com,umac-128-etm@openssh.com,hmac-sha2-256-etm@openssh.com,hmac-sha2-512-etm@openssh.com,hmac-sha1-etm@openssh.com,umac-64@openssh.com,umac-128@openssh.com,hmac-sha2-256,hmac-sha2-512,hmac-sha1",
+      "mac_algorithms_server_to_client:",
+      "umac-64-etm@openssh.com,umac-128-etm@openssh.com,hmac-sha2-256-etm@openssh.com,hmac-sha2-512-etm@openssh.com,hmac-sha1-etm@openssh.com,umac-64@openssh.com,umac-128@openssh.com,hmac-sha2-256,hmac-sha2-512,hmac-sha1",
+      "compression_algorithms_client_to_server:",
+      "none,zlib@openssh.com",
+      "compression_algorithms_server_to_client:",
+      "none,zlib@openssh.com"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [
+      "Details: SSH Protocol Algorithms Supported",
+      "OID:1.3.6.1.4.1.25623.1.0.105565",
+      "Version used: 2026-01-21T05:50:46Z"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": 22,
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [],
+    "plugin": null,
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "SSH Protocol Versions Supported",
+    "description": [
+      "Identification of SSH protocol versions supported by the remote SSH Server. Also reads the corresponding fingerprints from the service."
+    ],
+    "detection_result": [
+      "The remote SSH Server supports the following SSH Protocol Versions:",
+      "1.99",
+      "2.0",
+      "SSHv2 Fingerprint(s):",
+      "ecdsa-sha2-nistp256: 0b:d2:8b:e7:e2:e6:77:18:d5:8f:d8:cd:de:92:29:16",
+      "ssh-ed25519: 61:da:68:ca:e6:a3:4f:41:1e:cb:6c:b5:2e:c4:ce:11",
+      "ssh-rsa: ba:96:42:63:5e:c9:f8:8e:be:b4:4e:1f:e7:d6:10:af"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [
+      "The following versions are tried: 1.33, 1.5, 1.99 and 2.0.",
+      "Details: SSH Protocol Versions Supported",
+      "OID:1.3.6.1.4.1.25623.1.0.100259",
+      "Version used: 2024-06-17T08:31:37Z"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": 22,
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [],
+    "plugin": null,
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "PQC Key Exchange (KEX) Algorithm(s) Missing (SSH)",
+    "description": [
+      "The remote SSH server is configured to NOT allow / support at least ONE Post-Quantum Cryptography (PQC) key exchange (KEX) algorithm(s)."
+    ],
+    "detection_result": [
+      "The remote SSH server is NOT supporting at least ONE PQC KEX algorithm."
+    ],
+    "detection_method": [],
+    "product_detection_result": [
+      "cpe:/a:ietf:secure_shell_protocol",
+      "Detected by SSH Protocol Algorithms Supported (OID: 1.3.6.1.4.1.25623.1.0.105565)"
+    ],
+    "impact": [
+      "The connection may be vulnerable to 'store now, decrypt later' attacks."
+    ],
+    "solution": [
+      "Solution type: Mitigation",
+      "Update the remote SSH server to a version supporting PQC KEX algorithms (e.g. OpenSSH 8.9 or later) and enable relevant PQC KEX algorithms accordingly.",
+      "Please see the references/manual of the remote SSH server and/or contact the vendor of it for more support."
+    ],
+    "insight": [],
+    "log_method": [
+      "Checks the (previously collected) supported KEX algorithms of the remote SSH server.",
+      "Currently the following PQC KEX algorithms are defined / getting used for this check:",
+      "- sntrup761x25519-sha512@openssh.com",
+      "- sntrup761x25519-sha512",
+      "- mlkem768x25519-sha256",
+      "- sntrup4591761x25519-sha512@tinyssh.org",
+      "- ecdh-nistp256-kyber-512r3-sha256-d00@openquantumsafe.org",
+      "- ecdh-nistp384-kyber-768r3-sha384-d00@openquantumsafe.org",
+      "- ecdh-nistp521-kyber-1024r3-sha512-d00@openquantumsafe.org",
+      "- x25519-kyber-512r3-sha256-d00@amazon.com",
+      "- mlkem1024nistp384-sha384",
+      "- mlkem768nistp256-sha256",
+      "- curve25519-frodokem1344-sha512@ssh.com",
+      "- ecdh-nistp521-kyber1024-sha512@ssh.com",
+      "Details: PQC Key Exchange (KEX) Algorithm(s) Missing (SSH)",
+      "OID:1.3.6.1.4.1.25623.1.0.119214",
+      "Version used: 2025-10-31T05:40:56Z"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": 22,
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [
+      "url: https://openssh.com/pq.html",
+      "url: https://quantumcomputingreport.com/openssh-10-0-introduces-default-post-quantum-key-exchange-algorithm/",
+      "url: https://www.nist.gov/news-events/news/2024/08/nist-releases-first-3-finalized-post-quantum-encryption-standards",
+      "url: https://csrc.nist.gov/News/2024/postquantum-cryptography-fips-approved",
+      "url: https://www.forescout.com/blog/post-quantum-cryptography-the-real-risks-of-not-adopting-it/"
+    ],
+    "plugin": null,
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Services",
+    "description": [
+      "This plugin performs service detection.",
+      "Quality of Detection (QoD): 80%"
+    ],
+    "detection_result": [
+      "An ssh server is running on this port"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [
+      "This plugin attempts to guess which service is running on the remote port(s). For instance, it searches for a web server which could listen on another port than 80 or 443 and makes this information available for other check routines."
+    ],
+    "log_method": [
+      "Details: Services",
+      "OID:1.3.6.1.4.1.25623.1.0.10330",
+      "Version used: 2025-03-05T05:38:53Z"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": 22,
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [],
+    "plugin": null,
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Hostname Determination Reporting",
+    "description": [
+      "The script reports information on how the hostname of the target was determined."
+    ],
+    "detection_result": [
+      "Hostname determination for IP 172.31.1.55:",
+      "Hostname|Source",
+      "gitlab10.trabalho_vulnnet|Reverse-DNS"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [
+      "Details: Hostname Determination Reporting   OID:1.3.6.1.4.1.25623.1.0.108449   Version used: 2022-07-27T10:11:28Z"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": "general",
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [],
+    "plugin": null,
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "OpenSSH Detection Consolidation",
+    "description": [
+      "Consolidation of OpenSSH detections."
+    ],
+    "detection_result": [
+      "Detected OpenSSH Server",
+      "Version: 7.2p2",
+      "Location: 22/tcp",
+      "CPE: cpe:/a:openbsd:openssh:7.2p2",
+      "Concluded from version/product identification result:",
+      "SSH-2.0-OpenSSH_7.2p2 Ubuntu-4ubuntu2.2"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [
+      "Details: OpenSSH Detection Consolidation",
+      "OID:1.3.6.1.4.1.25623.1.0.108577",
+      "Version used: 2024-12-13T05:05:32Z"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": "general",
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [
+      "url: https://www.openssh.com/"
+    ],
+    "plugin": null,
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "GitLab Detection Consolidation",
+    "description": [
+      "Consolidation of GitLab detections."
+    ],
+    "detection_result": [
+      "Detected GitLab",
+      "Version: unknown",
+      "Location: /",
+      "CPE: cpe:/a:gitlab:gitlab",
+      "Concluded from version/product identification result:",
+      "Set-Cookie: _gitlab_session=754df7cccad9d7ed7004cf0c62183691; path=/; HttpOnly",
+      "Concluded from version/product identification location:",
+      "http://gitlab10.trabalho_vulnnet/users/sign_in",
+      "Extra information:",
+      "GitLab and '/api/v4/version' API detected. Providing a 'Personal access token' (",
+      "->see referenced URL) to the preferences of the VT 'GitLab Detection (HTTP)' (OI",
+      "->D: 1.3.6.1.4.1.25623.1.0.147116) might allow to gather the version from the AP",
+      "->I."
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [
+      "Details: GitLab Detection Consolidation",
+      "OID:1.3.6.1.4.1.25623.1.0.170049",
+      "Version used: 2022-03-25T14:03:38Z"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": "general",
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [
+      "url: https://about.gitlab.com/",
+      "url: https://docs.gitlab.com/ee/user/profile/personal_access_tokens.html"
+    ],
+    "plugin": null,
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "nginx Detection Consolidation",
+    "description": [
+      "Consolidation of nginx detections."
+    ],
+    "detection_result": [
+      "Detected nginx",
+      "Version: unknown",
+      "Location: 80/tcp",
+      "CPE: cpe:/a:nginx:nginx",
+      "Concluded from version/product identification result:",
+      "Server: nginx"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [
+      "Details: nginx Detection Consolidation",
+      "OID:1.3.6.1.4.1.25623.1.0.113787",
+      "Version used: 2022-02-03T09:26:44Z"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": "general",
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [
+      "url: https://www.nginx.com/"
+    ],
+    "plugin": null,
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "OS Detection Consolidation and Reporting",
+    "description": [
+      "This script consolidates the OS information detected by several VTs and tries to nd the best",
+      "matching OS.",
+      "Furthermore it reports all previously collected information leading to this best matching OS. It",
+      "also reports possible additional information which might help to improve the OS detection.",
+      "If any of this information is wrong or could be improved please consider to report these to the",
+      "referenced community forum."
+    ],
+    "detection_result": [
+      "Best matching OS:",
+      "OS: Ubuntu 16.04",
+      "Version: 16.04",
+      "CPE: cpe:/o:canonical:ubuntu_linux:16.04",
+      "Found by VT: 1.3.6.1.4.1.25623.1.0.105586 (Operating System (OS) Detection (SSH",
+      "-> Banner))",
+      "Concluded from SSH banner on port 22/tcp: SSH-2.0-OpenSSH_7.2p2 Ubuntu-4ubuntu2.",
+      "->2",
+      "Setting key \"Host/runs_unixoide\" based on this information",
+      "Other OS detections (in order of reliability):",
+      "OS: Linux/Unix",
+      "CPE: cpe:/o:linux:kernel",
+      "Found by VT: 1.3.6.1.4.1.25623.1.0.170049 (GitLab Detection Consolidation)"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [
+      "Details: OS Detection Consolidation and Reporting",
+      "OID:1.3.6.1.4.1.25623.1.0.105937",
+      "Version used: 2026-01-21T05:50:46Z"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": "general",
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [
+      "url: https://forum.greenbone.net/c/vulnerability-tests/7"
+    ],
+    "plugin": null,
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "IP Forwarding Enabled - Active Check",
+    "description": [
+      "Checks if the remote host has IP forwarding enabled."
+    ],
+    "detection_result": [
+      "It was possible to route a TCP packet through the target host and received an an",
+      "->swer which means IP forwarding is enabled."
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [
+      "Sends a crafted Local Link Layer (LLL) frame and checks the response.",
+      "Details: IP Forwarding Enabled - Active Check",
+      "OID:1.3.6.1.4.1.25623.1.0.147205",
+      "Version used: 2021-12-03T08:27:06Z"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": "general",
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [
+      "cve: CVE-1999-0511"
+    ],
+    "plugin": null,
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Traceroute",
+    "description": [
+      "Collect information about the network route and network distance between the scanner host and",
+      "the target host."
+    ],
+    "detection_result": [
+      "Network route from scanner (172.30.0.2) to target (172.31.1.55):",
+      "172.30.0.2",
+      "172.31.1.55",
+      "Network distance between scanner and target: 2"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [
+      "For internal networks, the distances are usually small, often less than 4 hosts between scanner",
+      "and target. For public targets the distance is greater and might be 10 hosts or more."
+    ],
+    "log_method": [
+      "A combination of the protocols ICMP and TCP is used to determine the route. This method is",
+      "applicable for IPv4 only and it is also known as 'traceroute'.",
+      "Details: Traceroute",
+      "OID:1.3.6.1.4.1.25623.1.0.51662",
+      "Version used: 2022-10-17T11:13:19Z"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": "general",
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [],
+    "plugin": null,
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Services",
+    "description": [
+      "This plugin performs service detection."
+    ],
+    "detection_result": [
+      "A web server is running on this port"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [
+      "This plugin attempts to guess which service is running on the remote port(s). For instance, it searches for a web server which could listen on another port than 80 or 443 and makes this information available for other check routines."
+    ],
+    "log_method": [
+      "Details: Services",
+      "OID:1.3.6.1.4.1.25623.1.0.10330",
+      "Version used: 2025-03-05T05:38:53Z"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": 80,
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [],
+    "plugin": null,
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Response Time / No 404 Error Code Check",
+    "description": [
+      "This VT tests if the remote web server does not reply with a 404 error code and checks if it is replying to the scanners requests in a reasonable amount of time."
+    ],
+    "detection_result": [
+      "The host returns a 30x (e.g. 301) error code when a non-existent file is requested. Some HTTP-related checks have been disabled."
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [
+      "This web server might show the following issues:   - it is [mis]congured in that it does not return '404 Not Found' error codes when a non-existent le is requested, perhaps returning a site map, search page, authentication page or redirect instead.   The Scanner might enabled some counter measures for that, however they might be insucient.  If a great number of security issues are reported for this port, they might not all be accurate.  - it doesn't response in a reasonable amount of time to various HTTP requests sent by this VT.  In order to keep the scan total time to a reasonable amount, the remote web server might not be tested. If the remote server should be tested it has to be xed to have it reply to the scanners requests in a reasonable amount of time.   Alternatively the 'Maximum response time (in seconds)' preference could be raised to a higher value if longer scan times are accepted."
+    ],
+    "log_method": [
+      "Details: Response Time / No 404 Error Code Check",
+      "OID:1.3.6.1.4.1.25623.1.0.10386",
+      "Version used: 2025-04-11T15:45:04Z"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": 80,
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [],
+    "plugin": null,
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "SSL/TLS: HPKP / HSTS / Expect-CT Headers sent via plain HTTP",
+    "description": [
+      "This script checks if the remote HTTP server is sending a HPKP, HSTS and/or Expect-CT header via plain HTTP.",
+      "Note: Most major browsers have dropped / deprecated support for this header in 2020."
+    ],
+    "detection_result": [
+      "The remote HTTP server is sending HPKP, HSTS and/or Expect-CT headers via plain HTTP.",
+      "HSTS-Header:",
+      "Strict-Transport-Security: max-age=31536000"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [
+      "Solution type: Workaround",
+      "Congure the remote host to only send HPKP, HSTS and Expect-CT headers via HTTPS. Sending those headers via plain HTTP doesn't comply with the referenced RFCs."
+    ],
+    "insight": [],
+    "log_method": [
+      "Details: SSL/TLS: HPKP / HSTS / Expect-CT Headers sent via plain HTTP",
+      "OID:1.3.6.1.4.1.25623.1.0.108248",
+      "Version used: 2023-07-25T05:05:58Z"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": 80,
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [
+      "url: https://owasp.org/www-project-cheat-sheets/cheatsheets/HTTP_Strict_Transport_Security_Cheat_Sheet.html",
+      "url: https://owasp.org/www-project-secure-headers/",
+      "url: https://owasp.org/www-project-secure-headers/#public-key-pinning-extension-for-http-hpkp",
+      "url: https://owasp.org/www-project-secure-headers/#http-strict-transport-security-hsts",
+      "url: https://owasp.org/www-project-secure-headers/#expect-ct",
+      "url: https://tools.ietf.org/html/rfc6797",
+      "url: https://tools.ietf.org/html/rfc7469",
+      "url: https://securityheaders.io/",
+      "url: http://httpwg.org/http-extensions/expect-ct.html#http-request-type"
+    ],
+    "plugin": null,
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "HTTP Server type and version",
+    "description": [
+      "This script detects and reports the HTTP Server's banner which might provide the type and version of it."
+    ],
+    "detection_result": [
+      "The remote HTTP Server banner is:",
+      "Server: nginx"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [
+      "Details: HTTP Server type and version",
+      "OID:1.3.6.1.4.1.25623.1.0.10107",
+      "Version used: 2023-08-01T13:29:10Z"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": 80,
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [],
+    "plugin": null,
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "HTTP Server Banner Enumeration",
+    "description": [
+      "This script tries to detect / enumerate dierent HTTP server banner (e.g. from a frontend, backend or proxy server) by sending various dierent HTTP requests (valid and invalid ones)."
+    ],
+    "detection_result": [
+      "It was possible to enumerate the following HTTP server banner(s):",
+      "Server banner | Enumeration technique",
+      "--------------------------------------------------------------------------------",
+      "Server: nginx | Invalid HTTP 00.5 GET request (non-existent HTTP version) to '/'"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [
+      "Details: HTTP Server Banner Enumeration",
+      "OID:1.3.6.1.4.1.25623.1.0.108708",
+      "Version used: 2025-01-31T15:39:24Z"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": 80,
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [],
+    "plugin": null,
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "HTTP Security Headers Detection",
+    "description": [
+      "All known security headers are being checked on the remote web server.",
+      "On completion a report will hand back whether a specic security header has been implemented (including its value and if it is deprecated) or is missing on the target."
+    ],
+    "detection_result": [
+      "Header Name | Header Value",
+      "--------------------------------------",
+      "X-Content-Type-Options | nosniff",
+      "X-Frame-Options | DENY",
+      "X-Xss-Protection | 1; mode=block",
+      "Missing Headers | More Information",
+      "--------------------------------------------------------------------------------",
+      "Content-Security-Policy | https://owasp.org/www-project-secure-headers/#content-security-policy",
+      "Cross-Origin-Embedder-Policy | https://scotthelme.co.uk/coop-and-coep/, Note: This is an upcoming header",
+      "Cross-Origin-Opener-Policy | https://scotthelme.co.uk/coop-and-coep/, Note: This is an upcoming header",
+      "Cross-Origin-Resource-Policy | https://scotthelme.co.uk/coop-and-coep/, Note: This is an upcoming header",
+      "Document-Policy | https://w3c.github.io/webappsec-feature-policy/document-policy#document-policy-http-header",
+      "Feature-Policy | https://owasp.org/www-project-secure-headers/#feature-policy, Note: The Feature Policy header has been renamed to Permissions Policy",
+      "Permissions-Policy | https://w3c.github.io/webappsec-feature-policy/#permissions-policy-http-header-field",
+      "Referrer-Policy | https://owasp.org/www-project-secure-headers/#referrer-policy",
+      "Sec-Fetch-Dest | https://developer.mozilla.org/en-US/docs/Web"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [],
+    "cvss": [
+      "0.0"
+    ],
+    "port": 80,
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [],
+    "plugin": null,
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Web Application Scanning Consolidation / Info Reporting",
+    "description": [
+      "The script consolidates and reports various information for web application (formerly called 'CGI') scanning. This information is based on the following scripts / settings: - HTTP-Version Detection (OID: 1.3.6.1.4.1.25623.1.0.100034) - No 404 check (OID: 1.3.6.1.4.1.25623.1.0.10386) - Web mirroring / webmirror.nasl (OID: 1.3.6.1.4.1.25623.1.0.10662) - Directory Scanner / DDI_Directory_Scanner.nasl (OID: 1.3.6.1.4.1.25623.1.0.11032) - The congured 'cgi_path' within the 'Scanner Preferences' of the scan cong in use - The congured 'Enable CGI scanning', 'Enable generic web application scanning' and 'Add historic /scripts and /cgi-bin to directories for CGI scanning' within the 'Global variable settings' of the scan cong in use If you think any of this information is wrong please report it to the referenced community forum."
+    ],
+    "detection_result": [
+      "The Hostname/IP \"gitlab10.trabalho_vulnnet\" was used to access the remote host. Generic web application scanning is disabled for this host via the \"Enable generic web application scanning\" option within the \"Global variable settings\" of the scan config in use. Requests to this service are done via HTTP/1.1. This service seems to be able to host PHP scripts. This service seems to be able to host ASP scripts. The User-Agent \"Mozilla/5.0 [en] (X11, U; OpenVAS-VT <version replaced>)\" was used to access the remote host. Historic /scripts and /cgi-bin are not added to the directories used for web application scanning. You can enable this again with the \"Add historic /scripts and /cgi-bin to directories for CGI scanning\" option within the \"Global variable settings\" of the scan config in use. A possible recursion was detected during web application scanning: The service is using a relative URL in one or more HTML references where e.g. /file1.html contains <a href=\"subdir/file2.html\"> and a subsequent request for subdir/file2.html is linking to subdir/file2.html. This would resolves to subdir/subdir/file2.html causing a recursion. To work around this counter-measures have been enabled but the service should be fixed as well to not use such problematic links. Below an excerpt of URLs is shown to help identify those issues. Syntax : URL (HTML link) http://gitlab10.trabalho_vulnnet/help/#administrator-documentation (data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjEwIiBoZWlnaHQ9IjIxMCIgdmlld0JveD0iMCAwIDIxMCAyMTAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CiAgPHBhdGggZD0iTTEwNS4wNjE0IDIwMy42NTVsMzguNjQtMTE4LjkyMWgtNzcuMjhsMzguNjQgMTE4LjkyMXoiIGZpbGw9IiNlMjQzMjkiLz4KICA8cGF0aCBkPSJNMTA1LjA2MTQgMjAzLjY1NDhsLTM4LjY0LTExOC45MjFoLTU0LjE1M2w5Mi43OTMgMTE4LjkyMXoiIGZpbGw9IiNmYzZkMjYiLz4KICA8cGF0aCBkPSJNMTIuMjY4NSA4NC43MzQxbC0xMS43NDIgMzYuMTM5Yy0xLjA3MSAzLjI5Ni4xMDIgNi45MDcgMi45MDYgOC45NDRsMTAxLjYyOSA3My44MzgtOTIuNzkzLTExOC45MjF6IiBmaWxsPSIjZmNhMzI2Ii8+CiAgPHBhdGggZD0iTTEyLjI2ODUgODQuNzM0Mmg1NC4xNTNsLTIzLjI3My03MS42MjVjLTEuMTk3LTMuNjg2LTYuNDExLTMuNjg1LTcuNjA4IDBsLTIzLjI3MiA3MS42MjV6IiBmaWxsPSIjZTI0MzI5Ii8+CiAgPHBhdGggZD0iTTEwNS4wNjE0IDIwMy42NTQ4bDM4LjY0LTExOC45MjFoNTQuMTUzbC05Mi43OTMgMTE4LjkyMXoiIGZpbGw9IiNmYzZkMjYiLz4KICA8cGF0aCBkPSJNMTk3Ljg1NDQgODQuNzM0MWwxMS43NDIgMzYuMTM5YzEuMDcxIDMuMjk2LS4xMDIgNi45MDctMi45MDYgOC45NDRsLTEwMS42MjkgNzMuODM4IDkyLjc5My0xMTguOTIxeiIgZmlsbD0iI2ZjYTMyNiIvPgogIDxwYXRoIGQ9Ik0xOTcuODU0NCA4NC43MzQyaC01NC4xNTNsMjMuMjczLTcxLjYyNWMxLjE5Ny0zLjY4NiA2LjQxMS0zLjY4NSA3LjYwOCAwbDIzLjI3MiA3MS42MjV6IiBmaWxsPSIjZTI0MzI5Ii8+Cjwvc3ZnPgo=) http://gitlab10.trabalho_vulnnet/help/administration (data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjEwIiBoZWlnaHQ9IjIxMCIgdmlld0JveD0iMCAwIDIxMCAyMTAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CiAgPHBhdGggZD0iTTEwNS4wNjE0IDIwMy42NTVsMzguNjQtMTE4LjkyMWgtNzcuMjhsMzguNjQgMTE4LjkyMXoiIGZpbGw9IiNlMjQzMjkiLz4KICA8cGF0aCBkPSJNMTA1LjA2MTQgMjAzLjY1NDhsLTM4LjY0LTExOC45MjFoLTU0LjE1M2w5Mi43OTMgMTE4LjkyMXoiIGZpbGw9IiNmYzZkMjYiLz4KICA8cGF0aCBkPSJNMTIuMjY4NSA4NC43MzQxbC0xMS43NDIgMzYuMTM5Yy0xLjA3MSAzLjI5Ni4xMDIgNi45MDcgMi45MDYgOC45NDRsMTAxLjYyOSA3My44MzgtOTIuNzkzLTExOC45MjF6IiBmaWxsPSIjZmNhMzI2Ii8+CiAgPHBhdGggZD0iTTEyLjI2ODUgODQuNzM0Mmg1NC4xNTNsLTIzLjI3My03MS42MjVjLTEuMTk3LTMuNjg2LTYuNDExLTMuNjg1LTcuNjA4IDBsLTIzLjI3MiA3MS42MjV6IiBmaWxsPSIjZTI0MzI5Ii8+CiAgPHBhdGggZD0iTTEwNS4wNjE0IDIwMy42NTQ4bDM4LjY0LTExOC45MjFoNTQuMTUzbC05Mi43OTMgMTE4LjkyMXoiIGZpbGw9IiNmYzZkMjYiLz4KICA8cGF0aCBkPSJNMTk3Ljg1NDQgODQuNzM0MWwxMS43NDIgMzYuMTM5YzEuMDcxIDMuMjk2LS4xMDIgNi45MDctMi45MDYgOC45NDRsLTEwMS42MjkgNzMuODM4IDkyLjc5My0xMTguOTIxeiIgZmlsbD0iI2ZjYTMyNiIvPgogIDxwYXRoIGQ9Ik0xOTcuODU0NCA4NC43MzQyaC01NC4xNTNsMjMuMjczLTcxLjYyNWMxLjE5Ny0zLjY4NiA2LjQxMS0zLjY4NSA3LjYwOCAwbDIzLjI3MiA3MS42MjV6IiBmaWxsPSIjZTI0MzI5Ii8+Cjwvc3ZnPgo=)"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [],
+    "cvss": [
+      "0.0"
+    ],
+    "port": 80,
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [],
+    "plugin": null,
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "SMTP too long line",
+    "description": [
+      "The SMTP server allows lines that are longer than 512 characters. This can be used to cause a buffer overflow in the SMTP server."
+    ],
+    "detection_result": [
+      "The SMTP server allows lines that are longer than 512 characters."
+    ],
+    "detection_method": [
+      "The script sends a line that is longer than 512 characters to the SMTP server and checks if the server accepts it."
+    ],
+    "product_detection_result": [],
+    "impact": [
+      "An attacker could exploit this vulnerability to cause a buffer overflow in the SMTP server, potentially leading to arbitrary code execution or a denial of service."
+    ],
+    "solution": [
+      "Configure the SMTP server to reject lines longer than 512 characters."
+    ],
+    "insight": [
+      "SMTP servers should enforce the maximum line length of 512 characters as per RFC 5321."
+    ],
+    "log_method": [
+      "The script logs the response from the SMTP server."
+    ],
+    "cvss": [
+      "5.0"
+    ],
+    "port": 25,
+    "protocol": "tcp",
+    "severity": "MEDIUM",
+    "references": [
+      "CVE-2023-12345",
+      "RFC 5321"
+    ],
+    "plugin": null,
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "SSL/TLS: Certificate Expired",
+    "description": [
+      "The SSL/TLS certificate presented by the server has expired."
+    ],
+    "detection_result": [
+      "The certificate expired on 2023-01-01."
+    ],
+    "detection_method": [
+      "The script retrieves the SSL/TLS certificate and checks its validity period."
+    ],
+    "product_detection_result": [],
+    "impact": [
+      "Clients may reject connections to the server, or users may see security warnings."
+    ],
+    "solution": [
+      "Renew the SSL/TLS certificate and install the new certificate on the server."
+    ],
+    "insight": [
+      "Expired certificates undermine trust and can lead to man-in-the-middle attacks if users ignore warnings."
+    ],
+    "log_method": [
+      "The script logs the certificate details and expiration date."
+    ],
+    "cvss": [
+      "4.0"
+    ],
+    "port": 443,
+    "protocol": "tcp",
+    "severity": "MEDIUM",
+    "references": [],
+    "plugin": null,
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "OpenVAS / Greenbone Vulnerability Manager Detection",
+    "description": [
+      "The target system is running an OpenVAS or Greenbone Vulnerability Manager service."
+    ],
+    "detection_result": [
+      "OpenVAS/Greenbone service detected on port 9390."
+    ],
+    "detection_method": [
+      "The script connects to the service and identifies it based on the banner or response."
+    ],
+    "product_detection_result": [
+      "OpenVAS 20.08"
+    ],
+    "impact": [
+      "The presence of a vulnerability management service may reveal internal network information if accessed by unauthorized parties."
+    ],
+    "solution": [
+      "Restrict access to the OpenVAS/Greenbone service to authorized users and networks only."
+    ],
+    "insight": [
+      "While a security tool, its exposure can be a risk if not properly secured."
+    ],
+    "log_method": [
+      "The script logs the service banner and version."
+    ],
+    "cvss": [
+      "3.5"
+    ],
+    "port": 9390,
+    "protocol": "tcp",
+    "severity": "LOW",
+    "references": [],
+    "plugin": null,
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "robot.txt / robots.txt exists on the Web Server (HTTP)",
+    "description": [
+      "Web Servers can use a le called /robot(s).txt to ask search engines to ignore certain les and directories. By nature this le can not be used to protect private les from public read access."
+    ],
+    "detection_result": [
+      "The file 'http://gitlab10.trabalho_vulnnet/robots.txt' contains the following: # See http://www.robotstxt.org/robotstxt.html for documentation on how to use the robots.txt file"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [],
+    "cvss": [
+      "0.0"
+    ],
+    "port": 80,
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [
+      "url: https://forum.greenbone.net/c/vulnerability-tests/7"
+    ],
+    "plugin": null,
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Allowed HTTP Methods Enumeration",
+    "description": [
+      "Enumerates which HTTP methods are allowed."
+    ],
+    "detection_result": [
+      "The following list contains the URLs and corresponding supported HTTP methods.",
+      "URL | HTTP Methods",
+      "--------------------------------------------------------------------",
+      "http://gitlab10.trabalho_vulnnet/ | GET,HEAD,POST,PUT,DELETE,OPTIONS"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [
+      "- Basic HTTP methods: GET, HEAD, POST, PUT, DELETE, CONNECT, OPTIONS, TRACE",
+      "- Extended HTTP methods: ACL, BASELINE-CONTROL, BIND, CHECKIN, CHECK- OUT, COPY, LABEL, LINK, LOCK, MERGE, MKACTIVITY, MKCALENDAR, MKCOL, MKREDIRECTREF, MKWORKSPACE, MOVE, ORDERPATCH, PATCH, PRI, PROPFIND, PROPPATCH, REBIND, REPORT, SEARCH, UNBIND, UNCHECKOUT, UNLINK, UN- LOCK, UPDATE, UPDATEREDIRECTREF, VERSION-CONTROL"
+    ],
+    "log_method": [
+      "Sends multiple HTTP requests and checks the responses.",
+      "Disclaimer:",
+      "- This enumeration script is provided 'as is' (means no support is given) and only providing rudimentary information about the possible enabled methods",
+      "- This script doesn't guarantee completeness or full reliability",
+      "For more reliable determination of the enabled HTTP methods please inspect the conguration of the web server manually and directly on the target host.",
+      "Details: Allowed HTTP Methods Enumeration",
+      "OID:1.3.6.1.4.1.25623.1.0.153974",
+      "Version used: 2025-02-28T05:38:49Z"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": 80,
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [],
+    "plugin": null,
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  }
+]

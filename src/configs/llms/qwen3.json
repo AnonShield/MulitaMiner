@@ -4,6 +4,6 @@
   "model": "qwen/qwen3-32b",
   "temperature": 0.0,
   "max_tokens": 5000,
-  "max_chunk_size": 1800,
-  "reserve_for_response": 2500
+  "max_chunk_size": 400,
+  "reserve_for_response": 3000
 }

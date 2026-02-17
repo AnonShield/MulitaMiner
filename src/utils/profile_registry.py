@@ -91,6 +91,14 @@ def detect_profile_type(profile_config: Dict[str, Any]) -> str:
     # Default
     return 'default'
 
+# Função utilitária para checar se o perfil é CAIS
+def is_cais_profile(profile_config: Dict[str, Any]) -> bool:
+    """Check if profile is CAIS-based."""
+    if not profile_config:
+        return False
+    prompt_template = profile_config.get('prompt_template', '').lower()
+    return 'cais' in prompt_template
+
 
 def get_profile_validator(profile_config: Dict[str, Any]) -> Callable:
     """
@@ -104,7 +112,7 @@ def get_profile_validator(profile_config: Dict[str, Any]) -> Callable:
         return validator
     
     # Return default validator
-    from utils.utils import validate_and_normalize_vulnerability
+    from .llm_utils import validate_and_normalize_vulnerability
     return validate_and_normalize_vulnerability
 
 
@@ -118,8 +126,8 @@ def validate_vulnerability(vuln: Dict[str, Any], profile_config: Dict[str, Any])
 
 def register_default_validators():
     """Register validators for built-in profile types."""
-    from utils.utils import validate_and_normalize_vulnerability
-    from utils.cais_validator import validate_cais_vulnerability
+    from .llm_utils import validate_and_normalize_vulnerability
+    from .cais_validator import validate_cais_vulnerability
     
     # Default validator (system fields: Name, description, etc)
     register_validator('default', validate_and_normalize_vulnerability)

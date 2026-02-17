@@ -1,0 +1,63 @@
+# LOG DE DEDUPLICAÇÃO DE VULNERABILIDADES
+Este arquivo lista todas as vulnerabilidades consideradas duplicatas e agrupadas durante o processo.
+Cada grupo é identificado por uma chave composta (ex: nome, porta, protocolo).
+Apenas a vulnerabilidade mais completa e com descrição válida foi mantida em cada grupo.
+
+Total de grupos de duplicatas: 7
+Total de vulnerabilidades agrupadas (removidas): 8
+
+Grupo 1: Chave = ('python multiple vulnerabilities (aug 2024) - linux', '8000', 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Python Multiple Vulnerabilities (Aug 2024) - Linux
+       Porta: 8000 | Protocolo: tcp | Severidade: Critical
+       Descrição: This script detects multiple vulnerabilities in Python versions 3.6.0 to 3.12.6, 3.11.0 to 3.11.10, 3.10.0 to 3.10.15, 3.9.0 to 3.9.20, and 3.8.0 to 3.8.20. The vulnerabilities include: - CVE-2024-623...
+
+
+Grupo 2: Chave = ('python < 3.6.13, 3.7.x < 3.7.10, 3.8.x < 3.8.7, 3.9.x < 3.9.1 python issue (bpo-41944) - linux', '8000', 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Python < 3.6.13, 3.7.x < 3.7.10, 3.8.x < 3.8.7, 3.9.x < 3.9.1 Python Issue (bpo-41944) - Linux
+       Porta: 8000 | Protocolo: tcp | Severidade: CRITICAL
+
+
+Grupo 3: Chave = ('python < 3.6.13, 3.7.x < 3.7.10, 3.8.x < 3.8.8, 3.9.x < 3.9.2 python issue (bpo-42938) - linux', '8000', 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Python < 3.6.13, 3.7.x < 3.7.10, 3.8.x < 3.8.8, 3.9.x < 3.9.2 Python Issue (bpo-42938) - Linux
+       Porta: 8000 | Protocolo: tcp | Severidade: CRITICAL
+       Descrição: Python is prone to a buer overow vulnerability in 'PyCArg_repr'.
+
+
+Grupo 4: Chave = ('python dos vulnerability (dec 2025) - linux', '8000', 'tcp')
+  Total de duplicatas neste grupo: 2
+    1. Nome: Python DoS Vulnerability (Dec 2025) - Linux
+       Porta: 8000 | Protocolo: tcp | Severidade: MEDIUM
+       Descrição: Python is prone to a denial of service (DoS) vulnerability.
+
+    2. Nome: Python DoS Vulnerability (Dec 2025) - Linux
+       Porta: 8000 | Protocolo: tcp | Severidade: MEDIUM
+       Descrição: Python is prone to a denial of service (DoS) vulnerability.
+
+
+Grupo 5: Chave = ('python < 3.2.6, 3.3.x < 3.3.3 wildcard dos vulnerability (bpo-17980) - linux', '8000', 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Python < 3.2.6, 3.3.x < 3.3.3 Wildcard DoS Vulnerability (bpo-17980) - Linux
+       Porta: 8000 | Protocolo: tcp | Severidade: MEDIUM
+       Descrição: Python's ssl.match_hostname() trips over crafted wildcard names.
+
+
+Grupo 6: Chave = ('python dos vulnerability (jun 2025) - linux', '8000', 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Python DoS Vulnerability (Jun 2025) - Linux
+       Porta: 8000 | Protocolo: tcp | Severidade: MEDIUM
+       Descrição: Python is prone to a denial of service (DoS) vulnerability. Quality of Detection (QoD): 30%
+
+
+Grupo 7: Chave = ('python ssrf vulnerability (nov 2024) - linux', '8000', 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Python SSRF Vulnerability (Nov 2024) - Linux
+       Porta: 8000 | Protocolo: tcp | Severidade: LOW
+       Descrição: Python is prone to a server-side request forgery (SSRF) vulnerability.
+
+
+Resumo final:
+Total de grupos de duplicatas: 7
+Total de vulnerabilidades agrupadas (removidas): 8

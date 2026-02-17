@@ -86,14 +86,12 @@ class OpenVASStrategy(ScannerStrategy):
             if len(group) == 1:
                 consolidated.extend(group)
             else:
-                # Mesclar múltiplas ocorrências da mesma vulnerabilidade
                 base_vuln = group[0].copy()
-                
-                # Mesclar arrays
                 array_fields = ['description', 'detection_result', 'detection_method', 
                                'product_detection_result', 'impact', 'solution', 
                                'insight', 'log_method', 'references', 'cvss']
-                
+                scalar_fields = ['port', 'protocol']
+                # Mesclar arrays sem repetição
                 for field in array_fields:
                     all_values = []
                     for vuln in group:
@@ -102,7 +100,6 @@ class OpenVASStrategy(ScannerStrategy):
                             all_values.extend(values)
                         else:
                             all_values.append(values)
-                    
                     # Remover duplicatas mantendo ordem
                     seen = set()
                     unique_values = []
@@ -111,9 +108,19 @@ class OpenVASStrategy(ScannerStrategy):
                         if v_str not in seen:
                             unique_values.append(v)
                             seen.add(v_str)
-                    
                     base_vuln[field] = unique_values
-                
+                # Mesclar campos escalares: se todos iguais, manter um só; se diferentes, escolher o mais frequente (ou o primeiro não nulo)
+                for field in scalar_fields:
+                    values = [v.get(field) for v in group if v.get(field) not in [None, '', 0]]
+                    if values:
+                        # Se todos iguais, manter um só
+                        if all(val == values[0] for val in values):
+                            base_vuln[field] = values[0]
+                        else:
+                            # Escolher o mais frequente
+                            from collections import Counter
+                            most_common = Counter(values).most_common(1)[0][0]
+                            base_vuln[field] = most_common
                 consolidated.append(base_vuln)
         
         return consolidated
@@ -579,42 +586,133 @@ def fuzzy_match(a, b, threshold=0.98):
     from difflib import SequenceMatcher
     return SequenceMatcher(None, a, b).ratio() >= threshold
 
+def get_scanner_type(vulnerabilities: list) -> str:
+    """
+    Detecta o tipo de scanner baseado no campo 'source' das vulnerabilidades.
+    
+    Returns:
+        'openvas', 'tenable', ou 'unknown'
+    """
+    if not vulnerabilities:
+        return 'unknown'
+    
+    for vuln in vulnerabilities:
+        source = str(vuln.get('source', '')).upper()
+        if source == 'OPENVAS':
+            return 'openvas'
+        elif source in ('TENABLEWAS', 'TENABLE'):
+            return 'tenable'
+    
+    return 'unknown'
+
 def remove_duplicates_by_key(vulnerabilities: list, log_path=None) -> list:
     """
-    Deduplicação robusta:
-    - Casos com port/protocol: chave = (Name, port, protocol, severity)
-    - Casos sem port/protocol: chave expandida (Name, host, description[:200], severity, references)
-    - Matching fuzzy para nomes e descrições similares
+    Deduplicação robusta (--allow-duplicates):
+    - OpenVAS: chave = (Name, port, protocol) - SEM severity (mesma vuln/porta = mesma severidade)
+    - Tenable: chave = (Name, severity)
+    - EXCEÇÃO para "Services": só mescla se 100% idêntico (todos os campos)
     - Log detalhado se log_path for fornecido
     """
+    import json
     seen = []
     result = []
     duplicates_log = []
-    key_to_vulns = {}
+    scanner_type = get_scanner_type(vulnerabilities)
+    def has_valid_description(vuln):
+        desc = vuln.get("description")
+        if not desc:
+            return False
+        if isinstance(desc, list):
+            return any(str(d).strip() for d in desc)
+        return bool(str(desc).strip())
+
+    key_to_vuln = {}
+    key_to_all = {}
     for vuln in vulnerabilities:
-        name = str(vuln.get('Name', '')).strip().lower()
-        # Se for Services, exige igualdade total
-        if name == 'services':
-            is_duplicate = False
-            for v in result:
-                if vuln == v:
-                    is_duplicate = True
-                    break
-            if not is_duplicate:
-                result.append(vuln)
-        else:
-            key = (name, str(vuln.get('port', '')).strip(), str(vuln.get('protocol', '')).strip().lower(), str(vuln.get('severity', '')).strip().lower())
-            if key not in seen:
-                seen.append(key)
-                result.append(vuln)
+        name = str(vuln.get('Name', '')).strip().lower()  # lowercase como no código original
+        if scanner_type == 'openvas':
+            if name == 'services':
+                vuln_serialized = json.dumps(vuln, sort_keys=True, default=str)
+                key = ('services_exact', hash(vuln_serialized))
             else:
-                duplicates_log.append((key, vuln))
-    # Gera log se solicitado
+                key = (name, str(vuln.get('port', '')).strip(), str(vuln.get('protocol', '')).strip().lower())
+        elif scanner_type == 'tenable':
+            severity = str(vuln.get('severity', '')).strip().lower()
+            key = (name, severity)
+        else:
+            severity = str(vuln.get('severity', '')).strip().lower()
+            key = (name, severity)
+        if key not in key_to_all:
+            key_to_all[key] = []
+        key_to_all[key].append(vuln)
+
+    def count_filled_fields(vuln):
+        # Conta campos não nulos, não vazios, não lista vazia
+        return sum(1 for k, v in vuln.items() if v not in [None, '', [], {}])
+
+    for key, vulns in key_to_all.items():
+        with_desc = [v for v in vulns if has_valid_description(v)]
+        if with_desc:
+            # Se múltiplas com descrição, prioriza a mais preenchida
+            chosen = max(with_desc, key=count_filled_fields)
+        else:
+            chosen = max(vulns, key=count_filled_fields)
+        result.append(chosen)
+        for v in vulns:
+            if v is not chosen:
+                duplicates_log.append((key, v))
     if log_path and duplicates_log:
         with open(log_path, 'w', encoding='utf-8') as f:
-            f.write("# Duplicatas agrupadas por chave composta (fuzzy):\n")
+            f.write(
+                "# LOG DE DEDUPLICAÇÃO DE VULNERABILIDADES\n"
+                "Este arquivo lista todas as vulnerabilidades consideradas duplicatas e agrupadas durante o processo.\n"
+                "Cada grupo é identificado por uma chave composta (ex: nome, porta, protocolo).\n"
+                "Apenas a vulnerabilidade mais completa e com descrição válida foi mantida em cada grupo.\n\n"
+            )
+            total_grupos = len(set([str(key) for key, _ in duplicates_log]))
+            total_dups = len(duplicates_log)
+            f.write(f"Total de grupos de duplicatas: {total_grupos}\n")
+            f.write(f"Total de vulnerabilidades agrupadas (removidas): {total_dups}\n\n")
+            from collections import defaultdict
+            grupos = defaultdict(list)
             for key, vuln in duplicates_log:
-                f.write(f"Chave: {key}\n")
-                f.write(f"  - {vuln.get('Name', '')} | port: {vuln.get('port', '')} | protocol: {vuln.get('protocol', '')} | severity: {vuln.get('severity', '')} | host: {vuln.get('host', '')}\n")
+                grupos[str(key)].append(vuln)
+            for idx, (key, vulns) in enumerate(grupos.items(), 1):
+                f.write(f"Grupo {idx}: Chave = {key}\n")
+                f.write(f"  Total de duplicatas neste grupo: {len(vulns)}\n")
+                for i, vuln in enumerate(vulns, 1):
+                    f.write(f"    {i}. Nome: {vuln.get('Name', '')}\n")
+                    f.write(f"       Porta: {vuln.get('port', '')} | Protocolo: {vuln.get('protocol', '')} | Severidade: {vuln.get('severity', '')}\n")
+                    desc = vuln.get('description', '')
+                    if desc:
+                        if isinstance(desc, list):
+                            desc = ' '.join([str(d) for d in desc if d])
+                        desc = str(desc).strip().replace('\n', ' ')
+                        f.write(f"       Descrição: {desc[:200]}{'...' if len(desc)>200 else ''}\n")
+                    f.write("\n")
                 f.write("\n")
+            f.write("Resumo final:\n")
+            f.write(f"Total de grupos de duplicatas: {total_grupos}\n")
+            f.write(f"Total de vulnerabilidades agrupadas (removidas): {total_dups}\n")
     return result
+def merge_duplicates_by_name(vulnerabilities: list) -> list:
+    """
+    Mescla vulnerabilidades por nome (case-insensitive), consolidando campos/contexto.
+    """
+    merged = {}
+    for vuln in vulnerabilities:
+        name = str(vuln.get('Name', '')).strip().lower()
+        if name not in merged:
+            merged[name] = vuln.copy()
+            # Mesclar campos de lista
+            for field in ['identification', 'http_info', 'references', 'description', 'detection_result', 'detection_method', 'product_detection_result', 'impact', 'solution', 'insight', 'log_method', 'cvss']:
+                if field in merged[name] and isinstance(merged[name][field], list):
+                    merged[name][field] = list(merged[name][field])
+        else:
+            # Mesclar campos de lista
+            for field in ['identification', 'http_info', 'references', 'description', 'detection_result', 'detection_method', 'product_detection_result', 'impact', 'solution', 'insight', 'log_method', 'cvss']:
+                if field in vuln and isinstance(vuln[field], list):
+                    for item in vuln[field]:
+                        if item not in merged[name][field]:
+                            merged[name][field].append(item)
+    return list(merged.values())

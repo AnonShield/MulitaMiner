@@ -1,0 +1,1135 @@
+[
+  {
+    "Name": "SMTP too long line",
+    "description": [
+      "Some antivirus scanners dies when they process an email with a too long string without line breaks. Such a message was sent. If there is an antivirus on your MTA, it might have crashed. Please check its status right now, as it is not possible to do it remotely."
+    ],
+    "detection_result": [
+      "Vulnerability was detected according to the Vulnerability Detection Method."
+    ],
+    "detection_method": [
+      "Details: SMTP too long line",
+      "OID:1.3.6.1.4.1.25623.1.0.11270",
+      "Version used: $Revision: 13470 $"
+    ],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [
+      "Solution type: VendorFix",
+      "Contact the vendor of the antivirus scanner to get an update."
+    ],
+    "insight": [],
+    "log_method": [],
+    "cvss": [
+      "7.0"
+    ],
+    "port": 25,
+    "protocol": "tcp",
+    "severity": "High",
+    "references": [],
+    "plugin": null,
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "OpenVAS / Greenbone Vulnerability Manager Default Credentials",
+    "description": [
+      "The remote OpenVAS / Greenbone Vulnerability Manager is installed/congured in a way that it has account(s) with default passwords enabled."
+    ],
+    "detection_result": [
+      "It was possible to login using the following credentials (username:password:role):",
+      "admin:admin:Admin"
+    ],
+    "detection_method": [
+      "Try to login with default credentials via the OMP/GMP protocol."
+    ],
+    "product_detection_result": [
+      "cpe:/a:openvas:openvas_manager:7.0",
+      "Detected by OpenVAS / Greenbone Vulnerability Manager Detection (OID: 1.3.6.1.4.1.25623.1.0.103825)"
+    ],
+    "impact": [
+      "This issue may be exploited by a remote attacker to gain access to sensitive information or modify system conguration."
+    ],
+    "solution": [
+      "Change the password of the mentioned account(s)."
+    ],
+    "insight": [
+      "It was possible to login with default credentials: admin/admin, sadmin/changeme, ob- server/observer or admin/openvas."
+    ],
+    "log_method": [],
+    "cvss": [
+      "10.0"
+    ],
+    "port": 9390,
+    "protocol": "tcp",
+    "severity": "HIGH",
+    "references": [],
+    "plugin": null,
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "SSL/TLS: Certicate Expired",
+    "description": [
+      "The remote server's SSL/TLS certicate has already expired."
+    ],
+    "detection_result": [
+      "The certificate of the remote service expired on 2020-08-20 19:18:24.",
+      "Certificate details: subject ...: C=DE,L=Osnabrueck,O=OpenVAS Users,CN=218ffb30ff7a",
+      "subject alternative names (SAN): None",
+      "issued by .: C=DE,L=Osnabrueck,O=OpenVAS Users,OU=Certificate Authority for 218ffb30ff7a",
+      "serial ....: 5B7C65801F8422EBBDAD2299",
+      "valid from : 2018-08-21 19:18:24 UTC",
+      "valid until: 2020-08-20 19:18:24 UTC",
+      "fingerprint (SHA-1): 6B34D170BC2D0EAE4DB2D6122E2DA7E94F0ADF6F",
+      "fingerprint (SHA-256): A672ACF69BB0944271599E210BF04BF20736E3CCB5862FAF3EFAC987241BC4B9"
+    ],
+    "detection_method": [
+      "Details: SSL/TLS: Certificate Expired",
+      "OID:1.3.6.1.4.1.25623.1.0.103955",
+      "Version used: $Revision: 11103 $"
+    ],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [
+      "Solution type: Mitigation",
+      "Replace the SSL/TLS certicate by a new one."
+    ],
+    "insight": [
+      "This script checks expiry dates of certicates associated with SSL/TLS-enabled services on the target and reports whether any have already expired."
+    ],
+    "log_method": [],
+    "cvss": [
+      "5.0"
+    ],
+    "port": 443,
+    "protocol": "tcp",
+    "severity": "MEDIUM",
+    "references": [],
+    "plugin": null,
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Check if Mailserver answer to VRFY and EXPN requests",
+    "description": [
+      "The Mailserver on this host answers to VRFY and/or EXPN requests."
+    ],
+    "detection_result": [
+      "'VRFY root' produces the following answer: 252 2.0.0 root"
+    ],
+    "detection_method": [
+      "Details: Check if Mailserver answer to VRFY and EXPN requests",
+      "OID:1.3.6.1.4.1.25623.1.0.100072",
+      "Version used: $Revision: 13470 $"
+    ],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [
+      "Solution type: Workaround",
+      "Disable VRFY and/or EXPN on your Mailserver.",
+      "For postx add 'disable_vrfy_command=yes' in 'main.cf'.",
+      "For Sendmail add the option 'O PrivacyOptions=goaway'.",
+      "It is suggested that, if you really want to publish this type of information, you use a mechanism that legitimate users actually know about, such as Finger or HTTP."
+    ],
+    "insight": [
+      "VRFY and EXPN ask the server for information about an address.",
+      "They are inherently unusable through rewalls, gateways, mail exchangers for part-time hosts, etc."
+    ],
+    "log_method": [],
+    "cvss": [
+      "5.0"
+    ],
+    "port": 25,
+    "protocol": "tcp",
+    "severity": "MEDIUM",
+    "references": [
+      "URL:http://cr.yp.to/smtp/vrfy.html"
+    ],
+    "plugin": null,
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "SSL/TLS: Certicate Expired",
+    "description": [
+      "The remote server's SSL/TLS certicate has already expired."
+    ],
+    "detection_result": [
+      "The certificate of the remote service expired on 2020-08-20 19:18:24.",
+      "Certificate details: subject ...: C=DE,L=Osnabrueck,O=OpenVAS Users,CN=218ffb30ff7a",
+      "subject alternative names (SAN): None",
+      "issued by .: C=DE,L=Osnabrueck,O=OpenVAS Users,OU=Certificate Authority for 218ffb30ff7a",
+      "serial ....: 5B7C65801F8422EBBDAD2299",
+      "valid from : 2018-08-21 19:18:24 UTC",
+      "valid until: 2020-08-20 19:18:24 UTC",
+      "fingerprint (SHA-1): 6B34D170BC2D0EAE4DB2D6122E2DA7E94F0ADF6F",
+      "fingerprint (SHA-256): A672ACF69BB0944271599E210BF04BF20736E3CCB5862FAF3EFAC987241BC4B9"
+    ],
+    "detection_method": [
+      "Details: SSL/TLS: Certificate Expired",
+      "OID:1.3.6.1.4.1.25623.1.0.103955",
+      "Version used: $Revision: 11103 $"
+    ],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [
+      "Solution type: Mitigation",
+      "Replace the SSL/TLS certicate by a new one."
+    ],
+    "insight": [
+      "This script checks expiry dates of certicates associated with SSL/TLS-enabled services on the target and reports whether any have already expired."
+    ],
+    "log_method": [],
+    "cvss": [
+      "5.0"
+    ],
+    "port": 9390,
+    "protocol": "tcp",
+    "severity": "MEDIUM",
+    "references": [],
+    "plugin": null,
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "SSL/TLS: HTTP Public Key Pinning (HPKP) Missing",
+    "description": [
+      "The remote web server is not enforcing HPKP."
+    ],
+    "detection_result": [
+      "The remote web server is not enforcing HPKP.",
+      "HTTP-Banner: HTTP/1.1 303 See Other",
+      "Connection: close",
+      "Content-Length: ***replaced***",
+      "Content-Security-Policy: default-src 'self' 'unsafe-inline'; img-src 'self' blob:; frame-ancestors 'self'",
+      "X-Frame-Options: SAMEORIGIN",
+      "Cache-Control: no-cache",
+      "Expires: ***replaced***",
+      "Location: https://localhost/login/login.html",
+      "Date: ***replaced***"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [
+      "Enable HPKP or add / configure the required directives correctly following the guides linked in the references."
+    ],
+    "insight": [],
+    "log_method": [
+      "Details: SSL/TLS: HTTP Public Key Pinning (HPKP) Missing",
+      "OID:1.3.6.1.4.1.25623.1.0.108247",
+      "Version used: $Revision: 7391 $"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": 443,
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [
+      "URL:https://www.owasp.org/index.php/OWASP_Secure_Headers_Project",
+      "URL:https://www.owasp.org/index.php/OWASP_Secure_Headers_Project#hpkp",
+      "URL:https://tools.ietf.org/html/rfc7469",
+      "URL:https://securityheaders.io/"
+    ],
+    "plugin": null,
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "SSL/TLS: HTTP Strict Transport Security (HSTS) Missing",
+    "description": [
+      "The remote web server is not enforcing HSTS."
+    ],
+    "detection_result": [
+      "The remote web server is not enforcing HSTS.",
+      "HTTP-Banner: HTTP/1.1 303 See Other",
+      "Connection: close",
+      "Content-Length: ***replaced***",
+      "Content-Security-Policy: default-src 'self' 'unsafe-inline'; img-src 'self' blob:; frame-ancestors 'self'",
+      "X-Frame-Options: SAMEORIGIN",
+      "Cache-Control: no-cache",
+      "Expires: ***replaced***",
+      "Location: https://localhost/login/login.html",
+      "Date: ***replaced***"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [
+      "Enable HSTS or add / configure the required directives correctly following the guides linked in the references."
+    ],
+    "insight": [],
+    "log_method": [
+      "Details: SSL/TLS: HTTP Strict Transport Security (HSTS) Missing",
+      "OID:1.3.6.1.4.1.25623.1.0.105879",
+      "Version used: $Revision: 7391 $"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": 443,
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [
+      "URL:https://www.owasp.org/index.php/OWASP_Secure_Headers_Project",
+      "URL:https://www.owasp.org/index.php/HTTP_Strict_Transport_Security_Cheat_Sheet",
+      "URL:https://www.owasp.org/index.php/OWASP_Secure_Headers_Project#hsts",
+      "URL:https://tools.ietf.org/html/rfc6797",
+      "URL:https://securityheaders.io/"
+    ],
+    "plugin": null,
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "SSL/TLS: Perfect Forward Secrecy Cipher Suites Missing",
+    "description": [
+      "The remote service is missing support for SSL/TLS cipher suites supporting Perfect Forward Secrecy."
+    ],
+    "detection_result": [
+      "The remote service does not support perfect forward secrecy cipher suites."
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [
+      "Details: SSL/TLS: Perfect Forward Secrecy Cipher Suites Missing",
+      "OID:1.3.6.1.4.1.25623.1.0.105092",
+      "Version used: $Revision: 4736 $"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": 443,
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [],
+    "plugin": null,
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "SSL/TLS: Report Medium Cipher Suites",
+    "description": [
+      "This routine reports all Medium SSL/TLS cipher suites accepted by a service."
+    ],
+    "detection_result": [
+      "'Medium' cipher suites accepted by this service via the TLSv1.1 protocol:",
+      "TLS_RSA_WITH_AES_256_CBC_SHA",
+      "TLS_RSA_WITH_CAMELLIA_256_CBC_SHA",
+      "'Medium' cipher suites accepted by this service via the TLSv1.2 protocol:",
+      "TLS_RSA_WITH_AES_128_CCM",
+      "TLS_RSA_WITH_AES_128_GCM_SHA256",
+      "TLS_RSA_WITH_AES_256_CBC_SHA",
+      "TLS_RSA_WITH_AES_256_CBC_SHA256",
+      "TLS_RSA_WITH_AES_256_CCM",
+      "TLS_RSA_WITH_AES_256_GCM_SHA384",
+      "TLS_RSA_WITH_CAMELLIA_128_GCM_SHA256",
+      "TLS_RSA_WITH_CAMELLIA_256_CBC_SHA",
+      "TLS_RSA_WITH_CAMELLIA_256_CBC_SHA256",
+      "TLS_RSA_WITH_CAMELLIA_256_GCM_SHA384"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [
+      "Any cipher suite considered to be secure for only the next 10 years is considered as medium"
+    ],
+    "log_method": [
+      "Details: SSL/TLS: Report Medium Cipher Suites",
+      "OID:1.3.6.1.4.1.25623.1.0.902816",
+      "Version used: $Revision: 4743 $"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": 443,
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [],
+    "plugin": null,
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "SSL/TLS: Report Non Weak Cipher Suites",
+    "description": [
+      "This routine reports all Non Weak SSL/TLS cipher suites accepted by a service."
+    ],
+    "detection_result": [
+      "'Non Weak' cipher suites accepted by this service via the TLSv1.1 protocol:",
+      "TLS_RSA_WITH_AES_256_CBC_SHA",
+      "TLS_RSA_WITH_CAMELLIA_256_CBC_SHA",
+      "'Non Weak' cipher suites accepted by this service via the TLSv1.2 protocol:",
+      "TLS_RSA_WITH_AES_128_CCM",
+      "TLS_RSA_WITH_AES_128_GCM_SHA256",
+      "TLS_RSA_WITH_AES_256_CBC_SHA",
+      "TLS_RSA_WITH_AES_256_CBC_SHA256",
+      "TLS_RSA_WITH_AES_256_CCM",
+      "TLS_RSA_WITH_AES_256_GCM_SHA384",
+      "TLS_RSA_WITH_CAMELLIA_128_GCM_SHA256",
+      "TLS_RSA_WITH_CAMELLIA_256_CBC_SHA",
+      "TLS_RSA_WITH_CAMELLIA_256_CBC_SHA256",
+      "TLS_RSA_WITH_CAMELLIA_256_GCM_SHA384"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [
+      "Details: SSL/TLS: Report Non Weak Cipher Suites",
+      "OID:1.3.6.1.4.1.25623.1.0.103441",
+      "Version used: $Revision: 4736 $"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": 443,
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [],
+    "plugin": null,
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "SSL/TLS: Report Supported Cipher Suites",
+    "description": [
+      "This routine reports all SSL/TLS cipher suites accepted by a service."
+    ],
+    "detection_result": [
+      "No 'Strong' cipher suites accepted by this service via the TLSv1.1 protocol.",
+      "'Medium' cipher suites accepted by this service via the TLSv1.1 protocol:",
+      "TLS_RSA_WITH_AES_256_CBC_SHA"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [
+      "Details: SSL/TLS: Report Supported Cipher Suites",
+      "OID:1.3.6.1.4.1.25623.1.0.900234"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": 443,
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [],
+    "plugin": null,
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "wapiti (NASL wrapper)",
+    "description": [
+      "This plugin uses wapiti to nd web security issues.",
+      "Make sure to have wapiti 2.x as wapiti 1.x is not supported.",
+      "See the preferences section for wapiti options.",
+      "Note that the scanner is using limited set of wapiti options. Therefore, for more complete web assessment, you should use standalone wapiti tool for deeper/customized checks.",
+      "Note: The plugin needs the 'wapiti' binary found within the PATH of the user running the scanner and needs to be executable for this user. The existence of this binary is checked and reported separately within 'Availability of scanner helper tools' (OID: 1.3.6.1.4.1.25623.1.0.810000)."
+    ],
+    "detection_result": [
+      "The wapiti report filename is empty. That could mean that a wrong version of wap iti is used or tmp dir is not accessible. Make sure to have wapiti 2.x as wapi ti 1.x is not supported."
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [
+      "Details: wapiti (NASL wrapper)",
+      "OID:1.3.6.1.4.1.25623.1.0.80110",
+      "Version used: $Revision: 13985 $"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": 443,
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [],
+    "plugin": null,
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Postx SMTP Server Detection",
+    "description": [
+      "The script checks the SMTP server banner for the presence of Postx."
+    ],
+    "detection_result": [
+      "Detected Postfix",
+      "Version: unknown",
+      "Location: 25/tcp",
+      "CPE: cpe:/a:postfix:postfix",
+      "Concluded from version/product identification result: 220 9c89ef55d1a6.localdomain ESMTP Postfix"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [
+      "Details: Postfix SMTP Server Detection",
+      "OID:1.3.6.1.4.1.25623.1.0.111086",
+      "Version used: $Revision: 13461 $"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": 25,
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [],
+    "plugin": null,
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Services",
+    "description": [
+      "This routine attempts to guess which service is running on the remote ports. For instance, it searches for a web server which could listen on another port than 80 or 443 and makes this information available for other check routines."
+    ],
+    "detection_result": [
+      "An SMTP server is running on this port",
+      "Here is its banner : 220 9c89ef55d1a6.localdomain ESMTP Postfix"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [
+      "Details: Services",
+      "OID:1.3.6.1.4.1.25623.1.0.10330",
+      "Version used: $Revision: 13541 $"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": 25,
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [],
+    "plugin": null,
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "SMTP antivirus scanner DoS",
+    "description": [
+      "This script sends the 42.zip recursive archive to the mail server. If there is an antivirus filter, it may start eating huge amounts of CPU or memory."
+    ],
+    "detection_result": [
+      "For some reason, we could not send the 42.zip file to this MTA."
+    ],
+    "detection_method": [
+      "Details: SMTP antivirus scanner DoS",
+      "OID:1.3.6.1.4.1.25623.1.0.11036",
+      "Version used: $Revision: 13470 $"
+    ],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [
+      "Reconfigure your antivirus / upgrade it."
+    ],
+    "insight": [],
+    "log_method": [],
+    "cvss": [
+      "7.2"
+    ],
+    "port": 25,
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [
+      "BID:3027"
+    ],
+    "plugin": null,
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "SMTP Missing Support For STARTTLS",
+    "description": [
+      "The remote SMTP server does not support the 'STARTTLS' command."
+    ],
+    "detection_result": [
+      "The remote SMTP server does not support the 'STARTTLS' command."
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [
+      "Details: SMTP Missing Support For STARTTLS",
+      "OID:1.3.6.1.4.1.25623.1.0.105091",
+      "Version used: $Revision: 13153 $"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": 25,
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [],
+    "plugin": null,
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "SMTP Server type and version",
+    "description": [
+      "This detects the SMTP Server's type and version by connecting to the server and processing the buffer received."
+    ],
+    "detection_result": [
+      "Remote SMTP server banner: 220 9c89ef55d1a6.localdomain ESMTP Postfix",
+      "The remote SMTP server is announcing the following available ESMTP commands (EHL ->O response) via an unencrypted connection: 8BITMIME, DSN, ENHANCEDSTATUSCODES, ETRN, PIPELINING, SIZE 10240000, VRFY"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [
+      "Details: SMTP Server type and version",
+      "OID:1.3.6.1.4.1.25623.1.0.10263",
+      "Version used: $Revision: 14004 $"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": 25,
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [],
+    "plugin": null,
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "OpenVAS / Greenbone Vulnerability Manager Detection",
+    "description": [
+      "The script sends a connection request to the server and attempts to determine if it is a OpenVAS Manager (openvasmd) or Greenbone Vulnerability Manager (gmvd)."
+    ],
+    "detection_result": [
+      "Detected OpenVAS Manager",
+      "Version: 7.0",
+      "Location: 9390/tcp",
+      "CPE: cpe:/a:openvas:openvas_manager:7.0",
+      "Concluded from version/product identification result: OMP protocol version request '<GET_VERSION/>', response: <version>7.0</version>"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [
+      "Details: OpenVAS / Greenbone Vulnerability Manager Detection",
+      "OID:1.3.6.1.4.1.25623.1.0.103825",
+      "Version used: $Revision: 13874 $"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": 9390,
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [],
+    "plugin": null,
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Service Detection with '<xml/>' Request",
+    "description": [
+      "This plugin performs service detection. This plugin is a complement of nd_service.nasl. It sends a '<xml/>' request to the remaining unknown services and tries to identify them."
+    ],
+    "detection_result": [
+      "A OpenVAS / Greenbone Vulnerability Manager supporting the OMP/GMP protocol seems to be running on this port."
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [],
+    "cvss": [
+      "0.0"
+    ],
+    "port": 25,
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [],
+    "plugin": null,
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Service Detection with '<xml/>' Request",
+    "description": [
+      "This plugin performs service detection.",
+      "This plugin is a complement of nd_service.nasl. It sends a '<xml/>' request to the remaining unknown services and tries to identify them."
+    ],
+    "detection_result": [
+      "A OpenVAS / Greenbone Vulnerability Manager supporting the OMP/GMP protocol seem to be running on this port."
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [
+      "Details: Service Detection with '<xml/>' Request",
+      "OID:1.3.6.1.4.1.25623.1.0.108198",
+      "Version used: $Revision: 13874 $"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": 9390,
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [],
+    "plugin": null,
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Services",
+    "description": [
+      "This routine attempts to guess which service is running on the remote ports. For instance, it searches for a web server which could listen on another port than 80 or 443 and makes this information available for other check routines."
+    ],
+    "detection_result": [
+      "A TLScustom server answered on this port"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [
+      "Details: Services",
+      "OID:1.3.6.1.4.1.25623.1.0.10330",
+      "Version used: $Revision: 13541 $"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": 9390,
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [],
+    "plugin": null,
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "SSL/TLS: Collect and Report Certicate Details",
+    "description": [
+      "This script collects and reports the details of all SSL/TLS certicates.",
+      "This data will be used by other tests to verify server certicates."
+    ],
+    "detection_result": [
+      "The following certificate details of the remote service were collected.",
+      "Certificate details: subject ...: C=DE,L=Osnabrueck,O=OpenVAS Users,CN=218ffb30ff7a",
+      "subject alternative names (SAN): None",
+      "issued by .: C=DE,L=Osnabrueck,O=OpenVAS Users,OU=Certificate Authority for 218ffb30ff7a",
+      "serial ....: 5B7C65801F8422EBBDAD2299",
+      "valid from : 2018-08-21 19:18:24 UTC",
+      "valid until: 2020-08-20 19:18:24 UTC",
+      "fingerprint (SHA-1): 6B34D170BC2D0EAE4DB2D6122E2DA7E94F0ADF6F",
+      "fingerprint (SHA-256): A672ACF69BB0944271599E210BF04BF20736E3CCB5862FAF3EFAC987241BC4B9"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [
+      "Details: SSL/TLS: Collect and Report Certificate Details",
+      "OID:1.3.6.1.4.1.25623.1.0.103692",
+      "Version used: $Revision: 13434 $"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": 9390,
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [],
+    "plugin": null,
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "SSL/TLS: Perfect Forward Secrecy Cipher Suites Missing",
+    "description": [
+      "The remote service is missing support for SSL/TLS cipher suites supporting Perfect Forward Secrecy."
+    ],
+    "detection_result": [
+      "The remote service does not support perfect forward secrecy cipher suites."
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [
+      "Details: SSL/TLS: Perfect Forward Secrecy Cipher Suites Missing",
+      "OID:1.3.6.1.4.1.25623.1.0.105092",
+      "Version used: $Revision: 4736 $"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": 9390,
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [],
+    "plugin": null,
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "SSL/TLS: Report Medium Cipher Suites",
+    "description": [
+      "This routine reports all Medium SSL/TLS cipher suites accepted by a service."
+    ],
+    "detection_result": [
+      "'Medium' cipher suites accepted by this service via the TLSv1.0 protocol:",
+      "TLS_RSA_WITH_3DES_EDE_CBC_SHA",
+      "TLS_RSA_WITH_AES_128_CBC_SHA",
+      "TLS_RSA_WITH_AES_256_CBC_SHA",
+      "TLS_RSA_WITH_CAMELLIA_128_CBC_SHA",
+      "TLS_RSA_WITH_CAMELLIA_256_CBC_SHA",
+      "'Medium' cipher suites accepted by this service via the TLSv1.1 protocol:",
+      "TLS_RSA_WITH_3DES_EDE_CBC_SHA",
+      "TLS_RSA_WITH_AES_128_CBC_SHA",
+      "TLS_RSA_WITH_AES_256_CBC_SHA",
+      "TLS_RSA_WITH_CAMELLIA_128_CBC_SHA",
+      "TLS_RSA_WITH_CAMELLIA_256_CBC_SHA",
+      "'Medium' cipher suites accepted by this service via the TLSv1.2 protocol:",
+      "TLS_RSA_WITH_3DES_EDE_CBC_SHA",
+      "TLS_RSA_WITH_AES_128_CBC_SHA",
+      "TLS_RSA_WITH_AES_128_CBC_SHA256",
+      "TLS_RSA_WITH_AES_128_CCM",
+      "TLS_RSA_WITH_AES_128_GCM_SHA256",
+      "TLS_RSA_WITH_AES_256_CBC_SHA",
+      "TLS_RSA_WITH_AES_256_CBC_SHA256",
+      "TLS_RSA_WITH_AES_256_CCM",
+      "TLS_RSA_WITH_AES_256_GCM_SHA384",
+      "TLS_RSA_WITH_CAMELLIA_128_CBC_SHA",
+      "TLS_RSA_WITH_CAMELLIA_128_CBC_SHA256",
+      "TLS_RSA_WITH_CAMELLIA_128_GCM_SHA256",
+      "TLS_RSA_WITH_CAMELLIA_256_CBC_SHA",
+      "TLS_RSA_WITH_CAMELLIA_256_CBC_SHA256",
+      "TLS_RSA_WITH_CAMELLIA_256_GCM_SHA384"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [
+      "Any cipher suite considered to be secure for only the next 10 years is considered as medium"
+    ],
+    "log_method": [
+      "Details: SSL/TLS: Report Medium Cipher Suites",
+      "OID:1.3.6.1.4.1.25623.1.0.902816",
+      "Version used: $Revision: 4743 $"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": 9390,
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [],
+    "plugin": null,
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "SSL/TLS: Report Non Weak Cipher Suites",
+    "description": [
+      "This routine reports all Non Weak SSL/TLS cipher suites accepted by a service."
+    ],
+    "detection_result": [
+      "'Non Weak' cipher suites accepted by this service via the TLSv1.0 protocol:",
+      "TLS_RSA_WITH_3DES_EDE_CBC_SHA",
+      "TLS_RSA_WITH_AES_128_CBC_SHA",
+      "TLS_RSA_WITH_AES_256_CBC_SHA",
+      "TLS_RSA_WITH_CAMELLIA_128_CBC_SHA",
+      "TLS_RSA_WITH_CAMELLIA_256_CBC_SHA",
+      "'Non Weak' cipher suites accepted by this service via the TLSv1.1 protocol:",
+      "TLS_RSA_WITH_3DES_EDE_CBC_SHA",
+      "TLS_RSA_WITH_AES_128_CBC_SHA",
+      "TLS_RSA_WITH_AES_256_CBC_SHA",
+      "TLS_RSA_WITH_CAMELLIA_128_CBC_SHA",
+      "TLS_RSA_WITH_CAMELLIA_256_CBC_SHA",
+      "'Non Weak' cipher suites accepted by this service via the TLSv1.2 protocol:",
+      "TLS_RSA_WITH_3DES_EDE_CBC_SHA",
+      "TLS_RSA_WITH_AES_128_CBC_SHA",
+      "TLS_RSA_WITH_AES_128_CBC_SHA256",
+      "TLS_RSA_WITH_AES_128_CCM",
+      "TLS_RSA_WITH_AES_128_GCM_SHA256",
+      "TLS_RSA_WITH_AES_256_CBC_SHA",
+      "TLS_RSA_WITH_AES_256_CBC_SHA256",
+      "TLS_RSA_WITH_AES_256_CCM",
+      "TLS_RSA_WITH_AES_256_GCM_SHA384",
+      "TLS_RSA_WITH_CAMELLIA_128_CBC_SHA",
+      "TLS_RSA_WITH_CAMELLIA_128_CBC_SHA256",
+      "TLS_RSA_WITH_CAMELLIA_128_GCM_SHA256",
+      "TLS_RSA_WITH_CAMELLIA_256_CBC_SHA",
+      "TLS_RSA_WITH_CAMELLIA_256_CBC_SHA256",
+      "TLS_RSA_WITH_CAMELLIA_256_GCM_SHA384"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [
+      "Any cipher suite considered to be secure for only the next 10 years is considered as medium"
+    ],
+    "log_method": [
+      "Details: SSL/TLS: Report Non Weak Cipher Suites"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": 9390,
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [],
+    "plugin": null,
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "SSL/TLS: Report Supported Cipher Suites",
+    "description": [
+      "This routine reports all SSL/TLS cipher suites accepted by a service. As the NVT 'SSL/TLS: Check Supported Cipher Suites' (OID: 1.3.6.1.4.1.25623.1.0.900234) might run into a timeout the actual reporting of all accepted cipher suites takes place in this NVT instead. The script preference 'Report timeout' allows you to congure if such an timeout is reported."
+    ],
+    "detection_result": [
+      "No 'Strong' cipher suites accepted by this service via the TLSv1.0 protocol.",
+      "'Medium' cipher suites accepted by this service via the TLSv1.0 protocol: TLS_RSA_WITH_3DES_EDE_CBC_SHA, TLS_RSA_WITH_AES_128_CBC_SHA, TLS_RSA_WITH_AES_256_CBC_SHA, TLS_RSA_WITH_CAMELLIA_128_CBC_SHA, TLS_RSA_WITH_CAMELLIA_256_CBC_SHA",
+      "No 'Weak' cipher suites accepted by this service via the TLSv1.0 protocol.",
+      "No 'Null' cipher suites accepted by this service via the TLSv1.0 protocol.",
+      "No 'Anonymous' cipher suites accepted by this service via the TLSv1.0 protocol.",
+      "No 'Strong' cipher suites accepted by this service via the TLSv1.1 protocol.",
+      "'Medium' cipher suites accepted by this service via the TLSv1.1 protocol: TLS_RSA_WITH_3DES_EDE_CBC_SHA, TLS_RSA_WITH_AES_128_CBC_SHA, TLS_RSA_WITH_AES_256_CBC_SHA, TLS_RSA_WITH_CAMELLIA_128_CBC_SHA, TLS_RSA_WITH_CAMELLIA_256_CBC_SHA",
+      "No 'Weak' cipher suites accepted by this service via the TLSv1.1 protocol.",
+      "No 'Null' cipher suites accepted by this service via the TLSv1.1 protocol.",
+      "No 'Anonymous' cipher suites accepted by this service via the TLSv1.1 protocol.",
+      "No 'Strong' cipher suites accepted by this service via the TLSv1.2 protocol.",
+      "'Medium' cipher suites accepted by this service via the TLSv1.2 protocol: TLS_RSA_WITH_3DES_EDE_CBC_SHA, TLS_RSA_WITH_AES_128_CBC_SHA, TLS_RSA_WITH_AES_128_CBC_SHA256, TLS_RSA_WITH_AES_128_CCM, TLS_RSA_WITH_AES_128_GCM_SHA256, TLS_RSA_WITH_AES_256_CBC_SHA, TLS_RSA_WITH_AES_256_CBC_SHA256, TLS_RSA_WITH_AES_256_CCM, TLS_RSA_WITH_AES_256_GCM_SHA384, TLS_RSA_WITH_CAMELLIA_128_CBC_SHA, TLS_RSA_WITH_CAMELLIA_128_CBC_SHA256, TLS_RSA_WITH_CAMELLIA_128_GCM_SHA256, TLS_RSA_WITH_CAMELLIA_256_CBC_SHA, TLS_RSA_WITH_CAMELLIA_256_CBC_SHA256, TLS_RSA_WITH_CAMELLIA_256_GCM_SHA384",
+      "No 'Weak' cipher suites accepted by this service via the TLSv1.2 protocol.",
+      "No 'Null' cipher suites accepted by this service via the TLSv1.2 protocol.",
+      "No 'Anonymous' cipher suites accepted by this service via the TLSv1.2 protocol."
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [
+      "Details: SSL/TLS: Report Non Weak Cipher Suites",
+      "OID:1.3.6.1.4.1.25623.1.0.103441",
+      "Version used: $Revision: 4736 $"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": 9390,
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [],
+    "plugin": null,
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "CPE Inventory",
+    "description": [
+      "This routine uses information collected by other routines about CPE identities of operating systems, services and applications detected during the scan."
+    ],
+    "detection_result": [
+      "127.0.0.1|cpe:/a:greenbone:greenbone_security_assistant:7.0.3",
+      "127.0.0.1|cpe:/a:openvas:openvas_manager:7.0",
+      "127.0.0.1|cpe:/a:postfix:postfix",
+      "127.0.0.1|cpe:/o:linux:linux_kernel:2.6.32"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [
+      "Details: CPE Inventory",
+      "OID:1.3.6.1.4.1.25623.1.0.810002",
+      "Version used: $Revision: 14324 $"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": 9390,
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [
+      "URL:http://cpe.mitre.org/"
+    ],
+    "plugin": null,
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "CPE Inventory",
+    "description": [
+      "This routine uses information collected by other routines about CPE identities of operating systems, services and applications detected during the scan."
+    ],
+    "detection_result": [
+      "127.0.0.1|cpe:/a:greenbone:greenbone_security_assistant:7.0.3",
+      "127.0.0.1|cpe:/a:openvas:openvas_manager:7.0",
+      "127.0.0.1|cpe:/a:postfix:postfix",
+      "127.0.0.1|cpe:/o:linux:linux_kernel:2.6.32"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [
+      "Details: CPE Inventory",
+      "OID:1.3.6.1.4.1.25623.1.0.810002",
+      "Version used: $Revision: 14324 $"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": "general",
+    "protocol": "CPE-T",
+    "severity": "LOG",
+    "references": [
+      "URL:http://cpe.mitre.org/"
+    ],
+    "plugin": null,
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "OS Detection Consolidation and Reporting",
+    "description": [
+      "This script consolidates the OS information detected by several NVTs and tries to find the best matching OS.",
+      "Furthermore it reports all previously collected information leading to this best matching OS. It also reports possible additional information which might help to improve the OS detection.",
+      "If any of this information is wrong or could be improved please consider to report these to the referenced community portal."
+    ],
+    "detection_result": [
+      "Best matching OS: ",
+      "OS: Linux 2.6.32",
+      "CPE: cpe:/o:linux:linux_kernel:2.6.32",
+      "Found by NVT: 1.3.6.1.4.1.25623.1.0.108021 (Nmap OS Identification (NASL wrapper))",
+      "Concluded from Nmap TCP/IP fingerprinting: ",
+      "OS details: Linux 2.6.32",
+      "OS CPE: cpe:/o:linux:linux_kernel:2.6.32",
+      "Setting key \"Host/runs_unixoide\" based on this information",
+      "Other OS detections (in order of reliability): ",
+      "OS: Linux Kernel",
+      "CPE: cpe:/o:linux:kernel",
+      "Found by NVT: 1.3.6.1.4.1.25623.1.0.102002 (ICMP based OS Fingerprinting)",
+      "Concluded from ICMP based OS fingerprint"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [
+      "Details: OS Detection Consolidation and Reporting",
+      "OID:1.3.6.1.4.1.25623.1.0.105937",
+      "Version used: $Revision: 14244 $"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": "general",
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [
+      "URL:https://community.greenbone.net/c/vulnerability-tests"
+    ],
+    "plugin": null,
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Traceroute",
+    "description": [
+      "A traceroute from the scanning server to the target system was conducted. This traceroute is provided primarily for informational value only. In the vast majority of cases, it does not represent a vulnerability. However, if the displayed traceroute contains any private addresses that should not have been publicly visible, then you have an issue you need to correct."
+    ],
+    "detection_result": [
+      "Here is the route from 127.0.0.1 to 127.0.0.1:",
+      "127.0.0.1"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [
+      "Block unwanted packets from escaping your network."
+    ],
+    "insight": [],
+    "log_method": [
+      "Details: Traceroute",
+      "OID:1.3.6.1.4.1.25623.1.0.51662",
+      "Version used: $Revision: 10411 $"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": "general",
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [],
+    "plugin": null,
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  }
+]

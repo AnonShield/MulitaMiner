@@ -382,14 +382,13 @@ python -m metrics.plot.cli --metric rouge --baseline tenable/TenableWAS_bWAAP.xl
 5. **Extração**: Vulnerabilidades extraídas com retry inteligente
 6. **Consolidação**: Remoção de duplicatas e merge de instances (TenableWAS)
 7. **Saída primária**: JSON conforme `output_file` do scanner
-8. **Conversões**: Formatos adicionais (CSV, XLSX) conforme `--convert`
+8. **Conversões**: Formatos adicionais (CSV, XLSX,...) conforme `--convert`
 9. **Layout visual**: Arquivo `.txt` com layout preservado (mesmo diretório do PDF)
 
 ### Arquivos Gerados
 
 - **JSON principal**: `vulnerabilities_<scanner>.json`
 - **Layout visual**: `visual_layout_extracted_<nome_arquivo>.txt`
-- **Conversões opcionais**: Arquivos CSV/XLSX na pasta especificada
 
 ### Formato de Saída
 

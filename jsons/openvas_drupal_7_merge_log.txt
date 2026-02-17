@@ -1,0 +1,25 @@
+# LOG DE DEDUPLICAÇÃO DE VULNERABILIDADES
+Este arquivo lista todas as vulnerabilidades consideradas duplicatas e agrupadas durante o processo.
+Cada grupo é identificado por uma chave composta (ex: nome, porta, protocolo).
+Apenas a vulnerabilidade mais completa e com descrição válida foi mantida em cada grupo.
+
+Total de grupos de duplicatas: 2
+Total de vulnerabilidades agrupadas (removidas): 2
+
+Grupo 1: Chave = ('php < 8.2.30, 8.3.x < 8.3.29, 8.4.x < 8.4.16 multiple vulnerabilities - linux', '80', 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: PHP < 8.2.30, 8.3.x < 8.3.29, 8.4.x < 8.4.16 Multiple Vulnerabilities - Linux
+       Porta: 80 | Protocolo: tcp | Severidade: HIGH
+       Descrição: PHP is prone to multiple vulnerabilities. Quality of Detection (QoD): 30%
+
+
+Grupo 2: Chave = ('response time / no 404 error code check', '80', 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Response Time / No 404 Error Code Check
+       Porta: 80 | Protocolo: tcp | Severidade: LOG
+       Descrição: This VT tests if the remote web server does not reply with a 404 error code and checks if it is replying to the scanners requests in a reasonable amount of time.
+
+
+Resumo final:
+Total de grupos de duplicatas: 2
+Total de vulnerabilidades agrupadas (removidas): 2

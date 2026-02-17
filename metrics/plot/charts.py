@@ -31,7 +31,7 @@ def create_score_heatmap(df_heatmap, metric_label: str, out_path: Path):
     plt.tight_layout()
     out_path.parent.mkdir(parents=True, exist_ok=True)
     plt.savefig(out_path, dpi=300, bbox_inches='tight')
-    print(f"✅ Heatmap saved: {out_path}")
+    print(f"Heatmap saved: {out_path}")
     plt.close()
 
 
