@@ -1,17 +1,19 @@
-Licença Creative Commons Atribuição-NãoComercial 4.0 Internacional (CC BY-NC 4.0)
+MIT License
 
-Ao utilizar, modificar ou distribuir este software, você concorda com os seguintes termos:
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
 
-Você tem permissão para:
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
 
-- Compartilhar — copiar e redistribuir o material em qualquer meio ou formato
-- Adaptar — remixar, transformar e criar a partir do material
-
-Sob as seguintes condições:
-
-- Atribuição — Você deve dar o devido crédito, fornecer um link para a licença e indicar se mudanças foram feitas. Você pode fazê-lo de qualquer forma razoável, mas não de maneira que sugira que o licenciante endossa você ou seu uso.
-- Uso Não Comercial — Você não pode usar o material para fins comerciais sem autorização expressa dos autores.
-
-Sem restrições adicionais — Você não pode aplicar termos jurídicos ou medidas tecnológicas que restrinjam legalmente outros de fazerem algo que a licença permita.
-
-Texto completo da licença: https://creativecommons.org/licenses/by-nc/4.0/legalcode.pt
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.

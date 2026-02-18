@@ -3,7 +3,6 @@
   "prompt_template": "src/configs/templates/cais_prompt_v3.txt",
   "retry_attempts": 3,
   "delay_between_chunks": 2,
-  "remove_duplicates": true,
   "output_file": "vulnerabilities_cais.json",
   "consolidation_field": "name_consolidated"
 }

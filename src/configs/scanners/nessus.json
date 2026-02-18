@@ -5,7 +5,6 @@
   "delay_between_chunks": 2,
   "output_file": "vulnerabilities_nessus.json",
   "consolidation_field": "Name",
-  "remove_duplicates": true,
   "chunking": {
     "scanner_type": "nessus",
     "marker_pattern": "^\\s*Plugin ID:\\s*\\d+",

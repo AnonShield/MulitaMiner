@@ -3,7 +3,6 @@
   "prompt_template": "src/configs/templates/default_prompt.txt",
   "retry_attempts": 3,
   "delay_between_chunks": 2,
-  "remove_duplicates": true,
   "output_file": "vulnerabilities_default_gpt4_2.json",
   "consolidation_field": "Name",
   "chunking": {

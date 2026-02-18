@@ -5,7 +5,6 @@
   "delay_between_chunks": 2,
   "output_file": "vulnerabilities_rapid7.json",
   "consolidation_field": "Name",
-  "remove_duplicates": true,
   "chunking": {
     "scanner_type": "rapid7",
     "marker_pattern": "^\\s*Vulnerability:\\s",
