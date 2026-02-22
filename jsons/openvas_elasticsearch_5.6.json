@@ -34,9 +34,7 @@
       "CVE-2021-45046: Denial of Service (DoS) and a possible remote code execution (RCE) in certain non-default congurations."
     ],
     "log_method": [],
-    "cvss": [
-      "10.0"
-    ],
+    "cvss": ["10.0"],
     "port": 9200,
     "protocol": "tcp",
     "severity": "Critical",
@@ -94,8 +92,8 @@
       "dfn-cert: DFN-CERT-2021-2576"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -126,18 +124,14 @@
     ],
     "insight": [],
     "log_method": [],
-    "cvss": [
-      "10.0"
-    ],
+    "cvss": ["10.0"],
     "port": 9200,
     "protocol": "tcp",
     "severity": "CRITICAL",
-    "references": [
-      "url: https://www.elastic.co/support/eol"
-    ],
+    "references": ["url: https://www.elastic.co/support/eol"],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -171,9 +165,7 @@
       "CVE-2021-45105: Apache Log4j2 did not protect from uncontrolled recursion from self-referential lookups. When the logging configuration uses a non-default Pattern Layout with a Context Lookup (for example, $$}ctx:loginId}), attackers with control over Thread Context Map (MDC) input data can craft malicious input data that contains a recursive lookup, resulting in a Stack-OverflowError that will terminate the process."
     ],
     "log_method": [],
-    "cvss": [
-      "9.0"
-    ],
+    "cvss": ["9.0"],
     "port": 9200,
     "protocol": "tcp",
     "severity": "Critical",
@@ -228,8 +220,8 @@
       "dfn-cert: DFN-CERT-2021-2576"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -261,9 +253,7 @@
       "A sensitive data disclosure flaw was found in the Elasticsearch repository-azure (formerly elasticsearch-cloud-azure) plugin."
     ],
     "log_method": [],
-    "cvss": [
-      "8.1"
-    ],
+    "cvss": ["8.1"],
     "port": 9200,
     "protocol": "tcp",
     "severity": "HIGH",
@@ -273,8 +263,8 @@
       "url: https://www.elastic.co/community/security"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -304,9 +294,7 @@
       "An uncontrolled recursion vulnerability that could lead to a denial of service attack was identified in the Elasticsearch Grok parser. A user with the ability to submit arbitrary queries to Elasticsearch could create a malicious Grok query that will crash the Elasticsearch node."
     ],
     "log_method": [],
-    "cvss": [
-      "6.5"
-    ],
+    "cvss": ["6.5"],
     "port": 9200,
     "protocol": "tcp",
     "severity": "MEDIUM",
@@ -318,8 +306,8 @@
       "dfn-cert: DFN-CERT-2022-2315"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -351,9 +339,7 @@
       "A field disclosure flaw was found in Elasticsearch when running a scrolling search with Field Level Security. If a user runs the same query another more privileged user recently ran, the scrolling search can leak fields that should be hidden."
     ],
     "log_method": [],
-    "cvss": [
-      "6.5"
-    ],
+    "cvss": ["6.5"],
     "port": 9200,
     "protocol": "tcp",
     "severity": "MEDIUM",
@@ -362,8 +348,8 @@
       "url: https://discuss.elastic.co/t/elastic-stack-7-9-0-and-6-8-12-security-update/245456"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -395,9 +381,7 @@
       "A race condition flaw was found in the response headers Elasticsearch returns to a request."
     ],
     "log_method": [],
-    "cvss": [
-      "5.9"
-    ],
+    "cvss": ["5.9"],
     "port": 9200,
     "protocol": "tcp",
     "severity": "MEDIUM",
@@ -408,15 +392,13 @@
       "cert-bund: WID-SEC-2024-3184"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
     "Name": "Elastic Elasticsearch Multiple Vulnerabilities (ESA-2021-06, ESA-2021-08)",
-    "description": [
-      "Elasticsearch is prone to multiple vulnerabilities."
-    ],
+    "description": ["Elasticsearch is prone to multiple vulnerabilities."],
     "detection_result": [
       "Installed version: 5.6.16",
       "Fixed version: 6.8.15",
@@ -443,9 +425,7 @@
       "- CVE-2021-22137: Field disclosure flaw"
     ],
     "log_method": [],
-    "cvss": [
-      "5.3"
-    ],
+    "cvss": ["5.3"],
     "port": 9200,
     "protocol": "tcp",
     "severity": "MEDIUM",
@@ -457,8 +437,8 @@
       "dfn-cert: DFN-CERT-2025-0933"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -490,9 +470,7 @@
       "Elasticsearch has an information disclosure issue when audit logging and the emit_request_body option is enabled. The Elasticsearch audit log could contain sensitive information such as password hashes or authentication tokens."
     ],
     "log_method": [],
-    "cvss": [
-      "4.9"
-    ],
+    "cvss": ["4.9"],
     "port": 9200,
     "protocol": "tcp",
     "severity": "MEDIUM",
@@ -501,8 +479,8 @@
       "url: https://discuss.elastic.co/t/elastic-stack-7-11-0-and-6"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -510,10 +488,7 @@
     "description": [
       "Elasticsearch is prone to an information disclosure vulnerability."
     ],
-    "detection_result": [
-      "Installed version: 5.6.16",
-      "Fixed version: 6.8.13"
-    ],
+    "detection_result": ["Installed version: 5.6.16", "Fixed version: 6.8.13"],
     "detection_method": [
       "Checks if a vulnerable version is present on the target host.",
       "Details: Elastic Elasticsearch Information Disclosure Vulnerability (ESA-2021-03)",
@@ -532,9 +507,7 @@
       "Elasticsearch has an information disclosure issue when audit logging and the emit_request_body option is enabled. The Elasticsearch audit log could contain sensitive information such as password hashes or authentication tokens."
     ],
     "log_method": [],
-    "cvss": [
-      "3.1"
-    ],
+    "cvss": ["3.1"],
     "port": 9200,
     "protocol": "tcp",
     "severity": "LOW",
@@ -546,8 +519,8 @@
       "dfn-cert: DFN-CERT-2025-0933"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -562,16 +535,14 @@
     "solution": [],
     "insight": [],
     "log_method": [],
-    "cvss": [
-      "2.6"
-    ],
+    "cvss": ["2.6"],
     "port": 9200,
     "protocol": "tcp",
     "severity": "LOW",
     "references": [],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -607,9 +578,7 @@
       "The remote host implements TCP timestamps, as dened by RFC1323/RFC7323."
     ],
     "log_method": [],
-    "cvss": [
-      "2.6"
-    ],
+    "cvss": ["2.6"],
     "port": "general",
     "protocol": "tcp",
     "severity": "LOW",
@@ -620,8 +589,8 @@
       "url: https://www.fortiguard.com/psirt/FG-IR-16-090"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -655,9 +624,7 @@
       "The Timestamp Reply is an ICMP message which replies to a Timestamp message. It consists of the originating timestamp sent by the sender of the Timestamp as well as a receive timestamp and a transmit timestamp."
     ],
     "log_method": [],
-    "cvss": [
-      "2.1"
-    ],
+    "cvss": ["2.1"],
     "port": "general",
     "protocol": "icmp",
     "severity": "LOW",
@@ -670,8 +637,8 @@
       "dfn-cert: DFN-CERT-2014-0658"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -694,18 +661,14 @@
       "OID:1.3.6.1.4.1.25623.1.0.810002",
       "Version used: 2022-07-27T10:11:28Z"
     ],
-    "cvss": [
-      "0.0"
-    ],
+    "cvss": ["0.0"],
     "port": "general",
     "protocol": "CPE-T",
     "severity": "LOG",
-    "references": [
-      "url: https://nvd.nist.gov/products/cpe"
-    ],
+    "references": ["url: https://nvd.nist.gov/products/cpe"],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -744,9 +707,7 @@
       "Details: HTTP Security Headers Detection",
       "OID:1.3.6.1.4.1.25623.1.0.112081"
     ],
-    "cvss": [
-      "0.0"
-    ],
+    "cvss": ["0.0"],
     "port": 9200,
     "protocol": "tcp",
     "severity": "LOG",
@@ -756,8 +717,8 @@
       "url: https://securityheaders.com/"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -795,18 +756,14 @@
       "Details: Web Application Scanning Consolidation / Info Reporting",
       "OID:1.3.6.1.4.1.25623.1.0.111038"
     ],
-    "cvss": [
-      "0.0"
-    ],
+    "cvss": ["0.0"],
     "port": 9200,
     "protocol": "tcp",
     "severity": "LOG",
-    "references": [
-      "url: https://forum.greenbone.net/c/vulnerability-tests/7"
-    ],
+    "references": ["url: https://forum.greenbone.net/c/vulnerability-tests/7"],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -815,9 +772,7 @@
       "This plugin performs service detection.",
       "Quality of Detection (QoD): 80%"
     ],
-    "detection_result": [
-      "A web server is running on this port"
-    ],
+    "detection_result": ["A web server is running on this port"],
     "detection_method": [],
     "product_detection_result": [],
     "impact": [],
@@ -825,20 +780,15 @@
     "insight": [
       "This plugin attempts to guess which service is running on the remote port(s). For instance, it searches for a web server which could listen on another port than 80 or 443 and makes this information available for other check routines."
     ],
-    "log_method": [
-      "Details: Services",
-      "OID:1.3.6.1.4.1.25623.1.0.10330"
-    ],
-    "cvss": [
-      "0.0"
-    ],
+    "log_method": ["Details: Services", "OID:1.3.6.1.4.1.25623.1.0.10330"],
+    "cvss": ["0.0"],
     "port": 9200,
     "protocol": "tcp",
     "severity": "LOG",
     "references": [],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -856,26 +806,20 @@
     "impact": [],
     "solution": [],
     "insight": [],
-    "log_method": [
-      "Details: Hostname Determination Reporting"
-    ],
-    "cvss": [
-      "0.0"
-    ],
+    "log_method": ["Details: Hostname Determination Reporting"],
+    "cvss": ["0.0"],
     "port": "general",
     "protocol": "tcp",
     "severity": "LOG",
     "references": [],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
     "Name": "Elastic Elasticsearch Detection Consolidation",
-    "description": [
-      "Consolidation of Elastic Elasticsearch detections."
-    ],
+    "description": ["Consolidation of Elastic Elasticsearch detections."],
     "detection_result": [
       "Detected Elastic Elasticsearch",
       "Version: 5.6.16",
@@ -894,21 +838,15 @@
     "impact": [],
     "solution": [],
     "insight": [],
-    "log_method": [
-      "Details: Elastic Elasticsearch Detection Consolidation"
-    ],
-    "cvss": [
-      "0.0"
-    ],
+    "log_method": ["Details: Elastic Elasticsearch Detection Consolidation"],
+    "cvss": ["0.0"],
     "port": "general",
     "protocol": "tcp",
     "severity": "LOG",
-    "references": [
-      "url: https://www.elastic.co/"
-    ],
+    "references": ["url: https://www.elastic.co/"],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -931,28 +869,20 @@
     "impact": [],
     "solution": [],
     "insight": [],
-    "log_method": [
-      "Details: OS Detection Consolidation and Reporting"
-    ],
-    "cvss": [
-      "0.0"
-    ],
+    "log_method": ["Details: OS Detection Consolidation and Reporting"],
+    "cvss": ["0.0"],
     "port": "general",
     "protocol": "tcp",
     "severity": "LOG",
-    "references": [
-      "url: https://forum.greenbone.net/c/vulnerability-tests/7"
-    ],
+    "references": ["url: https://forum.greenbone.net/c/vulnerability-tests/7"],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
     "Name": "IP Forwarding Enabled - Active Check",
-    "description": [
-      "Checks if the remote host has IP forwarding enabled."
-    ],
+    "description": ["Checks if the remote host has IP forwarding enabled."],
     "detection_result": [
       "It was possible to route a TCP packet through the target host and received an an",
       "->swer which means IP forwarding is enabled."
@@ -966,18 +896,14 @@
       "Sends a crafted Local Link Layer (LLL) frame and checks the response.",
       "Details: IP Forwarding Enabled - Active Check"
     ],
-    "cvss": [
-      "0.0"
-    ],
+    "cvss": ["0.0"],
     "port": "general",
     "protocol": "tcp",
     "severity": "LOG",
-    "references": [
-      "cve: CVE-1999-0511"
-    ],
+    "references": ["cve: CVE-1999-0511"],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -1002,16 +928,14 @@
       "A combination of the protocols ICMP and TCP is used to determine the route. This method is applicable for IPv4 only and it is also known as 'traceroute'.",
       "Details: Traceroute"
     ],
-    "cvss": [
-      "0.0"
-    ],
+    "cvss": ["0.0"],
     "port": "general",
     "protocol": "tcp",
     "severity": "LOG",
     "references": [],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   }
 ]

@@ -27,9 +27,7 @@
       "An attacker can access an improperly secured default installation without authenticating and gain admin privileges. The CouchDB documentation has always made recommendations for properly securing an installation, including recommending using a rewall in front of all CouchDB installations."
     ],
     "log_method": [],
-    "cvss": [
-      "9.8"
-    ],
+    "cvss": ["9.8"],
     "port": 5984,
     "protocol": "tcp",
     "severity": "Critical",
@@ -40,15 +38,13 @@
       "url: https://lists.apache.org/thread/w24wo0h8nlctfps65txvk0oc5hdcnv00"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
     "Name": "Apache CouchDB 1.x < 1.7.0, 2.x < 2.1.1 Multiple Vulnerabilities - Linux",
-    "description": [
-      "Apache CouchDB is prone to multiple vulnerabilities."
-    ],
+    "description": ["Apache CouchDB is prone to multiple vulnerabilities."],
     "detection_result": [
       "Installed version: 1.6.1",
       "Fixed version: 1.7.0",
@@ -73,9 +69,7 @@
       "The vulnerabilities are due to dierences in the Erlang-based JSON parser and JavaScript-based JSON parser."
     ],
     "log_method": [],
-    "cvss": [
-      "9.8"
-    ],
+    "cvss": ["9.8"],
     "port": 5984,
     "protocol": "tcp",
     "severity": "CRITICAL",
@@ -90,8 +84,8 @@
       "dfn-cert: DFN-CERT-2017-2094"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -123,9 +117,7 @@
       "A malicious user with permission to create documents in a database is able to attach a HTML attachment to a document. If a CouchDB admin opens that attachment in a browser, e.g. via the CouchDB admin interface Fauxton, any JavaScript code embedded in that HTML attachment will be executed within the security context of that admin. A similar route is available with the already deprecated _show and _list functionality."
     ],
     "log_method": [],
-    "cvss": [
-      "7.3"
-    ],
+    "cvss": ["7.3"],
     "port": 5984,
     "protocol": "tcp",
     "severity": "HIGH",
@@ -134,8 +126,8 @@
       "url: https://docs.couchdb.org/en/stable/cve/2021-38295.html"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -168,9 +160,7 @@
       "CouchDB allowed for runtime-conguration of key components of the database. In some cases, this lead to vulnerabilities where CouchDB admin users could access the underlying operating system as the CouchDB user."
     ],
     "log_method": [],
-    "cvss": [
-      "7.2"
-    ],
+    "cvss": ["7.2"],
     "port": 5984,
     "protocol": "tcp",
     "severity": "HIGH",
@@ -180,8 +170,8 @@
       "dfn-cert: DFN-CERT-2020-0465"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -214,9 +204,7 @@
       "The aw is due to an insucient validation of administrator-supplied conguration settings via the HTTP API."
     ],
     "log_method": [],
-    "cvss": [
-      "7.2"
-    ],
+    "cvss": ["7.2"],
     "port": 5984,
     "protocol": "tcp",
     "severity": "HIGH",
@@ -228,8 +216,8 @@
       "dfn-cert: DFN-CERT-2018-1774"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -262,9 +250,7 @@
       "The aw is due to an insucient validation of administrator-supplied conguration settings via the HTTP API."
     ],
     "log_method": [],
-    "cvss": [
-      "7.2"
-    ],
+    "cvss": ["7.2"],
     "port": 5984,
     "protocol": "tcp",
     "severity": "HIGH",
@@ -275,8 +261,8 @@
       "dfn-cert: DFN-CERT-2019-0331"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -306,9 +292,7 @@
       "Design document functions which receive a user http request object may expose authorization or session cookie headers of the user who accesses the document."
     ],
     "log_method": [],
-    "cvss": [
-      "5.7"
-    ],
+    "cvss": ["5.7"],
     "port": 5984,
     "protocol": "tcp",
     "severity": "MEDIUM",
@@ -317,8 +301,8 @@
       "url: https://docs.couchdb.org/en/stable/cve/2023-45725.html"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -337,9 +321,7 @@
     ],
     "insight": [],
     "log_method": [],
-    "cvss": [
-      "7.5"
-    ],
+    "cvss": ["7.5"],
     "port": 5984,
     "protocol": "tcp",
     "severity": "HIGH",
@@ -350,8 +332,8 @@
       "dfn-cert: DFN-CERT-2019-0331"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -389,9 +371,7 @@
       "This doesn't aect map/reduce or search (Dreyfus) index functions."
     ],
     "log_method": [],
-    "cvss": [
-      "5.3"
-    ],
+    "cvss": ["5.3"],
     "port": 5984,
     "protocol": "tcp",
     "severity": "MEDIUM",
@@ -400,15 +380,13 @@
       "url: https://docs.couchdb.org/en/stable/cve/2023-26268.html"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
     "Name": "ICMP Timestamp Reply Information Disclosure",
-    "description": [
-      "The remote host responded to an ICMP timestamp request."
-    ],
+    "description": ["The remote host responded to an ICMP timestamp request."],
     "detection_result": [
       "The following response / ICMP packet has been received:",
       "- ICMP Type: 14",
@@ -426,23 +404,19 @@
     ],
     "insight": [],
     "log_method": [],
-    "cvss": [
-      "2.1"
-    ],
+    "cvss": ["2.1"],
     "port": 5984,
     "protocol": "tcp",
     "severity": "LOW",
     "references": [],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
     "Name": "ICMP Timestamp Reply Information Disclosure",
-    "description": [
-      "The remote host responded to an ICMP timestamp request."
-    ],
+    "description": ["The remote host responded to an ICMP timestamp request."],
     "detection_result": [
       "The following response / ICMP packet has been received:",
       "- ICMP Type: 14",
@@ -465,9 +439,7 @@
       "The Timestamp Reply is an ICMP message which replies to a Timestamp message. It consists of the originating timestamp sent by the sender of the Timestamp as well as a receive timestamp and a transmit timestamp."
     ],
     "log_method": [],
-    "cvss": [
-      "2.1"
-    ],
+    "cvss": ["2.1"],
     "port": "general",
     "protocol": "icmp",
     "severity": "LOW",
@@ -480,8 +452,8 @@
       "dfn-cert: DFN-CERT-2014-0658"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -503,16 +475,14 @@
     "solution": [],
     "insight": [],
     "log_method": [],
-    "cvss": [
-      "2.6"
-    ],
+    "cvss": ["2.6"],
     "port": "general",
     "protocol": "icmp",
     "severity": "LOW",
     "references": [],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -545,9 +515,7 @@
       "The remote host implements TCP timestamps, as dened by RFC1323/RFC7323."
     ],
     "log_method": [],
-    "cvss": [
-      "2.6"
-    ],
+    "cvss": ["2.6"],
     "port": "general",
     "protocol": "tcp",
     "severity": "LOW",
@@ -558,15 +526,13 @@
       "url: https://www.fortiguard.com/psirt/FG-IR-16-090"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
     "Name": "Services",
-    "description": [
-      "This plugin performs service detection."
-    ],
+    "description": ["This plugin performs service detection."],
     "detection_result": [],
     "detection_method": [
       "Special IP packets are forged and sent with a little delay in between to the target IP. The responses are searched for a timestamps. If found, the timestamps are reported.",
@@ -588,9 +554,7 @@
       "The remote host implements TCP timestamps, as defined by RFC1323/RFC7323."
     ],
     "log_method": [],
-    "cvss": [
-      "0.0"
-    ],
+    "cvss": ["0.0"],
     "port": 5984,
     "protocol": "tcp",
     "severity": "LOG",
@@ -601,18 +565,14 @@
       "url: https://www.fortiguard.com/psirt/FG-IR-16-090"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
     "Name": "Services",
-    "description": [
-      "This plugin performs service detection."
-    ],
-    "detection_result": [
-      "A web server is running on this port"
-    ],
+    "description": ["This plugin performs service detection."],
+    "detection_result": ["A web server is running on this port"],
     "detection_method": [],
     "product_detection_result": [],
     "impact": [],
@@ -625,23 +585,19 @@
       "OID:1.3.6.1.4.1.25623.1.0.10330",
       "Version used: 2025-03-05T05:38:53Z"
     ],
-    "cvss": [
-      "0.0"
-    ],
+    "cvss": ["0.0"],
     "port": 5984,
     "protocol": "tcp",
     "severity": "LOG",
     "references": [],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
     "Name": "Apache CouchDB Detection (HTTP)",
-    "description": [
-      "HTTP based detection of Apache CouchDB."
-    ],
+    "description": ["HTTP based detection of Apache CouchDB."],
     "detection_result": [
       "Detected Apache CouchDB",
       "Version: 1.6.1",
@@ -660,18 +616,14 @@
       "OID:1.3.6.1.4.1.25623.1.0.100571",
       "Version used: 2025-03-04T05:38:25Z"
     ],
-    "cvss": [
-      "0.0"
-    ],
+    "cvss": ["0.0"],
     "port": 5984,
     "protocol": "tcp",
     "severity": "LOG",
-    "references": [
-      "url: http://couchdb.apache.org/"
-    ],
+    "references": ["url: http://couchdb.apache.org/"],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -693,16 +645,14 @@
       "OID:1.3.6.1.4.1.25623.1.0.10107",
       "Version used: 2023-08-01T13:29:10Z"
     ],
-    "cvss": [
-      "0.0"
-    ],
+    "cvss": ["0.0"],
     "port": 5984,
     "protocol": "tcp",
     "severity": "LOG",
     "references": [],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -728,16 +678,14 @@
       "OID:1.3.6.1.4.1.25623.1.0.108708",
       "Version used: 2025-01-31T15:39:24Z"
     ],
-    "cvss": [
-      "0.0"
-    ],
+    "cvss": ["0.0"],
     "port": 5984,
     "protocol": "tcp",
     "severity": "LOG",
     "references": [],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -759,16 +707,14 @@
       "OID:1.3.6.1.4.1.25623.1.0.20108",
       "Version used: 2023-08-01T13:29:10Z"
     ],
-    "cvss": [
-      "0.0"
-    ],
+    "cvss": ["0.0"],
     "port": 5984,
     "protocol": "tcp",
     "severity": "LOG",
     "references": [],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -831,9 +777,7 @@
       "OID:1.3.6.1.4.1.25623.1.0.112081",
       "Version used: 2025-03-21T15:40:43Z"
     ],
-    "cvss": [
-      "0.0"
-    ],
+    "cvss": ["0.0"],
     "port": 5984,
     "protocol": "tcp",
     "severity": "LOG",
@@ -843,15 +787,13 @@
       "url: https://securityheaders.com/"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
     "Name": "Allowed HTTP Methods Enumeration",
-    "description": [
-      "Enumerates which HTTP methods are allowed."
-    ],
+    "description": ["Enumerates which HTTP methods are allowed."],
     "detection_result": [
       "The following list contains the URLs and corresponding supported HTTP methods.",
       "URL | HTTP Methods",
@@ -876,16 +818,14 @@
       "OID:1.3.6.1.4.1.25623.1.0.153974",
       "Version used: 2025-02-28T05:38:49Z"
     ],
-    "cvss": [
-      "0.0"
-    ],
+    "cvss": ["0.0"],
     "port": 5984,
     "protocol": "tcp",
     "severity": "LOG",
     "references": [],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -908,18 +848,14 @@
       "OID:1.3.6.1.4.1.25623.1.0.810002",
       "Version used: 2022-07-27T10:11:28Z"
     ],
-    "cvss": [
-      "0.0"
-    ],
+    "cvss": ["0.0"],
     "port": "general",
     "protocol": "CPE-T",
     "severity": "LOG",
-    "references": [
-      "url: https://nvd.nist.gov/products/cpe"
-    ],
+    "references": ["url: https://nvd.nist.gov/products/cpe"],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -942,16 +878,14 @@
       "OID:1.3.6.1.4.1.25623.1.0.108449",
       "Version used: 2022-07-27T10:11:28Z"
     ],
-    "cvss": [
-      "0.0"
-    ],
+    "cvss": ["0.0"],
     "port": "general",
     "protocol": "tcp",
     "severity": "LOG",
     "references": [],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -979,25 +913,19 @@
       "OID:1.3.6.1.4.1.25623.1.0.105937",
       "Version used: 2026-01-21T05:50:46Z"
     ],
-    "cvss": [
-      "0.0"
-    ],
+    "cvss": ["0.0"],
     "port": "general",
     "protocol": "tcp",
     "severity": "LOG",
-    "references": [
-      "url: https://forum.greenbone.net/c/vulnerability-tests/7"
-    ],
+    "references": ["url: https://forum.greenbone.net/c/vulnerability-tests/7"],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
     "Name": "IP Forwarding Enabled - Active Check",
-    "description": [
-      "Checks if the remote host has IP forwarding enabled."
-    ],
+    "description": ["Checks if the remote host has IP forwarding enabled."],
     "detection_result": [
       "It was possible to route a TCP packet through the target host and received an an ->swer which means IP forwarding is enabled."
     ],
@@ -1012,18 +940,14 @@
       "OID:1.3.6.1.4.1.25623.1.0.147205",
       "Version used: 2021-12-03T08:27:06Z"
     ],
-    "cvss": [
-      "0.0"
-    ],
+    "cvss": ["0.0"],
     "port": "general",
     "protocol": "tcp",
     "severity": "LOG",
-    "references": [
-      "cve: CVE-1999-0511"
-    ],
+    "references": ["cve: CVE-1999-0511"],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -1050,16 +974,14 @@
       "OID:1.3.6.1.4.1.25623.1.0.51662",
       "Version used: 2022-10-17T11:13:19Z"
     ],
-    "cvss": [
-      "0.0"
-    ],
+    "cvss": ["0.0"],
     "port": "general",
     "protocol": "tcp",
     "severity": "LOG",
     "references": [],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -1087,18 +1009,14 @@
       "OID:1.3.6.1.4.1.25623.1.0.108441",
       "Version used: 2023-06-22T10:34:15Z"
     ],
-    "cvss": [
-      "0.0"
-    ],
+    "cvss": ["0.0"],
     "port": "general",
     "protocol": "tcp",
     "severity": "LOG",
-    "references": [
-      "url: https://forum.greenbone.net/c/vulnerability-tests/7"
-    ],
+    "references": ["url: https://forum.greenbone.net/c/vulnerability-tests/7"],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   }
 ]

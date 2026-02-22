@@ -1,0 +1,1 @@
+# Estratégias de scanner - pacote

@@ -27,18 +27,14 @@
     ],
     "insight": [],
     "log_method": [],
-    "cvss": [
-      "2.1"
-    ],
+    "cvss": ["2.1"],
     "port": 9200,
     "protocol": "tcp",
     "severity": "Critical",
-    "references": [
-      "url: https://www.elastic.co/support/eol"
-    ],
+    "references": ["url: https://www.elastic.co/support/eol"],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -46,10 +42,7 @@
     "description": [
       "Elasticsearch is prone to an information disclosure vulnerability."
     ],
-    "detection_result": [
-      "Installed version: 2.4.6",
-      "Fixed version: 5.6.12"
-    ],
+    "detection_result": ["Installed version: 2.4.6", "Fixed version: 5.6.12"],
     "detection_method": [
       "Checks if a vulnerable version is present on the target host.",
       "Details: Elastic Elasticsearch 'CVE-2018-3831' Information Disclosure Vulnerability - Li.",
@@ -69,9 +62,7 @@
       "The _cluster/settings API, when queried, could leak sensitive conguration information such as passwords, tokens or usernames."
     ],
     "log_method": [],
-    "cvss": [
-      "8.8"
-    ],
+    "cvss": ["8.8"],
     "port": 9200,
     "protocol": "tcp",
     "severity": "HIGH",
@@ -84,15 +75,13 @@
       "dfn-cert: DFN-CERT-2020-1653"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
     "Name": "Elastic Elasticsearch Security < 5.6.15 / 6.x < 6.6.1 Permission Issue (ESA-2019-04)",
-    "description": [
-      "Elasticsearch Security is prone to a permission issue."
-    ],
+    "description": ["Elasticsearch Security is prone to a permission issue."],
     "detection_result": [
       "Installed version: 2.4.6",
       "Fixed version: 5.6.15",
@@ -119,9 +108,7 @@
       "A permission issue was found in Elasticsearch when Field Level Security and Document Level Security are disabled and the _aliases, _shrink, or _split endpoints are used. If the elasticsearch.yml le has xpack.security.dls_s.enabled set to false, certain permission checks are skipped when users perform one of the actions mentioned above, to make existing data available under a new index/alias name."
     ],
     "log_method": [],
-    "cvss": [
-      "8.1"
-    ],
+    "cvss": ["8.1"],
     "port": 9200,
     "protocol": "tcp",
     "severity": "HIGH",
@@ -133,8 +120,8 @@
       "dfn-cert: DFN-CERT-2025-0933"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -166,9 +153,7 @@
       "A sensitive data disclosure aw was found in the Elasticsearch repository-azure (formerly elasticsearch-cloud-azure) plugin."
     ],
     "log_method": [],
-    "cvss": [
-      "8.1"
-    ],
+    "cvss": ["8.1"],
     "port": 9200,
     "protocol": "tcp",
     "severity": "HIGH",
@@ -179,8 +164,8 @@
       "url: https://www.elastic.co/community/security"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -211,9 +196,7 @@
       "A eld disclosure aw was found in Elasticsearch when running a scrolling search with Field  Level Security. If a user runs the same query another more privileged user recently ran, the  scrolling search can leak elds that should be hidden."
     ],
     "log_method": [],
-    "cvss": [
-      "6.5"
-    ],
+    "cvss": ["6.5"],
     "port": 9200,
     "protocol": "tcp",
     "severity": "MEDIUM",
@@ -222,8 +205,8 @@
       "url: https://discuss.elastic.co/t/elastic-stack-7-9-0-and-6-8-12-security-update  ->/245456"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -252,9 +235,7 @@
       "An uncontrolled recursion vulnerability that could lead to a denial of service attack was iden-  tied in the Elasticsearch Grok parser. A user with the ability to submit arbitrary queries to  Elasticsearch could create a malicious Grok query that will crash the Elasticsearch node."
     ],
     "log_method": [],
-    "cvss": [
-      "6.5"
-    ],
+    "cvss": ["6.5"],
     "port": 9200,
     "protocol": "tcp",
     "severity": "MEDIUM",
@@ -266,8 +247,8 @@
       "dfn-cert: DFN-CERT-2022-2315"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -298,9 +279,7 @@
       "A race condition aw was found in the response headers Elasticsearch returns to a request."
     ],
     "log_method": [],
-    "cvss": [
-      "5.9"
-    ],
+    "cvss": ["5.9"],
     "port": 9200,
     "protocol": "tcp",
     "severity": "MEDIUM",
@@ -311,15 +290,13 @@
       "cert-bund: WID-SEC-2024-3184"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
     "Name": "Elastic Elasticsearch Multiple Vulnerabilities (ESA-2021-06, ESA-2021-08)",
-    "description": [
-      "Elasticsearch is prone to multiple vulnerabilities."
-    ],
+    "description": ["Elasticsearch is prone to multiple vulnerabilities."],
     "detection_result": [
       "Installed version: 2.4.6",
       "Fixed version: 6.8.15",
@@ -345,9 +322,7 @@
       " - CVE-2021-22137: Field disclosure aw"
     ],
     "log_method": [],
-    "cvss": [
-      "5.3"
-    ],
+    "cvss": ["5.3"],
     "port": 9200,
     "protocol": "tcp",
     "severity": "MEDIUM",
@@ -359,8 +334,8 @@
       "dfn-cert: DFN-CERT-2025-0933"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -389,9 +364,7 @@
       "Elasticsearch has an information disclosure issue when audit logging and the emit_request_body option is enabled. The Elasticsearch audit log could contain sensitive information such as password hashes or authentication tokens."
     ],
     "log_method": [],
-    "cvss": [
-      "4.9"
-    ],
+    "cvss": ["4.9"],
     "port": 9200,
     "protocol": "tcp",
     "severity": "MEDIUM",
@@ -402,8 +375,8 @@
       "dfn-cert: DFN-CERT-2025-0933"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -427,16 +400,14 @@
     ],
     "insight": [],
     "log_method": [],
-    "cvss": [
-      "2.6"
-    ],
+    "cvss": ["2.6"],
     "port": 9200,
     "protocol": "tcp",
     "severity": "LOW",
     "references": [],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -470,9 +441,7 @@
       "The remote host implements TCP timestamps, as dened by RFC1323/RFC7323."
     ],
     "log_method": [],
-    "cvss": [
-      "2.6"
-    ],
+    "cvss": ["2.6"],
     "port": "general",
     "protocol": "tcp",
     "severity": "LOW",
@@ -483,8 +452,8 @@
       "url: https://www.fortiguard.com/psirt/FG-IR-16-090"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -515,9 +484,7 @@
       "A document disclosure aw was found in Elasticsearch when Document or Field Level Security is used. Search queries do not properly preserve security permissions when executing certain complex queries."
     ],
     "log_method": [],
-    "cvss": [
-      "3.1"
-    ],
+    "cvss": ["3.1"],
     "port": 9200,
     "protocol": "tcp",
     "severity": "LOW",
@@ -530,15 +497,13 @@
       "dfn-cert: DFN-CERT-2022-1530"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
     "Name": "ICMP Timestamp Reply Information Disclosure",
-    "description": [
-      "The remote host responded to an ICMP timestamp request."
-    ],
+    "description": ["The remote host responded to an ICMP timestamp request."],
     "detection_result": [],
     "detection_method": [],
     "product_detection_result": [],
@@ -546,16 +511,14 @@
     "solution": [],
     "insight": [],
     "log_method": [],
-    "cvss": [
-      "2.1"
-    ],
+    "cvss": ["2.1"],
     "port": 9200,
     "protocol": "tcp",
     "severity": "LOW",
     "references": [],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -589,9 +552,7 @@
       "The Timestamp Reply is an ICMP message which replies to a Timestamp message. It consists of the originating timestamp sent by the sender of the Timestamp as well as a receive timestamp and a transmit timestamp."
     ],
     "log_method": [],
-    "cvss": [
-      "2.1"
-    ],
+    "cvss": ["2.1"],
     "port": "general",
     "protocol": "icmp",
     "severity": "LOW",
@@ -604,8 +565,8 @@
       "dfn-cert: DFN-CERT-2014-0658"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -620,16 +581,14 @@
     "solution": [],
     "insight": [],
     "log_method": [],
-    "cvss": [
-      "0.0"
-    ],
+    "cvss": ["0.0"],
     "port": "general",
     "protocol": "icmp",
     "severity": "LOG",
     "references": [],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -652,18 +611,14 @@
       "OID:1.3.6.1.4.1.25623.1.0.810002",
       "Version used: 2022-07-27T10:11:28Z"
     ],
-    "cvss": [
-      "0.0"
-    ],
+    "cvss": ["0.0"],
     "port": "general",
     "protocol": "CPE-T",
     "severity": "LOG",
-    "references": [
-      "url: https://nvd.nist.gov/products/cpe"
-    ],
+    "references": ["url: https://nvd.nist.gov/products/cpe"],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -682,16 +637,14 @@
     "solution": [],
     "insight": [],
     "log_method": [],
-    "cvss": [
-      "0.0"
-    ],
+    "cvss": ["0.0"],
     "port": "general",
     "protocol": "CPE-T",
     "severity": "LOG",
     "references": [],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -712,16 +665,14 @@
     "log_method": [
       "Details: Hostname Determination Reporting   OID:1.3.6.1.4.1.25623.1.0.108449   Version used: 2022-07-27T10:11:28Z"
     ],
-    "cvss": [
-      "0.0"
-    ],
+    "cvss": ["0.0"],
     "port": "general",
     "protocol": "tcp",
     "severity": "LOG",
     "references": [],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -750,25 +701,19 @@
       "OID:1.3.6.1.4.1.25623.1.0.105937",
       "Version used: 2026-01-21T05:50:46Z"
     ],
-    "cvss": [
-      "0.0"
-    ],
+    "cvss": ["0.0"],
     "port": "general",
     "protocol": "tcp",
     "severity": "LOG",
-    "references": [
-      "url: https://forum.greenbone.net/c/vulnerability-tests/7"
-    ],
+    "references": ["url: https://forum.greenbone.net/c/vulnerability-tests/7"],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
     "Name": "IP Forwarding Enabled - Active Check",
-    "description": [
-      "Checks if the remote host has IP forwarding enabled."
-    ],
+    "description": ["Checks if the remote host has IP forwarding enabled."],
     "detection_result": [
       "It was possible to route a TCP packet through the target host and received an an",
       "->swer which means IP forwarding is enabled."
@@ -784,18 +729,14 @@
       "OID:1.3.6.1.4.1.25623.1.0.147205",
       "Version used: 2021-12-03T08:27:06Z"
     ],
-    "cvss": [
-      "0.0"
-    ],
+    "cvss": ["0.0"],
     "port": "general",
     "protocol": "tcp",
     "severity": "LOG",
-    "references": [
-      "cve: CVE-1999-0511"
-    ],
+    "references": ["cve: CVE-1999-0511"],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -822,23 +763,19 @@
       "OID:1.3.6.1.4.1.25623.1.0.51662",
       "Version used: 2022-10-17T11:13:19Z"
     ],
-    "cvss": [
-      "0.0"
-    ],
+    "cvss": ["0.0"],
     "port": "general",
     "protocol": "tcp",
     "severity": "LOG",
     "references": [],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
     "Name": "Elastic Elasticsearch Detection Consolidation",
-    "description": [
-      "Consolidation of Elastic Elasticsearch detections."
-    ],
+    "description": ["Consolidation of Elastic Elasticsearch detections."],
     "detection_result": [
       "Detected Elastic Elasticsearch",
       "Version: 2.4.6",
@@ -881,18 +818,14 @@
       "OID:1.3.6.1.4.1.25623.1.0.125293",
       "Version used: 2025-09-05T15:40:40Z"
     ],
-    "cvss": [
-      "0.0"
-    ],
+    "cvss": ["0.0"],
     "port": "general",
     "protocol": "tcp",
     "severity": "LOG",
-    "references": [
-      "url: https://www.elastic.co/"
-    ],
+    "references": ["url: https://www.elastic.co/"],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -901,9 +834,7 @@
       "This plugin performs service detection.",
       "Quality of Detection (QoD): 80%"
     ],
-    "detection_result": [
-      "A web server is running on this port"
-    ],
+    "detection_result": ["A web server is running on this port"],
     "detection_method": [],
     "product_detection_result": [],
     "impact": [],
@@ -916,16 +847,14 @@
       "OID:1.3.6.1.4.1.25623.1.0.10330",
       "Version used: 2025-03-05T05:38:53Z"
     ],
-    "cvss": [
-      "0.0"
-    ],
+    "cvss": ["0.0"],
     "port": 9200,
     "protocol": "tcp",
     "severity": "LOG",
     "references": [],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -965,9 +894,7 @@
       "OID:1.3.6.1.4.1.25623.1.0.112081",
       "Version used: 2025-03-21T15:40:43Z"
     ],
-    "cvss": [
-      "0.0"
-    ],
+    "cvss": ["0.0"],
     "port": 9200,
     "protocol": "tcp",
     "severity": "LOG",
@@ -977,8 +904,8 @@
       "url: https://securityheaders.com/"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -1027,16 +954,14 @@
       "OID:1.3.6.1.4.1.25623.1.0.111038",
       "Version used: 2026-01-13T05:47:36Z"
     ],
-    "cvss": [
-      "0.0"
-    ],
+    "cvss": ["0.0"],
     "port": 9200,
     "protocol": "tcp",
     "severity": "LOG",
     "references": [],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -1056,18 +981,14 @@
       "This plugin is a complement of the plugin 'Services' (OID: 1.3.6.1.4.1.25623.1.0.10330). It sends a HTTP 'GET' request to the remaining unknown services and tries to identify them."
     ],
     "log_method": [],
-    "cvss": [
-      "0.0"
-    ],
+    "cvss": ["0.0"],
     "port": 9300,
     "protocol": "tcp",
     "severity": "LOG",
-    "references": [
-      "url: https://forum.greenbone.net/c/vulnerability-tests/7"
-    ],
+    "references": ["url: https://forum.greenbone.net/c/vulnerability-tests/7"],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   }
 ]

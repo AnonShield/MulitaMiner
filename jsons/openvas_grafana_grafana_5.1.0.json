@@ -4,10 +4,7 @@
     "description": [
       "Grafana is prone to an Authentication Bypass vulnerability.   Quality of Detection (QoD): 80%"
     ],
-    "detection_result": [
-      "Installed version: 5.1.0",
-      "Fixed version: 5.2.3"
-    ],
+    "detection_result": ["Installed version: 5.1.0", "Fixed version: 5.2.3"],
     "detection_method": [
       "Checks if a vulnerable version is present on the target host.",
       "Details: Grafana Authentication Bypass Vulnerability",
@@ -26,9 +23,7 @@
       "An attacker can generate a valid remember me cookie knowing only a username of an LDAP or OAuth user."
     ],
     "log_method": [],
-    "cvss": [
-      "9.0"
-    ],
+    "cvss": ["9.0"],
     "port": 3000,
     "protocol": "tcp",
     "severity": "Critical",
@@ -42,8 +37,8 @@
       "dfn-cert: DFN-CERT-2018-2574"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -71,9 +66,7 @@
     ],
     "insight": [],
     "log_method": [],
-    "cvss": [
-      "8.8"
-    ],
+    "cvss": ["8.8"],
     "port": 3000,
     "protocol": "tcp",
     "severity": "HIGH",
@@ -90,8 +83,8 @@
       "dfn-cert: DFN-CERT-2022-0794"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -121,9 +114,7 @@
       "The avatar feature in Grafana has an SSRF Incorrect Access Control issue. This vulnerability allows any unauthenticated user/client to make Grafana send HTTP requests to any URL and return its result to the user/client. This can be used to gain information about the network that Grafana is running on."
     ],
     "log_method": [],
-    "cvss": [
-      "8.2"
-    ],
+    "cvss": ["8.2"],
     "port": 3000,
     "protocol": "tcp",
     "severity": "HIGH",
@@ -147,15 +138,13 @@
       "dfn-cert: DFN-CERT-2020-1201"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
     "Name": "Grafana < 8.5.15, 9 < 9.2.4 Multiple Vulnerabilities",
-    "description": [
-      "Grafana is prone to multiple vulnerabilities."
-    ],
+    "description": ["Grafana is prone to multiple vulnerabilities."],
     "detection_result": [
       "Installed version: 5.1.0",
       "Fixed version: 8.5.15",
@@ -180,9 +169,7 @@
       "- CVE-2022-39307: The impacted endpoint leaks information to unauthenticated users and introduces a security risk."
     ],
     "log_method": [],
-    "cvss": [
-      "8.1"
-    ],
+    "cvss": ["8.1"],
     "port": 3000,
     "protocol": "tcp",
     "severity": "HIGH",
@@ -197,8 +184,8 @@
       "dfn-cert: DFN-CERT-2023-0322"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -228,9 +215,7 @@
       "The Chromium browser embedded in the Grafana image renderer allows for 'printing' of unauthorized files in a PNG file. This makes it possible for a malicious user to retrieve unauthorized files under some network conditions or via a fake datasource (if the user has admin permissions in Grafana). This vulnerability permits unauthorized file disclosure and is a potential DoS vector through targeting of extremely large files."
     ],
     "log_method": [],
-    "cvss": [
-      "8.1"
-    ],
+    "cvss": ["8.1"],
     "port": 3000,
     "protocol": "tcp",
     "severity": "HIGH",
@@ -240,15 +225,13 @@
       "cert-bund: WID-SEC-2022-1221"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
     "Name": "Grafana 2.0.0 < 5.4.5, 6.x < 6.3.4 DoS Vulnerability",
-    "description": [
-      "Grafana is prone to a denial of service vulnerability."
-    ],
+    "description": ["Grafana is prone to a denial of service vulnerability."],
     "detection_result": [
       "Installed version: 5.1.0",
       "Fixed version: 5.4.5",
@@ -266,16 +249,14 @@
       "Parts of the HTTP API allow unauthenticated use. This makes it possible to run a denial of service attack"
     ],
     "log_method": [],
-    "cvss": [
-      "7.5"
-    ],
+    "cvss": ["7.5"],
     "port": 3000,
     "protocol": "tcp",
     "severity": "HIGH",
     "references": [],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -305,9 +286,7 @@
     ],
     "insight": [],
     "log_method": [],
-    "cvss": [
-      "7.5"
-    ],
+    "cvss": ["7.5"],
     "port": 3000,
     "protocol": "tcp",
     "severity": "HIGH",
@@ -320,8 +299,8 @@
       "dfn-cert: DFN-CERT-2023-0322"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -351,9 +330,7 @@
       "The snapshot feature in Grafana can allow an unauthenticated remote attacker to trigger a DoS via a remote API call if a commonly used conguration is set."
     ],
     "log_method": [],
-    "cvss": [
-      "7.5"
-    ],
+    "cvss": ["7.5"],
     "port": 3000,
     "protocol": "tcp",
     "severity": "HIGH",
@@ -369,8 +346,8 @@
       "dfn-cert: DFN-CERT-2021-1281"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -408,9 +385,7 @@
       "The combination of deletion and viewing enables a complete walk through all snapshot data while resulting in complete snapshot data loss."
     ],
     "log_method": [],
-    "cvss": [
-      "7.3"
-    ],
+    "cvss": ["7.3"],
     "port": 3000,
     "protocol": "tcp",
     "severity": "HIGH",
@@ -428,8 +403,8 @@
       "dfn-cert: DFN-CERT-2022-0922"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -463,9 +438,7 @@
       "- This fake datasource can be called publicly via this proxying feature."
     ],
     "log_method": [],
-    "cvss": [
-      "6.6"
-    ],
+    "cvss": ["6.6"],
     "port": 3000,
     "protocol": "tcp",
     "severity": "MEDIUM",
@@ -480,8 +453,8 @@
       "dfn-cert: DFN-CERT-2022-2350"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -502,9 +475,7 @@
       "Version used: 2021-07-08T11:00:45Z"
     ],
     "product_detection_result": [],
-    "impact": [
-      "An authenticated attacker may read arbitrary les."
-    ],
+    "impact": ["An authenticated attacker may read arbitrary les."],
     "solution": [
       "Solution type: VendorFix",
       "Update to version 6.4.4 or later."
@@ -513,9 +484,7 @@
       "Grafana has an arbitrary le read vulnerability, which could be exploited by an authenticated attacker that has privileges to modify the data source congurations."
     ],
     "log_method": [],
-    "cvss": [
-      "6.5"
-    ],
+    "cvss": ["6.5"],
     "port": 3000,
     "protocol": "tcp",
     "severity": "MEDIUM",
@@ -527,8 +496,8 @@
       "dfn-cert: DFN-CERT-2020-2387"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -560,9 +529,7 @@
       "The vulnerability allows any users with Editor or Admin permissions in Grafana to read any le that the Grafana process can read from the lesystem."
     ],
     "log_method": [],
-    "cvss": [
-      "6.5"
-    ],
+    "cvss": ["6.5"],
     "port": 3000,
     "protocol": "tcp",
     "severity": "MEDIUM",
@@ -582,8 +549,8 @@
       "dfn-cert: DFN-CERT-2019-0752"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -610,16 +577,14 @@
       "The option to send a test alert is not available from the user panel UI for users having the Viewer role. It is still possible for a user with the Viewer role to send a test alert using the API as the API does not check access to this function. This might enable malicious users to abuse the functionality by sending multiple alert messages to e-mail and Slack, spamming users, prepare phishing attack or block SMTP server."
     ],
     "log_method": [],
-    "cvss": [
-      "6.4"
-    ],
+    "cvss": ["6.4"],
     "port": 3000,
     "protocol": "tcp",
     "severity": "MEDIUM",
     "references": [],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -651,9 +616,7 @@
       "- Table-panel XSS via column.title or cellLinkTooltip (CVE-2020-12245)"
     ],
     "log_method": [],
-    "cvss": [
-      "6.1"
-    ],
+    "cvss": ["6.1"],
     "port": 3000,
     "protocol": "tcp",
     "severity": "MEDIUM",
@@ -678,8 +641,8 @@
       "dfn-cert: DFN-CERT-2020-1371"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -711,9 +674,7 @@
       "The vulnerability is exploitable via a query alias for the ElasticSearch datasource."
     ],
     "log_method": [],
-    "cvss": [
-      "6.1"
-    ],
+    "cvss": ["6.1"],
     "port": 3000,
     "protocol": "tcp",
     "severity": "MEDIUM",
@@ -730,8 +691,8 @@
       "dfn-cert: DFN-CERT-2020-2653"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -761,9 +722,7 @@
       "Cross-site scripting via the 'Dashboard > Text Panel' screen."
     ],
     "log_method": [],
-    "cvss": [
-      "6.1"
-    ],
+    "cvss": ["6.1"],
     "port": 3000,
     "protocol": "tcp",
     "severity": "MEDIUM",
@@ -777,8 +736,8 @@
       "dfn-cert: DFN-CERT-2020-2203"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -811,9 +770,7 @@
       "- CVE-2018-18625: XSS via a link on the 'Dashboard > All Panels > General' screen"
     ],
     "log_method": [],
-    "cvss": [
-      "6.1"
-    ],
+    "cvss": ["6.1"],
     "port": 3000,
     "protocol": "tcp",
     "severity": "MEDIUM",
@@ -830,8 +787,8 @@
       "dfn-cert: DFN-CERT-2020-2203"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -864,9 +821,7 @@
       "The vulnerability is triggered when clicking the field in the query editor's 'FROM'-row in which the payload was previously inserted."
     ],
     "log_method": [],
-    "cvss": [
-      "5.4"
-    ],
+    "cvss": ["5.4"],
     "port": 3000,
     "protocol": "tcp",
     "severity": "MEDIUM",
@@ -875,8 +830,8 @@
       "url: https://github.com/grafana/grafana/issues/13667"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -907,9 +862,7 @@
     ],
     "insight": [],
     "log_method": [],
-    "cvss": [
-      "5.4"
-    ],
+    "cvss": ["5.4"],
     "port": 3000,
     "protocol": "tcp",
     "severity": "MEDIUM",
@@ -927,8 +880,8 @@
       "dfn-cert: DFN-CERT-2022-0794"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -959,9 +912,7 @@
       "public/app/features/panel/panel_ctrl.ts allows HTML Injection in panel drilldown links (via the Title or url field)."
     ],
     "log_method": [],
-    "cvss": [
-      "5.4"
-    ],
+    "cvss": ["5.4"],
     "port": 3000,
     "protocol": "tcp",
     "severity": "MEDIUM",
@@ -971,8 +922,8 @@
       "url: https://github.com/grafana/grafana/releases/tag/v6.2.5"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -1000,9 +951,7 @@
     ],
     "insight": [],
     "log_method": [],
-    "cvss": [
-      "5.4"
-    ],
+    "cvss": ["5.4"],
     "port": 3000,
     "protocol": "tcp",
     "severity": "MEDIUM",
@@ -1019,15 +968,13 @@
       "dfn-cert: DFN-CERT-2020-2062"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
     "Name": "Grafana < 8.5.21, 9.2.x < 9.2.13, 9.3.x < 9.3.8 Multiple Vulnerabilities",
-    "description": [
-      "Grafana is prone to multiple vulnerabilities."
-    ],
+    "description": ["Grafana is prone to multiple vulnerabilities."],
     "detection_result": [
       "Installed version: 5.1.0",
       "Fixed version: 8.5.21",
@@ -1052,9 +999,7 @@
       "- CVE-2023-0594: Stored XSS in TraceView panel"
     ],
     "log_method": [],
-    "cvss": [
-      "5.4"
-    ],
+    "cvss": ["5.4"],
     "port": 3000,
     "protocol": "tcp",
     "severity": "MEDIUM",
@@ -1068,8 +1013,8 @@
       "dfn-cert: DFN-CERT-2023-0901"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -1103,9 +1048,7 @@
       "that endpoint."
     ],
     "log_method": [],
-    "cvss": [
-      "5.3"
-    ],
+    "cvss": ["5.3"],
     "port": 3000,
     "protocol": "tcp",
     "severity": "MEDIUM",
@@ -1117,8 +1060,8 @@
       "dfn-cert: DFN-CERT-2023-1676"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -1126,10 +1069,7 @@
     "description": [
       "Grafana is prone to an information disclosure vulnerability."
     ],
-    "detection_result": [
-      "Installed version: 5.1.0",
-      "Fixed version: None"
-    ],
+    "detection_result": ["Installed version: 5.1.0", "Fixed version: None"],
     "detection_method": [
       "Checks if a vulnerable version is present on the target host.",
       "Details: Grafana <= 5.4.0 Information Disclosure Vulnerability",
@@ -1149,9 +1089,7 @@
       "encryption of passwords for data sources that it uses."
     ],
     "log_method": [],
-    "cvss": [
-      "4.9"
-    ],
+    "cvss": ["4.9"],
     "port": 3000,
     "protocol": "tcp",
     "severity": "MEDIUM",
@@ -1160,8 +1098,8 @@
       "url: https://exchange.xforce.ibmcloud.com/vulnerabilities/167244"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -1196,9 +1134,7 @@
       "The stored cross-site scripting (XSS) is possible due to improper sanitization of the Function Description value."
     ],
     "log_method": [],
-    "cvss": [
-      "4.8"
-    ],
+    "cvss": ["4.8"],
     "port": 3000,
     "protocol": "tcp",
     "severity": "MEDIUM",
@@ -1214,8 +1150,8 @@
       "dfn-cert: DFN-CERT-2023-0901"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -1245,9 +1181,7 @@
       "Grafana contains a directory traversal vulnerability for fully lowercase or fully uppercase .md les. The vulnerability is limited in scope, and only allows access to les with the extension .md to authenticated users only."
     ],
     "log_method": [],
-    "cvss": [
-      "4.3"
-    ],
+    "cvss": ["4.3"],
     "port": 3000,
     "protocol": "tcp",
     "severity": "MEDIUM",
@@ -1270,8 +1204,8 @@
       "dfn-cert: DFN-CERT-2022-0144"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -1304,9 +1238,7 @@
     ],
     "insight": [],
     "log_method": [],
-    "cvss": [
-      "4.3"
-    ],
+    "cvss": ["4.3"],
     "port": 3000,
     "protocol": "tcp",
     "severity": "MEDIUM",
@@ -1323,8 +1255,8 @@
       "dfn-cert: DFN-CERT-2022-0794"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -1360,9 +1292,7 @@
       "The remote host implements TCP timestamps, as dened by RFC1323/RFC7323."
     ],
     "log_method": [],
-    "cvss": [
-      "2.6"
-    ],
+    "cvss": ["2.6"],
     "port": "general",
     "protocol": "tcp",
     "severity": "LOW",
@@ -1373,15 +1303,13 @@
       "url: https://www.fortiguard.com/psirt/FG-IR-16-090"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
     "Name": "ICMP Timestamp Reply Information Disclosure",
-    "description": [
-      "The remote host responded to an ICMP timestamp request."
-    ],
+    "description": ["The remote host responded to an ICMP timestamp request."],
     "detection_result": [
       "The following response / ICMP packet has been received:",
       "- ICMP Type: 14",
@@ -1407,9 +1335,7 @@
       "The Timestamp Reply is an ICMP message which replies to a Timestamp message. It consists of the originating timestamp sent by the sender of the Timestamp as well as a receive timestamp and a transmit timestamp."
     ],
     "log_method": [],
-    "cvss": [
-      "2.1"
-    ],
+    "cvss": ["2.1"],
     "port": "general",
     "protocol": "icmp",
     "severity": "LOW",
@@ -1422,8 +1348,8 @@
       "dfn-cert: DFN-CERT-2014-0658"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -1453,9 +1379,7 @@
       "OID:1.3.6.1.4.1.25623.1.0.10302",
       "Version used: 2024-02-26T14:36:40Z"
     ],
-    "cvss": [
-      "0.0"
-    ],
+    "cvss": ["0.0"],
     "port": 3000,
     "protocol": "tcp",
     "severity": "LOG",
@@ -1464,8 +1388,8 @@
       "url: https://www.robotstxt.org/norobots-rfc.txt"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -1498,16 +1422,14 @@
       "OID:1.3.6.1.4.1.25623.1.0.153974",
       "Version used: 2025-02-28T05:38:49Z"
     ],
-    "cvss": [
-      "0.0"
-    ],
+    "cvss": ["0.0"],
     "port": 3000,
     "protocol": "tcp",
     "severity": "LOG",
     "references": [],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -1516,9 +1438,7 @@
       "This plugin performs service detection.",
       "Quality of Detection (QoD): 80%"
     ],
-    "detection_result": [
-      "A web server is running on this port"
-    ],
+    "detection_result": ["A web server is running on this port"],
     "detection_method": [],
     "product_detection_result": [],
     "impact": [],
@@ -1531,16 +1451,14 @@
       "OID:1.3.6.1.4.1.25623.1.0.10330",
       "Version used: 2025-03-05T05:38:53Z"
     ],
-    "cvss": [
-      "0.0"
-    ],
+    "cvss": ["0.0"],
     "port": 3000,
     "protocol": "tcp",
     "severity": "LOG",
     "references": [],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -1563,16 +1481,14 @@
       "OID:1.3.6.1.4.1.25623.1.0.108449",
       "Version used: 2022-07-27T10:11:28Z"
     ],
-    "cvss": [
-      "0.0"
-    ],
+    "cvss": ["0.0"],
     "port": "general",
     "protocol": "tcp",
     "severity": "LOG",
     "references": [],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -1600,25 +1516,19 @@
       "OID:1.3.6.1.4.1.25623.1.0.105937",
       "Version used: 2026-01-21T05:50:46Z"
     ],
-    "cvss": [
-      "0.0"
-    ],
+    "cvss": ["0.0"],
     "port": "general",
     "protocol": "tcp",
     "severity": "LOG",
-    "references": [
-      "url: https://forum.greenbone.net/c/vulnerability-tests/7"
-    ],
+    "references": ["url: https://forum.greenbone.net/c/vulnerability-tests/7"],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
     "Name": "IP Forwarding Enabled - Active Check",
-    "description": [
-      "Checks if the remote host has IP forwarding enabled."
-    ],
+    "description": ["Checks if the remote host has IP forwarding enabled."],
     "detection_result": [
       "It was possible to route a TCP packet through the target host and received an an ->swer which means IP forwarding is enabled."
     ],
@@ -1633,18 +1543,14 @@
       "OID:1.3.6.1.4.1.25623.1.0.147205",
       "Version used: 2021-12-03T08:27:06Z"
     ],
-    "cvss": [
-      "0.0"
-    ],
+    "cvss": ["0.0"],
     "port": "general",
     "protocol": "tcp",
     "severity": "LOG",
-    "references": [
-      "cve: CVE-1999-0511"
-    ],
+    "references": ["cve: CVE-1999-0511"],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -1671,16 +1577,14 @@
       "OID:1.3.6.1.4.1.25623.1.0.51662",
       "Version used: 2022-10-17T11:13:19Z"
     ],
-    "cvss": [
-      "0.0"
-    ],
+    "cvss": ["0.0"],
     "port": "general",
     "protocol": "tcp",
     "severity": "LOG",
     "references": [],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -1699,16 +1603,14 @@
     "solution": [],
     "insight": [],
     "log_method": [],
-    "cvss": [
-      "0.0"
-    ],
+    "cvss": ["0.0"],
     "port": "general",
     "protocol": "tcp",
     "severity": "LOG",
     "references": [],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -1732,18 +1634,14 @@
       "OID:1.3.6.1.4.1.25623.1.0.810002",
       "Version used: 2022-07-27T10:11:28Z"
     ],
-    "cvss": [
-      "0.0"
-    ],
+    "cvss": ["0.0"],
     "port": "general",
     "protocol": "CPE-T",
     "severity": "LOG",
-    "references": [
-      "url: https://nvd.nist.gov/products/cpe"
-    ],
+    "references": ["url: https://nvd.nist.gov/products/cpe"],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   }
 ]

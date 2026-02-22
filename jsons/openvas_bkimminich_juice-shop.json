@@ -27,9 +27,7 @@
       "The aw is triggered when spoofed TCP Reset packets are received by the targeted TCP stack and will result in loss of availability for the attacked TCP services."
     ],
     "log_method": [],
-    "cvss": [
-      "5.0"
-    ],
+    "cvss": ["5.0"],
     "port": 3000,
     "protocol": "tcp",
     "severity": "Medium",
@@ -62,15 +60,13 @@
       "dfn-cert: DFN-CERT-2014-0890"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
     "Name": "Backup File Scanner (HTTP) - Unreliable Detection Reporting",
-    "description": [
-      "The script reports backup les left on the web server."
-    ],
+    "description": ["The script reports backup les left on the web server."],
     "detection_result": [
       "The following backup files were identified (<URL>:<Matching pattern>):",
       "http://juice-shop.trabalho_vulnnet:3000/.styles.css.backup:^HTTP/1\\.[01] 200",
@@ -107,16 +103,14 @@
     "solution": [],
     "insight": [],
     "log_method": [],
-    "cvss": [
-      "5.0"
-    ],
+    "cvss": ["5.0"],
     "port": 3000,
     "protocol": "tcp",
     "severity": "MEDIUM",
     "references": [],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -149,9 +143,7 @@
       "The Timestamp Reply is an ICMP message which replies to a Timestamp message. It consists of the originating timestamp sent by the sender of the Timestamp as well as a receive timestamp and a transmit timestamp."
     ],
     "log_method": [],
-    "cvss": [
-      "2.1"
-    ],
+    "cvss": ["2.1"],
     "port": "general",
     "protocol": "icmp",
     "severity": "LOW",
@@ -164,8 +156,8 @@
       "dfn-cert: DFN-CERT-2014-0658"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -181,16 +173,14 @@
     "solution": [],
     "insight": [],
     "log_method": [],
-    "cvss": [
-      "2.6"
-    ],
+    "cvss": ["2.6"],
     "port": "general",
     "protocol": "icmp",
     "severity": "LOW",
     "references": [],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -226,9 +216,7 @@
       "The remote host implements TCP timestamps, as dened by RFC1323/RFC7323."
     ],
     "log_method": [],
-    "cvss": [
-      "2.6"
-    ],
+    "cvss": ["2.6"],
     "port": "general",
     "protocol": "tcp",
     "severity": "LOW",
@@ -239,8 +227,8 @@
       "url: https://www.fortiguard.com/psirt/FG-IR-16-090"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -264,18 +252,14 @@
       "OID:1.3.6.1.4.1.25623.1.0.810002",
       "Version used: 2022-07-27T10:11:28Z"
     ],
-    "cvss": [
-      "0.0"
-    ],
+    "cvss": ["0.0"],
     "port": "general",
     "protocol": "CPE-T",
     "severity": "LOG",
-    "references": [
-      "url: https://nvd.nist.gov/products/cpe"
-    ],
+    "references": ["url: https://nvd.nist.gov/products/cpe"],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -300,16 +284,14 @@
       "OID:1.3.6.1.4.1.25623.1.0.10386",
       "Version used: 2025-04-11T15:45:04Z"
     ],
-    "cvss": [
-      "0.0"
-    ],
+    "cvss": ["0.0"],
     "port": 3000,
     "protocol": "tcp",
     "severity": "LOG",
     "references": [],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -345,9 +327,7 @@
       "OID:1.3.6.1.4.1.25623.1.0.102093",
       "Version used: 2024-01-16T05:05:27Z"
     ],
-    "cvss": [
-      "0.0"
-    ],
+    "cvss": ["0.0"],
     "port": 3000,
     "protocol": "tcp",
     "severity": "LOG",
@@ -356,15 +336,13 @@
       "url: https://securitytxt.org/"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
     "Name": "Allowed HTTP Methods Enumeration",
-    "description": [
-      "Enumerates which HTTP methods are allowed."
-    ],
+    "description": ["Enumerates which HTTP methods are allowed."],
     "detection_result": [
       "The following list contains the URLs and corresponding supported HTTP methods.",
       "URL | HTTP Methods",
@@ -389,16 +367,14 @@
       "OID:1.3.6.1.4.1.25623.1.0.153974",
       "Version used: 2025-02-28T05:38:49Z"
     ],
-    "cvss": [
-      "0.0"
-    ],
+    "cvss": ["0.0"],
     "port": 3000,
     "protocol": "tcp",
     "severity": "LOG",
     "references": [],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -428,16 +404,14 @@
     "solution": [],
     "insight": [],
     "log_method": [],
-    "cvss": [
-      "0.0"
-    ],
+    "cvss": ["0.0"],
     "port": 3000,
     "protocol": "tcp",
     "severity": "LOG",
     "references": [],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -471,18 +445,14 @@
       "OID:1.3.6.1.4.1.25623.1.0.111038",
       "Version used: 2026-01-13T05:47:36Z"
     ],
-    "cvss": [
-      "0.0"
-    ],
+    "cvss": ["0.0"],
     "port": 3000,
     "protocol": "tcp",
     "severity": "LOG",
-    "references": [
-      "url: https://forum.greenbone.net/c/vulnerability-tests/7"
-    ],
+    "references": ["url: https://forum.greenbone.net/c/vulnerability-tests/7"],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -512,9 +482,7 @@
       "OID:1.3.6.1.4.1.25623.1.0.10302",
       "Version used: 2024-02-26T14:36:40Z"
     ],
-    "cvss": [
-      "0.0"
-    ],
+    "cvss": ["0.0"],
     "port": 3000,
     "protocol": "tcp",
     "severity": "LOG",
@@ -523,8 +491,8 @@
       "url: https://www.robotstxt.org/norobots-rfc.txt"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -547,16 +515,14 @@
       "OID:1.3.6.1.4.1.25623.1.0.10919",
       "Version used: 2023-08-03T05:05:16Z"
     ],
-    "cvss": [
-      "0.0"
-    ],
+    "cvss": ["0.0"],
     "port": 3000,
     "protocol": "tcp",
     "severity": "LOG",
     "references": [],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -565,9 +531,7 @@
       "This plugin performs service detection.",
       "Quality of Detection (QoD): 80%"
     ],
-    "detection_result": [
-      "A web server is running on this port"
-    ],
+    "detection_result": ["A web server is running on this port"],
     "detection_method": [],
     "product_detection_result": [],
     "impact": [],
@@ -580,26 +544,20 @@
       "OID:1.3.6.1.4.1.25623.1.0.10330",
       "Version used: 2025-03-05T05:38:53Z"
     ],
-    "cvss": [
-      "0.0"
-    ],
+    "cvss": ["0.0"],
     "port": 3000,
     "protocol": "tcp",
     "severity": "LOG",
     "references": [],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
     "Name": "Services",
-    "description": [
-      "This plugin performs service detection."
-    ],
-    "detection_result": [
-      "A web server is running on this port"
-    ],
+    "description": ["This plugin performs service detection."],
+    "detection_result": ["A web server is running on this port"],
     "detection_method": [],
     "product_detection_result": [],
     "impact": [],
@@ -612,16 +570,14 @@
       "OID:1.3.6.1.4.1.25623.1.0.10330",
       "Version used: 2025-03-05T05:38:53Z"
     ],
-    "cvss": [
-      "0.0"
-    ],
+    "cvss": ["0.0"],
     "port": 3000,
     "protocol": "tcp",
     "severity": "LOG",
     "references": [],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -648,25 +604,19 @@
       "OID:1.3.6.1.4.1.25623.1.0.105937",
       "Version used: 2026-01-21T05:50:46Z"
     ],
-    "cvss": [
-      "0.0"
-    ],
+    "cvss": ["0.0"],
     "port": "general",
     "protocol": "tcp",
     "severity": "LOG",
-    "references": [
-      "url: https://forum.greenbone.net/c/vulnerability-tests/7"
-    ],
+    "references": ["url: https://forum.greenbone.net/c/vulnerability-tests/7"],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
     "Name": "IP Forwarding Enabled - Active Check",
-    "description": [
-      "Checks if the remote host has IP forwarding enabled."
-    ],
+    "description": ["Checks if the remote host has IP forwarding enabled."],
     "detection_result": [
       "It was possible to route a TCP packet through the target host and received an an ->swer which means IP forwarding is enabled."
     ],
@@ -681,18 +631,14 @@
       "OID:1.3.6.1.4.1.25623.1.0.147205",
       "Version used: 2021-12-03T08:27:06Z"
     ],
-    "cvss": [
-      "0.0"
-    ],
+    "cvss": ["0.0"],
     "port": "general",
     "protocol": "tcp",
     "severity": "LOG",
-    "references": [
-      "cve: CVE-1999-0511"
-    ],
+    "references": ["cve: CVE-1999-0511"],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -719,23 +665,19 @@
       "OID:1.3.6.1.4.1.25623.1.0.51662",
       "Version used: 2022-10-17T11:13:19Z"
     ],
-    "cvss": [
-      "0.0"
-    ],
+    "cvss": ["0.0"],
     "port": "general",
     "protocol": "tcp",
     "severity": "LOG",
     "references": [],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
     "Name": "jQuery Detection Consolidation",
-    "description": [
-      "Consolidation of jQuery detections."
-    ],
+    "description": ["Consolidation of jQuery detections."],
     "detection_result": [
       "Detected jQuery",
       "Version: unknown",
@@ -759,18 +701,14 @@
       "OID:1.3.6.1.4.1.25623.1.0.150658",
       "Version used: 2023-07-14T05:06:08Z"
     ],
-    "cvss": [
-      "0.0"
-    ],
+    "cvss": ["0.0"],
     "port": "general",
     "protocol": "tcp",
     "severity": "LOG",
-    "references": [
-      "url: https://jquery.com/"
-    ],
+    "references": ["url: https://jquery.com/"],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -793,16 +731,14 @@
       "OID:1.3.6.1.4.1.25623.1.0.108449",
       "Version used: 2022-07-27T10:11:28Z"
     ],
-    "cvss": [
-      "0.0"
-    ],
+    "cvss": ["0.0"],
     "port": "general",
     "protocol": "tcp",
     "severity": "LOG",
     "references": [],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   }
 ]

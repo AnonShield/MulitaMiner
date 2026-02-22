@@ -544,77 +544,72 @@ python main.py test_report.pdf --llm deepseek # Technical efficiency (1750 token
 
 ```
 Vulnerability_Extractor/
-├── main.py                        # Main CLI script
-├── requirements.txt               # Python dependencies
-├── README.md                      # Main documentation
-├── chunk_validator.py             # Chunk validator (standalone)
-├── batch_pdf_extractor.py         # Batch PDF extraction (standalone)
-├── extract_pdf_text.py            # Extracts plain text from PDFs
-├── extract_vuln_blocks.py         # Extracts vulnerability blocks from .txt
-├── compare_vuln_blocks.py         # Compares extracted blocks for duplicates
+├── main.py                              # Main CLI script (entry point for extraction)
+├── requirements.txt                     # Python dependencies
+├── README.md                            # Documentation
+├── chunk_validator.py                   # Chunk validator (standalone tool for chunk analysis)
+├── batch_pdf_extractor.py               # Batch PDF extraction (processes multiple PDFs)
 ├── tools/
-│   ├── run_experiments.py         # Massive execution and automated evaluation
-│   ├── process_results.py         # Chart and statistics generation
-│   ├── dataset_generator.py       # Dataset consolidation (CSV/XLSX/JSON/JSONL)
-│   ├── sum_tokens_cost_all_llms.py# Sums tokens and estimates costs per LLM
-│   ├── calc_tokens_cost.py        # Calculates tokens/cost for a specific LLM
-│   ├── prepare_metrics_input.py   # Generates combined files for metrics
-│   └── chunk_validator.py         # (link to root, for compatibility)
+│   ├── run_experiments.py               # Massive execution and automated evaluation (benchmarks)
+│   ├── process_results.py               # Chart and statistics generation (metrics visualization)
+│   ├── dataset_generator.py             # Dataset consolidation (CSV/XLSX/JSON/JSONL)
+│   ├── sum_tokens_cost_all_llms.py      # Sums tokens and estimates costs per LLM (cost analysis)
+│   ├── calc_tokens_cost.py              # Calculates tokens/cost for a specific LLM (single model)
+│   ├── prepare_metrics_input.py         # Generates combined files for metrics (preprocessing)
+│   └── chunk_validator.py               # (link to root, for compatibility)
 ├── src/
 │   ├── __init__.py
 │   ├── configs/
-│   │   ├── llms/                  # LLM configurations (JSON)
-│   │   ├── scanners/              # Scanner configurations (JSON)
-│   │   └── templates/             # Prompt templates (TXT)
+│   │   ├── llms/                        # LLM configurations (JSON files for models)
+│   │   ├── scanners/                    # Scanner configurations (JSON)
+│   │   └── templates/                   # Prompt templates (TXT)
 │   ├── converters/
+│   │   ├── base_converter.py            # Base converter class
+│   │   ├── csv_converter.py             # CSV/TSV export logic
+│   │   └── xlsx_converter.py            # Excel export logic
+│   ├── scanner_strategies/              # Modular scanner strategies
 │   │   ├── __init__.py
-│   │   ├── base_converter.py
-│   │   ├── csv_converter.py
-│   │   └── xlsx_converter.py
+│   │   ├── base.py                      # Base class for scanner strategies
+│   │   ├── consolidation.py             # Central consolidation logic
+│   │   ├── openvas.py                   # OpenVAS custom strategy
+│   │   ├── registry.py                  # Strategy registry (maps scanner to logic)
+│   │   └── tenablewas.py                # Tenable WAS custom strategy
 │   └── utils/
-│       ├── __init__.py
-│       ├── block_creation.py
-│       ├── cais_validator.py
-│       ├── chunking.py
-│       ├── cli_args.py
-│       ├── convertions.py
-│       ├── llm_utils.py
-│       ├── pdf_loader.py
-│       ├── processing.py
-│       ├── profile_registry.py
-│       └── scanner_strategies.py
+│       ├── block_creation.py            # Block creation and parsing logic
+│       ├── cais_validator.py            # CAIS format validation
+│       ├── chunking.py                  # Chunk calculation and optimization
+│       ├── cli_args.py                  # CLI argument parsing
+│       ├── convertions.py               # Data conversion helpers
+│       ├── llm_utils.py                 # LLM loading and configuration
+│       ├── pdf_loader.py                # PDF text extraction and layout preservation
+│       ├── processing.py                # Main processing pipeline
+│       └── profile_registry.py          # Profile and scanner registration
 ├── metrics/
 │   ├── __init__.py
 │   ├── baselines/
-│   │   ├── openvas/
-│   │   └── tenable/
+│   │   ├── openvas/                     # Baseline files for OpenVAS
+│   │   └── tenable/                     # Baseline files for Tenable WAS
 │   ├── bert/
-│   │   ├── compare_extractions_bert.py
-│   │   └── results/
+│   │   └── compare_extractions_bert.py  # BERTScore evaluation script
 │   ├── rouge/
-│   │   └── compare_extractions_rouge.py
+│   │   └── compare_extractions_rouge.py # ROUGE evaluation script
 │   ├── common/
-│   │   ├── cli.py
-│   │   ├── config.py
-│   │   ├── matching.py
-│   │   └── normalization.py
+│   │   ├── cli.py                       # CLI for metrics
+│   │   ├── config.py                    # Metrics configuration
+│   │   ├── matching.py                  # Matching logic for metrics
+│   │   └── normalization.py             # Normalization utilities
 │   └── plot/
 │       ├── __init__.py
-│       ├── __main__.py
-│       ├── charts.py
-│       └── utils.py
-├── data/                          # Input data and exports
-│   ├── *.pdf
-│   ├── vulnerabilities_*.json
-│   ├── visual_layout_*.txt
-│   └── exports/
-├── jsons/                         # Intermediate results (JSON)
-├── results_tokens/                # Token files per LLM
-├── results_runs/                  # Experimental run results
-├── results_runs_xlsx/             # XLSX results
-├── plot_runs/                     # Generated charts
-├── temp_blocks/                   # Temporary vulnerability blocks
-└── __pycache__/                   # Python cache (auto-generated)
+│       ├── __main__.py                  # CLI entry for plotting
+│       ├── charts.py                    # Chart generation logic
+│       └── utils.py                     # Plotting utilities
+├── data/                                # Datasets generated (CSV, XLSX, JSON, JSONL)
+├── jsons/                               # JSONs used in the dataset generation
+├── results_tokens/                      # Token files per LLM (token/cost analysis)
+├── results_runs/                        # Experimental run results (run_experiments.py)
+├── results_runs_xlsx/                   # XLSX results (run_experiments.py)µ
+├── plot_runs/                           # Generated charts (metrics visualization)
+└── temp_blocks/                         # Temporary vulnerability blocks (intermediate parsing)
 ```
 
 ### Main Components
@@ -783,45 +778,65 @@ Separate each vulnerability by line. Do not include any extra text.
 - Add a JSON file in `src/configs/scanners/` (e.g., `rapid7.json`).
 - Define: scanner name, template path, consolidation fields (`consolidation_field`), duplicate rules, retry parameters, etc.
 
+3. **(Optional) Custom block logic**
+
+- If the report has no clear separators, or requires special grouping (e.g., by asset, plugin, section), implement a function in `src/utils/block_creation.py`.
+- Integrate in the `create_session_blocks_from_text` method.
+- **If not implemented:** The system divides the text into sequential chunks based on the LLM's token limit, without considering separators. This works well for structured reports, but may mix vulnerabilities in more complex ones.
+
+4. **(Optional) Custom consolidation logic (strategy for allow_duplicates)**
+
+- If the scanner needs special rules to group/merge vulnerabilities (e.g., merge by asset, plugin, custom field), create a class in a new `.py` file inside `src/scanner_strategies/` (e.g., `mycustomscanner.py`).
+- Your class must inherit from `ScannerStrategy` (see `base.py`) and implement the method `consolidate_all(self, vulns, allow_duplicates=True, profile_config=None)`, which will receive all vulnerabilities and must return the consolidated list according to your custom logic.
+- Register your class in the system by adding it to the dictionary in `src/scanner_strategies/registry.py`. The key you use to register (e.g., 'mycustomscanner') must match the scanner name declared in your profile JSON (e.g., `"reader": "mycustomscanner"`).
+- The system will automatically call your custom strategy whenever the scanner name matches the registered key.
+- The method `consolidate_all` is called by the central pipeline during deduplication, and must handle both `allow_duplicates=True` and `allow_duplicates=False` cases as needed for your scanner.
+  **Important:** The custom function name must be strictly `vulnerability_processing_logic`. This ensures the system will automatically recognize and execute your vulnerability processing logic whenever the corresponding scanner is selected. The expected signature is:
+
+  ```python
+  def vulnerability_processing_logic(self, vulns, allow_duplicates=True, profile_config=None):
+    # ... your vulnerability processing logic ...
+  ```
+
+Thus, the central pipeline will call this function whenever needed, ensuring integration and compatibility.
+
+- **If not implemented:** The system uses the default consolidation (`consolidation_field`), sufficient for scanners without complex duplicates.
+
 **How deduplication and merge work:**
 
-The `consolidation_field` defines which field will be used to identify duplicates (e.g., "Name", "Name+asset"). If there is custom logic, it always prevails.
+The `consolidation_field` defines which field will be used to identify duplicates (e.g., "Name", "Name+asset"). If there is custom logic (custom strategy), it always prevails for the relevant allow_duplicates flag value (see below).
 
 | Scanner Type | `--allow-duplicates` **disabled**          | `--allow-duplicates` **enabled**               | Notes                         |
 | ------------ | ------------------------------------------ | ---------------------------------------------- | ----------------------------- |
 | **Generic**  | Removes duplicates by consolidation field  | Keeps all duplicates                           | Uses `consolidation_field`    |
 | **Custom**   | Advanced merge/grouping (scanner strategy) | Simple deduplication (key defined in strategy) | Ignores `consolidation_field` |
 
+> **How custom strategies are selected:**
+>
+> - For OpenVAS, the custom strategy is used only when `allow_duplicates=True` (maximum granularity, recommended for OpenVAS).
+> - For Tenable WAS, the custom strategy is used only when `allow_duplicates=False` (smart merge, recommended for Tenable WAS).
+> - In all other cases, the default logic using `consolidation_field` is applied.
+
 > `--allow-duplicates` preserves occurrences when repetition represents services, ports, or distinct instances.
 
-> Do not define `consolidation_field` and custom logic together: the system always prioritizes custom logic.
+> Do not define `consolidation_field` and custom logic together: the system always prioritizes custom logic when the relevant allow_duplicates flag is active for that scanner.
 
 The scanner profile controls how the report will be processed and how vulnerabilities will be grouped.
 
 ---
 
-> **Note on deduplication/merge strategies (OpenVAS and Tenable WAS):**
+> **Note on deduplication strategies (OpenVAS and Tenable WAS):**
 >
 > - Custom strategies were created to reduce vulnerability exceedances (i.e., invented or inflated vulnerabilities by the LLM), consolidating findings according to the real structure of each scanner.
 > - **OpenVAS:**
->   - `allow_duplicates=True` (**recommended**): keeps maximum granularity, removing only exact duplicates (same Name, port, protocol). Useful for detailed analysis.
+>   - `allow_duplicates=True` (**recommended**): uses custom strategy for maximum granularity, removing only exact duplicates (same Name, port, protocol). Useful for detailed analysis.
 >   - Note: In OpenVAS, legitimate vulnerabilities may repeat (e.g., on different ports), so "duplicates" are not always 100% identical despite the name.
->   - `allow_duplicates=False`: merges similar findings (same Name, port, protocol), consolidating fields and reducing the number of vulnerabilities.
 > - **Tenable WAS:**
->   - `allow_duplicates=True`: removes only exact duplicates (same Name, severity), keeping each occurrence separate.
->   - `allow_duplicates=False` (**recommended**): smart merge, grouping instances/bases of the same type and consolidating arrays (URLs, description, etc.).
+>   - `allow_duplicates=False` (**recommended**): uses custom strategy for smart merge, grouping instances/bases of the same type and consolidating arrays (URLs, description, etc.).
 >
 > These strategies were designed to balance granularity and efficiency, avoiding vulnerability exceedances and respecting the structure/content of each scanner.
 
-3. **(Optional) Custom block logic**
-   - If the report has no clear separators, or requires special grouping (e.g., by asset, plugin, section), implement a function in `src/utils/block_creation.py`.
-   - Integrate in the `create_session_blocks_from_text` method.
-   - **If not implemented:** The system divides the text into sequential chunks based on the LLM's token limit, without considering separators. This works well for structured reports, but may mix vulnerabilities in more complex reports.
-
-4. **(Optional) Custom consolidation logic**
-   - If the scanner needs special rules to group/merge vulnerabilities (e.g., merge by asset, plugin, custom field), create a class in `src/utils/scanner_strategies.py`.
-   - Register the strategy in the system.
-   - **If not implemented:** The system uses the default consolidation (consolidation_field), sufficient for scanners without complex duplicates.
+---
 
 5. **Testing and validation**
 

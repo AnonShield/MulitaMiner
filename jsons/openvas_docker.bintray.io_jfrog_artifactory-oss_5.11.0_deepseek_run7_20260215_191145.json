@@ -25,9 +25,7 @@
       "Apache Tomcat server has a file containing vulnerability, which can be used by an attacker to read or include any files in all webapp directories on Tomcat, such as webapp configuration files or source code."
     ],
     "log_method": [],
-    "cvss": [
-      "10.0"
-    ],
+    "cvss": ["10.0"],
     "port": 8019,
     "protocol": "tcp",
     "severity": "Critical",
@@ -65,8 +63,8 @@
       "dfn-cert: DFN-CERT-2020-0381"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -102,9 +100,7 @@
     ],
     "insight": [],
     "log_method": [],
-    "cvss": [
-      "10.0"
-    ],
+    "cvss": ["10.0"],
     "port": 8040,
     "protocol": "tcp",
     "severity": "CRITICAL",
@@ -119,8 +115,8 @@
       "url: https://tomcat.apache.org/whichversion.html"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -156,9 +152,7 @@
       "The aw exists because defaults settings for the CORS lter provided in Apache Tomcat are insecure and enable 'supportsCredentials' for all origins."
     ],
     "log_method": [],
-    "cvss": [
-      "9.8"
-    ],
+    "cvss": ["9.8"],
     "port": 8040,
     "protocol": "tcp",
     "severity": "CRITICAL",
@@ -187,8 +181,8 @@
       "dfn-cert: DFN-CERT-2018-0939"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -215,23 +209,19 @@
     ],
     "insight": [],
     "log_method": [],
-    "cvss": [
-      "9.8"
-    ],
+    "cvss": ["9.8"],
     "port": 8040,
     "protocol": "tcp",
     "severity": "CRITICAL",
     "references": [],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
     "Name": "Apache Tomcat Multiple Vulnerabilities (Feb 2020) - Linux",
-    "description": [
-      "Apache Tomcat is prone to multiple vulnerabilities."
-    ],
+    "description": ["Apache Tomcat is prone to multiple vulnerabilities."],
     "detection_result": [
       "Installed version: 8.5.23",
       "Fixed version: 8.5.51",
@@ -264,9 +254,7 @@
       "- AJP Request Injection and potential Remote Code Execution dubbed 'Ghostcat' (CVE-2020-1938)"
     ],
     "log_method": [],
-    "cvss": [
-      "9.8"
-    ],
+    "cvss": ["9.8"],
     "port": 8040,
     "protocol": "tcp",
     "severity": "CRITICAL",
@@ -306,8 +294,8 @@
       "dfn-cert: DFN-CERT"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -343,9 +331,7 @@
       "For a subset of unlikely rewrite rule congurations, it is possible for a specially crafted request to bypass some rewrite rules. If those rewrite rules eectively enforced security constraints, those constraints could be bypassed."
     ],
     "log_method": [],
-    "cvss": [
-      "9.8"
-    ],
+    "cvss": ["9.8"],
     "port": 8040,
     "protocol": "tcp",
     "severity": "CRITICAL",
@@ -373,8 +359,8 @@
       "dfn-cert: DFN-CERT-2025-1081"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -411,9 +397,7 @@
     ],
     "insight": [],
     "log_method": [],
-    "cvss": [
-      "10.0"
-    ],
+    "cvss": ["10.0"],
     "port": 8081,
     "protocol": "tcp",
     "severity": "CRITICAL",
@@ -428,8 +412,8 @@
       "url: https://tomcat.apache.org/whichversion.html"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -464,9 +448,7 @@
       "The aw exists because defaults settings for the CORS lter provided in Apache Tomcat are insecure and enable 'supportsCredentials' for all origins."
     ],
     "log_method": [],
-    "cvss": [
-      "9.8"
-    ],
+    "cvss": ["9.8"],
     "port": 8081,
     "protocol": "tcp",
     "severity": "CRITICAL",
@@ -495,8 +477,8 @@
       "dfn-cert: DFN-CERT-2018-0939"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -532,9 +514,7 @@
       "- AJP Request Injection and potential Remote Code Execution dubbed 'Ghostcat' (CVE-2020-1938)"
     ],
     "log_method": [],
-    "cvss": [
-      "9.8"
-    ],
+    "cvss": ["9.8"],
     "port": 8081,
     "protocol": "tcp",
     "severity": "CRITICAL",
@@ -555,8 +535,8 @@
       "cert-bund: WID-SEC-2023"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -592,9 +572,7 @@
       "For a subset of unlikely rewrite rule configurations, it is possible for a specially crafted request to bypass some rewrite rules. If those rewrite rules effectively enforced security constraints, those constraints could be bypassed."
     ],
     "log_method": [],
-    "cvss": [
-      "9.8"
-    ],
+    "cvss": ["9.8"],
     "port": 8081,
     "protocol": "tcp",
     "severity": "CRITICAL",
@@ -622,8 +600,8 @@
       "dfn-cert: DFN-CERT-2025-1081"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -642,16 +620,14 @@
     "solution": [],
     "insight": [],
     "log_method": [],
-    "cvss": [
-      "9.8"
-    ],
+    "cvss": ["9.8"],
     "port": 8081,
     "protocol": "tcp",
     "severity": "CRITICAL",
     "references": [],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -690,9 +666,7 @@
       "Apache Tomcat 8.5.0 through 8.5.75 and 9.0.0.M1 through 9.0.20."
     ],
     "log_method": [],
-    "cvss": [
-      "8.6"
-    ],
+    "cvss": ["8.6"],
     "port": 8040,
     "protocol": "tcp",
     "severity": "HIGH",
@@ -710,8 +684,8 @@
       "dfn-cert: DFN-CERT-2022-1605"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -748,9 +722,7 @@
       "Apache Tomcat versions prior to 9.0.106, 10.1.0-M1 through 10.1.41 and 11.0.0-M1 through 11.0.7."
     ],
     "log_method": [],
-    "cvss": [
-      "7.8"
-    ],
+    "cvss": ["7.8"],
     "port": 8040,
     "protocol": "tcp",
     "severity": "HIGH",
@@ -762,8 +734,8 @@
       "dfn-cert: DFN-CERT-2025-1588"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -803,9 +775,7 @@
       "If you disagree with this assessment and want to accept the risk please create an override for this result."
     ],
     "log_method": [],
-    "cvss": [
-      "7.8"
-    ],
+    "cvss": ["7.8"],
     "port": 8040,
     "protocol": "tcp",
     "severity": "HIGH",
@@ -834,8 +804,8 @@
       "dfn-cert: DFN-CERT-2024-"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -872,9 +842,7 @@
       "A race condition on connection close could trigger a JVM crash when using the APR/Native connector leading to a DoS. This was particularly noticeable with client initiated closes of HTTP/2 connections."
     ],
     "log_method": [],
-    "cvss": [
-      "7.8"
-    ],
+    "cvss": ["7.8"],
     "port": 8040,
     "protocol": "tcp",
     "severity": "HIGH",
@@ -893,8 +861,8 @@
       "dfn-cert: DFN-CERT-2025-1789"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -931,9 +899,7 @@
       "A mismatch caused by client-triggered server-sent stream resets between HTTP/2 specications and the internal architectures of some HTTP/2 implementations may result in excessive server resource consumption leading to denial-of-service (DoS). By opening streams and then rapidly triggering the server to reset them, using malformed frames or ow control errors, an attacker can exploit incorrect stream accounting. Streams reset by the server are considered closed at the protocol level, even though backend processing continues. This allows a client to cause the server to handle an unbounded number of concurrent streams on a single connection."
     ],
     "log_method": [],
-    "cvss": [
-      "7.8"
-    ],
+    "cvss": ["7.8"],
     "port": 8040,
     "protocol": "tcp",
     "severity": "HIGH",
@@ -949,15 +915,13 @@
       "url: https://deepness-lab.org/publications/m"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
     "Name": "Apache Tomcat Multiple Vulnerabilities (Jun 2025) - Linux",
-    "description": [
-      "Apache Tomcat is prone to multiple vulnerabilities."
-    ],
+    "description": ["Apache Tomcat is prone to multiple vulnerabilities."],
     "detection_result": [
       "Installed version: 8.5.23",
       "Fixed version: 9.0.106",
@@ -993,9 +957,7 @@
       "result."
     ],
     "log_method": [],
-    "cvss": [
-      "7.8"
-    ],
+    "cvss": ["7.8"],
     "port": 8040,
     "protocol": "tcp",
     "severity": "HIGH",
@@ -1035,8 +997,8 @@
       "cert-bund: WID-SEC-2025-2351"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -1082,9 +1044,7 @@
       "- CVE-2025-53506: DoS via excessive HTTP/2 streams"
     ],
     "log_method": [],
-    "cvss": [
-      "7.8"
-    ],
+    "cvss": ["7.8"],
     "port": 8040,
     "protocol": "tcp",
     "severity": "HIGH",
@@ -1109,8 +1069,8 @@
       "dfn-cert: DFN-CERT-2025-1789"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -1151,9 +1111,7 @@
       "crafted packet could be used to trigger an innite loop resulting in a denial of service."
     ],
     "log_method": [],
-    "cvss": [
-      "7.5"
-    ],
+    "cvss": ["7.5"],
     "port": 8040,
     "protocol": "tcp",
     "severity": "HIGH",
@@ -1163,15 +1121,13 @@
       "->4e0a58e2df5c6799434"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
     "Name": "Apache Tomcat Multiple Vulnerabilities (Oct 2023) - Linux",
-    "description": [
-      "Apache Tomcat is prone to multiple vulnerabilities."
-    ],
+    "description": ["Apache Tomcat is prone to multiple vulnerabilities."],
     "detection_result": [
       "Installed version: 8.5.23",
       "Fixed version: 8.5.94",
@@ -1202,9 +1158,7 @@
       "The following aws exist:   - CVE-2023-42795: When recycling various internal objects, including the request and the re-  sponse, prior to re-use by the next request/response, an error could cause Tomcat to skip some  parts of the recycling process leading to information leaking from the current request/response  to the next.   - CVE-2023-44487: HTTP/2 rapid reset attack   - CVE-2023-45648: A specially crafted, invalid trailer header could cause Tomcat to treat a  single request as multiple requests leading to the possibility of request smuggling when behind a  reverse proxy."
     ],
     "log_method": [],
-    "cvss": [
-      "7.5"
-    ],
+    "cvss": ["7.5"],
     "port": 8040,
     "protocol": "tcp",
     "severity": "HIGH",
@@ -1275,8 +1229,8 @@
       "dfn-cert: DFN-CERT-2024-307"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -1313,9 +1267,7 @@
       "It was discovered that Apache Tomcat could re-use an HTTP request header value from the previous stream received on an HTTP/2 connection for the request associated with the subsequent stream. While this would most likely lead to an error and the closure of the HTTP/2 connection, it is possible that information could leak between requests."
     ],
     "log_method": [],
-    "cvss": [
-      "7.5"
-    ],
+    "cvss": ["7.5"],
     "port": 8040,
     "protocol": "tcp",
     "severity": "HIGH",
@@ -1341,8 +1293,8 @@
       "dfn-cert: DFN-CERT-2020-2646"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -1379,9 +1331,7 @@
       "When responding to new h2c connection requests, Apache Tomcat could duplicate request headers and a limited amount of request body from one request to another meaning user A and user B could both see the results of user A's request."
     ],
     "log_method": [],
-    "cvss": [
-      "7.5"
-    ],
+    "cvss": ["7.5"],
     "port": 8040,
     "protocol": "tcp",
     "severity": "HIGH",
@@ -1413,8 +1363,8 @@
       "dfn-cert: DFN-CERT-2021-0445"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -1449,9 +1399,7 @@
       "Affected Software/OS Apache Tomcat 7.0.0 to 7.0.98, 8.5.0 to 8.5.49 and 9.0.0.M1 to 9.0.29."
     ],
     "log_method": [],
-    "cvss": [
-      "7.5"
-    ],
+    "cvss": ["7.5"],
     "port": 8040,
     "protocol": "tcp",
     "severity": "HIGH",
@@ -1481,8 +1429,8 @@
       "dfn-cert: DFN-CERT-2019-2673"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -1517,9 +1465,7 @@
       "Affected Software/OS Apache Tomcat versions 8.5.0 to 8.5.40 and 9.0.0.M1 to 9.0.19."
     ],
     "log_method": [],
-    "cvss": [
-      "7.5"
-    ],
+    "cvss": ["7.5"],
     "port": 8040,
     "protocol": "tcp",
     "severity": "HIGH",
@@ -1542,8 +1488,8 @@
       "dfn-cert: DFN-CERT-2019-1268"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -1575,13 +1521,9 @@
       "Solution type: VendorFix",
       "Update to version 8.5.38, 9.0.16 or later."
     ],
-    "insight": [
-      "Apache Tomcat 8.5.0 to 8.5.37 and 9.0.0.M1 to 9.0.14."
-    ],
+    "insight": ["Apache Tomcat 8.5.0 to 8.5.37 and 9.0.0.M1 to 9.0.14."],
     "log_method": [],
-    "cvss": [
-      "7.5"
-    ],
+    "cvss": ["7.5"],
     "port": 8040,
     "protocol": "tcp",
     "severity": "HIGH",
@@ -1602,8 +1544,8 @@
       "dfn-cert: DFN-CERT-2019-0594"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -1639,9 +1581,7 @@
       "Apache Tomcat 8.5.0 to 8.5.55, 9.0.0.M1 to 9.0.35 and 10.0.0-M1 to 10.0.0-M5."
     ],
     "log_method": [],
-    "cvss": [
-      "7.5"
-    ],
+    "cvss": ["7.5"],
     "port": 8040,
     "protocol": "tcp",
     "severity": "HIGH",
@@ -1650,8 +1590,8 @@
       "url: https://lists.apache.org/thread.html/r5541ef6b6"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -1689,9 +1629,7 @@
     ],
     "insight": [],
     "log_method": [],
-    "cvss": [
-      "7.5"
-    ],
+    "cvss": ["7.5"],
     "port": 8040,
     "protocol": "tcp",
     "severity": "HIGH",
@@ -1726,8 +1664,8 @@
       "dfn-cert: DFN-CERT-2020-1511"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -1764,9 +1702,7 @@
       "If Tomcat is congured to ignore invalid HTTP headers via setting rejectIllegalHeader to false (the default for 8.5.x only), Tomcat does not reject a request containing an invalid Content- Length header making a request smuggling attack possible if Tomcat is located behind a reverse proxy that also fails to reject the request with the invalid header."
     ],
     "log_method": [],
-    "cvss": [
-      "7.5"
-    ],
+    "cvss": ["7.5"],
     "port": 8040,
     "protocol": "tcp",
     "severity": "HIGH",
@@ -1789,8 +1725,8 @@
       "dfn-cert: DFN-CERT-2023-0829"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -1798,10 +1734,7 @@
     "description": [
       "Apache Tomcat is prone to a security bypass vulnerability."
     ],
-    "detection_result": [
-      "Installed version: 8.5.23",
-      "Fixed version: 8.5.32"
-    ],
+    "detection_result": ["Installed version: 8.5.23", "Fixed version: 8.5.32"],
     "detection_method": [
       "Checks if a vulnerable version is present on the target host.",
       "Details: Apache Tomcat 'Hostname Verification' Security Bypass Vulnerability - Linux OID:1.3.6.1.4.1.25623.1.0.813743 Version used: 2025-09-17T05:39:26Z"
@@ -1822,9 +1755,7 @@
       "The aw exists due to a missing host name verication when using TLS with the WebSocket client."
     ],
     "log_method": [],
-    "cvss": [
-      "7.5"
-    ],
+    "cvss": ["7.5"],
     "port": 8040,
     "protocol": "tcp",
     "severity": "HIGH",
@@ -1856,8 +1787,8 @@
       "dfn-cert: DFN-CERT-2018-1262"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -1865,10 +1796,7 @@
     "description": [
       "Apache Tomcat is prone to a request smuggling vulnerability."
     ],
-    "detection_result": [
-      "Installed version: 8.5.23",
-      "Fixed version: 8.5.96"
-    ],
+    "detection_result": ["Installed version: 8.5.23", "Fixed version: 8.5.96"],
     "detection_method": [
       "Checks if a vulnerable version is present on the target host.",
       "Details: Apache Tomcat Request Smuggling Vulnerability (Nov 2023) - Linux OID:1.3.6.1.4.1.25623.1.0.151316 Version used: 2023-12-07T05:05:41Z"
@@ -1887,16 +1815,14 @@
       "Tomcat does not correctly parse HTTP trailer headers. A specially crafted trailer header that exceeds the header size limit could cause Tomcat to treat a single request as multiple requests leading to the possibility of request smuggling when behind a reverse proxy."
     ],
     "log_method": [],
-    "cvss": [
-      "7.5"
-    ],
+    "cvss": ["7.5"],
     "port": 8040,
     "protocol": "tcp",
     "severity": "HIGH",
     "references": [],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -1932,9 +1858,7 @@
       "The aw exists due to improper handing of overow in the UTF-8 decoder with supplementary characters."
     ],
     "log_method": [],
-    "cvss": [
-      "7.5"
-    ],
+    "cvss": ["7.5"],
     "port": 8040,
     "protocol": "tcp",
     "severity": "HIGH",
@@ -1957,8 +1881,8 @@
       "dfn-cert: DFN-CERT-2018-1753"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -1992,9 +1916,7 @@
       "The documentation for the EncryptInterceptor incorrectly stated it enabled Tomcat clustering to run over an untrusted network. This was not correct. While the EncryptInterceptor does provide condentiality and integrity protection, it does not protect against all risks associated with running over any untrusted network, particularly DoS risks."
     ],
     "log_method": [],
-    "cvss": [
-      "7.5"
-    ],
+    "cvss": ["7.5"],
     "port": 8040,
     "protocol": "tcp",
     "severity": "HIGH",
@@ -2018,8 +1940,8 @@
       "dfn-cert: DFN-CERT-2022-1070"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -2051,9 +1973,7 @@
       "Apache Tomcat uses a packaged renamed copy of Apache Commons FileUpload to provide the le upload functionality dened in the Jakarta Servlet specication. Apache Tomcat was, therefore, also vulnerable to the Apache Commons FileUpload vulnerability CVE-2023-24998 as there was no limit to the number of request parts processed. This resulted in the possibility of an attacker triggering a DoS with a malicious upload or series of uploads."
     ],
     "log_method": [],
-    "cvss": [
-      "7.5"
-    ],
+    "cvss": ["7.5"],
     "port": 8040,
     "protocol": "tcp",
     "severity": "HIGH",
@@ -2074,8 +1994,8 @@
       "cert-bund: WID-SEC-2024-0890"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -2110,9 +2030,7 @@
       "Apache Tomcat 7.0.0 to 7.0.97, 8.5.0 to 8.5.47 and 9.0.0.M1 to 9.0.28."
     ],
     "log_method": [],
-    "cvss": [
-      "7.0"
-    ],
+    "cvss": ["7.0"],
     "port": 8040,
     "protocol": "tcp",
     "severity": "HIGH",
@@ -2124,8 +2042,8 @@
       "cert-bund: CB-K20/0309"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -2161,9 +2079,7 @@
       "The fix for CVE-2020-9484 was incomplete. When using a highly unlikely configuration edge case, the Tomcat instance is still vulnerable to CVE-2020-9484. Note that both the previously published prerequisites for CVE-2020-9484 also apply to this issue."
     ],
     "log_method": [],
-    "cvss": [
-      "7.0"
-    ],
+    "cvss": ["7.0"],
     "port": 8040,
     "protocol": "tcp",
     "severity": "HIGH",
@@ -2190,8 +2106,8 @@
       "dfn-cert: DFN-CERT-2021-0445"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -2228,16 +2144,14 @@
       "- the PersistenceManager is configured with sessionAttributeValueClassNameFilter='null' (the default unless a"
     ],
     "log_method": [],
-    "cvss": [
-      "7.0"
-    ],
+    "cvss": ["7.0"],
     "port": 8040,
     "protocol": "tcp",
     "severity": "HIGH",
     "references": [],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -2273,9 +2187,7 @@
       "Apache Tomcat 8.5.0 through 8.5.75 and 9.0.0.M1 through 9.0.20."
     ],
     "log_method": [],
-    "cvss": [
-      "8.6"
-    ],
+    "cvss": ["8.6"],
     "port": 8081,
     "protocol": "tcp",
     "severity": "HIGH",
@@ -2293,8 +2205,8 @@
       "dfn-cert: DFN-CERT-2022-1605"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -2333,9 +2245,7 @@
       "If you disagree with this assessment and want to accept the risk please create an override for this result."
     ],
     "log_method": [],
-    "cvss": [
-      "7.8"
-    ],
+    "cvss": ["7.8"],
     "port": 8081,
     "protocol": "tcp",
     "severity": "HIGH",
@@ -2370,8 +2280,8 @@
       "dfn-cert: DFN-CERT-2025-2219"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -2408,9 +2318,7 @@
       "When processing an HTTP/2 stream, Tomcat did not handle some cases of excessive HTTP headers correctly. This led to a miscounting of active HTTP/2 streams which in turn led to the use of an incorrect innite timeout which allowed connections to remain open which should have been closed."
     ],
     "log_method": [],
-    "cvss": [
-      "7.8"
-    ],
+    "cvss": ["7.8"],
     "port": 8081,
     "protocol": "tcp",
     "severity": "HIGH",
@@ -2440,8 +2348,8 @@
       "dfn-cert: DFN-CERT-2024-1723"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -2478,9 +2386,7 @@
       "A race condition on connection close could trigger a JVM crash when using the APR/Native connector leading to a DoS. This was particularly noticeable with client initiated closes of HTTP/2 connections."
     ],
     "log_method": [],
-    "cvss": [
-      "7.8"
-    ],
+    "cvss": ["7.8"],
     "port": 8081,
     "protocol": "tcp",
     "severity": "HIGH",
@@ -2499,8 +2405,8 @@
       "dfn-cert: DFN-CERT-2025-1789"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -2535,9 +2441,7 @@
       "If the rewrite valve was enabled for a web application, an attacker was able to craft a URL that, if a victim clicked on it, would cause the victim's interaction with that resource to occur in the context of the attacker's session."
     ],
     "log_method": [],
-    "cvss": [
-      "7.8"
-    ],
+    "cvss": ["7.8"],
     "port": 8081,
     "protocol": "tcp",
     "severity": "HIGH",
@@ -2549,15 +2453,13 @@
       "dfn-cert: DFN-CERT-2025-1588"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
     "Name": "Apache Tomcat Multiple Vulnerabilities (Jun 2025) - Linux",
-    "description": [
-      "Apache Tomcat is prone to multiple vulnerabilities."
-    ],
+    "description": ["Apache Tomcat is prone to multiple vulnerabilities."],
     "detection_result": [
       "Installed version: 8.5.23",
       "Fixed version: 9.0.106",
@@ -2591,9 +2493,7 @@
       "- CVE-2025-49125: Security constraint bypass for pre/post-resources"
     ],
     "log_method": [],
-    "cvss": [
-      "7.8"
-    ],
+    "cvss": ["7.8"],
     "port": 8081,
     "protocol": "tcp",
     "severity": "HIGH",
@@ -2623,8 +2523,8 @@
       "cert-bund: WID-SEC-2025-2369"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -2665,9 +2565,7 @@
       "- CVE-2025-53506: DoS via excessive HTTP/2 streams"
     ],
     "log_method": [],
-    "cvss": [
-      "7.8"
-    ],
+    "cvss": ["7.8"],
     "port": 8081,
     "protocol": "tcp",
     "severity": "HIGH",
@@ -2692,8 +2590,8 @@
       "dfn-cert: DFN-CERT-2025-1789"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -2729,16 +2627,14 @@
       "When Tomcat was congured to use NIO+OpenSSL or NIO2+OpenSSL for TLS, a specially crafted packet could be used to trigger an innite loop resulting in a denial of service."
     ],
     "log_method": [],
-    "cvss": [
-      "7.5"
-    ],
+    "cvss": ["7.5"],
     "port": 8081,
     "protocol": "tcp",
     "severity": "HIGH",
     "references": [],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -2774,9 +2670,7 @@
       "It was discovered that Apache Tomcat could re-use an HTTP request header value from the previous stream received on an HTTP/2 connection for the request associated with the subsequent stream. While this would most likely lead to an error and the closure of the HTTP/2 connection, it is possible that information could leak between requests."
     ],
     "log_method": [],
-    "cvss": [
-      "7.5"
-    ],
+    "cvss": ["7.5"],
     "port": 8081,
     "protocol": "tcp",
     "severity": "HIGH",
@@ -2802,15 +2696,13 @@
       "dfn-cert: DFN-CERT-2020-2646"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
     "Name": "Apache Tomcat Multiple Vulnerabilities (Oct 2023) - Linux",
-    "description": [
-      "Apache Tomcat is prone to multiple vulnerabilities."
-    ],
+    "description": ["Apache Tomcat is prone to multiple vulnerabilities."],
     "detection_result": [
       "Installed version: 8.5.23",
       "Fixed version: 8.5.94",
@@ -2843,16 +2735,14 @@
       "- CVE-2023-45648: A specially crafted, invalid trailer header could cause Tomcat to treat a single request as multiple requests leading to the possibility of request smuggling when behind a reverse proxy."
     ],
     "log_method": [],
-    "cvss": [
-      "7.5"
-    ],
+    "cvss": ["7.5"],
     "port": 8081,
     "protocol": "tcp",
     "severity": "HIGH",
     "references": [],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -2886,9 +2776,7 @@
       "When responding to new h2c connection requests, Apache Tomcat could duplicate request headers and a limited amount of request body from one request to another meaning user A and user B could both see the results of user A's request."
     ],
     "log_method": [],
-    "cvss": [
-      "7.5"
-    ],
+    "cvss": ["7.5"],
     "port": 8081,
     "protocol": "tcp",
     "severity": "HIGH",
@@ -2909,8 +2797,8 @@
       "dfn-cert: D"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -2947,9 +2835,7 @@
       "The HTTP/2 implementation accepts streams with excessive numbers of SETTINGS frames and also permitts clients to keep streams open without reading/writing request/response data. By keeping streams open for requests that utilises the Servlet API's blocking I/O, clients are able to cause server-side threads to block eventually leading to thread exhaustion and a DoS."
     ],
     "log_method": [],
-    "cvss": [
-      "7.5"
-    ],
+    "cvss": ["7.5"],
     "port": 8081,
     "protocol": "tcp",
     "severity": "HIGH",
@@ -2972,8 +2858,8 @@
       "dfn-cert: DFN-CERT-2019-1268"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -2997,9 +2883,7 @@
       "Method: Apache Tomcat Detection Consolidation",
       "OID: 1.3.6.1.4.1.25623.1.0.107652)"
     ],
-    "impact": [
-      "Apache Tomcat 8.5.0 to 8.5.37 and 9.0.0.M1 to 9.0.14."
-    ],
+    "impact": ["Apache Tomcat 8.5.0 to 8.5.37 and 9.0.0.M1 to 9.0.14."],
     "solution": [
       "Solution type: VendorFix",
       "Update to version 8.5.38, 9.0.16 or later."
@@ -3008,9 +2892,7 @@
       "The HTTP/2 implementation accepts streams with excessive numbers of SETTINGS frames and also permitts clients to keep streams open without reading/writing request/response data. By keeping streams open for requests that utilises the Servlet API's blocking I/O, clients are able to cause server-side threads to block eventually leading to thread exhaustion and a DoS."
     ],
     "log_method": [],
-    "cvss": [
-      "7.5"
-    ],
+    "cvss": ["7.5"],
     "port": 8081,
     "protocol": "tcp",
     "severity": "HIGH",
@@ -3031,8 +2913,8 @@
       "dfn-cert: DFN-CERT-2019-0594"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -3067,9 +2949,7 @@
       "A specially crafted sequence of HTTP/2 requests sent to Apache Tomcat could trigger high CPU usage for several seconds. If a sucient number of such requests were made on concurrent HTTP/2 connections, the server could become unresponsive."
     ],
     "log_method": [],
-    "cvss": [
-      "7.5"
-    ],
+    "cvss": ["7.5"],
     "port": 8081,
     "protocol": "tcp",
     "severity": "HIGH",
@@ -3089,8 +2969,8 @@
       "dfn-cert: DFN-CERT-2020-1358"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -3112,16 +2992,14 @@
     "solution": [],
     "insight": [],
     "log_method": [],
-    "cvss": [
-      "7.5"
-    ],
+    "cvss": ["7.5"],
     "port": 8081,
     "protocol": "tcp",
     "severity": "HIGH",
     "references": [],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -3129,10 +3007,7 @@
     "description": [
       "Apache Tomcat is prone to a session xation vulnerability."
     ],
-    "detection_result": [
-      "Installed version: 8.5.23",
-      "Fixed version: 8.5.50"
-    ],
+    "detection_result": ["Installed version: 8.5.23", "Fixed version: 8.5.50"],
     "detection_method": [
       "Checks if a vulnerable version is present on the target host.",
       "Details: Apache Tomcat Session Fixation Vulnerability (Dec 2019) - Linux",
@@ -3155,9 +3030,7 @@
       "When using FORM authentication there was a narrow window where an attacker could perform a session xation attack. The window was considered too narrow for an exploit to be practical but, erring on the side of caution, this issue has been treated as a security vulnerability."
     ],
     "log_method": [],
-    "cvss": [
-      "7.5"
-    ],
+    "cvss": ["7.5"],
     "port": 8081,
     "protocol": "tcp",
     "severity": "HIGH",
@@ -3187,8 +3060,8 @@
       "dfn-cert: DFN-CERT-2019-2673"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -3225,9 +3098,7 @@
       "The aw exists due to a missing host name verication when using TLS with the WebSocket client."
     ],
     "log_method": [],
-    "cvss": [
-      "7.5"
-    ],
+    "cvss": ["7.5"],
     "port": 8081,
     "protocol": "tcp",
     "severity": "HIGH",
@@ -3259,8 +3130,8 @@
       "dfn-cert: DFN-CERT-2018-1262"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -3295,9 +3166,7 @@
       "If Tomcat is congured to ignore invalid HTTP headers via setting rejectIllegalHeader to false (the default for 8.5.x only), Tomcat does not reject a request containing an invalid Content- Length header making a request smuggling attack possible if Tomcat is located behind a reverse proxy that also fails to reject the request with the invalid header."
     ],
     "log_method": [],
-    "cvss": [
-      "7.5"
-    ],
+    "cvss": ["7.5"],
     "port": 8081,
     "protocol": "tcp",
     "severity": "HIGH",
@@ -3324,8 +3193,8 @@
       "dfn-cert: DFN-CERT-2022-2428"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -3360,9 +3229,7 @@
       "The flaw exists due to improper handing of overflow in the UTF-8 decoder with supplementary characters."
     ],
     "log_method": [],
-    "cvss": [
-      "7.5"
-    ],
+    "cvss": ["7.5"],
     "port": 8081,
     "protocol": "tcp",
     "severity": "HIGH",
@@ -3389,8 +3256,8 @@
       "dfn-cert: DFN-CERT-2018-1262"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -3423,9 +3290,7 @@
       "Tomcat does not correctly parse HTTP trailer headers. A specially crafted trailer header that exceeds the header size limit could cause Tomcat to treat a single request as multiple requests leading to the possibility of request smuggling when behind a reverse proxy."
     ],
     "log_method": [],
-    "cvss": [
-      "7.5"
-    ],
+    "cvss": ["7.5"],
     "port": 8081,
     "protocol": "tcp",
     "severity": "HIGH",
@@ -3453,8 +3318,8 @@
       "cert-bund: WID-SEC-2024-0101"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -3490,9 +3355,7 @@
       "The documentation for the EncryptInterceptor incorrectly stated it enabled Tomcat clustering to run over an untrusted network. This was not correct. While the EncryptInterceptor does provide confidentiality and integrity protection, it does not protect against all risks associated with running over any untrusted network, particularly DoS risks."
     ],
     "log_method": [],
-    "cvss": [
-      "7.5"
-    ],
+    "cvss": ["7.5"],
     "port": 8081,
     "protocol": "tcp",
     "severity": "HIGH",
@@ -3516,8 +3379,8 @@
       "dfn-cert: DFN-CERT-2022-1070"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -3552,9 +3415,7 @@
       "Apache Tomcat uses a packaged renamed copy of Apache Commons FileUpload to provide the file upload functionality defined in the Jakarta Servlet specification. Apache Tomcat was, therefore, also vulnerable to the Apache Commons FileUpload vulnerability CVE-2023-24998 as there was no limit to the number of request parts processed. This resulted in the possibility of an attacker triggering a DoS with a malicious upload or series of uploads."
     ],
     "log_method": [],
-    "cvss": [
-      "7.5"
-    ],
+    "cvss": ["7.5"],
     "port": 8081,
     "protocol": "tcp",
     "severity": "HIGH",
@@ -3563,8 +3424,8 @@
       "url: https://lists.apache.org/thread/g16kv0"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -3591,9 +3452,7 @@
     ],
     "insight": [],
     "log_method": [],
-    "cvss": [
-      "7.0"
-    ],
+    "cvss": ["7.0"],
     "port": 8081,
     "protocol": "tcp",
     "severity": "HIGH",
@@ -3673,8 +3532,8 @@
       "dfn-cert: DFN-CERT-2023-0414"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -3708,9 +3567,7 @@
     ],
     "insight": [],
     "log_method": [],
-    "cvss": [
-      "7.0"
-    ],
+    "cvss": ["7.0"],
     "port": 8081,
     "protocol": "tcp",
     "severity": "HIGH",
@@ -3733,8 +3590,8 @@
       "dfn-cert: DFN-CERT-2019-2673"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -3758,9 +3615,7 @@
       "Method: Apache Tomcat Detection Consolidation",
       "OID: 1.3.6.1.4.1.25623.1.0.107652)"
     ],
-    "impact": [
-      "Quality of Detection (QoD): 30%"
-    ],
+    "impact": ["Quality of Detection (QoD): 30%"],
     "solution": [
       "Solution type: VendorFix",
       "Update to version 7.0.108, 8.5.63, 9.0.43, 10.0.2 or later.",
@@ -3770,9 +3625,7 @@
       "The fix for CVE-2020-9484 was incomplete. When using a highly unlikely configuration edge case, the Tomcat instance is still vulnerable to CVE-2020-9484. Note that both the previously published prerequisites for CVE-2020-9484 also apply to this issue."
     ],
     "log_method": [],
-    "cvss": [
-      "7.0"
-    ],
+    "cvss": ["7.0"],
     "port": 8081,
     "protocol": "tcp",
     "severity": "HIGH",
@@ -3799,8 +3652,8 @@
       "dfn-cert: DFN-CERT-2021-0445"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -3833,9 +3686,7 @@
       "Queries made by the JNDI Realm do not always correctly escape parameters. Parameter values could be sourced from user provided data (eg user names) as well as conguration data provided by an administrator. In limited circumstances it is possible for users to authenticate using variations of their user name and/or to bypass some of the protection provided by the LockOut Realm."
     ],
     "log_method": [],
-    "cvss": [
-      "6.5"
-    ],
+    "cvss": ["6.5"],
     "port": 8040,
     "protocol": "tcp",
     "severity": "MEDIUM",
@@ -3865,8 +3716,8 @@
       "dfn-cert: DFN-CERT-2021-1472"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -3903,9 +3754,7 @@
       "- The URL pattern of (the empty string) which exactly maps to the context root was not correctly handled when used as part of a security constraint denition."
     ],
     "log_method": [],
-    "cvss": [
-      "6.5"
-    ],
+    "cvss": ["6.5"],
     "port": 8040,
     "protocol": "tcp",
     "severity": "MEDIUM",
@@ -3945,8 +3794,8 @@
       "dfn-cert: DFN-CERT-2018-0378"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -3983,9 +3832,7 @@
       "If Tomcat was congured to use a custom Jakarta Authentication (formerly JASPIC) ServerAuth-Context component which may throw an exception during the authentication process without explicitly setting an HTTP status to indicate failure, the authentication may not have failed, allowing the user to bypass the authentication process. There are no known Jakarta Authentication components that behave in this way."
     ],
     "log_method": [],
-    "cvss": [
-      "6.4"
-    ],
+    "cvss": ["6.4"],
     "port": 8040,
     "protocol": "tcp",
     "severity": "MEDIUM",
@@ -4007,8 +3854,8 @@
       "dfn-cert: DFN-CERT-2024-3077"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -4044,9 +3891,7 @@
       "If the ROOT (default) web application is congured to use FORM authentication then it is possible that a specially crafted URL could be used to trigger a redirect to an URL of the attackers choice."
     ],
     "log_method": [],
-    "cvss": [
-      "6.1"
-    ],
+    "cvss": ["6.1"],
     "port": 8040,
     "protocol": "tcp",
     "severity": "MEDIUM",
@@ -4061,8 +3906,8 @@
       "cert-bund: WID-SEC-2024-0871"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -4097,9 +3942,7 @@
       "The SSI printenv command in Apache Tomcat echoes user provided data without escaping and is, therefore, vulnerable to XSS. SSI is disabled by default. The printenv command is intended for debugging and is unlikely to be present in a production website."
     ],
     "log_method": [],
-    "cvss": [
-      "6.1"
-    ],
+    "cvss": ["6.1"],
     "port": 8040,
     "protocol": "tcp",
     "severity": "MEDIUM",
@@ -4125,8 +3968,8 @@
       "dfn-cert: DFN-CERT-2019-1092"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -4161,9 +4004,7 @@
       "The aw exists due to an error where a mishandling of close in 'NIO/NIO2' connectors, user sessions can get mixed up."
     ],
     "log_method": [],
-    "cvss": [
-      "5.9"
-    ],
+    "cvss": ["5.9"],
     "port": 8040,
     "protocol": "tcp",
     "severity": "MEDIUM",
@@ -4184,8 +4025,8 @@
       "dfn-cert: DFN-CERT-2018-1262"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -4219,9 +4060,7 @@
       "When serving resources from a network location using the NTFS le system it was possible to bypass security constraints and/or view the source code for JSPs in some congurations. The root cause was the unexpected behaviour of the JRE API File.getCanonicalPath() which in turn was caused by the inconsistent behaviour of the Windows API (FindFirstFileW) in some circumstances."
     ],
     "log_method": [],
-    "cvss": [
-      "5.9"
-    ],
+    "cvss": ["5.9"],
     "port": 8040,
     "protocol": "tcp",
     "severity": "MEDIUM",
@@ -4244,8 +4083,8 @@
       "dfn-cert: DFN-CERT-2020-2646"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -4281,9 +4120,7 @@
       "The aw exists as the description of the search algorithm used by the CGI Servlet to identify which script to execute was not correct."
     ],
     "log_method": [],
-    "cvss": [
-      "5.3"
-    ],
+    "cvss": ["5.3"],
     "port": 8040,
     "protocol": "tcp",
     "severity": "MEDIUM",
@@ -4301,8 +4138,8 @@
       "dfn-cert: DFN-CERT-2018-0217"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -4337,9 +4174,7 @@
       "Apache Tomcat does not correctly parse the HTTP transfer-encoding request header in some circumstances leading to the possibility to request smuggling when used with a reverse proxy. Specically: Tomcat incorrectly ignores the transfer-encoding header if the client declared it would only accept an HTTP/1.0 response. Tomcat honours the identify encoding and Tomcat does not ensure that, if present, the chunked encoding is the nal encoding."
     ],
     "log_method": [],
-    "cvss": [
-      "5.3"
-    ],
+    "cvss": ["5.3"],
     "port": 8040,
     "protocol": "tcp",
     "severity": "MEDIUM",
@@ -4379,8 +4214,8 @@
       "dfn-cert: DFN-CERT-2021-1472"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -4416,9 +4251,7 @@
       "Incomplete POST requests triggered an error response that could contain data from a previous request from another user."
     ],
     "log_method": [],
-    "cvss": [
-      "5.3"
-    ],
+    "cvss": ["5.3"],
     "port": 8040,
     "protocol": "tcp",
     "severity": "MEDIUM",
@@ -4434,8 +4267,8 @@
       "dfn-cert: DFN-CERT-2024-"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -4469,9 +4302,7 @@
       "- CVE-2024-24549: HTTP/2 header handling DoS"
     ],
     "log_method": [],
-    "cvss": [
-      "5.0"
-    ],
+    "cvss": ["5.0"],
     "port": 8040,
     "protocol": "tcp",
     "severity": "MEDIUM",
@@ -4517,15 +4348,13 @@
       "dfn-cert: DFN-CERT-2024-0697"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
     "Name": "Apache Tomcat Multiple Vulnerabilities (Dec 2024) - Linux",
-    "description": [
-      "Apache Tomcat is prone to multiple vulnerabilities."
-    ],
+    "description": ["Apache Tomcat is prone to multiple vulnerabilities."],
     "detection_result": [
       "Installed version: 8.5.23",
       "Fixed version: 9.0.98",
@@ -4540,16 +4369,14 @@
     "solution": [],
     "insight": [],
     "log_method": [],
-    "cvss": [
-      "5.0"
-    ],
+    "cvss": ["5.0"],
     "port": 8040,
     "protocol": "tcp",
     "severity": "MEDIUM",
     "references": [],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -4586,9 +4413,7 @@
     ],
     "insight": [],
     "log_method": [],
-    "cvss": [
-      "5.0"
-    ],
+    "cvss": ["5.0"],
     "port": 8040,
     "protocol": "tcp",
     "severity": "MEDIUM",
@@ -4606,8 +4431,8 @@
       "dfn-cert: DFN-CERT-2025-1384"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -4643,9 +4468,7 @@
       "When using the RemoteIpFilter with requests received from a reverse proxy via HTTP that include the X-Forwarded-Proto header set to https, session cookies created by Tomcat did not include the secure attribute. This could result in the user agent transmitting the session cookie over an insecure channel."
     ],
     "log_method": [],
-    "cvss": [
-      "4.3"
-    ],
+    "cvss": ["4.3"],
     "port": 8040,
     "protocol": "tcp",
     "severity": "MEDIUM",
@@ -4678,8 +4501,8 @@
       "dfn-cert: DFN-CERT-2023-0640"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -4715,9 +4538,7 @@
       "If an HTTP/2 client exceeded the agreed maximum number of concurrent streams for a connection (in violation of the HTTP/2 protocol), it is possible that a subsequent request made on that connection could contain HTTP headers - including HTTP/2 pseudo headers - from a previous request rather than the intended headers. This could lead to users seeing responses for unexpected resources."
     ],
     "log_method": [],
-    "cvss": [
-      "4.3"
-    ],
+    "cvss": ["4.3"],
     "port": 8040,
     "protocol": "tcp",
     "severity": "MEDIUM",
@@ -4735,8 +4556,8 @@
       "dfn-cert: DFN-CERT-2020-2224"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -4767,9 +4588,7 @@
     ],
     "insight": [],
     "log_method": [],
-    "cvss": [
-      "4.3"
-    ],
+    "cvss": ["4.3"],
     "port": 8040,
     "protocol": "tcp",
     "severity": "MEDIUM",
@@ -4803,8 +4622,8 @@
       "dfn-cert: DFN-CERT-2018-2000"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -4839,9 +4658,7 @@
       "Queries made by the JNDI Realm do not always correctly escape parameters. Parameter values  could be sourced from user provided data (eg user names) as well as conguration data provided  by an administrator. In limited circumstances it is possible for users to authenticate using  variations of their user name and/or to bypass some of the protection provided by the LockOut  Realm."
     ],
     "log_method": [],
-    "cvss": [
-      "6.5"
-    ],
+    "cvss": ["6.5"],
     "port": 8081,
     "protocol": "tcp",
     "severity": "MEDIUM",
@@ -4872,8 +4689,8 @@
       "dfn-cert: DFN-CERT-2021-1472"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -4913,9 +4730,7 @@
       "- The URL pattern of (the empty string) which exactly maps to the context root was not  correctly handled when used as part of a security constraint denition."
     ],
     "log_method": [],
-    "cvss": [
-      "6.5"
-    ],
+    "cvss": ["6.5"],
     "port": 8081,
     "protocol": "tcp",
     "severity": "MEDIUM",
@@ -4952,8 +4767,8 @@
       "dfn-cert: DFN-CERT-2018-1038"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -4978,9 +4793,7 @@
     "solution": [],
     "insight": [],
     "log_method": [],
-    "cvss": [
-      "5.0"
-    ],
+    "cvss": ["5.0"],
     "port": 8081,
     "protocol": "tcp",
     "severity": "MEDIUM",
@@ -5021,8 +4834,8 @@
       "dfn-cert: DFN-CERT-2018-0378"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -5057,9 +4870,7 @@
       "If Tomcat was congured to use a custom Jakarta Authentication (formerly JASPIC) ServerAuth- Context component which may throw an exception during the authentication process without explicitly setting an HTTP status to indicate failure, the authentication may not have failed, al- lowing the user to bypass the authentication process. There are no known Jakarta Authentication components that behave in this way."
     ],
     "log_method": [],
-    "cvss": [
-      "6.4"
-    ],
+    "cvss": ["6.4"],
     "port": 8081,
     "protocol": "tcp",
     "severity": "MEDIUM",
@@ -5081,8 +4892,8 @@
       "dfn-cert: DFN-CERT-2024-3077"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -5117,9 +4928,7 @@
       "The SSI printenv command in Apache Tomcat echoes user provided data without escaping and is, therefore, vulnerable to XSS. SSI is disabled by default. The printenv command is intended for debugging and is unlikely to be present in a production website."
     ],
     "log_method": [],
-    "cvss": [
-      "6.1"
-    ],
+    "cvss": ["6.1"],
     "port": 8081,
     "protocol": "tcp",
     "severity": "MEDIUM",
@@ -5135,8 +4944,8 @@
       "dfn-cert: DFN-CERT-2024-"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -5171,9 +4980,7 @@
       "Apache Tomcat versions 8.5.0 through 8.5.92, 9.0.0-M1 through 9.0.79, 10.1.0-M1 through 10.1.12 and 11.0.0-M1 through 11.0.0-M10."
     ],
     "log_method": [],
-    "cvss": [
-      "6.1"
-    ],
+    "cvss": ["6.1"],
     "port": 8081,
     "protocol": "tcp",
     "severity": "MEDIUM",
@@ -5207,8 +5014,8 @@
       "dfn-cert: DFN-CERT-2023-1983"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -5239,16 +5046,14 @@
       "Apache Tomcat 9.0.0.M9 to 9.0.9 Apache Tomcat 8.5.5 to 8.5.31 on Linux."
     ],
     "log_method": [],
-    "cvss": [
-      "5.9"
-    ],
+    "cvss": ["5.9"],
     "port": 8081,
     "protocol": "tcp",
     "severity": "MEDIUM",
     "references": [],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -5285,9 +5090,7 @@
       "When serving resources from a network location using the NTFS le system it was possible to bypass security constraints and/or view the source code for JSPs in some congurations. The root cause was the unexpected behaviour of the JRE API File.getCanonicalPath() which in turn was caused by the inconsistent behaviour of the Windows API (FindFirstFileW) in some circumstances."
     ],
     "log_method": [],
-    "cvss": [
-      "5.9"
-    ],
+    "cvss": ["5.9"],
     "port": 8081,
     "protocol": "tcp",
     "severity": "MEDIUM",
@@ -5310,8 +5113,8 @@
       "dfn-cert: DFN-CERT-2020-2646"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -5340,9 +5143,7 @@
       "Apache Tomcat does not correctly parse the HTTP transfer-encoding request header in some circumstances leading to the possibility to request smuggling when used with a reverse proxy. Specically: Tomcat incorrectly ignores the transfer-encoding header if the client declared it would only accept an HTTP/1.0 response. Tomcat honours the identify encoding and Tomcat does not ensure that, if present, the chunked encoding is the nal encoding."
     ],
     "log_method": [],
-    "cvss": [
-      "5.3"
-    ],
+    "cvss": ["5.3"],
     "port": 8081,
     "protocol": "tcp",
     "severity": "MEDIUM",
@@ -5382,8 +5183,8 @@
       "dfn-cert: DFN-CERT-2021-1472"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -5417,9 +5218,7 @@
       "Incomplete POST requests triggered an error response that could contain data from a previous request from another user."
     ],
     "log_method": [],
-    "cvss": [
-      "5.3"
-    ],
+    "cvss": ["5.3"],
     "port": 8081,
     "protocol": "tcp",
     "severity": "MEDIUM",
@@ -5436,8 +5235,8 @@
       "dfn-cert: DFN-CERT-2024-0648"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -5460,23 +5259,19 @@
     "solution": [],
     "insight": [],
     "log_method": [],
-    "cvss": [
-      "5.3"
-    ],
+    "cvss": ["5.3"],
     "port": 8081,
     "protocol": "tcp",
     "severity": "MEDIUM",
     "references": [],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
     "Name": "Apache Tomcat Multiple Vulnerabilities (Dec 2024) - Linux",
-    "description": [
-      "Apache Tomcat is prone to multiple vulnerabilities."
-    ],
+    "description": ["Apache Tomcat is prone to multiple vulnerabilities."],
     "detection_result": [
       "Installed version: 8.5.23",
       "Fixed version: 9.0.98",
@@ -5504,9 +5299,7 @@
       "The aw exists as the description of the search algorithm used by the CGI Servlet to identify which script to execute was not correct."
     ],
     "log_method": [],
-    "cvss": [
-      "5.0"
-    ],
+    "cvss": ["5.0"],
     "port": 8081,
     "protocol": "tcp",
     "severity": "MEDIUM",
@@ -5524,8 +5317,8 @@
       "dfn-cert: DFN-CERT-2018-0217"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -5560,9 +5353,7 @@
       "Aected Software/OS Apache Tomcat version 9.0.104 and prior, 10.x through 10.1.40 and 11.0.0-M1 through 11.0.6. Note: While not explicitly mentioned by the vendor (due to the EOL status of these branches) it is assumed that the whole 10.x branch and all versions prior to 9.x are aected by these aws. If you disagree with this assessment and want to accept the risk please create an override for this result."
     ],
     "log_method": [],
-    "cvss": [
-      "5.0"
-    ],
+    "cvss": ["5.0"],
     "port": 8081,
     "protocol": "tcp",
     "severity": "MEDIUM",
@@ -5580,8 +5371,8 @@
       "dfn-cert: DFN-CERT-2025-1384"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -5618,9 +5409,7 @@
       "Aected Software/OS Apache Tomcat versions prior to 8.5.99, 9.0.0-M1 through 9.0.85, 10.x through 10.1.18 and 11.0.0-M1 through 11.0.0-M16. Note: While not explicitly mentioned by the vendor (due to the EOL status of these branches) it is assumed that the whole 10.x branch and all versions prior to 8.5.x are aected by these aws. If you disagree with this assessment and want to accept the risk please create an override for this result."
     ],
     "log_method": [],
-    "cvss": [
-      "5.0"
-    ],
+    "cvss": ["5.0"],
     "port": 8081,
     "protocol": "tcp",
     "severity": "MEDIUM",
@@ -5654,8 +5443,8 @@
       "cert-bund: WID-SEC-2024-0630"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -5696,9 +5485,7 @@
       "When using the RemoteIpFilter with requests received from a reverse proxy via HTTP that include the X-Forwarded-Proto header set to https, session cookies created by Tomcat did not include the secure attribute. This could result in the user agent transmitting the session cookie over an insecure channel."
     ],
     "log_method": [],
-    "cvss": [
-      "4.3"
-    ],
+    "cvss": ["4.3"],
     "port": 8081,
     "protocol": "tcp",
     "severity": "MEDIUM",
@@ -5731,8 +5518,8 @@
       "dfn-cert: DFN-CERT-2023-0640"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -5770,9 +5557,7 @@
     ],
     "insight": [],
     "log_method": [],
-    "cvss": [
-      "4.3"
-    ],
+    "cvss": ["4.3"],
     "port": 8081,
     "protocol": "tcp",
     "severity": "MEDIUM",
@@ -5785,8 +5570,8 @@
       "cert-bund: WID-SEC-2024-1682"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -5826,9 +5611,7 @@
       "If an HTTP/2 client exceeded the agreed maximum number of concurrent streams for a connection (in violation of the HTTP/2 protocol), it is possible that a subsequent request made on that connection could contain HTTP headers - including HTTP/2 pseudo headers - from a previous request rather than the intended headers. This could lead to users seeing responses for unexpected resources."
     ],
     "log_method": [],
-    "cvss": [
-      "4.3"
-    ],
+    "cvss": ["4.3"],
     "port": 8081,
     "protocol": "tcp",
     "severity": "MEDIUM",
@@ -5846,8 +5629,8 @@
       "dfn-cert: DFN-CERT-2020-2224"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -5881,9 +5664,7 @@
       "The Timestamp Reply is an ICMP message which replies to a Timestamp message. It consists of the originating timestamp sent by the sender of the Timestamp as well as a receive timestamp and a transmit timestamp."
     ],
     "log_method": [],
-    "cvss": [
-      "2.1"
-    ],
+    "cvss": ["2.1"],
     "port": "general",
     "protocol": "icmp",
     "severity": "LOW",
@@ -5896,8 +5677,8 @@
       "dfn-cert: DFN-CERT-2014-0658"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -5934,9 +5715,7 @@
       "The simplified implementation of blocking reads and writes introduced in Tomcat 10 and back-ported to Tomcat 9.0.47 onwards exposed a long standing (but extremely hard to trigger) concurrency bug that could cause client connections to share an Http11Processor instance resulting in responses, or part responses, to be received by the wrong client."
     ],
     "log_method": [],
-    "cvss": [
-      "3.7"
-    ],
+    "cvss": ["3.7"],
     "port": 8040,
     "protocol": "tcp",
     "severity": "LOW",
@@ -5951,8 +5730,8 @@
       "dfn-cert: DFN-CERT-2022-2392"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -5979,16 +5758,14 @@
     ],
     "insight": [],
     "log_method": [],
-    "cvss": [
-      "2.6"
-    ],
+    "cvss": ["2.6"],
     "port": 8040,
     "protocol": "tcp",
     "severity": "LOW",
     "references": [],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -6021,9 +5798,7 @@
       "The remote host implements TCP timestamps, as dened by RFC1323/RFC7323."
     ],
     "log_method": [],
-    "cvss": [
-      "2.6"
-    ],
+    "cvss": ["2.6"],
     "port": "general",
     "protocol": "tcp",
     "severity": "LOW",
@@ -6034,8 +5809,8 @@
       "url: https://www.fortiguard.com/psirt/FG-IR-16-090"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -6073,9 +5848,7 @@
       "The simplied implementation of blocking reads and writes introduced in Tomcat 10 and back-ported to Tomcat 9.0.47 onwards exposed a long standing (but extremely hard to trigger) con- currency bug that could cause client connections to share an Http11Processor instance resulting in responses, or part responses, to be received by the wrong client."
     ],
     "log_method": [],
-    "cvss": [
-      "3.7"
-    ],
+    "cvss": ["3.7"],
     "port": 8081,
     "protocol": "tcp",
     "severity": "LOW",
@@ -6090,8 +5863,8 @@
       "dfn-cert: DFN-CERT-2022-2392"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -6120,9 +5893,7 @@
       "The simplied implementation of blocking reads and writes introduced in Tomcat 10 and back-ported to Tomcat 9.0.47 onwards exposed a long standing (but extremely hard to trigger) con-currency bug that could cause client connections to share an Http11Processor instance resulting in responses, or part responses, to be received by the wrong client."
     ],
     "log_method": [],
-    "cvss": [
-      "0.0"
-    ],
+    "cvss": ["0.0"],
     "port": 8019,
     "protocol": "tcp",
     "severity": "LOG",
@@ -6137,8 +5908,8 @@
       "dfn-cert: DFN-CERT-2022-2392"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -6162,16 +5933,14 @@
       "OID:1.3.6.1.4.1.25623.1.0.810002",
       "Version used: 2022-07-27T10:11:28Z"
     ],
-    "cvss": [
-      "0.0"
-    ],
+    "cvss": ["0.0"],
     "port": 8019,
     "protocol": "tcp",
     "severity": "LOG",
     "references": [],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -6196,18 +5965,14 @@
       "OID:1.3.6.1.4.1.25623.1.0.810002",
       "Version used: 2022-07-27T10:11:28Z"
     ],
-    "cvss": [
-      "0.0"
-    ],
+    "cvss": ["0.0"],
     "port": "general",
     "protocol": "CPE-T",
     "severity": "LOG",
-    "references": [
-      "url: https://nvd.nist.gov/products/cpe"
-    ],
+    "references": ["url: https://nvd.nist.gov/products/cpe"],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -6216,9 +5981,7 @@
       "This plugin performs service detection.",
       "Quality of Detection (QoD): 80%"
     ],
-    "detection_result": [
-      "A web server is running on this port"
-    ],
+    "detection_result": ["A web server is running on this port"],
     "detection_method": [],
     "product_detection_result": [],
     "impact": [],
@@ -6231,16 +5994,14 @@
       "OID:1.3.6.1.4.1.25623.1.0.10330",
       "Version used: 2025-03-05T05:38:53Z"
     ],
-    "cvss": [
-      "0.0"
-    ],
+    "cvss": ["0.0"],
     "port": 8040,
     "protocol": "tcp",
     "severity": "LOG",
     "references": [],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -6273,16 +6034,14 @@
       "OID:1.3.6.1.4.1.25623.1.0.153974",
       "Version used: 2025-02-28T05:38:49Z"
     ],
-    "cvss": [
-      "0.0"
-    ],
+    "cvss": ["0.0"],
     "port": 8040,
     "protocol": "tcp",
     "severity": "LOG",
     "references": [],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -6322,9 +6081,7 @@
       "OID:1.3.6.1.4.1.25623.1.0.112081",
       "Version used: 2025-03-21T15:40:43Z"
     ],
-    "cvss": [
-      "0.0"
-    ],
+    "cvss": ["0.0"],
     "port": 8040,
     "protocol": "tcp",
     "severity": "LOG",
@@ -6334,8 +6091,8 @@
       "url: https://securityheaders.com/"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -6364,18 +6121,14 @@
       "OID:1.3.6.1.4.1.25623.1.0.103918",
       "Version used: 2026-01-06T05:47:51Z"
     ],
-    "cvss": [
-      "0.0"
-    ],
+    "cvss": ["0.0"],
     "port": 8040,
     "protocol": "tcp",
     "severity": "LOG",
-    "references": [
-      "url: https://jfrog.com/artifactory/"
-    ],
+    "references": ["url: https://jfrog.com/artifactory/"],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -6404,16 +6157,14 @@
     "solution": [],
     "insight": [],
     "log_method": [],
-    "cvss": [
-      "0.0"
-    ],
+    "cvss": ["0.0"],
     "port": 8040,
     "protocol": "tcp",
     "severity": "LOG",
     "references": [],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -6444,18 +6195,14 @@
       "OID:1.3.6.1.4.1.25623.1.0.111038",
       "Version used: 2026-01-13T05:47:36Z"
     ],
-    "cvss": [
-      "0.0"
-    ],
+    "cvss": ["0.0"],
     "port": 8040,
     "protocol": "tcp",
     "severity": "LOG",
-    "references": [
-      "url: https://forum.greenbone.net/c/vulnerability-tests/7"
-    ],
+    "references": ["url: https://forum.greenbone.net/c/vulnerability-tests/7"],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -6473,19 +6220,15 @@
     "impact": [],
     "solution": [],
     "insight": [],
-    "log_method": [
-      "Details: Hostname Determination Reporting"
-    ],
-    "cvss": [
-      "0.0"
-    ],
+    "log_method": ["Details: Hostname Determination Reporting"],
+    "cvss": ["0.0"],
     "port": "general",
     "protocol": "tcp",
     "severity": "LOG",
     "references": [],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -6510,23 +6253,19 @@
       "A combination of the protocols ICMP and TCP is used to determine the route. This method is applicable for IPv4 only and it is also known as 'traceroute'.",
       "Details: Traceroute"
     ],
-    "cvss": [
-      "0.0"
-    ],
+    "cvss": ["0.0"],
     "port": "general",
     "protocol": "tcp",
     "severity": "LOG",
     "references": [],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
     "Name": "IP Forwarding Enabled - Active Check",
-    "description": [
-      "Checks if the remote host has IP forwarding enabled."
-    ],
+    "description": ["Checks if the remote host has IP forwarding enabled."],
     "detection_result": [
       "It was possible to route a TCP packet through the target host and received an answer which means IP forwarding is enabled."
     ],
@@ -6539,18 +6278,14 @@
       "Sends a crafted Local Link Layer (LLL) frame and checks the response.",
       "Details: IP Forwarding Enabled - Active Check"
     ],
-    "cvss": [
-      "0.0"
-    ],
+    "cvss": ["0.0"],
     "port": "general",
     "protocol": "tcp",
     "severity": "LOG",
-    "references": [
-      "cve: CVE-1999-0511"
-    ],
+    "references": ["cve: CVE-1999-0511"],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -6573,28 +6308,20 @@
     "impact": [],
     "solution": [],
     "insight": [],
-    "log_method": [
-      "Details: OS Detection Consolidation and Reporting"
-    ],
-    "cvss": [
-      "0.0"
-    ],
+    "log_method": ["Details: OS Detection Consolidation and Reporting"],
+    "cvss": ["0.0"],
     "port": "general",
     "protocol": "tcp",
     "severity": "LOG",
-    "references": [
-      "url: https://forum.greenbone.net/c/vulnerability-tests/7"
-    ],
+    "references": ["url: https://forum.greenbone.net/c/vulnerability-tests/7"],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
     "Name": "Apache Tomcat Detection Consolidation",
-    "description": [
-      "Consolidation of Apache Tomcat detections."
-    ],
+    "description": ["Consolidation of Apache Tomcat detections."],
     "detection_result": [
       "Detected Apache Tomcat",
       "Version: 8.5.23",
@@ -6618,21 +6345,15 @@
     "impact": [],
     "solution": [],
     "insight": [],
-    "log_method": [
-      "Details: Apache Tomcat Detection Consolidation"
-    ],
-    "cvss": [
-      "0.0"
-    ],
+    "log_method": ["Details: Apache Tomcat Detection Consolidation"],
+    "cvss": ["0.0"],
     "port": "general",
     "protocol": "tcp",
     "severity": "LOG",
-    "references": [
-      "url: http://tomcat.apache.org/"
-    ],
+    "references": ["url: http://tomcat.apache.org/"],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -6659,25 +6380,19 @@
     "log_method": [
       "Details: Web Application Scanning Consolidation / Info Reporting"
     ],
-    "cvss": [
-      "0.0"
-    ],
+    "cvss": ["0.0"],
     "port": 8081,
     "protocol": "tcp",
     "severity": "LOG",
-    "references": [
-      "url: https://forum.greenbone.net/c/vulnerability-tests/7"
-    ],
+    "references": ["url: https://forum.greenbone.net/c/vulnerability-tests/7"],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
     "Name": "Allowed HTTP Methods Enumeration",
-    "description": [
-      "Enumerates which HTTP methods are allowed."
-    ],
+    "description": ["Enumerates which HTTP methods are allowed."],
     "detection_result": [
       "The following list contains the URLs and corresponding supported HTTP methods. URL | HTTP Methods -------------------------------------------------------------------------------- ------------------------------------- http://artifactory5.trabalho_vulnnet:8081/ | GET, HEAD, POST, PUT, DELETE, OPTIONS (obtained via HTTP OPTIONS method)"
     ],
@@ -6693,26 +6408,20 @@
       "Sends multiple HTTP requests and checks the responses.",
       "Disclaimer: - This enumeration script is provided 'as is' (means no support is given) and only providing rudimentary information about the possible enabled methods - This script doesn't guarantee completeness or full reliability For more reliable determination of the enabled HTTP methods please inspect the conguration of the web server manually and directly on the target host."
     ],
-    "cvss": [
-      "0.0"
-    ],
+    "cvss": ["0.0"],
     "port": 8081,
     "protocol": "tcp",
     "severity": "LOG",
     "references": [],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
     "Name": "Services",
-    "description": [
-      "This plugin performs service detection."
-    ],
-    "detection_result": [
-      "A web server is running on this port"
-    ],
+    "description": ["This plugin performs service detection."],
+    "detection_result": ["A web server is running on this port"],
     "detection_method": [],
     "product_detection_result": [],
     "impact": [],
@@ -6720,19 +6429,15 @@
     "insight": [
       "This plugin attempts to guess which service is running on the remote port(s). For instance, it searches for a web server which could listen on another port than 80 or 443 and makes this information available for other check routines."
     ],
-    "log_method": [
-      "Details: Services"
-    ],
-    "cvss": [
-      "0.0"
-    ],
+    "log_method": ["Details: Services"],
+    "cvss": ["0.0"],
     "port": 8081,
     "protocol": "tcp",
     "severity": "LOG",
     "references": [],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -6748,12 +6453,8 @@
     "impact": [],
     "solution": [],
     "insight": [],
-    "log_method": [
-      "Details: HTTP Security Headers Detection"
-    ],
-    "cvss": [
-      "0.0"
-    ],
+    "log_method": ["Details: HTTP Security Headers Detection"],
+    "cvss": ["0.0"],
     "port": 8081,
     "protocol": "tcp",
     "severity": "LOG",
@@ -6763,8 +6464,8 @@
       "url: https://securityheaders.com/"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -6793,18 +6494,14 @@
       "OID:1.3.6.1.4.1.25623.1.0.103918",
       "Version used: 2026-01-06T05:47:51Z"
     ],
-    "cvss": [
-      "0.0"
-    ],
+    "cvss": ["0.0"],
     "port": 8081,
     "protocol": "tcp",
     "severity": "LOG",
-    "references": [
-      "url: https://jfrog.com/artifactory/"
-    ],
+    "references": ["url: https://jfrog.com/artifactory/"],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   }
 ]

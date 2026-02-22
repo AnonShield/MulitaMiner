@@ -25,9 +25,7 @@
     ],
     "insight": [],
     "log_method": [],
-    "cvss": [
-      "10.0"
-    ],
+    "cvss": ["10.0"],
     "port": 8787,
     "protocol": "tcp",
     "severity": "High",
@@ -40,8 +38,8 @@
       "URL:http://www.ruby-doc.org/stdlib-1.9.3/libdoc/drb/rdoc/DRb.html"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -76,9 +74,7 @@
       "- %SEARCH}}% variable is not properly sanitised before being used in an eval() call which lets the attackers execute perl code through eval injection attack."
     ],
     "log_method": [],
-    "cvss": [
-      "10.0"
-    ],
+    "cvss": ["10.0"],
     "port": 80,
     "protocol": "tcp",
     "severity": "HIGH",
@@ -90,8 +86,8 @@
       "URL:http://twiki.org/cgi-bin/view/Codev/SecurityAlert-CVE-2008-5305"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -119,16 +115,14 @@
     ],
     "insight": [],
     "log_method": [],
-    "cvss": [
-      "7.5"
-    ],
+    "cvss": ["7.5"],
     "port": 80,
     "protocol": "tcp",
     "severity": "HIGH",
     "references": [],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -139,10 +133,7 @@
       "- An unspecied authentication-bypass vulnerability",
       "- An unspecied vulnerability"
     ],
-    "detection_result": [
-      "Installed version: 1.9.5",
-      "Fixed version: 4.2"
-    ],
+    "detection_result": ["Installed version: 1.9.5", "Fixed version: 4.2"],
     "detection_method": [
       "Details: Tiki Wiki CMS Groupware < 4.2 Multiple Unspecified Vulnerabilities",
       "OID:1.3.6.1.4.1.25623.1.0.100537",
@@ -162,9 +153,7 @@
     ],
     "insight": [],
     "log_method": [],
-    "cvss": [
-      "7.5"
-    ],
+    "cvss": ["7.5"],
     "port": 80,
     "protocol": "tcp",
     "severity": "HIGH",
@@ -181,18 +170,14 @@
       "URL:http://info.tikiwiki.org/tiki-index.php?page=homepage"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
     "Name": "PHP-CGI-based setups vulnerability when parsing query string parameters from php les.",
-    "description": [
-      "PHP is prone to an information-disclosure vulnerability."
-    ],
-    "detection_result": [
-      "Vulnerable url: http://172.17.0.3/cgi-bin/php"
-    ],
+    "description": ["PHP is prone to an information-disclosure vulnerability."],
+    "detection_result": ["Vulnerable url: http://172.17.0.3/cgi-bin/php"],
     "detection_method": [
       "Details: PHP-CGI-based setups vulnerability when parsing query string parameters from ph. ->..",
       "OID:1.3.6.1.4.1.25623.1.0.103482",
@@ -212,9 +197,7 @@
       "http://example.com/index.php?-s"
     ],
     "log_method": [],
-    "cvss": [
-      "7.5"
-    ],
+    "cvss": ["7.5"],
     "port": 80,
     "protocol": "tcp",
     "severity": "HIGH",
@@ -226,8 +209,8 @@
       "URL:http://www.kb.cert.org/vuls/id"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -255,20 +238,14 @@
     ],
     "insight": [],
     "log_method": [],
-    "cvss": [
-      "7.5"
-    ],
+    "cvss": ["7.5"],
     "port": 80,
     "protocol": "tcp",
     "severity": "HIGH",
-    "references": [
-      "BID:12141",
-      "Other:",
-      "OWASP:OWASP-CM-001"
-    ],
+    "references": ["BID:12141", "Other:", "OWASP:OWASP-CM-001"],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -295,23 +272,19 @@
     ],
     "insight": [],
     "log_method": [],
-    "cvss": [
-      "7.5"
-    ],
+    "cvss": ["7.5"],
     "port": 22,
     "protocol": "tcp",
     "severity": "HIGH",
     "references": [],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
     "Name": "Possible Backdoor: Ingreslock",
-    "description": [
-      "A backdoor is installed on the remote host"
-    ],
+    "description": ["A backdoor is installed on the remote host"],
     "detection_result": [
       "The service is answering to an 'id;' command with the following response: uid=0(  ->root) gid=0(root)"
     ],
@@ -324,28 +297,22 @@
     "impact": [
       "Attackers can exploit this issue to execute arbitrary commands in the context of the application. Successful attacks will compromise the affected system."
     ],
-    "solution": [
-      "Solution type: Workaround"
-    ],
+    "solution": ["Solution type: Workaround"],
     "insight": [],
     "log_method": [],
-    "cvss": [
-      "10.0"
-    ],
+    "cvss": ["10.0"],
     "port": 1524,
     "protocol": "tcp",
     "severity": "HIGH",
     "references": [],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
     "Name": "rsh Unencrypted Cleartext Login",
-    "description": [
-      "This remote host is running a rsh service."
-    ],
+    "description": ["This remote host is running a rsh service."],
     "detection_result": [
       "The rsh service is misconfigured so it is allowing conntections without a passwo",
       "rd or with default root:root credentials."
@@ -366,9 +333,7 @@
       "another user, and on another computer across a computer network."
     ],
     "log_method": [],
-    "cvss": [
-      "7.5"
-    ],
+    "cvss": ["7.5"],
     "port": 514,
     "protocol": "tcp",
     "severity": "HIGH",
@@ -377,15 +342,13 @@
       "URL:https://web.nvd.nist.gov/view/vuln/detail?vulnId=CVE-1999-0651"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
     "Name": "vsftpd Compromised Source Packages Backdoor Vulnerability",
-    "description": [
-      "vsftpd is prone to a backdoor vulnerability."
-    ],
+    "description": ["vsftpd is prone to a backdoor vulnerability."],
     "detection_result": [
       "Vulnerability was detected according to the Vulnerability Detection Method."
     ],
@@ -407,9 +370,7 @@
     ],
     "insight": [],
     "log_method": [],
-    "cvss": [
-      "7.5"
-    ],
+    "cvss": ["7.5"],
     "port": 21,
     "protocol": "tcp",
     "severity": "HIGH",
@@ -421,8 +382,8 @@
       "URL:https://security.appspot.com/vsftpd.html"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -450,23 +411,19 @@
     ],
     "insight": [],
     "log_method": [],
-    "cvss": [
-      "9.0"
-    ],
+    "cvss": ["9.0"],
     "port": 5432,
     "protocol": "tcp",
     "severity": "HIGH",
     "references": [],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
     "Name": "Check for Backdoor in UnrealIRCd",
-    "description": [
-      "Detection of backdoor in UnrealIRCd."
-    ],
+    "description": ["Detection of backdoor in UnrealIRCd."],
     "detection_result": [
       "Vulnerability was detected according to the Vulnerability Detection Method."
     ],
@@ -486,9 +443,7 @@
     ],
     "insight": [],
     "log_method": [],
-    "cvss": [
-      "7.5"
-    ],
+    "cvss": ["7.5"],
     "port": 6667,
     "protocol": "tcp",
     "severity": "HIGH",
@@ -501,15 +456,13 @@
       "URL:http://www.securityfocus.com/bid/40820"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
     "Name": "rexec Passwordless / Unencrypted Cleartext Login",
-    "description": [
-      "This remote host is running a rexec service."
-    ],
+    "description": ["This remote host is running a rexec service."],
     "detection_result": [
       "The rexec service is not allowing connections from this host."
     ],
@@ -529,9 +482,7 @@
       "The main dierence is that rexec authenticate by reading the username and password *unencrypted* from the socket."
     ],
     "log_method": [],
-    "cvss": [
-      "10.0"
-    ],
+    "cvss": ["10.0"],
     "port": 512,
     "protocol": "tcp",
     "severity": "HIGH",
@@ -540,8 +491,8 @@
       "URL:https://web.nvd.nist.gov/view/vuln/detail?vulnId=CVE-1999-0618"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -569,23 +520,19 @@
     ],
     "insight": [],
     "log_method": [],
-    "cvss": [
-      "9.0"
-    ],
+    "cvss": ["9.0"],
     "port": 3306,
     "protocol": "tcp",
     "severity": "HIGH",
     "references": [],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
     "Name": "vsftpd Compromised Source Packages Backdoor Vulnerability",
-    "description": [
-      "vsftpd is prone to a backdoor vulnerability."
-    ],
+    "description": ["vsftpd is prone to a backdoor vulnerability."],
     "detection_result": [
       "Vulnerability was detected according to the Vulnerability Detection Method."
     ],
@@ -603,13 +550,9 @@
       "Solution type: VendorFix",
       "The repaired package can be downloaded from the referenced link. Please validate the package with its signature."
     ],
-    "insight": [
-      "The vsftpd 2.3.4 source package is aected."
-    ],
+    "insight": ["The vsftpd 2.3.4 source package is aected."],
     "log_method": [],
-    "cvss": [
-      "7.5"
-    ],
+    "cvss": ["7.5"],
     "port": 6200,
     "protocol": "tcp",
     "severity": "HIGH",
@@ -621,15 +564,13 @@
       "URL:https://security.appspot.com/vsftpd.html"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
     "Name": "rlogin Passwordless / Unencrypted Cleartext Login",
-    "description": [
-      "This remote host is running a rlogin service."
-    ],
+    "description": ["This remote host is running a rlogin service."],
     "detection_result": [
       "The service is misconfigured so it is allowing conntections without a password."
     ],
@@ -650,9 +591,7 @@
       "- .rlogin (or .rhosts) le is easy to misuse (potentially allowing anyone to login without a password)"
     ],
     "log_method": [],
-    "cvss": [
-      "7.5"
-    ],
+    "cvss": ["7.5"],
     "port": 513,
     "protocol": "tcp",
     "severity": "HIGH",
@@ -663,8 +602,8 @@
       "URL:http://www.ietf.org/rfc/rfc1282.txt"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -692,21 +631,17 @@
       "OID: 1.3.6.1.4.1.25623.1.0.105937)"
     ],
     "impact": [],
-    "solution": [
-      "Solution type: Mitigation"
-    ],
+    "solution": ["Solution type: Mitigation"],
     "insight": [],
     "log_method": [],
-    "cvss": [
-      "10.0"
-    ],
+    "cvss": ["10.0"],
     "port": "general",
     "protocol": "tcp",
     "severity": "HIGH",
     "references": [],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -734,9 +669,7 @@
     ],
     "insight": [],
     "log_method": [],
-    "cvss": [
-      "9.3"
-    ],
+    "cvss": ["9.3"],
     "port": 3632,
     "protocol": "tcp",
     "severity": "HIGH",
@@ -747,15 +680,13 @@
       "URL:https://web.archive.org/web/20150511045306/http://archives.neohapsis.com: ->80/archives/bugtraq/2005-03/0183.html"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
     "Name": "VNC Brute Force Login",
-    "description": [
-      "Try to log in with given passwords via VNC protocol."
-    ],
+    "description": ["Try to log in with given passwords via VNC protocol."],
     "detection_result": [
       "It was possible to connect to the VNC server with the password: password"
     ],
@@ -776,16 +707,14 @@
       "Note as well that passwords can be max. 8 characters long."
     ],
     "log_method": [],
-    "cvss": [
-      "9.0"
-    ],
+    "cvss": ["9.0"],
     "port": 5900,
     "protocol": "tcp",
     "severity": "HIGH",
     "references": [],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -817,9 +746,7 @@
       "Attack can be done by tricking an authenticated TWiki user into visiting a static HTML page on another side, where a Javascript enabled browser will send an HTTP POST request to TWiki, which in turn will process the request as the TWiki user."
     ],
     "log_method": [],
-    "cvss": [
-      "6.8"
-    ],
+    "cvss": ["6.8"],
     "port": 80,
     "protocol": "tcp",
     "severity": "MEDIUM",
@@ -832,8 +759,8 @@
       "URL:http://twiki.org/cgi-bin/view/Codev/DownloadTWiki"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -841,10 +768,7 @@
     "description": [
       "In Tiki the user task component is vulnerable to a SQL Injection via the tiki-user_tasks.php show_history parameter."
     ],
-    "detection_result": [
-      "Installed version: 1.9.5",
-      "Fixed version: 17.2"
-    ],
+    "detection_result": ["Installed version: 1.9.5", "Fixed version: 17.2"],
     "detection_method": [
       "Checks if a vulnerable version is present on the target host.",
       "Details: Tiki Wiki CMS Groupware < 17.2 SQL Injection Vulnerability",
@@ -862,9 +786,7 @@
     ],
     "insight": [],
     "log_method": [],
-    "cvss": [
-      "6.5"
-    ],
+    "cvss": ["6.5"],
     "port": 80,
     "protocol": "tcp",
     "severity": "MEDIUM",
@@ -874,8 +796,8 @@
       "URL:https://blog.ripstech.com/2018/scan-verify-patch-security-issues-in-minutes/"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -907,9 +829,7 @@
       "Remote authenticated user can create a specially crafted image tag that, when viewed by the target user, will update pages on the target system with the privileges of the target user via HTTP requests."
     ],
     "log_method": [],
-    "cvss": [
-      "6.0"
-    ],
+    "cvss": ["6.0"],
     "port": 80,
     "protocol": "tcp",
     "severity": "MEDIUM",
@@ -921,8 +841,8 @@
       "URL:http://twiki.org/p/pub/Codev/SecurityAlert-CVE-2009-1339/TWiki-4.3.0-c-diff-cve-2009-1339.txt"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -952,9 +872,7 @@
       "It has been shown that web servers supporting this methods are subject to cross-site-scripting attacks, dubbed XST for Cross-Site-Tracing, when used in conjunction with various weaknesses in browsers."
     ],
     "log_method": [],
-    "cvss": [
-      "5.8"
-    ],
+    "cvss": ["5.8"],
     "port": 80,
     "protocol": "tcp",
     "severity": "MEDIUM",
@@ -968,8 +886,8 @@
       "URL:https://www.owasp.org/index.php/Cross_Site_Tracing"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -977,9 +895,7 @@
     "description": [
       "The /doc directory is browsable. /doc shows the content of the /usr/doc directory and therefore it shows which programs and - important! - the version of the installed programs."
     ],
-    "detection_result": [
-      "Vulnerable url: http://172.17.0.3/doc/"
-    ],
+    "detection_result": ["Vulnerable url: http://172.17.0.3/doc/"],
     "detection_method": [
       "Details: /doc directory browsable",
       "OID:1.3.6.1.4.1.25623.1.0.10056",
@@ -994,19 +910,14 @@
     ],
     "insight": [],
     "log_method": [],
-    "cvss": [
-      "5.0"
-    ],
+    "cvss": ["5.0"],
     "port": 80,
     "protocol": "tcp",
     "severity": "MEDIUM",
-    "references": [
-      "CVE: CVE-1999-0678",
-      "BID:318"
-    ],
+    "references": ["CVE: CVE-1999-0678", "BID:318"],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -1014,10 +925,7 @@
     "description": [
       "The host is installed with Tiki Wiki CMS Groupware and is prone to a local le inclusion vulnerability."
     ],
-    "detection_result": [
-      "Installed version: 1.9.5",
-      "Fixed version: 12.11"
-    ],
+    "detection_result": ["Installed version: 1.9.5", "Fixed version: 12.11"],
     "detection_method": [
       "Checks if a vulnerable version is present on the target host.",
       "Details: Tiki Wiki CMS Groupware 'fixedURLData' Local File Inclusion Vulnerability",
@@ -1043,9 +951,7 @@
       "The Flaw is due to improper sanitization of input passed to the 'xedURLData' parameter of the 'display_banner.php' script."
     ],
     "log_method": [],
-    "cvss": [
-      "5.0"
-    ],
+    "cvss": ["5.0"],
     "port": 80,
     "protocol": "tcp",
     "severity": "MEDIUM",
@@ -1057,8 +963,8 @@
       "URL:https://tiki.org"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -1066,10 +972,7 @@
     "description": [
       "The host is installed with Tiki Wiki CMS Groupware and is prone to input sanitation weakness vulnerability."
     ],
-    "detection_result": [
-      "Installed version: 1.9.5",
-      "Fixed version: 2.2"
-    ],
+    "detection_result": ["Installed version: 1.9.5", "Fixed version: 2.2"],
     "detection_method": [
       "Details: Tiki Wiki CMS Groupware Input Sanitation Weakness Vulnerability",
       "OID:1.3.6.1.4.1.25623.1.0.800315",
@@ -1092,9 +995,7 @@
       "The vulnerability is due to input validation error in tiki-error.php which fails to sanitise before being returned to the user."
     ],
     "log_method": [],
-    "cvss": [
-      "5.0"
-    ],
+    "cvss": ["5.0"],
     "port": 80,
     "protocol": "tcp",
     "severity": "MEDIUM",
@@ -1105,8 +1006,8 @@
       "URL:http://info.tikiwiki.org/tiki-read_article.php?articleId=41"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -1134,9 +1035,7 @@
     ],
     "insight": [],
     "log_method": [],
-    "cvss": [
-      "5.0"
-    ],
+    "cvss": ["5.0"],
     "port": 80,
     "protocol": "tcp",
     "severity": "MEDIUM",
@@ -1148,8 +1047,8 @@
       "URL:http://www.kobaonline.com/awiki/"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -1185,9 +1084,7 @@
     ],
     "insight": [],
     "log_method": [],
-    "cvss": [
-      "4.8"
-    ],
+    "cvss": ["4.8"],
     "port": 80,
     "protocol": "tcp",
     "severity": "MEDIUM",
@@ -1198,8 +1095,8 @@
       "URL:https://cwe.mitre.org/data/definitions/319.html"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -1231,9 +1128,7 @@
     ],
     "insight": [],
     "log_method": [],
-    "cvss": [
-      "4.3"
-    ],
+    "cvss": ["4.3"],
     "port": 80,
     "protocol": "tcp",
     "severity": "MEDIUM",
@@ -1244,8 +1139,8 @@
       "URL:http://twiki.org/cgi-bin/view/Codev/DownloadTWiki"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -1273,9 +1168,7 @@
       "The aw is due to an error within the default error response for status code 400 when no custom ErrorDocument is congured, which can be exploited to expose 'httpOnly' cookies."
     ],
     "log_method": [],
-    "cvss": [
-      "4.3"
-    ],
+    "cvss": ["4.3"],
     "port": 80,
     "protocol": "tcp",
     "severity": "MEDIUM",
@@ -1291,8 +1184,8 @@
       "URL:http://lists.opensuse.org/opensuse-security-announce/2012-02/msg00026.htm"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -1326,9 +1219,7 @@
       "The aw is caused by input validation errors in the 'error.php' script when processing crafted BBcode tags containing '@' characters, which could allow attackers to inject arbitrary HTML code within the error page and conduct phishing attacks."
     ],
     "log_method": [],
-    "cvss": [
-      "4.3"
-    ],
+    "cvss": ["4.3"],
     "port": 80,
     "protocol": "tcp",
     "severity": "MEDIUM",
@@ -1339,8 +1230,8 @@
       "URL:http://www.vupen.com/english/advisories/2010/3133"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -1374,9 +1265,7 @@
       "The aw is due to an improper validation of user-supplied input to the 'organization' eld when registering or editing a user, which allows attackers to execute arbitrary HTML and script code in a user's browser session in the context of an aected site."
     ],
     "log_method": [],
-    "cvss": [
-      "4.3"
-    ],
+    "cvss": ["4.3"],
     "port": 80,
     "protocol": "tcp",
     "severity": "MEDIUM",
@@ -1387,8 +1276,8 @@
       "URL:http://secunia.com/advisories/47784"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -1418,9 +1307,7 @@
       "The aw is due to an improper validation of user-supplied input to the 'organization' eld when registering or editing a user, which allows attackers to execute arbitrary HTML and script code in a user's browser session in the context of an aected site."
     ],
     "log_method": [],
-    "cvss": [
-      "4.3"
-    ],
+    "cvss": ["4.3"],
     "port": 22,
     "protocol": "tcp",
     "severity": "MEDIUM",
@@ -1435,8 +1322,8 @@
       "URL:http://packetstormsecurity.org/files/109246/twiki-xss.txt"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -1465,16 +1352,14 @@
     ],
     "insight": [],
     "log_method": [],
-    "cvss": [
-      "4.8"
-    ],
+    "cvss": ["4.8"],
     "port": 2121,
     "protocol": "tcp",
     "severity": "MEDIUM",
     "references": [],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -1509,9 +1394,7 @@
     ],
     "insight": [],
     "log_method": [],
-    "cvss": [
-      "6.0"
-    ],
+    "cvss": ["6.0"],
     "port": 445,
     "protocol": "tcp",
     "severity": "MEDIUM",
@@ -1523,8 +1406,8 @@
       "URL:https://www.samba.org/samba/security/CVE-2007-2447.html"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -1562,9 +1445,7 @@
       "on the supplied data."
     ],
     "log_method": [],
-    "cvss": [
-      "6.4"
-    ],
+    "cvss": ["6.4"],
     "port": 21,
     "protocol": "tcp",
     "severity": "MEDIUM",
@@ -1573,8 +1454,8 @@
       "URL:https://web.nvd.nist.gov/view/vuln/detail?vulnId=CVE-1999-0497"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -1615,16 +1496,14 @@
     ],
     "insight": [],
     "log_method": [],
-    "cvss": [
-      "4.8"
-    ],
+    "cvss": ["4.8"],
     "port": 21,
     "protocol": "tcp",
     "severity": "MEDIUM",
     "references": [],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -1651,9 +1530,7 @@
     ],
     "insight": [],
     "log_method": [],
-    "cvss": [
-      "6.8"
-    ],
+    "cvss": ["6.8"],
     "port": 25,
     "protocol": "tcp",
     "severity": "MEDIUM",
@@ -1680,8 +1557,8 @@
       "URL:http://www.kb.cert.org/vuls/id/555316"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -1717,16 +1594,14 @@
       "This script checks expiry dates of certicates associated with SSL/TLS-enabled services on the target and reports whether any have already expired."
     ],
     "log_method": [],
-    "cvss": [
-      "5.0"
-    ],
+    "cvss": ["5.0"],
     "port": 25,
     "protocol": "tcp",
     "severity": "MEDIUM",
     "references": [],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -1755,19 +1630,14 @@
       "VRFY and EXPN ask the server for information about an address. They are inherently unusable through rewalls, gateways, mail exchangers for part-time hosts, etc."
     ],
     "log_method": [],
-    "cvss": [
-      "5.0"
-    ],
+    "cvss": ["5.0"],
     "port": 25,
     "protocol": "tcp",
     "severity": "MEDIUM",
-    "references": [
-      "Other:",
-      "URL:http://cr.yp.to/smtp/vrfy.html"
-    ],
+    "references": ["Other:", "URL:http://cr.yp.to/smtp/vrfy.html"],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -1804,9 +1674,7 @@
       "Flaw is triggered when handling Die-Hellman key exchanges dened in the 'DHE_EXPORT' cipher suites."
     ],
     "log_method": [],
-    "cvss": [
-      "4.3"
-    ],
+    "cvss": ["4.3"],
     "port": 25,
     "protocol": "tcp",
     "severity": "MEDIUM",
@@ -1821,8 +1689,8 @@
       "URL:https://www.openssl.org/blog/blog/2015/05/20/logjam-freak-upcoming-change"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -1853,9 +1721,7 @@
       "- Decrypting RSA with Obsolete and Weakened eNcryption (DROWN, CVE-2016-0800)"
     ],
     "log_method": [],
-    "cvss": [
-      "4.3"
-    ],
+    "cvss": ["4.3"],
     "port": 25,
     "protocol": "tcp",
     "severity": "MEDIUM",
@@ -1869,8 +1735,8 @@
       "URL:https://www.imperialviolet.org/2014/10/14/poodle.html"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -1909,9 +1775,7 @@
       "Flaw is due to improper handling RSA temporary keys in a non-export RSA key exchange cipher suite."
     ],
     "log_method": [],
-    "cvss": [
-      "4.3"
-    ],
+    "cvss": ["4.3"],
     "port": 25,
     "protocol": "tcp",
     "severity": "MEDIUM",
@@ -1925,8 +1789,8 @@
       "URL:https://www.openssl.org"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -1958,9 +1822,7 @@
       "The aw is due to the block cipher padding not being deterministic and not covered by the Message Authentication Code"
     ],
     "log_method": [],
-    "cvss": [
-      "4.3"
-    ],
+    "cvss": ["4.3"],
     "port": 25,
     "protocol": "tcp",
     "severity": "MEDIUM",
@@ -1974,8 +1836,8 @@
       "URL:http://googleonlinesecurity.blogspot.in/2014/10/this-poodle-bites-exploit-ing-ssl-30.html"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -2013,9 +1875,7 @@
       "ngerprint1,Fingerprint2"
     ],
     "log_method": [],
-    "cvss": [
-      "4.0"
-    ],
+    "cvss": ["4.0"],
     "port": 25,
     "protocol": "tcp",
     "severity": "MEDIUM",
@@ -2024,8 +1884,8 @@
       "URL:https://blog.mozilla.org/security/2014/09/23/phasing-out-certificates-with-sha-1-based-signature-algorithms/"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -2033,9 +1893,7 @@
     "description": [
       "The SSL/TLS service uses Die-Hellman groups with insucient strength (key size < 2048)."
     ],
-    "detection_result": [
-      "Server Temporary Key Size: 1024 bits"
-    ],
+    "detection_result": ["Server Temporary Key Size: 1024 bits"],
     "detection_method": [
       "Checks the DHE temporary public key size.",
       "Details: SSL/TLS: Diffie-Hellman Key Exchange Insufficient DH Group Strength Vulnerabili...",
@@ -2055,9 +1913,7 @@
       "The Die-Hellman group are some big numbers that are used as base for the DH computations. They can be, and often are, xed. The security of the nal secret depends on the size of these parameters. It was found that 512 and 768 bits to be weak, 1024 bits to be breakable by really powerful attackers like governments."
     ],
     "log_method": [],
-    "cvss": [
-      "4.0"
-    ],
+    "cvss": ["4.0"],
     "port": 25,
     "protocol": "tcp",
     "severity": "MEDIUM",
@@ -2067,15 +1923,13 @@
       "URL:https://weakdh.org/sysadmin.html"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
     "Name": "SSL/TLS: OpenSSL CCS Man in the Middle Security Bypass Vulnerability",
-    "description": [
-      "OpenSSL is prone to security-bypass vulnerability."
-    ],
+    "description": ["OpenSSL is prone to security-bypass vulnerability."],
     "detection_result": [
       "Vulnerability was detected according to the Vulnerability Detection Method."
     ],
@@ -2097,9 +1951,7 @@
       "OpenSSL does not properly restrict processing of ChangeCipherSpec messages, which allows man-in-the-middle attackers to trigger use of a zero-length master key in certain OpenSSL-to-OpenSSL communications, and consequently hijack sessions or obtain sensitive information, via a crafted TLS handshake, aka the 'CCS Injection' vulnerability."
     ],
     "log_method": [],
-    "cvss": [
-      "6.8"
-    ],
+    "cvss": ["6.8"],
     "port": 5432,
     "protocol": "tcp",
     "severity": "MEDIUM",
@@ -2112,8 +1964,8 @@
       "URL:http://openssl.org/"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -2156,16 +2008,14 @@
       "This script checks expiry dates of certicates associated with SSL/TLS-enabled services on the target and reports whether any have already expired."
     ],
     "log_method": [],
-    "cvss": [
-      "5.0"
-    ],
+    "cvss": ["5.0"],
     "port": 5432,
     "protocol": "tcp",
     "severity": "MEDIUM",
     "references": [],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -2196,9 +2046,7 @@
       "- Decrypting RSA with Obsolete and Weakened eNcryption (DROWN, CVE-2016-0800)"
     ],
     "log_method": [],
-    "cvss": [
-      "4.3"
-    ],
+    "cvss": ["4.3"],
     "port": 5432,
     "protocol": "tcp",
     "severity": "MEDIUM",
@@ -2212,8 +2060,8 @@
       "URL:https://www.imperialviolet.org/2014/10/14/poodle.html"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -2245,9 +2093,7 @@
       "- Any other cipher is considered as strong"
     ],
     "log_method": [],
-    "cvss": [
-      "4.3"
-    ],
+    "cvss": ["4.3"],
     "port": 5432,
     "protocol": "tcp",
     "severity": "MEDIUM",
@@ -2259,8 +2105,8 @@
       "URL:https://mozilla.github.io/server-side-tls/ssl-config-generator/"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -2292,9 +2138,7 @@
       "The aw is due to the block cipher padding not being deterministic and not covered by the\nMessage Authentication Code"
     ],
     "log_method": [],
-    "cvss": [
-      "4.3"
-    ],
+    "cvss": ["4.3"],
     "port": 5432,
     "protocol": "tcp",
     "severity": "MEDIUM",
@@ -2308,8 +2152,8 @@
       "URL:http://googleonlinesecurity.blogspot.in/2014/10/this-poodle-bites-exploit\n->ing-ssl-30.html"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -2347,9 +2191,7 @@
       "ngerprint1,Fingerprint2"
     ],
     "log_method": [],
-    "cvss": [
-      "4.0"
-    ],
+    "cvss": ["4.0"],
     "port": 5432,
     "protocol": "tcp",
     "severity": "MEDIUM",
@@ -2358,8 +2200,8 @@
       "URL:https://blog.mozilla.org/security/2014/09/23/phasing-out-certificates-with\n->-sha-1-based-signature-algorithms/"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -2367,9 +2209,7 @@
     "description": [
       "The SSL/TLS service uses Die-Hellman groups with insucient strength (key size < 2048)."
     ],
-    "detection_result": [
-      "Server Temporary Key Size: 1024 bits"
-    ],
+    "detection_result": ["Server Temporary Key Size: 1024 bits"],
     "detection_method": [
       "Checks the DHE temporary public key size.",
       "Details: SSL/TLS: Diffie-Hellman Key Exchange Insufficient DH Group Strength Vulnerabili.\n->..",
@@ -2389,16 +2229,14 @@
       "The Die-Hellman group are some big numbers that are used as base for the DH computations.\nThey can be, and often are, xed. The security of the nal secret depends on the size of these\nparameters. It was found that 512 and 768 bits to be weak, 1024 bits to be breakable by really\npowerful attackers like governments."
     ],
     "log_method": [],
-    "cvss": [
-      "4.0"
-    ],
+    "cvss": ["4.0"],
     "port": 5432,
     "protocol": "tcp",
     "severity": "MEDIUM",
     "references": [],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -2429,9 +2267,7 @@
       "The flaw exists due to an error in the 'm_authenticate' function in 'modules/m_sasl.c' script."
     ],
     "log_method": [],
-    "cvss": [
-      "6.8"
-    ],
+    "cvss": ["6.8"],
     "port": 6667,
     "protocol": "tcp",
     "severity": "MEDIUM",
@@ -2440,8 +2276,8 @@
       "URL:https://weakdh.org/sysadmin.html"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -2467,16 +2303,14 @@
     ],
     "insight": [],
     "log_method": [],
-    "cvss": [
-      "4.8"
-    ],
+    "cvss": ["4.8"],
     "port": 23,
     "protocol": "tcp",
     "severity": "MEDIUM",
     "references": [],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -2504,19 +2338,14 @@
     ],
     "insight": [],
     "log_method": [],
-    "cvss": [
-      "4.8"
-    ],
+    "cvss": ["4.8"],
     "port": 5900,
     "protocol": "tcp",
     "severity": "MEDIUM",
-    "references": [
-      "Other:",
-      "URL:https://tools.ietf.org/html/rfc6143#page-10"
-    ],
+    "references": ["Other:", "URL:https://tools.ietf.org/html/rfc6143#page-10"],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -2524,10 +2353,7 @@
     "description": [
       "An XSS vulnerability (via an SVG image) in Tiki allows an authenticated user to gain administrator privileges if an administrator opens a wiki page with a malicious SVG image, related to lib/legals/legallib.php."
     ],
-    "detection_result": [
-      "Installed version: 1.9.5",
-      "Fixed version: 18.0"
-    ],
+    "detection_result": ["Installed version: 1.9.5", "Fixed version: 18.0"],
     "detection_method": [
       "Checks if a vulnerable version is present on the target host.",
       "Details: Tiki Wiki CMS Groupware XSS Vulnerability",
@@ -2541,18 +2367,14 @@
       "Method: Tiki Wiki CMS Groupware Version Detection",
       "OID: 1.3.6.1.4.1.25623.1.0.901001)"
     ],
-    "impact": [
-      "Tiki Wiki CMS Groupware prior to version 18.0."
-    ],
+    "impact": ["Tiki Wiki CMS Groupware prior to version 18.0."],
     "solution": [
       "Solution type: VendorFix",
       "Upgrade to version 18.0 or later."
     ],
     "insight": [],
     "log_method": [],
-    "cvss": [
-      "3.5"
-    ],
+    "cvss": ["3.5"],
     "port": 80,
     "protocol": "tcp",
     "severity": "LOW",
@@ -2562,8 +2384,8 @@
       "URL:http://openwall.com/lists/oss-security/2018/02/16/1"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -2594,16 +2416,14 @@
     ],
     "insight": [],
     "log_method": [],
-    "cvss": [
-      "2.6"
-    ],
+    "cvss": ["2.6"],
     "port": 22,
     "protocol": "tcp",
     "severity": "LOW",
     "references": [],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -2632,16 +2452,14 @@
     ],
     "insight": [],
     "log_method": [],
-    "cvss": [
-      "2.6"
-    ],
+    "cvss": ["2.6"],
     "port": 22,
     "protocol": "tcp",
     "severity": "LOW",
     "references": [],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -2679,9 +2497,7 @@
       "The remote host implements TCP timestamps, as dened by RFC1323."
     ],
     "log_method": [],
-    "cvss": [
-      "2.6"
-    ],
+    "cvss": ["2.6"],
     "port": "general",
     "protocol": "tcp",
     "severity": "LOW",
@@ -2691,8 +2507,8 @@
       "URL:http://www.microsoft.com/en-us/download/details.aspx?id=9152"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   }
 ]

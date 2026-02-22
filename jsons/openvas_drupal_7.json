@@ -22,9 +22,7 @@
       "Method: PHP Detection Consolidation",
       "OID: 1.3.6.1.4.1.25623.1.0.171722)"
     ],
-    "impact": [
-      "PHP versions prior to 8.1.32, and 8.2.x prior to 8.2.28."
-    ],
+    "impact": ["PHP versions prior to 8.1.32, and 8.2.x prior to 8.2.28."],
     "solution": [
       "Solution type: VendorFix",
       "Update to version 8.1.32, 8.2.28 or later."
@@ -38,9 +36,7 @@
       "- CVE-2025-1861: Stream HTTP wrapper truncate redirect location to 1024 bytes"
     ],
     "log_method": [],
-    "cvss": [
-      "2.1"
-    ],
+    "cvss": ["2.1"],
     "port": 80,
     "protocol": "tcp",
     "severity": "Critical",
@@ -63,8 +59,8 @@
       "dfn-cert: DFN-CERT-2025-0665"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -108,9 +104,7 @@
       "- No CVE: Null byte termination in dns_get_record()"
     ],
     "log_method": [],
-    "cvss": [
-      "8.2"
-    ],
+    "cvss": ["8.2"],
     "port": 80,
     "protocol": "tcp",
     "severity": "HIGH",
@@ -129,8 +123,8 @@
       "dfn-cert: DFN-CERT-2025-3544"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -176,9 +170,7 @@
       "prex"
     ],
     "log_method": [],
-    "cvss": [
-      "7.5"
-    ],
+    "cvss": ["7.5"],
     "port": 80,
     "protocol": "tcp",
     "severity": "HIGH",
@@ -197,8 +189,8 @@
       "dfn-cert: DFN-CERT-2025-1785"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -219,9 +211,7 @@
       "Product: cpe:/a:apache:http_server:2.4.62",
       "Method: Apache HTTP Server Detection Consolidation OID: 1.3.6.1.4.1.25623.1.0.117232)"
     ],
-    "impact": [
-      "Apache HTTP Server version 2.4.7 through 2.4.65."
-    ],
+    "impact": ["Apache HTTP Server version 2.4.7 through 2.4.65."],
     "solution": [
       "Solution type: VendorFix",
       "Update to version 2.4.66 or later."
@@ -230,9 +220,7 @@
       "mod_userdir+suexec bypass via AllowOverride FileInfo vulnerability in Apache HTTP Server. Users with access to use the RequestHeader directive in htaccess can cause some CGI scripts to run under an unexpected userid."
     ],
     "log_method": [],
-    "cvss": [
-      "5.8"
-    ],
+    "cvss": ["5.8"],
     "port": 80,
     "protocol": "tcp",
     "severity": "MEDIUM",
@@ -247,8 +235,8 @@
       "dfn-cert: DFN-CERT-2025-3405"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -269,9 +257,7 @@
       "Product: cpe:/a:apache:http_server:2.4.62",
       "Method: Apache HTTP Server Detection Consolidation OID: 1.3.6.1.4.1.25623.1.0.117232)"
     ],
-    "impact": [
-      "Apache HTTP Server version 2.4.26 through 2.4.63."
-    ],
+    "impact": ["Apache HTTP Server version 2.4.26 through 2.4.63."],
     "solution": [
       "Solution type: VendorFix",
       "Update to version 2.4.64 or later."
@@ -280,9 +266,7 @@
       "In certain proxy congurations, a denial of service attack against Apache HTTP Server can be triggered by untrusted clients causing an assertion in mod_proxy_http2. Congurations aected are a reverse proxy is congured for an HTTP/2 backend, with ProxyP- reserveHost set to 'on'."
     ],
     "log_method": [],
-    "cvss": [
-      "5.0"
-    ],
+    "cvss": ["5.0"],
     "port": 80,
     "protocol": "tcp",
     "severity": "MEDIUM",
@@ -298,15 +282,13 @@
       "dfn-cert: DFN-CERT-2025-1860"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
     "Name": "Apache HTTP Server < 2.4.64 Multiple Vulnerabilities - Linux",
-    "description": [
-      "Apache HTTP Server is prone to multiple vulnerabilities."
-    ],
+    "description": ["Apache HTTP Server is prone to multiple vulnerabilities."],
     "detection_result": [
       "Installed version: 2.4.62",
       "Fixed version: 2.4.64",
@@ -320,9 +302,7 @@
       "Product: cpe:/a:apache:http_server:2.4.62",
       "Method: Apache HTTP Server Detection Consolidation OID: 1.3.6.1.4.1.25623.1.0.117232)"
     ],
-    "impact": [
-      "Apache HTTP Server version 2.4.63 and prior."
-    ],
+    "impact": ["Apache HTTP Server version 2.4.63 and prior."],
     "solution": [
       "Solution type: VendorFix",
       "Update to version 2.4.64 or later."
@@ -335,9 +315,7 @@
       "- CVE-2025-49812: mod_ssl TLS upgrade attack"
     ],
     "log_method": [],
-    "cvss": [
-      "5.0"
-    ],
+    "cvss": ["5.0"],
     "port": 80,
     "protocol": "tcp",
     "severity": "MEDIUM",
@@ -361,8 +339,8 @@
       "dfn-cert: DFN-CERT-2025-1860"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -390,9 +368,7 @@
       "Method: Apache HTTP Server Detection Consolidation",
       "OID: 1.3.6.1.4.1.25623.1.0.117232)"
     ],
-    "impact": [
-      "Apache HTTP Server version 2.4.17 through 2.4.63."
-    ],
+    "impact": ["Apache HTTP Server version 2.4.17 through 2.4.63."],
     "solution": [
       "Solution type: VendorFix",
       "Update to version 2.4.64 or later."
@@ -401,9 +377,7 @@
       "Late release of memory after eective lifetime vulnerability in Apache HTTP Server."
     ],
     "log_method": [],
-    "cvss": [
-      "5.0"
-    ],
+    "cvss": ["5.0"],
     "port": 80,
     "protocol": "tcp",
     "severity": "MEDIUM",
@@ -416,8 +390,8 @@
       "dfn-cert: DFN-CERT-2025-1860"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -445,9 +419,7 @@
       "Method: Apache HTTP Server Detection Consolidation",
       "OID: 1.3.6.1.4.1.25623.1.0.117232)"
     ],
-    "impact": [
-      "Apache HTTP Server version 2.4.35 through 2.4.63."
-    ],
+    "impact": ["Apache HTTP Server version 2.4.35 through 2.4.63."],
     "solution": [
       "Solution type: VendorFix",
       "Update to version 2.4.64 or later."
@@ -461,9 +433,7 @@
       "to access another virtual host, if SSLStrictSNIVHostCheck is not enabled in either virtual host."
     ],
     "log_method": [],
-    "cvss": [
-      "5.0"
-    ],
+    "cvss": ["5.0"],
     "port": 80,
     "protocol": "tcp",
     "severity": "MEDIUM",
@@ -481,8 +451,8 @@
       "dfn-cert: DFN-CERT-2025-1860"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -510,9 +480,7 @@
       "Method: Apache HTTP Server Detection Consolidation",
       "OID: 1.3.6.1.4.1.25623.1.0.117232)"
     ],
-    "impact": [
-      "Apache HTTP Server version 2.4.x prior to 2.4.66."
-    ],
+    "impact": ["Apache HTTP Server version 2.4.x prior to 2.4.66."],
     "solution": [
       "Solution type: VendorFix",
       "Update to version 2.4.66 or later."
@@ -523,9 +491,7 @@
       "variables calculated by the server for CGI programs."
     ],
     "log_method": [],
-    "cvss": [
-      "4.3"
-    ],
+    "cvss": ["4.3"],
     "port": 80,
     "protocol": "tcp",
     "severity": "MEDIUM",
@@ -542,8 +508,8 @@
       "dfn-cert: DFN-CERT-2025-3405"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -567,9 +533,7 @@
       "Method: Apache HTTP Server Detection Consolidation",
       "OID: 1.3.6.1.4.1.25623.1.0.117232)"
     ],
-    "impact": [
-      "Apache HTTP Server prior to version 2.4.66."
-    ],
+    "impact": ["Apache HTTP Server prior to version 2.4.66."],
     "solution": [
       "Solution type: VendorFix",
       "Update to version 2.4.66 or later."
@@ -578,9 +542,7 @@
       "Apache HTTP Server with SSI enabled and mod_cgid (but not mod_cgi) passes the shell- escaped query string to #exec cmd='...' directives."
     ],
     "log_method": [],
-    "cvss": [
-      "4.3"
-    ],
+    "cvss": ["4.3"],
     "port": 80,
     "protocol": "tcp",
     "severity": "MEDIUM",
@@ -598,8 +560,8 @@
       "dfn-cert: DFN-CERT-2025-3405"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -633,9 +595,7 @@
       "The Timestamp Reply is an ICMP message which replies to a Timestamp message. It consists of the originating timestamp sent by the sender of the Timestamp as well as a receive timestamp and a transmit timestamp."
     ],
     "log_method": [],
-    "cvss": [
-      "2.1"
-    ],
+    "cvss": ["2.1"],
     "port": "general",
     "protocol": "icmp",
     "severity": "LOW",
@@ -648,8 +608,8 @@
       "dfn-cert: DFN-CERT-2014-0658"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -675,9 +635,7 @@
       "Method: Apache HTTP Server Detection Consolidation",
       "OID: 1.3.6.1.4.1.25623.1.0.117232)"
     ],
-    "impact": [
-      "Apache HTTP Server version 2.4.30 through 2.4.65."
-    ],
+    "impact": ["Apache HTTP Server version 2.4.30 through 2.4.65."],
     "solution": [
       "Solution type: VendorFix",
       "Update to version 2.4.66 or later."
@@ -686,9 +644,7 @@
       "An integer overow in the case of failed ACME certicate renewal leads, after a number of failures ( 30 days in default congurations), to the backo timer becoming 0. Attempts to renew the certicate then are repeated without delays until it succeeds."
     ],
     "log_method": [],
-    "cvss": [
-      "2.6"
-    ],
+    "cvss": ["2.6"],
     "port": 80,
     "protocol": "tcp",
     "severity": "LOW",
@@ -704,8 +660,8 @@
       "dfn-cert: DFN-CERT-2025-3405"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -732,16 +688,14 @@
     ],
     "insight": [],
     "log_method": [],
-    "cvss": [
-      "2.6"
-    ],
+    "cvss": ["2.6"],
     "port": 80,
     "protocol": "tcp",
     "severity": "LOW",
     "references": [],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -774,9 +728,7 @@
       "The remote host implements TCP timestamps, as dened by RFC1323/RFC7323."
     ],
     "log_method": [],
-    "cvss": [
-      "2.6"
-    ],
+    "cvss": ["2.6"],
     "port": "general",
     "protocol": "tcp",
     "severity": "LOW",
@@ -787,8 +739,8 @@
       "url: https://www.fortiguard.com/psirt/FG-IR-16-090"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -808,16 +760,14 @@
     "solution": [],
     "insight": [],
     "log_method": [],
-    "cvss": [
-      "0.0"
-    ],
+    "cvss": ["0.0"],
     "port": "general",
     "protocol": "tcp",
     "severity": "LOG",
     "references": [],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -841,28 +791,20 @@
       "OID:1.3.6.1.4.1.25623.1.0.810002",
       "Version used: 2022-07-27T10:11:28Z"
     ],
-    "cvss": [
-      "0.0"
-    ],
+    "cvss": ["0.0"],
     "port": "general",
     "protocol": "CPE-T",
     "severity": "LOG",
-    "references": [
-      "url: https://nvd.nist.gov/products/cpe"
-    ],
+    "references": ["url: https://nvd.nist.gov/products/cpe"],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
     "Name": "Services",
-    "description": [
-      "This plugin performs service detection."
-    ],
-    "detection_result": [
-      "A web server is running on this port"
-    ],
+    "description": ["This plugin performs service detection."],
+    "detection_result": ["A web server is running on this port"],
     "detection_method": [],
     "product_detection_result": [],
     "impact": [],
@@ -875,16 +817,14 @@
       "OID:1.3.6.1.4.1.25623.1.0.10330",
       "Version used: 2025-03-05T05:38:53Z"
     ],
-    "cvss": [
-      "0.0"
-    ],
+    "cvss": ["0.0"],
     "port": 80,
     "protocol": "tcp",
     "severity": "LOG",
     "references": [],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -913,16 +853,14 @@
       "OID:1.3.6.1.4.1.25623.1.0.10386",
       "Version used: 2025-04-11T15:45:04Z"
     ],
-    "cvss": [
-      "0.0"
-    ],
+    "cvss": ["0.0"],
     "port": 80,
     "protocol": "tcp",
     "severity": "LOG",
     "references": [],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -931,9 +869,7 @@
       "This plugin performs service detection.",
       "Quality of Detection (QoD): 80%"
     ],
-    "detection_result": [
-      "A web server is running on this port"
-    ],
+    "detection_result": ["A web server is running on this port"],
     "detection_method": [],
     "product_detection_result": [],
     "impact": [],
@@ -946,16 +882,14 @@
       "OID:1.3.6.1.4.1.25623.1.0.10330",
       "Version used: 2025-03-05T05:38:53Z"
     ],
-    "cvss": [
-      "0.0"
-    ],
+    "cvss": ["0.0"],
     "port": 80,
     "protocol": "tcp",
     "severity": "LOG",
     "references": [],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -978,16 +912,14 @@
       "OID:1.3.6.1.4.1.25623.1.0.10107",
       "Version used: 2023-08-01T13:29:10Z"
     ],
-    "cvss": [
-      "0.0"
-    ],
+    "cvss": ["0.0"],
     "port": 80,
     "protocol": "tcp",
     "severity": "LOG",
     "references": [],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -1013,16 +945,14 @@
       "OID:1.3.6.1.4.1.25623.1.0.108708",
       "Version used: 2025-01-31T15:39:24Z"
     ],
-    "cvss": [
-      "0.0"
-    ],
+    "cvss": ["0.0"],
     "port": 80,
     "protocol": "tcp",
     "severity": "LOG",
     "references": [],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -1062,9 +992,7 @@
       "OID:1.3.6.1.4.1.25623.1.0.112081",
       "Version used: 2025-03-21T15:40:43Z"
     ],
-    "cvss": [
-      "0.0"
-    ],
+    "cvss": ["0.0"],
     "port": 80,
     "protocol": "tcp",
     "severity": "LOG",
@@ -1074,8 +1002,8 @@
       "url: https://securityheaders.com/"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -1103,16 +1031,14 @@
     "solution": [],
     "insight": [],
     "log_method": [],
-    "cvss": [
-      "0.0"
-    ],
+    "cvss": ["0.0"],
     "port": 80,
     "protocol": "tcp",
     "severity": "LOG",
     "references": [],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -1126,21 +1052,17 @@
     "detection_method": [],
     "product_detection_result": [],
     "impact": [],
-    "solution": [
-      "Solution type: Mitigation"
-    ],
+    "solution": ["Solution type: Mitigation"],
     "insight": [],
     "log_method": [],
-    "cvss": [
-      "0.0"
-    ],
+    "cvss": ["0.0"],
     "port": 80,
     "protocol": "tcp",
     "severity": "LOG",
     "references": [],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -1167,23 +1089,19 @@
       "OID:1.3.6.1.4.1.25623.1.0.117232",
       "Version used: 2024-03-08T15:37:10Z"
     ],
-    "cvss": [
-      "0.0"
-    ],
+    "cvss": ["0.0"],
     "port": 80,
     "protocol": "tcp",
     "severity": "LOG",
     "references": [],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
     "Name": "Apache HTTP Server Detection Consolidation",
-    "description": [
-      "Consolidation of Apache HTTP Server detections."
-    ],
+    "description": ["Consolidation of Apache HTTP Server detections."],
     "detection_result": [
       "Detected Apache HTTP Server",
       "Version: 2.4.62",
@@ -1202,25 +1120,19 @@
       "OID:1.3.6.1.4.1.25623.1.0.117232",
       "Version used: 2024-03-08T15:37:10Z"
     ],
-    "cvss": [
-      "0.0"
-    ],
+    "cvss": ["0.0"],
     "port": "general",
     "protocol": "tcp",
     "severity": "LOG",
-    "references": [
-      "url: https://httpd.apache.org"
-    ],
+    "references": ["url: https://httpd.apache.org"],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
     "Name": "PHP Detection Consolidation",
-    "description": [
-      "Consolidation of PHP detections."
-    ],
+    "description": ["Consolidation of PHP detections."],
     "detection_result": [
       "Detected PHP",
       "Version: 8.1.31",
@@ -1241,18 +1153,14 @@
       "OID:1.3.6.1.4.1.25623.1.0.171722",
       "Version used: 2025-09-24T05:39:03Z"
     ],
-    "cvss": [
-      "0.0"
-    ],
+    "cvss": ["0.0"],
     "port": "general",
     "protocol": "tcp",
     "severity": "LOG",
-    "references": [
-      "url: https://www.php.net/"
-    ],
+    "references": ["url: https://www.php.net/"],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -1287,25 +1195,19 @@
       "OID:1.3.6.1.4.1.25623.1.0.105937",
       "Version used: 2026-01-21T05:50:46Z"
     ],
-    "cvss": [
-      "0.0"
-    ],
+    "cvss": ["0.0"],
     "port": "general",
     "protocol": "tcp",
     "severity": "LOG",
-    "references": [
-      "url: https://forum.greenbone.net/c/vulnerability-tests/7"
-    ],
+    "references": ["url: https://forum.greenbone.net/c/vulnerability-tests/7"],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
     "Name": "IP Forwarding Enabled - Active Check",
-    "description": [
-      "Checks if the remote host has IP forwarding enabled."
-    ],
+    "description": ["Checks if the remote host has IP forwarding enabled."],
     "detection_result": [
       "It was possible to route a TCP packet through the target host and received an an ->swer which means IP forwarding is enabled."
     ],
@@ -1320,18 +1222,14 @@
       "OID:1.3.6.1.4.1.25623.1.0.147205",
       "Version used: 2021-12-03T08:27:06Z"
     ],
-    "cvss": [
-      "0.0"
-    ],
+    "cvss": ["0.0"],
     "port": "general",
     "protocol": "tcp",
     "severity": "LOG",
-    "references": [
-      "cve: CVE-1999-0511"
-    ],
+    "references": ["cve: CVE-1999-0511"],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -1358,16 +1256,14 @@
       "OID:1.3.6.1.4.1.25623.1.0.51662",
       "Version used: 2022-10-17T11:13:19Z"
     ],
-    "cvss": [
-      "0.0"
-    ],
+    "cvss": ["0.0"],
     "port": "general",
     "protocol": "tcp",
     "severity": "LOG",
     "references": [],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -1390,16 +1286,14 @@
       "OID:1.3.6.1.4.1.25623.1.0.108449",
       "Version used: 2022-07-27T10:11:28Z"
     ],
-    "cvss": [
-      "0.0"
-    ],
+    "cvss": ["0.0"],
     "port": "general",
     "protocol": "tcp",
     "severity": "LOG",
     "references": [],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   }
 ]

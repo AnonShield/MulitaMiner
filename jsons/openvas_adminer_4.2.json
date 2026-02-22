@@ -36,9 +36,7 @@
       "Once the three years of support are completed, the branch reaches its end of life and is no longer supported."
     ],
     "log_method": [],
-    "cvss": [
-      "9.8"
-    ],
+    "cvss": ["9.8"],
     "port": 8080,
     "protocol": "tcp",
     "severity": "Critical",
@@ -47,8 +45,8 @@
       "url: https://secure.php.net/eol.php"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -79,13 +77,9 @@
       "Solution type: VendorFix",
       "Update to version 7.4.28, 8.0.16, 8.1.3 or later."
     ],
-    "insight": [
-      "Fix #81708: UAF due to php_lter_oat() failing for ints."
-    ],
+    "insight": ["Fix #81708: UAF due to php_lter_oat() failing for ints."],
     "log_method": [],
-    "cvss": [
-      "9.8"
-    ],
+    "cvss": ["9.8"],
     "port": 8080,
     "protocol": "tcp",
     "severity": "CRITICAL",
@@ -113,15 +107,13 @@
       "dfn-cert: DFN-CERT-2022-0365"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
     "Name": "PHP Multiple Vulnerabilities (Feb 2019) - Linux",
-    "description": [
-      "PHP is prone to multiple vulnerabilities."
-    ],
+    "description": ["PHP is prone to multiple vulnerabilities."],
     "detection_result": [],
     "detection_method": [
       "Checks if a vulnerable version is present on the target host.",
@@ -155,9 +147,7 @@
       "PHP versions before 5.6.40, 7.x before 7.1.26, 7.2.x before 7.2.14 and 7.3.x before 7.3.1."
     ],
     "log_method": [],
-    "cvss": [
-      "9.8"
-    ],
+    "cvss": ["9.8"],
     "port": 8080,
     "protocol": "tcp",
     "severity": "Critical",
@@ -209,8 +199,8 @@
       "dfn-cert: DFN-CERT-2017-0179"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -250,9 +240,7 @@
       "The attacker provides a pair of a regex pattern and a string, with a multi-byte encoding that gets handled by onig_new_deluxe()."
     ],
     "log_method": [],
-    "cvss": [
-      "9.8"
-    ],
+    "cvss": ["9.8"],
     "port": 8080,
     "protocol": "tcp",
     "severity": "CRITICAL",
@@ -268,8 +256,8 @@
       "dfn-cert: DFN-CERT-2022-2107"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -313,9 +301,7 @@
       "- oniguruma upstream x"
     ],
     "log_method": [],
-    "cvss": [
-      "9.8"
-    ],
+    "cvss": ["9.8"],
     "port": 8080,
     "protocol": "tcp",
     "severity": "Critical",
@@ -375,8 +361,8 @@
       "dfn-cert: DFN-CERT-2017-0932"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -416,9 +402,7 @@
       "- CVE-2017-9119: The i_zval_ptr_dtor function in Zend/zend_variables.h allows attackers to cause a denial of service (memory consumption and application crash) or possibly have unspeci- ed other impact by triggering crafted operations on array data structures."
     ],
     "log_method": [],
-    "cvss": [
-      "9.8"
-    ],
+    "cvss": ["9.8"],
     "port": 8080,
     "protocol": "tcp",
     "severity": "Critical",
@@ -440,15 +424,13 @@
       "dfn-cert: DFN-CERT-2022-0410"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
     "Name": "PHP 5.x < 5.6.34, 7.x < 7.0.28, 7.1.x < 7.1.15, 7.2.x < 7.2.3 Stack Buer Overow Vulnerability (Mar 2018) - Linux",
-    "description": [
-      "PHP is prone to a stack buer overow vulnerability."
-    ],
+    "description": ["PHP is prone to a stack buer overow vulnerability."],
     "detection_result": [
       "Installed version: 7.0.17",
       "Fixed version: 7.0.28",
@@ -477,9 +459,7 @@
       "The aw exists because php fails to adequately bounds-check user-supplied data before copying it into an insuciently sized buer."
     ],
     "log_method": [],
-    "cvss": [
-      "9.8"
-    ],
+    "cvss": ["9.8"],
     "port": 8080,
     "protocol": "tcp",
     "severity": "CRITICAL",
@@ -501,8 +481,8 @@
       "dfn-cert: DFN-CERT-2018-0399"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -533,39 +513,29 @@
       "Adminer allows unauthenticated connections to be initiated to arbitrary systems/ports."
     ],
     "log_method": [],
-    "cvss": [
-      "9.8"
-    ],
+    "cvss": ["9.8"],
     "port": 8080,
     "protocol": "tcp",
     "severity": "CRITICAL",
     "references": [],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
     "Name": "PHP < 8.0.30, 8.1.x < 8.1.22, 8.2.x < 8.2.9 Security Update - Linux",
-    "description": [
-      "PHP is prone to multiple vulnerabilities."
-    ],
-    "detection_result": [
-      "Installed version: 7.0.17"
-    ],
+    "description": ["PHP is prone to multiple vulnerabilities."],
+    "detection_result": ["Installed version: 7.0.17"],
     "detection_method": [
       "Checks if a vulnerable version is present on the target host."
     ],
-    "product_detection_result": [
-      "cpe:/a:php:php:7.0.17"
-    ],
+    "product_detection_result": ["cpe:/a:php:php:7.0.17"],
     "impact": [],
     "solution": [],
     "insight": [],
     "log_method": [],
-    "cvss": [
-      "9.8"
-    ],
+    "cvss": ["9.8"],
     "port": 8080,
     "protocol": "tcp",
     "severity": "Critical",
@@ -588,8 +558,8 @@
       "dfn-cert: DFN-CERT-2023-1775"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -604,9 +574,7 @@
       "path / port: 8080/tcp"
     ],
     "detection_method": [],
-    "product_detection_result": [
-      "cpe:/a:php:php:7.0.17"
-    ],
+    "product_detection_result": ["cpe:/a:php:php:7.0.17"],
     "impact": [
       "Successful exploitation would allow an unauthenticated remote attacker to execute arbitrary code on the target machine."
     ],
@@ -620,27 +588,20 @@
       "Such conditions can be achieved in a pretty standard Nginx conguration. The regexp in 'fastcgi_split_path_info' directive can be broken using the newline character (in encoded form, %0a). Broken regexp leads to empty PATH_INFO, which triggers the bug."
     ],
     "log_method": [],
-    "cvss": [
-      "9.8"
-    ],
+    "cvss": ["9.8"],
     "port": 8080,
     "protocol": "tcp",
     "severity": "CRITICAL",
     "references": [],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
     "Name": "PHP < 8.1.29, 8.2.x < 8.2.20, 8.3.x < 8.3.8 Multiple Vulnerabilities - Linux",
-    "description": [
-      "PHP is prone to multiple vulnerabilities."
-    ],
-    "detection_result": [
-      "Installed version: 7.0.17",
-      "Fixed version: 8.1.29"
-    ],
+    "description": ["PHP is prone to multiple vulnerabilities."],
+    "detection_result": ["Installed version: 7.0.17", "Fixed version: 8.1.29"],
     "detection_method": [
       "Checks if a vulnerable version is present on the target host.",
       "Details: PHP < 8.1.29, 8.2.x < 8.2.20, 8.3.x < 8.3.8 Multiple Vulnerabilities - Linux",
@@ -665,9 +626,7 @@
       "Note: As of 06/2024 the CVEs CVE-2024-4577 and CVE-2024-5585 are known to be exploitable on Windows systems only."
     ],
     "log_method": [],
-    "cvss": [
-      "9.8"
-    ],
+    "cvss": ["9.8"],
     "port": 8080,
     "protocol": "tcp",
     "severity": "Critical",
@@ -705,15 +664,13 @@
       "dfn-cert: DFN-CERT-2024-1476"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
     "Name": "PHP < 8.1.31, 8.2.x < 8.2.26, 8.3.x < 8.3.14 Multiple Vulnerabilities - Linux",
-    "description": [
-      "PHP is prone to multiple vulnerabilities."
-    ],
+    "description": ["PHP is prone to multiple vulnerabilities."],
     "detection_result": [
       "Installed version: 7.0.17",
       "Fixed version: 8.1.31",
@@ -748,9 +705,7 @@
       "- No CVE: Heap-Use-After-Free in sapi_read_post_data Processing in CLI SAPI Interface"
     ],
     "log_method": [],
-    "cvss": [
-      "9.8"
-    ],
+    "cvss": ["9.8"],
     "port": 8080,
     "protocol": "tcp",
     "severity": "Critical",
@@ -782,15 +737,13 @@
       "dfn-cert: DFN-CERT-2024-3108"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
     "Name": "PHP < 8.1.32, 8.2.x < 8.2.28 Multiple Vulnerabilities - Linux",
-    "description": [
-      "PHP is prone to multiple vulnerabilities."
-    ],
+    "description": ["PHP is prone to multiple vulnerabilities."],
     "detection_result": [
       "Installed version: 7.0.17",
       "Fixed version: 8.1.32",
@@ -808,9 +761,7 @@
       "Method: PHP Detection Consolidation",
       "OID: 1.3.6.1.4.1.25623.1.0.171722)"
     ],
-    "impact": [
-      "PHP versions prior to 8.1.32, and 8.2.x prior to 8.2.28."
-    ],
+    "impact": ["PHP versions prior to 8.1.32, and 8.2.x prior to 8.2.28."],
     "solution": [
       "Solution type: VendorFix",
       "Update to version 8.1.32, 8.2.28 or later."
@@ -824,9 +775,7 @@
       "- CVE-2025-1861: Stream HTTP wrapper truncate redirect location to 1024 bytes"
     ],
     "log_method": [],
-    "cvss": [
-      "9.8"
-    ],
+    "cvss": ["9.8"],
     "port": 8080,
     "protocol": "tcp",
     "severity": "CRITICAL",
@@ -849,15 +798,13 @@
       "dfn-cert: DFN-CERT-2025-0665"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
     "Name": "PHP 7.0.x < 7.0.23, 7.1.x < 7.1.9 Use-After-Free Vulnerability - Linux",
-    "description": [
-      "PHP is prone to a use-after-free vulnerability."
-    ],
+    "description": ["PHP is prone to a use-after-free vulnerability."],
     "detection_result": [
       "Installed version: 7.0.17",
       "Fixed version: 7.0.23",
@@ -887,9 +834,7 @@
       "PHP versions 7.0.x prior to 7.0.23 and 7.1.x prior to 7.1.9."
     ],
     "log_method": [],
-    "cvss": [
-      "9.8"
-    ],
+    "cvss": ["9.8"],
     "port": 8080,
     "protocol": "tcp",
     "severity": "Critical",
@@ -906,15 +851,13 @@
       "dfn-cert: DFN-CERT-2017-1629"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
     "Name": "PHP < 7.4.33, 8.0.x < 8.0.25, 8.1.x < 8.1.12 Security Update - Linux",
-    "description": [
-      "PHP is prone to multiple vulnerabilities."
-    ],
+    "description": ["PHP is prone to multiple vulnerabilities."],
     "detection_result": [
       "Installed version: 7.0.17",
       "Fixed version: 7.4.33",
@@ -946,9 +889,7 @@
       "PHP prior to version 7.4.33, version 8.0.x through 8.0.24 and 8.1.x through 8.1.11."
     ],
     "log_method": [],
-    "cvss": [
-      "9.8"
-    ],
+    "cvss": ["9.8"],
     "port": 8080,
     "protocol": "tcp",
     "severity": "CRITICAL",
@@ -979,15 +920,13 @@
       "dfn-cert: DFN-CERT-2022-2380"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
     "Name": "Adminer < 4.16.0 Multiple Vulnerabilities",
-    "description": [
-      "Adminer is prone to multiple vulnerabilities."
-    ],
+    "description": ["Adminer is prone to multiple vulnerabilities."],
     "detection_result": [
       "Installed version: 4.2.5",
       "Fixed version: 4.16.0",
@@ -1013,9 +952,7 @@
       "- CVE-2023-45197: File upload vulnerability"
     ],
     "log_method": [],
-    "cvss": [
-      "9.8"
-    ],
+    "cvss": ["9.8"],
     "port": 8080,
     "protocol": "tcp",
     "severity": "Critical",
@@ -1032,15 +969,13 @@
       "->a5c45"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
     "Name": "PHP Multiple Vulnerabilities (Mar 2019) - Linux",
-    "description": [
-      "PHP is prone to multiple vulnerabilities."
-    ],
+    "description": ["PHP is prone to multiple vulnerabilities."],
     "detection_result": [
       "Installed version: 7.0.17",
       "Fixed version: 7.1.27",
@@ -1075,9 +1010,7 @@
       "- Uninitialized read in exif_process_IFD_in_TIFF (CVE-2019-9641)"
     ],
     "log_method": [],
-    "cvss": [
-      "9.8"
-    ],
+    "cvss": ["9.8"],
     "port": 8080,
     "protocol": "tcp",
     "severity": "CRITICAL",
@@ -1106,15 +1039,13 @@
       "dfn-cert: DFN-CERT-2019-0464"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
     "Name": "PHP 7.0.0 <= 7.1.15 DoS Vulnerability (Aug 2018) - Linux",
-    "description": [
-      "PHP is prone to a denial of service (DoS) vulnerability."
-    ],
+    "description": ["PHP is prone to a denial of service (DoS) vulnerability."],
     "detection_result": [
       "Installed version: 7.0.17",
       "Fixed version: None",
@@ -1146,23 +1077,19 @@
       "properly handles long strings."
     ],
     "log_method": [],
-    "cvss": [
-      "9.8"
-    ],
+    "cvss": ["9.8"],
     "port": 8080,
     "protocol": "tcp",
     "severity": "CRITICAL",
     "references": [],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
     "Name": "PHP 7.0.x < 7.0.21, 7.1.x < 7.1.7 Multiple Vulnerabilities (Jul 2017) - Linux",
-    "description": [
-      "PHP is prone to multiple vulnerabilities."
-    ],
+    "description": ["PHP is prone to multiple vulnerabilities."],
     "detection_result": [
       "Installed version: 7.0.17",
       "Fixed version: 7.0.21",
@@ -1191,9 +1118,7 @@
       "- CVE-2017-12934: Unserialize Heap Use-After-Free (READ: 1) in zval_get_type"
     ],
     "log_method": [],
-    "cvss": [
-      "9.8"
-    ],
+    "cvss": ["9.8"],
     "port": 8080,
     "protocol": "tcp",
     "severity": "Critical",
@@ -1213,15 +1138,13 @@
       "dfn-cert: DFN-CERT-2017-1420"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
     "Name": "PHP < 7.2.27, 7.3.x < 7.3.14, 7.4.x < 7.4.2 Multiple Vulnerabilities (Jan 2020) - Linux",
-    "description": [
-      "PHP is prone to multiple vulnerabilities."
-    ],
+    "description": ["PHP is prone to multiple vulnerabilities."],
     "detection_result": [
       "Installed version: 7.0.17",
       "Fixed version: 7.2.27",
@@ -1250,9 +1173,7 @@
       "- Global buer-overow in 'mb_lt_conv_big5_wchar' (CVE-2020-7060)"
     ],
     "log_method": [],
-    "cvss": [
-      "9.1"
-    ],
+    "cvss": ["9.1"],
     "port": 8080,
     "protocol": "tcp",
     "severity": "CRITICAL",
@@ -1278,8 +1199,8 @@
       "dfn-cert: DFN-CERT-2020-0139"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -1318,9 +1239,7 @@
       "- CVE-2024-9026: Logs from children may be altered"
     ],
     "log_method": [],
-    "cvss": [
-      "8.8"
-    ],
+    "cvss": ["8.8"],
     "port": 8080,
     "protocol": "tcp",
     "severity": "HIGH",
@@ -1354,8 +1273,8 @@
       "dfn-cert: DFN-CERT-2024-2550"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -1392,9 +1311,7 @@
       "- CVE-2022-31626: mysqlnd/pdo password buer overow"
     ],
     "log_method": [],
-    "cvss": [
-      "8.8"
-    ],
+    "cvss": ["8.8"],
     "port": 8080,
     "protocol": "tcp",
     "severity": "HIGH",
@@ -1424,15 +1341,13 @@
       "dfn-cert: DFN-CERT-2022-1288"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
     "Name": "PHP < 5.6.36, 7.x < 7.0.30, 7.1.x < 7.1.17, 7.2.x < 7.2.5 Multiple Vulnerabilities (May 2018) - Linux",
-    "description": [
-      "PHP is prone to multiple vulnerabilities."
-    ],
+    "description": ["PHP is prone to multiple vulnerabilities."],
     "detection_result": [
       "Installed version: 7.0.17",
       "Fixed version: 7.0.30",
@@ -1465,9 +1380,7 @@
       "- CVE-2018-10547: An error in the 'phar_do_404()' function in 'ext/phar/phar_object.c' script which returns parts of the request unltered, leading to another XSS vector. This is due to incomplete x for CVE-2018-5712."
     ],
     "log_method": [],
-    "cvss": [
-      "8.8"
-    ],
+    "cvss": ["8.8"],
     "port": 8080,
     "protocol": "tcp",
     "severity": "HIGH",
@@ -1488,15 +1401,13 @@
       "dfn-cert: DFN-CERT-2018-0877"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
     "Name": "PHP < 8.2.30, 8.3.x < 8.3.29, 8.4.x < 8.4.16 Multiple Vulnerabilities - Linux",
-    "description": [
-      "PHP is prone to multiple vulnerabilities."
-    ],
+    "description": ["PHP is prone to multiple vulnerabilities."],
     "detection_result": [
       "Installed version: 7.0.17",
       "Fixed version: 8.2.30",
@@ -1527,9 +1438,7 @@
       "- No CVE: Null byte termination in dns_get_record()"
     ],
     "log_method": [],
-    "cvss": [
-      "8.2"
-    ],
+    "cvss": ["8.2"],
     "port": 8080,
     "protocol": "tcp",
     "severity": "HIGH",
@@ -1545,15 +1454,13 @@
       "url: https://github.com/php/php-src/security/advisories/GHSA-8xr5-qppj-gvwj"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
     "Name": "PHP < 8.0.28, 8.1.x < 8.1.16, 8.2.x < 8.2.3 Security Update - Linux",
-    "description": [
-      "PHP is prone to multiple vulnerabilities."
-    ],
+    "description": ["PHP is prone to multiple vulnerabilities."],
     "detection_result": [
       "Installed version: 7.0.17",
       "Fixed version: 8.0.28",
@@ -1585,9 +1492,7 @@
       "- CVE-2023-0662: Fixed bug GHSA-54hq-v5wp-fqgv (DOS vulnerability when parsing multipart request body)"
     ],
     "log_method": [],
-    "cvss": [
-      "8.1"
-    ],
+    "cvss": ["8.1"],
     "port": 8080,
     "protocol": "tcp",
     "severity": "HIGH",
@@ -1620,8 +1525,8 @@
       "dfn-cert: DFN-CERT-2023-0336"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -1653,9 +1558,7 @@
       "When using Monolog for logging, Adminer allows a denial of service (memory consumption) via a crafted serialized payload (e.g., using s:1000000000), leading to a PHP Object Injection issue."
     ],
     "log_method": [],
-    "cvss": [
-      "7.8"
-    ],
+    "cvss": ["7.8"],
     "port": 8080,
     "protocol": "tcp",
     "severity": "HIGH",
@@ -1664,15 +1567,13 @@
       "url: https://github.com/far00t01/CVE-2025-43960"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
     "Name": "PHP < 8.0.27, 8.1.x < 8.1.14, 8.2.x < 8.2.1 Security Update - Linux",
-    "description": [
-      "PHP is prone to an integer overow vulnerability."
-    ],
+    "description": ["PHP is prone to an integer overow vulnerability."],
     "detection_result": [
       "Installed version: 7.0.17",
       "Fixed version: 8.0.27",
@@ -1701,9 +1602,7 @@
       "Due to an uncaught integer overow, PDO::quote() of PDO_SQLite may return a not properly quoted string."
     ],
     "log_method": [],
-    "cvss": [
-      "7.8"
-    ],
+    "cvss": ["7.8"],
     "port": 8080,
     "protocol": "tcp",
     "severity": "HIGH",
@@ -1719,15 +1618,13 @@
       "dfn-cert: DFN-CERT-2023-0034"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
     "Name": "PHP < 8.1.33, 8.2.x < 8.2.29, 8.3.x < 8.3.23, 8.4.x < 8.4.10 Multiple Vulnerabilities - Linux",
-    "description": [
-      "PHP is prone to multiple vulnerabilities."
-    ],
+    "description": ["PHP is prone to multiple vulnerabilities."],
     "detection_result": [
       "Installed version: 7.0.17",
       "Fixed version: 8.1.33",
@@ -1759,9 +1656,7 @@
       "- CVE-2025-6491: NULL pointer dereference in PHP SOAP extension via large XML namespace prex"
     ],
     "log_method": [],
-    "cvss": [
-      "7.5"
-    ],
+    "cvss": ["7.5"],
     "port": 8080,
     "protocol": "tcp",
     "severity": "HIGH",
@@ -1780,8 +1675,8 @@
       "dfn-cert: DFN-CERT-2025-1785"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -1804,16 +1699,14 @@
     "solution": [],
     "insight": [],
     "log_method": [],
-    "cvss": [
-      "7.5"
-    ],
+    "cvss": ["7.5"],
     "port": 8080,
     "protocol": "tcp",
     "severity": "HIGH",
     "references": [],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -1847,9 +1740,7 @@
     ],
     "insight": [],
     "log_method": [],
-    "cvss": [
-      "7.5"
-    ],
+    "cvss": ["7.5"],
     "port": 8080,
     "protocol": "tcp",
     "severity": "HIGH",
@@ -1874,15 +1765,13 @@
       "dfn-cert: DFN-CERT-2021-0246"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
     "Name": "PHP < 7.2.30, 7.3 < 7.3.17, 7.4 < 7.4.5 DoS Vulnerability (Apr 2020) - Linux",
-    "description": [
-      "PHP is prone to a denial of service (DoS) vulnerability."
-    ],
+    "description": ["PHP is prone to a denial of service (DoS) vulnerability."],
     "detection_result": [
       "Installed version: 7.0.17",
       "Fixed version: 7.2.30",
@@ -1910,9 +1799,7 @@
       "If 'CHARSET_EBCDIC' is dened (usually, on systems with EBCDIC encoding support), an out-of-bounds read can occur using a malformed url-encoded string."
     ],
     "log_method": [],
-    "cvss": [
-      "7.5"
-    ],
+    "cvss": ["7.5"],
     "port": 8080,
     "protocol": "tcp",
     "severity": "HIGH",
@@ -1928,15 +1815,13 @@
       "dfn-cert: DFN-CERT-2020-0751"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
     "Name": "PHP < 5.6.32, 7.x < 7.0.24, 7.1.x < 7.1.11 Heap Based Buer Overow Vulnerability - Linux",
-    "description": [
-      "PHP is prone to a heap buer overow vulnerability."
-    ],
+    "description": ["PHP is prone to a heap buer overow vulnerability."],
     "detection_result": [
       "Installed version: 7.0.17",
       "Fixed version: 7.0.24",
@@ -1964,16 +1849,14 @@
       "The aw exists due to an error in the date extension's 'timelib_meridian' handling of 'front of' and 'back of' directives."
     ],
     "log_method": [],
-    "cvss": [
-      "7.5"
-    ],
+    "cvss": ["7.5"],
     "port": 8080,
     "protocol": "tcp",
     "severity": "HIGH",
     "references": [],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -1998,9 +1881,7 @@
       "Method: PHP Detection Consolidation",
       "OID: 1.3.6.1.4.1.25623.1.0.171722)"
     ],
-    "impact": [
-      "PHP versions before 7.2.28."
-    ],
+    "impact": ["PHP versions before 7.2.28."],
     "solution": [
       "Solution type: VendorFix",
       "Update to version 7.2.28 or later."
@@ -2011,9 +1892,7 @@
       "- Files added to tar with Phar::buildFromIterator have all-access permissions (CVE-2020-7063)"
     ],
     "log_method": [],
-    "cvss": [
-      "7.5"
-    ],
+    "cvss": ["7.5"],
     "port": 8080,
     "protocol": "tcp",
     "severity": "HIGH",
@@ -2033,8 +1912,8 @@
       "dfn-cert: DFN-CERT-2020-0341"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -2073,9 +1952,7 @@
       "- CVE-2018-15132: linkinfo function on windows doesn't implement openbasedir check."
     ],
     "log_method": [],
-    "cvss": [
-      "7.5"
-    ],
+    "cvss": ["7.5"],
     "port": 8080,
     "protocol": "tcp",
     "severity": "HIGH",
@@ -2099,8 +1976,8 @@
       "dfn-cert: DFN-CERT-2018-1655"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -2123,16 +2000,14 @@
     "solution": [],
     "insight": [],
     "log_method": [],
-    "cvss": [
-      "7.5"
-    ],
+    "cvss": ["7.5"],
     "port": 8080,
     "protocol": "tcp",
     "severity": "HIGH",
     "references": [],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -2164,9 +2039,7 @@
       "Adminer allows an attacker to read arbitrary les on the remote server by requesting Adminer to connect to a remote MySQL database."
     ],
     "log_method": [],
-    "cvss": [
-      "7.5"
-    ],
+    "cvss": ["7.5"],
     "port": 8080,
     "protocol": "tcp",
     "severity": "HIGH",
@@ -2178,15 +2051,13 @@
       "dfn-cert: DFN-CERT-2022-1100"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
     "Name": "PHP 'CVE-2017-7189' Improper Input Validation Vulnerability - Linux",
-    "description": [
-      "PHP is improperly validating input from untrusted input."
-    ],
+    "description": ["PHP is improperly validating input from untrusted input."],
     "detection_result": [
       "Installed version: 7.0.17",
       "Fixed version: None",
@@ -2217,9 +2088,7 @@
       "main/streams/xp_socket.c in PHP misparses fsockopen calls, such as by interpreting fsock-open('127.0.0.1:80', 443) as if the address/port were 127.0.0.1:80:443, which is later truncated to 127.0.0.1:80. This behavior has a security risk if the explicitly provided port number (i.e., 443 in this example) is hardcoded into an application as a security policy, but the hostname argument (i.e., 127.0.0.1:80 in this example) is obtained from untrusted input."
     ],
     "log_method": [],
-    "cvss": [
-      "7.5"
-    ],
+    "cvss": ["7.5"],
     "port": 8080,
     "protocol": "tcp",
     "severity": "HIGH",
@@ -2230,15 +2099,13 @@
       "url: https://github.com/php/php-src/commit/bab0b99f376dac9170ac81382a5ed526938d5 ->95a"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
     "Name": "PHP 5.6.x < 5.6.38, 7.x < 7.0.33, 7.1.x < 7.1.25, 7.2.x < 7.2.13 Multiple Vulnerabilities (Dec 2018) - Linux",
-    "description": [
-      "PHP is prone to multiple security vulnerabilities."
-    ],
+    "description": ["PHP is prone to multiple security vulnerabilities."],
     "detection_result": [
       "Installed version: 7.0.17",
       "Fixed version: 7.0.33",
@@ -2271,9 +2138,7 @@
       "- CVE-2018-19395: Denial of service because com and com_safearray_proxy return NULL in com_properties_get in ext/com_dotnet/com_handlers.c, as demonstrated by a serialize call on COM('WScript.Shell')."
     ],
     "log_method": [],
-    "cvss": [
-      "7.5"
-    ],
+    "cvss": ["7.5"],
     "port": 8080,
     "protocol": "tcp",
     "severity": "HIGH",
@@ -2304,15 +2169,13 @@
       "dfn-cert: DFN-CERT-2018-2476"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
     "Name": "PHP 5.x < 5.6.39, 7.x < 7.0.33, 7.1.x < 7.1.26, 7.2.x < 7.2.14 DoS Vulnerability - Linux",
-    "description": [
-      "PHP is prone to a denial of service (DoS) vulnerability."
-    ],
+    "description": ["PHP is prone to a denial of service (DoS) vulnerability."],
     "detection_result": [
       "Installed version: 7.0.17",
       "Fixed version: 7.0.33",
@@ -2341,9 +2204,7 @@
       "A NULL pointer dereference and application crash via an empty string occurs in the message argument to the imap_mail function of ext/imap/php_imap.c."
     ],
     "log_method": [],
-    "cvss": [
-      "7.5"
-    ],
+    "cvss": ["7.5"],
     "port": 8080,
     "protocol": "tcp",
     "severity": "HIGH",
@@ -2360,15 +2221,13 @@
       "dfn-cert: DFN-CERT-2018-2476"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
     "Name": "PHP 7.x < 7.0.27, 7.1.x < 7.1.13, 7.2.0 Unspecied Vulnerability - Linux",
-    "description": [
-      "PHP is prone to an unspecied vulnerability."
-    ],
+    "description": ["PHP is prone to an unspecied vulnerability."],
     "detection_result": [
       "Installed version: 7.0.17",
       "Fixed version: 7.0.27",
@@ -2397,9 +2256,7 @@
       "The aw exists due to an inappropriate parsing of HTTP response 'http_header_value' in 'ext/standard/http_fopen_wrapper.c'."
     ],
     "log_method": [],
-    "cvss": [
-      "7.5"
-    ],
+    "cvss": ["7.5"],
     "port": 8080,
     "protocol": "tcp",
     "severity": "HIGH",
@@ -2409,15 +2266,13 @@
       "dfn-cert: DFN-CERT-2019-1737"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
     "Name": "PHP 7.x < 7.0.18, 7.1.x < 7.1.4 SSRF Security Bypass Vulnerability - Linux",
-    "description": [
-      "PHP is prone to a security bypass vulnerability."
-    ],
+    "description": ["PHP is prone to a security bypass vulnerability."],
     "detection_result": [
       "Installed version: 7.0.17",
       "Fixed version: 7.0.18",
@@ -2446,9 +2301,7 @@
       "The aw exists due to the php_wddx_pop_element function in ext/wddx/wddx.c via an inappli- cable class name in a wddxPacket XML document, leading to mishandling in a wddx_deserialize call."
     ],
     "log_method": [],
-    "cvss": [
-      "7.4"
-    ],
+    "cvss": ["7.4"],
     "port": 8080,
     "protocol": "tcp",
     "severity": "HIGH",
@@ -2464,8 +2317,8 @@
       "dfn-cert: DFN-CERT-2017-1046"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -2501,9 +2354,7 @@
       "- Heap-buer-overow on exif_process_user_comment (CVE-2019-11042)"
     ],
     "log_method": [],
-    "cvss": [
-      "7.1"
-    ],
+    "cvss": ["7.1"],
     "port": 8080,
     "protocol": "tcp",
     "severity": "HIGH",
@@ -2528,15 +2379,13 @@
       "dfn-cert: DFN-CERT-2019-1557"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
     "Name": "PHP 5.3.7 - 7.3.31, 7.4.x < 7.4.25, 8.0.x < 8.0.12 Security Update (Oct 2021) - Linux",
-    "description": [
-      "PHP released new versions which includes a security x."
-    ],
+    "description": ["PHP released new versions which includes a security x."],
     "detection_result": [
       "Installed version: 7.0.17",
       "Fixed version: 7.3.32 (not released yet)"
@@ -2559,9 +2408,7 @@
       "Fixed bug #81026 (PHP-FPM oob R/W in root process leading to privilege escalation)."
     ],
     "log_method": [],
-    "cvss": [
-      "7.0"
-    ],
+    "cvss": ["7.0"],
     "port": 8080,
     "protocol": "tcp",
     "severity": "HIGH",
@@ -2588,8 +2435,8 @@
       "dfn-cert: DFN-CERT-2021-2200"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -2617,9 +2464,7 @@
       "Method: PHP Detection Consolidation",
       "OID: 1.3.6.1.4.1.25623.1.0.171722)"
     ],
-    "impact": [
-      "PHP versions before 7.2.22 and 7.3.x before 7.3.9."
-    ],
+    "impact": ["PHP versions before 7.2.22 and 7.3.x before 7.3.9."],
     "solution": [
       "Solution type: VendorFix",
       "Update to version 7.2.22, 7.3.9 or later."
@@ -2632,9 +2477,7 @@
       "- Use-after-free in FPM master event handling"
     ],
     "log_method": [],
-    "cvss": [
-      "6.8"
-    ],
+    "cvss": ["6.8"],
     "port": 8080,
     "protocol": "tcp",
     "severity": "MEDIUM",
@@ -2647,8 +2490,8 @@
       "url: https://www.php.net/ChangeLog-7.php#7.2.22"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -2676,20 +2519,14 @@
       "Method: PHP Detection Consolidation",
       "OID: 1.3.6.1.4.1.25623.1.0.171722)"
     ],
-    "impact": [
-      "PHP versions before 7.1.32."
-    ],
+    "impact": ["PHP versions before 7.1.32."],
     "solution": [
       "Solution type: VendorFix",
       "Update to version 7.1.32 or later."
     ],
-    "insight": [
-      "PHP is prone to a heap use-after-free in pcrelib (cmb)."
-    ],
+    "insight": ["PHP is prone to a heap use-after-free in pcrelib (cmb)."],
     "log_method": [],
-    "cvss": [
-      "6.8"
-    ],
+    "cvss": ["6.8"],
     "port": 8080,
     "protocol": "tcp",
     "severity": "MEDIUM",
@@ -2698,8 +2535,8 @@
       "url: https://www.php.net/ChangeLog-7.php#7.1.32"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -2727,9 +2564,7 @@
       "Method: PHP Detection Consolidation",
       "OID: 1.3.6.1.4.1.25623.1.0.171722)"
     ],
-    "impact": [
-      "PHP versions before 7.2.26."
-    ],
+    "impact": ["PHP versions before 7.2.26."],
     "solution": [
       "Solution type: VendorFix",
       "Update to version 7.2.26 or later."
@@ -2742,9 +2577,7 @@
       "- Heap-buer-overow READ in exif (CVE-2019-11047)"
     ],
     "log_method": [],
-    "cvss": [
-      "6.5"
-    ],
+    "cvss": ["6.5"],
     "port": 8080,
     "protocol": "tcp",
     "severity": "MEDIUM",
@@ -2767,8 +2600,8 @@
       "dfn-cert: DFN-CERT-2019-2659"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -2788,32 +2621,26 @@
       "cpe:/a:php:php:7.0.17",
       "Detected by PHP Detection Consolidation (OID: 1.3.6.1.4.1.25623.1.0.171722)"
     ],
-    "impact": [
-      "PHP versions prior 7.2.34, 7.3 prior 7.3.23 and 7.4"
-    ],
+    "impact": ["PHP versions prior 7.2.34, 7.3 prior 7.3.23 and 7.4"],
     "solution": [
       "Solution type: VendorFix",
       "Update to version 7.2.34, 7.3.23, 7.4.11 or later."
     ],
     "insight": [],
     "log_method": [],
-    "cvss": [
-      "6.5"
-    ],
+    "cvss": ["6.5"],
     "port": 8080,
     "protocol": "tcp",
     "severity": "MEDIUM",
     "references": [],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
     "Name": "PHP < 7.2.34, 7.3 < 7.3.23, 7.4 < 7.4.11 Multiple Vulnerabilities (Oct 2020) - .",
-    "description": [
-      "PHP released new versions which includes a security x."
-    ],
+    "description": ["PHP released new versions which includes a security x."],
     "detection_result": [
       "Installed version: 7.0.17",
       "Fixed version: 7.2.34",
@@ -2846,9 +2673,7 @@
       " - PHP parses encoded cookie names so malicious '__Host-' cookies can be sent (CVE-2020-7070)"
     ],
     "log_method": [],
-    "cvss": [
-      "6.5"
-    ],
+    "cvss": ["6.5"],
     "port": 8080,
     "protocol": "tcp",
     "severity": "MEDIUM",
@@ -2870,15 +2695,13 @@
       "dfn-cert: DFN-CERT-2020-2111"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
     "Name": "PHP < 7.3.31, 7.4.x < 7.4.24, 8.0.x < 8.0.11 Security Update (Sep 2021) - Linux",
-    "description": [
-      "PHP released new versions which includes a security x."
-    ],
+    "description": ["PHP released new versions which includes a security x."],
     "detection_result": [
       "Installed version: 7.0.17",
       "Fixed version: 7.3.31",
@@ -2908,9 +2731,7 @@
       "Fixed bug #81420 (ZipArchive::extractTo extracts outside of destination)."
     ],
     "log_method": [],
-    "cvss": [
-      "6.5"
-    ],
+    "cvss": ["6.5"],
     "port": 8080,
     "protocol": "tcp",
     "severity": "MEDIUM",
@@ -2927,15 +2748,13 @@
       "dfn-cert: DFN-CERT-2021-1994"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
     "Name": "PHP < 7.4.31, 8.0.x < 8.0.24, 8.1.x < 8.1.11 Security Update - Linux",
-    "description": [
-      "PHP is prone to multiple vulnerabilities."
-    ],
+    "description": ["PHP is prone to multiple vulnerabilities."],
     "detection_result": [
       "Installed version: 7.0.17",
       "Fixed version: 7.4.31",
@@ -2970,23 +2789,19 @@
       " PHP applications."
     ],
     "log_method": [],
-    "cvss": [
-      "6.5"
-    ],
+    "cvss": ["6.5"],
     "port": 8080,
     "protocol": "tcp",
     "severity": "MEDIUM",
     "references": [],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
     "Name": "PHP 5.x < 7.1.20, 7.2.x < 7.2.8, 7.3.0alpha1 < 7.3.0alpha3 DoS Vulnerability - Linux",
-    "description": [
-      "PHP is prone to a denial of service (DoS) vulnerability."
-    ],
+    "description": ["PHP is prone to a denial of service (DoS) vulnerability."],
     "detection_result": [
       "Installed version: 7.0.17",
       "Fixed version: 7.1.20",
@@ -3019,9 +2834,7 @@
       "when using program execution functions with a non-blocking STDIN stream."
     ],
     "log_method": [],
-    "cvss": [
-      "6.5"
-    ],
+    "cvss": ["6.5"],
     "port": 8080,
     "protocol": "tcp",
     "severity": "MEDIUM",
@@ -3039,15 +2852,13 @@
       "dfn-cert: DFN-CERT-2018-1882"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
     "Name": "PHP < 5.6.33, 7.x < 7.0.27, 7.1.x < 7.1.13, 7.2.x < 7.2.1 Multiple Vulnerabilities - Linux",
-    "description": [
-      "PHP is prone to multiple vulnerabilities."
-    ],
+    "description": ["PHP is prone to multiple vulnerabilities."],
     "detection_result": [
       "Installed version: 7.0.17",
       "Fixed version: 7.0.27",
@@ -3077,27 +2888,20 @@
       "libgd)."
     ],
     "log_method": [],
-    "cvss": [
-      "6.1"
-    ],
+    "cvss": ["6.1"],
     "port": 8080,
     "protocol": "tcp",
     "severity": "MEDIUM",
     "references": [],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
     "Name": "PHP < 5.6.33, 7.x < 7.0.27, 7.1.x < 7.1.13, 7.2.x < 7.2.1 Multiple Vulnerabilities",
-    "description": [
-      "PHP is prone to multiple vulnerabilities."
-    ],
-    "detection_result": [
-      "Installed version: 7.0.17",
-      "Fixed version: 7.2.1"
-    ],
+    "description": ["PHP is prone to multiple vulnerabilities."],
+    "detection_result": ["Installed version: 7.0.17", "Fixed version: 7.2.1"],
     "detection_method": [
       "Checks if a vulnerable version is present on the target host.",
       "Details: PHP < 5.6.33, 7.x < 7.0.27, 7.1.x < 7.1.13, 7.2.x < 7.2.1 Multiple Vulnerabilit.",
@@ -3115,9 +2919,7 @@
       "- CVE-2018-5711: Integer signedness error in gd_gif_in.c in the GD Graphics Library (aka libgd)."
     ],
     "log_method": [],
-    "cvss": [
-      "5.9"
-    ],
+    "cvss": ["5.9"],
     "port": 8080,
     "protocol": "tcp",
     "severity": "MEDIUM",
@@ -3151,15 +2953,13 @@
       "dfn-cert: DFN-CERT-2018-0191"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
     "Name": "PHP < 7.3.29 Multiple Vulnerabilities (Jul 2021) - Linux",
-    "description": [
-      "PHP is prone to multiple vulnerabilities."
-    ],
+    "description": ["PHP is prone to multiple vulnerabilities."],
     "detection_result": [
       "Installed version: 7.0.17",
       "Fixed version: 7.3.29",
@@ -3177,9 +2977,7 @@
       "Method: PHP Detection Consolidation",
       "OID: 1.3.6.1.4.1.25623.1.0.171722)"
     ],
-    "impact": [
-      "PHP versions prior to 7.3.29."
-    ],
+    "impact": ["PHP versions prior to 7.3.29."],
     "solution": [
       "Solution type: VendorFix",
       "Update to version 7.3.29 or later."
@@ -3193,9 +2991,7 @@
       "- CVE-2021-21704: Crash while parsing blob data in rebird_fetch_blob."
     ],
     "log_method": [],
-    "cvss": [
-      "5.9"
-    ],
+    "cvss": ["5.9"],
     "port": 8080,
     "protocol": "tcp",
     "severity": "MEDIUM",
@@ -3225,15 +3021,13 @@
       "dfn-cert: DFN-CERT-2021-1419"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
     "Name": "PHP < 8.1.28, 8.2.x < 8.2.18, 8.3.x < 8.3.6 Security Update (GHSA-h746-cjrr-wfmr) - Linux",
-    "description": [
-      "PHP is prone to a vulnerability in password_verify."
-    ],
+    "description": ["PHP is prone to a vulnerability in password_verify."],
     "detection_result": [
       "Installed version: 7.0.17",
       "Fixed version: 8.1.28",
@@ -3256,23 +3050,19 @@
     ],
     "insight": [],
     "log_method": [],
-    "cvss": [
-      "5.8"
-    ],
+    "cvss": ["5.8"],
     "port": 8080,
     "protocol": "tcp",
     "severity": "MEDIUM",
     "references": [],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
     "Name": "PHP < 8.0.22, 8.1.x < 8.1.9 Security Update - Linux",
-    "description": [
-      "PHP is prone to a buer overow vulnerability."
-    ],
+    "description": ["PHP is prone to a buer overow vulnerability."],
     "detection_result": [
       "Installed version: 7.0.17",
       "Fixed version: 8.0.22/8.1.9/8.2.0",
@@ -3290,9 +3080,7 @@
       "Method: PHP Detection Consolidation",
       "OID: 1.3.6.1.4.1.25623.1.0.171722)"
     ],
-    "impact": [
-      "PHP versions prior to 8.0.22 and 8.1.x prior to 8.1.9."
-    ],
+    "impact": ["PHP versions prior to 8.0.22 and 8.1.x prior to 8.1.9."],
     "solution": [
       "Solution type: VendorFix",
       "Update to version 8.0.22, 8.1.9, 8.2.0 or later."
@@ -3301,9 +3089,7 @@
       "Fixed potential overow for the builtin server via the PHP_CLI_SERVER_WORKERS environment variable."
     ],
     "log_method": [],
-    "cvss": [
-      "5.5"
-    ],
+    "cvss": ["5.5"],
     "port": 8080,
     "protocol": "tcp",
     "severity": "MEDIUM",
@@ -3322,15 +3108,13 @@
       "dfn-cert: DFN-CERT-2023-0681"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
     "Name": "PHP < 7.2.29 Multiple Vulnerabilities (Mar 2020) - Linux",
-    "description": [
-      "PHP is prone to multiple vulnerabilities."
-    ],
+    "description": ["PHP is prone to multiple vulnerabilities."],
     "detection_result": [
       "Installed version: 7.0.17",
       "Fixed version: 7.2.29",
@@ -3347,9 +3131,7 @@
       "Product: cpe:/a:php:php:7.0.17",
       "Method: PHP Detection Consolidation"
     ],
-    "impact": [
-      "PHP versions before 7.2.29."
-    ],
+    "impact": ["PHP versions before 7.2.29."],
     "solution": [
       "Solution type: VendorFix",
       "Update to version 7.2.29 or later."
@@ -3360,23 +3142,19 @@
       "- get_headers() silently truncates after a null byte (CVE-2020-7066)"
     ],
     "log_method": [],
-    "cvss": [
-      "5.4"
-    ],
+    "cvss": ["5.4"],
     "port": 8080,
     "protocol": "tcp",
     "severity": "MEDIUM",
     "references": [],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
     "Name": "PHP < 7.3.33, 7.4.x < 7.4.26, 8.0.x < 8.0.13 Security Update (Nov 2021) - Linux",
-    "description": [
-      "PHP released new versions which include a security x."
-    ],
+    "description": ["PHP released new versions which include a security x."],
     "detection_result": [
       "Installed version: 7.0.17",
       "Fixed version: 7.3.33",
@@ -3404,9 +3182,7 @@
       "Fixed bug #79971 (special character is breaking the path in xml function)."
     ],
     "log_method": [],
-    "cvss": [
-      "5.3"
-    ],
+    "cvss": ["5.3"],
     "port": 8080,
     "protocol": "tcp",
     "severity": "MEDIUM",
@@ -3456,15 +3232,13 @@
       "dfn-cert: DFN-CERT-2021-2436"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
     "Name": "PHP < 7.2.31, 7.3 < 7.3.18, 7.4 < 7.4.6 Multiple DoS Vulnerabilities (May 2020) - Linux",
-    "description": [
-      "PHP is prone to two Denial-of-Service vulnerabilities."
-    ],
+    "description": ["PHP is prone to two Denial-of-Service vulnerabilities."],
     "detection_result": [
       "Installed version: 7.0.17",
       "Fixed version: 7.2.31",
@@ -3495,9 +3269,7 @@
       "leading to a Denial-of-Service condition (CVE-2019-11048)."
     ],
     "log_method": [],
-    "cvss": [
-      "5.3"
-    ],
+    "cvss": ["5.3"],
     "port": 8080,
     "protocol": "tcp",
     "severity": "MEDIUM",
@@ -3521,8 +3293,8 @@
       "dfn-cert: DFN-CERT-2020-1019"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -3556,9 +3328,7 @@
     ],
     "insight": [],
     "log_method": [],
-    "cvss": [
-      "5.3"
-    ],
+    "cvss": ["5.3"],
     "port": 8080,
     "protocol": "tcp",
     "severity": "MEDIUM",
@@ -3583,15 +3353,13 @@
       "dfn-cert: DFN-CERT-2021-0013"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
     "Name": "PHP < 7.3.28, 7.4.x < 7.4.18 IMAP Header Injection Vulnerability (Apr 2021) - Linux",
-    "description": [
-      "PHP is prone to an IMAP header injection vulnerability."
-    ],
+    "description": ["PHP is prone to an IMAP header injection vulnerability."],
     "detection_result": [
       "Installed version: 7.0.17",
       "Fixed version: 7.3.28",
@@ -3609,18 +3377,14 @@
       "Method: PHP Detection Consolidation",
       "OID: 1.3.6.1.4.1.25623.1.0.171722)"
     ],
-    "impact": [
-      "PHP versions prior to 7.3.28 and 7.4.x through 7.4.17."
-    ],
+    "impact": ["PHP versions prior to 7.3.28 and 7.4.x through 7.4.17."],
     "solution": [
       "Solution type: VendorFix",
       "Update to version 7.3.28, 7.4.18 or later."
     ],
     "insight": [],
     "log_method": [],
-    "cvss": [
-      "5.0"
-    ],
+    "cvss": ["5.0"],
     "port": 8080,
     "protocol": "tcp",
     "severity": "MEDIUM",
@@ -3629,15 +3393,13 @@
       "url: https://www.php.net/ChangeLog-7.php#7.4.18"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
     "Name": "PHP < 7.3.30, 7.4.x < 7.4.23, 8.0.x < 8.0.10 Security Update (Aug 2021) - Linux",
-    "description": [
-      "PHP released new versions which include security xes."
-    ],
+    "description": ["PHP released new versions which include security xes."],
     "detection_result": [
       "Installed version: 7.0.17",
       "Fixed version: 7.3.30",
@@ -3664,9 +3426,7 @@
     ],
     "insight": [],
     "log_method": [],
-    "cvss": [
-      "5.0"
-    ],
+    "cvss": ["5.0"],
     "port": 8080,
     "protocol": "tcp",
     "severity": "MEDIUM",
@@ -3676,8 +3436,8 @@
       "url: https://www.php.net/ChangeLog-8"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -3708,9 +3468,7 @@
     ],
     "insight": [],
     "log_method": [],
-    "cvss": [
-      "4.8"
-    ],
+    "cvss": ["4.8"],
     "port": 8080,
     "protocol": "tcp",
     "severity": "MEDIUM",
@@ -3720,19 +3478,14 @@
       "url: https://cwe.mitre.org/data/definitions/319.html"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
     "Name": "PHP < 5.6.35, 7.x < 7.0.29, 7.1.x < 7.1.16, 7.2.x < 7.2.4 Security Bypass Vulnerability (May 2018) - Linux",
-    "description": [
-      "PHP is prone to a security bypass vulnerability."
-    ],
-    "detection_result": [
-      "Installed version: 7.0.17",
-      "Fixed version: 7.0.29"
-    ],
+    "description": ["PHP is prone to a security bypass vulnerability."],
+    "detection_result": ["Installed version: 7.0.17", "Fixed version: 7.0.29"],
     "detection_method": [
       "Checks if a vulnerable version is present on the target host.",
       "Details: PHP < 5.6.35, 7.x < 7.0.29, 7.1.x < 7.1.16, 7.2.x < 7.2.4 Security Bypass Vulne. ->..",
@@ -3755,9 +3508,7 @@
       "The aw exists as the dumpable FPM child processes allow bypassing opcache access controls."
     ],
     "log_method": [],
-    "cvss": [
-      "4.7"
-    ],
+    "cvss": ["4.7"],
     "port": 8080,
     "protocol": "tcp",
     "severity": "MEDIUM",
@@ -3774,8 +3525,8 @@
       "dfn-cert: DFN-CERT-2018-0877"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -3804,9 +3555,7 @@
       "The vulnerability is caused by the result being returned to the user when a non-existing le is requested (e.g. the result contains script code provided in the request)."
     ],
     "log_method": [],
-    "cvss": [
-      "4.3"
-    ],
+    "cvss": ["4.3"],
     "port": 8080,
     "protocol": "tcp",
     "severity": "MEDIUM",
@@ -3815,8 +3564,8 @@
       "url: http://www.cert.org/advisories/CA-2000-02.html"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -3849,9 +3598,7 @@
     ],
     "insight": [],
     "log_method": [],
-    "cvss": [
-      "4.3"
-    ],
+    "cvss": ["4.3"],
     "port": 8080,
     "protocol": "tcp",
     "severity": "MEDIUM",
@@ -3870,8 +3617,8 @@
       "dfn-cert: DFN-CERT-2023-1328"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -3906,9 +3653,7 @@
       "The phar_parse_ziple function had use-after-free vulnerability because of mishandling of the actual_alias variable."
     ],
     "log_method": [],
-    "cvss": [
-      "3.6"
-    ],
+    "cvss": ["3.6"],
     "port": 8080,
     "protocol": "tcp",
     "severity": "LOW",
@@ -3929,15 +3674,13 @@
       "dfn-cert: DFN-CERT-2020-1732"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
     "Name": "ICMP Timestamp Reply Information Disclosure",
-    "description": [
-      "The remote host responded to an ICMP timestamp request."
-    ],
+    "description": ["The remote host responded to an ICMP timestamp request."],
     "detection_result": [
       "The following response / ICMP packet has been received:",
       "- ICMP Type: 14",
@@ -3958,23 +3701,19 @@
       "The Timestamp Reply is an ICMP message which replies to a Timestamp message. It consists of the originating timestamp sent by the sender of the Timestamp as well as a receive timestamp and a transmit timestamp."
     ],
     "log_method": [],
-    "cvss": [
-      "2.1"
-    ],
+    "cvss": ["2.1"],
     "port": 8080,
     "protocol": "tcp",
     "severity": "LOW",
     "references": [],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
     "Name": "ICMP Timestamp Reply Information Disclosure",
-    "description": [
-      "The remote host responded to an ICMP timestamp request."
-    ],
+    "description": ["The remote host responded to an ICMP timestamp request."],
     "detection_result": [
       "The following response / ICMP packet has been received:",
       "- ICMP Type: 14",
@@ -4000,9 +3739,7 @@
       "The Timestamp Reply is an ICMP message which replies to a Timestamp message. It consists of the originating timestamp sent by the sender of the Timestamp as well as a receive timestamp and a transmit timestamp."
     ],
     "log_method": [],
-    "cvss": [
-      "2.1"
-    ],
+    "cvss": ["2.1"],
     "port": "general",
     "protocol": "icmp",
     "severity": "LOW",
@@ -4015,8 +3752,8 @@
       "dfn-cert: DFN-CERT-2014-0658"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -4044,16 +3781,14 @@
     ],
     "insight": [],
     "log_method": [],
-    "cvss": [
-      "2.6"
-    ],
+    "cvss": ["2.6"],
     "port": "general",
     "protocol": "icmp",
     "severity": "LOW",
     "references": [],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -4090,9 +3825,7 @@
       "The remote host implements TCP timestamps, as dened by RFC1323/RFC7323."
     ],
     "log_method": [],
-    "cvss": [
-      "2.6"
-    ],
+    "cvss": ["2.6"],
     "port": "general",
     "protocol": "tcp",
     "severity": "LOW",
@@ -4103,8 +3836,8 @@
       "url: https://www.fortiguard.com/psirt/FG-IR-16-090"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -4125,16 +3858,14 @@
     "solution": [],
     "insight": [],
     "log_method": [],
-    "cvss": [
-      "0.0"
-    ],
+    "cvss": ["0.0"],
     "port": "general",
     "protocol": "tcp",
     "severity": "LOG",
     "references": [],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -4157,18 +3888,14 @@
       "OID:1.3.6.1.4.1.25623.1.0.810002",
       "Version used: 2022-07-27T10:11:28Z"
     ],
-    "cvss": [
-      "0.0"
-    ],
+    "cvss": ["0.0"],
     "port": "general",
     "protocol": "CPE-T",
     "severity": "LOG",
-    "references": [
-      "url: https://nvd.nist.gov/products/cpe"
-    ],
+    "references": ["url: https://nvd.nist.gov/products/cpe"],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -4194,16 +3921,14 @@
       "OID:1.3.6.1.4.1.25623.1.0.108708",
       "Version used: 2025-01-31T15:39:24Z"
     ],
-    "cvss": [
-      "0.0"
-    ],
+    "cvss": ["0.0"],
     "port": 8080,
     "protocol": "tcp",
     "severity": "LOG",
     "references": [],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -4218,16 +3943,14 @@
     "solution": [],
     "insight": [],
     "log_method": [],
-    "cvss": [
-      "0.0"
-    ],
+    "cvss": ["0.0"],
     "port": "general",
     "protocol": "CPE-T",
     "severity": "LOG",
     "references": [],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -4289,9 +4012,7 @@
       "OID:1.3.6.1.4.1.25623.1.0.112081",
       "Version used: 2025-03-21T15:40:43Z"
     ],
-    "cvss": [
-      "0.0"
-    ],
+    "cvss": ["0.0"],
     "port": 8080,
     "protocol": "tcp",
     "severity": "LOG",
@@ -4301,15 +4022,13 @@
       "url: https://securityheaders.com/"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
     "Name": "Adminer Detection (HTTP)",
-    "description": [
-      "HTTP based detection of Adminer."
-    ],
+    "description": ["HTTP based detection of Adminer."],
     "detection_result": [
       "Detected Adminer",
       "Version: 4.2.5",
@@ -4330,9 +4049,7 @@
       "OID:1.3.6.1.4.1.25623.1.0.108531",
       "Version used: 2025-09-05T15:40:40Z"
     ],
-    "cvss": [
-      "0.0"
-    ],
+    "cvss": ["0.0"],
     "port": 8080,
     "protocol": "tcp",
     "severity": "LOG",
@@ -4341,18 +4058,14 @@
       "url: https://github.com/vrana/adminer"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
     "Name": "Services",
-    "description": [
-      "This plugin performs service detection."
-    ],
-    "detection_result": [
-      "A MySQL server is running on this port"
-    ],
+    "description": ["This plugin performs service detection."],
+    "detection_result": ["A MySQL server is running on this port"],
     "detection_method": [],
     "product_detection_result": [],
     "impact": [],
@@ -4365,16 +4078,14 @@
       "OID:1.3.6.1.4.1.25623.1.0.10330",
       "Version used: 2025-03-05T05:38:53Z"
     ],
-    "cvss": [
-      "0.0"
-    ],
+    "cvss": ["0.0"],
     "port": 8080,
     "protocol": "tcp",
     "severity": "LOG",
     "references": [],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -4426,54 +4137,40 @@
       "OID:1.3.6.1.4.1.25623.1.0.111038",
       "Version used: 2026-01-13T05:47:36Z"
     ],
-    "cvss": [
-      "0.0"
-    ],
+    "cvss": ["0.0"],
     "port": 8080,
     "protocol": "tcp",
     "severity": "LOG",
-    "references": [
-      "url: https://forum.greenbone.net/c/vulnerability-tests/7"
-    ],
+    "references": ["url: https://forum.greenbone.net/c/vulnerability-tests/7"],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
     "Name": "Services",
-    "description": [
-      "This plugin performs service detection."
-    ],
-    "detection_result": [
-      "A web server is running on this port"
-    ],
+    "description": ["This plugin performs service detection."],
+    "detection_result": ["A web server is running on this port"],
     "detection_method": [],
     "product_detection_result": [],
     "impact": [],
     "solution": [],
     "insight": [],
     "log_method": [],
-    "cvss": [
-      "0.0"
-    ],
+    "cvss": ["0.0"],
     "port": 8080,
     "protocol": "tcp",
     "severity": "LOG",
     "references": [],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
     "Name": "Services",
-    "description": [
-      "This plugin performs service detection."
-    ],
-    "detection_result": [
-      "A web server is running on this port"
-    ],
+    "description": ["This plugin performs service detection."],
+    "detection_result": ["A web server is running on this port"],
     "detection_method": [],
     "product_detection_result": [],
     "impact": [],
@@ -4486,23 +4183,19 @@
       "OID:1.3.6.1.4.1.25623.1.0.10330",
       "Version used: 2025-03-05T05:38:53Z"
     ],
-    "cvss": [
-      "0.0"
-    ],
+    "cvss": ["0.0"],
     "port": 8080,
     "protocol": "tcp",
     "severity": "LOG",
     "references": [],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
     "Name": "Allowed HTTP Methods Enumeration",
-    "description": [
-      "Enumerates which HTTP methods are allowed."
-    ],
+    "description": ["Enumerates which HTTP methods are allowed."],
     "detection_result": [
       "The following list contains the URLs and corresponding supported HTTP methods.",
       "URL | HTTP Methods",
@@ -4527,16 +4220,14 @@
       "OID:1.3.6.1.4.1.25623.1.0.153974",
       "Version used: 2025-02-28T05:38:49Z"
     ],
-    "cvss": [
-      "0.0"
-    ],
+    "cvss": ["0.0"],
     "port": 8080,
     "protocol": "tcp",
     "severity": "LOG",
     "references": [],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -4563,23 +4254,19 @@
       "OID:1.3.6.1.4.1.25623.1.0.51662",
       "Version used: 2022-10-17T11:13:19Z"
     ],
-    "cvss": [
-      "0.0"
-    ],
+    "cvss": ["0.0"],
     "port": "general",
     "protocol": "tcp",
     "severity": "LOG",
     "references": [],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
     "Name": "IP Forwarding Enabled - Active Check",
-    "description": [
-      "Checks if the remote host has IP forwarding enabled."
-    ],
+    "description": ["Checks if the remote host has IP forwarding enabled."],
     "detection_result": [
       "It was possible to route a TCP packet through the target host and received an answer which means IP forwarding is enabled."
     ],
@@ -4594,18 +4281,14 @@
       "OID:1.3.6.1.4.1.25623.1.0.147205",
       "Version used: 2021-12-03T08:27:06Z"
     ],
-    "cvss": [
-      "0.0"
-    ],
+    "cvss": ["0.0"],
     "port": "general",
     "protocol": "tcp",
     "severity": "LOG",
-    "references": [
-      "cve: CVE-1999-0511"
-    ],
+    "references": ["cve: CVE-1999-0511"],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -4632,25 +4315,19 @@
       "OID:1.3.6.1.4.1.25623.1.0.105937",
       "Version used: 2026-01-21T05:50:46Z"
     ],
-    "cvss": [
-      "0.0"
-    ],
+    "cvss": ["0.0"],
     "port": "general",
     "protocol": "tcp",
     "severity": "LOG",
-    "references": [
-      "url: https://forum.greenbone.net/c/vulnerability-tests/7"
-    ],
+    "references": ["url: https://forum.greenbone.net/c/vulnerability-tests/7"],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
     "Name": "PHP Detection Consolidation",
-    "description": [
-      "Consolidation of PHP detections."
-    ],
+    "description": ["Consolidation of PHP detections."],
     "detection_result": [
       "Detected PHP",
       "Version: 7.0.17",
@@ -4671,18 +4348,14 @@
       "OID:1.3.6.1.4.1.25623.1.0.171722",
       "Version used: 2025-09-24T05:39:03Z"
     ],
-    "cvss": [
-      "0.0"
-    ],
+    "cvss": ["0.0"],
     "port": "general",
     "protocol": "tcp",
     "severity": "LOG",
-    "references": [
-      "url: https://www.php.net/"
-    ],
+    "references": ["url: https://www.php.net/"],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -4705,16 +4378,14 @@
       "OID:1.3.6.1.4.1.25623.1.0.108449",
       "Version used: 2022-07-27T10:11:28Z"
     ],
-    "cvss": [
-      "0.0"
-    ],
+    "cvss": ["0.0"],
     "port": "general",
     "protocol": "tcp",
     "severity": "LOG",
     "references": [],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   }
 ]

@@ -33,9 +33,7 @@
     ],
     "insight": [],
     "log_method": [],
-    "cvss": [
-      "10.0"
-    ],
+    "cvss": ["10.0"],
     "port": 80,
     "protocol": "tcp",
     "severity": "Critical",
@@ -46,8 +44,8 @@
       "url: https://en.wikipedia.org/wiki/Apache_HTTP_Server#Versions"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -84,9 +82,7 @@
     ],
     "insight": [],
     "log_method": [],
-    "cvss": [
-      "10.0"
-    ],
+    "cvss": ["10.0"],
     "port": 80,
     "protocol": "tcp",
     "severity": "CRITICAL",
@@ -94,8 +90,8 @@
       "url: https://openssl-library.org/policies/releasestrat/index.html"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -136,9 +132,7 @@
       "- CVE-2022-31813: mod_proxy X-Forwarded-For dropped by hop-by-hop mechanism"
     ],
     "log_method": [],
-    "cvss": [
-      "9.8"
-    ],
+    "cvss": ["9.8"],
     "port": 80,
     "protocol": "tcp",
     "severity": "CRITICAL",
@@ -174,8 +168,8 @@
       "dfn-cert: DFN-CERT-2022-1296"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -214,16 +208,14 @@
       "- CVE-2022-23943: mod_sed: Read/write beyond bounds"
     ],
     "log_method": [],
-    "cvss": [
-      "9.8"
-    ],
+    "cvss": ["9.8"],
     "port": 80,
     "protocol": "tcp",
     "severity": "CRITICAL",
     "references": [],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -246,9 +238,7 @@
       "Method: Apache HTTP Server Detection Consolidation",
       "OID: 1.3.6.1.4.1.25623.1.0.117232)"
     ],
-    "impact": [
-      "Apache HTTP Server versions through 2.4.51."
-    ],
+    "impact": ["Apache HTTP Server versions through 2.4.51."],
     "solution": [
       "Solution type: VendorFix",
       "Update to version 2.4.52 or later."
@@ -258,9 +248,7 @@
       "(r:parsebody() called from Lua scripts)."
     ],
     "log_method": [],
-    "cvss": [
-      "9.8"
-    ],
+    "cvss": ["9.8"],
     "port": 80,
     "protocol": "tcp",
     "severity": "Critical",
@@ -289,15 +277,13 @@
       "dfn-cert: DFN-CERT-2021-2656"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
     "Name": "Apache HTTP Server < 2.4.60 Multiple Vulnerabilities - Linux",
-    "description": [
-      "Apache HTTP Server is prone to multiple vulnerabilities."
-    ],
+    "description": ["Apache HTTP Server is prone to multiple vulnerabilities."],
     "detection_result": [
       "Installed version: 2.2.34",
       "Fixed version: 2.4.60",
@@ -310,9 +296,7 @@
       "Detected by Apache HTTP Server Detection Consolidation (OID: 1.3.6.1.4.1.25623.1",
       "->.0.117232)"
     ],
-    "impact": [
-      "Apache HTTP Server version 2.4.59 and prior."
-    ],
+    "impact": ["Apache HTTP Server version 2.4.59 and prior."],
     "solution": [
       "Solution type: VendorFix",
       "Update to version 2.4.60 or later."
@@ -327,23 +311,19 @@
       "- CVE-2024-38476:"
     ],
     "log_method": [],
-    "cvss": [
-      "9.8"
-    ],
+    "cvss": ["9.8"],
     "port": 80,
     "protocol": "tcp",
     "severity": "CRITICAL",
     "references": [],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
     "Name": "OpenSSL 1.0.2 and 1.0.1 Multiple Vulnerabilities (Sep 2016) - Linux",
-    "description": [
-      "OpenSSL is prone to multiple vulnerabilities."
-    ],
+    "description": ["OpenSSL is prone to multiple vulnerabilities."],
     "detection_result": [
       "Installed version: 1.0.1t",
       "Fixed version: 1.0.1u",
@@ -360,9 +340,7 @@
       "Method: OpenSSL Detection Consolidation",
       "OID: 1.3.6.1.4.1.25623.1.0.145462)"
     ],
-    "impact": [
-      "Successful exploitation could result in Denial of Service."
-    ],
+    "impact": ["Successful exploitation could result in Denial of Service."],
     "solution": [
       "Solution type: VendorFix",
       "OpenSSL 1.0.2 users should upgrade to 1.0.2i, OpenSSL 1.0.1 users should upgrade to 1.0.1u."
@@ -378,9 +356,7 @@
       "7) A aw in the DTLS replay attack protection mechanism enabling the attacker to send records for next epochs with a very large sequence number, this causes in dropping all the subsequent legitimate packets and causing a denial of service for a specic DTLS connection."
     ],
     "log_method": [],
-    "cvss": [
-      "9.8"
-    ],
+    "cvss": ["9.8"],
     "port": 80,
     "protocol": "tcp",
     "severity": "Critical",
@@ -417,15 +393,13 @@
       "cert-bund: CB-K17/0506"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
     "Name": "Apache HTTP Server < 2.4.49 Multiple Vulnerabilities - Linux",
-    "description": [
-      "Apache HTTP Server is prone to multiple vulnerabilities."
-    ],
+    "description": ["Apache HTTP Server is prone to multiple vulnerabilities."],
     "detection_result": [
       "Installed version: 2.2.34",
       "Fixed version: 2.4.49",
@@ -451,9 +425,7 @@
     ],
     "insight": [],
     "log_method": [],
-    "cvss": [
-      "9.8"
-    ],
+    "cvss": ["9.8"],
     "port": 80,
     "protocol": "tcp",
     "severity": "Critical",
@@ -501,8 +473,8 @@
       "dfn-cert: DFN-CERT-2021-1961"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -538,13 +510,9 @@
       "Solution type: VendorFix",
       "Update to version 2.4.55 or later."
     ],
-    "insight": [
-      "Apache HTTP Server version 2.4.54 and prior."
-    ],
+    "insight": ["Apache HTTP Server version 2.4.54 and prior."],
     "log_method": [],
-    "cvss": [
-      "9.0"
-    ],
+    "cvss": ["9.0"],
     "port": 80,
     "protocol": "tcp",
     "severity": "Critical",
@@ -570,8 +538,8 @@
       "dfn-cert: DFN-CERT-2023-0118"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -611,9 +579,7 @@
       "The aw is due to 'CGI Servlet' does not protect applications from the presence of untrusted client data in the 'HTTP_PROXY' environment variable."
     ],
     "log_method": [],
-    "cvss": [
-      "8.1"
-    ],
+    "cvss": ["8.1"],
     "port": 80,
     "protocol": "tcp",
     "severity": "HIGH",
@@ -649,8 +615,8 @@
       "dfn-cert: DFN-CERT-2016-1153"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -676,9 +642,7 @@
       "Method: OpenSSL Detection Consolidation",
       "OID: 1.3.6.1.4.1.25623.1.0.145462)"
     ],
-    "impact": [
-      "Successful exploitation could result in service crash."
-    ],
+    "impact": ["Successful exploitation could result in service crash."],
     "solution": [
       "Solution type: VendorFix",
       "OpenSSL 1.1.0 users should upgrade to 1.1.0a. OpenSSL 1.0.2 users should upgrade to 1.0.2i.",
@@ -688,9 +652,7 @@
       "OpenSSL suers from the possibility of DoS attack through sending a large OCSP Status Request extensions which lead to unbounded memory growth on the server which in turn lead to denial of service."
     ],
     "log_method": [],
-    "cvss": [
-      "7.5"
-    ],
+    "cvss": ["7.5"],
     "port": 80,
     "protocol": "tcp",
     "severity": "HIGH",
@@ -733,8 +695,8 @@
       "dfn-cert: DFN-CERT-2017-1124"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -770,9 +732,7 @@
       "Calls to EVP_CipherUpdate, EVP_EncryptUpdate and EVP_DecryptUpdate may overow the output length argument in some cases where the input length is close to the maximum permissible length for an integer on the platform. In such cases the return value from the function call will be 1 (indicating success), but the output length value will be negative."
     ],
     "log_method": [],
-    "cvss": [
-      "7.5"
-    ],
+    "cvss": ["7.5"],
     "port": 80,
     "protocol": "tcp",
     "severity": "HIGH",
@@ -816,8 +776,8 @@
       "dfn-cert: DFN-CERT-2021-0363"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -848,23 +808,19 @@
     ],
     "insight": [],
     "log_method": [],
-    "cvss": [
-      "7.5"
-    ],
+    "cvss": ["7.5"],
     "port": 80,
     "protocol": "tcp",
     "severity": "HIGH",
     "references": [],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
     "Name": "OpenSSL Multiple Vulnerabilities (Feb 2017)",
-    "description": [
-      "OpenSSL is prone to multiple vulnerabilities."
-    ],
+    "description": ["OpenSSL is prone to multiple vulnerabilities."],
     "detection_result": [
       "Installed version: 1.0.1t",
       "Fixed version: 1.0.2k",
@@ -895,9 +851,7 @@
       "- A carry propagating bug in the x86_64 Montgomery squaring procedure."
     ],
     "log_method": [],
-    "cvss": [
-      "7.5"
-    ],
+    "cvss": ["7.5"],
     "port": 80,
     "protocol": "tcp",
     "severity": "HIGH",
@@ -969,8 +923,8 @@
       "dfn-cert: DFN-CERT-2017-0675"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -1009,9 +963,7 @@
       "to higher CPU usage due to improper handling of warning packets."
     ],
     "log_method": [],
-    "cvss": [
-      "7.5"
-    ],
+    "cvss": ["7.5"],
     "port": 80,
     "protocol": "tcp",
     "severity": "HIGH",
@@ -1075,8 +1027,8 @@
       "dfn-cert: DFN-CERT-2016-1797"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -1115,9 +1067,7 @@
       "<Limit abcxyz> </Limit>"
     ],
     "log_method": [],
-    "cvss": [
-      "7.5"
-    ],
+    "cvss": ["7.5"],
     "port": 80,
     "protocol": "tcp",
     "severity": "HIGH",
@@ -1130,15 +1080,13 @@
       "url: https://www.apache.org/dist/httpd/CHANGES_2.4.28"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
     "Name": "Apache HTTP Server < 2.4.59 Multiple Vulnerabilities - Linux",
-    "description": [
-      "Apache HTTP Server is prone to multiple vulnerabilities."
-    ],
+    "description": ["Apache HTTP Server is prone to multiple vulnerabilities."],
     "detection_result": [
       "Installed version: 2.2.34",
       "Fixed version: 2.4.59",
@@ -1167,9 +1115,7 @@
       "- CVE-2024-27316: HTTP/2 DoS by memory exhaustion on endless continuation frames"
     ],
     "log_method": [],
-    "cvss": [
-      "7.5"
-    ],
+    "cvss": ["7.5"],
     "port": 80,
     "protocol": "tcp",
     "severity": "HIGH",
@@ -1183,8 +1129,8 @@
       "url: https://nowotarski.info/http2-continuation-flood-technical-details/"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -1193,10 +1139,7 @@
       "Apache HTTP Server is prone to a Denial of Service vulnerability.",
       "Quality of Detection (QoD): 30%"
     ],
-    "detection_result": [
-      "Installed version: 2.2.34",
-      "Fixed version: 2.3.3"
-    ],
+    "detection_result": ["Installed version: 2.2.34", "Fixed version: 2.3.3"],
     "detection_method": [
       "Details: Apache HTTP Server 'mod_proxy_http.c' Denial Of Service Vulnerability",
       "OID:1.3.6.1.4.1.25623.1.0.800827",
@@ -1218,9 +1161,7 @@
       "The aw is due to error in 'stream_reqbody_cl' function in 'mod_proxy_http.c' in the mod_proxy module. When a reverse proxy is congured, it does not properly handle an amount of streamed data that exceeds the Content-Length value via crafted requests."
     ],
     "log_method": [],
-    "cvss": [
-      "7.1"
-    ],
+    "cvss": ["7.1"],
     "port": 80,
     "protocol": "tcp",
     "severity": "HIGH",
@@ -1237,8 +1178,8 @@
       "dfn-cert: DFN-CERT-2009-1225"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -1277,9 +1218,7 @@
       "However it fails to correctly handle any errors that may occur while parsing the issuer eld (which might occur if the issuer eld is maliciously constructed)."
     ],
     "log_method": [],
-    "cvss": [
-      "5.9"
-    ],
+    "cvss": ["5.9"],
     "port": 80,
     "protocol": "tcp",
     "severity": "MEDIUM",
@@ -1326,8 +1265,8 @@
       "dfn-cert: DFN-CERT-2021-0363"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -1364,9 +1303,7 @@
       "The aw exists due to an insucient setting in the 'BN_FLG_CONSTTIME' ag for nonces, which could trigger a failure to take a secure code path in the BN_mod_inverse method that results in a cache-timing condition."
     ],
     "log_method": [],
-    "cvss": [
-      "5.5"
-    ],
+    "cvss": ["5.5"],
     "port": 80,
     "protocol": "tcp",
     "severity": "MEDIUM",
@@ -1378,8 +1315,8 @@
       "url: https://git.openssl.org/?p=openssl.git;a=commit;h=8aed2a7548362e88e84a7feb7"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -1416,9 +1353,7 @@
       "The aw exists as OpenSSL could do a one-byte buer overread if an X.509 certicate has a malformed IPAddressFamily extension."
     ],
     "log_method": [],
-    "cvss": [
-      "5.3"
-    ],
+    "cvss": ["5.3"],
     "port": 80,
     "protocol": "tcp",
     "severity": "MEDIUM",
@@ -1466,8 +1401,8 @@
       "dfn-cert: DFN-CERT-2017-0272"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -1491,23 +1426,19 @@
     "solution": [],
     "insight": [],
     "log_method": [],
-    "cvss": [
-      "5.0"
-    ],
+    "cvss": ["5.0"],
     "port": 80,
     "protocol": "tcp",
     "severity": "MEDIUM",
     "references": [],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
     "Name": "Apache HTTP Server < 2.4.64 Multiple Vulnerabilities - Linux",
-    "description": [
-      "Apache HTTP Server is prone to multiple vulnerabilities."
-    ],
+    "description": ["Apache HTTP Server is prone to multiple vulnerabilities."],
     "detection_result": [
       "Installed version: 2.2.34",
       "Fixed version: 2.4.64",
@@ -1536,9 +1467,7 @@
     ],
     "insight": [],
     "log_method": [],
-    "cvss": [
-      "5.0"
-    ],
+    "cvss": ["5.0"],
     "port": 80,
     "protocol": "tcp",
     "severity": "MEDIUM",
@@ -1562,8 +1491,8 @@
       "dfn-cert: DFN-CERT-2025-1860"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -1595,9 +1524,7 @@
     ],
     "insight": [],
     "log_method": [],
-    "cvss": [
-      "4.3"
-    ],
+    "cvss": ["4.3"],
     "port": 80,
     "protocol": "tcp",
     "severity": "MEDIUM",
@@ -1615,8 +1542,8 @@
       "dfn-cert: DFN-CERT-2025-3405"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -1634,16 +1561,14 @@
     "solution": [],
     "insight": [],
     "log_method": [],
-    "cvss": [
-      "2.6"
-    ],
+    "cvss": ["2.6"],
     "port": 80,
     "protocol": "tcp",
     "severity": "LOW",
     "references": [],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -1680,9 +1605,7 @@
       "The remote host implements TCP timestamps, as defined by RFC1323/RFC7323."
     ],
     "log_method": [],
-    "cvss": [
-      "2.6"
-    ],
+    "cvss": ["2.6"],
     "port": "general",
     "protocol": "tcp",
     "severity": "LOW",
@@ -1693,15 +1616,13 @@
       "url: https://www.fortiguard.com/psirt/FG-IR-16-090"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
     "Name": "ICMP Timestamp Reply Information Disclosure",
-    "description": [
-      "The remote host responded to an ICMP timestamp request."
-    ],
+    "description": ["The remote host responded to an ICMP timestamp request."],
     "detection_result": [
       "The following response / ICMP packet has been received:",
       "- ICMP Type: 14",
@@ -1724,9 +1645,7 @@
       "The Timestamp Reply is an ICMP message which replies to a Timestamp message. It consists of the originating timestamp sent by the sender of the Timestamp as well as a receive timestamp and a transmit timestamp."
     ],
     "log_method": [],
-    "cvss": [
-      "2.1"
-    ],
+    "cvss": ["2.1"],
     "port": "general",
     "protocol": "icmp",
     "severity": "LOW",
@@ -1739,8 +1658,8 @@
       "dfn-cert: DFN-CERT-2014-0658"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -1771,18 +1690,14 @@
       "OID:1.3.6.1.4.1.25623.1.0.105937",
       "Version used: 2026-01-21T05:50:46Z"
     ],
-    "cvss": [
-      "0.0"
-    ],
+    "cvss": ["0.0"],
     "port": "general",
     "protocol": "tcp",
     "severity": "LOG",
-    "references": [
-      "url: https://forum.greenbone.net/c/vulnerability-tests/7"
-    ],
+    "references": ["url: https://forum.greenbone.net/c/vulnerability-tests/7"],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -1807,18 +1722,14 @@
       "OID:1.3.6.1.4.1.25623.1.0.117232",
       "Version used: 2024-03-08T15:37:10Z"
     ],
-    "cvss": [
-      "0.0"
-    ],
+    "cvss": ["0.0"],
     "port": "general",
     "protocol": "tcp",
     "severity": "LOG",
-    "references": [
-      "url: https://httpd.apache.org"
-    ],
+    "references": ["url: https://httpd.apache.org"],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -1846,18 +1757,14 @@
       "OID:1.3.6.1.4.1.25623.1.0.145462",
       "Version used: 2025-07-09T05:43:50Z"
     ],
-    "cvss": [
-      "0.0"
-    ],
+    "cvss": ["0.0"],
     "port": "general",
     "protocol": "tcp",
     "severity": "LOG",
-    "references": [
-      "url: https://openssl-library.org/"
-    ],
+    "references": ["url: https://openssl-library.org/"],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -1881,16 +1788,14 @@
       "OID:1.3.6.1.4.1.25623.1.0.108449",
       "Version used: 2022-07-27T10:11:28Z"
     ],
-    "cvss": [
-      "0.0"
-    ],
+    "cvss": ["0.0"],
     "port": "general",
     "protocol": "tcp",
     "severity": "LOG",
     "references": [],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -1918,16 +1823,14 @@
       "OID:1.3.6.1.4.1.25623.1.0.51662",
       "Version used: 2022-10-17T11:13:19Z"
     ],
-    "cvss": [
-      "0.0"
-    ],
+    "cvss": ["0.0"],
     "port": "general",
     "protocol": "tcp",
     "severity": "LOG",
     "references": [],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -1951,18 +1854,14 @@
       "OID:1.3.6.1.4.1.25623.1.0.147205",
       "Version used: 2021-12-03T08:27:06Z"
     ],
-    "cvss": [
-      "0.0"
-    ],
+    "cvss": ["0.0"],
     "port": "general",
     "protocol": "tcp",
     "severity": "LOG",
-    "references": [
-      "cve: CVE-1999-0511"
-    ],
+    "references": ["cve: CVE-1999-0511"],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -1987,18 +1886,14 @@
       "OID:1.3.6.1.4.1.25623.1.0.810002",
       "Version used: 2022-07-27T10:11:28Z"
     ],
-    "cvss": [
-      "0.0"
-    ],
+    "cvss": ["0.0"],
     "port": "general",
     "protocol": "CPE-T",
     "severity": "LOG",
-    "references": [
-      "url: https://nvd.nist.gov/products/cpe"
-    ],
+    "references": ["url: https://nvd.nist.gov/products/cpe"],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -2007,9 +1902,7 @@
       "This plugin performs service detection.",
       "Quality of Detection (QoD): 80%"
     ],
-    "detection_result": [
-      "A web server is running on this port"
-    ],
+    "detection_result": ["A web server is running on this port"],
     "detection_method": [],
     "product_detection_result": [],
     "impact": [],
@@ -2022,16 +1915,14 @@
       "OID:1.3.6.1.4.1.25623.1.0.10330",
       "Version used: 2025-03-05T05:38:53Z"
     ],
-    "cvss": [
-      "0.0"
-    ],
+    "cvss": ["0.0"],
     "port": 80,
     "protocol": "tcp",
     "severity": "LOG",
     "references": [],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -2056,18 +1947,14 @@
       "The mod_ssl module for Apache may disclose configuration details during the SSL/TLS negotiation process. This information leakage can provide attackers with insights into the server's security configuration."
     ],
     "log_method": [],
-    "cvss": [
-      "5.0"
-    ],
+    "cvss": ["5.0"],
     "port": 80,
     "protocol": "tcp",
     "severity": "MEDIUM",
-    "references": [
-      "url: https://httpd.apache.org/docs/2.4/mod/mod_ssl.html"
-    ],
+    "references": ["url: https://httpd.apache.org/docs/2.4/mod/mod_ssl.html"],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   }
 ]

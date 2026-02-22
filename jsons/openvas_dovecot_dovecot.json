@@ -40,16 +40,14 @@
     ],
     "insight": [],
     "log_method": [],
-    "cvss": [
-      "5.0"
-    ],
+    "cvss": ["5.0"],
     "port": 8080,
     "protocol": "tcp",
     "severity": "Medium",
     "references": [],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -93,23 +91,19 @@
     ],
     "insight": [],
     "log_method": [],
-    "cvss": [
-      "5.0"
-    ],
+    "cvss": ["5.0"],
     "port": 9090,
     "protocol": "tcp",
     "severity": "MEDIUM",
     "references": [],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
     "Name": "ICMP Timestamp Reply Information Disclosure",
-    "description": [
-      "The remote host responded to an ICMP timestamp request."
-    ],
+    "description": ["The remote host responded to an ICMP timestamp request."],
     "detection_result": [
       "The following response / ICMP packet has been received:",
       "- ICMP Type: 14",
@@ -130,23 +124,19 @@
       "The Timestamp Reply is an ICMP message which replies to a Timestamp message. It consists of the originating timestamp sent by the sender of the Timestamp as well as a receive timestamp and a transmit timestamp."
     ],
     "log_method": [],
-    "cvss": [
-      "2.1"
-    ],
+    "cvss": ["2.1"],
     "port": 9090,
     "protocol": "tcp",
     "severity": "LOW",
     "references": [],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
     "Name": "ICMP Timestamp Reply Information Disclosure",
-    "description": [
-      "The remote host responded to an ICMP timestamp request."
-    ],
+    "description": ["The remote host responded to an ICMP timestamp request."],
     "detection_result": [
       "The following response / ICMP packet has been received:",
       "- ICMP Type: 14",
@@ -169,9 +159,7 @@
       "The Timestamp Reply is an ICMP message which replies to a Timestamp message. It consists of the originating timestamp sent by the sender of the Timestamp as well as a receive timestamp and a transmit timestamp."
     ],
     "log_method": [],
-    "cvss": [
-      "2.1"
-    ],
+    "cvss": ["2.1"],
     "port": "general",
     "protocol": "icmp",
     "severity": "LOW",
@@ -184,8 +172,8 @@
       "dfn-cert: DFN-CERT-2014-0658"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -222,9 +210,7 @@
       "The remote host implements TCP timestamps, as dened by RFC1323/RFC7323."
     ],
     "log_method": [],
-    "cvss": [
-      "2.6"
-    ],
+    "cvss": ["2.6"],
     "port": "general",
     "protocol": "tcp",
     "severity": "LOW",
@@ -235,8 +221,8 @@
       "url: https://www.fortiguard.com/psirt/FG-IR-16-090"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -257,16 +243,14 @@
     "solution": [],
     "insight": [],
     "log_method": [],
-    "cvss": [
-      "0.0"
-    ],
+    "cvss": ["0.0"],
     "port": "general",
     "protocol": "tcp",
     "severity": "LOG",
     "references": [],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -289,18 +273,14 @@
       "OID:1.3.6.1.4.1.25623.1.0.810002",
       "Version used: 2022-07-27T10:11:28Z"
     ],
-    "cvss": [
-      "0.0"
-    ],
+    "cvss": ["0.0"],
     "port": "general",
     "protocol": "CPE-T",
     "severity": "LOG",
-    "references": [
-      "url: https://nvd.nist.gov/products/cpe"
-    ],
+    "references": ["url: https://nvd.nist.gov/products/cpe"],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -308,9 +288,7 @@
     "description": [
       "This plugin performs service detection. Quality of Detection (QoD): 80%"
     ],
-    "detection_result": [
-      "A web server is running on this port through SSL"
-    ],
+    "detection_result": ["A web server is running on this port through SSL"],
     "detection_method": [],
     "product_detection_result": [],
     "impact": [],
@@ -323,16 +301,14 @@
       "OID:1.3.6.1.4.1.25623.1.0.10330",
       "Version used: 2025-03-05T05:38:53Z"
     ],
-    "cvss": [
-      "0.0"
-    ],
+    "cvss": ["0.0"],
     "port": 8080,
     "protocol": "tcp",
     "severity": "LOG",
     "references": [],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -366,26 +342,20 @@
       "OID:1.3.6.1.4.1.25623.1.0.103692",
       "Version used: 2024-09-27T05:05:23Z"
     ],
-    "cvss": [
-      "0.0"
-    ],
+    "cvss": ["0.0"],
     "port": 8080,
     "protocol": "tcp",
     "severity": "LOG",
     "references": [],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
     "Name": "Services",
-    "description": [
-      "This plugin performs service detection."
-    ],
-    "detection_result": [
-      "A web server is running on this port through SSL"
-    ],
+    "description": ["This plugin performs service detection."],
+    "detection_result": ["A web server is running on this port through SSL"],
     "detection_method": [],
     "product_detection_result": [],
     "impact": [],
@@ -398,23 +368,19 @@
       "OID:1.3.6.1.4.1.25623.1.0.10330",
       "Version used: 2025-03-05T05:38:53Z"
     ],
-    "cvss": [
-      "0.0"
-    ],
+    "cvss": ["0.0"],
     "port": 8080,
     "protocol": "tcp",
     "severity": "LOG",
     "references": [],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
     "Name": "SSL/TLS: Certicate - Self-Signed Certicate Detection",
-    "description": [
-      "The SSL/TLS certicate on this port is self-signed."
-    ],
+    "description": ["The SSL/TLS certicate on this port is self-signed."],
     "detection_result": [
       "The certificate of the remote service is self signed.",
       "Certificate details:",
@@ -444,9 +410,7 @@
       "OID:1.3.6.1.4.1.25623.1.0.103140",
       "Version used: 2025-07-15T05:43:27Z"
     ],
-    "cvss": [
-      "0.0"
-    ],
+    "cvss": ["0.0"],
     "port": 8080,
     "protocol": "tcp",
     "severity": "LOG",
@@ -455,8 +419,8 @@
       "url: https://datatracker.ietf.org/doc/html/rfc5280#appendix-C.1"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -492,16 +456,14 @@
       "OID:1.3.6.1.4.1.25623.1.0.103141",
       "Version used: 2024-06-14T05:05:48Z"
     ],
-    "cvss": [
-      "0.0"
-    ],
+    "cvss": ["0.0"],
     "port": 8080,
     "protocol": "tcp",
     "severity": "LOG",
     "references": [],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -509,9 +471,7 @@
     "description": [
       "The remote web server is not enforcing HTTP Public Key Pinning (HPKP)."
     ],
-    "detection_result": [
-      "The remote web server is not enforcing HPKP."
-    ],
+    "detection_result": ["The remote web server is not enforcing HPKP."],
     "detection_method": [],
     "product_detection_result": [],
     "impact": [],
@@ -529,9 +489,7 @@
       "OID:1.3.6.1.4.1.25623.1.0.108247",
       "Version used: 2025-03-21T15:40:43Z"
     ],
-    "cvss": [
-      "0.0"
-    ],
+    "cvss": ["0.0"],
     "port": 8080,
     "protocol": "tcp",
     "severity": "LOG",
@@ -544,8 +502,8 @@
       "url: https://nginx.org/en/docs/http/ngx_http_headers_module.html#add_header"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -578,9 +536,7 @@
       "OID:1.3.6.1.4.1.25623.1.0.105879",
       "Version used: 2025-03-21T15:40:43Z"
     ],
-    "cvss": [
-      "0.0"
-    ],
+    "cvss": ["0.0"],
     "port": 8080,
     "protocol": "tcp",
     "severity": "LOG",
@@ -594,8 +550,8 @@
       "url: https://nginx.org/en/docs/http/ngx_http_headers_module.html#add_header"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -617,16 +573,14 @@
       "OID:1.3.6.1.4.1.25623.1.0.117764",
       "Version used: 2024-09-27T05:05:23Z"
     ],
-    "cvss": [
-      "0.0"
-    ],
+    "cvss": ["0.0"],
     "port": 8080,
     "protocol": "tcp",
     "severity": "LOG",
     "references": [],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -666,16 +620,14 @@
       "OID:1.3.6.1.4.1.25623.1.0.105018",
       "Version used: 2024-09-30T08:38:05Z"
     ],
-    "cvss": [
-      "0.0"
-    ],
+    "cvss": ["0.0"],
     "port": 8080,
     "protocol": "tcp",
     "severity": "LOG",
     "references": [],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -714,16 +666,14 @@
       "OID:1.3.6.1.4.1.25623.1.0.902816",
       "Version used: 2024-09-27T05:05:23Z"
     ],
-    "cvss": [
-      "0.0"
-    ],
+    "cvss": ["0.0"],
     "port": 8080,
     "protocol": "tcp",
     "severity": "LOG",
     "references": [],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -763,16 +713,14 @@
       "OID:1.3.6.1.4.1.25623.1.0.103441",
       "Version used: 2024-09-27T05:05:23Z"
     ],
-    "cvss": [
-      "0.0"
-    ],
+    "cvss": ["0.0"],
     "port": 8080,
     "protocol": "tcp",
     "severity": "LOG",
     "references": [],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -821,16 +769,14 @@
       "OID:1.3.6.1.4.1.25623.1.0.802067",
       "Version used: 2024-09-27T05:05:23Z"
     ],
-    "cvss": [
-      "0.0"
-    ],
+    "cvss": ["0.0"],
     "port": 8080,
     "protocol": "tcp",
     "severity": "LOG",
     "references": [],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -868,9 +814,7 @@
       "OID:1.3.6.1.4.1.25623.1.0.117757",
       "Version used: 2024-09-27T05:05:23Z"
     ],
-    "cvss": [
-      "0.0"
-    ],
+    "cvss": ["0.0"],
     "port": 8080,
     "protocol": "tcp",
     "severity": "LOG",
@@ -880,8 +824,8 @@
       "url: https://datatracker.ietf.org/doc/html/rfc5746"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -955,9 +899,7 @@
       "OID:1.3.6.1.4.1.25623.1.0.112081",
       "Version used: 2025-03-21T15:40:43Z"
     ],
-    "cvss": [
-      "0.0"
-    ],
+    "cvss": ["0.0"],
     "port": 8080,
     "protocol": "tcp",
     "severity": "LOG",
@@ -967,8 +909,8 @@
       "url: https://securityheaders.com/"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -987,25 +929,21 @@
       "of the scan cong in use",
       "If you think any of this information is wrong please report it to the referenced community forum."
     ],
-    "detection_result": [
-      "The Hostname/IP \"dovecot.trabalho_vuln"
-    ],
+    "detection_result": ["The Hostname/IP \"dovecot.trabalho_vuln"],
     "detection_method": [],
     "product_detection_result": [],
     "impact": [],
     "solution": [],
     "insight": [],
     "log_method": [],
-    "cvss": [
-      "0.0"
-    ],
+    "cvss": ["0.0"],
     "port": 8080,
     "protocol": "tcp",
     "severity": "LOG",
     "references": [],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -1027,26 +965,20 @@
       "Sends multiple connection requests to the remote service and attempts to determine the SSL/TLS protocol versions supported by the service from the replies.",
       "Note: The supported SSL/TLS protocol versions included in the report of this VT are reported independently from the allowed / supported SSL/TLS ciphers."
     ],
-    "cvss": [
-      "0.0"
-    ],
+    "cvss": ["0.0"],
     "port": 8080,
     "protocol": "tcp",
     "severity": "LOG",
     "references": [],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
     "Name": "Services",
-    "description": [
-      "This plugin performs service detection."
-    ],
-    "detection_result": [
-      "A TLScustom server answered on this port"
-    ],
+    "description": ["This plugin performs service detection."],
+    "detection_result": ["A TLScustom server answered on this port"],
     "detection_method": [],
     "product_detection_result": [],
     "impact": [],
@@ -1055,16 +987,14 @@
       "This plugin attempts to guess which service is running on the remote port(s). For instance, it searches for a web server which could listen on another port than 80 or 443 and makes this information available for other check routines."
     ],
     "log_method": [],
-    "cvss": [
-      "0.0"
-    ],
+    "cvss": ["0.0"],
     "port": 8080,
     "protocol": "tcp",
     "severity": "LOG",
     "references": [],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -1073,9 +1003,7 @@
       "This plugin performs service detection.",
       "Quality of Detection (QoD): 80%"
     ],
-    "detection_result": [
-      "A TLScustom server answered on this port"
-    ],
+    "detection_result": ["A TLScustom server answered on this port"],
     "detection_method": [],
     "product_detection_result": [],
     "impact": [],
@@ -1088,16 +1016,14 @@
       "OID:1.3.6.1.4.1.25623.1.0.10330",
       "Version used: 2025-03-05T05:38:53Z"
     ],
-    "cvss": [
-      "0.0"
-    ],
+    "cvss": ["0.0"],
     "port": "general",
     "protocol": "tcp",
     "severity": "LOG",
     "references": [],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -1126,18 +1052,14 @@
       "OID:1.3.6.1.4.1.25623.1.0.105937",
       "Version used: 2026-01-21T05:50:46Z"
     ],
-    "cvss": [
-      "0.0"
-    ],
+    "cvss": ["0.0"],
     "port": "general",
     "protocol": "tcp",
     "severity": "LOG",
-    "references": [
-      "url: https://forum.greenbone.net/c/vulnerability-tests/7"
-    ],
+    "references": ["url: https://forum.greenbone.net/c/vulnerability-tests/7"],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -1160,18 +1082,14 @@
       "OID:1.3.6.1.4.1.25623.1.0.147205",
       "Version used: 2021-12-03T08:27:06Z"
     ],
-    "cvss": [
-      "0.0"
-    ],
+    "cvss": ["0.0"],
     "port": "general",
     "protocol": "tcp",
     "severity": "LOG",
-    "references": [
-      "cve: CVE-1999-0511"
-    ],
+    "references": ["cve: CVE-1999-0511"],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -1199,16 +1117,14 @@
       "OID:1.3.6.1.4.1.25623.1.0.51662",
       "Version used: 2022-10-17T11:13:19Z"
     ],
-    "cvss": [
-      "0.0"
-    ],
+    "cvss": ["0.0"],
     "port": "general",
     "protocol": "tcp",
     "severity": "LOG",
     "references": [],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -1232,16 +1148,14 @@
       "OID:1.3.6.1.4.1.25623.1.0.108449",
       "Version used: 2022-07-27T10:11:28Z"
     ],
-    "cvss": [
-      "0.0"
-    ],
+    "cvss": ["0.0"],
     "port": "general",
     "protocol": "tcp",
     "severity": "LOG",
     "references": [],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -1266,16 +1180,14 @@
       "OID:1.3.6.1.4.1.25623.1.0.105782",
       "Version used: 2024-09-27T05:05:23Z"
     ],
-    "cvss": [
-      "0.0"
-    ],
+    "cvss": ["0.0"],
     "port": 9090,
     "protocol": "tcp",
     "severity": "LOG",
     "references": [],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -1311,16 +1223,14 @@
       "OID:1.3.6.1.4.1.25623.1.0.103692",
       "Version used: 2024-09-27T05:05:23Z"
     ],
-    "cvss": [
-      "0.0"
-    ],
+    "cvss": ["0.0"],
     "port": 9090,
     "protocol": "tcp",
     "severity": "LOG",
     "references": [],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -1365,9 +1275,7 @@
       "Method: SSL/TLS: Collect and Report Certificate Details",
       "OID: 1.3.6.1.4.1.25623.1.0.103692)"
     ],
-    "cvss": [
-      "0.0"
-    ],
+    "cvss": ["0.0"],
     "port": 9090,
     "protocol": "tcp",
     "severity": "LOG",
@@ -1376,8 +1284,8 @@
       "url: https://datatracker.ietf.org/doc/html/rfc5280#appendix-C.1"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -1421,16 +1329,14 @@
       "Method: SSL/TLS: Collect and Report Certificate Details",
       "OID: 1.3.6.1.4.1.25623.1.0.103692)"
     ],
-    "cvss": [
-      "0.0"
-    ],
+    "cvss": ["0.0"],
     "port": 9090,
     "protocol": "tcp",
     "severity": "LOG",
     "references": [],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -1469,9 +1375,7 @@
       "OID:1.3.6.1.4.1.25623.1.0.108247",
       "Version used: 2025-03-21T15:40:43Z"
     ],
-    "cvss": [
-      "0.0"
-    ],
+    "cvss": ["0.0"],
     "port": 9090,
     "protocol": "tcp",
     "severity": "LOG",
@@ -1485,8 +1389,8 @@
       "url: https://nginx.org/en/docs/http/ngx_http_headers_module.html#add_header"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -1519,9 +1423,7 @@
       "OID:1.3.6.1.4.1.25623.1.0.105879",
       "Version used: 2025-03-21T15:40:43Z"
     ],
-    "cvss": [
-      "0.0"
-    ],
+    "cvss": ["0.0"],
     "port": 9090,
     "protocol": "tcp",
     "severity": "LOG",
@@ -1535,8 +1437,8 @@
       "url: https://nginx.org/en/docs/http/ngx_http_headers_module.html#add_header"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -1575,16 +1477,14 @@
       "OID:1.3.6.1.4.1.25623.1.0.105018",
       "Version used: 2024-09-30T08:38:05Z"
     ],
-    "cvss": [
-      "0.0"
-    ],
+    "cvss": ["0.0"],
     "port": 9090,
     "protocol": "tcp",
     "severity": "LOG",
     "references": [],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -1622,16 +1522,14 @@
       "OID:1.3.6.1.4.1.25623.1.0.902816",
       "Version used: 2024-09-27T05:05:23Z"
     ],
-    "cvss": [
-      "0.0"
-    ],
+    "cvss": ["0.0"],
     "port": 9090,
     "protocol": "tcp",
     "severity": "LOG",
     "references": [],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -1671,16 +1569,14 @@
       "OID:1.3.6.1.4.1.25623.1.0.103441",
       "Version used: 2024-09-27T05:05:23Z"
     ],
-    "cvss": [
-      "0.0"
-    ],
+    "cvss": ["0.0"],
     "port": 9090,
     "protocol": "tcp",
     "severity": "LOG",
     "references": [],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -1733,16 +1629,14 @@
       "OID:1.3.6.1.4.1.25623.1.0.802067",
       "Version used: 2024-09-27T05:05:23Z"
     ],
-    "cvss": [
-      "0.0"
-    ],
+    "cvss": ["0.0"],
     "port": 9090,
     "protocol": "tcp",
     "severity": "LOG",
     "references": [],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -1770,9 +1664,7 @@
       "OID:1.3.6.1.4.1.25623.1.0.117757",
       "Version used: 2024-09-27T05:05:23Z"
     ],
-    "cvss": [
-      "0.0"
-    ],
+    "cvss": ["0.0"],
     "port": 9090,
     "protocol": "tcp",
     "severity": "LOG",
@@ -1782,8 +1674,8 @@
       "url: https://datatracker.ietf.org/doc/html/rfc5746"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -1802,16 +1694,14 @@
     "log_method": [
       "Details: SSL/TLS: Untrusted Certificate Detection OID:1.3.6.1.4.1.25623.1.0.117764 Version used: 2024-09-27T05:05:23Z"
     ],
-    "cvss": [
-      "0.0"
-    ],
+    "cvss": ["0.0"],
     "port": 9090,
     "protocol": "tcp",
     "severity": "LOG",
     "references": [],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -1830,9 +1720,7 @@
     "log_method": [
       "Details: SSL/TLS: NPN / ALPN Extension and Protocol Support Detection OID:1.3.6.1.4.1.25623.1.0.108099 Version used: 2024-09-27T05:05:23Z"
     ],
-    "cvss": [
-      "0.0"
-    ],
+    "cvss": ["0.0"],
     "port": 9090,
     "protocol": "tcp",
     "severity": "LOG",
@@ -1841,8 +1729,8 @@
       "url: https://tools.ietf.org/html/draft-agl-tls-nextprotoneg-04"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -1881,9 +1769,7 @@
     "log_method": [
       "Details: HTTP Security Headers Detection OID:1.3.6.1.4.1.25623.1.0.112081 Version used: 2025-03-21T15:40:43Z"
     ],
-    "cvss": [
-      "0.0"
-    ],
+    "cvss": ["0.0"],
     "port": 9090,
     "protocol": "tcp",
     "severity": "LOG",
@@ -1893,8 +1779,8 @@
       "url: https://securityheaders.com/"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -1911,26 +1797,20 @@
     "solution": [],
     "insight": [],
     "log_method": [],
-    "cvss": [
-      "0.0"
-    ],
+    "cvss": ["0.0"],
     "port": 9090,
     "protocol": "tcp",
     "severity": "LOG",
     "references": [],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
     "Name": "Services",
-    "description": [
-      "This plugin performs service detection."
-    ],
-    "detection_result": [
-      "A TLScustom server answered on this port"
-    ],
+    "description": ["This plugin performs service detection."],
+    "detection_result": ["A TLScustom server answered on this port"],
     "detection_method": [],
     "product_detection_result": [],
     "impact": [],
@@ -1938,29 +1818,21 @@
     "insight": [
       "This plugin attempts to guess which service is running on the remote port(s). For instance, it searches for a web server which could listen on another port than 80 or 443 and makes this information available for other check routines."
     ],
-    "log_method": [
-      "Details: Services"
-    ],
-    "cvss": [
-      "0.0"
-    ],
+    "log_method": ["Details: Services"],
+    "cvss": ["0.0"],
     "port": 9090,
     "protocol": "tcp",
     "severity": "LOG",
     "references": [],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
     "Name": "Services",
-    "description": [
-      "This plugin performs service detection."
-    ],
-    "detection_result": [
-      "A web server is running on this port through SSL"
-    ],
+    "description": ["This plugin performs service detection."],
+    "detection_result": ["A web server is running on this port through SSL"],
     "detection_method": [],
     "product_detection_result": [],
     "impact": [],
@@ -1968,19 +1840,15 @@
     "insight": [
       "This plugin attempts to guess which service is running on the remote port(s). For instance, it searches for a web server which could listen on another port than 80 or 443 and makes this information available for other check routines."
     ],
-    "log_method": [
-      "Details: Services"
-    ],
-    "cvss": [
-      "0.0"
-    ],
+    "log_method": ["Details: Services"],
+    "cvss": ["0.0"],
     "port": 9090,
     "protocol": "tcp",
     "severity": "LOG",
     "references": [],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   }
 ]

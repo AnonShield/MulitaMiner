@@ -8,9 +8,10 @@ IMPORTANT EXTRACTION ROBUSTNESS RULES (READ FIRST):
 - Never stop extracting other NVTs due to an error in a specific NVT block.
 
 [PRIORITY OVERRIDES - READ FIRST]
-  - Arrays: `description`, `detection_result`, `detection_method`, `impact`, `solution`, `insight`, `product_detection_result`, `log_method`, `references`, `cvss` - use `[]` when unknown/not applicable.
-  - Empty arrays: `identification`, `http_info` - always empty arrays for OpenVAS.
-  - Scalars: `port`, `protocol`, `severity`, `source` - use `null` for `port`/`protocol` when unknown; `severity` must still be a valid value; `source` must be set.
+- Arrays: `description`, `detection_result`, `detection_method`, `impact`, `solution`, `insight`, `product_detection_result`, `log_method`, `references`, `cvss` - use `[]` when unknown/not applicable.
+- Empty arrays: `instances` - always empty array for OpenVAS.
+- Empty object: `plugin_details` - always empty object {} for OpenVAS.
+- Scalars: `port`, `protocol`, `severity`, `source` - use `null` for `port`/`protocol` when unknown; `severity` must still be a valid value; `source` must be set.
 
 ---
 PORT/PROTOCOL CONTEXT EXTRACTION (IMPORTANT):
@@ -117,8 +118,8 @@ PAGE BREAK HANDLING:
 
 3. Build JSON object with all 18 fields:
    - plugin: null (always null for OpenVAS)
-   - identification: [] (always empty array for OpenVAS)
-   - http_info: [] (always empty array for OpenVAS)
+   - plugin_details: {} (always empty object for OpenVAS)
+   - instances: [] (always empty array for OpenVAS)
    - source: "OPENVAS"
 
 4. Extract ALL NVT blocks you find
@@ -159,9 +160,9 @@ OPENVAS VULNERABILITIES:
     "severity": "CRITICAL|HIGH|MEDIUM|LOW|LOG",
     "references": ["<array of references>"],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
-    "source": "OPENVAS"
+   "plugin_details": {},
+   "instances": [],
+   "source": "OPENVAS"
   }
 ]
 
@@ -178,7 +179,8 @@ CRITICAL EXTRACTION RULES FOR OUTPUT:
 2. FIELD REQUIREMENTS:
    - Name: ONLY from "NVT: " lines - exact copy of text after "NVT: " prefix
    - All OpenVAS-specific fields must be filled as ARRAYS when available: description, detection_result, detection_method, impact, solution, insight, product_detection_result, log_method, references
-   - Always empty arrays for OpenVAS: identification = [], http_info = []
+   - Always empty array for OpenVAS: instances = []
+   - Always empty object for OpenVAS: plugin_details = {}
    - Always null for OpenVAS: plugin = null
    - Always set: source = "OPENVAS"
 

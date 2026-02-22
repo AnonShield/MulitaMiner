@@ -245,63 +245,46 @@ def extract_visual_layout_from_pdf(pdf_path):
                     sumario = ''
                     texto_extracao = texto_completo
                     print(f"[VISUAL] Nenhum marcador '{marker_pattern}' encontrado. Sumário vazio.")
+            
             elif scanner == 'tenable':
-                # Para Tenable WAS: sumário = do início até o primeiro marcador de vulnerabilidade detalhada
-                # O marcador é "VULNERABILITY <SEVERITY> PLUGIN ID <ID>"
-                # Mas o NOME da vulnerabilidade vem na LINHA ANTERIOR ao marcador
-                # Então precisamos cortar DUAS linhas antes: o nome + o cabeçalho
-                vuln_detail_pattern = re.search(
-                    r'VULNERABILITY\s+(CRITICAL|HIGH|MEDIUM|LOW|INFO)\s+PLUGIN\s+ID\s+\d+',
-                    texto_completo,
-                    re.IGNORECASE
-                )
-                if vuln_detail_pattern:
-                    # Posição do marcador "VULNERABILITY..."
-                    marker_pos = vuln_detail_pattern.start()
-                    # Volta para encontrar o início da LINHA do marcador
-                    line_start = texto_completo.rfind('\n', 0, marker_pos)
-                    if line_start == -1:
-                        line_start = 0
+                export_marker = 'Web Application Scanning Detailed Scan Export:'
+
+                # Procura o primeiro sinal de conteúdo real de vulnerabilidade
+                # Pode ser o header formal OU o bloco BASE sem header (CVSS, Plugin Details)
+                early_patterns = [
+                    re.compile(r'VULNERABILITY\s+(CRITICAL|HIGH|MEDIUM|LOW|INFO)\s+PLUGIN\s+ID\s+\d+', re.IGNORECASE),
+                    re.compile(r'CVSSV[34]\s+BASE\s+SCORE\s+[\d.]+', re.IGNORECASE),
+                    re.compile(r'PUBLICATION\s+DATE\s+\d{4}-\d{2}-\d{2}', re.IGNORECASE),
+                ]
+
+                earliest_pos = len(texto_completo)
+                for pattern in early_patterns:
+                    m = pattern.search(texto_completo)
+                    if m and m.start() < earliest_pos:
+                        earliest_pos = m.start()
+
+                if earliest_pos < len(texto_completo):
+                    # Busca o último export marker antes do conteúdo de vulnerabilidade
+                    last_export_pos = texto_completo.rfind(export_marker, 0, earliest_pos)
+
+                    if last_export_pos != -1:
+                        line_start_export = texto_completo.rfind('\n', 0, last_export_pos)
+                        cut_pos = line_start_export + 1 if line_start_export != -1 else 0
                     else:
-                        line_start += 1  # Pula o próprio \n
-                    
-                    # Agora volta UMA LINHA A MAIS (onde está o nome da vulnerabilidade)
-                    prev_line_end = texto_completo.rfind('\n', 0, line_start - 1) if line_start > 0 else -1
-                    if prev_line_end != -1:
-                        # Procura o início da linha anterior (onde está o nome da vuln)
-                        prev_line_start = texto_completo.rfind('\n', 0, prev_line_end)
-                        if prev_line_start == -1:
-                            prev_line_start = 0
-                        else:
-                            prev_line_start += 1
-                        cut_pos = prev_line_start
-                    else:
-                        cut_pos = line_start
-                    
+                        cut_pos = earliest_pos
+
+                    print(f"[DEBUG] earliest_pos={earliest_pos}")
+                    print(f"[DEBUG] last_export_pos={last_export_pos}")
+                    print(f"[DEBUG] cut_pos={cut_pos}")
+
                     sumario = texto_completo[:cut_pos].rstrip()
                     texto_extracao = texto_completo[cut_pos:]
-                    print(f"[VISUAL] Tenable WAS: Sumário extraído até {cut_pos} caracteres (antes do nome da vulnerabilidade).")
+                    texto_extracao = re.sub(r'Web Application Scanning Detailed Scan Export:[^\n]*', '', texto_extracao)
+                    print(f"[VISUAL] Tenable WAS: Sumário extraído até {cut_pos} caracteres.")
                 else:
-                    # Fallback: usa o marcador de exportação após Scan Results
-                    scan_results_pattern = re.search(r'Scan Results\s*\n\s*\n\s*\n\s*\n?\s*Vulnerabilities', texto_completo)
-                    if scan_results_pattern:
-                        pos_after = scan_results_pattern.end()
-                        export_marker = 'Web Application Scanning Detailed Scan Export:'
-                        export_match = texto_completo.find(export_marker, pos_after)
-                        if export_match != -1:
-                            end_of_line = texto_completo.find('\n', export_match)
-                            if end_of_line == -1:
-                                end_of_line = len(texto_completo)
-                            sumario = texto_completo[:end_of_line]
-                            texto_extracao = texto_completo[end_of_line:]
-                            print(f"[VISUAL] Tenable WAS (fallback): Sumário extraído até {end_of_line} caracteres.")
-                        else:
-                            sumario = texto_completo[:pos_after]
-                            texto_extracao = texto_completo[pos_after:]
-                    else:
-                        sumario = ''
-                        texto_extracao = texto_completo
-                        print("[VISUAL] Tenable WAS: Nenhum marcador encontrado. Sumário vazio.")
+                    sumario = ''
+                    texto_extracao = texto_completo
+                    print("[VISUAL] Tenable WAS: Nenhum marcador encontrado. Sumário vazio.")
             else:
                 sumario = ''
                 texto_extracao = texto_completo

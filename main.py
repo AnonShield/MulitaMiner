@@ -46,9 +46,8 @@ from src.utils.convertions import execute_conversions
 from src.utils.cais_validator import validate_cais_vulnerability
 from src.utils.pdf_loader import load_pdf_with_pypdf2, save_visual_layout
 from src.utils.chunking import get_token_based_chunks, retry_chunk_with_subdivision
-from src.utils.processing import consolidate_duplicates, get_consolidation_field
+from src.scanner_strategies.consolidation import central_custom_allow_duplicates
 from src.utils.profile_registry import is_cais_profile
-from src.utils.scanner_strategies import remove_duplicates_by_key
 
 
 def get_validator(profile_config: dict):
@@ -190,42 +189,16 @@ def save_results(vulnerabilities: list, output_file: str, profile_config: dict =
             os.path.dirname(output_file),
             os.path.splitext(os.path.basename(output_file))[0] + '_duplicates_removed_log.txt'
         )
-        if not allow_duplicates:
-            print(f"\n🔄 Consolidando vulnerabilidades duplicadas...")
-            from src.utils.processing import consolidate_duplicates_with_logs
-            final_vulns, removed_vulns, merged_pairs = consolidate_duplicates_with_logs(vulnerabilities, profile_config)
-            print(f"📊 Total: {len(vulnerabilities)} → {len(final_vulns)} após consolidação")
-            # Salvar logs
-            if removed_vulns:
-                with open(removed_log_path, 'w', encoding='utf-8') as f:
-                    f.write("# LOG DE VULNERABILIDADES REMOVIDAS POR FALTA DE DESCRIÇÃO VÁLIDA\n")
-                    f.write("Estas vulnerabilidades foram descartadas por não possuírem descrição ou campos essenciais.\n\n")
-                    f.write(f"Total removidas: {len(removed_vulns)}\n\n")
-                    for idx, v in enumerate(removed_vulns, 1):
-                        f.write(f"Removida {idx}:\n")
-                        f.write(f"  Nome: {v.get('Name', '')}\n")
-                        f.write(f"  Porta: {v.get('port', '')} | Protocolo: {v.get('protocol', '')} | Severidade: {v.get('severity', '')}\n")
-                        desc = v.get('description', '')
-                        if desc:
-                            if isinstance(desc, list):
-                                desc = ' '.join([str(d) for d in desc if d])
-                            desc = str(desc).strip().replace('\n', ' ')
-                            f.write(f"  Descrição: {desc[:200]}{'...' if len(desc)>200 else ''}\n")
-                        f.write("-"*40 + "\n")
-            if merged_pairs:
-                with open(merge_log_path, 'w', encoding='utf-8') as f:
-                    f.write("# Vulnerabilidades mescladas/consolidadas\n\n")
-                    for group in merged_pairs:
-                        f.write("Grupo mesclado:\n")
-                        for v in group:
-                            f.write(json.dumps(v, ensure_ascii=False, indent=2))
-                            f.write("\n")
-                        f.write("---\n")
-        else:
-            print(f"\n⚠️ Sem consolidação (permitindo duplicatas) - {len(vulnerabilities)} vulnerabilidades")
-            final_vulns = remove_duplicates_by_key(vulnerabilities, log_path=duplicates_removed_log_path)
-            print(f"📊 Total após deduplicação customizada: {len(final_vulns)} (veja {duplicates_removed_log_path} para detalhes)")
-        name_field = get_consolidation_field(final_vulns, profile_config)
+        print(f"\n🔄 Processando deduplicação/consolidação (allow_duplicates={allow_duplicates})...")
+        final_vulns = central_custom_allow_duplicates(vulnerabilities, profile_config, allow_duplicates, output_file=output_file)
+        print(f"📊 Total: {len(vulnerabilities)} → {len(final_vulns)} após deduplicação/consolidação")
+        # O campo de consolidação agora é definido internamente pelas estratégias/scanners
+        name_field = 'Name'  # Fallback para exibição
+        if final_vulns and isinstance(final_vulns[0], dict):
+            for k in ['name_consolidated', 'definition.name', 'Name']:
+                if k in final_vulns[0]:
+                    name_field = k
+                    break
         new_vulns = []
         updated_vulns = []
         repeated_vulns = []

@@ -29,7 +29,7 @@ def generate_csv(vulnerabilities, output_folder):
     fields = [
         "id", "Name", "description", "detection_result", "detection_method", "impact", "solution", "insight",
         "product_detection_result", "log_method", "cvss", "port", "protocol", "severity", "references",
-        "plugin", "identification", "http_info", "source"
+        "plugin", "plugin_details", "instances", "source"
     ]
 
     vulnerabilities.sort(key=lambda x: x.get("Name", "").lower())
@@ -65,7 +65,7 @@ def generate_json(vulnerabilities, output_folder):
     fields = [
         "id", "Name", "description", "detection_result", "detection_method", "impact", "solution", "insight",
         "product_detection_result", "log_method", "cvss", "port", "protocol", "severity", "references",
-        "plugin", "identification", "http_info", "source"
+        "plugin", "plugin_details", "instances", "source"
     ]
     def order_fields(vuln):
         return {k: vuln.get(k, "") for k in fields}
@@ -84,7 +84,7 @@ def generate_jsonl(vulnerabilities, output_folder):
     fields = [
         "id", "Name", "description", "detection_result", "detection_method", "impact", "solution", "insight",
         "product_detection_result", "log_method", "cvss", "port", "protocol", "severity", "references",
-        "plugin", "identification", "http_info", "source"
+        "plugin", "plugin_details", "instances", "source"
     ]
     def order_fields(vuln):
         return {k: vuln.get(k, "") for k in fields}
@@ -103,7 +103,7 @@ def generate_xlsx(vulnerabilities, output_folder):
     fields = [
         "id", "Name", "description", "detection_result", "detection_method", "impact", "solution", "insight",
         "product_detection_result", "log_method", "cvss", "port", "protocol", "severity", "references",
-        "plugin", "identification", "http_info", "source"
+        "plugin", "plugin_details", "instances", "source"
     ]
 
     vulnerabilities.sort(key=lambda x: x.get("Name", "").lower())

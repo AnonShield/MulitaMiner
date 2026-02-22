@@ -38,9 +38,7 @@
       "- CVE-2025-4517: Allows arbitrary lesystem writes outside the extraction directory during extraction with lter='data'."
     ],
     "log_method": [],
-    "cvss": [
-      "9.1"
-    ],
+    "cvss": ["9.1"],
     "port": 5000,
     "protocol": "tcp",
     "severity": "Critical",
@@ -98,8 +96,8 @@
       "dfn-cert: DFN-CERT-2025-1489"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -132,9 +130,7 @@
       "When reading an HTTP response from a server, if no read amount is specied, the default behavior will be to use Content-Length. This allows a malicious server to cause the client to read large amounts of data into memory, potentially causing out-of-memory (OOM) or other DoS conditions."
     ],
     "log_method": [],
-    "cvss": [
-      "9.1"
-    ],
+    "cvss": ["9.1"],
     "port": 5000,
     "protocol": "tcp",
     "severity": "Critical",
@@ -153,8 +149,8 @@
       "dfn-cert: DFN-CERT-2025-3621"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -190,9 +186,7 @@
       "There is a defect in the CPython 'tarle' module aecting the 'TarFile' extraction and entry enumeration APIs. The tar implementation would process tar archives with negative osets without error, resulting in an innite loop and deadlock during the parsing of maliciously crafted tar archives."
     ],
     "log_method": [],
-    "cvss": [
-      "7.8"
-    ],
+    "cvss": ["7.8"],
     "port": 5000,
     "protocol": "tcp",
     "severity": "HIGH",
@@ -219,8 +213,8 @@
       "dfn-cert: DFN-CERT-2025-2063"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -256,9 +250,7 @@
       "A vulnerability has been found in the venv module and CLI where path names provided when creating a virtual environment were not quoted properly, allowing the virtual environment creator to inject commands into virtual environment 'activation' scripts (ie 'source venv/bin/activate'). This means that attacker-controlled virtual environments are able to run commands when the virtual environment is activated. Virtual environments which are not created by an attacker or which aren't activated before being used (ie './venv/bin/python') are not aected."
     ],
     "log_method": [],
-    "cvss": [
-      "7.8"
-    ],
+    "cvss": ["7.8"],
     "port": 5000,
     "protocol": "tcp",
     "severity": "HIGH",
@@ -288,15 +280,13 @@
       "dfn-cert: DFN-CERT-2024-2837"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
     "Name": "Python <= 3.12.1 'RecursionError' Vulnerability - Linux",
-    "description": [
-      "Python is prone to a 'RecursionError' vulnerability."
-    ],
+    "description": ["Python is prone to a 'RecursionError' vulnerability."],
     "detection_result": [
       "Installed version: 3.11.10",
       "Fixed version: None",
@@ -322,9 +312,7 @@
       "NOTE: The vendor's perspective is that this is neither a vulnerability nor a bug. The email package is intended to have size limits and to throw an exception when limits are exceeded."
     ],
     "log_method": [],
-    "cvss": [
-      "7.5"
-    ],
+    "cvss": ["7.5"],
     "port": 5000,
     "protocol": "tcp",
     "severity": "HIGH",
@@ -340,8 +328,8 @@
       "dfn-cert: DFN-CERT-2024-1003"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -379,9 +367,7 @@
       "The e-mail module incorrectly parses e-mail addresses which contain a special character. This vulnerability allows attackers to send messages from e-mail addresses that would otherwise be rejected."
     ],
     "log_method": [],
-    "cvss": [
-      "5.3"
-    ],
+    "cvss": ["5.3"],
     "port": 5000,
     "protocol": "tcp",
     "severity": "MEDIUM",
@@ -421,8 +407,8 @@
       "dfn-cert: DFN-CERT-2023-2651"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -459,9 +445,7 @@
       "If the value passed to os.path.expandvars() is user-controlled a performance degradation is possible when expanding environment variables. This vulnerability exhibits quadratic complexity behavior that could be exploited for denial of service attacks."
     ],
     "log_method": [],
-    "cvss": [
-      "5.0"
-    ],
+    "cvss": ["5.0"],
     "port": 5000,
     "protocol": "tcp",
     "severity": "MEDIUM",
@@ -484,8 +468,8 @@
       "dfn-cert: DFN-CERT-2025-3267"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -522,9 +506,7 @@
       "The 'ziple' module would not check the validity of the ZIP64 End of Central Directory (EOCD) Locator record oset value would not be used to locate the ZIP64 EOCD record, instead the ZIP64 EOCD record would be assumed to be the previous record in the ZIP archive. This could be abused to create ZIP archives that are handled dierently by the 'ziple' module compared to other ZIP implementations. Remediation maintains this behavior, but checks that the oset specied in the ZIP64 EOCD Locator record matches the expected value."
     ],
     "log_method": [],
-    "cvss": [
-      "5.0"
-    ],
+    "cvss": ["5.0"],
     "port": 5000,
     "protocol": "tcp",
     "severity": "MEDIUM",
@@ -552,15 +534,13 @@
       "dfn-cert: DFN-CERT-2025-2812"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
     "Name": "Python Use After Free Vulnerability (May 2025) - Linux",
-    "description": [
-      "Python is prone to an use after free vulnerability."
-    ],
+    "description": ["Python is prone to an use after free vulnerability."],
     "detection_result": [
       "Installed version: 3.11.10",
       "Fixed version: 3.11.13",
@@ -590,9 +570,7 @@
       "There is an issue in CPython when using bytes.decode(). If you are not using the 'unicode_escape' encoding or an error handler your usage is not aected. To work-around this issue you may stop using the error= handler and instead wrap the bytes.decode() call in a try-except catching the DecodeError."
     ],
     "log_method": [],
-    "cvss": [
-      "4.0"
-    ],
+    "cvss": ["4.0"],
     "port": 5000,
     "protocol": "tcp",
     "severity": "MEDIUM",
@@ -619,8 +597,8 @@
       "dfn-cert: DFN-CERT-2025-1477"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -658,9 +636,7 @@
       "The html.parser.HTMLParser class had worse-case quadratic complexity when processing certain crafted malformed inputs potentially leading to amplied denial of service."
     ],
     "log_method": [],
-    "cvss": [
-      "4.0"
-    ],
+    "cvss": ["4.0"],
     "port": 5000,
     "protocol": "tcp",
     "severity": "MEDIUM",
@@ -687,8 +663,8 @@
       "dfn-cert: DFN-CERT-2025-1800"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -722,9 +698,7 @@
       "The Timestamp Reply is an ICMP message which replies to a Timestamp message. It consists of the originating timestamp sent by the sender of the Timestamp as well as a receive timestamp and a transmit timestamp."
     ],
     "log_method": [],
-    "cvss": [
-      "2.1"
-    ],
+    "cvss": ["2.1"],
     "port": "general",
     "protocol": "icmp",
     "severity": "LOW",
@@ -737,8 +711,8 @@
       "dfn-cert: DFN-CERT-2014-0658"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -777,9 +751,7 @@
       "The Python standard library functions urllib.parse.urlsplit and urlparse accepted domain names that included square brackets which isn't valid according to RFC 3986. Square brackets are only meant to be used as delimiters for specifying IPv6 and IPvFuture hosts in URLs. This could result in differential parsing across the Python URL parser and other specification-compliant URL parsers."
     ],
     "log_method": [],
-    "cvss": [
-      "2.6"
-    ],
+    "cvss": ["2.6"],
     "port": 5000,
     "protocol": "tcp",
     "severity": "LOW",
@@ -809,8 +781,8 @@
       "dfn-cert: DFN-CERT-2025-0309"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -847,9 +819,7 @@
       "The remote host implements TCP timestamps, as dened by RFC1323/RFC7323."
     ],
     "log_method": [],
-    "cvss": [
-      "2.6"
-    ],
+    "cvss": ["2.6"],
     "port": "general",
     "protocol": "tcp",
     "severity": "LOW",
@@ -860,8 +830,8 @@
       "url: https://www.fortiguard.com/psirt/FG-IR-16-090"
     ],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -877,23 +847,19 @@
     "solution": [],
     "insight": [],
     "log_method": [],
-    "cvss": [
-      "0.0"
-    ],
+    "cvss": ["0.0"],
     "port": 5000,
     "protocol": "tcp",
     "severity": "LOG",
     "references": [],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
     "Name": "Allowed HTTP Methods Enumeration",
-    "description": [
-      "Enumerates which HTTP methods are allowed."
-    ],
+    "description": ["Enumerates which HTTP methods are allowed."],
     "detection_result": [
       "The following list contains the URLs and corresponding supported HTTP methods.",
       "URL | HTTP Methods",
@@ -918,16 +884,14 @@
       "OID:1.3.6.1.4.1.25623.1.0.153974",
       "Version used: 2025-02-28T05:38:49Z"
     ],
-    "cvss": [
-      "0.0"
-    ],
+    "cvss": ["0.0"],
     "port": 5000,
     "protocol": "tcp",
     "severity": "LOG",
     "references": [],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -956,18 +920,14 @@
       "OID:1.3.6.1.4.1.25623.1.0.105937",
       "Version used: 2026-01-21T05:50:46Z"
     ],
-    "cvss": [
-      "0.0"
-    ],
+    "cvss": ["0.0"],
     "port": "general",
     "protocol": "tcp",
     "severity": "LOG",
-    "references": [
-      "url: https://forum.greenbone.net/c/vulnerability-tests/7"
-    ],
+    "references": ["url: https://forum.greenbone.net/c/vulnerability-tests/7"],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -994,18 +954,14 @@
       "OID:1.3.6.1.4.1.25623.1.0.112857",
       "Version used: 2021-07-09T08:01:09Z"
     ],
-    "cvss": [
-      "0.0"
-    ],
+    "cvss": ["0.0"],
     "port": "general",
     "protocol": "tcp",
     "severity": "LOG",
-    "references": [
-      "url: https://www.python.org/"
-    ],
+    "references": ["url: https://www.python.org/"],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -1033,16 +989,14 @@
       "OID:1.3.6.1.4.1.25623.1.0.51662",
       "Version used: 2022-10-17T11:13:19Z"
     ],
-    "cvss": [
-      "0.0"
-    ],
+    "cvss": ["0.0"],
     "port": "general",
     "protocol": "tcp",
     "severity": "LOG",
     "references": [],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -1065,18 +1019,14 @@
       "OID:1.3.6.1.4.1.25623.1.0.147205",
       "Version used: 2021-12-03T08:27:06Z"
     ],
-    "cvss": [
-      "0.0"
-    ],
+    "cvss": ["0.0"],
     "port": "general",
     "protocol": "tcp",
     "severity": "LOG",
-    "references": [
-      "cve: CVE-1999-0511"
-    ],
+    "references": ["cve: CVE-1999-0511"],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -1105,18 +1055,14 @@
       "OID:1.3.6.1.4.1.25623.1.0.108441",
       "Version used: 2023-06-22T10:34:15Z"
     ],
-    "cvss": [
-      "0.0"
-    ],
+    "cvss": ["0.0"],
     "port": "general",
     "protocol": "tcp",
     "severity": "LOG",
-    "references": [
-      "url: https://forum.greenbone.net/c/vulnerability-tests/7"
-    ],
+    "references": ["url: https://forum.greenbone.net/c/vulnerability-tests/7"],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -1140,16 +1086,14 @@
       "OID:1.3.6.1.4.1.25623.1.0.108449",
       "Version used: 2022-07-27T10:11:28Z"
     ],
-    "cvss": [
-      "0.0"
-    ],
+    "cvss": ["0.0"],
     "port": "general",
     "protocol": "tcp",
     "severity": "LOG",
     "references": [],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   },
   {
@@ -1171,18 +1115,14 @@
       "OID:1.3.6.1.4.1.25623.1.0.810002",
       "Version used: 2022-07-27T10:11:28Z"
     ],
-    "cvss": [
-      "0.0"
-    ],
+    "cvss": ["0.0"],
     "port": "general",
     "protocol": "CPE-T",
     "severity": "LOG",
-    "references": [
-      "url: https://nvd.nist.gov/products/cpe"
-    ],
+    "references": ["url: https://nvd.nist.gov/products/cpe"],
     "plugin": null,
-    "identification": [],
-    "http_info": [],
+    "plugin_details": {},
+    "instances": [],
     "source": "OPENVAS"
   }
 ]

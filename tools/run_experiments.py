@@ -8,15 +8,11 @@ from datetime import datetime, timedelta
 # Configurações das runs
 baselines = [
     "metrics/baselines/openvas/OpenVAS_JuiceShop.xlsx",
-    "metrics/baselines/openvas/OpenVAS_bBWA.xlsx",
-    "metrics/baselines/openvas/openvas_docker.bintray.io_jfrog_artifactory-oss_5.11.0.xlsx",
     "metrics/baselines/tenable/TenableWAS_JuiceShop.xlsx",
     "metrics/baselines/tenable/TenableWAS_bWAAP.xlsx"
 ]
 extractors = [
     "metrics/baselines/openvas/OpenVAS_JuiceShop.pdf",
-    "metrics/baselines/openvas/OpenVAS_bBWA.pdf",
-    "metrics/baselines/openvas/openvas_docker.bintray.io_jfrog_artifactory-oss_5.11.0.pdf",
     "metrics/baselines/tenable/TenableWAS_JuiceShop.pdf",
     "metrics/baselines/tenable/TenableWAS_bWAAP.pdf"
 ]
