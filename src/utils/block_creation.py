@@ -16,19 +16,13 @@ def extract_visual_layout_context(visual_layout_path):
     try:
         with open(visual_layout_path, encoding="utf-8") as f:
             layout_lines = [l.strip() for l in f.readlines() if l.strip()]
-        # Para Tenable WAS: pega apenas entre 'Scan Results' e o próximo 'Web Application Scanning Detailed Scan Export: ...'
-        scan_results_idx = None
-        export_idx = None
-        for idx, line in enumerate(layout_lines):
-            if scan_results_idx is None and line.strip().startswith("Scan Results"):
-                scan_results_idx = idx
-            elif scan_results_idx is not None and line.startswith("Web Application Scanning Detailed Scan Export:"):
-                export_idx = idx
-                break
-        if scan_results_idx is not None and export_idx is not None:
-            context_search_lines = layout_lines[scan_results_idx:export_idx]
-        else:
+
+        if 'openvas' in visual_layout_path.lower():
+            # OpenVAS: precisa de contexto visual para extrair severity/port/protocol da primeira vulnerabilidade
             context_search_lines = layout_lines
+        else:
+            # Outros scanners: não precisa de contexto visual
+            return [], None, None, None
 
         # Busca de baixo para cima pelo primeiro header válido
         header_regex = re.compile(r"^(?:\d+\.\d+\.\d+\s+)?(Critical|High|Medium|Low|Log)\s+(\d+|general)/([a-zA-Z0-9_-]+)", re.IGNORECASE)
@@ -65,10 +59,13 @@ def create_session_blocks_from_text(report_text: str, temp_dir: str = 'temp_bloc
         shutil.rmtree(temp_dir)
     os.makedirs(temp_dir, exist_ok=True)
 
-    # Extrai contexto do visual layout apenas para OpenVAS
+    # Extrai contexto do visual layout apenas para OpenVAS, com separação explícita
     initial_context_lines, initial_severity, initial_port, initial_protocol = ([], None, None, None)
     if scanner.lower() == 'openvas' and visual_layout_path:
         initial_context_lines, initial_severity, initial_port, initial_protocol = extract_visual_layout_context(visual_layout_path)
+    elif scanner.lower() == 'tenable':
+        # Para Tenable, nunca usa contexto visual
+        initial_context_lines, initial_severity, initial_port, initial_protocol = ([], None, None, None)
 
     # Modularização por scanner
     if scanner.lower() == 'openvas':
@@ -196,26 +193,40 @@ def _create_blocks_tenable(report_text, temp_dir, initial_context_lines):
     
     current_severity = None
     current_block = []
+    pre_header_lines = []
+    first_header_found = False
     headers_found = []
-    
+
+    severity_field_pattern = re.compile(r'^\s*SEVERITY\s+(CRITICAL|HIGH|MEDIUM|LOW|INFO)\s*$', re.IGNORECASE)
+
     for line in lines:
-        # Verifica se a linha contém um header de vulnerabilidade
         header_match = header_pattern.search(line)
-        
+
         if header_match:
-            # Salva o bloco anterior se existir
+            if not first_header_found:
+                # Descobre a severidade do conteúdo órfão (BASE sem header)
+                orphan_severity = None
+                for orphan_line in pre_header_lines:
+                    m = severity_field_pattern.match(orphan_line)
+                    if m:
+                        orphan_severity = m.group(1).upper()
+                        break
+                if orphan_severity and pre_header_lines:
+                    blocks_por_severidade[orphan_severity].extend(pre_header_lines)
+                    print(f"[DEBUG] Conteúdo órfão ({len(pre_header_lines)} linhas) atribuído ao bloco {orphan_severity}")
+                first_header_found = True
+
             if current_severity and current_block:
                 blocks_por_severidade[current_severity].extend(current_block)
-            
-            # Inicia novo bloco com a severidade encontrada
+
             current_severity = header_match.group(1).upper()
             current_block = [line]
             headers_found.append(f"{current_severity}: {line.strip()[:80]}")
+        elif not first_header_found:
+            pre_header_lines.append(line)
         elif current_severity:
-            # Continua acumulando no bloco atual
             current_block.append(line)
-    
-    # Salva o último bloco
+
     if current_severity and current_block:
         blocks_por_severidade[current_severity].extend(current_block)
     
@@ -250,6 +261,7 @@ def extract_vulns_from_blocks(blocks: list, llm, profile_config: dict, chunk_fun
     Para cada bloco de sessão, aplica chunking e extrai vulnerabilidades, propagando port/protocol.
     chunk_func: função de chunking (ex: get_token_based_chunks)
     """
+    from src.utils.chunking import get_token_based_chunks, split_text_to_subchunks, TokenChunk
     all_vulns = []
     tokens_info = []
     # Contar total de chunks para a barra de progresso
@@ -258,7 +270,19 @@ def extract_vulns_from_blocks(blocks: list, llm, profile_config: dict, chunk_fun
     for block in blocks:
         with open(block['file'], 'r', encoding='utf-8') as f:
             block_text = f.read()
-        chunks = chunk_func(block_text, max_tokens=4096, profile_config=profile_config)
+            reader = profile_config.get('reader', '').lower() if profile_config else ''
+            chunks = []
+            if reader == 'openvas':
+                # Token-first, depois marker 
+                token_chunks = get_token_based_chunks(block_text, max_tokens=4096, profile_config=profile_config)
+                for tc in token_chunks:
+                    subs = split_text_to_subchunks(tc.page_content, target_size=8000, profile_config=profile_config)
+                    chunks.extend([TokenChunk(s) for s in subs])
+            else:
+                # Marker-first, depois token (Tenable e demais scanners)
+                subs = split_text_to_subchunks(block_text, target_size=8000, profile_config=profile_config)
+                for s in subs:
+                    chunks.extend(get_token_based_chunks(s, max_tokens=4096, profile_config=profile_config))
         block_chunks_map.append((block, chunks))
         total_chunks += len(chunks)
 

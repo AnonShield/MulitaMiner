@@ -7,20 +7,16 @@ from datetime import datetime, timedelta
 
 # Configurações das runs
 baselines = [
-    "metrics/baselines/openvas/OpenVAS_JuiceShop.xlsx",
-    "metrics/baselines/tenable/TenableWAS_JuiceShop.xlsx",
-    "metrics/baselines/tenable/TenableWAS_bWAAP.xlsx"
+    "metrics/baselines/openvas/OpenVAS_JuiceShop.xlsx"
 ]
 extractors = [
-    "metrics/baselines/openvas/OpenVAS_JuiceShop.pdf",
-    "metrics/baselines/tenable/TenableWAS_JuiceShop.pdf",
-    "metrics/baselines/tenable/TenableWAS_bWAAP.pdf"
+    "metrics/baselines/openvas/OpenVAS_JuiceShop.pdf"
 ]
-llms = ["llama3", "llama4", "deepseek", "gpt4", "gpt5"]
-scanners = ["openvas", "tenable"]
-evaluation_methods = ["bert", "rouge"]
-runs_per_model = 10
-allow_duplicates_map = {"openvas": True, "tenable": False}
+llms = ["llama3"] # config llm
+scanners = ["openvas"] # config scanners
+evaluation_methods = ["bert"] # config metricas
+runs_per_model = 10 # numero de runs
+allow_duplicates_map = {"openvas": True, "tenable": False} # config do cli allow-duplicates por scanner
 
 os.makedirs("results_runs", exist_ok=True)
 
@@ -58,6 +54,12 @@ import argparse
 parser = argparse.ArgumentParser()
 parser.add_argument('--checkpoint-file', type=str, default=None, help='Arquivo de checkpoint a ser usado')
 args, unknown = parser.parse_known_args()
+
+# Verifica argumentos desconhecidos
+if unknown:
+    print(f"\nErro: Argumentos não reconhecidos: {unknown}")
+    print("Verifique se há erros de digitação nos argumentos.")
+    sys.exit(1)
 
 if args.checkpoint_file:
     checkpoint_path = args.checkpoint_file

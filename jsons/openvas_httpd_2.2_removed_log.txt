@@ -1,2 +1,0 @@
-# Vulnerabilidades removidas por falta de descrição válida:
-- Apache HTTP Server with SSI enabled and mod_cgid (but not mod_cgi) passes the shell-escaped query string to #exec cmd='...' directives. | port: 80 | protocol: tcp | severity: MEDIUM

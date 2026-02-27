@@ -1,5 +1,0 @@
-# Vulnerabilidades removidas por falta de descrição válida:
-- Apache HTTP Server < 2.4.39 mod_auth_digest Access Control Bypass Vulnerability - Linux | port: 80 | protocol: tcp | severity: HIGH
-- PHP < 8.3.8 Multiple Vulnerabilities | port: 443 | protocol: tcp | severity: MEDIUM
-- HTTP Brute Force Logins With Default Credentials | port: 443 | protocol: tcp | severity: LOG
-- OpenVAS / Greenbone Vulnerability Manager Detection | port: 443 | protocol: tcp | severity: LOG

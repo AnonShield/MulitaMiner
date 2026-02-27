@@ -1,8 +1,0 @@
-# Vulnerabilidades removidas por falta de descrição válida:
-- Oracle MySQL Server <= 5.7.43, 8.x <= 8.0.34, 8.1.0 Security Update (cpuoct2023) - Linux | port: 80 | protocol: tcp | severity: Critical
-- Oracle Mysql Security Updates (apr2017-3236618) 01 | port: 3306 | protocol: tcp | severity: HIGH
-- OpenVAS / Greenbone Vulnerability Manager Detection | port: 3306 | protocol: tcp | severity: LOG
-- PHP < 7.2.29 Multiple Vulnerabilities (Mar 2020) - Linux | port: 80 | protocol: tcp | severity: MEDIUM
-- Apache HTTP Server < 2.4.39 | port: 80 | protocol: tcp | severity: MEDIUM
-- Oracle MySQL Server <= 8.0.39, 8.1 <= 8.4.0 | port: 3306 | protocol: tcp | severity: MEDIUM
-- OpenVAS / Greenbone Vulnerability Manager Detection | port: 80 | protocol: tcp | severity: LOG

@@ -1,3 +1,0 @@
-# Vulnerabilidades removidas por falta de descrição válida:
-- Apache Tomcat Multiple Vulnerabilities (Linux) | port: 80 | protocol: tcp | severity: HIGH
-- ICMP Timestamp Reply Information Disclosure | port: 8081 | protocol: tcp | severity: LOW

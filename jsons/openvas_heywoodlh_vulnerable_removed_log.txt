@@ -1,5 +1,0 @@
-# Vulnerabilidades removidas por falta de descrição válida:
-- OpenVAS / Greenbone Vulnerability Manager Detection | port: 445 | protocol: tcp | severity: LOG
-- Samba 4.x Multiple DoS Vulnerabilities (Mar 2021) | port: 445 | protocol: tcp | severity: HIGH
-- PHP 5.3.7 - 7.3.31, 7.4.x < 7.4.25, 8.0.x < 8.0.12 Security Update (Oct 2021) - Linux | port: 80 | protocol: tcp | severity: HIGH
-- OpenVAS / Greenbone Vulnerability Manager Detection | port: 22 | protocol: tcp | severity: LOG

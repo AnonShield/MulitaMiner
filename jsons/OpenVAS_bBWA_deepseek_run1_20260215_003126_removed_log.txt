@@ -1,2 +1,0 @@
-# Vulnerabilidades removidas por falta de descrição válida:
-- OS End Of Life Detection | port: 6200 | protocol: tcp | severity: HIGH

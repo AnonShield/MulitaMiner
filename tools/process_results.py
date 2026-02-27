@@ -93,13 +93,18 @@ def plot_similarity_category_stacked_bar():
             bar_width = 0.75 / n_baselines
             x = np.arange(n_llms)
 
-            fig, ax = plt.subplots(figsize=(16, 6))
+            fig, ax = plt.subplots(figsize=(18, 8))
+            plt.rcParams.update({'font.size': 15})
 
-            # Paleta de cores para distinguir baselines na legenda
-            baseline_edge_colors = ["#333333", "#555555", "#777777"]
+            # Patterns (hatches) para diferenciar as baselines
+            baseline_hatches = ['/', '+', '-', '|', '++', 'X', 'o', 'O', '.', '*', '//', '\\\\', '||', '--', '\\', 'XX', '..', '-\\']
+            # Se houver mais baselines que patterns, repete os patterns
+            while len(baseline_hatches) < len(baselines):
+                baseline_hatches *= 2
 
             for b_idx, baseline in enumerate(baselines):
                 llm_dict = baselines_dict[baseline]
+                hatch_pattern = baseline_hatches[b_idx]
 
                 for l_idx, llm in enumerate(llms):
                     runs = llm_dict.get(llm, [])
@@ -133,21 +138,22 @@ def plot_similarity_category_stacked_bar():
                             color=color,
                             width=bar_width,
                             label=label,
-                            edgecolor="white",
-                            linewidth=0.3
+                            edgecolor="#cccccc",
+                            linewidth=0.7,
+                            hatch=hatch_pattern
                         )
                         bottom += pct[cat_idx]
 
             # Eixos e títulos
-            ax.set_ylabel("Distribution (%)", fontsize=12)
-            ax.set_xlabel("LLM", fontsize=12)
+            ax.set_ylabel("Distribution (%)", fontsize=18)
+            ax.set_xlabel("LLM", fontsize=18)
             ax.set_ylim(0, 100)
             ax.set_title(
                 f"Similarity Category Distribution\n{scanner} | {metric.upper()}",
-                fontsize=13
+                fontsize=20
             )
             ax.set_xticks(x + bar_width * (n_baselines - 1) / 2)
-            ax.set_xticklabels(llms, fontsize=11)
+            ax.set_xticklabels(llms, fontsize=16)
 
             # Legenda das categorias
             handles, labels = ax.get_legend_handles_labels()
@@ -155,24 +161,27 @@ def plot_similarity_category_stacked_bar():
                 handles, labels,
                 title="Category",
                 loc="upper right",
-                fontsize=9
+                fontsize=14
             )
             ax.add_artist(legend_cats)
 
-            # Legenda das baselines (texto abaixo)
-            baseline_legend = "  |  ".join(
-                [f"{i+1}: {b}" for i, b in enumerate(baselines)]
-            )
-            ax.annotate(
-                f"Bar order (baseline) → {baseline_legend}",
-                xy=(0.5, -0.18), 
-                xycoords="axes fraction",
-                ha="center",
-                fontsize=9,
-                color="#444444"
+            # Legenda das baselines (agora com patterns)
+            from matplotlib.patches import Patch
+            baseline_legend_patches = [
+                Patch(facecolor='#cccccc', edgecolor='#333', hatch=baseline_hatches[i], label=b)
+                for i, b in enumerate(baselines)
+            ]
+            ax.legend(
+                handles=baseline_legend_patches,
+                title="Baseline (pattern)",
+                loc="lower center",
+                bbox_to_anchor=(0.5, -0.45),  # Desce mais a legenda
+                ncol=min(len(baselines), 4),
+                fontsize=14,
+                frameon=False
             )
 
-            plt.tight_layout()
+            plt.tight_layout(rect=[0, 0.13, 1, 1])  # Aumenta espaço inferior
             timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
             fname_out = f"plot_runs/stacked_similarity_{scanner}_{metric}_{timestamp}.png"
             plt.savefig(fname_out, dpi=150, bbox_inches='tight')
@@ -336,16 +345,17 @@ def plot_absent_nonexistent_mean():
             print(f"Generating Absent/Non-existent std barplot for {scanner} | {report}...")
             df_sub = df[(df["scanner"]==scanner) & (df["report"]==report)]
             bar_data = df_sub.groupby(["llm"])[["Absent", "Non-existent"]].std().reset_index()
-            plt.figure(figsize=(14, 6))
+            plt.figure(figsize=(18, 8))
+            plt.rcParams.update({'font.size': 15})
             x = np.arange(len(bar_data["llm"]))
             width = 0.35
             plt.bar(x - width/2, bar_data["Absent"], width=width, label="Absent", color="#d85231")
             plt.bar(x + width/2, bar_data["Non-existent"], width=width, label="Non-existent", color="#151529")
-            plt.title(f"Absent/Non-existent Std\n{scanner} | {report}")
-            plt.xlabel("LLM")
-            plt.ylabel("Standard Deviation")
-            plt.xticks(x, bar_data["llm"], rotation=0)
-            plt.legend()
+            plt.title(f"Absent/Non-existent Std\n{scanner} | {report}", fontsize=20)
+            plt.xlabel("LLM", fontsize=18)
+            plt.ylabel("Standard Deviation", fontsize=18)
+            plt.xticks(x, bar_data["llm"], rotation=0, fontsize=16)
+            plt.legend(fontsize=14)
             plt.tight_layout()
             from datetime import datetime
             timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
@@ -434,7 +444,8 @@ def plot_matched_rate_mean_std():
                 llms = sorted(df_s["llm"].unique())
                 x = np.arange(len(llms))
                 width = 0.8 / max(1, len(baselines_present))
-                plt.figure(figsize=(14, 6))
+                plt.figure(figsize=(18, 8))
+                plt.rcParams.update({'font.size': 15})
                 for idx, baseline in enumerate(baselines_present):
                     df_b = df_s[df_s["report"].apply(normalize_name)==baseline]
                     means = df_b.groupby("llm")["Matched_Rate"].mean().reindex(llms, fill_value=0)
@@ -442,11 +453,11 @@ def plot_matched_rate_mean_std():
                     plt.bar(x + idx*width, means, width=width, yerr=stds, label=baseline, color=colors[idx % len(colors)], alpha=0.8)
                     main_title = "Matched Rate Mean ± Std (%)"
                     subtitle = f"{scanner} | {metric}"
-                    plt.title(f"{main_title}\n{subtitle}")
-                plt.xlabel("LLM")
-                plt.ylabel("Matched Rate (%)")
-                plt.xticks(x + width*(len(baselines_present)-1)/2, llms)
-                plt.legend(title="Baseline")
+                    plt.title(f"{main_title}\n{subtitle}", fontsize=20)
+                plt.xlabel("LLM", fontsize=18)
+                plt.ylabel("Matched Rate (%)", fontsize=18)
+                plt.xticks(x + width*(len(baselines_present)-1)/2, llms, fontsize=16)
+                plt.legend(title="Baseline", fontsize=14)
                 plt.tight_layout()
                 from datetime import datetime
                 timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
@@ -497,15 +508,22 @@ def plot_score_heatmaps():
                 import matplotlib.pyplot as plt
                 out_path = Path('plot_runs') / f"heatmap_scores_{baseline}_{metric}_{timestamp}.png"
                 # Cria heatmap manualmente para customizar o título
-                plt.figure(figsize=(14, 6))
+                plt.figure(figsize=(18, 8))
+                plt.rcParams.update({'font.size': 15})
                 import seaborn as sns
-                ax = sns.heatmap(df_heatmap, annot=True, fmt=".3f", cmap="RdYlGn", vmin=0, vmax=1, cbar_kws={"label": f"{metric.upper()} Score"}, linewidths=0.5)
+                ax = sns.heatmap(
+                    df_heatmap, annot=True, fmt=".3f", cmap="RdYlGn", vmin=0, vmax=1,
+                    cbar_kws={"label": f"{metric.upper()} Score"}, linewidths=0.5,
+                    annot_kws={"fontsize": 14}
+                )
                 main_title = "Score Heatmap"
                 subtitle = f"{scanner} | {base} | {metric}"
-                plt.title(f"{main_title}\n{subtitle}", fontsize=14, fontweight='normal', pad=20)
-                plt.xlabel("Fields", fontsize=12)
-                plt.ylabel("Models", fontsize=12)
-                plt.tight_layout()
+                plt.title(f"{main_title}\n{subtitle}", fontsize=22, fontweight='normal', pad=24)
+                plt.xlabel("Fields", fontsize=20, labelpad=12)
+                plt.ylabel("Models", fontsize=20, labelpad=12)
+                plt.xticks(fontsize=16, rotation=30, ha='right')
+                plt.yticks(fontsize=16)
+                plt.tight_layout(rect=[0, 0, 1, 0.97])
                 plt.savefig(out_path, dpi=300, bbox_inches='tight')
                 plt.close()
                 print(f"✅ Heatmap saved: {out_path}")

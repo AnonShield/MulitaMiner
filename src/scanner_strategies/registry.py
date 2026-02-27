@@ -7,4 +7,6 @@ SCANNER_STRATEGIES = {
 }
 
 def get_strategy(source: str):
-    return SCANNER_STRATEGIES.get(source.upper())
+    if not source:
+        return None
+    return SCANNER_STRATEGIES.get(source.lower())

@@ -28,11 +28,11 @@ def batch_extract_vulnerabilities(input_dir, output_dir=None, marker='_batch', s
 
     pdf_files = [f for f in os.listdir(input_dir) if f.lower().endswith('.pdf')]
     if not pdf_files:
-        print(f"Nenhum PDF encontrado em {input_dir}")
+        print(f"No PDFs found in directory: {input_dir}")
         return
 
-    print(f"Processando {len(pdf_files)} PDFs para {output_dir} ...")
-    for pdf_file in tqdm(pdf_files, desc="Extraindo PDFs"):
+    print(f"Processing {len(pdf_files)} PDFs to {output_dir} ...")
+    for pdf_file in tqdm(pdf_files, desc="Extracting vulnerabilities"):
         pdf_path = os.path.join(input_dir, pdf_file)
         base_name = os.path.splitext(pdf_file)[0]
         output_json = os.path.join(output_dir, f"{base_name}.json")
@@ -52,20 +52,24 @@ def batch_extract_vulnerabilities(input_dir, output_dir=None, marker='_batch', s
             cmd += extra_args
 
         try:
-            print(f"\n[INFO] Processando: {pdf_file}")
+            print(f"\n[INFO] Processing: {pdf_file}")
             subprocess.run(cmd, check=True)
         except subprocess.CalledProcessError as e:
-            print(f"[ERRO] Falha ao processar {pdf_file}: {e}")
+            print(f"[ERROR] Failed to process {pdf_file}: {e}")
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Extração em lote de vulnerabilidades de PDFs de um diretório.")
-    parser.add_argument('input_dir', help="Diretório com arquivos PDF para extrair")
-    parser.add_argument('--marker', default='_batch', help="Marcador para o diretório de saída (padrão: _batch)")
-    parser.add_argument('--output-dir', help="Diretório de saída (opcional)")
-    parser.add_argument('--scanner', help="Nome do scanner (ex: tenable, openvas, etc)")
-    parser.add_argument('--LLM', help="Nome do LLM a usar (ex: gpt4, deepseek, etc)")
-    parser.add_argument('--convert', choices=['csv', 'xlsx', 'tsv', 'all', 'none'], help="Converter saída para formato específico")
+    parser = argparse.ArgumentParser(description="Batch PDF Vulnerability Extractor")
+    parser.add_argument('input_dir', help="Directory containing PDF files to process (path to folder with PDFs)")
+    parser.add_argument('--marker', default='_batch', help="Marker for the output directory (default: _batch)")
+    parser.add_argument('--output-dir', help="Output directory (optional)")
+    parser.add_argument('--scanner', help="Name of the scanner (e.g., tenable, openvas, etc)")
+    parser.add_argument('--LLM', help="Name of the LLM to use (e.g., gpt4, deepseek, etc)")
+    parser.add_argument('--convert', choices=['csv', 'xlsx', 'tsv', 'all', 'none'], help="Convert output to specific format")
+    parser.add_argument('--allow-duplicates', action='store_true', help="Allow duplicate vulnerabilities in the output (default: False)")
     args, extra = parser.parse_known_args()
+    # Garante que --allow-duplicates seja repassado explicitamente ao main.py
+    if args.allow_duplicates and '--allow-duplicates' not in extra:
+        extra.append('--allow-duplicates')
     batch_extract_vulnerabilities(
         args.input_dir,
         output_dir=args.output_dir,

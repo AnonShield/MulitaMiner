@@ -1,2 +1,0 @@
-# Vulnerabilidades removidas por falta de descrição válida:
-- OpenVAS / Greenbone Vulnerability Manager Detection | port: 8686 | protocol: tcp | severity: LOG

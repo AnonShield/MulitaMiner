@@ -182,6 +182,8 @@ def save_results(vulnerabilities: list, output_file: str, profile_config: dict =
         True se sucesso, False caso contrário
     """
     try:
+        # (Removido: agora a normalização é feita no registry.py)
+
         previous_vulns = load_previous_vulnerabilities(output_file)
         removed_log_path = os.path.join(os.path.dirname(output_file), os.path.splitext(os.path.basename(output_file))[0] + '_removed_log.txt')
         merge_log_path = os.path.join(os.path.dirname(output_file), os.path.splitext(os.path.basename(output_file))[0] + '_merge_log.txt')
@@ -346,6 +348,8 @@ def main():
     """Fluxo principal de extração."""
     # Parse e validação
     args = parse_arguments()
+    print(f"[DEBUG] main.py recebeu argumentos: {sys.argv}")
+    print(f"[DEBUG] Namespace args: {args}")
     if not validate_inputs(args):
         return
     
@@ -453,8 +457,13 @@ def main():
         pid = os.getpid()
         tokens_candidates = glob.glob(f'results_tokens/tokens_info_{pid}.json')
         if tokens_candidates:
-            # Renomeia para bater com o nome do output_file
-            tokens_final = os.path.join('results_tokens', os.path.splitext(os.path.basename(output_file))[0] + '_tokens.json')
+            # Inclui o nome da LLM no nome do arquivo de tokens
+            llm_name = getattr(args, 'LLM', None) or llm_config.get('model', 'unknown')
+            llm_name = str(llm_name).replace('/', '_').replace(':', '_')
+            tokens_final = os.path.join(
+                'results_tokens',
+                os.path.splitext(os.path.basename(output_file))[0] + f'_{llm_name}_tokens.json'
+            )
             shutil.move(tokens_candidates[0], tokens_final)
             print(f"[TOKENS] Arquivo de tokens salvo em: {tokens_final}")
         try:
