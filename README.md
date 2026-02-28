@@ -1,12 +1,10 @@
 <div align="center">
 
   <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="assets/2.png">
-    <source media="(prefers-color-scheme: light)" srcset="assets/1.png">
-    <img src="assets/1.svg" width="500" alt="MulitaMiner logo">
+    <source media="(prefers-color-scheme: dark)" srcset="assets/MulitaMiner_logo_dark.png">
+    <source media="(prefers-color-scheme: light)" srcset="assets/MulitaMiner_logo_light.png">
+    <img src="assets/MulitaMiner_logo_light" width="500" alt="MulitaMiner logo">
   </picture>
-
-# MulitaMiner
 
 **Vulnerability Extraction from Security Reports using LLMs**
 
