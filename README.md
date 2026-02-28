@@ -1,17 +1,21 @@
 <p align="center">
-  <img src="MulitaMiner_logo.png" width="180">
+  <img src="MulitaMiner_logo.png" width="220" alt="MulitaMiner logo">
 </p>
 
 <h1 align="center">MulitaMiner</h1>
 
 <p align="center">
-  Vulnerability Extraction from Unstructured Security Reports using LLMs
+  <b>Vulnerability Extraction from Security Reports using LLMs</b><br>
+  Automated • Structured • Multi-LLM
 </p>
 
-_Last update: February 2026_
+<p align="center">
+  <img src="https://img.shields.io/badge/Python-3.8+-blue">
+  <img src="https://img.shields.io/badge/license-MIT-green">
+  <img src="https://img.shields.io/badge/status-active-orange">
+</p>
 
-[![Python](https://img.shields.io/badge/Python-3.8+-blue.svg)](https://www.python.org/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
+<p align="center"><i>Last update: February 2026</i></p>
 
 ## Overview
 
