@@ -1,8 +1,8 @@
 <div align="center">
 
   <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="assets/MulitaMiner_logo_dark.png">
-    <source media="(prefers-color-scheme: light)" srcset="assets/MulitaMiner_logo_light.png">
+    <source media="(prefers-color-scheme: dark)" srcset="assets/MulitaMiner_logo_light.png">
+    <source media="(prefers-color-scheme: light)" srcset="assets/MulitaMiner_logo_dark.png">
     <img src="assets/MulitaMiner_logo_light" width="500" alt="MulitaMiner logo">
   </picture>
 
