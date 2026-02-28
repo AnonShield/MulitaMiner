@@ -1,0 +1,32 @@
+# LOG DE VULNERABILIDADES REMOVIDAS (sem descrição válida)
+
+Removida 1:
+{
+  "Name": "OpenVAS / Greenbone Vulnerability Manager Detection",
+  "description": [],
+  "detection_result": [],
+  "detection_method": [],
+  "product_detection_result": [],
+  "impact": [],
+  "solution": [],
+  "insight": [],
+  "log_method": [],
+  "cvss": [
+    "0.0"
+  ],
+  "port": 5432,
+  "protocol": "tcp",
+  "severity": "LOG",
+  "references": [
+    "cve: CVE-2021-20229",
+    "url: https://bugzilla.redhat.com/show_bug.cgi?id=1925296",
+    "cert-bund: WID-SEC-2023-2464",
+    "cert-bund: CB-K21/0172",
+    "dfn-cert: DFN-CERT-2021-0324"
+  ],
+  "plugin": null,
+  "plugin_details": {},
+  "instances": [],
+  "source": "OPENVAS"
+}
+---

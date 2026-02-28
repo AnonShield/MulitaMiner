@@ -1,0 +1,106 @@
+# LOG DE DEDUPLICAÇÃO DE VULNERABILIDADES
+Este arquivo lista todas as vulnerabilidades consideradas duplicatas e agrupadas durante o processo.
+Cada grupo é identificado por uma chave composta (ex: nome, porta, protocolo).
+Apenas a vulnerabilidade mais completa e com descrição válida foi mantida em cada grupo.
+
+Total de grupos de duplicatas: 16
+Total de vulnerabilidades agrupadas (removidas): 2
+
+Grupo 1: Chave = ('Backup File Scanner (HTTP) - Unreliable Detection Reporting', 9000, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Backup File Scanner (HTTP) - Unreliable Detection Reporting
+       Porta: 9000 | Protocolo: tcp | Severidade: Medium
+       Descrição: The script reports backup les left on the web server.
+
+Grupo 2: Chave = ('TCP Timestamps Information Disclosure', 9000, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: TCP Timestamps Information Disclosure
+       Porta: 9000 | Protocolo: tcp | Severidade: Medium
+       Descrição: The remote host implements TCP timestamps and therefore allows to compute the uptime.
+
+Grupo 3: Chave = ('TCP Timestamps Information Disclosure', 'general', 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: TCP Timestamps Information Disclosure
+       Porta: general | Protocolo: tcp | Severidade: LOW
+       Descrição: The remote host implements TCP timestamps and therefore allows to compute the uptime.
+
+Grupo 4: Chave = ('ICMP Timestamp Reply Information Disclosure', 'general', 'icmp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: ICMP Timestamp Reply Information Disclosure
+       Porta: general | Protocolo: icmp | Severidade: LOW
+       Descrição: The remote host responded to an ICMP timestamp request. Quality of Detection (QoD): 80%
+
+Grupo 5: Chave = ('Web Application Scanning Consolidation / Info Reporting', 9000, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Web Application Scanning Consolidation / Info Reporting
+       Porta: 9000 | Protocolo: tcp | Severidade: LOG
+       Descrição: The script consolidates and reports various information for web application (formerly called 'CGI') scanning. This information is based on the following scripts / settings: - HTTP-Version Detection (O...
+
+Grupo 6: Chave = ('robot.txt / robots.txt exists on the Web Server (HTTP)', 9000, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: robot.txt / robots.txt exists on the Web Server (HTTP)
+       Porta: 9000 | Protocolo: tcp | Severidade: LOG
+       Descrição: Web Servers can use a le called /robot(s).txt to ask search engines to ignore certain les and directories. By nature this le can not be used to protect private les from public read access. Quality of ...
+
+Grupo 7: Chave = ('Allowed HTTP Methods Enumeration', 9000, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Allowed HTTP Methods Enumeration
+       Porta: 9000 | Protocolo: tcp | Severidade: LOG
+       Descrição: Enumerates which HTTP methods are allowed. Quality of Detection (QoD): 70%
+
+Grupo 8: Chave = ('HTTP Security Headers Detection', 9000, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: HTTP Security Headers Detection
+       Porta: 9000 | Protocolo: tcp | Severidade: LOG
+       Descrição: All known security headers are being checked on the remote web server. On completion a report will hand back whether a specic security header has been implemented (including its value and if it is dep...
+
+Grupo 9: Chave = (('Name', 'Services'), ('cvss', ('0.0',)), ('description', ('This plugin performs service detection.',)), ('detection_method', ()), ('detection_result', ('A web server is running on this port',)), ('impact', ()), ('insight', ('This plugin attempts to guess which service is running on the remote port(s). For instance, it searches for a web server which could listen on another port than 80 or 443 and makes this information available for other check routines.',)), ('instances', ()), ('log_method', ('Details: Services', 'OID:1.3.6.1.4.1.25623.1.0.10330', 'Version used: 2025-03-05T05:38:53Z')), ('plugin', None), ('plugin_details', ()), ('port', 9000), ('product_detection_result', ()), ('protocol', 'tcp'), ('references', ()), ('severity', 'LOG'), ('solution', ()), ('source', 'OPENVAS'))
+  Total de duplicatas neste grupo: 1
+    1. Nome: Services
+       Porta: 9000 | Protocolo: tcp | Severidade: LOG
+       Descrição: This plugin performs service detection.
+
+Grupo 10: Chave = ('Response Time / No 404 Error Code Check', 9000, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Response Time / No 404 Error Code Check
+       Porta: 9000 | Protocolo: tcp | Severidade: LOG
+       Descrição: This VT tests if the remote web server does not reply with a 404 error code and checks if it is replying to the scanners requests in a reasonable amount of time.
+
+Grupo 11: Chave = ('CPE Inventory', 'general', 'CPE-T')
+  Total de duplicatas neste grupo: 1
+    1. Nome: CPE Inventory
+       Porta: general | Protocolo: CPE-T | Severidade: LOG
+       Descrição: This routine uses information collected by other routines about CPE identities of operating systems, services and applications detected during the scan. Note: Some CPEs for specic products might show ...
+
+Grupo 12: Chave = ('OS Detection Consolidation and Reporting', 'general', 'CPE-T')
+  Total de duplicatas neste grupo: 1
+    1. Nome: OS Detection Consolidation and Reporting
+       Porta: general | Protocolo: CPE-T | Severidade: LOG
+       Descrição: This script consolidates the OS information detected by several VTs and tries to nd the best matching OS. Furthermore it reports all previously collected information leading to this best matching OS. ...
+
+Grupo 13: Chave = ('OS Detection Consolidation and Reporting', 'general', 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: OS Detection Consolidation and Reporting
+       Porta: general | Protocolo: tcp | Severidade: LOG
+       Descrição: This script consolidates the OS information detected by several VTs and tries to nd the best matching OS. Furthermore it reports all previously collected information leading to this best matching OS. ...
+
+Grupo 14: Chave = ('IP Forwarding Enabled - Active Check', 'general', 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: IP Forwarding Enabled - Active Check
+       Porta: general | Protocolo: tcp | Severidade: LOG
+       Descrição: Checks if the remote host has IP forwarding enabled.
+
+Grupo 15: Chave = ('Traceroute', 'general', 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Traceroute
+       Porta: general | Protocolo: tcp | Severidade: LOG
+       Descrição: Collect information about the network route and network distance between the scanner host and the target host.
+
+Grupo 16: Chave = ('Hostname Determination Reporting', 'general', 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Hostname Determination Reporting
+       Porta: general | Protocolo: tcp | Severidade: LOG
+       Descrição: The script reports information on how the hostname of the target was determined.
+Resumo final:
+Total de grupos de duplicatas: 16
+Total de vulnerabilidades agrupadas (removidas): 2

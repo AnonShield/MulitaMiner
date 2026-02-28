@@ -1,0 +1,56 @@
+# LOG DE VULNERABILIDADES REMOVIDAS (sem descrição válida)
+
+Removida 1:
+{
+  "Name": "Squid 3.1 <= 3.5.22, 4.0 <= 4.0.16 Information Disclosure Vulnerability (SQUID-2016:11) - Linux",
+  "description": [],
+  "detection_result": [],
+  "detection_method": [],
+  "product_detection_result": [
+    "cpe:/a:squid-cache:squid:3.3.8",
+    "Detected by Squid Detection (HTTP) (OID: 1.3.6.1.4.1.25623.1.0.900611)"
+  ],
+  "impact": [],
+  "solution": [],
+  "insight": [],
+  "log_method": [],
+  "cvss": [
+    "7.5"
+  ],
+  "port": 3128,
+  "protocol": "tcp",
+  "severity": "HIGH",
+  "references": [],
+  "plugin": null,
+  "plugin_details": {},
+  "instances": [],
+  "source": "OPENVAS"
+}
+---
+Removida 2:
+{
+  "Name": "Squid DoS Vulnerability (GHSA-8w9r-p88v-mmx9, SQUID-2023:7)",
+  "description": [],
+  "detection_result": [],
+  "detection_method": [],
+  "product_detection_result": [
+    "cpe:/a:squid-cache:squid:3.3.8",
+    "Detected by Squid Detection (HTTP) (OID: 1.3.6.1.4.1.25623.1.0.900611)"
+  ],
+  "impact": [],
+  "solution": [],
+  "insight": [],
+  "log_method": [],
+  "cvss": [
+    "7.5"
+  ],
+  "port": 3128,
+  "protocol": "tcp",
+  "severity": "HIGH",
+  "references": [],
+  "plugin": null,
+  "plugin_details": {},
+  "instances": [],
+  "source": "OPENVAS"
+}
+---

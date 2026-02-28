@@ -1,0 +1,4001 @@
+[
+  {
+    "Name": "MariaDB End of Life (EOL) Detection - Linux",
+    "description": [
+      "The MariaDB version on the remote host has reached the end of life (EOL) and should not be used anymore."
+    ],
+    "detection_result": [
+      "The \"MariaDB\" version on the remote host has reached the end of life.",
+      "CPE: cpe:/a:mariadb:mariadb:10.0.38",
+      "Installed version: 10.0.38",
+      "EOL version: 10.0",
+      "EOL date: 2019-03-31"
+    ],
+    "detection_method": [
+      "Checks if an EOL version is present on the target host.",
+      "Details: MariaDB End of Life (EOL) Detection - Linux",
+      "OID:1.3.6.1.4.1.25623.1.0.108186",
+      "Version used: 2025-09-09T05:38:49Z"
+    ],
+    "product_detection_result": [
+      "Product: cpe:/a:mariadb:mariadb:10.0.38",
+      "Method: MariaDB / Oracle MySQL Detection (MySQL Protocol)",
+      "OID: 1.3.6.1.4.1.25623.1.0.100152)"
+    ],
+    "impact": [
+      "An EOL version of MariaDB is not receiving any security updates from the vendor. Unxed security vulnerabilities might be leveraged by an attacker to compromise the security of this host."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update the MariaDB version on the remote host to a still supported version."
+    ],
+    "insight": [],
+    "log_method": [],
+    "cvss": [
+      "9.8"
+    ],
+    "port": 3306,
+    "protocol": "tcp",
+    "severity": "Critical",
+    "references": [
+      "url: https://mariadb.org/about/maintenance-policy/"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "MySQL / MariaDB Default Credentials (MySQL Protocol)",
+    "description": [
+      "It was possible to login into the remote MySQL using default credentials."
+    ],
+    "detection_result": [
+      "It was possible to login as user \"root\" with password \"root\"."
+    ],
+    "detection_method": [
+      "Details: MySQL / MariaDB Default Credentials (MySQL Protocol)",
+      "OID:1.3.6.1.4.1.25623.1.0.103551",
+      "Version used: 2025-09-09T05:38:49Z"
+    ],
+    "product_detection_result": [
+      "Product: cpe:/a:mariadb:mariadb:10.0.38",
+      "Method: MariaDB / Oracle MySQL Detection (MySQL Protocol)",
+      "OID: 1.3.6.1.4.1.25623.1.0.100152)"
+    ],
+    "impact": [],
+    "solution": [
+      "Solution type: Mitigation",
+      "- Change the password as soon as possible",
+      "- Contact the vendor for other possible xes / updates"
+    ],
+    "insight": [
+      "The following products are know to use such weak credentials:",
+      "- CVE-2001-0645: Symantec/AXENT NetProwler 3.5.x",
+      "- CVE-2002-1809: Windows binary release of MySQL 3.23.2 through 3.23.52",
+      "- CVE-2004-1532: AppServ 2.5.x and earlier",
+      "- CVE-2004-2357: Proofpoint Protection Server",
+      "- CVE-2006-1451: MySQL Manager in Apple Mac OS X 10.3.9 and 10.4.6",
+      "- CVE-2007-2554: Associated Press (AP) Newspower 4.0.1 and earlier",
+      "- CVE-2007-6081: AdventNet EventLog Analyzer build 4030",
+      "- CVE-2009-0919: XAMPP",
+      "- CVE-2014-3419: Infoblox NetMRI before 6.8.5",
+      "- CVE-2015-4669: Xsuite 2.x",
+      "- CVE-2016-6531, CVE-2018-15719: Open Dental before version 18.4",
+      "- CVE-2024-22901: Vinchin Backup & Recovery 7.2 and prior",
+      "Other products might be aected as well."
+    ],
+    "log_method": [],
+    "cvss": [
+      "8.8"
+    ],
+    "port": 3306,
+    "protocol": "tcp",
+    "severity": "HIGH",
+    "references": [
+      "cve: CVE-2001-0645",
+      "cve: CVE-2002-1809",
+      "cve: CVE-2004-1532",
+      "cve: CVE-2004-2357",
+      "cve: CVE-2006-1451",
+      "cve: CVE-2007-2554",
+      "cve: CVE-2007-6081",
+      "cve: CVE-2009-0919",
+      "cve: CVE-2014-3419",
+      "cve: CVE-2015-4669",
+      "cve: CVE-2016-6531",
+      "cve: CVE-2018-15719",
+      "cve: CVE-2024-22901"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "MariaDB Access Bypass Vulnerability - Linux",
+    "description": [
+      "MariaDB is prone to an access bypass vulnerability."
+    ],
+    "detection_result": [
+      "Installed version: 10.0.38",
+      "Fixed version: 10.1.30"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host."
+    ],
+    "product_detection_result": [
+      "cpe:/a:mariadb:mariadb:10.0.38",
+      "Detected by MariaDB / Oracle MySQL Detection (MySQL Protocol) (OID: 1.3.6.1.4.1.25623.1.0.100152)"
+    ],
+    "impact": [
+      "A user with an SQL access to the server could possibly use this aw to perform database modification on certain cluster nodes without having privileges to perform such changes."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to MariaDB 10.1.30, 10.2.10 or later."
+    ],
+    "insight": [
+      "sql/event_data_objects.cc in MariaDB allows remote authenticated users with SQL access to bypass intended access restrictions and replicate data definition language (DDL) statements to cluster nodes by leveraging incorrect ordering of DDL replication and ACL checking."
+    ],
+    "log_method": [],
+    "cvss": [
+      "7.8"
+    ],
+    "port": 3306,
+    "protocol": "tcp",
+    "severity": "HIGH",
+    "references": [
+      "cve: CVE-2017-15365",
+      "url: https://bugzilla.redhat.com/show_bug.cgi?id=1524234",
+      "url: https://mariadb.com/kb/en/library/mariadb-10130-release-notes/",
+      "url: https://mariadb.com/kb/en/library/mariadb-10210-release-notes/",
+      "cert-bund: CB-K18/0061",
+      "dfn-cert: DFN-CERT-2019-1152",
+      "dfn-cert: DFN-CERT-2019-1047",
+      "dfn-cert: DFN-CERT-2018-1276",
+      "dfn-cert: DFN-CERT-2018-0067"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "MariaDB Multiple Vulnerabilities (Feb 2022) - Linux",
+    "description": [
+      "MariaDB is prone to multiple vulnerabilities."
+    ],
+    "detection_result": [
+      "Installed version: 10.0.38",
+      "Fixed version: 10.2.42"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host."
+    ],
+    "product_detection_result": [
+      "cpe:/a:mariadb:mariadb:10.0.38",
+      "Detected by MariaDB / Oracle MySQL Detection (MySQL Protocol) (OID: 1.3.6.1.4.1.25623.1.0.100152)"
+    ],
+    "impact": [],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 10.2.42, 10.3.33, 10.4.23, 10.5.14, 10.6.6, 10.7.2, 10.8.1 or later."
+    ],
+    "insight": [],
+    "log_method": [],
+    "cvss": [
+      "7.5"
+    ],
+    "port": 3306,
+    "protocol": "tcp",
+    "severity": "HIGH",
+    "references": [
+      "cve: CVE-2022-24048",
+      "cve: CVE-2022-24050",
+      "cve: CVE-2022-24051",
+      "cve: CVE-2022-24052",
+      "url: https://mariadb.com/kb/en/security/#full-list-of-cves-fixed-in-mariadb",
+      "cert-bund: WID-SEC-2022-0844",
+      "cert-bund: CB-K22/0171",
+      "dfn-cert: DFN-CERT-2022-1928",
+      "dfn-cert: DFN-CERT-2022-1777",
+      "dfn-cert: DFN-CERT-2022-1717",
+      "dfn-cert: DFN-CERT-2022-1688",
+      "dfn-cert: DFN-CERT-2022-1667",
+      "dfn-cert: DFN-CERT-2022-1597",
+      "dfn-cert: DFN-CERT-2022-0500",
+      "dfn-cert: DFN-CERT-2022-0460",
+      "dfn-cert: DFN-CERT-2022-0327"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "MariaDB Use-After-Free Vulnerability (MDEV-26281) - Linux",
+    "description": [
+      "MariaDB is prone to a use-after-free vulnerability.",
+      "Quality of Detection (QoD): 30%"
+    ],
+    "detection_result": [
+      "Installed version: 10.0.38",
+      "Fixed version: 10.2.44"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: MariaDB Use-After-Free Vulnerability (MDEV-26281) - Linux",
+      "OID:1.3.6.1.4.1.25623.1.0.104565",
+      "Version used: 2025-09-09T05:38:49Z"
+    ],
+    "product_detection_result": [
+      "cpe:/a:mariadb:mariadb:10.0.38   Detected by MariaDB / Oracle MySQL Detection (MySQL Protocol) (OID: 1.3.6.1.4.1.  ->25623.1.0.100152)",
+      "Product: cpe:/a:mariadb:mariadb:10.0.38",
+      "Method: MariaDB / Oracle MySQL Detection (MySQL Protocol)",
+      "OID: 1.3.6.1.4.1.25623.1.0.100152)"
+    ],
+    "impact": [
+      "Aected Software/OS   MariaDB versions prior to 10.2.44, 10.3.x prior to 10.3.35, 10.4.x prior to 10.4.25, 10.5.x prior to  10.5.16, 10.6.x prior to 10.6.8 and 10.7.x prior to 10.7.4."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 10.2.44, 10.3.35, 10.4.25, 10.5.16, 10.6.8, 10.7.4 or later."
+    ],
+    "insight": [],
+    "log_method": [],
+    "cvss": [
+      "7.0"
+    ],
+    "port": 3306,
+    "protocol": "tcp",
+    "severity": "HIGH",
+    "references": [
+      "cve: CVE-2022-27377",
+      "url: https://jira.mariadb.org/browse/MDEV-26281",
+      "url: https://mariadb.com/kb/en/security/#full-list-of-cves-fixed-in-mariadb",
+      "cert-bund: WID-SEC-2022-0166",
+      "cert-bund: CB-K22/0418",
+      "dfn-cert: DFN-CERT-2022-2668",
+      "dfn-cert: DFN-CERT-2022-2059",
+      "dfn-cert: DFN-CERT-2022-1928",
+      "dfn-cert: DFN-CERT-2022-1777",
+      "dfn-cert: DFN-CERT-2022-1717",
+      "dfn-cert: DFN-CERT-2022-1688",
+      "dfn-cert: DFN-CERT-2022-1667"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "MariaDB DoS Vulnerability (MDEV-28089) - Linux",
+    "description": [
+      "MariaDB is prone to a denial of service (DoS) vulnerability."
+    ],
+    "detection_result": [
+      "Installed version: 10.0.38",
+      "Fixed version: 10.3.35"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: MariaDB DoS Vulnerability (MDEV-28089) - Linux",
+      "OID:1.3.6.1.4.1.25623.1.0.104616",
+      "Version used: 2025-09-09T05:38:49Z"
+    ],
+    "product_detection_result": [
+      "Product: cpe:/a:mariadb:mariadb:10.0.38",
+      "Method: MariaDB / Oracle MySQL Detection (MySQL Protocol)",
+      "OID: 1.3.6.1.4.1.25623.1.0.100152)"
+    ],
+    "impact": [
+      "DoS due segmentation fault via component sql/item_func.cc:148."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 10.3.35, 10.4.25, 10.5.16, 10.6.8, 10.7.4 or later."
+    ],
+    "insight": [
+      "Aected Software/OS",
+      "MariaDB versions prior to 10.3.35, 10.4.x prior to 10.4.25, 10.5.x prior to 10.5.16, 10.6.x prior to 10.6.8 and 10.7.x prior to 10.7.4."
+    ],
+    "log_method": [],
+    "cvss": [
+      "7.5"
+    ],
+    "port": 3306,
+    "protocol": "tcp",
+    "severity": "HIGH",
+    "references": [
+      "cve: CVE-2022-27449",
+      "url: https://jira.mariadb.org/browse/MDEV-28089",
+      "url: https://mariadb.com/kb/en/security/#full-list-of-cves-fixed-in-mariadb",
+      "cert-bund: WID-SEC-2022-0168",
+      "cert-bund: CB-K22/0461",
+      "dfn-cert: DFN-CERT-2022-2668",
+      "dfn-cert: DFN-CERT-2022-2059",
+      "dfn-cert: DFN-CERT-2022-1928",
+      "dfn-cert: DFN-CERT-2022-1777",
+      "dfn-cert: DFN-CERT-2022-1717",
+      "dfn-cert: DFN-CERT-2022-1688",
+      "dfn-cert: DFN-CERT-2022-1667",
+      "dfn-cert: DFN-CERT-2022-1205"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "MariaDB DoS Vulnerability (MDEV-28094) - Linux",
+    "description": [
+      "MariaDB is prone to a denial of service (DoS) vulnerability."
+    ],
+    "detection_result": [
+      "Installed version: 10.0.38",
+      "Fixed version: 10.4.25"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: MariaDB DoS Vulnerability (MDEV-28094) - Linux",
+      "OID:1.3.6.1.4.1.25623.1.0.104622",
+      "Version used: 2025-09-09T05:38:49Z"
+    ],
+    "product_detection_result": [
+      "Product: cpe:/a:mariadb:mariadb:10.0.38",
+      "Method: MariaDB / Oracle MySQL Detection (MySQL Protocol)",
+      "OID: 1.3.6.1.4.1.25623.1.0.100152)"
+    ],
+    "impact": [
+      "Segmentation fault via the component sql/eld_conv.cc."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 10.4.25, 10.5.16, 10.6.8, 10.7.4 or later."
+    ],
+    "insight": [
+      "Aected Software/OS",
+      "MariaDB versions prior 10.4.25, 10.5.x prior to 10.5.16, 10.6.x prior to 10.6.8 and 10.7.x prior to 10.7.4."
+    ],
+    "log_method": [],
+    "cvss": [
+      "7.5"
+    ],
+    "port": 3306,
+    "protocol": "tcp",
+    "severity": "HIGH",
+    "references": [
+      "cve: CVE-2022-27451",
+      "url: https://jira.mariadb.org/browse/MDEV-28094",
+      "url: https://mariadb.com/kb/en/security/#full-list-of-cves-fixed-in-mariadb",
+      "cert-bund: WID-SEC-2022-0168",
+      "cert-bund: CB-K22/0461",
+      "dfn-cert: DFN-CERT-2022-2668",
+      "dfn-cert: DFN-CERT-2022-1777",
+      "dfn-cert: DFN-CERT-2022-1717",
+      "dfn-cert: DFN-CERT-2022-1688",
+      "dfn-cert: DFN-CERT-2022-1667",
+      "dfn-cert: DFN-CERT-2022-1205"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "MariaDB DoS Vulnerability (MDEV-28095) - Linux",
+    "description": [
+      "MariaDB is prone to a denial of service (DoS) vulnerability."
+    ],
+    "detection_result": [
+      "Installed version: 10.0.38",
+      "Fixed version: 10.3.35"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: MariaDB DoS Vulnerability (MDEV-28095) - Linux",
+      "OID:1.3.6.1.4.1.25623.1.0.126003",
+      "Version used: 2025-09-09T05:38:49Z"
+    ],
+    "product_detection_result": [
+      "Product: cpe:/a:mariadb:mariadb:10.0.38",
+      "Method: MariaDB / Oracle MySQL Detection (MySQL Protocol)",
+      "OID: 1.3.6.1.4.1.25623.1.0.100152)"
+    ],
+    "impact": [
+      "MariaDB versions prior to 10.3.35, 10.4.x prior to 10.4.25, 10.5.x prior to 10.5.16, 10.6.x prior to 10.6.8 and 10.7.x prior to 10.7.4."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 10.3.35, 10.4.25, 10.5.16, 10.6.8, 10.7.4 or later."
+    ],
+    "insight": [
+      "There is an assertion failure in MariaDB Server via 'node->pcur->rel_pos == BTR_PCUR_ON' at /row/row0mysql.cc."
+    ],
+    "log_method": [],
+    "cvss": [
+      "7.5"
+    ],
+    "port": 3306,
+    "protocol": "tcp",
+    "severity": "HIGH",
+    "references": [
+      "cve: CVE-2022-27448",
+      "url: https://jira.mariadb.org/browse/MDEV-28095",
+      "url: https://mariadb.com/kb/en/security/#full-list-of-cves-fixed-in-mariadb",
+      "cert-bund: WID-SEC-2022-0168",
+      "cert-bund: CB-K22/0461",
+      "dfn-cert: DFN-CERT-2022-2668",
+      "dfn-cert: DFN-CERT-2022-2059",
+      "dfn-cert: DFN-CERT-2022-1928",
+      "dfn-cert: DFN-CERT-2022-1777",
+      "dfn-cert: DFN-CERT-2022-1717",
+      "dfn-cert: DFN-CERT-2022-1688",
+      "dfn-cert: DFN-CERT-2022-1667",
+      "dfn-cert: DFN-CERT-2022-1205"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "MariaDB Use-After-Free Vulnerability (MDEV-28093) - Linux",
+    "description": [
+      "MariaDB is prone to a use-after-free vulnerability."
+    ],
+    "detection_result": [
+      "Installed version: 10.0.38",
+      "Fixed version: 10.3.35"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: MariaDB Use-After-Free Vulnerability (MDEV-28093) - Linux",
+      "OID:1.3.6.1.4.1.25623.1.0.104620",
+      "Version used: 2025-09-09T05:38:49Z"
+    ],
+    "product_detection_result": [
+      "Product: cpe:/a:mariadb:mariadb:10.0.38",
+      "Method: MariaDB / Oracle MySQL Detection (MySQL Protocol)",
+      "OID: 1.3.6.1.4.1.25623.1.0.100152)"
+    ],
+    "impact": [
+      "MariaDB versions prior to 10.3.35, 10.4.x prior to 10.4.25, 10.5.x prior to 10.5.16, 10.6.x prior to 10.6.8 and 10.7.x prior to 10.7.4."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 10.3.35, 10.4.25, 10.5.16, 10.6.8, 10.7.4 or later."
+    ],
+    "insight": [
+      "Use-after-free in the component VDec::VDec at /sql/sql_type.cc."
+    ],
+    "log_method": [],
+    "cvss": [
+      "7.5"
+    ],
+    "port": 3306,
+    "protocol": "tcp",
+    "severity": "HIGH",
+    "references": [
+      "cve: CVE-2022-27456",
+      "url: https://jira.mariadb.org/browse/MDEV-28093",
+      "url: https://mariadb.com/kb/en/security/#full-list-of-cves-fixed-in-mariadb",
+      "cert-bund: WID-SEC-2022-0168",
+      "cert-bund: CB-K22/0461",
+      "dfn-cert: DFN-CERT-2022-2668",
+      "dfn-cert: DFN-CERT-2022-2059",
+      "dfn-cert: DFN-CERT-2022-1928",
+      "dfn-cert: DFN-CERT-2022-1777",
+      "dfn-cert: DFN-CERT-2022-1717",
+      "dfn-cert: DFN-CERT-2022-1688",
+      "dfn-cert: DFN-CERT-2022-1667",
+      "dfn-cert: DFN-CERT-2022-1205"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "MariaDB Use-After-Free Vulnerability (MDEV-28098) - Linux",
+    "description": [
+      "MariaDB is prone to a use-after-free vulnerability."
+    ],
+    "detection_result": [
+      "Installed version: 10.0.38",
+      "Fixed version: 10.4.25"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: MariaDB Use-After-Free Vulnerability (MDEV-28098) - Linux",
+      "OID:1.3.6.1.4.1.25623.1.0.104626",
+      "Version used: 2025-09-09T05:38:49Z"
+    ],
+    "product_detection_result": [
+      "Product: cpe:/a:mariadb:mariadb:10.0.38",
+      "Method: MariaDB / Oracle MySQL Detection (MySQL Protocol)",
+      "OID: 1.3.6.1.4.1.25623.1.0.100152)"
+    ],
+    "impact": [
+      "MariaDB versions prior 10.4.25, 10.5.x prior to 10.5.16, 10.6.x prior to 10.6.8 and 10.7.x prior to 10.7.4."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 10.4.25, 10.5.16, 10.6.8, 10.7.4 or later."
+    ],
+    "insight": [
+      "Use-after-free in the component my_mb_wc_latin1 at /strings/ctype-latin1.c."
+    ],
+    "log_method": [],
+    "cvss": [
+      "7.5"
+    ],
+    "port": 3306,
+    "protocol": "tcp",
+    "severity": "HIGH",
+    "references": [
+      "cve: CVE-2022-27457",
+      "url: https://jira.mariadb.org/browse/MDEV-28098",
+      "url: https://mariadb.com/kb/en/security/#full-list-of-cves-fixed-in-mariadb",
+      "cert-bund: WID-SEC-2022-0168",
+      "cert-bund: CB-K22/0461",
+      "dfn-cert: DFN-CERT-2022-2668"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "MariaDB Use-After-Free Vulnerability (MDEV-28097) - Linux",
+    "description": [
+      "MariaDB is prone to a use-after-free vulnerability.",
+      "Quality of Detection (QoD): 30%"
+    ],
+    "detection_result": [
+      "Installed version: 10.0.38",
+      "Fixed version: 10.4.25"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: MariaDB Use-After-Free Vulnerability (MDEV-28097) - Linux",
+      "OID:1.3.6.1.4.1.25623.1.0.104624",
+      "Version used: 2025-09-09T05:38:49Z"
+    ],
+    "product_detection_result": [
+      "cpe:/a:mariadb:mariadb:10.0.38",
+      "Detected by MariaDB / Oracle MySQL Detection (MySQL Protocol) (OID: 1.3.6.1.4.1.25623.1.0.100152)",
+      "Product: cpe:/a:mariadb:mariadb:10.0.38",
+      "Method: MariaDB / Oracle MySQL Detection (MySQL Protocol)   OID: 1.3.6.1.4.1.25623.1.0.100152)"
+    ],
+    "impact": [
+      "MariaDB versions prior 10.4.25, 10.5.x prior to 10.5.16, 10.6.x prior to 10.6.8 and 10.7.x prior to 10.7.4."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 10.4.25, 10.5.16, 10.6.8, 10.7.4 or later."
+    ],
+    "insight": [
+      "Use-after-free in the component my_wildcmp_8bit_impl at /strings/ctype-simple.c."
+    ],
+    "log_method": [],
+    "cvss": [
+      "7.5"
+    ],
+    "port": 3306,
+    "protocol": "tcp",
+    "severity": "HIGH",
+    "references": [
+      "cve: CVE-2022-27455",
+      "url: https://jira.mariadb.org/browse/MDEV-28097",
+      "url: https://mariadb.com/kb/en/security/#full-list-of-cves-fixed-in-mariadb",
+      "cert-bund: WID-SEC-2022-0168",
+      "cert-bund: CB-K22/0461",
+      "dfn-cert: DFN-CERT-2022-2668",
+      "dfn-cert: DFN-CERT-2022-1777",
+      "dfn-cert: DFN-CERT-2022-1717",
+      "dfn-cert: DFN-CERT-2022-1688",
+      "dfn-cert: DFN-CERT-2022-1667",
+      "dfn-cert: DFN-CERT-2022-1205"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "MariaDB DoS Vulnerability (MDEV-28080) - Linux",
+    "description": [
+      "MariaDB is prone to a denial of service (DoS) vulnerability.",
+      "Quality of Detection (QoD): 30%"
+    ],
+    "detection_result": [
+      "Installed version: 10.0.38",
+      "Fixed version: 10.4.25"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: MariaDB DoS Vulnerability (MDEV-28080) - Linux",
+      "OID:1.3.6.1.4.1.25623.1.0.104610",
+      "Version used: 2025-09-09T05:38:49Z"
+    ],
+    "product_detection_result": [
+      "cpe:/a:mariadb:mariadb:10.0.38",
+      "Detected by MariaDB / Oracle MySQL Detection (MySQL Protocol) (OID: 1.3.6.1.4.1.25623.1.0.100152)",
+      "Product: cpe:/a:mariadb:mariadb:10.0.38",
+      "Method: MariaDB / Oracle MySQL Detection (MySQL Protocol)",
+      "OID: 1.3.6.1.4.1.25623.1.0.100152)"
+    ],
+    "impact": [
+      "MariaDB versions prior 10.4.25, 10.5.x prior to 10.5.16, 10.6.x prior to 10.6.8 and 10.7.x prior to 10.7.4."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 10.4.25, 10.5.16, 10.6.8, 10.7.4 or later."
+    ],
+    "insight": [
+      "Segmentation fault via the component sql/item_subselect.cc."
+    ],
+    "log_method": [],
+    "cvss": [
+      "7.5"
+    ],
+    "port": 3306,
+    "protocol": "tcp",
+    "severity": "HIGH",
+    "references": [
+      "cve: CVE-2022-27444",
+      "url: https://jira.mariadb.org/browse/MDEV-28080",
+      "url: https://mariadb.com/kb/en/security/#full-list-of-cves-fixed-in-mariadb",
+      "cert-bund: WID-SEC-2022-0168",
+      "cert-bund: CB-K22/0461",
+      "dfn-cert: DFN-CERT-2022-2668",
+      "dfn-cert: DFN-CERT-2022-1777",
+      "dfn-cert: DFN-CERT-2022-1717",
+      "dfn-cert: DFN-CERT-2022-1688",
+      "dfn-cert: DFN-CERT-2022-1667",
+      "dfn-cert: DFN-CERT-2022-1597",
+      "dfn-cert: DFN-CERT-2022-1205"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "MariaDB DoS Vulnerability (MDEV-28081) - Linux",
+    "description": [
+      "MariaDB is prone to a denial of service (DoS) vulnerability.",
+      "Quality of Detection (QoD): 30%"
+    ],
+    "detection_result": [
+      "Installed version: 10.0.38",
+      "Fixed version: 10.2.44"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: MariaDB DoS Vulnerability (MDEV-28081) - Linux",
+      "OID:1.3.6.1.4.1.25623.1.0.104610",
+      "Version used: 2025-09-09T05:38:49Z"
+    ],
+    "product_detection_result": [
+      "cpe:/a:mariadb:mariadb:10.0.38",
+      "Detected by MariaDB / Oracle MySQL Detection (MySQL Protocol) (OID: 1.3.6.1.4.1.25623.1.0.100152)"
+    ],
+    "impact": [
+      "MariaDB versions prior to 10.2.44, 10.3.x prior to 10.3.35, 10.4.x prior to 10.4.25, 10.5.x prior to 10.5.16, 10.6.x prior to 10.6.8 and 10.7.x prior to 10.7.4."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 10.2.44, 10.3.35, 10.4.25, 10.5.16, 10.6.8, 10.7.4 or later."
+    ],
+    "insight": [
+      "DoS due segmentation fault via component sql/sql_window.cc."
+    ],
+    "log_method": [],
+    "cvss": [
+      "7.5"
+    ],
+    "port": 3306,
+    "protocol": "tcp",
+    "severity": "HIGH",
+    "references": [],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "MariaDB DoS Vulnerability (MDEV-28082) - Linux",
+    "description": [
+      "MariaDB is prone to a denial of service (DoS) vulnerability.",
+      "Quality of Detection (QoD): 30%"
+    ],
+    "detection_result": [
+      "Installed version: 10.0.38",
+      "Fixed version: 10.4.25"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: MariaDB DoS Vulnerability (MDEV-28082) - Linux",
+      "OID:1.3.6.1.4.1.25623.1.0.104614",
+      "Version used: 2025-09-09T05:38:49Z"
+    ],
+    "product_detection_result": [
+      "Product: cpe:/a:mariadb:mariadb:10.0.38",
+      "Method: MariaDB / Oracle MySQL Detection (MySQL Protocol)",
+      "OID: 1.3.6.1.4.1.25623.1.0.100152)"
+    ],
+    "impact": [
+      "MariaDB versions prior 10.4.25, 10.5.x prior to 10.5.16, 10.6.x prior to 10.6.8 and 10.7.x prior to 10.7.4."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 10.4.25, 10.5.16, 10.6.8, 10.7.4 or later."
+    ],
+    "insight": [
+      "Segmentation fault via the component sql/item_cmpfunc.h."
+    ],
+    "log_method": [],
+    "cvss": [
+      "7.5"
+    ],
+    "port": 3306,
+    "protocol": "tcp",
+    "severity": "HIGH",
+    "references": [
+      "cve: CVE-2022-27446",
+      "url: https://jira.mariadb.org/browse/MDEV-28082",
+      "url: https://mariadb.com/kb/en/security/#full-list-of-cves-fixed-in-mariadb",
+      "cert-bund: WID-SEC-2022-0168",
+      "cert-bund: CB-K22/0461",
+      "dfn-cert: DFN-CERT-2022-2668",
+      "dfn-cert: DFN-CERT-2022-1777",
+      "dfn-cert: DFN-CERT-2022-1717",
+      "dfn-cert: DFN-CERT-2022-1688",
+      "dfn-cert: DFN-CERT-2022-1667",
+      "dfn-cert: DFN-CERT-2022-1205"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "MariaDB DoS Vulnerability (MDEV-28090) - Linux",
+    "description": [
+      "MariaDB is prone to a denial of service (DoS) vulnerability.",
+      "Quality of Detection (QoD): 30%"
+    ],
+    "detection_result": [
+      "Installed version: 10.0.38",
+      "Fixed version: 10.3.35"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: MariaDB DoS Vulnerability (MDEV-28090) - Linux",
+      "OID:1.3.6.1.4.1.25623.1.0.104618",
+      "Version used: 2025-09-09T05:38:49Z"
+    ],
+    "product_detection_result": [
+      "Product: cpe:/a:mariadb:mariadb:10.0.38",
+      "Method: MariaDB / Oracle MySQL Detection (MySQL Protocol)",
+      "OID: 1.3.6.1.4.1.25623.1.0.100152)"
+    ],
+    "impact": [
+      "MariaDB versions prior to 10.3.35, 10.4.x prior to 10.4.25, 10.5.x prior to 10.5.16, 10.6.x prior to 10.6.8 and 10.7.x prior to 10.7.4."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 10.3.35, 10.4.25, 10.5.16, 10.6.8, 10.7.4 or later."
+    ],
+    "insight": [
+      "DoS due segmentation fault via component sql/item_cmpfunc.cc."
+    ],
+    "log_method": [],
+    "cvss": [
+      "7.5"
+    ],
+    "port": 3306,
+    "protocol": "tcp",
+    "severity": "HIGH",
+    "references": [
+      "cve: CVE-2022-27452",
+      "url: https://jira.mariadb.org/browse/MDEV-28090",
+      "url: https://mariadb.com/kb/en/security/#full-list-of-cves-fixed-in-mariadb",
+      "cert-bund: WID-SEC-2022-0168",
+      "cert-bund: CB-K22/0461",
+      "dfn-cert: DFN-CERT-2022-2668",
+      "dfn-cert: DFN-CERT-2022-2059",
+      "dfn-cert: DFN-CERT-2022-1928",
+      "dfn-cert: DFN-CERT-2022-1777",
+      "dfn-cert: DFN-CERT-2022-1717",
+      "dfn-cert: DFN-CERT-2022-1688",
+      "dfn-cert: DFN-CERT-2022-1667",
+      "dfn-cert: DFN-CERT-2022-1205"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "MariaDB Multiple DoS Vulnerabilities (MDEV-24176, MDEV-26407, MDEV-26437) - Linux",
+    "description": [
+      "MariaDB is prone to multiple denial of service (DoS) vulnerabilities.",
+      "Quality of Detection (QoD): 30%"
+    ],
+    "detection_result": [
+      "Installed version: 10.0.38",
+      "Fixed version: 10.3.35"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host."
+    ],
+    "product_detection_result": [
+      "Product: cpe:/a:mariadb:mariadb:10.0.38",
+      "Method: MariaDB / Oracle MySQL Detection (MySQL Protocol)",
+      "OID: 1.3.6.1.4.1.25623.1.0.100152)"
+    ],
+    "impact": [
+      "MariaDB versions prior to 10.3.35, 10.4.x prior to 10.4.25, 10.5.x prior to 10.5.16, 10.6.x prior to 10.6.8 and 10.7.x prior to 10.7.4."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 10.3.35, 10.4.25, 10.5.16, 10.6.8, 10.7.4 or later."
+    ],
+    "insight": [
+      "The following vulnerabilities exist:",
+      "- CVE-2022-32085: Server crashes in Item_func_in::cleanup/Item::cleanup_processor (MDEV-26407, MDEV-24176)",
+      "- CVE-2022-32087: Server crashes in Item_args::walk_args (MDEV-26437, MDEV-24176)"
+    ],
+    "log_method": [],
+    "cvss": [
+      "7.5"
+    ],
+    "port": 3306,
+    "protocol": "tcp",
+    "severity": "HIGH",
+    "references": [],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "MariaDB Multiple Use-After-Free Vulnerabilities (MDEV-28099) - Linux",
+    "description": [
+      "MariaDB is prone to multiple use-after-free vulnerabilities."
+    ],
+    "detection_result": [
+      "Installed version: 10.0.38",
+      "Fixed version: 10.3.35"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: MariaDB Multiple Use-After-Free Vulnerabilities (MDEV-28099) - Linux"
+    ],
+    "product_detection_result": [
+      "cpe:/a:mariadb:mariadb:10.0.38",
+      "Detected by MariaDB / Oracle MySQL Detection (MySQL Protocol) (OID: 1.3.6.1.4.1.25623.1.0.100152)"
+    ],
+    "impact": [],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 10.3.35, 10.4.25, 10.5.16, 10.6.8, 10.7.4 or later."
+    ],
+    "insight": [
+      "The following vulnerabilities exist:",
+      "- CVE-2022-27447: Use-after-free in the component Binary_string::free_buer() at /sql/sql_string.h",
+      "- CVE-2022-27458: Use-after-free in the component Binary_string::free_buer() at /sql/sql_string.h"
+    ],
+    "log_method": [],
+    "cvss": [
+      "7.5"
+    ],
+    "port": 3306,
+    "protocol": "tcp",
+    "severity": "HIGH",
+    "references": [
+      "cve: CVE-2022-27447",
+      "cve: CVE-2022-27458",
+      "url: https://jira.mariadb.org/browse/MDEV-28099",
+      "url: https://mariadb.com/kb/en/security/#full-list-of-cves-fixed-in-mariadb",
+      "cert-bund: WID-SEC-2022-0168",
+      "cert-bund: CB-K22/0461",
+      "dfn-cert: DFN-CERT-2022-2668",
+      "dfn-cert: DFN-CERT-2022-2059",
+      "dfn-cert: DFN-CERT-2022-1928",
+      "dfn-cert: DFN-CERT-2022-1777",
+      "dfn-cert: DFN-CERT-2022-1717",
+      "dfn-cert: DFN-CERT-2022-1688",
+      "dfn-cert: DFN-CERT-2022-1667",
+      "dfn-cert: DFN-CERT-2022-1205"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "MariaDB Use-After-Free Vulnerability (MDEV-26354) - Linux",
+    "description": [
+      "MariaDB is prone to a use-after-free vulnerability."
+    ],
+    "detection_result": [
+      "Installed version: 10.0.38",
+      "Fixed version: 10.3.35"
+    ],
+    "detection_method": [],
+    "product_detection_result": [
+      "cpe:/a:mariadb:mariadb:10.0.38",
+      "Detected by MariaDB / Oracle MySQL Detection (MySQL Protocol) (OID: 1.3.6.1.4.1.25623.1.0.100152)"
+    ],
+    "impact": [
+      "MariaDB versions prior to 10.3.35, 10.4.x prior to 10.4.25, 10.5.x prior to 10.5.16, 10.6.x prior to 10.6.8 and 10.7.x prior to 10.7.4."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 10.3.35, 10.4.25, 10.5.16, 10.6.8, 10.7.4 or later."
+    ],
+    "insight": [],
+    "log_method": [],
+    "cvss": [
+      "7.5"
+    ],
+    "port": 3306,
+    "protocol": "tcp",
+    "severity": "HIGH",
+    "references": [],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "MariaDB DoS Vulnerability (MDEV-25638) - Linux",
+    "description": [
+      "MariaDB is prone to a denial of service (DoS) vulnerability."
+    ],
+    "detection_result": [
+      "Installed version: 10.0.38",
+      "Fixed version: 10.2.44"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: MariaDB DoS Vulnerability (MDEV-25638) - Linux",
+      "OID:1.3.6.1.4.1.25623.1.0.147581",
+      "Version used: 2025-09-09T05:38:49Z"
+    ],
+    "product_detection_result": [
+      "Product: cpe:/a:mariadb:mariadb:10.0.38",
+      "Method: MariaDB / Oracle MySQL Detection (MySQL Protocol)",
+      "OID: 1.3.6.1.4.1.25623.1.0.100152)"
+    ],
+    "impact": [
+      "MariaDB allows attackers to trigger a convert_const_to_int use-after-free when the BIGINT data type is used."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 10.2.44, 10.3.35, 10.4.25, 10.5.16, 10.6.8, 10.7.4 or later.",
+      "Aected Software/OS",
+      "MariaDB versions prior to 10.2.44, 10.3.x prior to 10.3.35, 10.4.x prior to 10.4.25, 10.5.x prior to 10.5.16, 10.6.x prior to 10.6.8 and 10.7.x prior to 10.7.4."
+    ],
+    "insight": [
+      "MariaDB allows attackers to trigger a convert_const_to_int use-after-free when the BIGINT data type is used."
+    ],
+    "log_method": [],
+    "cvss": [
+      "7.5"
+    ],
+    "port": 3306,
+    "protocol": "tcp",
+    "severity": "HIGH",
+    "references": [
+      "cve: CVE-2021-46669",
+      "url: https://jira.mariadb.org/browse/MDEV-25638",
+      "url: https://mariadb.com/kb/en/security/#full-list-of-cves-fixed-in-mariadb",
+      "cert-bund: WID-SEC-2022-0147",
+      "cert-bund: CB-K22/0126",
+      "dfn-cert: DFN-CERT-2022-2668",
+      "dfn-cert: DFN-CERT-2022-2059",
+      "dfn-cert: DFN-CERT-2022-1928",
+      "dfn-cert: DFN-CERT-2022-1777",
+      "dfn-cert: DFN-CERT-2022-1717",
+      "dfn-cert: DFN-CERT-2022-1688",
+      "dfn-cert: DFN-CERT-2022-1667",
+      "dfn-cert: DFN-CERT-2022-1597",
+      "dfn-cert: DFN-CERT-2022-1370",
+      "dfn-cert: DFN-CERT-2022-1205"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "MariaDB Buer Overow Vulnerability (MDEV-26422) - Linux",
+    "description": [
+      "MariaDB is prone to a buer overow vulnerability."
+    ],
+    "detection_result": [
+      "Installed version: 10.0.38",
+      "Fixed version: 10.2.44"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: MariaDB Buffer Overflow Vulnerability (MDEV-26422) - Linux",
+      "OID:1.3.6.1.4.1.25623.1.0.104579",
+      "Version used: 2025-09-09T05:38:49Z"
+    ],
+    "product_detection_result": [
+      "Product: cpe:/a:mariadb:mariadb:10.0.38",
+      "Method: MariaDB / Oracle MySQL Detection (MySQL Protocol)",
+      "OID: 1.3.6.1.4.1.25623.1.0.100152)"
+    ],
+    "impact": [],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 10.2.44, 10.3.35, 10.4.25, 10.5.16, 10.6.8, 10.7.4 or later.",
+      "Aected Software/OS",
+      "MariaDB versions prior to 10.2.44, 10.3.x prior to 10.3.35, 10.4.x prior to 10.4.25, 10.5.x prior to 10.5.16, 10.6.x prior to 10.6.8 and 10.7.x prior to 10.7.4."
+    ],
+    "insight": [],
+    "log_method": [],
+    "cvss": [
+      "7.5"
+    ],
+    "port": 3306,
+    "protocol": "tcp",
+    "severity": "HIGH",
+    "references": [
+      "cve: CVE-2022-27387",
+      "url: https://jira.mariadb.org/browse/MDEV-26422",
+      "url: https://mariadb.com/kb/en/security/#full-list-of-cves-fixed-in-mariadb",
+      "cert-bund: WID-SEC-2022-0166",
+      "cert-bund: CB-K22/0418",
+      "dfn-cert: DFN-CERT-2022-2668",
+      "dfn-cert: DFN-CERT-2022-2059",
+      "dfn-cert: DFN-CERT-2022-1928",
+      "dfn-cert: DFN-CERT-2022-1777",
+      "dfn-cert: DFN-CERT-2022-1717",
+      "dfn-cert: DFN-CERT-2022-1688",
+      "dfn-cert: DFN-CERT-2022-1667"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "MariaDB Use-After-Free Vulnerability (MDEV-26323) - Linux",
+    "description": [
+      "MariaDB is prone to a use-after-free vulnerability."
+    ],
+    "detection_result": [
+      "Installed version: 10.0.38",
+      "Fixed version: 10.2.44"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: MariaDB Use-After-Free Vulnerability (MDEV-26323) - Linux",
+      "OID:1.3.6.1.4.1.25623.1.0.104567",
+      "Version used: 2025-09-09T05:38:49Z"
+    ],
+    "product_detection_result": [
+      "cpe:/a:mariadb:mariadb:10.0.38",
+      "Detected by MariaDB / Oracle MySQL Detection (MySQL Protocol) (OID: 1.3.6.1.4.1. ->25623.1.0.100152)",
+      "Product: cpe:/a:mariadb:mariadb:10.0.38",
+      "Method: MariaDB / Oracle MySQL Detection (MySQL Protocol)",
+      "OID: 1.3.6.1.4.1.25623.1.0.100152)"
+    ],
+    "impact": [
+      "MariaDB versions prior to 10.2.44, 10.3.x prior to 10.3.35, 10.4.x prior to 10.4.25, 10.5.x prior to 10.5.16, 10.6.x prior to 10.6.8 and 10.7.x prior to 10.7.4."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 10.2.44, 10.3.35, 10.4.25, 10.5.16, 10.6.8, 10.7.4 or later."
+    ],
+    "insight": [],
+    "log_method": [],
+    "cvss": [
+      "7.5"
+    ],
+    "port": 3306,
+    "protocol": "tcp",
+    "severity": "HIGH",
+    "references": [
+      "cve: CVE-2022-27383",
+      "url: https://jira.mariadb.org/browse/MDEV-26323",
+      "url: https://mariadb.com/kb/en/security/#full-list-of-cves-fixed-in-mariadb",
+      "cert-bund: WID-SEC-2022-0166",
+      "cert-bund: CB-K22/0418",
+      "dfn-cert: DFN-CERT-2022-2668",
+      "dfn-cert: DFN-CERT-2022-2059",
+      "dfn-cert: DFN-CERT-2022-1928",
+      "dfn-cert: DFN-CERT-2022-1777",
+      "dfn-cert: DFN-CERT-2022-1717",
+      "dfn-cert: DFN-CERT-2022-1688",
+      "dfn-cert: DFN-CERT-2022-1667",
+      "dfn-cert: DFN-CERT-2022-1597",
+      "dfn-cert: DFN-CERT-2022-1370",
+      "dfn-cert: DFN-CERT-2022-1205"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "MariaDB DoS Vulnerability (MDEV-26047 - 2) - Linux",
+    "description": [
+      "MariaDB is prone to a denial of service (DoS) vulnerability."
+    ],
+    "detection_result": [
+      "Installed version: 10.0.38",
+      "Fixed version: 10.2.44"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: MariaDB DoS Vulnerability (MDEV-26047 - 2) - Linux",
+      "OID:1.3.6.1.4.1.25623.1.0.104561",
+      "Version used: 2025-09-09T05:38:49Z"
+    ],
+    "product_detection_result": [
+      "cpe:/a:mariadb:mariadb:10.0.38",
+      "Detected by MariaDB / Oracle MySQL Detection (MySQL Protocol) (OID: 1.3.6.1.4.1. ->25623.1.0.100152)",
+      "Product: cpe:/a:mariadb:mariadb:10.0.38",
+      "Method: MariaDB / Oracle MySQL Detection (MySQL Protocol)",
+      "OID: 1.3.6.1.4.1.25623.1.0.100152)"
+    ],
+    "impact": [
+      "MariaDB versions prior to 10.2.44, 10.3.x prior to 10.3.35, 10.4.x prior to 10.4.25, 10.5.x prior to 10.5.16, 10.6.x prior to 10.6.8 and 10.7.x prior to 10.7.4."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 10.2.44, 10.3.35, 10.4.25, 10.5.16, 10.6.8, 10.7.4 or later."
+    ],
+    "insight": [
+      "MariaDB contains a segmentation fault via the component Item_subselect::init_expr_cache_tracker."
+    ],
+    "log_method": [],
+    "cvss": [
+      "7.5"
+    ],
+    "port": 3306,
+    "protocol": "tcp",
+    "severity": "HIGH",
+    "references": [
+      "cve: CVE-2022-32083",
+      "url: https://jira.mariadb.org/browse/MDEV-26047",
+      "url: https://mariadb.com/kb/en/security/#full-list-of-cves-fixed-in-mariadb",
+      "cert-bund: WID-SEC-2022-0584",
+      "dfn-cert: DFN-CERT-2022-2668",
+      "dfn-cert: DFN-CERT-2022-2132",
+      "dfn-cert: DFN-CERT-2022-2059",
+      "dfn-cert: DFN-CERT-2022-1992",
+      "dfn-cert: DFN-CERT-2022-1980",
+      "dfn-cert: DFN-CERT-2022-1928",
+      "dfn-cert: DFN-CERT-2022-1688"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "MariaDB DoS Vulnerability (MDEV-26047) - Linux",
+    "description": [
+      "MariaDB is prone to a denial of service (DoS) vulnerability."
+    ],
+    "detection_result": [
+      "Installed version: 10.0.38",
+      "Fixed version: 10.2.44"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: MariaDB DoS Vulnerability (MDEV-26047) - Linux",
+      "OID:1.3.6.1.4.1.25623.1.0.148355",
+      "Version used: 2025-09-09T05:38:49Z"
+    ],
+    "product_detection_result": [
+      "Product: cpe:/a:mariadb:mariadb:10.0.38",
+      "Method: MariaDB / Oracle MySQL Detection (MySQL Protocol)",
+      "OID: 1.3.6.1.4.1.25623.1.0.100152)"
+    ],
+    "impact": [
+      "MariaDB versions prior to 10.2.44, 10.3.x prior to 10.3.35, 10.4.x prior to 10.4.25, 10.5.x prior to 10.5.16, 10.6.x prior to 10.6.8 and 10.7.x prior to 10.7.4."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 10.2.44, 10.3.35, 10.4.25, 10.5.16, 10.6.8, 10.7.4 or later."
+    ],
+    "insight": [],
+    "log_method": [],
+    "cvss": [
+      "7.5"
+    ],
+    "port": 3306,
+    "protocol": "tcp",
+    "severity": "HIGH",
+    "references": [
+      "cve: CVE-2022-27384",
+      "url: https://jira.mariadb.org/browse/MDEV-26047",
+      "url: https://mariadb.com/kb/en/security/#full-list-of-cves-fixed-in-mariadb",
+      "cert-bund: WID-SEC-2022-0170",
+      "cert-bund: CB-K22/0484",
+      "dfn-cert: DFN-CERT-2022-2668",
+      "dfn-cert: DFN-CERT-2022-2059",
+      "dfn-cert: DFN-CERT-2022-1928",
+      "dfn-cert: DFN-CERT-2022-1777",
+      "dfn-cert: DFN-CERT-2022-1717",
+      "dfn-cert: DFN-CERT-2022-1688",
+      "dfn-cert: DFN-CERT-2022-1667",
+      "dfn-cert: DFN-CERT-2022-1597",
+      "dfn-cert: DFN-CERT-2022-1370",
+      "dfn-cert: DFN-CERT-2022-1205"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "MariaDB DoS Vulnerability (MDEV-26061) - Linux",
+    "description": [
+      "MariaDB is prone to a denial of service (DoS) vulnerability."
+    ],
+    "detection_result": [
+      "Installed version: 10.0.38",
+      "Fixed version: 10.2.44"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: MariaDB DoS Vulnerability (MDEV-26061) - Linux",
+      "OID:1.3.6.1.4.1.25623.1.0.147987",
+      "Version used: 2025-09-09T05:38:49Z"
+    ],
+    "product_detection_result": [
+      "Product: cpe:/a:mariadb:mariadb:10.0.38",
+      "Method: MariaDB / Oracle MySQL Detection (MySQL Protocol)",
+      "OID: 1.3.6.1.4.1.25623.1.0.100152)"
+    ],
+    "impact": [
+      "MariaDB versions prior to 10.2.44, 10.3.x prior to 10.3.35, 10.4.x prior to 10.4.25, 10.5.x prior to 10.5.16, 10.6.x prior to 10.6.8 and 10.7.x prior to 10.7.4."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 10.2.44, 10.3.35, 10.4.25, 10.5.16, 10.6.8, 10.7.4 or later."
+    ],
+    "insight": [],
+    "log_method": [],
+    "cvss": [
+      "7.5"
+    ],
+    "port": 3306,
+    "protocol": "tcp",
+    "severity": "HIGH",
+    "references": [
+      "cve: CVE-2022-27381",
+      "url: https://jira.mariadb.org/browse/MDEV-26061",
+      "url: https://mariadb.com/kb/en/security/#full-list-of-cves-fixed-in-mariadb",
+      "cert-bund: WID-SEC-2022-0359",
+      "cert-bund: CB-K22/0440",
+      "dfn-cert: DFN-CERT-2022-2668",
+      "dfn-cert: DFN-CERT-2022-2059",
+      "dfn-cert: DFN-CERT-2022-1928",
+      "dfn-cert: DFN-CERT-2022-1777",
+      "dfn-cert: DFN-CERT-2022-1717",
+      "dfn-cert: DFN-CERT-2022-1688",
+      "dfn-cert: DFN-CERT-2022-1667",
+      "dfn-cert: DFN-CERT-2022-1597",
+      "dfn-cert: DFN-CERT-2022-1370",
+      "dfn-cert: DFN-CERT-2022-1205"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "MariaDB DoS Vulnerability (MDEV-26280) - Linux",
+    "description": [
+      "MariaDB is prone to a denial of service (DoS) vulnerability."
+    ],
+    "detection_result": [
+      "Installed version: 10.0.38",
+      "Fixed version: 10.2.44"
+    ],
+    "detection_method": [],
+    "product_detection_result": [
+      "cpe:/a:mariadb:mariadb:10.0.38",
+      "Detected by MariaDB / Oracle MySQL Detection (MySQL Protocol) (OID: 1.3.6.1.4.1. ->25623.1.0.100152)"
+    ],
+    "impact": [],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 10.2.44, 10.3.35, 10.4.25, 10.5.16, 10.6.8, 10.7.4 or later."
+    ],
+    "insight": [],
+    "log_method": [],
+    "cvss": [
+      "7.5"
+    ],
+    "port": 3306,
+    "protocol": "tcp",
+    "severity": "HIGH",
+    "references": [],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "MariaDB DoS Vulnerability (CVE-2023-5157) - Linux",
+    "description": [
+      "MariaDB is prone to a denial of service (DoS) vulnerability."
+    ],
+    "detection_result": [
+      "Installed version: 10.0.38",
+      "Fixed version: 10.4.26"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: MariaDB DoS Vulnerability (CVE-2023-5157) - Linux",
+      "OID:1.3.6.1.4.1.25623.1.0.114196",
+      "Version used: 2025-09-09T05:38:49Z"
+    ],
+    "product_detection_result": [
+      "cpe:/a:mariadb:mariadb:10.0.38",
+      "Detected by MariaDB / Oracle MySQL Detection (MySQL Protocol) (OID: 1.3.6.1.4.1. ->25623.1.0.100152)"
+    ],
+    "impact": [
+      "MariaDB versions prior to 10.4.26, 10.5.x prior to 10.5.17, 10.6.x prior to 10.6.9, 10.7.x prior to 10.7.5 and 10.8.x prior to 10.8.4."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 10.4.26, 10.5.17, 10.6.9, 10.7.5, 10.8.4 or later."
+    ],
+    "insight": [
+      "An OpenVAS port scan on ports 3306 and 4567 allows a malicious remote client to cause a denial of service."
+    ],
+    "log_method": [],
+    "cvss": [
+      "7.5"
+    ],
+    "port": 3306,
+    "protocol": "tcp",
+    "severity": "HIGH",
+    "references": [
+      "cve: CVE-2023-5157",
+      "url: https://mariadb.com/kb/en/security/#full-list-of-cves-fixed-in-mariadb",
+      "url: https://bugzilla.redhat.com/show_bug.cgi?id=2240246",
+      "cert-bund: WID-SEC-2023-2444",
+      "dfn-cert: DFN-CERT-2023-2850",
+      "dfn-cert: DFN-CERT-2023-2503"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "MariaDB DoS Vulnerability (MDEV-26353) - Linux",
+    "description": [
+      "MariaDB is prone to a denial of service (DoS) vulnerability."
+    ],
+    "detection_result": [
+      "Installed version: 10.0.38",
+      "Fixed version: 10.3.35"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: MariaDB DoS Vulnerability (MDEV-26353) - Linux",
+      "OID:1.3.6.1.4.1.25623.1.0.104569",
+      "Version used: 2025-09-09T05:38:49Z"
+    ],
+    "product_detection_result": [
+      "cpe:/a:mariadb:mariadb:10.0.38",
+      "Detected by MariaDB / Oracle MySQL Detection (MySQL Protocol) (OID: 1.3.6.1.4.1. ->25623.1.0.100152)"
+    ],
+    "impact": [
+      "MariaDB versions prior to 10.3.35, 10.4.x prior to 10.4.25, 10.5.x prior to 10.5.16, 10.6.x prior to 10.6.8 and 10.7.x prior to 10.7.4."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 10.3.35, 10.4.25, 10.5.16, 10.6.8, 10.7.4 or later."
+    ],
+    "insight": [],
+    "log_method": [],
+    "cvss": [
+      "7.5"
+    ],
+    "port": 3306,
+    "protocol": "tcp",
+    "severity": "HIGH",
+    "references": [
+      "cve: CVE-2022-27379",
+      "url: https://jira.mariadb.org/browse/MDEV-26353",
+      "url: https://mariadb.com/kb/en/security/#full-list-of-cves-fixed-in-mariadb",
+      "cert-bund: WID-SEC-2022-0359",
+      "cert-bund: CB-K22/0440",
+      "dfn-cert: DFN-CERT-2022-2668",
+      "dfn-cert: DFN-CERT-2022-2059",
+      "dfn-cert: DFN-CERT-2022-1928",
+      "dfn-cert: DFN-CERT-2022-1777",
+      "dfn-cert: DFN-CERT-2022-1717",
+      "dfn-cert: DFN-CERT-2022-1688",
+      "dfn-cert: DFN-CERT-2022-1667",
+      "dfn-cert: DFN-CERT-2022-1597",
+      "dfn-cert: DFN-CERT-2022-1205"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "MariaDB DoS Vulnerability (MDEV-26402) - Linux",
+    "description": [
+      "MariaDB is prone to a denial of service (DoS) vulnerability."
+    ],
+    "detection_result": [
+      "Installed version: 10.0.38",
+      "Fixed version: 10.4.25"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: MariaDB DoS Vulnerability (MDEV-26402) - Linux",
+      "OID:1.3.6.1.4.1.25623.1.0.104573",
+      "Version used: 2025-09-09T05:38:49Z"
+    ],
+    "product_detection_result": [
+      "Product: cpe:/a:mariadb:mariadb:10.0.38",
+      "Method: MariaDB / Oracle MySQL Detection (MySQL Protocol)",
+      "OID: 1.3.6.1.4.1.25623.1.0.100152)"
+    ],
+    "impact": [
+      "MariaDB versions prior to 10.4.25, 10.5.x prior to 10.5.16, 10.6.x prior to 10.6.8 and 10.7.x prior to 10.7.4."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 10.4.25, 10.5.16, 10.6.8, 10.7.4 or later."
+    ],
+    "insight": [],
+    "log_method": [],
+    "cvss": [
+      "7.5"
+    ],
+    "port": 3306,
+    "protocol": "tcp",
+    "severity": "HIGH",
+    "references": [
+      "cve: CVE-2022-27382",
+      "url: https://jira.mariadb.org/browse/MDEV-26402",
+      "url: https://mariadb.com/kb/en/security/#full-list-of-cves-fixed-in-mariadb",
+      "cert-bund: WID-SEC-2022-0359",
+      "cert-bund: CB-K22/0440",
+      "dfn-cert: DFN-CERT-2022-2668",
+      "dfn-cert: DFN-CERT-2022-1777",
+      "dfn-cert: DFN-CERT-2022-1717",
+      "dfn-cert: DFN-CERT-2022-1688",
+      "dfn-cert: DFN-CERT-2022-1667",
+      "dfn-cert: DFN-CERT-2022-1597",
+      "dfn-cert: DFN-CERT-2022-1205"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "MariaDB DoS Vulnerability (MDEV-26406) - Linux",
+    "description": [
+      "MariaDB is prone to a denial of service (DoS) vulnerability."
+    ],
+    "detection_result": [
+      "Installed version: 10.0.38",
+      "Fixed version: 10.2.44"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: MariaDB DoS Vulnerability (MDEV-26406) - Linux",
+      "OID:1.3.6.1.4.1.25623.1.0.104575",
+      "Version used: 2025-09-09T05:38:49Z"
+    ],
+    "product_detection_result": [
+      "Product: cpe:/a:mariadb:mariadb:10.0.38",
+      "Method: MariaDB / Oracle MySQL Detection (MySQL Protocol)",
+      "OID: 1.3.6.1.4.1.25623.1.0.100152)"
+    ],
+    "impact": [
+      "MariaDB versions prior to 10.2.44, 10.3.x prior to 10.3.35, 10.4.x prior to 10.4.25, 10.5.x prior to 10.5.16, 10.6.x prior to 10.6.8 and 10.7.x prior to 10.7.4."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 10.2.44, 10.3.35, 10.4.25, 10.5.16, 10.6.8, 10.7.4 or later."
+    ],
+    "insight": [],
+    "log_method": [],
+    "cvss": [
+      "7.5"
+    ],
+    "port": 3306,
+    "protocol": "tcp",
+    "severity": "HIGH",
+    "references": [
+      "cve: CVE-2022-27386",
+      "url: https://jira.mariadb.org/browse/MDEV-26406",
+      "url: https://mariadb.com/kb/en/security/#full-list-of-cves-fixed-in-mariadb",
+      "cert-bund: WID-SEC-2022-0170",
+      "cert-bund: CB-K22/0484",
+      "dfn-cert: DFN-CERT-2022-2668",
+      "dfn-cert: DFN-CERT-2022-2059",
+      "dfn-cert: DFN-CERT-2022-1928",
+      "dfn-cert: DFN-CERT-2022-1777",
+      "dfn-cert: DFN-CERT-2022-1717",
+      "dfn-cert: DFN-CERT-2022-1688",
+      "dfn-cert: DFN-CERT-2022-1667",
+      "dfn-cert: DFN-CERT-2022-1597",
+      "dfn-cert: DFN-CERT-2022-1370",
+      "dfn-cert: DFN-CERT-2022-1205"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "MariaDB DoS Vulnerability (MDEV-26410, MDEV-22001) - Linux",
+    "description": [
+      "MariaDB is prone to a denial of service (DoS) vulnerability."
+    ],
+    "detection_result": [
+      "Installed version: 10.0.38",
+      "Fixed version: 10.4.26"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: MariaDB DoS Vulnerability (MDEV-26410, MDEV-22001) - Linux",
+      "OID:1.3.6.1.4.1.25623.1.0.148365",
+      "Version used: 2025-09-09T05:38:49Z"
+    ],
+    "product_detection_result": [
+      "Product: cpe:/a:mariadb:mariadb:10.0.38",
+      "Method: MariaDB / Oracle MySQL Detection (MySQL Protocol)",
+      "OID: 1.3.6.1.4.1.25623.1.0.100152)"
+    ],
+    "impact": [
+      "MariaDB versions prior to 10.4.26, 10.5.x prior to 10.5.17, 10.6.x prior to 10.6.9, 10.7.x prior to 10.7.5, 10.8.x prior to 10.8.4 and 10.9.x prior to 10.9.2."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 10.4.26, 10.5.17, 10.6.9, 10.7.5, 10.8.4, 10.9.2 or later."
+    ],
+    "insight": [
+      "MariaDB contains a segmentation fault via the component st_select_lex_unit::exclude_level."
+    ],
+    "log_method": [],
+    "cvss": [
+      "7.5"
+    ],
+    "port": 3306,
+    "protocol": "tcp",
+    "severity": "HIGH",
+    "references": [
+      "cve: CVE-2022-32089",
+      "url: https://jira.mariadb.org/browse/MDEV-26410",
+      "url: https://jira.mariadb.org/browse/MDEV-22001",
+      "url: https://mariadb.com/kb/en/security/#full-list-of-cves-fixed-in-mariadb",
+      "cert-bund: WID-SEC-2022-0641",
+      "dfn-cert: DFN-CERT-2023-2503",
+      "dfn-cert: DFN-CERT-2022-2668",
+      "dfn-cert: DFN-CERT-2022-2132",
+      "dfn-cert: DFN-CERT-202"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "MariaDB DoS Vulnerability (MDEV-26412) - Linux",
+    "description": [
+      "MariaDB is prone to a denial of service (DoS) vulnerability."
+    ],
+    "detection_result": [
+      "Installed version: 10.0.38",
+      "Fixed version: 10.4.25"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: MariaDB DoS Vulnerability (MDEV-26412) - Linux",
+      "OID:1.3.6.1.4.1.25623.1.0.148371",
+      "Version used: 2025-09-09T05:38:49Z"
+    ],
+    "product_detection_result": [
+      "cpe:/a:mariadb:mariadb:10.0.38",
+      "Detected by MariaDB / Oracle MySQL Detection (MySQL Protocol) (OID: 1.3.6.1.4.1.",
+      "->25623.1.0.100152)",
+      "Product: cpe:/a:mariadb:mariadb:10.0.38",
+      "Method: MariaDB / Oracle MySQL Detection (MySQL Protocol)",
+      "OID: 1.3.6.1.4.1.25623.1.0.100152)"
+    ],
+    "impact": [
+      "MariaDB versions prior to 10.4.25, 10.5.x prior to 10.5.16, 10.6.x prior to 10.6.8 and 10.7.x prior to 10.7.4."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 10.4.25, 10.5.16, 10.6.8, 10.7.4 or later."
+    ],
+    "insight": [
+      "MariaDB contains a segmentation fault via the component Item_eld::x_outer_eld."
+    ],
+    "log_method": [],
+    "cvss": [
+      "7.5"
+    ],
+    "port": 3306,
+    "protocol": "tcp",
+    "severity": "HIGH",
+    "references": [
+      "cve: CVE-2022-32086",
+      "url: https://jira.mariadb.org/browse/MDEV-26412",
+      "url: https://mariadb.com/kb/en/security/#full-list-of-cves-fixed-in-mariadb",
+      "cert-bund: WID-SEC-2022-0584",
+      "dfn-cert: DFN-CERT-2022-2668",
+      "dfn-cert: DFN-CERT-2022-2132",
+      "dfn-cert: DFN-CERT-2022-1992",
+      "dfn-cert: DFN-CERT-2022-1980",
+      "dfn-cert: DFN-CERT-2022-1688"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "MariaDB DoS Vulnerability (MDEV-26415) - Linux",
+    "description": [
+      "MariaDB is prone to a denial of service (DoS) vulnerability."
+    ],
+    "detection_result": [
+      "Installed version: 10.0.38",
+      "Fixed version: 10.3.32"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: MariaDB DoS Vulnerability (MDEV-26415) - Linux",
+      "OID:1.3.6.1.4.1.25623.1.0.104577",
+      "Version used: 2025-09-09T05:38:49Z"
+    ],
+    "product_detection_result": [
+      "cpe:/a:mariadb:mariadb:10.0.38",
+      "Detected by MariaDB / Oracle MySQL Detection (MySQL Protocol) (OID: 1.3.6.1.4.1.",
+      "->25623.1.0.100152)",
+      "Product: cpe:/a:mariadb:mariadb:10.0.38",
+      "Method: MariaDB / Oracle MySQL Detection (MySQL Protocol)",
+      "OID: 1.3.6.1.4.1.25623.1.0.100152)"
+    ],
+    "impact": [
+      "MariaDB versions prior to 10.3.32, 10.4.x prior to 10.4.22, 10.5.x prior to 10.5.13 and 10.6.x prior to 10.6.5."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 10.3.32, 10.4.22, 10.5.13, 10.6.5 or later."
+    ],
+    "insight": [],
+    "log_method": [],
+    "cvss": [
+      "7.5"
+    ],
+    "port": 3306,
+    "protocol": "tcp",
+    "severity": "HIGH",
+    "references": [
+      "cve: CVE-2022-27385",
+      "url: https://jira.mariadb.org/browse/MDEV-26415",
+      "url: https://mariadb.com/kb/en/security/#full-list-of-cves-fixed-in-mariadb",
+      "cert-bund: WID-SEC-2022-0170",
+      "cert-bund: CB-K22/0484",
+      "dfn-cert: DFN-CERT-2022-1597",
+      "dfn-cert: DFN-CERT-2022-1241"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "MariaDB DoS Vulnerability (MDEV-26419) - Linux",
+    "description": [
+      "MariaDB is prone to a denial of service (DoS) vulnerability."
+    ],
+    "detection_result": [
+      "Installed version: 10.0.38",
+      "Fixed version: 10.2.44"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: MariaDB DoS Vulnerability (MDEV-26419) - Linux",
+      "OID:1.3.6.1.4.1.25623.1.0.148363",
+      "Version used: 2025-09-09T05:38:49Z"
+    ],
+    "product_detection_result": [
+      "cpe:/a:mariadb:mariadb:10.0.38",
+      "Detected by MariaDB / Oracle MySQL Detection (MySQL Protocol) (OID: 1.3.6.1.4.1.",
+      "->25623.1.0.100152)",
+      "Product: cpe:/a:mariadb:mariadb:10.0.38"
+    ],
+    "impact": [
+      "MariaDB versions prior to 10.2.44, 10.3.x prior to 10.3.35, 10.4.x prior to 10.4.25, 10.5.x prior to 10.5.16, 10.6.x prior to 10.6.8 and 10.7.x prior to 10.7.4."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 10.2.44, 10.3.35, 10.4.25, 10.5.16, 10.6.8, 10.7.4 or later."
+    ],
+    "insight": [
+      "MariaDB contains a segmentation fault via the component",
+      "Exec_time_tracker::get_loops/Filesort_tracker::report_use/lesort."
+    ],
+    "log_method": [],
+    "cvss": [
+      "7.5"
+    ],
+    "port": 3306,
+    "protocol": "tcp",
+    "severity": "HIGH",
+    "references": [],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "MariaDB DoS Vulnerability (MDEV-26420) - Linux",
+    "description": [
+      "MariaDB is prone to a denial of service (DoS) vulnerability."
+    ],
+    "detection_result": [
+      "Installed version: 10.0.38",
+      "Fixed version: 10.4.26"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host."
+    ],
+    "product_detection_result": [
+      "cpe:/a:mariadb:mariadb:10.0.38",
+      "Detected by MariaDB / Oracle MySQL Detection (MySQL Protocol) (OID: 1.3.6.1.4.1.25623.1.0.100152)"
+    ],
+    "impact": [
+      "MariaDB versions prior to 10.4.26, 10.5.x prior to 10.5.17, 10.6.x prior to 10.6.9, 10.7.x prior to 10.7.5, 10.8.x prior to 10.8.4 and 10.9.x prior to 10.9.2."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 10.4.26, 10.5.17, 10.6.9, 10.7.5, 10.8.4, 10.9.2 or later."
+    ],
+    "insight": [
+      "MariaDB contains a use-after-poison in prepare_inplace_add_virtual at /storage/innobase/handler/handler0alter.cc."
+    ],
+    "log_method": [],
+    "cvss": [
+      "7.5"
+    ],
+    "port": 3306,
+    "protocol": "tcp",
+    "severity": "HIGH",
+    "references": [
+      "cve: CVE-2022-32088",
+      "url: https://jira.mariadb.org/browse/MDEV-26419",
+      "url: https://mariadb.com/kb/en/security/#full-list-of-cves-fixed-in-mariadb",
+      "cert-bund: WID-SEC-2022-0641",
+      "dfn-cert: DFN-CERT-2022-2668",
+      "dfn-cert: DFN-CERT-2022-2132",
+      "dfn-cert: DFN-CERT-2022-2059",
+      "dfn-cert: DFN-CERT-2022-1992",
+      "dfn-cert: DFN-CERT-2022-1980",
+      "dfn-cert: DFN-CERT-2022-1928",
+      "dfn-cert: DFN-CERT-2022-1688"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "MariaDB DoS Vulnerability (MDEV-26423) - Linux",
+    "description": [
+      "MariaDB is prone to a denial of service (DoS) vulnerability."
+    ],
+    "detection_result": [
+      "Installed version: 10.0.38",
+      "Fixed version: 10.2.44"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host."
+    ],
+    "product_detection_result": [
+      "cpe:/a:mariadb:mariadb:10.0.38",
+      "Detected by MariaDB / Oracle MySQL Detection (MySQL Protocol) (OID: 1.3.6.1.4.1.25623.1.0.100152)"
+    ],
+    "impact": [
+      "MariaDB versions prior to 10.2.44, 10.3.x prior to 10.3.35, 10.4.x prior to 10.4.25, 10.5.x prior to 10.5.16, 10.6.x prior to 10.6.8 and 10.7.x prior to 10.7.4."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 10.2.44, 10.3.35, 10.4.25, 10.5.16, 10.6.8, 10.7.4 or later."
+    ],
+    "insight": [],
+    "log_method": [],
+    "cvss": [
+      "7.5"
+    ],
+    "port": 3306,
+    "protocol": "tcp",
+    "severity": "HIGH",
+    "references": [
+      "cve: CVE-2022-32081",
+      "url: https://jira.mariadb.org/browse/MDEV-26420",
+      "url: https://mariadb.com/kb/en/security/#full-list-of-cves-fixed-in-mariadb",
+      "cert-bund: WID-SEC-2022-0641",
+      "dfn-cert: DFN-CERT-2023-2503",
+      "dfn-cert: DFN-CERT-2022-2668",
+      "dfn-cert: DFN-CERT-2022-2132",
+      "dfn-cert: DFN-CERT-2022-1992",
+      "dfn-cert: DFN-CERT-2022-1980"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "MariaDB DoS Vulnerability (MDEV-26427) - Linux",
+    "description": [
+      "MariaDB is prone to a denial of service (DoS) vulnerability.",
+      "Quality of Detection (QoD): 30%"
+    ],
+    "detection_result": [
+      "Installed version: 10.0.38",
+      "Fixed version: 10.3.36"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: MariaDB DoS Vulnerability (MDEV-26427) - Linux",
+      "OID:1.3.6.1.4.1.25623.1.0.148361",
+      "Version used: 2025-09-09T05:38:49Z"
+    ],
+    "product_detection_result": [
+      "Product: cpe:/a:mariadb:mariadb:10.0.38",
+      "Method: MariaDB / Oracle MySQL Detection (MySQL Protocol)",
+      "OID: 1.3.6.1.4.1.25623.1.0.100152)"
+    ],
+    "impact": [
+      "MariaDB versions prior to 10.3.36, 10.4.x prior to 10.4.26, 10.5.x prior to 10.5.17, 10.6.x prior to 10.6.9, 10.7.x prior to 10.7.5, 10.8.x prior to 10.8.4 and 10.9.x prior to 10.9.2."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 10.3.36, 10.4.26, 10.5.17, 10.6.9, 10.7.5, 10.8.4, 10.9.2 or later."
+    ],
+    "insight": [
+      "MariaDB contains a segmentation fault via the component sub_select."
+    ],
+    "log_method": [],
+    "cvss": [
+      "7.0"
+    ],
+    "port": 3306,
+    "protocol": "tcp",
+    "severity": "HIGH",
+    "references": [
+      "cve: CVE-2022-32084",
+      "url: https://jira.mariadb.org/browse/MDEV-26427",
+      "url: https://mariadb.com/kb/en/security/#full-list-of-cves-fixed-in-mariadb",
+      "cert-bund: WID-SEC-2022-0641",
+      "dfn-cert: DFN-CERT-2023-2503",
+      "dfn-cert: DFN-CERT-2023-2216",
+      "dfn-cert: DFN-CERT-2023-1625",
+      "dfn-cert: DFN-CERT-2022-2668",
+      "dfn-cert: DFN-CERT-2022-2132",
+      "dfn-cert: DFN-CERT-2022-2059",
+      "dfn-cert: DFN-CERT-2022-1992",
+      "dfn-cert: DFN-CERT-2022-1980"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "MariaDB DoS Vulnerability (MDEV-26431, MDEV-23809) - Linux",
+    "description": [
+      "MariaDB is prone to a denial of service (DoS) vulnerability.",
+      "Quality of Detection (QoD): 30%"
+    ],
+    "detection_result": [
+      "Installed version: 10.0.38",
+      "Fixed version: 10.3.36"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: MariaDB DoS Vulnerability (MDEV-26431, MDEV-23809) - Linux",
+      "OID:1.3.6.1.4.1.25623.1.0.148367",
+      "Version used: 2025-09-09T05:38:49Z"
+    ],
+    "product_detection_result": [
+      "Product: cpe:/a:mariadb:mariadb:10.0.38",
+      "Method: MariaDB / Oracle MySQL Detection (MySQL Protocol)",
+      "OID: 1.3.6.1.4.1.25623.1.0.100152)"
+    ],
+    "impact": [
+      "MariaDB versions prior to 10.3.36, 10.4.x prior to 10.4.26, 10.5.x prior to 10.5.17, 10.6.x prior to 10.6.9, 10.7.x prior to 10.7.5, 10.8.x prior to 10.8.4 and 10.9.x prior to 10.9.2."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 10.3.36, 10.4.26, 10.5.17, 10.6.9, 10.7.5, 10.8.4, 10.9.2 or later."
+    ],
+    "insight": [
+      "MariaDB contains a use-after-poison in __interceptor_memset at /libsani- tizer/sanitizer_common/sanitizer_common_interceptors.inc."
+    ],
+    "log_method": [],
+    "cvss": [
+      "7.5"
+    ],
+    "port": 3306,
+    "protocol": "tcp",
+    "severity": "HIGH",
+    "references": [
+      "cve: CVE-2022-32091",
+      "url: https://jira.mariadb.org/browse/MDEV-26431",
+      "url: https://jira.mariadb.org/browse/MDEV-23809",
+      "url: https://mariadb.com/kb/en/security/#full-list-of-cves-fixed-in-mariadb",
+      "cert-bund: WID-SEC-2022-0641",
+      "dfn-cert: DFN-CERT-2023-2503",
+      "dfn-cert: DFN-CERT-2023-2216",
+      "dfn-cert: DFN-CERT-2022-2668",
+      "dfn-cert: DFN-CERT-2022-2132",
+      "dfn-cert: DFN-CERT-2022-2059",
+      "dfn-cert: DFN-CERT-2022-1992",
+      "dfn-cert: DFN-CERT-2022-1980"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "MariaDB DoS Vulnerability (MDEV-26433) - Linux",
+    "description": [
+      "MariaDB is prone to a denial of service (DoS) vulnerability.",
+      "Quality of Detection (QoD): 30%"
+    ],
+    "detection_result": [
+      "Installed version: 10.0.38",
+      "Fixed version: 10.5.17"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: MariaDB DoS Vulnerability (MDEV-26433) - Linux",
+      "OID:1.3.6.1.4.1.25623.1.0.148359",
+      "Version used: 2025-09-09T05:38:49Z"
+    ],
+    "product_detection_result": [
+      "Product: cpe:/a:mariadb:mariadb:10.0.38",
+      "Method: MariaDB / Oracle MySQL Detection (MySQL Protocol)",
+      "OID: 1.3.6.1.4.1.25623.1.0.100152)"
+    ],
+    "impact": [
+      "MariaDB versions prior to 10.5.17, 10.6.x prior to 10.6.9, 10.7.x prior to 10.7.5, 10.8.x prior to 10.8.4 and 10.9.x prior to 10.9.2."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 10.5.17, 10.6.9, 10.7.5, 10.8.4, 10.9.2 or later."
+    ],
+    "insight": [
+      "MariaDB contains an assertion failure at table->get_ref_count() == 0 in dict0dict.cc."
+    ],
+    "log_method": [],
+    "cvss": [
+      "7.5"
+    ],
+    "port": 3306,
+    "protocol": "tcp",
+    "severity": "HIGH",
+    "references": [
+      "cve: CVE-2022-32082",
+      "url: https://jira.mariadb.org/browse/MDEV-26433",
+      "url: https://mariadb.com/kb/en/security/#full-list-of-cves-fixed-in-mariadb",
+      "cert-bund: WID-SEC-2022-0641",
+      "dfn-cert: DFN-CERT-2023-2503",
+      "dfn-cert: DFN-CERT-2022-2668",
+      "dfn-cert: DFN-CERT-2022-2132",
+      "dfn-cert: DFN-CERT-2022-1980"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "MariaDB Multiple Vulnerabilities (MDEV-36268, MDEV-36613)",
+    "description": [
+      "MariaDB is prone to multiple vulnerabilities.",
+      "Quality of Detection (QoD): 30%"
+    ],
+    "detection_result": [
+      "Installed version: 10.0.38",
+      "Fixed version: 10.5.29",
+      "Installation path / port: 3306/tcp"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: MariaDB Multiple Vulnerabilities (MDEV-36268, MDEV-36613)",
+      "OID:1.3.6.1.4.1.25623.1.0.125393",
+      "Version used: 2025-11-28T15:41:52Z"
+    ],
+    "product_detection_result": [
+      "Product: cpe:/a:mariadb:mariadb:10.0.38",
+      "Method: MariaDB / Oracle MySQL Detection (MySQL Protocol)",
+      "OID: 1.3.6.1.4.1.25623.1.0.100152)"
+    ],
+    "impact": [
+      "MariaDB versions prior to 10.5.29, 10.6.x prior to 10.6.22, 10.7.x prior to 10.11.12 and 11.0.x prior to 11.4.6.",
+      "The following aws exist:",
+      "- CVE-2025-30693: This vulnerability allows high privileged attacker with network access via multiple protocols to compromise MySQL Server. Successful attacks of this vulnerability can result in unauthorized ability to cause a hang or frequently repeatable crash (complete DOS) of MySQL Server as well as unauthorized update, insert or delete access to some of MySQL Server accessible data.",
+      "- CVE-2025-30722: This vulnerability allows low privileged attacker with network access via multiple protocols to compromise MySQL Client. Successful attacks of this vulnerability can result in unauthorized access to critical data or complete access to all MySQL Client accessible data as well as unauthorized update, insert or delete access to some of MySQL Client accessible data."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 10.5.29, 10.6.22, 10.11.12, 11.4.6 or later."
+    ],
+    "insight": [
+      "The following aws exist:",
+      "- CVE-2025-30693: This vulnerability allows high privileged attacker with network access via multiple protocols to compromise MySQL Server. Successful attacks of this vulnerability can result in unauthorized ability to cause a hang or frequently repeatable crash (complete DOS) of MySQL Server as well as unauthorized update, insert or delete access to some of MySQL Server accessible data.",
+      "- CVE-2025-30722: This vulnerability allows low privileged attacker with network access via multiple protocols to compromise MySQL Client. Successful attacks of this vulnerability can result in unauthorized access to critical data or complete access to all MySQL Client accessible data as well as unauthorized update, insert or delete access to some of MySQL Client accessible data."
+    ],
+    "log_method": [],
+    "cvss": [
+      "6.5"
+    ],
+    "port": 3306,
+    "protocol": "tcp",
+    "severity": "MEDIUM",
+    "references": [
+      "cve: CVE-2025-30693",
+      "cve: CVE-2025-30722",
+      "url: https://jira.mariadb.org/browse/MDEV-36268",
+      "url: https://jira.mariadb.org/browse/MDEV-36613",
+      "url: https://mariadb.com/docs/server/security/securing-mariadb/security#full-list-of-cves-fixed-in-mariadb",
+      "url: https://www.oracle.com/security-alerts/cpuapr2025.html",
+      "cert-bund: WID-SEC-2025-1850",
+      "cert-bund: WID-SEC-2025-0813",
+      "dfn-cert: DFN-CERT-2026-0037",
+      "dfn-cert: DFN-CERT-2025-3583",
+      "dfn-cert: DFN-CERT-2025-2602",
+      "dfn-cert: DFN-CERT-2025-2523",
+      "dfn-cert: DFN-CERT-2025-1470",
+      "dfn-cert: DFN-CERT-2025-1424",
+      "dfn-cert: DFN-CERT-2025-1304",
+      "dfn-cert: DFN-CERT-2025-0973"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "MariaDB DoS Vulnerability (MDEV-29644) - Linux",
+    "description": [
+      "MariaDB is prone to a denial of service (DoS) vulnerability."
+    ],
+    "detection_result": [
+      "Installed version: 10.0.38",
+      "Fixed version: 10.3.39"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: MariaDB DoS Vulnerability (MDEV-29644) - Linux",
+      "OID:1.3.6.1.4.1.25623.1.0.149185",
+      "Version used: 2025-09-09T05:38:49Z",
+      "Product Detection Result",
+      "Product: cpe:/a:mariadb:mariadb:10.0.38",
+      "Method: MariaDB / Oracle MySQL Detection (MySQL Protocol)",
+      "OID: 1.3.6.1.4.1.25623.1.0.100152)"
+    ],
+    "product_detection_result": [
+      "cpe:/a:mariadb:mariadb:10.0.38",
+      "Detected by MariaDB / Oracle MySQL Detection (MySQL Protocol) (OID: 1.3.6.1.4.1.25623.1.0.100152)"
+    ],
+    "impact": [],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 10.3.39, 10.4.29, 10.5.20, 10.6.13, 10.8.8, 10.9.6, 10.10.4, 10.11.3 or later."
+    ],
+    "insight": [
+      "It is possible for function spider_db_mbase::print_warnings to dereference a null pointer."
+    ],
+    "log_method": [],
+    "cvss": [
+      "6.2"
+    ],
+    "port": 3306,
+    "protocol": "tcp",
+    "severity": "MEDIUM",
+    "references": [
+      "cve: CVE-2022-47015",
+      "url: https://github.com/MariaDB/server/commit/be0a46b3d52b58956fd0d47d040b9f4514406954",
+      "url: https://jira.mariadb.org/browse/MDEV-29644",
+      "url: https://mariadb.com/kb/en/security/#full-list-of-cves-fixed-in-mariadb",
+      "cert-bund: WID-SEC-2023-0167",
+      "dfn-cert: DFN-CERT-2024-0220",
+      "dfn-cert: DFN-CERT-2023-2503",
+      "dfn-cert: DFN-CERT-2023-2216",
+      "dfn-cert: DFN-CERT-2023-1276"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "MariaDB Directory Traversal RCE Vulnerability (Nov 2025)",
+    "description": [
+      "MariaDB is prone to a directory traversal remote code execution (RCE) vulnerability in the mariadb-dump Utility."
+    ],
+    "detection_result": [
+      "Installed version: 10.0.38",
+      "Fixed version: 10.6.24",
+      "Installation",
+      "path / port: 3306/tcp"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: MariaDB Directory Traversal RCE Vulnerability (Nov 2025)",
+      "OID:1.3.6.1.4.1.25623.1.0.119238",
+      "Version used: 2025-11-28T15:41:52Z",
+      "Product Detection Result",
+      "Product: cpe:/a:mariadb:mariadb:10.0.38"
+    ],
+    "product_detection_result": [
+      "cpe:/a:mariadb:mariadb:10.0.38",
+      "Detected by MariaDB / Oracle MySQL Detection (MySQL Protocol) (OID: 1.3.6.1.4.1.25623.1.0.100152)"
+    ],
+    "impact": [
+      "This vulnerability allows remote attackers to execute arbitrary code on aected installations of MariaDB. Interaction with the mariadb-dump utility is required to exploit this vulnerability but attack vectors may vary depending on the implementation."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 10.6.24, 10.11.15, 11.4.9, 11.8.4 or later."
+    ],
+    "insight": [
+      "The specic aw exists within the handling of view names. The issue results from the lack of proper validation of a user-supplied path prior to using it in le operations. An attacker can leverage this vulnerability to execute code in the context of the current user."
+    ],
+    "log_method": [],
+    "cvss": [
+      "6.2"
+    ],
+    "port": 3306,
+    "protocol": "tcp",
+    "severity": "MEDIUM",
+    "references": [
+      "url: https://mariadb.com/kb/en/security/#full-list-of-cves-fixed-in-mariadb",
+      "cert-bund: WID-SEC-2023-0167",
+      "dfn-cert: DFN-CERT-2024-0220",
+      "dfn-cert: DFN-CERT-2023-2503",
+      "dfn-cert: DFN-CERT-2023-2216",
+      "dfn-cert: DFN-CERT-2023-1276"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "MariaDB DoS Vulnerability (MDEV-32086)",
+    "description": [
+      "MariaDB is prone to a denial of service (DoS) vulnerability."
+    ],
+    "detection_result": [
+      "Installed version: 10.0.38",
+      "Fixed version: 10.5.29",
+      "Installation",
+      "path / port: 3306/tcp"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: MariaDB DoS Vulnerability (MDEV-32086)",
+      "OID:1.3.6.1.4.1.25623.1.0.125172",
+      "Version used: 2025-11-28T15:41:52Z"
+    ],
+    "product_detection_result": [
+      "Product: cpe:/a:mariadb:mariadb:10.0.38",
+      "Method: MariaDB / Oracle MySQL Detection (MySQL Protocol)",
+      "OID: 1.3.6.1.4.1.25623.1.0.100152)"
+    ],
+    "impact": [
+      "MariaDB versions prior to 10.5.29, 10.6.x prior to 10.6.22, 10.7.x prior to 10.11.12 and 11.x prior to 11.4.6."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 10.5.29, 10.6.22, 10.11.12, 11.4.6 or later."
+    ],
+    "insight": [
+      "MariaDB Server crashes in Item_direct_view_ref::derived_eld_transformer_for_where."
+    ],
+    "log_method": [],
+    "cvss": [
+      "6.1"
+    ],
+    "port": 3306,
+    "protocol": "tcp",
+    "severity": "MEDIUM",
+    "references": [
+      "cve: CVE-2023-52970",
+      "url: https://jira.mariadb.org/browse/MDEV-32086",
+      "url: https://mariadb.com/docs/release-notes/community-server/mariadb-11-4-series/mariadb-11-4-6-release-notes#security",
+      "url: https://mariadb.com/docs/release-notes/community-server/mariadb-10-11-series/mariadb-10.11.12-release-notes#security",
+      "url: https://mariadb.com/docs/release-notes/community-server/mariadb-10-6-series/mariadb-10-6-22-release-notes#security",
+      "url: https://mariadb.com/docs/release-notes/community-server/old-releases/mariadb-10-5-series/mariadb-10-5-29-release-notes#security",
+      "url: https://mariadb.com/kb/en/security/#full-list-of-cves-fixed-in-mariadb",
+      "url: https://mariadb.com/kb/en/security/#full-list-of-cves-fixed-in-mariadb",
+      "cert-bund: WID-SEC-2025-0507",
+      "dfn-cert: DFN-CERT-2026-0037",
+      "dfn-cert: DFN-CERT-2025-3583",
+      "dfn-cert: DFN-CERT-2025-2602",
+      "dfn-cert: DFN-CERT-2025-1424",
+      "dfn-cert: DFN-CERT-2025-1304",
+      "dfn-cert: DFN-CERT-2025-1166",
+      "dfn-cert: DFN-CERT-2025-0876"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "MariaDB DoS Vulnerability (MDEV-32083)",
+    "description": [
+      "MariaDB is prone to a denial of service (DoS) vulnerability."
+    ],
+    "detection_result": [
+      "Installed version: 10.0.38",
+      "Fixed version: 10.5.29",
+      "Installation",
+      "path / port: 3306/tcp"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: MariaDB DoS Vulnerability (MDEV-32083)",
+      "OID:1.3.6.1.4.1.25623.1.0.125171",
+      "Version used: 2025-11-28T15:41:52Z"
+    ],
+    "product_detection_result": [
+      "Product: cpe:/a:mariadb:mariadb:10.0.38",
+      "Method: MariaDB / Oracle MySQL Detection (MySQL Protocol)",
+      "OID: 1.3.6.1.4.1.25623.1.0.100152)"
+    ],
+    "impact": [
+      "MariaDB versions prior to 10.5.29, 10.6.x prior to 10.6.22, 10.7.x prior to 10.11.12 and 11.x prior to 11.4.6."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 10.5.29, 10.6.22, 10.11.12, 11.4.6 or later."
+    ],
+    "insight": [
+      "MariaDB Server can sometimes crash with an empty backtrace log. This may be related to make_aggr_tables_info and optimize_stage2."
+    ],
+    "log_method": [],
+    "cvss": [
+      "6.1"
+    ],
+    "port": 3306,
+    "protocol": "tcp",
+    "severity": "MEDIUM",
+    "references": [
+      "cve: CVE-2023-52969",
+      "url: https://jira.mariadb.org/browse/MDEV-32083",
+      "url: https://mariadb.com/docs/release-notes/community-server/mariadb-11-4-series/mariadb-11-4-6-release-notes#security",
+      "url: https://mariadb.com/docs/release-notes/community-server/mariadb-10-11-series/mariadb-10.11.12-release-notes#security"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "MariaDB DoS Vulnerability (MDEV-32082)",
+    "description": [
+      "MariaDB is prone to a denial of service (DoS) vulnerability."
+    ],
+    "detection_result": [
+      "Installed version: 10.0.38",
+      "Fixed version: 10.4.33",
+      "Installation path / port: 3306/tcp"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: MariaDB DoS Vulnerability (MDEV-32082)",
+      "OID:1.3.6.1.4.1.25623.1.0.125170",
+      "Version used: 2025-11-28T15:41:52Z"
+    ],
+    "product_detection_result": [
+      "Product: cpe:/a:mariadb:mariadb:10.0.38",
+      "Method: MariaDB / Oracle MySQL Detection (MySQL Protocol)",
+      "OID: 1.3.6.1.4.1.25623.1.0.100152)"
+    ],
+    "impact": [
+      "MariaDB Server calls x_elds_if_needed under mysql_derived_prepare when derived is not yet prepared, leading to a nd_eld_in_table crash."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 10.4.33, 10.5.24, 10.6.17, 10.11.7, 11.0.5, 11.1.4, 11.2.3, 11.3.2, 11.4.1 or later."
+    ],
+    "insight": [
+      "MariaDB Server calls x_elds_if_needed under mysql_derived_prepare when derived is not yet prepared, leading to a nd_eld_in_table crash."
+    ],
+    "log_method": [],
+    "cvss": [
+      "5.5"
+    ],
+    "port": 3306,
+    "protocol": "tcp",
+    "severity": "MEDIUM",
+    "references": [
+      "cve: CVE-2023-52968",
+      "url: https://jira.mariadb.org/browse/MDEV-32082",
+      "url: https://mariadb.com/kb/en/mariadb-10-4-33-release-notes/",
+      "url: https://mariadb.com/kb/en/mariadb-10-5-24-release-notes/",
+      "url: https://mariadb.com/kb/en/mariadb-10-6-17-release-notes/",
+      "url: https://mariadb.com/kb/en/mariadb-10-11-7-release-notes/",
+      "url: https://mariadb.com/kb/en/mariadb-11-0-5-release-notes/",
+      "url: https://mariadb.com/kb/en/mariadb-11-1-4-release-notes/",
+      "url: https://mariadb.com/kb/en/mariadb-11-2-3-release-notes/",
+      "url: https://mariadb.com/kb/en/mariadb-11-3-2-release-notes/",
+      "url: https://mariadb.com/kb/en/mariadb-11-4-1-release-notes/",
+      "cert-bund: WID-SEC-2025-0507"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "MariaDB Multiple DoS Vulnerabilities (MDEV-26561) - Linux",
+    "description": [
+      "MariaDB is prone to multiple denial of service (DoS) vulnerabilities."
+    ],
+    "detection_result": [
+      "Installed version: 10.0.38",
+      "Fixed version: 10.2.42"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: MariaDB Multiple DoS Vulnerabilities (MDEV-26561) - Linux",
+      "OID:1.3.6.1.4.1.25623.1.0.127028",
+      "Version used: 2025-09-09T05:38:49Z"
+    ],
+    "product_detection_result": [
+      "Product: cpe:/a:mariadb:mariadb:10.0.38",
+      "Method: MariaDB / Oracle MySQL Detection (MySQL Protocol)",
+      "OID: 1.3.6.1.4.1.25623.1.0.100152)"
+    ],
+    "impact": [
+      "The following vulnerabilities exist:",
+      "- CVE-2022-31622: in extra/mariabackup/ds_compress.cc, while executing the method create_worker_threads, the held lock is not released correctly, which allows local users to trigger a denial of service due to the deadlock,",
+      "- CVE-2022-31623: In extra/mariabackup/ds_compress.cc, while executing the method create_worker_threads, the held lock thd->ctrl_mutex is not released correctly, which allows local users to trigger a denial of service due to the deadlock."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 10.2.42, 10.3.33, 10.4.23, 10.5.14, 10.6.6, 10.7.2 or later."
+    ],
+    "insight": [
+      "The following vulnerabilities exist:",
+      "- CVE-2022-31622: in extra/mariabackup/ds_compress.cc, while executing the method create_worker_threads, the held lock is not released correctly, which allows local users to trigger a denial of service due to the deadlock,",
+      "- CVE-2022-31623: In extra/mariabackup/ds_compress.cc, while executing the method create_worker_threads, the held lock thd->ctrl_mutex is not released correctly, which allows local users to trigger a denial of service due to the deadlock."
+    ],
+    "log_method": [],
+    "cvss": [
+      "5.5"
+    ],
+    "port": 3306,
+    "protocol": "tcp",
+    "severity": "MEDIUM",
+    "references": [
+      "cve: CVE-2022-31622",
+      "cve: CVE-2022-31623",
+      "url: https://jira.mariadb.org/browse/MDEV-26561",
+      "url: https://github.com/MariaDB/server/commit/e1eb39a446c30b8459c39fd7f2ee1c55a36e97d2",
+      "url: https://github.com/MariaDB/server/commit/7c30bc38a588b22b01f11130cfe99e7f36accf94",
+      "url: https://mariadb.com/kb/en/security/#full-list-of-cves-fixed-in-mariadb",
+      "cert-bund: WID-SEC-2022-0017",
+      "cert-bund: CB-K22/0665",
+      "dfn-cert: DFN-CERT-2022-1928",
+      "dfn-cert: DFN-CERT-2022-1777",
+      "dfn-cert: DFN-CERT-2022-1717",
+      "dfn-cert: DFN-CERT-2022-1688",
+      "dfn-cert: DFN-CERT-2022-1597"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "MariaDB DoS Vulnerability (MDEV-25629) - Linux",
+    "description": [
+      "MariaDB is prone to a denial of service (DoS) vulnerability."
+    ],
+    "detection_result": [
+      "Installed version: 10.0.38",
+      "Fixed version: 10.2.39"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: MariaDB DoS Vulnerability (MDEV-25629) - Linux",
+      "OID:1.3.6.1.4.1.25623.1.0.147539",
+      "Version used: 2025-09-09T05:38:49Z"
+    ],
+    "product_detection_result": [
+      "cpe:/a:mariadb:mariadb:10.0.38",
+      "Detected by MariaDB / Oracle MySQL Detection (MySQL Protocol) (OID: 1.3.6.1.4.1. ->25623.1.0.100152)",
+      "Product: cpe:/a:mariadb:mariadb:10.0.38",
+      "Method: MariaDB / Oracle MySQL Detection (MySQL Protocol)",
+      "OID: 1.3.6.1.4.1.25623.1.0.100152)"
+    ],
+    "impact": [
+      "MariaDB versions prior to 10.2.39, 10.3.x prior to 10.3.30, 10.4.x prior to 10.4.20 and 10.5.x prior to 10.5.11."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 10.2.39, 10.3.30, 10.4.20, 10.5.11 or later."
+    ],
+    "insight": [
+      "get_sort_by_table in MariaDB allows an application crash via certain subquery uses of ORDER BY."
+    ],
+    "log_method": [],
+    "cvss": [
+      "5.5"
+    ],
+    "port": 3306,
+    "protocol": "tcp",
+    "severity": "MEDIUM",
+    "references": [
+      "cve: CVE-2021-46657",
+      "url: https://jira.mariadb.org/browse/MDEV-25629",
+      "url: https://mariadb.com/kb/en/security/#full-list-of-cves-fixed-in-mariadb",
+      "cert-bund: WID-SEC-2022-0843",
+      "cert-bund: CB-K22/0121",
+      "dfn-cert: DFN-CERT-2022-1667",
+      "dfn-cert: DFN-CERT-2022-1597",
+      "dfn-cert: DFN-CERT-2022-1241",
+      "dfn-cert: DFN-CERT-2022-0933",
+      "dfn-cert: DFN-CERT-2022-0666",
+      "dfn-cert: DFN-CERT-2022-0500"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "MariaDB DoS Vulnerability (MDEV-25630) - Linux",
+    "description": [
+      "MariaDB is prone to a denial of service (DoS) vulnerability."
+    ],
+    "detection_result": [
+      "Installed version: 10.0.38",
+      "Fixed version: 10.2.40"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: MariaDB DoS Vulnerability (MDEV-25630) - Linux",
+      "OID:1.3.6.1.4.1.25623.1.0.147543",
+      "Version used: 2025-09-09T05:38:49Z"
+    ],
+    "product_detection_result": [
+      "cpe:/a:mariadb:mariadb:10.0.38",
+      "Detected by MariaDB / Oracle MySQL Detection (MySQL Protocol) (OID: 1.3.6.1.4.1. ->25623.1.0.100152)",
+      "Product: cpe:/a:mariadb:mariadb:10.0.38",
+      "Method: MariaDB / Oracle MySQL Detection (MySQL Protocol)",
+      "OID: 1.3.6.1.4.1.25623.1.0.100152)"
+    ],
+    "impact": [
+      "MariaDB versions prior to 10.2.40, 10.3.x prior to 10.3.31, 10.4.x prior to 10.4.21, 10.5.x prior to 10.5.12 and 10.6.x prior to 10.6.3."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 10.2.40, 10.3.31, 10.4.21, 10.5.12, 10.6.3 or later."
+    ],
+    "insight": [
+      "save_window_function_values in MariaDB allows an application crash because of incorrect handling of with_window_func=true for a subquery."
+    ],
+    "log_method": [],
+    "cvss": [
+      "5.5"
+    ],
+    "port": 3306,
+    "protocol": "tcp",
+    "severity": "MEDIUM",
+    "references": [
+      "cve: CVE-2021-46658",
+      "url: https://jira.mariadb.org/browse/MDEV-25630",
+      "url: https://mariadb.com/kb/en/security/#full-list-of-cves-fixed-in-mariadb",
+      "cert-bund: WID-SEC-2022-0843",
+      "cert-bund: CB-K22/0121",
+      "dfn-cert: DFN-CERT-2022-1667",
+      "dfn-cert: DFN-CERT-2022-1597",
+      "dfn-cert: DFN-CERT-2022-1241",
+      "dfn-cert: DFN-CERT-2022-0933",
+      "dfn-cert: DFN-CERT-2022-0500"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "MariaDB DoS Vulnerability (MDEV-25631) - Linux",
+    "description": [
+      "MariaDB is prone to a denial of service (DoS) vulnerability."
+    ],
+    "detection_result": [
+      "Installed version: 10.0.38",
+      "Fixed version: 10.2.42"
+    ],
+    "detection_method": [],
+    "product_detection_result": [
+      "cpe:/a:mariadb:mariadb:10.0.38",
+      "Detected by MariaDB / Oracle MySQL Detection (MySQL Protocol) (OID: 1.3.6.1.4.1. ->25623.1.0.100152)"
+    ],
+    "impact": [
+      "MariaDB versions prior to 10.2.42, 10.3.x prior to 10.3.33, 10.4.x prior to 10.4.23, 10.5.x prior to 10.5.14, 10.6.x prior to 10.6.6, 10.7.x prior to 10.7.2 and 10.8.0."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 10.2.42, 10.3.33, 10.4.23, 10.5.14, 10.6.6, 10.7.2, 10.8.1 or later."
+    ],
+    "insight": [],
+    "log_method": [],
+    "cvss": [
+      "5.5"
+    ],
+    "port": 3306,
+    "protocol": "tcp",
+    "severity": "MEDIUM",
+    "references": [],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "MariaDB DoS Vulnerability (MDEV-25635) - Linux",
+    "description": [
+      "MariaDB is prone to a denial of service (DoS) vulnerability.",
+      "Quality of Detection (QoD): 30%"
+    ],
+    "detection_result": [
+      "Installed version: 10.0.38",
+      "Fixed version: 10.2.39"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: MariaDB DoS Vulnerability (MDEV-25635) - Linux",
+      "OID:1.3.6.1.4.1.25623.1.0.147575",
+      "Version used: 2025-09-09T05:38:49Z"
+    ],
+    "product_detection_result": [
+      "cpe:/a:mariadb:mariadb:10.0.38",
+      "Detected by MariaDB / Oracle MySQL Detection (MySQL Protocol) (OID: 1.3.6.1.4.1.25623.1.0.100152)",
+      "Product: cpe:/a:mariadb:mariadb:10.0.38",
+      "Method: MariaDB / Oracle MySQL Detection (MySQL Protocol)",
+      "OID: 1.3.6.1.4.1.25623.1.0.100152)"
+    ],
+    "impact": [
+      "MariaDB versions prior to 10.2.39, 10.3.x prior to 10.3.30, 10.4.x prior to 10.4.20 and 10.5.x prior to 10.5.11."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 10.2.39, 10.3.30, 10.4.20, 10.5.11 or later."
+    ],
+    "insight": [
+      "MariaDB allows an application crash because of mishandling of a pushdown from a HAVING clause to a WHERE clause."
+    ],
+    "log_method": [],
+    "cvss": [
+      "5.5"
+    ],
+    "port": 3306,
+    "protocol": "tcp",
+    "severity": "MEDIUM",
+    "references": [
+      "cve: CVE-2021-46666",
+      "url: https://jira.mariadb.org/browse/MDEV-25635",
+      "url: https://mariadb.com/kb/en/security/#full-list-of-cves-fixed-in-mariadb",
+      "cert-bund: WID-SEC-2022-0147",
+      "cert-bund: CB-K22/0126",
+      "dfn-cert: DFN-CERT-2022-1597",
+      "dfn-cert: DFN-CERT-2022-1241",
+      "dfn-cert: DFN-CERT-2022-0933",
+      "dfn-cert: DFN-CERT-2022-0666"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "MariaDB DoS Vulnerability (MDEV-25636) - Linux",
+    "description": [
+      "MariaDB is prone to a denial of service (DoS) vulnerability.",
+      "Quality of Detection (QoD): 30%"
+    ],
+    "detection_result": [
+      "Installed version: 10.0.38",
+      "Fixed version: 10.2.43"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: MariaDB DoS Vulnerability (MDEV-25636) - Linux",
+      "OID:1.3.6.1.4.1.25623.1.0.147573",
+      "Version used: 2025-09-09T05:38:49Z"
+    ],
+    "product_detection_result": [
+      "cpe:/a:mariadb:mariadb:10.0.38",
+      "Detected by MariaDB / Oracle MySQL Detection (MySQL Protocol) (OID: 1.3.6.1.4.1.25623.1.0.100152)",
+      "Product: cpe:/a:mariadb:mariadb:10.0.38",
+      "Method: MariaDB / Oracle MySQL Detection (MySQL Protocol)",
+      "OID: 1.3.6.1.4.1.25623.1.0.100152)"
+    ],
+    "impact": [
+      "MariaDB versions prior to 10.2.43, 10.3.x prior to 10.3.34, 10.4.x prior to 10.4.24, 10.5.x prior to 10.5.15, 10.6.x prior to 10.6.7 and 10.7.x prior to 10.7.3."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 10.2.43, 10.3.34, 10.4.24, 10.5.15, 10.6.7, 10.7.3 or later."
+    ],
+    "insight": [
+      "MariaDB allows a sql_parse.cc application crash because of incorrect used_tables expectations."
+    ],
+    "log_method": [],
+    "cvss": [
+      "5.5"
+    ],
+    "port": 3306,
+    "protocol": "tcp",
+    "severity": "MEDIUM",
+    "references": [
+      "cve: CVE-2021-46665",
+      "url: https://jira.mariadb.org/browse/MDEV-25636",
+      "url: https://mariadb.com/kb/en/security/#full-list-of-cves-fixed-in-mariadb",
+      "cert-bund: WID-SEC-2022-0147",
+      "cert-bund: CB-K22/0126",
+      "dfn-cert: DFN-CERT-2022-1928",
+      "dfn-cert: DFN-CERT-2022-1777",
+      "dfn-cert: DFN-CERT-2022-1717",
+      "dfn-cert: DFN-CERT-2022-1688",
+      "dfn-cert: DFN-CERT-2022-1667",
+      "dfn-cert: DFN-CERT-2022-1597"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "MariaDB DoS Vulnerability (MDEV-25637, MDEV-22464) - Linux",
+    "description": [
+      "MariaDB is prone to a denial of service (DoS) vulnerability."
+    ],
+    "detection_result": [
+      "Installed version: 10.0.38",
+      "Fixed version: 10.3.32"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host."
+    ],
+    "product_detection_result": [
+      "cpe:/a:mariadb:mariadb:10.0.38",
+      "Detected by MariaDB / Oracle MySQL Detection (MySQL Protocol) (OID: 1.3.6.1.4.1.25623.1.0.100152)"
+    ],
+    "impact": [
+      "MariaDB versions prior 10.3.32, 10.4.x prior to 10.4.22, 10.5.x prior to 10.5.13 and 10.6.x prior to 10.6.5."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 10.3.32, 10.4.22, 10.5.13, 10.6.5 or later."
+    ],
+    "insight": [
+      "MariaDB allows a set_var.cc application crash via certain uses of an UPDATE statement in conjunction with a nested subquery."
+    ],
+    "log_method": [],
+    "cvss": [
+      "5.5"
+    ],
+    "port": 3306,
+    "protocol": "tcp",
+    "severity": "MEDIUM",
+    "references": [
+      "cve: CVE-2021-46662",
+      "url: https://jira.mariadb.org/browse/MDEV-25637",
+      "url: https://jira.mariadb.org/browse/MDEV-22464",
+      "url: https://mariadb.com/kb/en/security/#full-list-of-cves-fixed-in-mariadb",
+      "cert-bund: WID-SEC-2022-0147",
+      "cert-bund: CB-K22/0126",
+      "dfn-cert: DFN-CERT-2022-1597",
+      "dfn-cert: DFN-CERT-2022-1241",
+      "dfn-cert: DFN-CERT-2022-0933",
+      "dfn-cert: DFN-CERT-2022-0666"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "MariaDB DoS Vulnerability (MDEV-25761) - Linux",
+    "description": [
+      "MariaDB is prone to a denial of service (DoS) vulnerability."
+    ],
+    "detection_result": [
+      "Installed version: 10.0.38",
+      "Fixed version: 10.2.43"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host."
+    ],
+    "product_detection_result": [
+      "cpe:/a:mariadb:mariadb:10.0.38",
+      "Detected by MariaDB / Oracle MySQL Detection (MySQL Protocol) (OID: 1.3.6.1.4.1.25623.1.0.100152)"
+    ],
+    "impact": [
+      "MariaDB versions prior to 10.2.43, 10.3.x prior to 10.3.34, 10.4.x prior to 10.4.24, 10.5.x prior to 10.5.15, 10.6.x prior to 10.6.7 and 10.7.x prior to 10.7.3."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 10.2.43, 10.3.34, 10.4.24, 10.5.15, 10.6.7, 10.7.3 or later."
+    ],
+    "insight": [
+      "MariaDB allows an application crash in sub_select_postjoin_aggr for a NULL value of aggr."
+    ],
+    "log_method": [],
+    "cvss": [
+      "5.5"
+    ],
+    "port": 3306,
+    "protocol": "tcp",
+    "severity": "MEDIUM",
+    "references": [
+      "cve: CVE-2021-46664",
+      "url: https://jira.mariadb.org/browse/MDEV-25761",
+      "url: https://mariadb.com/kb/en/security/#full-list-of-cves-fixed-in-mariadb",
+      "cert-bund: WID-SEC-2022-0147",
+      "cert-bund: CB-K22/0126",
+      "dfn-cert: DFN-CERT-2022-1928",
+      "dfn-cert: DFN-CERT-2022-1777",
+      "dfn-cert: DFN-CERT-2022-1717",
+      "dfn-cert: DFN-CERT-2022-1688",
+      "dfn-cert: DFN-CERT-2022-1667",
+      "dfn-cert: DFN-CERT-2022-1597",
+      "dfn-cert: DFN-CERT-2022-0500",
+      "dfn-cert: DFN-CERT-2022-0460"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "MariaDB DoS Vulnerability (MDEV-25766) - Linux",
+    "description": [
+      "MariaDB is prone to a denial of service (DoS) vulnerability."
+    ],
+    "detection_result": [
+      "Installed version: 10.0.38",
+      "Fixed version: 10.2.43"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host."
+    ],
+    "product_detection_result": [
+      "cpe:/a:mariadb:mariadb:10.0.38",
+      "Detected by MariaDB / Oracle MySQL Detection (MySQL Protocol) (OID: 1.3.6.1.4.1.25623.1.0.100152)"
+    ],
+    "impact": [],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 10.2.43, 10.3.34, 10.4.24, 10.5.15, 10.6.7, 10.7.3 or later."
+    ],
+    "insight": [],
+    "log_method": [],
+    "cvss": [
+      "5.5"
+    ],
+    "port": 3306,
+    "protocol": "tcp",
+    "severity": "MEDIUM",
+    "references": [],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "MariaDB DoS Vulnerability (MDEV-25787) - Linux",
+    "description": [
+      "MariaDB is prone to a denial of service (DoS) vulnerability."
+    ],
+    "detection_result": [
+      "Installed version: 10.0.38",
+      "Fixed version: 10.2.43"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: MariaDB DoS Vulnerability (MDEV-25787) - Linux",
+      "OID:1.3.6.1.4.1.25623.1.0.147579",
+      "Version used: 2025-09-09T05:38:49Z"
+    ],
+    "product_detection_result": [
+      "Product: cpe:/a:mariadb:mariadb:10.0.38",
+      "Method: MariaDB / Oracle MySQL Detection (MySQL Protocol)",
+      "OID: 1.3.6.1.4.1.25623.1.0.100152)"
+    ],
+    "impact": [
+      "MariaDB versions prior to 10.2.43, 10.3.x prior to 10.3.34, 10.4.x prior to 10.4.24, 10.5.x prior to 10.5.15, 10.6.x prior to 10.6.7 and 10.7.x prior to 10.7.3."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 10.2.43, 10.3.34, 10.4.24, 10.5.15, 10.6.7, 10.7.3 or later."
+    ],
+    "insight": [
+      "MariaDB allows an application crash via certain long SELECT DISTINCT statements that improperly interact with storage-engine resource limitations for temporary data structures."
+    ],
+    "log_method": [],
+    "cvss": [
+      "5.5"
+    ],
+    "port": 3306,
+    "protocol": "tcp",
+    "severity": "MEDIUM",
+    "references": [
+      "cve: CVE-2021-46668",
+      "url: https://jira.mariadb.org/browse/MDEV-25787",
+      "url: https://mariadb.com/kb/en/security/#full-list-of-cves-fixed-in-mariadb",
+      "cert-bund: WID-SEC-2022-0147",
+      "cert-bund: CB-K22/0126",
+      "dfn-cert: DFN-CERT-2022-1928",
+      "dfn-cert: DFN-CERT-2022-1777",
+      "dfn-cert: DFN-CERT-2022-1717",
+      "dfn-cert: DFN-CERT-2022-1688",
+      "dfn-cert: DFN-CERT-2022-1667",
+      "dfn-cert: DFN-CERT-2022-1597",
+      "dfn-cert: DFN-CERT-2022-0500",
+      "dfn-cert: DFN-CERT-2022-0460"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "MariaDB DoS Vulnerability (MDEV-26350) - Linux",
+    "description": [
+      "MariaDB is prone to a denial of service (DoS) vulnerability."
+    ],
+    "detection_result": [
+      "Installed version: 10.0.38",
+      "Fixed version: 10.2.41"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: MariaDB DoS Vulnerability (MDEV-26350) - Linux",
+      "OID:1.3.6.1.4.1.25623.1.0.147577",
+      "Version used: 2025-09-09T05:38:49Z"
+    ],
+    "product_detection_result": [
+      "Product: cpe:/a:mariadb:mariadb:10.0.38",
+      "Method: MariaDB / Oracle MySQL Detection (MySQL Protocol)",
+      "OID: 1.3.6.1.4.1.25623.1.0.100152)"
+    ],
+    "impact": [
+      "MariaDB versions prior to 10.2.41, 10.3.x prior to 10.3.32, 10.4.x prior to 10.4.22, 10.5.x prior to 10.5.13 and 10.6.x prior to 10.6.5."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 10.2.41, 10.3.32, 10.4.22, 10.5.13, 10.6.5 or later."
+    ],
+    "insight": [
+      "MariaDB has a sql_lex.cc integer overow, leading to an application crash."
+    ],
+    "log_method": [],
+    "cvss": [
+      "5.5"
+    ],
+    "port": 3306,
+    "protocol": "tcp",
+    "severity": "MEDIUM",
+    "references": [
+      "cve: CVE-2021-46667",
+      "url: https://jira.mariadb.org/browse/MDEV-26350",
+      "url: https://mariadb.com/kb/en/security/#full-list-of-cves-fixed-in-mariadb",
+      "cert-bund: WID-SEC-2022-0147",
+      "cert-bund: CB-K22/0126",
+      "dfn-cert: DFN-CERT-2022-1597",
+      "dfn-cert: DFN-CERT-2022-1241",
+      "dfn-cert: DFN-CERT-2022-0933",
+      "dfn-cert: DFN-CERT-2022-0666"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "MariaDB DoS Vulnerability (MDEV-26351) - Linux",
+    "description": [
+      "MariaDB is prone to a denial of service (DoS) vulnerability.",
+      "Quality of Detection (QoD): 30%"
+    ],
+    "detection_result": [
+      "Installed version: 10.0.38",
+      "Fixed version: 10.2.43"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: MariaDB DoS Vulnerability (MDEV-26351) - Linux",
+      "OID:1.3.6.1.4.1.25623.1.0.147569",
+      "Version used: 2025-09-09T05:38:49Z"
+    ],
+    "product_detection_result": [
+      "cpe:/a:mariadb:mariadb:10.0.38",
+      "Detected by MariaDB / Oracle MySQL Detection (MySQL Protocol) (OID: 1.3.6.1.4.1. ->25623.1.0.100152)",
+      "Product: cpe:/a:mariadb:mariadb:10.0.38",
+      "Method: MariaDB / Oracle MySQL Detection (MySQL Protocol)",
+      "OID: 1.3.6.1.4.1.25623.1.0.100152)"
+    ],
+    "impact": [
+      "MariaDB allows a ha_maria::extra application crash via certain SELECT statements."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 10.2.43, 10.3.34, 10.4.24, 10.5.15, 10.6.7, 10.7.3 or later."
+    ],
+    "insight": [
+      "MariaDB allows a ha_maria::extra application crash via certain SELECT statements."
+    ],
+    "log_method": [],
+    "cvss": [
+      "5.5"
+    ],
+    "port": 3306,
+    "protocol": "tcp",
+    "severity": "MEDIUM",
+    "references": [
+      "cve: CVE-2021-46663",
+      "url: https://jira.mariadb.org/browse/MDEV-26351",
+      "url: https://mariadb.com/kb/en/security/#full-list-of-cves-fixed-in-mariadb",
+      "cert-bund: WID-SEC-2022-0147",
+      "cert-bund: CB-K22/0126",
+      "dfn-cert: DFN-CERT-2022-1928",
+      "dfn-cert: DFN-CERT-2022-1777",
+      "dfn-cert: DFN-CERT-2022-1717",
+      "dfn-cert: DFN-CERT-2022-1688",
+      "dfn-cert: DFN-CERT-2022-1667",
+      "dfn-cert: DFN-CERT-2022-1597",
+      "dfn-cert: DFN-CERT-2022-0500",
+      "dfn-cert: DFN-CERT-2022-0460"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "MariaDB DoS Vulnerability (MDEV-26556) - Linux",
+    "description": [
+      "MariaDB is prone to a denial of service (DoS) vulnerability.",
+      "Quality of Detection (QoD): 30%"
+    ],
+    "detection_result": [
+      "Installed version: 10.0.38",
+      "Fixed version: 10.2.41"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: MariaDB DoS Vulnerability (MDEV-26556) - Linux",
+      "OID:1.3.6.1.4.1.25623.1.0.104552",
+      "Version used: 2025-09-09T05:38:49Z"
+    ],
+    "product_detection_result": [
+      "cpe:/a:mariadb:mariadb:10.0.38",
+      "Detected by MariaDB / Oracle MySQL Detection (MySQL Protocol) (OID: 1.3.6.1.4.1. ->25623.1.0.100152)",
+      "Product: cpe:/a:mariadb:mariadb:10.0.38",
+      "Method: MariaDB / Oracle MySQL Detection (MySQL Protocol)",
+      "OID: 1.3.6.1.4.1.25623.1.0.100152)"
+    ],
+    "impact": [
+      "While executing the plugin/server_audit/server_audit.c method log_statement_ex, the held lock lock_bigbuer is not released correctly, which allows local users to trigger a denial of service due to the deadlock."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 10.2.41, 10.3.32, 10.4.22, 10.5.13, 10.6.5 or later."
+    ],
+    "insight": [
+      "While executing the plugin/server_audit/server_audit.c method log_statement_ex, the held lock lock_bigbuer is not released correctly, which allows local users to trigger a denial of service due to the deadlock."
+    ],
+    "log_method": [],
+    "cvss": [
+      "5.5"
+    ],
+    "port": 3306,
+    "protocol": "tcp",
+    "severity": "MEDIUM",
+    "references": [
+      "cve: CVE-2022-31624",
+      "url: https://jira.mariadb.org/browse/MDEV-26556",
+      "url: https://github.com/MariaDB/server/commit/d627d00b13ab2f2c0954ea7b77202470cb ->102944",
+      "url: https://mariadb.com/kb/en/security/#full-list-of-cves-fixed-in-mariadb",
+      "cert-bund: WID-SEC-2022-0017",
+      "cert-bund: CB-K22/0665",
+      "dfn-cert: DFN-CERT-2022-1597"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "MariaDB DoS Vulnerability (MDEV-26574) - Linux",
+    "description": [
+      "MariaDB is prone to a denial of service (DoS) vulnerability.",
+      "Quality of Detection (QoD): 30%"
+    ],
+    "detection_result": [
+      "Installed version: 10.0.38",
+      "Fixed version: 10.2.41"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: MariaDB DoS Vulnerability (MDEV-26574) - Linux",
+      "OID:1.3.6.1.4.1.25623.1.0.104552",
+      "Version used: 2025-09-09T05:38:49Z"
+    ],
+    "product_detection_result": [
+      "cpe:/a:mariadb:mariadb:10.0.38",
+      "Detected by MariaDB / Oracle MySQL Detection (MySQL Protocol) (OID: 1.3.6.1.4.1. ->25623.1.0.100152)"
+    ],
+    "impact": [
+      "In extra/mariabackup/ds_xbstream.cc, while executing the method xbstream_open, the held lock is not released correctly, which allows local users to trigger a denial of service due to the deadlock."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 10.2.41, 10.3.32, 10.4.22, 10.5.13, 10.6.5 or later."
+    ],
+    "insight": [
+      "In extra/mariabackup/ds_xbstream.cc, while executing the method xbstream_open, the held lock is not released correctly, which allows local users to trigger a denial of service due to the deadlock."
+    ],
+    "log_method": [],
+    "cvss": [
+      "5.5"
+    ],
+    "port": 3306,
+    "protocol": "tcp",
+    "severity": "MEDIUM",
+    "references": [],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "MariaDB DoS Vulnerability (MDEV-28719) - Linux",
+    "description": [
+      "MariaDB is prone to a denial of service (DoS) vulnerability.   Quality of Detection (QoD): 30%"
+    ],
+    "detection_result": [
+      "Installed version: 10.0.38",
+      "Fixed version: 10.3.36"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: MariaDB DoS Vulnerability (MDEV-28719) - Linux",
+      "OID:1.3.6.1.4.1.25623.1.0.148641",
+      "Version used: 2025-09-09T05:38:49Z"
+    ],
+    "product_detection_result": [
+      "cpe:/a:mariadb:mariadb:10.0.38",
+      "Detected by MariaDB / Oracle MySQL Detection (MySQL Protocol) (OID: 1.3.6.1.4.1. ->25623.1.0.100152)",
+      "Product: cpe:/a:mariadb:mariadb:10.0.38",
+      "Method: MariaDB / Oracle MySQL Detection (MySQL Protocol)",
+      "OID: 1.3.6.1.4.1.25623.1.0.100152)"
+    ],
+    "impact": [
+      "compress_write in extra/mariabackup/ds_compress.cc does not release data_mutex upon a stream write failure, which allows local users to trigger a deadlock."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 10.3.36, 10.4.26, 10.5.17, 10.6.9, 10.7.5, 10.8.4, 10.9.2 or later."
+    ],
+    "insight": [
+      "compress_write in extra/mariabackup/ds_compress.cc does not release data_mutex upon a stream write failure, which allows local users to trigger a deadlock."
+    ],
+    "log_method": [],
+    "cvss": [
+      "5.5"
+    ],
+    "port": 3306,
+    "protocol": "tcp",
+    "severity": "MEDIUM",
+    "references": [
+      "cve: CVE-2022-38791",
+      "url: https://jira.mariadb.org/browse/MDEV-28719",
+      "url: https://mariadb.com/kb/en/security/#full-list-of-cves-fixed-in-mariadb",
+      "cert-bund: WID-SEC-2022-1258",
+      "dfn-cert: DFN-CERT-2023-2503",
+      "dfn-cert: DFN-CERT-2023-2216",
+      "dfn-cert: DFN-CERT-2023-0504",
+      "dfn-cert: DFN-CERT-2022-2132"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "MariaDB Multiple Vulnerabilities (Jul/Nov 2021) - Linux",
+    "description": [
+      "MariaDB is prone to multiple vulnerabilities.   Quality of Detection (QoD): 30%"
+    ],
+    "detection_result": [
+      "Installed version: 10.0.38",
+      "Fixed version: 10.2.41"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: MariaDB Multiple Vulnerabilities (Jul/Nov 2021) - Linux",
+      "OID:1.3.6.1.4.1.25623.1.0.117813",
+      "Version used: 2025-09-09T05:38:49Z"
+    ],
+    "product_detection_result": [
+      "cpe:/a:mariadb:mariadb:10.0.38",
+      "Detected by MariaDB / Oracle MySQL Detection (MySQL Protocol) (OID: 1.3.6.1.4.1. ->25623.1.0.100152)",
+      "Product: cpe:/a:mariadb:mariadb:10.0.38",
+      "Method: MariaDB / Oracle MySQL Detection (MySQL Protocol)",
+      "OID: 1.3.6.1.4.1.25623.1.0.100152)"
+    ],
+    "impact": [
+      "Successful attacks of this vulnerability can result in unauthorized ability to cause a hang or frequently repeatable crash (complete DOS) of MariaDB Server as well as unauthorized update, insert or delete access to some of MariaDB Server accessible data."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 10.2.41, 10.3.32, 10.4.22, 10.5.13, 10.6.3 or later."
+    ],
+    "insight": [
+      "Easily exploitable vulnerability allows high privileged attacker with network access via multiple protocols to compromise MariaDB Server."
+    ],
+    "log_method": [],
+    "cvss": [
+      "5.5"
+    ],
+    "port": 3306,
+    "protocol": "tcp",
+    "severity": "MEDIUM",
+    "references": [
+      "cve: CVE-2021-35604",
+      "url: https://mariadb.com/kb/en/mariadb-10241-release-notes/",
+      "url: https://mariadb.com/kb/en/mariadb-10332-release-notes/",
+      "url: https://mariadb.com/kb/en/mariadb-10422-release-notes/",
+      "url: https://mariadb.com/kb/en/mariadb-10513-release-notes/",
+      "url: https://mariadb.com/kb/en/mariadb-1063-release-notes/",
+      "cert-bund: WID-SEC-2024-1591",
+      "cert-bund: WID-SEC-2022-"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "MariaDB DoS Vulnerability (MDEV-33727)",
+    "description": [
+      "MariaDB is prone to a denial of service (DoS) vulnerability."
+    ],
+    "detection_result": [
+      "Installed version: 10.0.38",
+      "Fixed version: 10.5.25",
+      "Installation path / port: 3306/tcp"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: MariaDB DoS Vulnerability (MDEV-33727)",
+      "OID:1.3.6.1.4.1.25623.1.0.125391",
+      "Version used: 2025-11-28T15:41:52Z"
+    ],
+    "product_detection_result": [
+      "cpe:/a:mariadb:mariadb:10.0.38",
+      "Detected by MariaDB / Oracle MySQL Detection (MySQL Protocol) (OID: 1.3.6.1.4.1.25623.1.0.100152)",
+      "Product: cpe:/a:mariadb:mariadb:10.0.38",
+      "Method: MariaDB / Oracle MySQL Detection (MySQL Protocol)",
+      "OID: 1.3.6.1.4.1.25623.1.0.100152)"
+    ],
+    "impact": [
+      "Successful exploitation of this vulnerability can allow unauthorized users to update, insert, or delete certain data accessible by MySQL Server, gain unauthorized read access to a subset of data, and potentially cause a partial DoS."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 10.5.25, 10.6.18, 10.11.8, 11.0.6, 11.1.5, 11.2.4, 11.4.2 or later."
+    ],
+    "insight": [
+      "A difficult-to-exploit vulnerability allows an unauthenticated attacker who has logon access to the host running MySQL Server to compromise the MySQL Server."
+    ],
+    "log_method": [],
+    "cvss": [
+      "4.9"
+    ],
+    "port": 3306,
+    "protocol": "tcp",
+    "severity": "MEDIUM",
+    "references": [
+      "cve: CVE-2024-21096",
+      "url: https://jira.mariadb.org/browse/MDEV-33727",
+      "url: https://mariadb.com/docs/server/security/securing-mariadb/security#full-list-of-cves-fixed-in-mariadb",
+      "url: https://www.oracle.com/security-alerts/cpujan2025.html",
+      "cert-bund: WID-SEC-2024-0894",
+      "dfn-cert: DFN-CERT-2024-1517",
+      "dfn-cert: DFN-CERT-2024-1341",
+      "dfn-cert: DFN-CERT-2024-1002"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "MariaDB DoS Vulnerability (CVE-2023-22084) - Linux",
+    "description": [
+      "MariaDB is prone to a denial of service (DoS) vulnerability."
+    ],
+    "detection_result": [
+      "Installed version: 10.0.38",
+      "Fixed version: 10.4.32"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: MariaDB DoS Vulnerability (CVE-2023-22084) - Linux",
+      "OID:1.3.6.1.4.1.25623.1.0.114198",
+      "Version used: 2025-09-09T05:38:49Z"
+    ],
+    "product_detection_result": [
+      "cpe:/a:mariadb:mariadb:10.0.38",
+      "Detected by MariaDB / Oracle MySQL Detection (MySQL Protocol) (OID: 1.3.6.1.4.1.25623.1.0.100152)",
+      "Product: cpe:/a:mariadb:mariadb:10.0.38",
+      "Method: MariaDB / Oracle MySQL Detection (MySQL Protocol)",
+      "OID: 1.3.6.1.4.1.25623.1.0.100152)"
+    ],
+    "impact": [
+      "Successful attacks of this vulnerability can result in unauthorized ability to cause a hang or frequently repeatable crash (complete DoS)."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 10.4.32, 10.5.23, 10.6.16, 10.10.7, 10.11.6, 11.0.4, 11.1.3, 11.2.2 or later."
+    ],
+    "insight": [
+      "Easily exploitable vulnerability allows high privileged attacker with network access via multiple protocols to compromise the MariaDB Server."
+    ],
+    "log_method": [],
+    "cvss": [
+      "4.9"
+    ],
+    "port": 3306,
+    "protocol": "tcp",
+    "severity": "MEDIUM",
+    "references": [
+      "cve: CVE-2023-22084",
+      "url: https://mariadb.com/kb/en/security/#full-list-of-cves-fixed-in-mariadb",
+      "cert-bund: WID-SEC-2023-2690",
+      "dfn-cert: DFN-CERT-2024-1517",
+      "dfn-cert: DFN-CERT-2024-1188",
+      "dfn-cert: DFN-CERT-2024-0593",
+      "dfn-cert: DFN-CERT-2024-0454",
+      "dfn-cert: DFN-CERT-2024-0220",
+      "dfn-cert: DFN-CERT-2024-0108",
+      "dfn-cert: DFN-CERT-2023-2819",
+      "dfn-cert: DFN-CERT-2023-2681",
+      "dfn-cert: DFN-CERT-2023-2536"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "MariaDB < 10.2.44, 10.3.x < 10.3.35, 10.4.x < 10.4.25, 10.5.x < 10.5.7 DoS Vulnerability",
+    "description": [
+      "MariaDB is prone to a denial of service (DoS) vulnerability."
+    ],
+    "detection_result": [
+      "Installed version: 10.0.38",
+      "Fixed version: 10.2.44"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: MariaDB < 10.2.44, 10.3.x < 10.3.35, 10.4.x < 10.4.25, 10.5.x < 10.5.7 DoS Vuln.",
+      "OID:1.3.6.1.4.1.25623.1.0.104583",
+      "Version used: 2025-09-09T05:38:49Z"
+    ],
+    "product_detection_result": [
+      "Product: cpe:/a:mariadb:mariadb:10.0.38",
+      "Method: MariaDB / Oracle MySQL Detection (MySQL Protocol)",
+      "OID: 1.3.6.1.4.1.25623.1.0.100152)"
+    ],
+    "impact": [
+      "MariaDB versions prior to 10.2.44, 10.3.x prior to 10.3.35, 10.4.x prior to 10.4.25 and 10.5.x prior to 10.5.7."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 10.2.44, 10.3.35, 10.4.25, 10.5.7 or later."
+    ],
+    "insight": [],
+    "log_method": [],
+    "cvss": [
+      "4.9"
+    ],
+    "port": 3306,
+    "protocol": "tcp",
+    "severity": "MEDIUM",
+    "references": [
+      "cve: CVE-2022-21427",
+      "url: https://mariadb.com/kb/en/security/#full-list-of-cves-fixed-in-mariadb",
+      "cert-bund: WID-SEC-2024-1591",
+      "cert-bund: WID-SEC-2022-1081",
+      "cert-bund: WID-SEC-2022-0169",
+      "cert-bund: CB-K22/0468",
+      "dfn-cert: DFN-CERT-2022-2668",
+      "dfn-cert: DFN-CERT-2022-2376",
+      "dfn-cert: DFN-CERT-2022-2094",
+      "dfn-cert: DFN-CERT-2022-2059",
+      "dfn-cert: DFN-CERT-2022-2047",
+      "dfn-cert: DFN-CERT-2022-1928",
+      "dfn-cert: DFN-CERT-2022-1667",
+      "dfn-cert: DFN-CERT-2022-1597",
+      "dfn-cert: DFN-CERT-2022-1370",
+      "dfn-cert: DFN-CERT-2022-1205",
+      "dfn-cert: DFN-CERT-2022-0866"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "MariaDB DoS Vulnerability (MDEV-29182)",
+    "description": [
+      "MariaDB is prone to a denial of service (DoS) vulnerability."
+    ],
+    "detection_result": [
+      "Installed version: 10.0.38",
+      "Fixed version: 10.5.28",
+      "Installation path / port: 3306/tcp"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: MariaDB DoS Vulnerability (MDEV-29182)",
+      "OID:1.3.6.1.4.1.25623.1.0.125392",
+      "Version used: 2025-11-28T15:41:52Z"
+    ],
+    "product_detection_result": [
+      "Product: cpe:/a:mariadb:mariadb:10.0.38",
+      "Method: MariaDB / Oracle MySQL Detection (MySQL Protocol)",
+      "OID: 1.3.6.1.4.1.25623.1.0.100152)"
+    ],
+    "impact": [
+      "MariaDB versions prior to 10.5.28, 10.6.x prior to 10.6.21, 10.7.x prior to 10.11.11, 11.0.x prior to 11.4.5 and 11.5.x prior to 11.7.2."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 10.5.28, 10.6.21, 10.11.11, 11.4.5, 11.7.2 or later."
+    ],
+    "insight": [
+      "Easily exploitable vulnerability allows high privileged attacker with network access via multiple protocols to compromise MySQL Server. Successful attacks of this vulnerability can result in unauthorized ability to cause a hang or frequently repeatable crash (DoS)."
+    ],
+    "log_method": [],
+    "cvss": [
+      "4.9"
+    ],
+    "port": 3306,
+    "protocol": "tcp",
+    "severity": "MEDIUM",
+    "references": [
+      "cve: CVE-2025-21490",
+      "url: https://jira.mariadb.org/browse/MDEV-29182",
+      "url: https://mariadb.com/docs/server/security/securing-mariadb/security#full-list-of-cves-fixed-in-mariadb",
+      "url: https://www.oracle.com/security-alerts/cpujan2025.html",
+      "cert-bund: WID-SEC-2025-0167",
+      "dfn-cert: DFN-CERT-2026-0037",
+      "dfn-cert: DFN-CERT-2025-3583",
+      "dfn-cert: DFN-CERT-2025-2602",
+      "dfn-cert: DFN-CERT-2025-0544",
+      "dfn-cert: DFN-CERT-2025-0446",
+      "dfn-cert: DFN-CERT-2025-0174"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "MariaDB < 10.2.38 Multiple Vulnerabilities - Linux",
+    "description": [
+      "MariaDB is prone to multiple vulnerabilities."
+    ],
+    "detection_result": [
+      "Installed version: 10.0.38",
+      "Fixed version: 10.2.38"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: MariaDB < 10.2.38 Multiple Vulnerabilities - Linux",
+      "OID:1.3.6.1.4.1.25623.1.0.149349",
+      "Version used: 2025-09-09T05:38:49Z"
+    ],
+    "product_detection_result": [
+      "Product: cpe:/a:mariadb:mariadb:10.0.38",
+      "Method: MariaDB / Oracle MySQL Detection (MySQL Protocol)",
+      "OID: 1.3.6.1.4.1.25623.1.0.100152)"
+    ],
+    "impact": [
+      "MariaDB prior to version 10.2.38."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 10.2.38 or later."
+    ],
+    "insight": [
+      "The following vulnerabilities exist:",
+      "- CVE-2021-2166: Denial of service (DoS) in MySQL",
+      "- CVE-2021-2154: Denial of service (DoS) in MySQL",
+      "- CVE-2021-2180: Denial of service (DoS) in MySQL",
+      "- CVE-2022-21451: Denial of service (DoS) in MySQL"
+    ],
+    "log_method": [],
+    "cvss": [
+      "4.9"
+    ],
+    "port": 3306,
+    "protocol": "tcp",
+    "severity": "MEDIUM",
+    "references": [
+      "cve: CVE-2021-2166",
+      "cve: CVE-2021-2154",
+      "cve: CVE-2021-2180",
+      "cve: CVE-2022-21451",
+      "url: https://mariadb.com/kb/en/mariadb-10238-release-notes/",
+      "url: https://mariadb.com/kb/en/security/#full-list-of-cves-fixed-in-mariadb"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "TCP Timestamps Information Disclosure",
+    "description": [
+      "The remote host implements TCP timestamps and therefore allows to compute the uptime.  Quality of Detection (QoD): 80%"
+    ],
+    "detection_result": [
+      "It was detected that the host implements RFC1323/RFC7323.",
+      "The following timestamps were retrieved with a delay of 1 seconds in-between:",
+      "Packet 1: 3844684019",
+      "Packet 2: 3844685127"
+    ],
+    "detection_method": [
+      "Special IP packets are forged and sent with a little delay in between to the target IP. The responses are searched for a timestamps. If found, the timestamps are reported."
+    ],
+    "product_detection_result": [],
+    "impact": [
+      "A side effect of this feature is that the uptime of the remote host can sometimes be computed."
+    ],
+    "solution": [
+      "Solution type: Mitigation",
+      "To disable TCP timestamps on linux add the line 'net.ipv4.tcp_timestamps = 0' to /etc/sysctl.conf. Execute 'sysctl -p' to apply the settings at runtime.",
+      "To disable TCP timestamps on Windows execute 'netsh int tcp set global timestamps=disabled'",
+      "Starting with Windows Server 2008 and Vista, the timestamp can not be completely disabled.",
+      "The default behavior of the TCP/IP stack on this Systems is to not use the Timestamp options when initiating TCP connections, but use them if the TCP peer that is initiating communication includes them in their synchronize (SYN) segment.",
+      "See the references for more information."
+    ],
+    "insight": [
+      "The remote host implements TCP timestamps, as defined by RFC1323/RFC7323."
+    ],
+    "log_method": [],
+    "cvss": [
+      "2.6"
+    ],
+    "port": 3306,
+    "protocol": "tcp",
+    "severity": "LOW",
+    "references": [],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "TCP Timestamps Information Disclosure",
+    "description": [
+      "The remote host implements TCP timestamps and therefore allows to compute the uptime."
+    ],
+    "detection_result": [
+      "It was detected that the host implements RFC1323/RFC7323.",
+      "The following timestamps were retrieved with a delay of 1 seconds in-between:",
+      "Packet 1: 3844684019",
+      "Packet 2: 3844685127"
+    ],
+    "detection_method": [
+      "Special IP packets are forged and sent with a little delay in between to the target IP. The responses are searched for a timestamps. If found, the timestamps are reported."
+    ],
+    "product_detection_result": [],
+    "impact": [
+      "A side eect of this feature is that the uptime of the remote host can sometimes be computed."
+    ],
+    "solution": [
+      "Solution type: Mitigation",
+      "To disable TCP timestamps on linux add the line 'net.ipv4.tcp_timestamps = 0' to /etc/sysctl.conf. Execute 'sysctl -p' to apply the settings at runtime.",
+      "To disable TCP timestamps on Windows execute 'netsh int tcp set global timestamps=disabled'",
+      "Starting with Windows Server 2008 and Vista, the timestamp can not be completely disabled.",
+      "The default behavior of the TCP/IP stack on this Systems is to not use the Timestamp options when initiating TCP connections, but use them if the TCP peer that is initiating communication includes them in their synchronize (SYN) segment.",
+      "See the references for more information."
+    ],
+    "insight": [
+      "The remote host implements TCP timestamps, as dened by RFC1323/RFC7323."
+    ],
+    "log_method": [],
+    "cvss": [
+      "2.6"
+    ],
+    "port": "general",
+    "protocol": "tcp",
+    "severity": "LOW",
+    "references": [
+      "url: https://datatracker.ietf.org/doc/html/rfc1323",
+      "url: https://datatracker.ietf.org/doc/html/rfc7323",
+      "url: https://web.archive.org/web/20151213072445/http://www.microsoft.com/en-us/download/details.aspx?id=9152",
+      "url: https://www.fortiguard.com/psirt/FG-IR-16-090"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "ICMP Timestamp Reply Information Disclosure",
+    "description": [
+      "The remote host responded to an ICMP timestamp request."
+    ],
+    "detection_result": [
+      "The following response / ICMP packet has been received:",
+      "- ICMP Type: 14",
+      "- ICMP Code: 0"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [
+      "This information could theoretically be used to exploit weak time-based random number generators in other services."
+    ],
+    "solution": [
+      "Solution type: Mitigation",
+      "Various mitigations are possible:",
+      "- Disable the support for ICMP timestamp on the remote host completely",
+      "- Protect the remote host by a rewall, and block ICMP packets passing through the rewall in either direction (either completely or only for untrusted networks)"
+    ],
+    "insight": [
+      "The Timestamp Reply is an ICMP message which replies to a Timestamp message. It consists of the originating timestamp sent by the sender of the Timestamp as well as a receive timestamp and a transmit timestamp."
+    ],
+    "log_method": [],
+    "cvss": [
+      "2.1"
+    ],
+    "port": "general",
+    "protocol": "tcp",
+    "severity": "LOW",
+    "references": [],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "ICMP Timestamp Reply Information Disclosure",
+    "description": [
+      "The remote host responded to an ICMP timestamp request."
+    ],
+    "detection_result": [
+      "The following response / ICMP packet has been received:",
+      "- ICMP Type: 14",
+      "- ICMP Code: 0"
+    ],
+    "detection_method": [
+      "Sends an ICMP Timestamp (Type 13) request and checks if a Timestamp Reply (Type 14) is received."
+    ],
+    "product_detection_result": [],
+    "impact": [
+      "This information could theoretically be used to exploit weak time-based random number generators in other services."
+    ],
+    "solution": [
+      "Solution type: Mitigation",
+      "Various mitigations are possible:",
+      "- Disable the support for ICMP timestamp on the remote host completely",
+      "- Protect the remote host by a rewall, and block ICMP packets passing through the rewall in either direction (either completely or only for untrusted networks)"
+    ],
+    "insight": [
+      "The Timestamp Reply is an ICMP message which replies to a Timestamp message. It consists of the originating timestamp sent by the sender of the Timestamp as well as a receive timestamp and a transmit timestamp."
+    ],
+    "log_method": [],
+    "cvss": [
+      "2.1"
+    ],
+    "port": "general",
+    "protocol": "icmp",
+    "severity": "LOW",
+    "references": [
+      "cve: CVE-1999-0524",
+      "url: https://datatracker.ietf.org/doc/html/rfc792",
+      "url: https://datatracker.ietf.org/doc/html/rfc2780",
+      "cert-bund: CB-K15/1514",
+      "cert-bund: CB-K14/0632",
+      "dfn-cert: DFN-CERT-2014-0658"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Services",
+    "description": [
+      "This plugin performs service detection.",
+      "Quality of Detection (QoD): 80%"
+    ],
+    "detection_result": [
+      "A MySQL server is running on this port"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [
+      "This plugin attempts to guess which service is running on the remote port(s). For instance, it searches for a web server which could listen on another port than 80 or 443 and makes this information available for other check routines."
+    ],
+    "log_method": [
+      "Details: Services",
+      "OID:1.3.6.1.4.1.25623.1.0.10330",
+      "Version used: 2025-03-05T05:38:53Z"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": 3306,
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Services",
+    "description": [
+      "This plugin performs service detection."
+    ],
+    "detection_result": [
+      "A MySQL server is running on this port"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [
+      "This plugin attempts to guess which service is running on the remote port(s). For instance, it searches for a web server which could listen on another port than 80 or 443 and makes this information available for other check routines."
+    ],
+    "log_method": [
+      "Details: Services",
+      "OID:1.3.6.1.4.1.25623.1.0.10330",
+      "Version used: 2025-03-05T05:38:53Z"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": 3306,
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Database Open Access Information Disclosure Vulnerability",
+    "description": [
+      "Various Database server might be prone to an information disclosure vulnerability if accessible to remote systems."
+    ],
+    "detection_result": [
+      "MariaDB can be accessed by remote attackers"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [
+      "Successful exploitation could allow an attacker to obtain sensitive information from the database."
+    ],
+    "solution": [
+      "Solution type: Workaround",
+      "Restrict database access to remote systems. Please see the manual of the aected database server for more information."
+    ],
+    "insight": [
+      "The remote database server is not restricting direct access from remote systems."
+    ],
+    "log_method": [
+      "Checks the result of various database server detections and evaluates their results.",
+      "Details: Database Open Access Information Disclosure Vulnerability",
+      "OID:1.3.6.1.4.1.25623.1.0.902799",
+      "Version used: 2025-09-09T05:38:49Z"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": 3306,
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [
+      "url: https://www.pcisecuritystandards.org/security_standards/index.php?id=pci_ds ->s_v1-2.pdf"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "MariaDB / Oracle MySQL Detection (MySQL Protocol)",
+    "description": [
+      "MySQL protocol-based detection of MariaDB / Oracle MySQL."
+    ],
+    "detection_result": [
+      "Detected MariaDB",
+      "Version: 10.0.38",
+      "Location: 3306/tcp",
+      "CPE: cpe:/a:mariadb:mariadb:10.0.38",
+      "Concluded from version/product identification result:",
+      "5.5.5-10.0.38-MariaDB-1~xenial"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [
+      "Details: MariaDB / Oracle MySQL Detection (MySQL Protocol)",
+      "OID:1.3.6.1.4.1.25623.1.0.100152",
+      "Version used: 2025-09-09T05:38:49Z"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": 3306,
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Hostname Determination Reporting",
+    "description": [
+      "The script reports information on how the hostname of the target was determined."
+    ],
+    "detection_result": [
+      "Hostname determination for IP 172.31.1.27:",
+      "Hostname|Source",
+      "mariadb10.trabalho_vulnnet|Reverse-DNS"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [
+      "Details: Hostname Determination Reporting",
+      "OID:1.3.6.1.4.1.25623.1.0.108449",
+      "Version used: 2022-07-27T10:11:28Z"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": 3306,
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Hostname Determination Reporting",
+    "description": [
+      "The script reports information on how the hostname of the target was determined."
+    ],
+    "detection_result": [
+      "Hostname determination for IP 172.31.1.27:",
+      "Hostname|Source",
+      "mariadb10.trabalho_vulnnet|Reverse-DNS"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [
+      "Details: Hostname Determination Reporting",
+      "OID:1.3.6.1.4.1.25623.1.0.108449",
+      "Version used: 2022-07-27T10:11:28Z"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": "general",
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "OS Detection Consolidation and Reporting",
+    "description": [
+      "This script consolidates the OS information detected by several VTs and tries to nd the best matching OS.",
+      "Furthermore it reports all previously collected information leading to this best matching OS. It also reports possible additional information which might help to improve the OS detection.",
+      "If any of this information is wrong or could be improved please consider to report these to the referenced community forum."
+    ],
+    "detection_result": [
+      "Best matching OS:",
+      "OS: Ubuntu 16.04",
+      "Version: 16.04",
+      "CPE: cpe:/o:canonical:ubuntu_linux:16.04",
+      "Found by VT: 1.3.6.1.4.1.25623.1.0.108192 (Operating System (OS) Detection (MyS ->QL/MariaDB))",
+      "Concluded from MySQL/MariaDB server banner on port 3306/tcp: 5.5.5-10.0.38-Maria ->DB-1~xenial",
+      "Setting key \"Host/runs_unixoide\" based on this information"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [
+      "Details: OS Detection Consolidation and Reporting",
+      "OID:1.3.6.1.4.1.25623.1.0.105937",
+      "Version used: 2026-01-21T05:50:46Z"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": "general",
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [
+      "url: https://forum.greenbone.net/c/vulnerability-tests/7"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "IP Forwarding Enabled - Active Check",
+    "description": [
+      "Checks if the remote host has IP forwarding enabled."
+    ],
+    "detection_result": [
+      "It was possible to route a TCP packet through the target host and received an an ->swer which means IP forwarding is enabled."
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [
+      "Sends a crafted Local Link Layer (LLL) frame and checks the response.",
+      "Details: IP Forwarding Enabled - Active Check",
+      "OID:1.3.6.1.4.1.25623.1.0.147205",
+      "Version used: 2021-12-03T08:27:06Z"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": "general",
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [
+      "cve: CVE-1999-0511"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Traceroute",
+    "description": [
+      "Collect information about the network route and network distance between the scanner host and the target host."
+    ],
+    "detection_result": [
+      "Network route from scanner (172.30.0.2) to target (172.31.1.27):",
+      "172.30.0.2",
+      "172.31.1.27",
+      "Network distance between scanner and target: 2"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [
+      "For internal networks, the distances are usually small, often less than 4 hosts between scanner and target. For public targets the distance is greater and might be 10 hosts or more."
+    ],
+    "log_method": [
+      "A combination of the protocols ICMP and TCP is used to determine the route. This method is applicable for IPv4 only and it is also known as 'traceroute'.",
+      "Details: Traceroute",
+      "OID:1.3.6.1.4.1.25623.1.0.51662",
+      "Version used: 2022-10-17T11:13:19Z"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": "general",
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "CPE Inventory",
+    "description": [
+      "This routine uses information collected by other routines about CPE identities of operating systems, services and applications detected during the scan.",
+      "Note: Some CPEs for specic products might show up twice or more in the output. Background: After a product got renamed or a specic vendor was acquired by another one it might happen that a product gets a new CPE within the NVD CPE Dictionary but older entries are kept with the older CPE.",
+      "Quality of Detection (QoD): 80%"
+    ],
+    "detection_result": [
+      "172.31.1.27|cpe:/a:mariadb:mariadb:10.0.38",
+      "172.31.1.27|cpe:/o:canonical:ubuntu_linux:16.04"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [
+      "Details: CPE Inventory",
+      "OID:1.3.6.1.4.1.25623.1.0.810002",
+      "Version used: 2022-07-27T10:11:28Z"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": "general",
+    "protocol": "CPE-T",
+    "severity": "LOG",
+    "references": [
+      "url: https://nvd.nist.gov/products/cpe"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  }
+]

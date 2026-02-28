@@ -1,4 +1,12 @@
-# Vulnerability Extraction from Unstructured Security Reports using LLMs
+<p align="center">
+  <img src="MulitaMiner_logo.png" width="180">
+</p>
+
+<h1 align="center">MulitaMiner</h1>
+
+<p align="center">
+  Vulnerability Extraction from Unstructured Security Reports using LLMs
+</p>
 
 _Last update: February 2026_
 
@@ -7,7 +15,7 @@ _Last update: February 2026_
 
 ## Overview
 
-**Vulnerability Extractor** is a tool developed to extract and process vulnerabilities from security PDF reports using Large Language Models (LLMs) with an optimized chunking system. The tool implements an intelligent token optimization system that ensures efficient processing with no exceedances, supporting multiple LLM providers and specialized scanning strategies for different security tools (OpenVAS, Tenable WAS, Nessus, ...).
+**MulitaMiner** is a tool developed to extract and process vulnerabilities from security PDF reports using Large Language Models (LLMs) with an optimized chunking system. The tool implements an intelligent token optimization system that ensures efficient processing with no exceedances, supporting multiple LLM providers and specialized scanning strategies for different security tools (OpenVAS, Tenable WAS, Nessus, ...).
 
 ### Use Cases
 
@@ -495,7 +503,7 @@ The tool generates a JSON file with the vulnerabilities found. The complete form
 
 ## Experiments
 
-Vulnerability Extractor was validated through practical experiments with different types of reports and LLM configurations.
+MulitaMiner was validated through practical experiments with different types of reports and LLM configurations.
 
 ### Test Scenarios
 
@@ -752,7 +760,7 @@ Precise mathematical calculations for each LLM:
 
 ### Adding a new scanner
 
-Vulnerability Extractor was designed to be easily expanded, allowing integration of new scanners (extraction tools) without changing the system core. See the recommended flow:
+MulitaMiner was designed to be easily expanded, allowing integration of new scanners (extraction tools) without changing the system core. See the recommended flow:
 
 1. **Create a prompt template**
    - Add a file in `src/configs/templates/` (e.g., `rapid7_prompt.txt`).

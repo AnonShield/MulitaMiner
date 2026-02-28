@@ -1,0 +1,3686 @@
+[
+  {
+    "Name": "Oracle MySQL Server <= 5.7.40, 8.x <= 8.0.31 Security Update (cpujan2023) - Linux",
+    "description": [
+      "Oracle MySQL Server is prone to a vulnerability in libcurl.",
+      "Quality of Detection (QoD): 30%"
+    ],
+    "detection_result": [
+      "Installed version: 5.5.62",
+      "Fixed version: 5.7.41",
+      "Installation",
+      "path / port: 3306/tcp"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: Oracle MySQL Server <= 5.7.40, 8.x <= 8.0.31 Security Update (cpujan2023) - Lin.",
+      "OID:1.3.6.1.4.1.25623.1.0.149169",
+      "Version used: 2025-09-09T05:38:49Z"
+    ],
+    "product_detection_result": [
+      "Product: cpe:/a:mysql:mysql:5.5.62",
+      "Method: MariaDB / Oracle MySQL Detection (MySQL Protocol)",
+      "OID: 1.3.6.1.4.1.25623.1.0.100152)"
+    ],
+    "impact": [
+      "Oracle MySQL Server version 5.7.40 and prior and 8.0 through 8.0.31."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 5.7.41, 8.0.32 or later."
+    ],
+    "insight": [],
+    "log_method": [],
+    "cvss": [
+      "9.8"
+    ],
+    "port": 3306,
+    "protocol": "tcp",
+    "severity": "Critical",
+    "references": [
+      "cve: CVE-2022-32221",
+      "cve: CVE-2022-35260",
+      "cve: CVE-2022-42915",
+      "cve: CVE-2022-42916",
+      "url: https://www.oracle.com/security-alerts/cpujan2023.html#AppendixMSQL",
+      "advisory-id: cpujan2023",
+      "cert-bund: WID-SEC-2026-0180",
+      "cert-bund: WID-SEC-2024-3377",
+      "cert-bund: WID-SEC-2024-0794",
+      "cert-bund: WID-SEC-2023-2917",
+      "cert-bund: WID-SEC-2023-2229",
+      "cert-bund: WID-SEC-2023-2031",
+      "cert-bund: WID-SEC-2023-1728",
+      "cert-bund: WID-SEC-2023-1614",
+      "cert-bund: WID-SEC-2023-1424",
+      "cert-bund: WID-SEC-2023-1350",
+      "cert-bund: WID-SEC-2023-1026",
+      "cert-bund: WID-SEC-2023-0296",
+      "cert-bund: WID-SEC-2023-0189",
+      "cert-bund: WID-SEC-2023-0137",
+      "cert-bund: WID-SEC-2023-0126",
+      "cert-bund: WID-SEC-2022-2372",
+      "cert-bund: WID-SEC-2022-1862",
+      "dfn-cert: DFN-CERT-2023-1947",
+      "dfn-cert: DFN-CERT-2023-1636",
+      "dfn-cert: DFN-CERT-2023-1230",
+      "dfn-cert: DFN-CERT-2023-0898",
+      "dfn-cert: DFN-CERT-2023-0884",
+      "dfn-cert: DFN-CERT-2023-0372",
+      "dfn-cert: DFN-CERT-2023-0278",
+      "dfn-cert: DFN-CERT-2023-0216",
+      "dfn-cert: DFN-CERT-2023-0214",
+      "dfn-cert: DFN-CERT-2023-0157",
+      "dfn-cert: DFN-CERT-2023-0156",
+      "dfn-cert: DFN-CERT-2023-0105",
+      "dfn-cert: DFN-CERT-2022-2799",
+      "dfn-cert: DFN-CERT-2022-2401",
+      "dfn-cert: DFN-CERT-2022-2400",
+      "dfn-cert: DFN-CERT-2022-2393",
+      "dfn-cert: DFN-CERT-2022-2391"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Oracle MySQL Server <= 5.7.41, 8.x <= 8.0.31 Security Update (cpuapr2023) - Linux",
+    "description": [
+      "Oracle MySQL Server is prone to a vulnerability in InnoDB (zlib).",
+      "Quality of Detection (QoD): 30%"
+    ],
+    "detection_result": [
+      "Installed version: 5.5.62",
+      "Fixed version: 5.7.42",
+      "Installation",
+      "path / port: 3306/tcp"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: Oracle MySQL Server <= 5.7.41, 8.x <= 8.0.31 Security Update (cpuapr2023) - Lin.",
+      "OID:1.3.6.1.4.1.25623.1.0.149535",
+      "Version used: 2025-09-09T05:38:49Z"
+    ],
+    "product_detection_result": [
+      "Product: cpe:/a:mysql:mysql:5.5.62",
+      "Method: MariaDB / Oracle MySQL Detection (MySQL Protocol)",
+      "OID: 1.3.6.1.4.1.25623.1.0.100152)"
+    ],
+    "impact": [
+      "Oracle MySQL Server version 5.7.41 and prior and 8.x through 8.0.31."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 5.7.42, 8.0.32 or later."
+    ],
+    "insight": [],
+    "log_method": [],
+    "cvss": [
+      "9.8"
+    ],
+    "port": 3306,
+    "protocol": "tcp",
+    "severity": "CRITICAL",
+    "references": [
+      "cve: CVE-2022-37434",
+      "url: https://www.oracle.com/security-alerts/cpuapr2023.html#AppendixMSQL",
+      "advisory-id: cpuapr2023",
+      "cert-bund: WID-SEC-2026-0180",
+      "cert-bund: WID-SEC-2024-1653",
+      "cert-bund: WID-SEC-2024-1591",
+      "cert-bund: WID-SEC-2024-0794",
+      "cert-bund: WID-SEC-2024-0122",
+      "cert-bund: WID-SEC-2024-0120",
+      "cert-bund: WID-SEC-2024-0064",
+      "cert-bund: WID-SEC-2023-2031",
+      "cert-bund: WID-SEC-2023-1812",
+      "cert-bund: WID-SEC-2023-1791",
+      "cert-bund: WID-SEC-2023-1790",
+      "cert-bund: WID-SEC-2023-1783",
+      "cert-bund: WID-SEC-2023-1728",
+      "cert-bund: WID-SEC-2023-1542",
+      "cert-bund: WID-SEC-2023-1350",
+      "cert-bund: WID-SEC-2023-1033",
+      "cert-bund: WID-SEC-2023-1031"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Oracle MySQL Server <= 5.7.43, 8.x <= 8.0.34, 8.1.0 Security Update (cpuoct2023) - Linux",
+    "description": [
+      "Oracle MySQL Server is prone to multiple vulnerabilities."
+    ],
+    "detection_result": [
+      "Installed version: 5.5.62",
+      "Fixed version: 5.7.44",
+      "Installation path / port: 3306/tcp"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: Oracle MySQL Server <= 5.7.43, 8.x <= 8.0.34, 8.1.0 Security Update (cpuoct2023...",
+      "OID:1.3.6.1.4.1.25623.1.0.151217",
+      "Version used: 2025-09-09T05:38:49Z"
+    ],
+    "product_detection_result": [
+      "Product: cpe:/a:mysql:mysql:5.5.62",
+      "Method: MariaDB / Oracle MySQL Detection (MySQL Protocol)",
+      "OID: 1.3.6.1.4.1.25623.1.0.100152)"
+    ],
+    "impact": [],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 5.7.44, 8.0.35, 8.1.1 or later."
+    ],
+    "insight": [],
+    "log_method": [],
+    "cvss": [
+      "9.8"
+    ],
+    "port": 3306,
+    "protocol": "tcp",
+    "severity": "Critical",
+    "references": [
+      "cve: CVE-2023-38545",
+      "cve: CVE-2023-22084",
+      "cve: CVE-2023-38546",
+      "url: https://www.oracle.com/security-alerts/cpuoct2023.html#AppendixMSQL",
+      "advisory-id: cpuoct2023",
+      "cert-bund: WID-SEC-2026-0180",
+      "cert-bund: WID-SEC-2024-3377",
+      "cert-bund: WID-SEC-2024-1226",
+      "cert-bund: WID-SEC-2024-1086",
+      "cert-bund: WID-SEC-2024-0893",
+      "cert-bund: WID-SEC-2024-0290",
+      "cert-bund: WID-SEC-2024-0178",
+      "cert-bund: WID-SEC-2024-0175",
+      "cert-bund: WID-SEC-2024-0123",
+      "cert-bund: WID-SEC-2024-0119",
+      "cert-bund: WID-SEC-2024-0110",
+      "cert-bund: WID-SEC-2023-2788",
+      "cert-bund: WID-SEC-2023-2690",
+      "cert-bund: WID-SEC-2023-2570",
+      "dfn-cert: DFN-CERT-2024-2795",
+      "dfn-cert: DFN-CERT-2024-2543",
+      "dfn-cert: DFN-CERT-2024-1601",
+      "dfn-cert: DFN-CERT-2024-1517",
+      "dfn-cert: DFN-CERT-2024-1188",
+      "dfn-cert: DFN-CERT-2024-1090",
+      "dfn-cert: DFN-CERT-2024-1025",
+      "dfn-cert: DFN-CERT-2024-0963",
+      "dfn-cert: DFN-CERT-2024-0869",
+      "dfn-cert: DFN-CERT-2024-0593",
+      "dfn-cert: DFN-CERT-2024-0454",
+      "dfn-cert: DFN-CERT-2024-0376",
+      "dfn-cert: DFN-CERT-2024-0220",
+      "dfn-cert: DFN-CERT-2024-0185",
+      "dfn-cert: DFN-CERT-2024-0184",
+      "dfn-cert: DFN-CERT-2024-0181",
+      "dfn-cert: DFN-CERT-2024-0133",
+      "dfn-cert: DFN-CERT-2024-0132",
+      "dfn-cert: DFN-CERT-2024-0127",
+      "dfn-cert: DFN-CERT-2024-0108",
+      "dfn-cert: DFN-CERT-2023-3124",
+      "dfn-cert: DFN-CERT-2023-3071",
+      "dfn-cert: DFN-CERT-2023-3064",
+      "dfn-cert: DFN-CERT-2023-2988",
+      "dfn-cert: DFN-CERT-2023-2941",
+      "dfn-cert: DFN-CERT-2023-2819",
+      "dfn-cert: DFN-CERT-2023-2763",
+      "dfn-cert: DFN-CERT-2023-2681",
+      "dfn-cert: DFN-CERT-2023-2680",
+      "dfn-cert: DFN-CERT-2023-2643",
+      "dfn-cert: DFN-CERT-2023-2536",
+      "dfn-cert: DFN-CERT-2023-2475",
+      "dfn-cert: DFN-CERT-2023-2458"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "MySQL / MariaDB Default Credentials (MySQL Protocol)",
+    "description": [
+      "It was possible to login into the remote MySQL using default credentials.",
+      "Quality of Detection (QoD): 95%"
+    ],
+    "detection_result": [
+      "It was possible to login as user \"root\" with password \"root\"."
+    ],
+    "detection_method": [
+      "Details: MySQL / MariaDB Default Credentials (MySQL Protocol)",
+      "OID:1.3.6.1.4.1.25623.1.0.103551",
+      "Version used: 2025-09-09T05:38:49Z"
+    ],
+    "product_detection_result": [
+      "Product: cpe:/a:mysql:mysql:5.5.62",
+      "Method: MariaDB / Oracle MySQL Detection (MySQL Protocol)",
+      "OID: 1.3.6.1.4.1.25623.1.0.100152)"
+    ],
+    "impact": [
+      "The following products are know to use such weak credentials:",
+      "- CVE-2001-0645: Symantec/AXENT NetProwler 3.5.x",
+      "- CVE-2002-1809: Windows binary release of MySQL 3.23.2 through 3.23.52",
+      "- CVE-2004-1532: AppServ 2.5.x and earlier",
+      "- CVE-2004-2357: Proofpoint Protection Server",
+      "- CVE-2006-1451: MySQL Manager in Apple Mac OS X 10.3.9 and 10.4.6",
+      "- CVE-2007-2554: Associated Press (AP) Newspower 4.0.1 and earlier",
+      "- CVE-2007-6081: AdventNet EventLog Analyzer build 4030",
+      "- CVE-2009-0919: XAMPP",
+      "- CVE-2014-3419: Infoblox NetMRI before 6.8.5",
+      "- CVE-2015-4669: Xsuite 2.x",
+      "- CVE-2016-6531, CVE-2018-15719: Open Dental before version 18.4",
+      "- CVE-2024-22901: Vinchin Backup & Recovery 7.2 and prior",
+      "Other products might be aected as well."
+    ],
+    "solution": [
+      "Solution type: Mitigation",
+      "- Change the password as soon as possible",
+      "- Contact the vendor for other possible xes / updates"
+    ],
+    "insight": [],
+    "log_method": [],
+    "cvss": [
+      "9.8"
+    ],
+    "port": 3306,
+    "protocol": "tcp",
+    "severity": "Critical",
+    "references": [
+      "cve: CVE-2001-0645",
+      "cve: CVE-2002-1809",
+      "cve: CVE-2004-1532",
+      "cve: CVE-2004-2357",
+      "cve: CVE-2006-1451",
+      "cve: CVE-2007-2554",
+      "cve: CVE-2007-6081",
+      "cve: CVE-2009-0919",
+      "cve: CVE-2014-3419",
+      "cve: CVE-2015-4669",
+      "cve: CVE-2016-6531",
+      "cve: CVE-2018-15719",
+      "cve: CVE-2024-22901"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Oracle MySQL Server <= 5.7.35 / 8.0 <= 8.0.26 Security Update (cpuoct2021) - Linux",
+    "description": [
+      "Oracle MySQL Server is prone to multiple vulnerabilities.",
+      "Quality of Detection (QoD): 30%"
+    ],
+    "detection_result": [
+      "Installed version: 5.5.62",
+      "Fixed version: 5.7.36",
+      "Installation",
+      "path / port: 3306/tcp"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: Oracle MySQL Server <= 5.7.35 / 8.0 <= 8.0.26 Security Update (cpuoct2021) - Li.",
+      "OID:1.3.6.1.4.1.25623.1.0.117740",
+      "Version used: 2025-09-09T05:38:49Z"
+    ],
+    "product_detection_result": [
+      "Product: cpe:/a:mysql:mysql:5.5.62",
+      "Method: MariaDB / Oracle MySQL Detection (MySQL Protocol)",
+      "OID: 1.3.6.1.4.1.25623.1.0.100152)"
+    ],
+    "impact": [
+      "Oracle MySQL Server version 5.7.35 and prior and 8.0 through 8.0.26."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 5.7.36, 8.0.27 or later."
+    ],
+    "insight": [],
+    "log_method": [],
+    "cvss": [
+      "9.8"
+    ],
+    "port": 3306,
+    "protocol": "tcp",
+    "severity": "CRITICAL",
+    "references": [
+      "cve: CVE-2021-3711",
+      "cve: CVE-2021-22926",
+      "cve: CVE-2021-35604",
+      "cve: CVE-2021-35624",
+      "cve: CVE-2021-22922",
+      "cve: CVE-2021-22923",
+      "cve: CVE-2021-22924",
+      "cve: CVE-2021-22925",
+      "cve: CVE-2021-22945",
+      "cve: CVE-2021-22946",
+      "cve: CVE-2021-22947",
+      "cve: CVE-2021-3712",
+      "url: https://www.oracle.com/security-alerts/cpuoct2021.html#AppendixMSQL",
+      "advisory-id: cpuoct2021",
+      "cert-bund: WID-SEC-2026-0180",
+      "cert-bund: WID-SEC-2025-2366",
+      "cert-bund: WID-SEC-2025-1459",
+      "cert-bund: WID-SEC-2024-1591",
+      "cert-bund: WID-SEC-2024-1186",
+      "cert-bund: WID-SEC-2024-0794",
+      "cert-bund: WID-SEC-2024-0556",
+      "cert-bund: WID-SEC-2023-2229",
+      "cert-bund: WID-SEC-2023-1821",
+      "cert-bund: WID-SEC-2023-1350",
+      "cert-bund: WID-SEC-2023-1030",
+      "cert-bund: WID-SEC-2023-0530",
+      "cert-bund: WID-SEC-2022-2354",
+      "cert-bund: WID-SEC-2022-2354"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "MariaDB / Oracle MySQL Detection (MySQL Protocol)",
+    "description": [
+      "MySQL protocol-based detection of MariaDB / Oracle MySQL."
+    ],
+    "detection_result": [
+      "Detected Oracle MySQL",
+      "Version: 5.5.62",
+      "Location: 3306/tcp",
+      "CPE: cpe:/a:oracle:mysql:5.5.62",
+      "Concluded from version/product identification result:",
+      "5.5.62"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [],
+    "cvss": [
+      "0.0"
+    ],
+    "port": 3306,
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Oracle MySQL Server <= 5.7.38 / 8.0 <= 8.0.29 Security Update (cpujul2022) - Linux",
+    "description": [
+      "Oracle MySQL Server is prone to multiple vulnerabilities.",
+      "Quality of Detection (QoD): 30%"
+    ],
+    "detection_result": [
+      "Installed version: 5.5.62",
+      "Fixed version: 5.7.39",
+      "Installation path / port: 3306/tcp"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: Oracle MySQL Server <= 5.7.38 / 8.0 <= 8.0.29 Security Update (cpujul2022) - Li.",
+      "OID:1.3.6.1.4.1.25623.1.0.148510",
+      "Version used: 2025-09-09T05:38:49Z"
+    ],
+    "product_detection_result": [
+      "Product: cpe:/a:mysql:mysql:5.5.62",
+      "Method: MariaDB / Oracle MySQL Detection (MySQL Protocol)",
+      "OID: 1.3.6.1.4.1.25623.1.0.100152)"
+    ],
+    "impact": [
+      "Aected Software/OS Oracle MySQL Server version 5.7.38 and prior and 8.0 through 8.0.29."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 5.7.39, 8.0.30 or later."
+    ],
+    "insight": [],
+    "log_method": [],
+    "cvss": [
+      "8.1"
+    ],
+    "port": 3306,
+    "protocol": "tcp",
+    "severity": "HIGH",
+    "references": [
+      "cve: CVE-2022-1292",
+      "cve: CVE-2022-27778",
+      "cve: CVE-2018-25032",
+      "cve: CVE-2022-21515",
+      "url: https://www.oracle.com/security-alerts/cpujul2022.html#AppendixMSQL",
+      "advisory-id: cpujul2022",
+      "cert-bund: WID-SEC-2026-0180",
+      "cert-bund: WID-SEC-2024-1186",
+      "cert-bund: WID-SEC-2024-0794",
+      "cert-bund: WID-SEC-2023-2723",
+      "cert-bund: WID-SEC-2023-2229",
+      "cert-bund: WID-SEC-2023-1969",
+      "cert-bund: WID-SEC-2023-1784",
+      "cert-bund: WID-SEC-2023-1542",
+      "cert-bund: WID-SEC-2023-1432",
+      "cert-bund: WID-SEC-2023-1424",
+      "cert-bund: WID-SEC-2023-1350",
+      "cert-bund: WID-SEC-2023-1021",
+      "cert-bund: WID-SEC-2023-0141",
+      "cert-bund: WID-SEC-2023-0132",
+      "cert-bund: WID-SEC-2022-1775",
+      "cert-bund: WID-SEC-2022-1772",
+      "cert-bund: WID-SEC-2022-1767",
+      "cert-bund: WID-SEC-2022-1461",
+      "cert-bund: WID-SEC-2022-1438",
+      "cert-bund: WID-SEC-2022-1335",
+      "cert-bund: WID-SEC-2022-1245",
+      "cert-bund: WID-SEC-2022-1228",
+      "cert-bund: WID-SEC-2022-1068",
+      "cert-bund: WID-SEC-2022-1057",
+      "cert-bund: WID-SEC-2022-0833",
+      "cert-bund: WID-SEC-2022-0826",
+      "cert-bund: WID-SEC-2022-0767",
+      "cert-bund: WID-SEC-2022-0755",
+      "cert-bund: WID-SEC-2022-0736",
+      "cert-bund: WID-SEC-2022-0735",
+      "cert-bund: WID-SEC-2022-0677",
+      "cert-bund: WID-SEC-2022-0554",
+      "cert-bund: WID-SEC-2022-0393",
+      "cert-bund: WID-SEC-2022-0277",
+      "cert-bund: WID-SEC-2022-0071",
+      "cert-bund: WID-SEC-2022-0005",
+      "cert-bund: CB-K22/0619",
+      "cert-bund: CB-K22/0570",
+      "cert-bund: CB-K22/0536",
+      "cert-bund: CB-K22/0386",
+      "dfn-cert: DFN-CERT-2024-2686",
+      "dfn-cert: DFN-CERT-2024-2451",
+      "dfn-cert: DFN-CERT-2024-0998",
+      "dfn-cert: DFN-CERT-2024-0790",
+      "dfn-cert: DFN-CERT-2024-0147",
+      "dfn-cert: DFN-CERT-2023-3028",
+      "dfn-cert: DFN-CERT-2023-2667",
+      "dfn-cert: DFN-CERT-2023-2600",
+      "dfn-cert: DFN-CERT-2023-2599",
+      "dfn-cert: DFN-CERT-2023-2571",
+      "dfn-cert: DFN-CERT-2023-0553",
+      "dfn-cert: DFN-CERT-2023-0430",
+      "dfn-cert: DFN-CERT-2023-0372",
+      "dfn-cert: DFN-CERT-2023-0121",
+      "dfn-cert: DFN-CERT-2023-0119",
+      "dfn-cert: DFN-CERT-2023-0100",
+      "dfn-cert: DFN-CERT-2022-2799",
+      "dfn-cert: DFN-CERT-2022-2668",
+      "dfn-cert: DFN-CERT-2022-2376",
+      "dfn-cert: DFN-CERT-2022-2323",
+      "dfn-cert: DFN-CERT-2022-2309",
+      "dfn-cert: DFN-CERT-2022-2305",
+      "dfn-cert: DFN-CERT-2022-2268",
+      "dfn-cert: DFN-CERT-2022-2254",
+      "dfn-cert: DFN-CERT-2022-2150",
+      "dfn-cert: DFN-CERT-2022-2111",
+      "dfn-cert: DFN-CERT-2022-2094",
+      "dfn-cert: DFN-CERT-2022-2073",
+      "dfn-cert: DFN-CERT-2022-2072",
+      "dfn-cert: DFN-CERT-2022-2066",
+      "dfn-cert: DFN-CERT-2022-2059",
+      "dfn-cert: DFN-CERT-2022-2047",
+      "dfn-cert: DFN-CERT-2022-1992",
+      "dfn-cert: DFN-CERT-2022-1905",
+      "dfn-cert: DFN-CERT-2022-1875",
+      "dfn-cert: DFN-CERT-2022-1837",
+      "dfn-cert: DFN-CERT-2022-1646",
+      "dfn-cert: DFN-CERT-2022-1614",
+      "dfn-cert: DFN-CERT-2022-1609",
+      "dfn-cert: DFN-CERT-2022-1520",
+      "dfn-cert: DFN-CERT-2022-1476",
+      "dfn-cert: DFN-CERT-2022-1425",
+      "dfn-cert: DFN-CERT-2022-1310",
+      "dfn-cert: DFN-CERT-2022-1304",
+      "dfn-cert: DFN-CERT-2022-1267",
+      "dfn-cert: DFN-CERT-2022-1264",
+      "dfn-cert: DFN-CERT-2022-1116",
+      "dfn-cert: DFN-CERT-2022-1115",
+      "dfn-cert: DFN-CERT-2022-1114",
+      "dfn-cert: DFN-CERT-2022-1103",
+      "dfn-cert: DFN-CERT-2022-1081"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Oracle MySQL Server <= 5.7.34 / 8.0 <= 8.0.25 Security Update (cpujul2021) - Linux",
+    "description": [
+      "Oracle MySQL Server is prone to multiple vulnerabilities.",
+      "Quality of Detection (QoD): 30%"
+    ],
+    "detection_result": [
+      "Installed version: 5.5.62",
+      "Fixed version: 5.7.35",
+      "Installation",
+      "path / port: 3306/tcp"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: Oracle MySQL Server <= 5.7.34 / 8.0 <= 8.0.25 Security Update (cpujul2021) - Li.",
+      "OID:1.3.6.1.4.1.25623.1.0.146354",
+      "Version used: 2025-09-09T05:38:49Z"
+    ],
+    "product_detection_result": [
+      "Product: cpe:/a:mysql:mysql:5.5.62",
+      "Method: MariaDB / Oracle MySQL Detection (MySQL Protocol)"
+    ],
+    "impact": [
+      "Oracle MySQL Server version 5.7.34 and prior and 8.0 through 8.0.25."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 5.7.35, 8.0.26 or later."
+    ],
+    "insight": [],
+    "log_method": [],
+    "cvss": [
+      "8.1"
+    ],
+    "port": 3306,
+    "protocol": "tcp",
+    "severity": "HIGH",
+    "references": [
+      "cve: CVE-2021-22901",
+      "cve: CVE-2019-17543",
+      "cve: CVE-2021-2389",
+      "cve: CVE-2021-2390",
+      "cve: CVE-2021-2356",
+      "cve: CVE-2021-2385",
+      "cve: CVE-2021-2342",
+      "cve: CVE-2021-2372",
+      "cve: CVE-2021-22897",
+      "cve: CVE-2021-22898",
+      "url: https://www.oracle.com/security-alerts/cpujul2021.html#AppendixMSQL",
+      "advisory-id: cpujul2021",
+      "cert-bund: WID-SEC-2026-0180",
+      "cert-bund: WID-SEC-2025-2364",
+      "cert-bund: WID-SEC-2025-1905",
+      "cert-bund: WID-SEC-2025-1550",
+      "cert-bund: WID-SEC-2024-2180",
+      "cert-bund: WID-SEC-2024-1591",
+      "cert-bund: WID-SEC-2023-2229",
+      "cert-bund: WID-SEC-2023-1350",
+      "cert-bund: WID-SEC-2023-0063",
+      "cert-bund: WID-SEC-2022-1963",
+      "cert-bund: WID-SEC-2022-0873",
+      "cert-bund: CB-K22/0044",
+      "cert-bund: CB-K21/0813",
+      "cert-bund: CB-K21/0770",
+      "dfn-cert: DFN-CERT-2025-2944",
+      "dfn-cert: DFN-CERT-2022-1892",
+      "dfn-cert: DFN-CERT-2022-1692",
+      "dfn-cert: DFN-CERT-2022-1597",
+      "dfn-cert: DFN-CERT-2022-1241",
+      "dfn-cert: DFN-CERT-2022-0933",
+      "dfn-cert: DFN-CERT-2022-0872",
+      "dfn-cert: DFN-CERT-2022-0666",
+      "dfn-cert: DFN-CERT-2022-0076",
+      "dfn-cert: DFN-CERT-2022-0074",
+      "dfn-cert: DFN-CERT-2021-2527",
+      "dfn-cert: DFN-CERT-2021-2438",
+      "dfn-cert: DFN-CERT-2021-2369",
+      "dfn-cert: DFN-CERT-2021-2185",
+      "dfn-cert: DFN-CERT-2021-2155",
+      "dfn-cert: DFN-CERT-2021-1743",
+      "dfn-cert: DFN-CERT-2021-1677",
+      "dfn-cert: DFN-CERT-2021-1593",
+      "dfn-cert: DFN-CERT-2021-1580",
+      "dfn-cert: DFN-CERT-2021-1537",
+      "dfn-cert: DFN-CERT-2021-1329",
+      "dfn-cert: DFN-CERT-2021-1174",
+      "dfn-cert: DFN-CERT-2021-1165",
+      "dfn-cert: DFN-CERT-2021-1157",
+      "dfn-cert: DFN-CERT-2021-1151",
+      "dfn-cert: DFN-CERT-2021-1148",
+      "dfn-cert: DFN-CERT-2021-1045",
+      "dfn-cert: DFN-CERT-2019-2216"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Oracle MySQL Server <= 5.7.37 / 8.0 <= 8.0.28 Security Update (cpuapr2022) - Linux",
+    "description": [
+      "Oracle MySQL Server is prone to multiple vulnerabilities.",
+      "Quality of Detection (QoD): 30%"
+    ],
+    "detection_result": [
+      "Installed version: 5.5.62",
+      "Fixed version: 5.7.38",
+      "Installation",
+      "path / port: 3306/tcp"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: Oracle MySQL Server <= 5.7.37 / 8.0 <= 8.0.28 Security Update (cpuapr2022) - Li.",
+      "OID:1.3.6.1.4.1.25623.1.0.113943",
+      "Version used: 2025-09-09T05:38:49Z"
+    ],
+    "product_detection_result": [
+      "cpe:/a:mysql:mysql:5.5.62",
+      "Detected by MariaDB / Oracle MySQL Detection (MySQL Protocol) (OID: 1.3.6.1.4.1."
+    ],
+    "impact": [
+      "Oracle MySQL Server version 5.7.37 and prior and 8.0 through 8.0.28."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 5.7.38, 8.0.29 or later."
+    ],
+    "insight": [],
+    "log_method": [],
+    "cvss": [
+      "7.5"
+    ],
+    "port": 3306,
+    "protocol": "tcp",
+    "severity": "HIGH",
+    "references": [],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Oracle MySQL Server <= 8.0.39, 8.1 <= 8.4.2, 9.0 <= 9.0.1 Security Update (cpuoct2024) - Linux",
+    "description": [
+      "Oracle MySQL Server is prone to multiple vulnerabilities."
+    ],
+    "detection_result": [
+      "Installed version: 5.5.62",
+      "Fixed version: 8.0.40",
+      "Installation path / port: 3306/tcp"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: Oracle MySQL Server <= 8.0.39, 8.1 <= 8.4.2, 9.0 <= 9.0.1 Security Update (cpuo.."
+    ],
+    "product_detection_result": [
+      "cpe:/a:mysql:mysql:5.5.62",
+      "Detected by MariaDB / Oracle MySQL Detection (MySQL Protocol) (OID: 1.3.6.1.4.1.25623.1.0.100152)"
+    ],
+    "impact": [
+      "Oracle MySQL Server version 8.0.39 and prior, 8.1 through 8.4.2 and 9.0 through 9.0.1."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 8.0.40, 8.4.3, 9.0.2 or later."
+    ],
+    "insight": [],
+    "log_method": [],
+    "cvss": [
+      "7.5"
+    ],
+    "port": 3306,
+    "protocol": "tcp",
+    "severity": "HIGH",
+    "references": [],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Oracle MySQL Denial Of Service Vulnerability (Feb 2017) - Linux",
+    "description": [
+      "Oracle MySQL is prone to a denial of service (DoS) vulnerability."
+    ],
+    "detection_result": [
+      "Installed version: 5.5.62",
+      "Fixed version: 5.6.21",
+      "Installation",
+      "path / port: 3306/tcp"
+    ],
+    "detection_method": [],
+    "product_detection_result": [
+      "cpe:/a:mysql:mysql:5.5.62",
+      "Detected by MariaDB / Oracle MySQL Detection (MySQL Protocol) (OID: 1.3.6.1.4.1.",
+      "->25623.1.0.100152)"
+    ],
+    "impact": [
+      "Successful exploitation of this vulnerability will allow attackers to cause crash of applications",
+      "using that MySQL client."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Upgrade to Oracle MySQL version 5.6.21 or 5.7.5 or later."
+    ],
+    "insight": [
+      "Multiple errors exist as,",
+      "- In sql-common/client.c script 'mysql_prune_stmt_list' function, the for loop adds elements",
+      "to pruned_list without removing it from the existing list."
+    ],
+    "log_method": [],
+    "cvss": [
+      "7.5"
+    ],
+    "port": 3306,
+    "protocol": "tcp",
+    "severity": "HIGH",
+    "references": [],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Oracle MySQL Server <= 5.7.42, 8.x <= 8.0.33 Security Update (cpuoct2023) - Linux",
+    "description": [
+      "Oracle MySQL Server is prone to multiple vulnerabilities.",
+      "Quality of Detection (QoD): 30%"
+    ],
+    "detection_result": [
+      "Installed version: 5.5.62",
+      "Fixed version: 5.7.43",
+      "Installation path / port: 3306/tcp"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: Oracle MySQL Server <= 5.7.42, 8.x <= 8.0.33 Security Update (cpuoct2023) - Lin...",
+      "OID:1.3.6.1.4.1.25623.1.0.151213",
+      "Version used: 2025-09-09T05:38:49Z"
+    ],
+    "product_detection_result": [
+      "Product: cpe:/a:mysql:mysql:5.5.62",
+      "Method: MariaDB / Oracle MySQL Detection (MySQL Protocol)",
+      "OID: 1.3.6.1.4.1.25623.1.0.100152)"
+    ],
+    "impact": [
+      "Oracle MySQL Server version 5.7.42 and prior and 8.x through 8.0.33."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 5.7.43, 8.0.34 or later."
+    ],
+    "insight": [],
+    "log_method": [],
+    "cvss": [
+      "7.5"
+    ],
+    "port": 3306,
+    "protocol": "tcp",
+    "severity": "HIGH",
+    "references": [
+      "cve: CVE-2023-2650",
+      "cve: CVE-2023-0464",
+      "cve: CVE-2023-0465",
+      "cve: CVE-2023-0466",
+      "cve: CVE-2023-1255",
+      "url: https://www.oracle.com/security-alerts/cpuoct2023.html#AppendixMSQL",
+      "advisory-id: cpuoct2023",
+      "cert-bund: WID-SEC-2024-1591",
+      "cert-bund: WID-SEC-2024-0794",
+      "cert-bund: WID-SEC-2024-0120",
+      "cert-bund: WID-SEC-2024-0064",
+      "cert-bund: WID-SEC-2024-0053",
+      "cert-bund: WID-SEC-2023-2917",
+      "cert-bund: WID-SEC-2023-2690",
+      "cert-bund: WID-SEC-2023-2674",
+      "cert-bund: WID-SEC-2023-1794",
+      "cert-bund: WID-SEC-2023-1781",
+      "cert-bund: WID-SEC-2023-1614",
+      "cert-bund: WID-SEC-2023-1432",
+      "cert-bund: WID-SEC-2023-1323",
+      "cert-bund: WID-SEC-2023-1130",
+      "cert-bund: WID-SEC-2023-1053",
+      "cert-bund: WID-SEC-2023-0782",
+      "cert-bund: WID-SEC-2023-0732",
+      "dfn-cert: DFN-CERT-2025-3324",
+      "dfn-cert: DFN-CERT-2025-2802",
+      "dfn-cert: DFN-CERT-2024-1799",
+      "dfn-cert: DFN-CERT-2024-1067",
+      "dfn-cert: DFN-CERT-2024-0565",
+      "dfn-cert: DFN-CERT-2024-0147",
+      "dfn-cert: DFN-CERT-2024-0125",
+      "dfn-cert: DFN-CERT-2023-3071",
+      "dfn-cert: DFN-CERT-2023-3070",
+      "dfn-cert: DFN-CERT-2023-2749",
+      "dfn-cert: DFN-CERT-2023-2545",
+      "dfn-cert: DFN-CERT-2023-2536",
+      "dfn-cert: DFN-CERT-2023-2116",
+      "dfn-cert: DFN-CERT-2023-1947",
+      "dfn-cert: DFN-CERT-2023-1903",
+      "dfn-cert: DFN-CERT-2023-1720",
+      "dfn-cert: DFN-CERT-2023-1649",
+      "dfn-cert: DFN-CERT-2023-1642",
+      "dfn-cert: DFN-CERT-2023-1462",
+      "dfn-cert: DFN-CERT-2023-1428",
+      "dfn-cert: DFN-CERT-2023-1423",
+      "dfn-cert: DFN-CERT-2023-1332",
+      "dfn-cert: DFN-CERT-2023-1246",
+      "dfn-cert: DFN-CERT-2023-1245",
+      "dfn-cert: DFN-CERT-2023-1233",
+      "dfn-cert: DFN-CERT-2023-0999",
+      "dfn-cert: DFN-CERT-2023-0960",
+      "dfn-cert: DFN-CERT-2023-0929",
+      "dfn-cert: DFN-CERT-2023-0904",
+      "dfn-cert: DFN-CERT-2023-0782",
+      "dfn-cert: DFN-CERT-2023-0700",
+      "dfn-cert: DFN-CERT-2023-0645"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Oracle MySQL Server <= 5.6.48 Security Update (cpujul2020) - Linux",
+    "description": [
+      "Oracle MySQL Server is prone to multiple vulnerabilities."
+    ],
+    "detection_result": [
+      "Installed version: 5.5.62",
+      "Fixed version: 5.6.49",
+      "Installation path / port: 3306/tcp"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: Oracle MySQL Server <= 5.6.48 Security Update (cpujul2020) - Linux",
+      "OID:1.3.6.1.4.1.25623.1.0.144285",
+      "Version used: 2025-09-09T05:38:49Z"
+    ],
+    "product_detection_result": [
+      "Product: cpe:/a:mysql:mysql:5.5.62",
+      "Method: MariaDB / Oracle MySQL Detection (MySQL Protocol)",
+      "OID: 1.3.6.1.4.1.25623.1.0.100152)"
+    ],
+    "impact": [
+      "Oracle MySQL Server versions 5.6.48 and prior."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 5.6.49 or later."
+    ],
+    "insight": [],
+    "log_method": [],
+    "cvss": [
+      "7.5"
+    ],
+    "port": 3306,
+    "protocol": "tcp",
+    "severity": "HIGH",
+    "references": [
+      "cve: CVE-2020-1967",
+      "cve: CVE-2020-14539",
+      "cve: CVE-2020-14559",
+      "url: https://www.oracle.com/security-alerts/cpujul2020.html#AppendixMSQL",
+      "advisory-id: cpujul2020",
+      "cert-bund: WID-SEC-2024-0794",
+      "cert-bund: WID-SEC-2023-3080",
+      "cert-bund: CB-K21/1088",
+      "cert-bund: CB-K21/0070",
+      "cert-bund: CB-K20/1023",
+      "cert-bund: CB-K20/1017",
+      "cert-bund: CB-K20/0711",
+      "cert-bund: CB-K20/0708",
+      "cert-bund: CB-K20/0357",
+      "dfn-cert: DFN-CERT-2021-2192",
+      "dfn-cert: DFN-CERT-2021-0830",
+      "dfn-cert: DFN-CERT-2021-0826",
+      "dfn-cert: DFN-CERT-2021-0444",
+      "dfn-cert: DFN-CERT-2021-0140",
+      "dfn-cert: DFN-CERT-2020-2295",
+      "dfn-cert: DFN-CERT-2020-2286",
+      "dfn-cert: DFN-CERT-2020-2006",
+      "dfn-cert: DFN-CERT-2020-1827",
+      "dfn-cert: DFN-CERT-2020-1788",
+      "dfn-cert: DFN-CERT-2020-1508",
+      "dfn-cert: DFN-CERT-2020-0956",
+      "dfn-cert: DFN-CERT-2020-0930",
+      "dfn-cert: DFN-CERT-2020-0841",
+      "dfn-cert: DFN-CERT-2020-0824",
+      "dfn-cert: DFN-CERT-2020-0822"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Oracle MySQL Server <= 5.7.41, 8.x <= 8.0.32 Security Update (cpuapr2023) - Linux",
+    "description": [
+      "Oracle MySQL Server is prone to multiple vulnerabilities."
+    ],
+    "detection_result": [
+      "Installed version: 5.5.62",
+      "Fixed version: 5.7.42",
+      "Installation path / port: 3306/tcp"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: Oracle MySQL Server <= 5.7.41, 8.x <= 8.0.32 Security Update (cpuapr2023) - Lin...",
+      "OID:1.3.6.1.4.1.25623.1.0.149537",
+      "Version used: 2025-09-09T05:38:49Z"
+    ],
+    "product_detection_result": [
+      "Product: cpe:/a:mysql:mysql:5.5.62",
+      "Method: MariaDB / Oracle MySQL Detection (MySQL Protocol)",
+      "OID: 1.3.6.1.4.1.25623.1.0.100152)"
+    ],
+    "impact": [
+      "Oracle MySQL Server version 5.7.41 and prior and 8.x through 8.0.32."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 5.7.42, 8.0.33 or later."
+    ],
+    "insight": [],
+    "log_method": [],
+    "cvss": [
+      "7.5"
+    ],
+    "port": 3306,
+    "protocol": "tcp",
+    "severity": "HIGH",
+    "references": [
+      "cve: CVE-2023-0215",
+      "cve: CVE-2022-43551",
+      "cve: CVE-2023-21980",
+      "cve: CVE-2022-4304",
+      "cve: CVE-2022-4450",
+      "cve: CVE-2023-0286",
+      "url: https://www.oracle.com/security-alerts/cpuapr2023.html#AppendixMSQL",
+      "advisory-id: cpuapr2023",
+      "cert-bund: WID-SEC-2025-1365",
+      "cert-bund: WID-SEC-2024-3377",
+      "cert-bund: WID-SEC-2024-2086",
+      "cert-bund: WID-SEC-2024-1591",
+      "cert-bund: WID-SEC-2024-0794",
+      "cert-bund: WID-SEC-2024-0114",
+      "cert-bund: WID-SEC-2024-0064",
+      "cert-bund: WID-SEC-2023-2229",
+      "cert-bund: WID-SEC-2023-2031",
+      "cert-bund: WID-SEC-2023-1886",
+      "cert-bund: WID-SEC-2023-1812",
+      "cert-bund: WID-SEC-2023-1793",
+      "cert-bund: WID-SEC-2023-1790",
+      "cert-bund: WID-SEC-2023-1614",
+      "cert-bund: WID-SEC-2023-1553",
+      "cert-bund: WID-SEC-2023-1432",
+      "cert-bund: WID-SEC-2023-1424",
+      "cert-bund: WID-SEC-2023-1350",
+      "cert-bund: WID-SEC-2023-1033",
+      "cert-bund: WID-SEC-2023-1016",
+      "cert-bund: WID-SEC-2023-0777",
+      "cert-bund: WID-SEC-2023-0304",
+      "cert-bund: WID-SEC-2022-2375",
+      "dfn-cert: DFN-CERT-2025-3324",
+      "dfn-cert: DFN-CERT-2024-1799",
+      "dfn-cert: DFN-CERT-2024-1188",
+      "dfn-cert: DFN-CERT-2024-0593",
+      "dfn-cert: DFN-CERT-2024-0454",
+      "dfn-cert: DFN-CERT-2024-0147",
+      "dfn-cert: DFN-CERT-2024-0126",
+      "dfn-cert: DFN-CERT-2024-0016",
+      "dfn-cert: DFN-CERT-2023-2192",
+      "dfn-cert: DFN-CERT-2023-1760",
+      "dfn-cert: DFN-CERT-2023-1697",
+      "dfn-cert: DFN-CERT-2023-1656",
+      "dfn-cert: DFN-CERT-2023-1643",
+      "dfn-cert: DFN-CERT-2023-1590",
+      "dfn-cert: DFN-CERT-2023-1522"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Oracle MySQL Server <= 5.7.41, 8.x <= 8.0.30 Security Update (cpuapr2023) - Linux",
+    "description": [
+      "Oracle MySQL Server is prone to a denial of service (DoS) vulnerability.",
+      "Quality of Detection (QoD): 30%"
+    ],
+    "detection_result": [
+      "Installed version: 5.5.62",
+      "Fixed version: 5.7.42",
+      "Installation",
+      "path / port: 3306/tcp"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: Oracle MySQL Server <= 5.7.41, 8.x <= 8.0.30 Security Update (cpuapr2023) - Lin.",
+      "OID:1.3.6.1.4.1.25623.1.0.149533",
+      "Version used: 2025-09-09T05:38:49Z"
+    ],
+    "product_detection_result": [
+      "Product: cpe:/a:mysql:mysql:5.5.62",
+      "Method: MariaDB / Oracle MySQL Detection (MySQL Protocol)"
+    ],
+    "impact": [
+      "Oracle MySQL Server version 5.7.41 and prior and 8.x through 8.0.30."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 5.7.42, 8.0.31 or later."
+    ],
+    "insight": [],
+    "log_method": [],
+    "cvss": [
+      "7.5"
+    ],
+    "port": 3306,
+    "protocol": "tcp",
+    "severity": "HIGH",
+    "references": [
+      "cve: CVE-2023-21912",
+      "url: https://www.oracle.com/security-alerts/cpuapr2023.html#AppendixMSQL",
+      "advisory-id: cpuapr2023",
+      "cert-bund: WID-SEC-2024-1591",
+      "cert-bund: WID-SEC-2023-2031",
+      "cert-bund: WID-SEC-2023-1033",
+      "dfn-cert: DFN-CERT-2023-1058",
+      "dfn-cert: DFN-CERT-2023-1037",
+      "dfn-cert: DFN-CERT-2023-0885"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Oracle MySQL Server <= 5.7.33 / 8.0 <= 8.0.23 Security Update (cpuapr2021) - Linux",
+    "description": [
+      "Oracle MySQL Server is prone to multiple vulnerabilities.",
+      "Quality of Detection (QoD): 30%"
+    ],
+    "detection_result": [
+      "Installed version: 5.5.62",
+      "Fixed version: 5.7.34",
+      "Installation",
+      "path / port: 3306/tcp"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: Oracle MySQL Server <= 5.7.33 / 8.0 <= 8.0.23 Security Update (cpuapr2021) - Li.",
+      "OID:1.3.6.1.4.1.25623.1.0.145795",
+      "Version used: 2025-09-09T05:38:49Z"
+    ],
+    "product_detection_result": [
+      "Product: cpe:/a:mysql:mysql:5.5.62",
+      "Method: MariaDB / Oracle MySQL Detection (MySQL Protocol)"
+    ],
+    "impact": [
+      "Oracle MySQL Server version 5.7.33 and prior and 8.0 through 8.0.23."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 5.7.34, 8.0.24 or later."
+    ],
+    "insight": [],
+    "log_method": [],
+    "cvss": [
+      "7.5"
+    ],
+    "port": 3306,
+    "protocol": "tcp",
+    "severity": "HIGH",
+    "references": [
+      "cve: CVE-2021-3449",
+      "cve: CVE-2021-3450",
+      "cve: CVE-2021-23840",
+      "cve: CVE-2021-23841",
+      "cve: CVE-2021-2307",
+      "cve: CVE-2021-2304",
+      "cve: CVE-2021-2180",
+      "cve: CVE-2021-2194",
+      "cve: CVE-2021-2166",
+      "cve: CVE-2021-2179"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Oracle MySQL Server <= 5.7.36 / 8.0 <= 8.0.27 Security Update (cpujan2022) - Linux",
+    "description": [
+      "Oracle MySQL Server is prone to multiple vulnerabilities.",
+      "Quality of Detection (QoD): 30%"
+    ],
+    "detection_result": [
+      "Installed version: 5.5.62",
+      "Fixed version: 5.7.37",
+      "Installation",
+      "path / port: 3306/tcp"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: Oracle MySQL Server <= 5.7.36 / 8.0 <= 8.0.27 Security Update (cpujan2022) - Li.",
+      "->..",
+      "OID:1.3.6.1.4.1.25623.1.0.147464",
+      "Version used: 2025-09-09T05:38:49Z"
+    ],
+    "product_detection_result": [
+      "Product: cpe:/a:mysql:mysql:5.5.62",
+      "Method: MariaDB / Oracle MySQL Detection (MySQL Protocol)",
+      "OID: 1.3.6.1.4.1.25623.1.0.100152)"
+    ],
+    "impact": [
+      "Oracle MySQL Server version 5.7.36 and prior and 8.0 through 8.0.27."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 5.7.37, 8.0.28 or later."
+    ],
+    "insight": [],
+    "log_method": [],
+    "cvss": [
+      "7.2"
+    ],
+    "port": 3306,
+    "protocol": "tcp",
+    "severity": "HIGH",
+    "references": [
+      "cve: CVE-2021-22946",
+      "cve: CVE-2022-21367",
+      "cve: CVE-2022-21270",
+      "cve: CVE-2022-21304",
+      "cve: CVE-2022-21344",
+      "cve: CVE-2022-21303",
+      "cve: CVE-2022-21245",
+      "cve: CVE-2021-22947",
+      "url: https://www.oracle.com/security-alerts/cpujan2022.html#AppendixMSQL",
+      "advisory-id: cpujan2022",
+      "cert-bund: WID-SEC-2026-0180",
+      "cert-bund: WID-SEC-2024-1591",
+      "cert-bund: WID-SEC-2023-2229",
+      "cert-bund: WID-SEC-2023-1350",
+      "cert-bund: WID-SEC-2022-1908",
+      "cert-bund: WID-SEC-2022-1461",
+      "cert-bund: WID-SEC-2022-1335",
+      "cert-bund: WID-SEC-2022-1228",
+      "cert-bund: WID-SEC-2022-1056",
+      "cert-bund: WID-SEC-2022-0875",
+      "cert-bund: WID-SEC-2022-0751",
+      "cert-bund: WID-SEC-2022-0676",
+      "cert-bund: WID-SEC-2022-0393",
+      "cert-bund: WID-SEC-2022-0101",
+      "cert-bund: CB-K22/0316",
+      "cert-bund: CB-K22/0077",
+      "cert-bund: CB-K22/0062",
+      "cert-bund: CB-K22/0030",
+      "cert-bund: CB-K21/0991",
+      "cert-bund: CB-K21/0969",
+      "dfn-cert: DFN-CERT-2022-2376",
+      "dfn-cert: DFN-CERT-2022-2086",
+      "dfn-cert: DFN-CERT-2022-2073",
+      "dfn-cert: DFN-CERT-2022-2072",
+      "dfn-cert: DFN-CERT-2022-2047",
+      "dfn-cert: DFN-CERT-2022-1892",
+      "dfn-cert: DFN-CERT-2022-1692",
+      "dfn-cert: DFN-CERT-2022-1571",
+      "dfn-cert: DFN-CERT-2022-1143",
+      "dfn-cert: DFN-CERT-2022-0835",
+      "dfn-cert: DFN-CERT-2022-0586",
+      "dfn-cert: DFN-CERT-2022-0118",
+      "dfn-cert: DFN-CERT-2022-0112",
+      "dfn-cert: DFN-CERT-2022-0052",
+      "dfn-cert: DFN-CERT-2021-2527",
+      "dfn-cert: DFN-CERT-2021-1931"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Oracle MySQL Server <= 5.7.29 / 8.0 <= 8.0.19 Security Update (cpuapr2021) - Linux",
+    "description": [
+      "Oracle MySQL Server is prone to a vulnerability in the parser."
+    ],
+    "detection_result": [
+      "Installed version: 5.5.62",
+      "Fixed version: 5.7.30",
+      "Installation path / port: 3306/tcp"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host."
+    ],
+    "product_detection_result": [
+      "cpe:/a:mysql:mysql:5.5.62",
+      "Detected by MariaDB / Oracle MySQL Detection (MySQL Protocol) (OID: 1.3.6.1.4.1.25623.1.0.100152)"
+    ],
+    "impact": [
+      "Aected Software/OS Oracle MySQL Server version 5.7.29 and prior and 8.0 through 8.0.19."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 5.7.30, 8.0.20 or later."
+    ],
+    "insight": [],
+    "log_method": [],
+    "cvss": [
+      "7.1"
+    ],
+    "port": 3306,
+    "protocol": "tcp",
+    "severity": "HIGH",
+    "references": [
+      "cve: CVE-2021-2144",
+      "url: https://www.oracle.com/security-alerts/cpuapr2021.html#AppendixMSQL",
+      "advisory-id: cpuapr2021",
+      "cert-bund: WID-SEC-2023-0065",
+      "cert-bund: CB-K21/0421",
+      "dfn-cert: DFN-CERT-2021-0821"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Oracle MySQL Server <= 5.6.42 / 5.7 <= 5.7.24 / 8.0 <= 8.0.13 Security Update (cpu-jan2019) - Linux",
+    "description": [
+      "Oracle MySQL Server is prone to multiple vulnerabilities.",
+      "Quality of Detection (QoD): 30%"
+    ],
+    "detection_result": [
+      "Installed version: 5.5.62",
+      "Fixed version: Apply the patch",
+      "Installation path / port: 3306/tcp"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: Oracle MySQL Server <= 5.6.42 / 5.7 <= 5.7.24 / 8.0 <= 8.0.13 Security Update (.",
+      "->..",
+      "OID:1.3.6.1.4.1.25623.1.0.112488",
+      "Version used: 2025-09-09T05:38:49Z"
+    ],
+    "product_detection_result": [
+      "Product: cpe:/a:mysql:mysql:5.5.62",
+      "Method: MariaDB / Oracle MySQL Detection (MySQL Protocol)",
+      "OID: 1.3.6.1.4.1.25623.1.0.100152)"
+    ],
+    "impact": [
+      "Successful exploitation of this vulnerability can result in unauthorized access to critical data or complete access to all MySQL Server accessible data and unauthorized ability to cause a hang or frequently repeatable crash (complete DOS) of MySQL Server."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Updates are available. Apply the necessary patch from the referenced link.",
+      "Aected Software/OS",
+      "Oracle MySQL Server versions 5.6.42 and prior, 5.7 through 5.7.24 and 8.0 through 8.0.13."
+    ],
+    "insight": [
+      "The attacks range in variety and diculty. Most of them allow an attacker with network access via multiple protocols to compromise the MySQL Server.",
+      "For further information refer to the ocial advisory via the referenced link."
+    ],
+    "log_method": [],
+    "cvss": [
+      "7.0"
+    ],
+    "port": 3306,
+    "protocol": "tcp",
+    "severity": "HIGH",
+    "references": [
+      "cve: CVE-2019-2534",
+      "cve: CVE-2019-2529",
+      "cve: CVE-2019-2482",
+      "cve: CVE-2019-2455",
+      "cve: CVE-2019-2503",
+      "cve: CVE-2018-0734",
+      "cve: CVE-2019-2537",
+      "cve: CVE-2019-2481",
+      "cve: CVE-2019-2507",
+      "cve: CVE-2019-2531",
+      "cve: CVE-2018-5407",
+      "url: https://www.oracle.com/security-alerts/cpujan2019.html#AppendixMSQL",
+      "advisory-id: cpujan2019",
+      "cert-bund: WID-SEC-2025-2349",
+      "cert-bund: WID-SEC-2025-1212",
+      "cert-bund: WID-SEC-2023-3083",
+      "cert-bund: WID-SEC-2023-1594",
+      "cert-bund: WID-SEC-2022-1696",
+      "cert-bund: WID-SEC-2022-0673",
+      "cert-bund: WID-SEC-2022-0517",
+      "cert-bund: CB-K22/0045",
+      "cert-bund: CB-K20/0324",
+      "cert-bund: CB-K20/0136",
+      "cert-bund: CB-K19/1121",
+      "cert-bund: CB-K19/0696",
+      "cert-bund: CB-K19/0622",
+      "cert-bund: CB-K19/0615",
+      "cert-bund: CB-K19/0321",
+      "cert-bund: CB-K19/0320",
+      "cert-bund: CB-K19/0319",
+      "cert-bund: CB-K19/0318",
+      "cert-bund: CB-K19/0316",
+      "cert-bund: CB-K19/0314",
+      "cert-bund: CB-K19/0050",
+      "cert-bund: CB-K19/0044",
+      "cert-bund: CB-K18/1173",
+      "cert-bund: CB-K18/1065",
+      "cert-bund: CB-K18/1039",
+      "dfn-cert: DFN-CERT-2020-0326",
+      "dfn-cert: DFN-CERT-2019-2457",
+      "dfn-cert: DFN-CERT-2019-2456",
+      "dfn-cert: DFN-CERT-2019-2305",
+      "dfn-cert: DFN-CERT-2019-2300",
+      "dfn-cert: DFN-CERT-2019-2046",
+      "dfn-cert: DFN-CERT-2019-1996",
+      "dfn-cert: DFN-CERT-2019-1897",
+      "dfn-cert: DFN-CERT-2019-1746",
+      "dfn-cert: DFN-CERT-2019-1713",
+      "dfn-cert: DFN-CERT-2019-1617",
+      "dfn-cert: DFN-CERT-2019-1614",
+      "dfn-cert: DFN-CERT-2019-1600",
+      "dfn-cert: DFN-CERT-2019-1588",
+      "dfn-cert: DFN-CERT-2019-1562",
+      "dfn-cert: DFN-CERT-2019-1455",
+      "dfn-cert: DFN-CERT-2019-1450",
+      "dfn-cert: DFN-CERT-2019-1240",
+      "dfn-cert: DFN-CERT-2019-1152",
+      "dfn-cert: DFN-CERT-2019-1047",
+      "dfn-cert: DFN-CERT-2019-0782",
+      "dfn-cert: DFN-CERT-2019-0781",
+      "dfn-cert: DFN-CERT-2019-0778",
+      "dfn-cert: DFN-CERT-2019-0775",
+      "dfn-cert: DFN-CERT-2019-0772",
+      "dfn-cert: DFN-CERT-2019-0484",
+      "dfn-cert: DFN-CERT-2019-0232",
+      "dfn-cert: DFN-CERT-2019-0204",
+      "dfn-cert: DFN-CERT-2019-0112",
+      "dfn-cert: DFN-CERT-2019-0104",
+      "dfn-cert: DFN-CERT-2019-0103",
+      "dfn-cert: DFN-CERT-2019-0102",
+      "dfn-cert: DFN-CERT-2018-2541",
+      "dfn-cert: DFN-CERT-2018-2539",
+      "dfn-cert: DFN-CERT-2018-2513",
+      "dfn-cert: DFN-CERT-2018-2456",
+      "dfn-cert: DFN-CERT-2018-2444",
+      "dfn-cert: DFN-CERT-2018-2396",
+      "dfn-cert: DFN-CERT-2018-2360",
+      "dfn-cert: DFN-CERT-2018-2338",
+      "dfn-cert: DFN-CERT-2018-2214"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Oracle MySQL Server <= 5.6.46 Security Update (cpujan2020) - Linux",
+    "description": [
+      "Oracle MySQL Server is prone to an unspecied denial of service vulnerability."
+    ],
+    "detection_result": [
+      "Installed version: 5.5.62",
+      "Fixed version: 5.6.47",
+      "Installation",
+      "path / port: 3306/tcp"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: Oracle MySQL Server <= 5.6.46 Security Update (cpujan2020) - Linux  OID:1.3.6.1.4.1.25623.1.0.143358   Version used: 2025-09-09T05:38:49Z   Product Detection Result   Product: cpe:/a:mysql:mysql:5.5.62   Method: MariaDB / Oracle MySQL Detection (MySQL Protocol)   OID: 1.3.6.1.4.1.25623.1.0.100152)"
+    ],
+    "product_detection_result": [
+      "cpe:/a:mysql:mysql:5.5.62",
+      "Detected by MariaDB / Oracle MySQL Detection (MySQL Protocol) (OID: 1.3.6.1.4.1. ->25623.1.0.100152)"
+    ],
+    "impact": [
+      "Aected Software/OS",
+      "Oracle MySQL Server versions 5.6.46 and prior."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 5.6.47 or later."
+    ],
+    "insight": [],
+    "log_method": [],
+    "cvss": [
+      "6.5"
+    ],
+    "port": 3306,
+    "protocol": "tcp",
+    "severity": "MEDIUM",
+    "references": [
+      "cve: CVE-2020-2579",
+      "url: https://www.oracle.com/security-alerts/cpujan2020.html#AppendixMSQL",
+      "advisory-id: cpujan2020",
+      "cert-bund: CB-K20/0038",
+      "dfn-cert: DFN-CERT-2020-1827",
+      "dfn-cert: DFN-CERT-2020-1078",
+      "dfn-cert: DFN-CERT-2020-0096"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Oracle MySQL Server <= 5.6.49 / 5.7 <= 5.7.31 / 8.0 <= 8.0.21 Security Update (cpuoct2020) - Linux",
+    "description": [
+      "Oracle MySQL Server is prone to multiple vulnerabilities."
+    ],
+    "detection_result": [
+      "Installed version: 5.5.62",
+      "Fixed version: 5.6.50",
+      "Installation",
+      "path / port: 3306/tcp"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: Oracle MySQL Server <= 5.6.49 / 5.7 <= 5.7.31 / 8.0 <= 8.0.21 Security Update (.  ->..   OID:1.3.6.1.4.1.25623.1.0.108958   Version used: 2025-09-09T05:38:49Z   Product Detection Result   Product: cpe:/a:mysql:mysql:5.5.62   Method: MariaDB / Oracle MySQL Detection (MySQL Protocol)   OID: 1.3.6.1.4.1.25623.1.0.100152)"
+    ],
+    "product_detection_result": [
+      "cpe:/a:mysql:mysql:5.5.62",
+      "Detected by MariaDB / Oracle MySQL Detection (MySQL Protocol) (OID: 1.3.6.1.4.1. ->25623.1.0.100152)"
+    ],
+    "impact": [
+      "Aected Software/OS   Oracle MySQL Server versions 5.6.49 and prior, 5.7 through 5.7.31 and 8.0 through 8.0.21."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 5.6.50, 5.7.32, 8.0.22 or later."
+    ],
+    "insight": [],
+    "log_method": [],
+    "cvss": [
+      "6.5"
+    ],
+    "port": 3306,
+    "protocol": "tcp",
+    "severity": "MEDIUM",
+    "references": [
+      "cve: CVE-2020-14765",
+      "cve: CVE-2020-14769",
+      "cve: CVE-2020-14812",
+      "cve: CVE-2020-14793",
+      "cve: CVE-2020-14672",
+      "cve: CVE-2020-14867",
+      "url: https://www.oracle.com/security-alerts/cpuoct2020.html#AppendixMSQL",
+      "advisory-id: cpuoct2020",
+      "cert-bund: CB-K20/1066",
+      "cert-bund: CB-K20/1017",
+      "dfn-cert: DFN-CERT-2021-2155",
+      "dfn-cert: DFN-CERT-2021-0002",
+      "dfn-cert: DFN-CERT-2020-2763",
+      "dfn-cert: DFN-CERT-2020-2756",
+      "dfn-cert: DFN-CERT-2020-2620",
+      "dfn-cert: DFN-CERT-2020-2380",
+      "dfn-cert: DFN-CERT-2020-2295"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Oracle MySQL Server <= 5.7.32 / 8.0 <= 8.0.22 Security Update (cpuapr2021) - Linux",
+    "description": [
+      "Oracle MySQL Server is prone to multiple vulnerabilities."
+    ],
+    "detection_result": [
+      "Installed version: 5.5.62",
+      "Fixed version: 5.7.33",
+      "Installation path / port: 3306/tcp"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: Oracle MySQL Server <= 5.7.32 / 8.0 <= 8.0.22 Security Update (cpuapr2021) - Li...",
+      "OID:1.3.6.1.4.1.25623.1.0.145793",
+      "Version used: 2025-09-09T05:38:49Z"
+    ],
+    "product_detection_result": [
+      "cpe:/a:mysql:mysql:5.5.62",
+      "Detected by MariaDB / Oracle MySQL Detection (MySQL Protocol) (OID: 1.3.6.1.4.1.25623.1.0.100152)",
+      "Product: cpe:/a:mysql:mysql:5.5.62",
+      "Method: MariaDB / Oracle MySQL Detection (MySQL Protocol)",
+      "OID: 1.3.6.1.4.1.25623.1.0.100152)"
+    ],
+    "impact": [
+      "Oracle MySQL Server version 5.7.32 and prior and 8.0 through 8.0.22."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 5.7.33, 8.0.23 or later."
+    ],
+    "insight": [],
+    "log_method": [],
+    "cvss": [
+      "5.0"
+    ],
+    "port": 3306,
+    "protocol": "tcp",
+    "severity": "MEDIUM",
+    "references": [
+      "cve: CVE-2020-1971",
+      "cve: CVE-2021-2178",
+      "cve: CVE-2021-2202",
+      "url: https://www.oracle.com/security-alerts/cpuapr2021.html#AppendixMSQL",
+      "advisory-id: cpuapr2021",
+      "cert-bund: WID-SEC-2024-0794",
+      "cert-bund: WID-SEC-2023-0067",
+      "cert-bund: WID-SEC-2023-0065",
+      "cert-bund: WID-SEC-2022-2047",
+      "cert-bund: WID-SEC-2022-1908",
+      "cert-bund: WID-SEC-2022-1000",
+      "cert-bund: WID-SEC-2022-0585",
+      "cert-bund: CB-K21/1065",
+      "cert-bund: CB-K21/0788",
+      "cert-bund: CB-K21/0615",
+      "cert-bund: CB-K21/0421",
+      "cert-bund: CB-K21/0111"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Oracle MySQL Server <= 5.6.44 / 5.7 <= 5.7.26 / 8.0 <= 8.0.16 Security Update (cpu- jul2019) - Linux",
+    "description": [
+      "Oracle MySQL Server is prone to multiple vulnerabilities.",
+      "Quality of Detection (QoD): 30%"
+    ],
+    "detection_result": [
+      "Installed version: 5.5.62",
+      "Fixed version: 5.6.45",
+      "Installation",
+      "path / port: 3306/tcp"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: Oracle MySQL Server <= 5.6.44 / 5.7 <= 5.7.26 / 8.0 <= 8.0.16 Security Update (.",
+      "->..",
+      "OID:1.3.6.1.4.1.25623.1.0.142644",
+      "Version used: 2025-09-09T05:38:49Z"
+    ],
+    "product_detection_result": [
+      "Product: cpe:/a:mysql:mysql:5.5.62",
+      "Method: MariaDB / Oracle MySQL Detection (MySQL Protocol)",
+      "OID: 1.3.6.1.4.1.25623.1.0.100152)"
+    ],
+    "impact": [
+      "Oracle MySQL Server versions 5.6.44 and prior, 5.7 through 5.7.26 and 8.0 through 8.0.16.",
+      "Oracle MySQL Server is prone to multiple denial of service vulnerabilities.",
+      "For further information refer to the ocial advisory via the referenced link."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 5.6.45, 5.7.27, 8.0.17 or later."
+    ],
+    "insight": [
+      "Oracle MySQL Server is prone to multiple denial of service vulnerabilities.",
+      "For further information refer to the ocial advisory via the referenced link."
+    ],
+    "log_method": [],
+    "cvss": [
+      "6.5"
+    ],
+    "port": 3306,
+    "protocol": "tcp",
+    "severity": "MEDIUM",
+    "references": [
+      "cve: CVE-2019-2805",
+      "cve: CVE-2019-2740",
+      "cve: CVE-2019-2819",
+      "cve: CVE-2019-2739",
+      "cve: CVE-2019-2737",
+      "cve: CVE-2019-2738",
+      "url: https://www.oracle.com/security-alerts/cpujul2019.html#AppendixMSQL",
+      "advisory-id: cpujul2019",
+      "cert-bund: CB-K19/0620",
+      "dfn-cert: DFN-CERT-2020-2620",
+      "dfn-cert: DFN-CERT-2020-2180",
+      "dfn-cert: DFN-CERT-2020-0658",
+      "dfn-cert: DFN-CERT-2020-0517",
+      "dfn-cert: DFN-CERT-2019-2695",
+      "dfn-cert: DFN-CERT-2019-2656",
+      "dfn-cert: DFN-CERT-2019-2300",
+      "dfn-cert: DFN-CERT-2019-2008",
+      "dfn-cert: DFN-CERT-2019-1713",
+      "dfn-cert: DFN-CERT-2019-1683",
+      "dfn-cert: DFN-CERT-2019-1568",
+      "dfn-cert: DFN-CERT-2019-1453"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Oracle MySQL Server <= 5.6.45 / 5.7 <= 5.7.27 / 8.0 <= 8.0.17 Security Update (cpuoct2019) - Linux",
+    "description": [
+      "Oracle MySQL Server is prone to multiple vulnerabilities.",
+      "Quality of Detection (QoD): 30%"
+    ],
+    "detection_result": [
+      "Installed version: 5.5.62",
+      "Fixed version: 5.6.46",
+      "Installation",
+      "path / port: 3306/tcp"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: Oracle MySQL Server <= 5.6.45 / 5.7 <= 5.7.27 / 8.0 <= 8.0.17 Security Update (.",
+      "->..",
+      "OID:1.3.6.1.4.1.25623.1.0.143029",
+      "Version used: 2025-09-09T05:38:49Z"
+    ],
+    "product_detection_result": [
+      "Product: cpe:/a:mysql:mysql:5.5.62",
+      "Method: MariaDB / Oracle MySQL Detection (MySQL Protocol)",
+      "OID: 1.3.6.1.4.1.25623.1.0.100152)"
+    ],
+    "impact": [
+      "Oracle MySQL Server versions 5.6.45 and prior, 5.7 through 5.7.27 and 8.0 through 8.0.17.",
+      "Oracle MySQL Server is prone to multiple vulnerabilities.",
+      "For further information refer to the ocial advisory via the referenced link."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 5.6.46, 5.7.28, 8.0.18 or later."
+    ],
+    "insight": [
+      "Oracle MySQL Server is prone to multiple vulnerabilities.",
+      "For further information refer to the ocial advisory via the referenced link."
+    ],
+    "log_method": [],
+    "cvss": [
+      "6.5"
+    ],
+    "port": 3306,
+    "protocol": "tcp",
+    "severity": "MEDIUM",
+    "references": [],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Oracle MySQL Server <= 8.0.41, 8.1 <= 8.4.4, 9.0 <= 9.2.0 Security Update (cpuapr2025) - Linux",
+    "description": [
+      "Oracle MySQL Server is prone to multiple vulnerabilities.",
+      "Quality of Detection (QoD): 30%"
+    ],
+    "detection_result": [
+      "Installed version: 5.5.62",
+      "Fixed version: 8.0.42",
+      "Installation",
+      "path / port: 3306/tcp"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: Oracle MySQL Server <= 8.0.41, 8.1 <= 8.4.4, 9.0 <= 9.2.0 Security Update (cpua.",
+      "->..",
+      "OID:1.3.6.1.4.1.25623.1.0.171441",
+      "Version used: 2025-09-09T05:38:49Z"
+    ],
+    "product_detection_result": [
+      "Product: cpe:/a:mysql:mysql:5.5.62",
+      "Method: MariaDB / Oracle MySQL Detection (MySQL Protocol)",
+      "OID: 1.3.6.1.4.1.25623.1.0.100152)"
+    ],
+    "impact": [
+      "Oracle MySQL Server version 8.0.41 and prior, 8.1 through 8.4.4 and 9.0 through 9.2.0."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 8.0.42, 8.4.5, 9.3.0 or later."
+    ],
+    "insight": [],
+    "log_method": [],
+    "cvss": [
+      "6.5"
+    ],
+    "port": 3306,
+    "protocol": "tcp",
+    "severity": "MEDIUM",
+    "references": [
+      "cve: CVE-2025-21577",
+      "cve: CVE-2025-30682",
+      "cve: CVE-2025-30687",
+      "cve: CVE-2025-30688",
+      "cve: CVE-2025-21574",
+      "cve: CVE-2025-21575",
+      "cve: CVE-2025-30693",
+      "cve: CVE-2025-30695",
+      "cve: CVE-2025-30715",
+      "cve: CVE-2025-21584",
+      "cve: CVE-2025-21580",
+      "cve: CVE-2025-21581",
+      "cve: CVE-2025-21585",
+      "cve: CVE-2025-30689",
+      "cve: CVE-2025-21579",
+      "cve: CVE-2025-30696",
+      "cve: CVE-2025-30705",
+      "cve: CVE-2025-30683",
+      "cve: CVE-2025-30684",
+      "cve: CVE-2025-30685",
+      "cve: CVE-2025-30699",
+      "cve: CVE-2025-30704",
+      "cve: CVE-2024-13176",
+      "cve: CVE-2024-9143",
+      "cve: CVE-2025-30721",
+      "cve: CVE-2025-30703",
+      "cve: CVE-2025-30681",
+      "url: https://www.oracle.com/security-alerts/cpuapr2025.html#AppendixMSQL",
+      "advisory-id: cpuapr2025",
+      "cert-bund: WID-SEC-2025-2364",
+      "cert-bund: WID-SEC-2025-1850",
+      "cert-bund: WID-SEC-2025-1572",
+      "cert-bund: WID-SEC-2025-1568",
+      "cert-bund: WID-SEC-2025-1566",
+      "cert-bund: WID-SEC-2025-1564",
+      "cert-bund: WID-SEC-2025-1560",
+      "cert-bund: WID-SEC-2025-1257",
+      "cert-bund: WID-SEC-2025-1035",
+      "cert-bund: WID-SEC-2025-0828",
+      "cert-bund: WID-SEC-2025-0818",
+      "cert-bund: WID-SEC-2025-0813",
+      "cert-bund: WID-SEC-2025-0148",
+      "cert-bund: WID-SEC-2025-0131",
+      "cert-bund: WID-SEC-2024-3230",
+      "dfn-cert: DFN-CERT-2026-0037",
+      "dfn-cert: DFN-CERT-2025-3583",
+      "dfn-cert: DFN-CERT-2025-3324",
+      "dfn-cert: DFN-CERT-2025-2944",
+      "dfn-cert: DFN-CERT-2025-2602",
+      "dfn-cert: DFN-CERT-2025-2523",
+      "dfn-cert: DFN-CERT-2025-1905",
+      "dfn-cert: DFN-CERT-2025-1903",
+      "dfn-cert: DFN-CERT-2025-1901",
+      "dfn-cert: DFN-CERT-2025-1898",
+      "dfn-cert: DFN-CERT-2025-1648",
+      "dfn-cert: DFN-CERT-2025-1611",
+      "dfn-cert: DFN-CERT-2025-1470",
+      "dfn-cert: DFN-CERT-2025-1424",
+      "dfn-cert: DFN-CERT-2025-1304",
+      "dfn-cert: DFN-CERT-2025-0993",
+      "dfn-cert: DFN-CERT-2025-0981",
+      "dfn-cert: DFN-CERT-2025-0974",
+      "dfn-cert: DFN-CERT-2025-0973",
+      "dfn-cert: DFN-CERT-2025-0564",
+      "dfn-cert: DFN-CERT-2025-0465",
+      "dfn-cert: DFN-CERT-2025-0354",
+      "dfn-cert: DFN-CERT-2025-0158"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Oracle MySQL Server <= 5.6.44 / 5.7 <= 5.7.26 / 8.0 <= 8.0.16 Security Update (cpuoct2019) - Linux",
+    "description": [
+      "Oracle MySQL Server is prone to a local unauthenticated vulnerability."
+    ],
+    "detection_result": [
+      "Installed version: 5.5.62",
+      "Fixed version: 5.6.45",
+      "Installation path / port: 3306/tcp"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: Oracle MySQL Server <= 5.6.44 / 5.7 <= 5.7.26 / 8.0 <= 8.0.16 Security Update (...",
+      "OID:1.3.6.1.4.1.25623.1.0.143031",
+      "Version used: 2025-09-09T05:38:49Z"
+    ],
+    "product_detection_result": [
+      "Product: cpe:/a:mysql:mysql:5.5.62",
+      "Method: MariaDB / Oracle MySQL Detection (MySQL Protocol) OID: 1.3.6.1.4.1.25623.1.0.100152)"
+    ],
+    "impact": [
+      "Easily exploitable vulnerability allows unauthenticated attacker with logon to the infrastructure where MySQL Server executes to compromise MySQL Server."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 5.6.45, 5.7.27, 8.0.17 or later."
+    ],
+    "insight": [
+      "Oracle MySQL Server versions 5.6.44 and prior, 5.7 through 5.7.26 and 8.0 through 8.0.16."
+    ],
+    "log_method": [],
+    "cvss": [
+      "5.9"
+    ],
+    "port": 3306,
+    "protocol": "tcp",
+    "severity": "MEDIUM",
+    "references": [
+      "cve: CVE-2019-2969",
+      "url: https://www.oracle.com/security-alerts/cpuoct2019.html#AppendixMSQL",
+      "advisory-id: cpuoct2019",
+      "cert-bund: CB-K19/0915",
+      "dfn-cert: DFN-CERT-2019-2149"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Oracle MySQL Server <= 5.6.43 / 5.7 <= 5.7.25 / 8.0 <= 8.0.15 Security Update (cpuapr2019) - Linux",
+    "description": [
+      "Oracle MySQL Server is prone to multiple vulnerabilities."
+    ],
+    "detection_result": [
+      "Installed version: 5.5.62",
+      "Fixed version: 5.6.44",
+      "Installation path / port: 3306/tcp"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: Oracle MySQL Server <= 5.6.43 / 5.7 <= 5.7.25 / 8.0 <= 8.0.15 Security Update (...",
+      "OID:1.3.6.1.4.1.25623.1.0.142402",
+      "Version used: 2025-09-09T05:38:49Z"
+    ],
+    "product_detection_result": [
+      "Product: cpe:/a:mysql:mysql:5.5.62",
+      "Method: MariaDB / Oracle MySQL Detection (MySQL Protocol) OID: 1.3.6.1.4.1.25623.1.0.100152)"
+    ],
+    "impact": [
+      "The attacks range in variety and diculty. Most of them allow an attacker with network access via multiple protocols to compromise the MySQL Server.",
+      "For further information refer to the ocial advisory via the referenced link."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 5.6.44, 5.7.26, 8.0.16 or later."
+    ],
+    "insight": [
+      "Oracle MySQL Server versions 5.6.43 and prior, 5.7 through 5.7.25 and 8.0 through 8.0.15."
+    ],
+    "log_method": [],
+    "cvss": [
+      "5.9"
+    ],
+    "port": 3306,
+    "protocol": "tcp",
+    "severity": "MEDIUM",
+    "references": [
+      "cve: CVE-2019-1559",
+      "cve: CVE-2019-2683",
+      "cve: CVE-2019-2627",
+      "cve: CVE-2019-2614",
+      "url: https://www.oracle.com/security-alerts/cpuapr2019.html#AppendixMSQL",
+      "advisory-id: cpuapr2019",
+      "cert-bund: WID-SEC-2026-0180",
+      "cert-bund: WID-SEC-2023-2946",
+      "cert-bund: WID-SEC-2023-1594",
+      "cert-bund: WID-SEC-2022-0673",
+      "cert-bund: WID-SEC-2022-0462",
+      "cert-bund: CB-K22/0045",
+      "cert-bund: CB-K20/0041",
+      "cert-bund: CB-K19/0911",
+      "cert-bund: CB-K19/0639",
+      "cert-bund: CB-K19/0623",
+      "cert-bund: CB-K19/0622",
+      "cert-bund: CB-K19/0620",
+      "cert-bund: CB-K19/0619",
+      "cert-bund: CB-K19/0615",
+      "cert-bund: CB-K19/0332",
+      "cert-bund: CB-K19/0320",
+      "cert-bund: CB-K19/0319",
+      "cert-bund: CB-K19/0173",
+      "dfn-cert: DFN-CERT-2020-2620",
+      "dfn-cert: DFN-CERT-2020-2189",
+      "dfn-cert: DFN-CERT-2020-2180",
+      "dfn-cert: DFN-CERT-2020-0092",
+      "dfn-cert: DFN-CERT-2020-0048",
+      "dfn-cert: DFN-CERT-2019-2625",
+      "dfn-cert: DFN-CERT-2019-2457",
+      "dfn-cert: DFN-CERT-2019-2300",
+      "dfn-cert: DFN-CERT-2019-2274",
+      "dfn-cert: DFN-CERT-2019-2158",
+      "dfn-cert: DFN-CERT-2019-2157"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Oracle MySQL Backronym Vulnerability (Jun 2016) - Linux",
+    "description": [
+      "Oracle MySQL is prone to a backronym vulnerability.",
+      "Quality of Detection (QoD): 30%"
+    ],
+    "detection_result": [
+      "Installed version: 5.5.62",
+      "Fixed version: 5.7.3",
+      "Installation path / port: 3306/tcp"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: Oracle MySQL Backronym Vulnerability (Jun 2016) - Linux",
+      "OID:1.3.6.1.4.1.25623.1.0.808064",
+      "Version used: 2025-09-09T05:38:49Z"
+    ],
+    "product_detection_result": [
+      "Product: cpe:/a:mysql:mysql:5.5.62",
+      "Method: MariaDB / Oracle MySQL Detection (MySQL Protocol)",
+      "OID: 1.3.6.1.4.1.25623.1.0.100152)"
+    ],
+    "impact": [
+      "Successful exploitation will allow man-in-the-middle attackers to spoof servers via a cleartext-downgrade attack."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Upgrade to version Oracle MySQL Server 5.7.3 or later."
+    ],
+    "insight": [
+      "The aw exists due to improper validation of MySQL client library when establishing a secure connection to a MySQL server using the ssl option."
+    ],
+    "log_method": [],
+    "cvss": [
+      "5.9"
+    ],
+    "port": 3306,
+    "protocol": "tcp",
+    "severity": "MEDIUM",
+    "references": [
+      "cve: CVE-2015-3152",
+      "url: http://www.ocert.org/advisories/ocert-2015-003.html",
+      "url: https://duo.com/blog/backronym-mysql-vulnerability",
+      "cert-bund: CB-K18/0871",
+      "cert-bund: CB-K16/0944",
+      "cert-bund: CB-K15/1045",
+      "cert-bund: CB-K15/1042",
+      "cert-bund: CB-K15/1020",
+      "cert-bund: CB-K15/0994",
+      "cert-bund: CB-K15/0964",
+      "cert-bund: CB-K15/0895",
+      "dfn-cert: DFN-CERT-2016-1004",
+      "dfn-cert: DFN-CERT-2015-1105",
+      "dfn-cert: DFN-CERT-2015-1096",
+      "dfn-cert: DFN-CERT-2015-1071",
+      "dfn-cert: DFN-CERT-2015-1051",
+      "dfn-cert: DFN-CERT-2015-1016",
+      "dfn-cert: DFN-CERT-2015-0942"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Oracle MySQL Server <= 5.7.42, 8.x <= 8.0.33 Security Update (cpujul2023) - Linux",
+    "description": [
+      "Oracle MySQL Server is prone to a unspecied vulnerability.",
+      "Quality of Detection (QoD): 30%"
+    ],
+    "detection_result": [
+      "Installed version: 5.5.62",
+      "Fixed version: 5.7.43",
+      "Installation path / port: 3306/tcp"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: Oracle MySQL Server <= 5.7.42, 8.x <= 8.0.33 Security Update (cpujul2023) - Lin...",
+      "OID:1.3.6.1.4.1.25623.1.0.149980",
+      "Version used: 2025-09-09T05:38:49Z"
+    ],
+    "product_detection_result": [
+      "Product: cpe:/a:mysql:mysql:5.5.62",
+      "Method: MariaDB / Oracle MySQL Detection (MySQL Protocol)",
+      "OID: 1.3.6.1.4.1.25623.1.0.100152)"
+    ],
+    "impact": [],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 5.7.43, 8.0.34 or later."
+    ],
+    "insight": [],
+    "log_method": [],
+    "cvss": [
+      "5.9"
+    ],
+    "port": 3306,
+    "protocol": "tcp",
+    "severity": "MEDIUM",
+    "references": [
+      "cve: CVE-2023-22053"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Oracle MySQL Server <= 5.6.42 / 5.7 <= 5.7.24 / 8.0 <= 8.0.13 Security Update (cpuapr2019) - Linux",
+    "description": [
+      "Oracle MySQL Server is prone to a vulnerability in the libmysqld subcomponent."
+    ],
+    "detection_result": [
+      "Installed version: 5.5.62",
+      "Fixed version: 5.6.43",
+      "Installation",
+      "path / port: 3306/tcp"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: Oracle MySQL Server <= 5.6.42 / 5.7 <= 5.7.24 / 8.0 <= 8.0.13 Security Update (.",
+      "->..",
+      "OID:1.3.6.1.4.1.25623.1.0.142404",
+      "Version used: 2025-09-09T05:38:49Z"
+    ],
+    "product_detection_result": [
+      "cpe:/a:mysql:mysql:5.5.62",
+      "Detected by MariaDB / Oracle MySQL Detection (MySQL Protocol) (OID: 1.3.6.1.4.1.",
+      "->25623.1.0.100152)",
+      "Product: cpe:/a:mysql:mysql:5.5.62",
+      "Method: MariaDB / Oracle MySQL Detection (MySQL Protocol)",
+      "OID: 1.3.6.1.4.1.25623.1.0.100152)"
+    ],
+    "impact": [
+      "Aected Software/OS",
+      "Oracle MySQL Server versions 5.6.42 and prior, 5.7 through 5.7.24 and 8.0 through 8.0.13.",
+      "Dicult to exploit vulnerability allows unauthenticated attacker with network access via multiple",
+      "protocols to compromise MySQL Server. Successful attacks of this vulnerability can result in",
+      "unauthorized access to critical data or complete access to all MySQL Server accessible data."
+    ],
+    "solution": [
+      "Solution:",
+      "Solution type: VendorFix",
+      "Update to version 5.6.43, 5.7.25, 8.0.14 or later."
+    ],
+    "insight": [
+      "Dicult to exploit vulnerability allows unauthenticated attacker with network access via multiple",
+      "protocols to compromise MySQL Server. Successful attacks of this vulnerability can result in",
+      "unauthorized access to critical data or complete access to all MySQL Server accessible data."
+    ],
+    "log_method": [],
+    "cvss": [
+      "5.5"
+    ],
+    "port": 3306,
+    "protocol": "tcp",
+    "severity": "MEDIUM",
+    "references": [
+      "cve: CVE-2018-3123",
+      "url: https://www.oracle.com/security-alerts/cpuapr2019.html#AppendixMSQL",
+      "advisory-id: cpuapr2019",
+      "cert-bund: WID-SEC-2023-1594",
+      "cert-bund: CB-K19/0319",
+      "dfn-cert: DFN-CERT-2019-0775"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Oracle MySQL Server <= 8.0.43, 8.1.x <= 8.4.7, 9.0.0 <= 9.4.0 Security Update (cpuoct2025) - Linux",
+    "description": [
+      "Oracle MySQL Server is prone to multiple vulnerabilities."
+    ],
+    "detection_result": [
+      "Installed version: 5.5.62",
+      "Fixed version: 8.0.44",
+      "Installation",
+      "path / port: 3306/tcp"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: Oracle MySQL Server <= 8.0.43, 8.1.x <= 8.4.7, 9.0.0 <= 9.4.0 Security Update (.",
+      "->..",
+      "OID:1.3.6.1.4.1.25623.1.0.119198",
+      "Version used: 2025-10-24T05:39:31Z"
+    ],
+    "product_detection_result": [
+      "cpe:/a:mysql:mysql:5.5.62",
+      "Detected by MariaDB / Oracle MySQL Detection (MySQL Protocol) (OID: 1.3.6.1.4.1.",
+      "->25623.1.0.100152)",
+      "Product: cpe:/a:mysql:mysql:5.5.62",
+      "Method: MariaDB / Oracle MySQL Detection (MySQL Protocol)",
+      "OID: 1.3.6.1.4.1.25623.1.0.100152)"
+    ],
+    "impact": [
+      "Aected Software/OS",
+      "Oracle MySQL Server versions 8.0.43 and prior, 8.1.x through 8.4.6 and 9.0.0 through 9.4.0.",
+      "Note: While not explicitly mentioned by the vendor (due to the EOL status of these branches)",
+      "it is assumed that all versions prior to 8.x and versions like 9.2.x in between are also aected by",
+      "these aws. If you disagree with this assessment and want to accept the risk please create an",
+      "override for this result."
+    ],
+    "solution": [
+      "Solution:",
+      "Solution type: VendorFix",
+      "Update to version 8.0.44, 8.4.7, 9.4.1 or later."
+    ],
+    "insight": [],
+    "log_method": [],
+    "cvss": [
+      "5.3"
+    ],
+    "port": 3306,
+    "protocol": "tcp",
+    "severity": "MEDIUM",
+    "references": [
+      "cve: CVE-2025-53054",
+      "cve: CVE-2025-53053",
+      "cve: CVE-2025-53044",
+      "cve: CVE-2025-53045",
+      "cve: CVE-2025-53062",
+      "cve: CVE-2025-53069",
+      "cve: CVE-2025-53040",
+      "cve: CVE-2025-53042",
+      "url: https://www.oracle.com/security-alerts/cpuoct2025.html#AppendixMSQL",
+      "advisory-id: cpuoct2025",
+      "cert-bund: WID-SEC-2025-2363",
+      "dfn-cert: DFN-CERT-2025-3598",
+      "dfn-cert: DFN-CERT-2025-2945"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Oracle MySQL Server <= 5.7.39 / 8.0 <= 8.0.30 Security Update (cpuoct2022) - Linux",
+    "description": [
+      "Oracle MySQL Server is prone to multiple vulnerabilities."
+    ],
+    "detection_result": [
+      "Installed version: 5.5.62",
+      "Fixed version: 5.7.40",
+      "Installation",
+      "path / port: 3306/tcp"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: Oracle MySQL Server <= 5.7.39 / 8.0 <= 8.0.30 Security Update (cpuoct2022) - Li.",
+      "->..",
+      "OID:1.3.6.1.4.1.25623.1.0.118387",
+      "Version used: 2025-09-09T05:38:49Z"
+    ],
+    "product_detection_result": [
+      "Product: cpe:/a:mysql:mysql:5.5.62",
+      "Method: MariaDB / Oracle MySQL Detection (MySQL Protocol)",
+      "OID: 1.3.6.1.4.1.25623.1.0.100152)"
+    ],
+    "impact": [
+      "Oracle MySQL Server version 5.7.39 and prior and 8.0 through 8.0.30."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 5.7.40, 8.0.31 or later."
+    ],
+    "insight": [],
+    "log_method": [],
+    "cvss": [
+      "5.3"
+    ],
+    "port": 3306,
+    "protocol": "tcp",
+    "severity": "MEDIUM",
+    "references": [
+      "cve: CVE-2022-2097",
+      "cve: CVE-2022-21617",
+      "cve: CVE-2022-21608",
+      "url: https://www.oracle.com/security-alerts/cpuoct2022.html#AppendixMSQL",
+      "advisory-id: cpuoct2022",
+      "cert-bund: WID-SEC-2024-1591",
+      "cert-bund: WID-SEC-2024-1186",
+      "cert-bund: WID-SEC-2024-0794",
+      "cert-bund: WID-SEC-2023-2031",
+      "cert-bund: WID-SEC-2023-1969",
+      "cert-bund: WID-SEC-2023-1432",
+      "cert-bund: WID-SEC-2022-1777",
+      "cert-bund: WID-SEC-2022-1776",
+      "cert-bund: WID-SEC-2022-1461",
+      "cert-bund: WID-SEC-2022-1245",
+      "cert-bund: WID-SEC-2022-1146",
+      "cert-bund: WID-SEC-2022-1068",
+      "cert-bund: WID-SEC-2022-1065",
+      "cert-bund: WID-SEC-2022-0561",
+      "dfn-cert: DFN-CERT-2024-0147",
+      "dfn-cert: DFN-CERT-2023-2667",
+      "dfn-cert: DFN-CERT-2023-2491",
+      "dfn-cert: DFN-CERT-2023-1230",
+      "dfn-cert: DFN-CERT-2023-1058",
+      "dfn-cert: DFN-CERT-2023-0509",
+      "dfn-cert: DFN-CERT-2023-0299",
+      "dfn-cert: DFN-CERT-2023-0100",
+      "dfn-cert: DFN-CERT-2022-2323",
+      "dfn-cert: DFN-CERT-2022-2315",
+      "dfn-cert: DFN-CERT-2022-2306",
+      "dfn-cert: DFN-CERT-2022-2150",
+      "dfn-cert: DFN-CERT-2022-2073",
+      "dfn-cert: DFN-CERT-2022-2072",
+      "dfn-cert: DFN-CERT-2022-1905",
+      "dfn-cert: DFN-CERT-2022-1646",
+      "dfn-cert: DFN-CERT-2022-1536",
+      "dfn-cert: DFN-CERT-2022-1521",
+      "dfn-cert: DFN-CERT-2022-1520",
+      "dfn-cert: DFN-CERT-2022-1515",
+      "dfn-cert: DFN-CERT-2022-1497"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Oracle MySQL Server <= 5.6.46 / 5.7 <= 5.7.26 Security Update (cpuapr2020) - Linux",
+    "description": [
+      "Oracle MySQL Server is prone to multiple vulnerabilities in OpenSSL."
+    ],
+    "detection_result": [
+      "Installed version: 5.5.62",
+      "Fixed version: 5.6.47",
+      "Installation",
+      "path / port: 3306/tcp"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: Oracle MySQL Server <= 5.6.46 / 5.7 <= 5.7.26 Security Update (cpuapr2020) - Li.",
+      "->..",
+      "OID:1.3.6.1.4.1.25623.1.0.143734",
+      "Version used: 2025-09-09T05:38:49Z"
+    ],
+    "product_detection_result": [
+      "Product: cpe:/a:mysql:mysql:5.5.62",
+      "Method: MariaDB / Oracle MySQL Detection (MySQL Protocol)",
+      "OID: 1.3.6.1.4.1.25623.1.0.100152)"
+    ],
+    "impact": [
+      "Oracle MySQL Server versions 5.6.46 and prior and 5.7 through 5.7.26."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 5.6.47, 5.7.27 or later."
+    ],
+    "insight": [],
+    "log_method": [],
+    "cvss": [
+      "5.3"
+    ],
+    "port": 3306,
+    "protocol": "tcp",
+    "severity": "MEDIUM",
+    "references": [
+      "cve: CVE-2019-1547",
+      "cve: CVE-2019-1549",
+      "cve: CVE-2019-1552",
+      "cve: CVE-2019-1563",
+      "url: https://www.oracle.com/security-alerts/cpuapr2020.html#AppendixMSQL",
+      "advisory-id: cpuapr2020",
+      "cert-bund: WID-SEC-2023-3081",
+      "cert-bund: WID-SEC-2023-1762",
+      "cert-bund: WID-SEC-2023-1049",
+      "cert-bund: WID-SEC-2022-0673",
+      "cert-bund: CB-K22/0045",
+      "cert-bund: CB-K20/1049",
+      "cert-bund: CB-K20/1016",
+      "cert-bund: CB-K20/0321",
+      "cert-bund: CB-K20/0318",
+      "cert-bund: CB-K20/0043",
+      "cert-bund: CB-K20/0038",
+      "cert-bund: CB-K20/0036",
+      "cert-bund: CB-K20/0028",
+      "cert-bund: CB-K19/1025",
+      "cert-bund: CB-K19/0919",
+      "cert-bund: CB-K19/0915",
+      "cert-bund: CB-K19/0808",
+      "cert-bund: CB-K19/0675",
+      "dfn-cert: DFN-CERT-2023-2709",
+      "dfn-cert: DFN-CERT-2020-2014",
+      "dfn-cert: DFN-CERT-2020-1729"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Oracle MySQL Server <= 5.6.45 / 5.7 <= 5.7.27 Security Update (cpuoct2019) - Linux",
+    "description": [
+      "Oracle MySQL Server is prone to multiple vulnerabilities."
+    ],
+    "detection_result": [
+      "Installed version: 5.5.62",
+      "Fixed version: 5.6.46",
+      "Installation path / port: 3306/tcp"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: Oracle MySQL Server <= 5.6.45 / 5.7 <= 5.7.27 Security Update (cpuoct2019) - Li. ->..",
+      "OID:1.3.6.1.4.1.25623.1.0.143033",
+      "Version used: 2025-09-09T05:38:49Z"
+    ],
+    "product_detection_result": [
+      "Product: cpe:/a:mysql:mysql:5.5.62",
+      "Method: MariaDB / Oracle MySQL Detection (MySQL Protocol)",
+      "OID: 1.3.6.1.4.1.25623.1.0.100152)"
+    ],
+    "impact": [
+      "Oracle MySQL Server is prone to multiple vulnerabilities. For further information refer to the ocial advisory via the referenced link."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 5.6.46, 5.7.28 or later."
+    ],
+    "insight": [
+      "Oracle MySQL Server is prone to multiple vulnerabilities. For further information refer to the ocial advisory via the referenced link."
+    ],
+    "log_method": [],
+    "cvss": [
+      "5.3"
+    ],
+    "port": 3306,
+    "protocol": "tcp",
+    "severity": "MEDIUM",
+    "references": [
+      "cve: CVE-2019-2922",
+      "cve: CVE-2019-2923",
+      "cve: CVE-2019-2924",
+      "cve: CVE-2019-2910",
+      "url: https://www.oracle.com/security-alerts/cpuoct2019.html#AppendixMSQL",
+      "advisory-id: cpuoct2019",
+      "cert-bund: CB-K19/0915",
+      "dfn-cert: DFN-CERT-2020-0103",
+      "dfn-cert: DFN-CERT-2019-2149"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Oracle MySQL Server <= 8.0.39, 8.1 <= 8.4.1, 9.0 <= 9.0.1 Security Update (cpuoct2024) - Linux",
+    "description": [
+      "Oracle MySQL Server is prone to a denial of service (DoS) vulnerability."
+    ],
+    "detection_result": [
+      "Installed version: 5.5.62",
+      "Fixed version: 8.0.40",
+      "Installation path / port: 3306/tcp"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: Oracle MySQL Server <= 8.0.39, 8.1 <= 8.4.1, 9.0 <= 9.0.1 Security Update (cpuo. ->..",
+      "OID:1.3.6.1.4.1.25623.1.0.170872",
+      "Version used: 2025-09-09T05:38:49Z"
+    ],
+    "product_detection_result": [
+      "Product: cpe:/a:mysql:mysql:5.5.62",
+      "Method: MariaDB / Oracle MySQL Detection (MySQL Protocol)",
+      "OID: 1.3.6.1.4.1.25623.1.0.100152)"
+    ],
+    "impact": [
+      "Oracle MySQL Server is prone to a denial of service (DoS) vulnerability."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 8.0.40, 8.4.2, 9.0.2 or later."
+    ],
+    "insight": [],
+    "log_method": [],
+    "cvss": [
+      "4.9"
+    ],
+    "port": 3306,
+    "protocol": "tcp",
+    "severity": "MEDIUM",
+    "references": [
+      "cve: CVE-2024-21238",
+      "url: https://www.oracle.com/security-alerts/cpuoct2024.html#AppendixMSQL",
+      "advisory-id: cpuoct2024",
+      "cert-bund: WID-SEC-2024-3188",
+      "dfn-cert: DFN-CERT-2025-0446",
+      "dfn-cert: DFN-CERT-2024-2732"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Oracle MySQL Server <= 5.6.50 / 5.7 <= 5.7.32 / 8.0 <= 8.0.22 Security Update (cpu- jan2021) - Linux",
+    "description": [
+      "Oracle MySQL Server is prone to multiple vulnerabilities."
+    ],
+    "detection_result": [
+      "Installed version: 5.5.62",
+      "Fixed version: 5.6.51",
+      "Installation path / port: 3306/tcp"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: Oracle MySQL Server <= 5.6.50 / 5.7 <= 5.7.32 / 8.0 <= 8.0.22 Security Update (.",
+      "->..",
+      "OID:1.3.6.1.4.1.25623.1.0.145223",
+      "Version used: 2025-09-09T05:38:49Z"
+    ],
+    "product_detection_result": [
+      "Product: cpe:/a:mysql:mysql:5.5.62",
+      "Method: MariaDB / Oracle MySQL Detection (MySQL Protocol)",
+      "OID: 1.3.6.1.4.1.25623.1.0.100152)"
+    ],
+    "impact": [],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 5.6.51, 5.7.33, 8.0.23 or later."
+    ],
+    "insight": [],
+    "log_method": [],
+    "cvss": [
+      "4.9"
+    ],
+    "port": 3306,
+    "protocol": "tcp",
+    "severity": "MEDIUM",
+    "references": [
+      "cve: CVE-2021-2022",
+      "cve: CVE-2021-2060",
+      "url: https://www.oracle.com/security-alerts/cpujan2021.html#AppendixMSQL",
+      "advisory-id: cpujan2021",
+      "cert-bund: WID-SEC-2023-0067",
+      "cert-bund: CB-K21/0062",
+      "dfn-cert: DFN-CERT-2021-2155",
+      "dfn-cert: DFN-CERT-2021-0131"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Oracle MySQL Server <= 5.6.50 / 5.7 <= 5.7.30 / 8.0 <= 8.0.17 Security Update (cpu- jan2021) - Linux",
+    "description": [
+      "Oracle MySQL Server is prone to a denial of service (DoS) vulnerability."
+    ],
+    "detection_result": [
+      "Installed version: 5.5.62",
+      "Fixed version: 5.6.51",
+      "Installation path / port: 3306/tcp"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: Oracle MySQL Server <= 5.6.50 / 5.7 <= 5.7.30 / 8.0 <= 8.0.17 Security Update (.",
+      "->..",
+      "OID:1.3.6.1.4.1.25623.1.0.145221",
+      "Version used: 2025-09-09T05:38:49Z"
+    ],
+    "product_detection_result": [
+      "Product: cpe:/a:mysql:mysql:5.5.62",
+      "Method: MariaDB / Oracle MySQL Detection (MySQL Protocol)",
+      "OID: 1.3.6.1.4.1.25623.1.0.100152)"
+    ],
+    "impact": [
+      "Successful attacks of this vulnerability can result in the unauthorized ability to cause a hang or frequently repeatedly crash (complete DOS) the MySQL Server."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 5.6.51, 5.7.31, 8.0.18 or later."
+    ],
+    "insight": [],
+    "log_method": [],
+    "cvss": [
+      "4.9"
+    ],
+    "port": 3306,
+    "protocol": "tcp",
+    "severity": "MEDIUM",
+    "references": [
+      "cve: CVE-2021-2001",
+      "url: https://www.oracle.com/security-alerts/cpujan2021.html#AppendixMSQL",
+      "advisory-id: cpujan2021",
+      "cert-bund: WID-SEC-2023-0067",
+      "cert-bund: CB-K21/0062",
+      "dfn-cert: DFN-CERT-2021-2155",
+      "dfn-cert: DFN-CERT-2021-0810",
+      "dfn-cert: DFN-CERT-2021-0131"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Oracle MySQL Server <= 5.7.41, 8.x <= 8.0.32 Security Update (cpujul2023) - Linux",
+    "description": [
+      "Oracle MySQL Server is prone to a denial of service (DoS) vulnerability."
+    ],
+    "detection_result": [
+      "Installed version: 5.5.62",
+      "Fixed version: 5.7.42",
+      "Installation path / port: 3306/tcp"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: Oracle MySQL Server <= 5.7.41, 8.x <= 8.0.32 Security Update (cpujul2023) - Lin..",
+      "OID:1.3.6.1.4.1.25623.1.0.149978",
+      "Version used: 2025-09-09T05:38:49Z"
+    ],
+    "product_detection_result": [
+      "cpe:/a:mysql:mysql:5.5.62",
+      "Detected by MariaDB / Oracle MySQL Detection (MySQL Protocol) (OID: 1.3.6.1.4.1.25623.1.0.100152)",
+      "Product: cpe:/a:mysql:mysql:5.5.62",
+      "Method: MariaDB / Oracle MySQL Detection (MySQL Protocol)",
+      "OID: 1.3.6.1.4.1.25623.1.0.100152)"
+    ],
+    "impact": [
+      "Oracle MySQL Server version 5.7.41 and prior and 8.x through 8.0.32."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 5.7.42, 8.0.33 or later."
+    ],
+    "insight": [],
+    "log_method": [],
+    "cvss": [
+      "4.9"
+    ],
+    "port": 3306,
+    "protocol": "tcp",
+    "severity": "MEDIUM",
+    "references": [
+      "cve: CVE-2023-22007",
+      "url: https://www.oracle.com/security-alerts/cpujul2023.html#AppendixMSQL",
+      "advisory-id: cpujul2023",
+      "cert-bund: WID-SEC-2023-1794",
+      "dfn-cert: DFN-CERT-2024-1188",
+      "dfn-cert: DFN-CERT-2024-0593",
+      "dfn-cert: DFN-CERT-2024-0454",
+      "dfn-cert: DFN-CERT-2023-1642"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Oracle MySQL Server <= 5.7.42, 8.x <= 8.0.31 Security Update (cpuoct2023) - Linux",
+    "description": [
+      "Oracle MySQL Server is prone to multiple vulnerabilities."
+    ],
+    "detection_result": [
+      "Installed version: 5.5.62",
+      "Fixed version: 5.7.43",
+      "Installation path / port: 3306/tcp"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: Oracle MySQL Server <= 5.7.42, 8.x <= 8.0.31 Security Update (cpuoct2023) - Lin..",
+      "OID:1.3.6.1.4.1.25623.1.0.151211",
+      "Version used: 2025-09-09T05:38:49Z"
+    ],
+    "product_detection_result": [
+      "cpe:/a:mysql:mysql:5.5.62",
+      "Detected by MariaDB / Oracle MySQL Detection (MySQL Protocol) (OID: 1.3.6.1.4.1.25623.1.0.100152)",
+      "Product: cpe:/a:mysql:mysql:5.5.62",
+      "Method: MariaDB / Oracle MySQL Detection (MySQL Protocol)",
+      "OID: 1.3.6.1.4.1.25623.1.0.100152)"
+    ],
+    "impact": [
+      "Oracle MySQL Server version 5.7.42 and prior and 8.x through 8.0.31."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 5.7.43, 8.0.32 or later."
+    ],
+    "insight": [],
+    "log_method": [],
+    "cvss": [
+      "4.9"
+    ],
+    "port": 3306,
+    "protocol": "tcp",
+    "severity": "MEDIUM",
+    "references": [
+      "cve: CVE-2023-22015"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Oracle MySQL Server <= 8.0.38, 8.1 <= 8.4.1, 9.0 <= 9.0.1 Security Update (cpuoct2024) - Linux",
+    "description": [
+      "Oracle MySQL Server is prone to a denial of service (DoS) vulnerability.",
+      "Quality of Detection (QoD): 30%"
+    ],
+    "detection_result": [
+      "Installed version: 5.5.62",
+      "Fixed version: 8.0.39",
+      "Installation path / port: 3306/tcp"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: Oracle MySQL Server <= 8.0.38, 8.1 <= 8.4.1, 9.0 <= 9.0.1 Security Update (cpuo...",
+      "OID:1.3.6.1.4.1.25623.1.0.170868",
+      "Version used: 2025-09-09T05:38:49Z"
+    ],
+    "product_detection_result": [
+      "Product: cpe:/a:mysql:mysql:5.5.62",
+      "Method: MariaDB / Oracle MySQL Detection (MySQL Protocol) OID: 1.3.6.1.4.1.25623.1.0.100152)"
+    ],
+    "impact": [
+      "Oracle MySQL Server version 8.0.38 and prior, 8.1 through 8.4.1 and 9.0 through 9.0.1."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 8.0.39, 8.4.2, 9.0.2 or later."
+    ],
+    "insight": [],
+    "log_method": [],
+    "cvss": [
+      "4.9"
+    ],
+    "port": 3306,
+    "protocol": "tcp",
+    "severity": "MEDIUM",
+    "references": [
+      "cve: CVE-2024-21207",
+      "url: https://www.oracle.com/security-alerts/cpuoct2024.html#AppendixMSQL",
+      "advisory-id: cpuoct2024",
+      "cert-bund: WID-SEC-2024-3188",
+      "dfn-cert: DFN-CERT-2024-2732"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Oracle MySQL Server <= 5.7.40 Security Update (cpujan2023) - Linux",
+    "description": [
+      "Oracle MySQL Server is prone to a denial of service (DoS) vulnerability.",
+      "Quality of Detection (QoD): 30%"
+    ],
+    "detection_result": [
+      "Installed version: 5.5.62",
+      "Fixed version: 5.7.41",
+      "Installation path / port: 3306/tcp"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: Oracle MySQL Server <= 5.7.40 Security Update (cpujan2023) - Linux",
+      "OID:1.3.6.1.4.1.25623.1.0.149167",
+      "Version used: 2025-09-09T05:38:49Z"
+    ],
+    "product_detection_result": [
+      "Product: cpe:/a:mysql:mysql:5.5.62",
+      "Method: MariaDB / Oracle MySQL Detection (MySQL Protocol) OID: 1.3.6.1.4.1.25623.1.0.100152)"
+    ],
+    "impact": [
+      "Oracle MySQL Server version 5.7.40 and prior."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 5.7.41 or later."
+    ],
+    "insight": [],
+    "log_method": [],
+    "cvss": [
+      "4.9"
+    ],
+    "port": 3306,
+    "protocol": "tcp",
+    "severity": "MEDIUM",
+    "references": [
+      "cve: CVE-2023-21840",
+      "url: https://www.oracle.com/security-alerts/cpujan2023.html#AppendixMSQL",
+      "advisory-id: cpujan2023",
+      "cert-bund: WID-SEC-2024-1591",
+      "cert-bund: WID-SEC-2023-1424",
+      "cert-bund: WID-SEC-2023-0126",
+      "dfn-cert: DFN-CERT-2023-0105"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Oracle MySQL Server <= 5.7.33 Security Update (cpuapr2021) - Linux",
+    "description": [
+      "Oracle MySQL Server is prone to a denial of service (DoS) vulnerability.",
+      "Quality of Detection (QoD): 30%"
+    ],
+    "detection_result": [
+      "Installed version: 5.5.62",
+      "Fixed version: 5.7.34",
+      "Installation path / port: 3306/tcp"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: Oracle MySQL Server <= 5.7.33 Security Update (cpuapr2021) - Linux",
+      "OID:1.3.6.1.4.1.25623.1.0.145801",
+      "Version used: 2025-09-09T05:38:49Z"
+    ],
+    "product_detection_result": [
+      "Product: cpe:/a:mysql:mysql:5.5.62",
+      "Method: MariaDB / Oracle MySQL Detection (MySQL Protocol) OID: 1.3.6.1.4.1.25623.1.0.100152)"
+    ],
+    "impact": [
+      "Oracle MySQL Server version 5.7.33 and prior."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 5.7.34 or later."
+    ],
+    "insight": [],
+    "log_method": [],
+    "cvss": [
+      "4.9"
+    ],
+    "port": 3306,
+    "protocol": "tcp",
+    "severity": "MEDIUM",
+    "references": [],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Oracle MySQL Server <= 5.7.30 / 8.0 <= 8.0.17 Security Update (cpuapr2021) - Linux",
+    "description": [
+      "Oracle MySQL Server is prone to a denial of service (DoS) vulnerability.",
+      "Quality of Detection (QoD): 30%"
+    ],
+    "detection_result": [
+      "Installed version: 5.5.62",
+      "Fixed version: 5.7.31",
+      "Installation",
+      "path / port: 3306/tcp"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: Oracle MySQL Server <= 5.7.30 / 8.0 <= 8.0.17 Security Update (cpuapr2021) - Li.",
+      "->..",
+      "OID:1.3.6.1.4.1.25623.1.0.145803",
+      "Version used: 2025-09-09T05:38:49Z"
+    ],
+    "product_detection_result": [
+      "Product: cpe:/a:mysql:mysql:5.5.62",
+      "Method: MariaDB / Oracle MySQL Detection (MySQL Protocol)",
+      "OID: 1.3.6.1.4.1.25623.1.0.100152)"
+    ],
+    "impact": [
+      "Oracle MySQL Server version 5.7.30 and prior and 8.0 through 8.0.17."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 5.7.31, 8.0.18 or later."
+    ],
+    "insight": [],
+    "log_method": [],
+    "cvss": [
+      "4.9"
+    ],
+    "port": 3306,
+    "protocol": "tcp",
+    "severity": "MEDIUM",
+    "references": [
+      "cve: CVE-2021-2160",
+      "url: https://www.oracle.com/security-alerts/cpuapr2021.html#AppendixMSQL",
+      "advisory-id: cpuapr2021",
+      "cert-bund: WID-SEC-2023-0065",
+      "cert-bund: CB-K21/0421",
+      "dfn-cert: DFN-CERT-2021-0821"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Oracle MySQL Server <= 5.7.43, 8.x <= 8.0.31 Security Update (cpuoct2023) - Linux",
+    "description": [
+      "Oracle MySQL Server is prone to denial of service (DoS) vulnerability.",
+      "Quality of Detection (QoD): 30%"
+    ],
+    "detection_result": [
+      "Installed version: 5.5.62",
+      "Fixed version: 5.7.44",
+      "Installation",
+      "path / port: 3306/tcp"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: Oracle MySQL Server <= 5.7.43, 8.x <= 8.0.31 Security Update (cpuoct2023) - Lin.",
+      "->..",
+      "OID:1.3.6.1.4.1.25623.1.0.151215",
+      "Version used: 2025-09-09T05:38:49Z"
+    ],
+    "product_detection_result": [
+      "Product: cpe:/a:mysql:mysql:5.5.62",
+      "Method: MariaDB / Oracle MySQL Detection (MySQL Protocol)",
+      "OID: 1.3.6.1.4.1.25623.1.0.100152)"
+    ],
+    "impact": [
+      "Oracle MySQL Server version 5.7.43 and prior and 8.x through 8.0.31."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 5.7.44, 8.0.32 or later."
+    ],
+    "insight": [],
+    "log_method": [],
+    "cvss": [
+      "4.9"
+    ],
+    "port": 3306,
+    "protocol": "tcp",
+    "severity": "MEDIUM",
+    "references": [
+      "cve: CVE-2023-22028",
+      "url: https://www.oracle.com/security-alerts/cpuoct2023.html#AppendixMSQL",
+      "advisory-id: cpuoct2023",
+      "cert-bund: WID-SEC-2023-2690",
+      "dfn-cert: DFN-CERT-2024-0108",
+      "dfn-cert: DFN-CERT-2023-2536"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Oracle MySQL Server <= 8.0.35 Security Update (cpuoct2024) - Linux",
+    "description": [
+      "Oracle MySQL Server is prone to a denial of service (DoS) vulnerability.",
+      "Quality of Detection (QoD): 30%"
+    ],
+    "detection_result": [
+      "Installed version: 5.5.62",
+      "Fixed version: 8.0.36",
+      "Installation",
+      "path / port: 3306/tcp"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: Oracle MySQL Server <= 8.0.35 Security Update (cpuoct2024) - Linux",
+      "OID:1.3.6.1.4.1.25623.1.0.170866",
+      "Version used: 2025-09-09T05:38:49Z"
+    ],
+    "product_detection_result": [
+      "Product: cpe:/a:mysql:mysql:5.5.62",
+      "Method: MariaDB / Oracle MySQL Detection (MySQL Protocol)",
+      "OID: 1.3.6.1.4.1.25623.1.0.100152)"
+    ],
+    "impact": [
+      "Oracle MySQL Server version 8.0.35 and prior."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 8.0.36 or later."
+    ],
+    "insight": [],
+    "log_method": [],
+    "cvss": [
+      "4.4"
+    ],
+    "port": 3306,
+    "protocol": "tcp",
+    "severity": "MEDIUM",
+    "references": [
+      "cve: CVE-2024-21200",
+      "url: https://www.oracle.com/security-alerts/cpuoct2024.html#AppendixMSQL",
+      "advisory-id: cpuoct2024",
+      "cert-bund: WID-SEC-2024-3188",
+      "dfn-cert: DFN-CERT-2024-2732"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Oracle MySQL Server <= 8.0.39, 8.1 <= 8.4.0 Security Update (cpuoct2024) - Linux",
+    "description": [
+      "Oracle MySQL Server is prone to a denial of service (DoS) vulnerability.",
+      "Quality of Detection (QoD): 30%"
+    ],
+    "detection_result": [
+      "Installed version: 5.5.62",
+      "Fixed version: 8.0.40",
+      "Installation path / port: 3306/tcp"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: Oracle MySQL Server <= 8.0.39, 8.1 <= 8.4.0 Security Update (cpuoct2024) - Linux",
+      "OID:1.3.6.1.4.1.25623.1.0.170870",
+      "Version used: 2025-09-09T05:38:49Z"
+    ],
+    "product_detection_result": [
+      "Product: cpe:/a:mysql:mysql:5.5.62",
+      "Method: MariaDB / Oracle MySQL Detection (MySQL Protocol)",
+      "OID: 1.3.6.1.4.1.25623.1.0.100152)"
+    ],
+    "impact": [
+      "Oracle MySQL Server version 8.0.39 and prior and 8.1 through 8.4.0."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 8.0.40, 8.4.1 or later."
+    ],
+    "insight": [],
+    "log_method": [],
+    "cvss": [
+      "4.4"
+    ],
+    "port": 3306,
+    "protocol": "tcp",
+    "severity": "MEDIUM",
+    "references": [
+      "cve: CVE-2024-21212",
+      "url: https://www.oracle.com/security-alerts/cpuoct2024.html#AppendixMSQL",
+      "advisory-id: cpuoct2024",
+      "cert-bund: WID-SEC-2024-3188",
+      "dfn-cert: DFN-CERT-2025-0446",
+      "dfn-cert: DFN-CERT-2024-2732"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Oracle MySQL Server <= 5.7.36 / 8.0 <= 8.0.27 Security Update (cpuoct2022) - Linux",
+    "description": [
+      "Oracle MySQL Server is prone to a denial of service (DoS) vulnerability.",
+      "Quality of Detection (QoD): 30%"
+    ],
+    "detection_result": [
+      "Installed version: 5.5.62",
+      "Fixed version: 5.7.37",
+      "Installation path / port: 3306/tcp"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: Oracle MySQL Server <= 5.7.36 / 8.0 <= 8.0.27 Security Update (cpuoct2022) - Li.",
+      "OID:1.3.6.1.4.1.25623.1.0.118381",
+      "Version used: 2025-09-09T05:38:49Z"
+    ],
+    "product_detection_result": [
+      "Product: cpe:/a:mysql:mysql:5.5.62",
+      "Method: MariaDB / Oracle MySQL Detection (MySQL Protocol)",
+      "OID: 1.3.6.1.4.1.25623.1.0.100152)"
+    ],
+    "impact": [
+      "Oracle MySQL Server version 5.7.36 and prior and 8.0 through 8.0.27."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 5.7.37, 8.0.28 or later."
+    ],
+    "insight": [],
+    "log_method": [],
+    "cvss": [
+      "4.3"
+    ],
+    "port": 3306,
+    "protocol": "tcp",
+    "severity": "MEDIUM",
+    "references": [
+      "cve: CVE-2022-21595",
+      "url: https://www.oracle.com/security-alerts/cpuoct2022.html#AppendixMSQL",
+      "advisory-id: cpuoct2022",
+      "cert-bund: WID-SEC-2024-1591",
+      "cert-bund: WID-SEC-2022-1776",
+      "dfn-cert: DFN-CERT-2023-0504",
+      "dfn-cert: DFN-CERT-2022-2306"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Oracle MySQL Server <= 5.7.39 / 8.0 <= 8.0.29 Security Update (cpuoct2022) - Linux",
+    "description": [
+      "Oracle MySQL Server is prone to an information disclosure vulnerability."
+    ],
+    "detection_result": [
+      "Installed version: 5.5.62",
+      "Fixed version: 5.7.40",
+      "Installation",
+      "path / port: 3306/tcp"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: Oracle MySQL Server <= 5.7.39 / 8.0 <= 8.0.29 Security Update (cpuoct2022) - Li.",
+      "OID:1.3.6.1.4.1.25623.1.0.118385",
+      "Version used: 2025-09-09T05:38:49Z"
+    ],
+    "product_detection_result": [
+      "Product: cpe:/a:mysql:mysql:5.5.62",
+      "Method: MariaDB / Oracle MySQL Detection (MySQL Protocol)",
+      "OID: 1.3.6.1.4.1.25623.1.0.100152)"
+    ],
+    "impact": [
+      "Oracle MySQL Server version 5.7.39 and prior and 8.0 through 8.0.29."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 5.7.40, 8.0.30 or later."
+    ],
+    "insight": [],
+    "log_method": [],
+    "cvss": [
+      "4.3"
+    ],
+    "port": 3306,
+    "protocol": "tcp",
+    "severity": "MEDIUM",
+    "references": [
+      "cve: CVE-2022-21592",
+      "url: https://www.oracle.com/security-alerts/cpuoct2022.html#AppendixMSQL",
+      "advisory-id: cpuoct2022",
+      "cert-bund: WID-SEC-2024-1591",
+      "cert-bund: WID-SEC-2023-2031",
+      "cert-bund: WID-SEC-2022-1776",
+      "dfn-cert: DFN-CERT-2022-2306"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Oracle MySQL Server <= 5.7.39 / 8.0 <= 8.0.16 Security Update (cpuoct2022) - Linux",
+    "description": [
+      "Oracle MySQL Server is prone to an information disclosure vulnerability.",
+      "Quality of Detection (QoD): 30%"
+    ],
+    "detection_result": [
+      "Installed version: 5.5.62",
+      "Fixed version: 5.7.40",
+      "Installation path / port: 3306/tcp"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: Oracle MySQL Server <= 5.7.39 / 8.0 <= 8.0.16 Security Update (cpuoct2022) - Li...",
+      "OID:1.3.6.1.4.1.25623.1.0.118383",
+      "Version used: 2025-09-09T05:38:49Z"
+    ],
+    "product_detection_result": [
+      "cpe:/a:mysql:mysql:5.5.62",
+      "Detected by MariaDB / Oracle MySQL Detection (MySQL Protocol) (OID: 1.3.6.1.4.1.25623.1.0.100152)",
+      "Product: cpe:/a:mysql:mysql:5.5.62",
+      "Method: MariaDB / Oracle MySQL Detection (MySQL Protocol)",
+      "OID: 1.3.6.1.4.1.25623.1.0.100152)"
+    ],
+    "impact": [
+      "Oracle MySQL Server version 5.7.39 and prior and 8.0 through 8.0.16."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 5.7.40, 8.0.17 or later."
+    ],
+    "insight": [],
+    "log_method": [],
+    "cvss": [
+      "4.3"
+    ],
+    "port": 3306,
+    "protocol": "tcp",
+    "severity": "MEDIUM",
+    "references": [
+      "cve: CVE-2022-21589",
+      "url: https://www.oracle.com/security-alerts/cpuoct2022.html#AppendixMSQL",
+      "advisory-id: cpuoct2022",
+      "cert-bund: WID-SEC-2024-1591",
+      "cert-bund: WID-SEC-2023-2031",
+      "cert-bund: WID-SEC-2022-1776",
+      "dfn-cert: DFN-CERT-2022-2306"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Oracle MySQL Server Information Disclosure",
+    "description": [
+      "Oracle MySQL Server is prone to an information disclosure vulnerability."
+    ],
+    "detection_result": [
+      "Installed version: 5.5.62",
+      "Fixed version: 5.7.40",
+      "Installation path / port: 3306/tcp"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: Oracle MySQL Server <= 5.7.39 / 8.0 <= 8.0.16 Security Update (cpuoct2022) - Li.",
+      "OID:1.3.6.1.4.1.25623.1.0.118383",
+      "Version used: 2025-09-09T05:38:49Z"
+    ],
+    "product_detection_result": [
+      "Product: cpe:/a:mysql:mysql:5.5.62",
+      "Method: MariaDB / Oracle MySQL Detection (MySQL Protocol)",
+      "OID: 1.3.6.1.4.1.25623.1.0.100152)"
+    ],
+    "impact": [],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 5.7.40, 8.0.17 or later."
+    ],
+    "insight": [],
+    "log_method": [],
+    "cvss": [
+      "2.1"
+    ],
+    "port": 3306,
+    "protocol": "tcp",
+    "severity": "LOW",
+    "references": [
+      "cve: CVE-2022-21589",
+      "url: https://www.oracle.com/security-alerts/cpuoct2022.html#AppendixMSQL",
+      "advisory-id: cpuoct2022",
+      "cert-bund: WID-SEC-2024-1591",
+      "cert-bund: WID-SEC-2023-2031",
+      "cert-bund: WID-SEC-2022-1776",
+      "dfn-cert: DFN-CERT-2022-2306"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Oracle MySQL Server <= 5.6.44 / 5.7 <= 5.7.18 Security Update (cpujul2019) - Linux",
+    "description": [
+      "Oracle MySQL Server is prone to an unspecied vulnerability."
+    ],
+    "detection_result": [
+      "Installed version: 5.5.62",
+      "Fixed version: 5.6.45",
+      "Installation path / port: 3306/tcp"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: Oracle MySQL Server <= 5.6.44 / 5.7 <= 5.7.18 Security Update (cpujul2019) - Li...",
+      "OID:1.3.6.1.4.1.25623.1.0.142642",
+      "Version used: 2025-09-09T05:38:49Z"
+    ],
+    "product_detection_result": [
+      "Product: cpe:/a:mysql:mysql:5.5.62",
+      "Method: MariaDB / Oracle MySQL Detection (MySQL Protocol)",
+      "OID: 1.3.6.1.4.1.25623.1.0.100152)"
+    ],
+    "impact": [
+      "Aected Software/OS Oracle MySQL Server versions 5.6.44 and prior and 5.7 through 5.7.18."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 5.6.45, 5.7.19 or later."
+    ],
+    "insight": [],
+    "log_method": [],
+    "cvss": [
+      "2.7"
+    ],
+    "port": 3306,
+    "protocol": "tcp",
+    "severity": "LOW",
+    "references": [
+      "cve: CVE-2019-2730",
+      "url: https://www.oracle.com/security-alerts/cpujul2019.html#AppendixMSQL",
+      "advisory-id: cpujul2019",
+      "cert-bund: CB-K19/0620",
+      "dfn-cert: DFN-CERT-2019-2169",
+      "dfn-cert: DFN-CERT-2019-1453"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Oracle MySQL Server <= 5.7.40, 8.x <= 8.0.31 Security Update (cpuapr2023) - Linux",
+    "description": [
+      "Oracle MySQL Server is prone to a denial of service (DoS) vulnerability."
+    ],
+    "detection_result": [
+      "Installed version: 5.5.62",
+      "Fixed version: 5.7.41",
+      "Installation path / port: 3306/tcp"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: Oracle MySQL Server <= 5.7.40, 8.x <= 8.0.31 Security Update (cpuapr2023) - Lin...",
+      "OID:1.3.6.1.4.1.25623.1.0.149531",
+      "Version used: 2025-09-09T05:38:49Z"
+    ],
+    "product_detection_result": [
+      "Product: cpe:/a:mysql:mysql:5.5.62",
+      "Method: MariaDB / Oracle MySQL Detection (MySQL Protocol)",
+      "OID: 1.3.6.1.4.1.25623.1.0.100152)"
+    ],
+    "impact": [
+      "Aected Software/OS Oracle MySQL Server version 5.7.40 and prior and 8.x through 8.0.31."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 5.7.41, 8.0.32 or later."
+    ],
+    "insight": [],
+    "log_method": [],
+    "cvss": [
+      "2.7"
+    ],
+    "port": 3306,
+    "protocol": "tcp",
+    "severity": "LOW",
+    "references": [
+      "cve: CVE-2023-21963",
+      "url: https://www.oracle.com/security-alerts/cpuapr2023.html#AppendixMSQL",
+      "advisory-id: cpuapr2023",
+      "cert-bund: WID-SEC-2024-1591",
+      "cert-bund: WID-SEC-2023-1033",
+      "dfn-cert: DFN-CERT-2023-0885"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "ICMP Timestamp Reply Information Disclosure",
+    "description": [
+      "The remote host responded to an ICMP timestamp request.",
+      "Quality of Detection (QoD): 80%"
+    ],
+    "detection_result": [
+      "The following response / ICMP packet has been received:",
+      "- ICMP Type: 14",
+      "- ICMP Code: 0"
+    ],
+    "detection_method": [
+      "Sends an ICMP Timestamp (Type 13) request and checks if a Timestamp Reply (Type 14) is received."
+    ],
+    "product_detection_result": [],
+    "impact": [
+      "This information could theoretically be used to exploit weak time-based random number generators in other services."
+    ],
+    "solution": [
+      "Solution type: Mitigation",
+      "Various mitigations are possible:",
+      "- Disable the support for ICMP timestamp on the remote host completely",
+      "- Protect the remote host by a rewall, and block ICMP packets passing through the rewall in either direction (either completely or only for untrusted networks)"
+    ],
+    "insight": [
+      "The Timestamp Reply is an ICMP message which replies to a Timestamp message. It consists of the originating timestamp sent by the sender of the Timestamp as well as a receive timestamp and a transmit timestamp."
+    ],
+    "log_method": [],
+    "cvss": [
+      "2.1"
+    ],
+    "port": "general",
+    "protocol": "icmp",
+    "severity": "LOW",
+    "references": [
+      "cve: CVE-1999-0524",
+      "url: https://datatracker.ietf.org/doc/html/rfc792",
+      "url: https://datatracker.ietf.org/doc/html/rfc2780",
+      "cert-bund: CB-K15/1514",
+      "cert-bund: CB-K14/0632",
+      "dfn-cert: DFN-CERT-2014-0658"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "TCP Timestamps Information Disclosure",
+    "description": [
+      "The remote host implements TCP timestamps and therefore allows to compute the uptime.",
+      "Quality of Detection (QoD): 80%"
+    ],
+    "detection_result": [
+      "It was detected that the host implements RFC1323/RFC7323.",
+      "The following timestamps were retrieved with a delay of 1 seconds in-between:",
+      "Packet 1: 2259507992",
+      "Packet 2: 2259509120"
+    ],
+    "detection_method": [
+      "Special IP packets are forged and sent with a little delay in between to the target IP. The responses are searched for a timestamps. If found, the timestamps are reported."
+    ],
+    "product_detection_result": [],
+    "impact": [
+      "A side eect of this feature is that the uptime of the remote host can sometimes be computed."
+    ],
+    "solution": [
+      "Solution type: Mitigation",
+      "To disable TCP timestamps on linux add the line 'net.ipv4.tcp_timestamps = 0' to /etc/sysctl.conf. Execute 'sysctl -p' to apply the settings at runtime.",
+      "To disable TCP timestamps on Windows execute 'netsh int tcp set global timestamps=disabled'",
+      "Starting with Windows Server 2008 and Vista, the timestamp can not be completely disabled. The default behavior of the TCP/IP stack on this Systems is to not use the Timestamp options when initiating TCP connections, but use them if the TCP peer that is initiating communication includes them in their synchronize (SYN) segment.",
+      "See the references for more information."
+    ],
+    "insight": [
+      "The remote host implements TCP timestamps, as dened by RFC1323/RFC7323."
+    ],
+    "log_method": [],
+    "cvss": [
+      "2.6"
+    ],
+    "port": "general",
+    "protocol": "icmp",
+    "severity": "LOW",
+    "references": [],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "TCP Timestamps Information Disclosure",
+    "description": [
+      "The remote host implements TCP timestamps and therefore allows to compute the uptime.",
+      "Quality of Detection (QoD): 80%"
+    ],
+    "detection_result": [
+      "It was detected that the host implements RFC1323/RFC7323.",
+      "The following timestamps were retrieved with a delay of 1 seconds in-between:",
+      "Packet 1: 2259507992",
+      "Packet 2: 2259509120"
+    ],
+    "detection_method": [
+      "Special IP packets are forged and sent with a little delay in between to the target IP. The responses are searched for a timestamps. If found, the timestamps are reported."
+    ],
+    "product_detection_result": [],
+    "impact": [
+      "A side eect of this feature is that the uptime of the remote host can sometimes be computed."
+    ],
+    "solution": [
+      "Solution type: Mitigation",
+      "To disable TCP timestamps on linux add the line 'net.ipv4.tcp_timestamps = 0' to /etc/sysctl.conf. Execute 'sysctl -p' to apply the settings at runtime.",
+      "To disable TCP timestamps on Windows execute 'netsh int tcp set global timestamps=disabled'",
+      "Starting with Windows Server 2008 and Vista, the timestamp can not be completely disabled.",
+      "The default behavior of the TCP/IP stack on this Systems is to not use the Timestamp options when initiating TCP connections, but use them if the TCP peer that is initiating communication includes them in their synchronize (SYN) segment.",
+      "See the references for more information."
+    ],
+    "insight": [
+      "The remote host implements TCP timestamps, as dened by RFC1323/RFC7323."
+    ],
+    "log_method": [],
+    "cvss": [
+      "2.6"
+    ],
+    "port": "general",
+    "protocol": "tcp",
+    "severity": "LOW",
+    "references": [
+      "url: https://datatracker.ietf.org/doc/html/rfc1323",
+      "url: https://datatracker.ietf.org/doc/html/rfc7323",
+      "url: https://web.archive.org/web/20151213072445/http://www.microsoft.com/en-us/download/details.aspx?id=9152",
+      "url: https://www.fortiguard.com/psirt/FG-IR-16-090"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "CPE Inventory",
+    "description": [
+      "This routine uses information collected by other routines about CPE identities of operating systems, services and applications detected during the scan.",
+      "Note: Some CPEs for specic products might show up twice or more in the output. Background: After a product got renamed or a specic vendor was acquired by another one it might happen that a product gets a new CPE within the NVD CPE Dictionary but older entries are kept with the older CPE.",
+      "Quality of Detection (QoD): 80%"
+    ],
+    "detection_result": [
+      "172.31.1.25|cpe:/a:mysql:mysql:5.5.62",
+      "172.31.1.25|cpe:/a:oracle:mysql:5.5.62",
+      "172.31.1.25|cpe:/o:linux:kernel"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [],
+    "cvss": [
+      "0.0"
+    ],
+    "port": "general",
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [
+      "url: https://nvd.nist.gov/products/cpe"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "CPE Inventory",
+    "description": [
+      "This routine uses information collected by other routines about CPE identities of operating systems, services and applications detected during the scan. Note: Some CPEs for specic products might show up twice or more in the output. Background: After a product got renamed or a specic vendor was acquired by another one it might happen that a product gets a new CPE within the NVD CPE Dictionary but older entries are kept with the older CPE. Quality of Detection (QoD): 80%"
+    ],
+    "detection_result": [
+      "172.31.1.25|cpe:/a:mysql:mysql:5.5.62",
+      "172.31.1.25|cpe:/a:oracle:mysql:5.5.62",
+      "172.31.1.25|cpe:/o:linux:kernel"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [
+      "Details: CPE Inventory",
+      "OID:1.3.6.1.4.1.25623.1.0.810002",
+      "Version used: 2022-07-27T10:11:28Z"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": "general",
+    "protocol": "CPE-T",
+    "severity": "LOG",
+    "references": [
+      "url: https://nvd.nist.gov/products/cpe"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Database Open Access Information Disclosure Vulnerability",
+    "description": [
+      "Various Database server might be prone to an information disclosure vulnerability if accessible to remote systems."
+    ],
+    "detection_result": [
+      "Oracle MySQL can be accessed by remote attackers"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [
+      "Successful exploitation could allow an attacker to obtain sensitive information from the database."
+    ],
+    "solution": [
+      "Solution type: Workaround",
+      "Restrict database access to remote systems. Please see the manual of the aected database server for more information."
+    ],
+    "insight": [
+      "The remote database server is not restricting direct access from remote systems."
+    ],
+    "log_method": [
+      "Checks the result of various database server detections and evaluates their results."
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": 3306,
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [
+      "url: https://www.pcisecuritystandards.org/security_standards/index.php?id=pci_ds->s_v1-2.pdf"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Services",
+    "description": [
+      "This plugin performs service detection."
+    ],
+    "detection_result": [
+      "A MySQL server is running on this port"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [
+      "This plugin attempts to guess which service is running on the remote port(s). For instance, it searches for a web server which could listen on another port than 80 or 443 and makes this information available for other check routines."
+    ],
+    "log_method": [],
+    "cvss": [
+      "0.0"
+    ],
+    "port": 3306,
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "IP Forwarding Enabled - Active Check",
+    "description": [
+      "Checks if the remote host has IP forwarding enabled."
+    ],
+    "detection_result": [
+      "It was possible to route a TCP packet through the target host and received an answer which means IP forwarding is enabled."
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [
+      "Sends a crafted Local Link Layer (LLL) frame and checks the response."
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": "general",
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [
+      "cve: CVE-1999-0511"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Traceroute",
+    "description": [
+      "Collect information about the network route and network distance between the scanner host and the target host."
+    ],
+    "detection_result": [
+      "Network route from scanner (172.30.0.2) to target (172.31.1.25):",
+      "172.30.0.2",
+      "172.31.1.25",
+      "Network distance between scanner and target: 2"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [
+      "For internal networks, the distances are usually small, often less than 4 hosts between scanner and target. For public targets the distance is greater and might be 10 hosts or more."
+    ],
+    "log_method": [
+      "A combination of the protocols ICMP and TCP is used to determine the route. This method is applicable for IPv4 only and it is also known as 'traceroute'."
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": "general",
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "OS Detection Consolidation and Reporting",
+    "description": [
+      "This script consolidates the OS information detected by several VTs and tries to nd the best matching OS.",
+      "Furthermore it reports all previously collected information leading to this best matching OS. It also reports possible additional information which might help to improve the OS detection.",
+      "If any of this information is wrong or could be improved please consider to report these to the referenced community forum."
+    ],
+    "detection_result": [
+      "Best matching OS:",
+      "OS: Linux Kernel",
+      "CPE: cpe:/o:linux:kernel",
+      "Found by VT: 1.3.6.1.4.1.25623.1.0.102002 (Operating System (OS) Detection (ICMP))",
+      "Concluded from ICMP based OS fingerprint",
+      "Setting key \"Host/runs_unixoide\" based on this information"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [],
+    "cvss": [
+      "0.0"
+    ],
+    "port": "general",
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [
+      "url: https://forum.greenbone.net/c/vulnerability-tests/7"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Hostname Determination Reporting",
+    "description": [
+      "The script reports information on how the hostname of the target was determined."
+    ],
+    "detection_result": [
+      "Hostname determination for IP 172.31.1.25:",
+      "Hostname|Source",
+      "mysql55.trabalho_vulnnet|Reverse-DNS"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [],
+    "cvss": [
+      "0.0"
+    ],
+    "port": "general",
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  }
+]

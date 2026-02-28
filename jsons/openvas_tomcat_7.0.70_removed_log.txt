@@ -1,0 +1,54 @@
+# LOG DE VULNERABILIDADES REMOVIDAS (sem descrição válida)
+
+Removida 1:
+{
+  "Name": "OpenVAS / Greenbone Vulnerability Manager Detection",
+  "description": [],
+  "detection_result": [],
+  "detection_method": [],
+  "product_detection_result": [],
+  "impact": [],
+  "solution": [],
+  "insight": [],
+  "log_method": [],
+  "cvss": [
+    "0.0"
+  ],
+  "port": 8009,
+  "protocol": "tcp",
+  "severity": "LOG",
+  "references": [],
+  "plugin": null,
+  "plugin_details": {},
+  "instances": [],
+  "source": "OPENVAS"
+}
+---
+Removida 2:
+{
+  "Name": "HTTP Security Headers Detection",
+  "description": [],
+  "detection_result": [],
+  "detection_method": [],
+  "product_detection_result": [],
+  "impact": [],
+  "solution": [],
+  "insight": [],
+  "log_method": [],
+  "cvss": [
+    "0.0"
+  ],
+  "port": 8009,
+  "protocol": "tcp",
+  "severity": "LOG",
+  "references": [
+    "https://owasp.org/www-project-secure-headers/",
+    "https://owasp.org/www-project-secure-headers/#div-headers",
+    "https://securityheaders.com/"
+  ],
+  "plugin": null,
+  "plugin_details": {},
+  "instances": [],
+  "source": "OPENVAS"
+}
+---

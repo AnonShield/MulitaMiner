@@ -1,0 +1,530 @@
+[
+  {
+    "Name": "Report default community names of the SNMP Agent",
+    "description": [
+      "Simple Network Management Protocol (SNMP) is a protocol which can be used by administrators to remotely manage a computer or network device. There are typically 2 modes of remote SNMP monitoring. These modes are roughly 'READ' and 'WRITE' (or PUBLIC and PRIVATE)."
+    ],
+    "detection_result": [
+      "SNMP Agent responded as expected when using the following community name: public"
+    ],
+    "detection_method": [
+      "Details: Report default community names of the SNMP Agent",
+      "OID:1.3.6.1.4.1.25623.1.0.10264",
+      "Version used: 2025-10-28T05:40:26Z"
+    ],
+    "product_detection_result": [],
+    "impact": [
+      "If an attacker is able to guess a PUBLIC community string, they would be able to read SNMP data (depending on which MIBs are installed) from the remote device. This information might include system time, IP addresses, interfaces, processes running, etc.",
+      "If an attacker is able to guess a PRIVATE community string (WRITE or 'writeall' access), they will have the ability to change information on the remote machine. This could be a huge security hole, enabling remote attackers to wreak complete havoc such as routing network trac, initiating processes, etc. In essence, 'writeall' access will give the remote attacker full administrative rights over the remote machine.",
+      "Note that this test only gathers information and does not attempt to write to the remote device. Thus it is not possible to determine automatically whether the reported community is public or private.",
+      "Also note that information made available through a guessable community string might or might not contain sensitive data. Please review the information available through the reported community string to determine the impact of this disclosure."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Determine if the detected community string is a private community string. Determine whether a public community string exposes sensitive information. Disable the SNMP service if you don't use it or change the default community string."
+    ],
+    "insight": [],
+    "log_method": [],
+    "cvss": [
+      "5.0"
+    ],
+    "port": 161,
+    "protocol": "udp",
+    "severity": "High",
+    "references": [
+      "cve: CVE-1999-0186",
+      "cve: CVE-1999-0254",
+      "cve: CVE-1999-0472",
+      "cve: CVE-1999-0516",
+      "cve: CVE-1999-0517",
+      "cve: CVE-1999-0792",
+      "cve: CVE-2000-0147",
+      "cve: CVE-2001-0380",
+      "cve: CVE-2001-0514",
+      "cve: CVE-2001-1210",
+      "cve: CVE-2002-0109",
+      "cve: CVE-2002-0478",
+      "cve: CVE-2002-1229",
+      "cve: CVE-2004-0311",
+      "cve: CVE-2004-1474",
+      "cve: CVE-2004-1775",
+      "cve: CVE-2004-1776",
+      "cve: CVE-2006-4950",
+      "cve: CVE-2008-1524",
+      "cve: CVE-2010-1574",
+      "cve: CVE-2010-2976",
+      "cve: CVE-2011-0890",
+      "cve: CVE-2012-4964",
+      "cve: CVE-2014-4862",
+      "cve: CVE-2014-4863",
+      "cve: CVE-2016-1452",
+      "cve: CVE-2016-1473",
+      "cve: CVE-2016-5645",
+      "cve: CVE-2017-7922",
+      "cve: CVE-2020-5364",
+      "cve: CVE-2024-5460",
+      "cve: CVE-2024-8450",
+      "cve: CVE-2025-12217",
+      "url: http://www.securityfocus.com/bid/11237",
+      "url: http://www.securityfocus.com/bid/177",
+      "url: http://www.securityfocus.com/bid/20125",
+      "url: http://www.securityfocus.com/bid/2112",
+      "url: http://www.securityfocus.com/bid/2896",
+      "url: http://www.securityfocus.com/bid/3758",
+      "url: http://www.securityfocus.com/bid/3795",
+      "url: http://www.securityfocus.com/bid/3797",
+      "url: http://www.securityfocus.com/bid/41436",
+      "url: http://www.securityfocus.com/bid/4330",
+      "url: http://www.securityfocus.com/bid/46981",
+      "url: http://www.securityfocus.com/bid/5030",
+      "url: http://www.securityfocus.com/bid/5965",
+      "url: http://www.securityfocus.com/bid/7081",
+      "url: http://www.securityfocus.com/bid/7212",
+      "url: http://www.securityfocus.com/bid/7317",
+      "url: http://www.securityfocus.com/bid/91756",
+      "url: http://www.securityfocus.com/bid/92428",
+      "url: http://www.securityfocus.com/bid/9681",
+      "url: http://www.securityfocus.com/bid/973",
+      "url: http://www.securityfocus.com/bid/986",
+      "url: http://www.securityfocus.com/bid/99083",
+      "cert-bund: WID-SEC-2024-1255",
+      "cert-bund: CB-K18/1132",
+      "cert-bund: CB-K16/1338"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "SNMP GETBULK Reflected DRDoS",
+    "description": [
+      "The remote SNMP daemon allows distributed reflection and amplification (DRDoS) attacks. Quality of Detection (QoD): 99%"
+    ],
+    "detection_result": [
+      "By sending an SNMP GetBulk request of 41 bytes, we received a response of 1456 bytes."
+    ],
+    "detection_method": [
+      "Send an SNMP GetBulk request and check the response.",
+      "Details: SNMP GETBULK Reflected DRDoS",
+      "OID:1.3.6.1.4.1.25623.1.0.105062",
+      "Version used: 2023-07-27T05:05:09Z"
+    ],
+    "product_detection_result": [],
+    "impact": [
+      "Successfully exploiting this vulnerability allows attackers to cause denial-of-service conditions against remote hosts."
+    ],
+    "solution": [
+      "Solution type: Workaround",
+      "Disable the SNMP service on the remote host if you do not use it or restrict access to this service."
+    ],
+    "insight": [],
+    "log_method": [],
+    "cvss": [
+      "5.0"
+    ],
+    "port": 161,
+    "protocol": "udp",
+    "severity": "High",
+    "references": [
+      "url: http://www.darkreading.com/attacks-breaches/snmp-ddos-attacks-spike/d/d-id/1269149",
+      "cert-bund: CB-K16/1338",
+      "cert-bund: CB-K16/1061",
+      "dfn-cert: DFN-CERT-2016-1423",
+      "dfn-cert: DFN-CERT-2016-1130",
+      "dfn-cert: DFN-CERT-2010-0866"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "SNMP GETBULK Reected DRDoS",
+    "description": [
+      "The remote SNMP daemon allows distributed reection and amplication (DRDoS) attacks.",
+      "Quality of Detection (QoD): 99%"
+    ],
+    "detection_result": [
+      "By sending an SNMP GetBulk request of 41 bytes, we received a response of 1456 bytes."
+    ],
+    "detection_method": [
+      "Send an SNMP GetBulk request and check the response.",
+      "Details: SNMP GETBULK Reflected DRDoS",
+      "OID:1.3.6.1.4.1.25623.1.0.105062",
+      "Version used: 2023-07-27T05:05:09Z"
+    ],
+    "product_detection_result": [],
+    "impact": [
+      "Successfully exploiting this vulnerability allows attackers to cause denial-of-service conditions against remote hosts."
+    ],
+    "solution": [
+      "Solution type: Workaround",
+      "Disable the SNMP service on the remote host if you do not use it or restrict access to this service."
+    ],
+    "insight": [],
+    "log_method": [],
+    "cvss": [
+      "5.0"
+    ],
+    "port": 161,
+    "protocol": "udp",
+    "severity": "MEDIUM",
+    "references": [
+      "url: http://www.darkreading.com/attacks-breaches/snmp-ddos-attacks-spike/d/d-id/1269149"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "ICMP Timestamp Reply Information Disclosure",
+    "description": [
+      "The remote host responded to an ICMP timestamp request.",
+      "Quality of Detection (QoD): 80%"
+    ],
+    "detection_result": [
+      "The following response / ICMP packet has been received:",
+      "- ICMP Type: 14",
+      "- ICMP Code: 0"
+    ],
+    "detection_method": [
+      "Sends an ICMP Timestamp (Type 13) request and checks if a Timestamp Reply (Type 14) is received.",
+      "Details: ICMP Timestamp Reply Information Disclosure",
+      "OID:1.3.6.1.4.1.25623.1.0.103190",
+      "Version used: 2025-01-21T05:37:33Z"
+    ],
+    "product_detection_result": [],
+    "impact": [
+      "This information could theoretically be used to exploit weak time-based random number generators in other services."
+    ],
+    "solution": [
+      "Solution type: Mitigation",
+      "Various mitigations are possible:",
+      "- Disable the support for ICMP timestamp on the remote host completely",
+      "- Protect the remote host by a firewall, and block ICMP packets passing through the firewall in either direction (either completely or only for untrusted networks)"
+    ],
+    "insight": [
+      "The Timestamp Reply is an ICMP message which replies to a Timestamp message. It consists of the originating timestamp sent by the sender of the Timestamp as well as a receive timestamp and a transmit timestamp."
+    ],
+    "log_method": [],
+    "cvss": [
+      "2.1"
+    ],
+    "port": "general",
+    "protocol": "icmp",
+    "severity": "LOW",
+    "references": [
+      "cve: CVE-1999-0524",
+      "url: https://datatracker.ietf.org/doc/html/rfc792",
+      "url: https://datatracker.ietf.org/doc/html/rfc2780",
+      "cert-bund: CB-K15/1514",
+      "cert-bund: CB-K14/0632",
+      "dfn-cert: DFN-CERT-2014-0658"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "OS Detection Consolidation and Reporting",
+    "description": [
+      "This script consolidates the OS information detected by several VTs and tries to nd the best matching OS.",
+      "Furthermore it reports all previously collected information leading to this best matching OS. It also reports possible additional information which might help to improve the OS detection.",
+      "If any of this information is wrong or could be improved please consider to report these to the referenced community forum.",
+      "Quality of Detection (QoD): 80%"
+    ],
+    "detection_result": [
+      "Best matching OS:",
+      "OS: Unraid OS",
+      "CPE: cpe:/o:unraid:unraid",
+      "Found by VT: 1.3.6.1.4.1.25623.1.0.153874 (Unraid OS Detection Consolidation)",
+      "Setting key \"Host/runs_unixoide\" based on this information",
+      "Other OS detections (in order of reliability):",
+      "OS: Linux 6.6.87.2-microsoft-standard-WSL2",
+      "Version: 6.6.87.2-microsoft-standard-WSL2",
+      "CPE: cpe:/o:linux:kernel:6.6.87.2-microsoft-standard-wsl2",
+      "Found by VT: 1.3.6.1.4.1.25623.1.0.103429 (Operating System (OS) Detection (SNM ->P))",
+      "Concluded from SNMP sysDescr on port 161/udp: Linux 3261c2cf33a6 6.6.87.2-micros ->oft-standard-WSL2 #1 SMP PREEMPT_DYNAMIC Thu Jun 5 18:30:46 UTC 2025 x86_64"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [
+      "Details: OS Detection Consolidation and Reporting",
+      "OID:1.3.6.1.4.1.25623.1.0.105937",
+      "Version used: 2026-01-21T05:50:46Z"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": "general",
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [
+      "url: https://forum.greenbone.net/c/vulnerability-tests/7"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "IP Forwarding Enabled - Active Check",
+    "description": [
+      "Checks if the remote host has IP forwarding enabled.",
+      "Quality of Detection (QoD): 70%"
+    ],
+    "detection_result": [
+      "It was possible to route a TCP packet through the target host and received an an ->swer which means IP forwarding is enabled."
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [
+      "Sends a crafted Local Link Layer (LLL) frame and checks the response.",
+      "Details: IP Forwarding Enabled - Active Check",
+      "OID:1.3.6.1.4.1.25623.1.0.147205",
+      "Version used: 2021-12-03T08:27:06Z"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": "general",
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [
+      "cve: CVE-1999-0511"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Traceroute",
+    "description": [
+      "Collect information about the network route and network distance between the scanner host and the target host.",
+      "Quality of Detection (QoD): 80%"
+    ],
+    "detection_result": [
+      "Network route from scanner (172.30.0.2) to target (172.30.30.1):",
+      "172.30.0.2",
+      "172.30.30.1",
+      "Network distance between scanner and target: 2"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [
+      "For internal networks, the distances are usually small, often less than 4 hosts between scanner and target. For public targets the distance is greater and might be 10 hosts or more."
+    ],
+    "log_method": [
+      "A combination of the protocols ICMP and TCP is used to determine the route. This method is applicable for IPv4 only and it is also known as 'traceroute'.",
+      "Details: Traceroute",
+      "OID:1.3.6.1.4.1.25623.1.0.51662",
+      "Version used: 2022-10-17T11:13:19Z"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": "general",
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Hostname Determination Reporting",
+    "description": [
+      "The script reports information on how the hostname of the target was determined.",
+      "Quality of Detection (QoD): 80%"
+    ],
+    "detection_result": [
+      "Hostname determination for IP 172.30.30.1:",
+      "Hostname|Source",
+      "snmpd.trabalho_vulnnet|Reverse-DNS"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [
+      "Details: Hostname Determination Reporting",
+      "OID:1.3.6.1.4.1.25623.1.0.108449",
+      "Version used: 2022-07-27T10:11:28Z"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": "general",
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Unraid OS Detection Consolidation",
+    "description": [
+      "Consolidation of Unraid OS detections.",
+      "Quality of Detection (QoD): 80%"
+    ],
+    "detection_result": [
+      "Detected Unraid OS",
+      "Version: unknown",
+      "Location: /",
+      "CPE: cpe:/o:unraid:unraid",
+      "Detection methods:",
+      "SNMP on port 161/udp",
+      "SNMP banner: Linux 3261c2cf33a6 6.6.87.2-microsoft-standard-WSL2 #1 SMP PREEMP ->T_DYNAMIC Thu Jun 5 18:30:46 UTC 2025 x86_64"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [
+      "Details: Unraid OS Detection Consolidation",
+      "OID:1.3.6.1.4.1.25623.1.0.153874",
+      "Version used: 2025-01-31T05:37:27Z"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": "general",
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [
+      "url: https://unraid.net/"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "An SNMP Agent is running",
+    "description": [
+      "This script detects if SNMP is open and if it is possible to connect with the given credentials / community string from one of the following resources:",
+      "- SNMPv1/2 community string provided via the target conguration or via 'SNMP Authorization (OID: 1.3.6.1.4.1.25623.1.0.105076).'",
+      "- SNMPv1/2 community string detected by 'Check default community names of the SNMP Agent (OID: 1.3.6.1.4.1.25623.1.0.103914).'",
+      "- SNMPv3 credentials provided via the target conguration or via 'SNMP Authorization (OID: 1.3.6.1.4.1.25623.1.0.105076).'",
+      "Quality of Detection (QoD): 80%"
+    ],
+    "detection_result": [
+      "An SNMP server is running on this host.",
+      "The following SNMP versions are supported:",
+      "- SNMPv1",
+      "- SNMPv2c",
+      "- SNMPv3",
+      "Additional info:",
+      "- SNMPv1: It was possible to log in using the community string 'public' detected -> by \"Check default community names of the SNMP Agent (OID: 1.3.6.1.4.1.25623.1 ->.0.103914)\".",
+      "- SNMPv2c: It was possible to log in using the community string 'public' detecte ->d by \"Check default community names of the SNMP Agent (OID: 1.3.6.1.4.1.25623. ->1.0.103914)\".",
+      "- SNMPv3: It was possible to determine that a service is running by using random -> credentials and based on the following response: Unknown user name"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [
+      "Details: An SNMP Agent is running",
+      "OID:1.3.6.1.4.1.25623.1.0.10265",
+      "Version used: 2023-08-10T05:05:53Z"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": 161,
+    "protocol": "udp",
+    "severity": "LOG",
+    "references": [],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "SNMP Information Detection and Reporting",
+    "description": [
+      "SNMP based detection and reporting of generic information like e.g. the System Description/sysDescr (OID: 1.3.6.1.2.1.1.1.0) gathered from the remote device.",
+      "Quality of Detection (QoD): 80%"
+    ],
+    "detection_result": [
+      "The following SNMP information was extracted from the remote device:",
+      "System Description (OID: 1.3.6.1.2.1.1.1.0) : Linux 3261c2cf33a6 6. ->6.87.2-microsoft-standard-WSL2 #1 SMP PREEMPT_DYNAMIC Thu Jun 5 18:30:46 UTC ->2025 x86_64",
+      "System Name (OID: 1.3.6.1.2.1.1.5.0) : 3261c2cf33a6",
+      "System Location (OID: 1.3.6.1.2.1.1.6.0) : Unknown (edit /et ->c/snmp/snmpd.conf)",
+      "System ObjectID (OID: 1.3.6.1.2.1.1.2.0) : iso.3.6.1.4.1.8072.3. ->2.10"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [
+      "Details: SNMP Information Detection and Reporting",
+      "OID:1.3.6.1.4.1.25623.1.0.103416",
+      "Version used: 2025-06-27T05:41:33Z"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": 161,
+    "protocol": "udp",
+    "severity": "LOG",
+    "references": [],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "CPE Inventory",
+    "description": [
+      "This routine uses information collected by other routines about CPE identities of operating systems, services and applications detected during the scan.",
+      "Note: Some CPEs for specic products might show up twice or more in the output. Background: After a product got renamed or a specic vendor was acquired by another one it might happen that a product gets a new CPE within the NVD CPE Dictionary but older entries are kept with the older CPE.",
+      "Quality of Detection (QoD): 80%"
+    ],
+    "detection_result": [
+      "172.30.30.1|cpe:/o:unraid:unraid"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [
+      "Details: CPE Inventory",
+      "OID:1.3.6.1.4.1.25623.1.0.810002",
+      "Version used: 2022-07-27T10:11:28Z"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": "general",
+    "protocol": "CPE-T",
+    "severity": "LOG",
+    "references": [
+      "url: https://nvd.nist.gov/products/cpe"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  }
+]

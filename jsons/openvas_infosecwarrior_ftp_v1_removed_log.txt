@@ -1,0 +1,92 @@
+# LOG DE VULNERABILIDADES REMOVIDAS (sem descrição válida)
+
+Removida 1:
+{
+  "Name": "OpenBSD OpenSSH < 9.1 Multiple Vulnerabilities",
+  "description": [],
+  "detection_result": [],
+  "detection_method": [],
+  "product_detection_result": [
+    "cpe:/a:openbsd:openssh:8.4p1",
+    "Detected by OpenSSH Detection Consolidation (OID: 1.3.6.1.4.1.25623.1.0.108577)"
+  ],
+  "impact": [],
+  "solution": [],
+  "insight": [],
+  "log_method": [],
+  "cvss": [
+    "4.0"
+  ],
+  "port": 22,
+  "protocol": "tcp",
+  "severity": "MEDIUM",
+  "references": [],
+  "plugin": null,
+  "plugin_details": {},
+  "instances": [],
+  "source": "OPENVAS"
+}
+---
+Removida 2:
+{
+  "Name": "OpenVAS / Greenbone Vulnerability Manager Detection",
+  "description": [],
+  "detection_result": [],
+  "detection_method": [],
+  "product_detection_result": [
+    "Product: cpe:/a:openbsd:openssh:8.4p1",
+    "Method: OpenSSH Detection Consolidation",
+    "OID: 1.3.6.1.4.1.25623.1.0.108577)"
+  ],
+  "impact": [],
+  "solution": [],
+  "insight": [],
+  "log_method": [],
+  "cvss": [
+    "0.0"
+  ],
+  "port": 22,
+  "protocol": "tcp",
+  "severity": "LOG",
+  "references": [
+    "cve: CVE-2025-61984",
+    "cve: CVE-2025-61985",
+    "url: https://www.openssh.com/txt/release-10.1",
+    "url: https://www.openssh.com/security.html",
+    "url: https://www.openwall.com/lists/oss-security/2025/10/06/1",
+    "url: https://dgl.cx/2025/10/bash-a-newline-ssh-proxycommand-cve-2025-61984#_",
+    "cert-bund: WID-SEC-2025-2212",
+    "dfn-cert: DFN-CERT-2026-0218",
+    "dfn-cert: DFN-CERT-2025-3384",
+    "dfn-cert: DFN-CERT-2025-2768"
+  ],
+  "plugin": null,
+  "plugin_details": {},
+  "instances": [],
+  "source": "OPENVAS"
+}
+---
+Removida 3:
+{
+  "Name": "TCP Timestamps Information Disclosure",
+  "description": [],
+  "detection_result": [],
+  "detection_method": [],
+  "product_detection_result": [],
+  "impact": [],
+  "solution": [],
+  "insight": [],
+  "log_method": [],
+  "cvss": [
+    "2.6"
+  ],
+  "port": 80,
+  "protocol": "tcp",
+  "severity": "LOW",
+  "references": [],
+  "plugin": null,
+  "plugin_details": {},
+  "instances": [],
+  "source": "OPENVAS"
+}
+---

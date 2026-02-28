@@ -1,0 +1,298 @@
+# LOG DE DEDUPLICAÇÃO DE VULNERABILIDADES
+Este arquivo lista todas as vulnerabilidades consideradas duplicatas e agrupadas durante o processo.
+Cada grupo é identificado por uma chave composta (ex: nome, porta, protocolo).
+Apenas a vulnerabilidade mais completa e com descrição válida foi mantida em cada grupo.
+
+Total de grupos de duplicatas: 48
+Total de vulnerabilidades agrupadas (removidas): 16
+
+Grupo 1: Chave = ('OpenSSH < 7.2 X11 Forwarding Security Bypass Vulnerability - Linux', 22, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: OpenSSH < 7.2 X11 Forwarding Security Bypass Vulnerability - Linux
+       Porta: 22 | Protocolo: tcp | Severidade: Critical
+       Descrição: OpenSSH is prone to a security bypass vulnerability. Quality of Detection (QoD): 30%
+
+Grupo 2: Chave = ('SSH Brute Force Logins With Default Credentials Reporting', 22, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: SSH Brute Force Logins With Default Credentials Reporting
+       Porta: 22 | Protocolo: tcp | Severidade: Critical
+       Descrição: It was possible to login into the remote SSH server using default credentials.
+
+Grupo 3: Chave = ('OpenBSD OpenSSH < 9.3p2 RCE Vulnerability', 22, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: OpenBSD OpenSSH < 9.3p2 RCE Vulnerability
+       Porta: 22 | Protocolo: tcp | Severidade: Critical
+       Descrição: OpenBSD OpenSSH is prone to a remote code execution (RCE) vulnerability in OpenSSH's forwarded ssh-agent. Quality of Detection (QoD): 30%
+
+Grupo 4: Chave = ('OpenSSH Multiple Vulnerabilities', 22, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: OpenSSH Multiple Vulnerabilities
+       Porta: 22 | Protocolo: tcp | Severidade: HIGH
+       Descrição: OpenSSH is prone to multiple vulnerabilities.
+
+Grupo 5: Chave = ('OpenSSH Client Information Leak', 22, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: OpenSSH Client Information Leak
+       Porta: 22 | Protocolo: tcp | Severidade: HIGH
+       Descrição: The OpenSSH client code between 5.4 and 7.1p1 contains experimental support for resuming SSH-connections (roaming). The matching server code has never been shipped, but the client code was enabled by ...
+
+Grupo 6: Chave = ('OpenSSH < 7.4 Multiple Vulnerabilities (Jan 2017) - Linux', 22, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: OpenSSH < 7.4 Multiple Vulnerabilities (Jan 2017) - Linux
+       Porta: 22 | Protocolo: tcp | Severidade: HIGH
+       Descrição: OpenSSH is prone to multiple vulnerabilities. Quality of Detection (QoD): 30%
+
+Grupo 7: Chave = ('OpenSSH <= 7.2p2 Privilege Escalation Vulnerability (May 2016)', 22, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: OpenSSH <= 7.2p2 Privilege Escalation Vulnerability (May 2016)
+       Porta: 22 | Protocolo: tcp | Severidade: HIGH
+       Descrição: OpenSSH is prone to a privilege escalation vulnerability.
+
+Grupo 8: Chave = ('OpenSSH < 7.3 DoS and User Enumeration Vulnerabilities - Linux', 22, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: OpenSSH < 7.3 DoS and User Enumeration Vulnerabilities - Linux
+       Porta: 22 | Protocolo: tcp | Severidade: HIGH
+       Descrição: OpenSSH is prone to denial of service (DoS) and user enumeration vulnerabilities. Quality of Detection (QoD): 30%
+
+Grupo 9: Chave = ('Die-Hellman Ephemeral Key Exchange DoS Vulnerability (SSH, D(HE)ater)', 22, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Die-Hellman Ephemeral Key Exchange DoS Vulnerability (SSH, D(HE)ater)
+       Porta: 22 | Protocolo: tcp | Severidade: MEDIUM
+       Descrição: The remote SSH server is supporting Die-Hellman ephemeral (DHE) Key Exchange (KEX) algorithms and thus could be prone to a denial of service (DoS) vulnerability. Quality of Detection (QoD): 30%
+
+Grupo 10: Chave = ('OpenBSD OpenSSH <= 8.6 Command Injection Vulnerability', 22, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: OpenBSD OpenSSH <= 8.6 Command Injection Vulnerability
+       Porta: 22 | Protocolo: tcp | Severidade: HIGH
+       Descrição: OpenBSD OpenSSH is prone to a command injection vulnerability.
+
+Grupo 11: Chave = ('OpenSSH 6.2 <= 8.7 Privilege Escalation Vulnerability', 22, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: OpenSSH 6.2 <= 8.7 Privilege Escalation Vulnerability
+       Porta: 22 | Protocolo: tcp | Severidade: HIGH
+       Descrição: OpenSSH is prone to a privilege scalation vulnerability in certain congurations.
+
+Grupo 12: Chave = ('OpenBSD OpenSSH <= 7.9 Multiple Vulnerabilities', 22, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: OpenBSD OpenSSH <= 7.9 Multiple Vulnerabilities
+       Porta: 22 | Protocolo: tcp | Severidade: MEDIUM
+       Descrição: OpenBSD OpenSSH is prone to multiple vulnerabilities.
+
+Grupo 13: Chave = ('OpenBSD OpenSSH < 9.6 Multiple Vulnerabilities (Terrapin Attack)', 22, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: OpenBSD OpenSSH < 9.6 Multiple Vulnerabilities (Terrapin Attack)
+       Porta: 22 | Protocolo: tcp | Severidade: HIGH
+       Descrição: OpenBSD OpenSSH is prone to multiple vulnerabilities. Quality of Detection (QoD): 30%
+
+Grupo 14: Chave = ('OpenSSH <= 7.2p1 Xauth Command Injection Vulnerability', 22, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: OpenSSH <= 7.2p1 Xauth Command Injection Vulnerability
+       Porta: 22 | Protocolo: tcp | Severidade: MEDIUM
+       Descrição: OpenSSH is prone to an xauth command injection vulnerability. Quality of Detection (QoD): 30%
+
+Grupo 15: Chave = ('Prex Truncation Attacks in SSH Specication (Terrapin Attack)', 22, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Prex Truncation Attacks in SSH Specication (Terrapin Attack)
+       Porta: 22 | Protocolo: tcp | Severidade: MEDIUM
+       Descrição: The remote SSH server is supporting an specic encryption algorithm or MAC. Parts of their SSH specication are vulnerable to a novel prex truncation attack (a.k.a. Terrapin attack). Quality of Detectio...
+
+Grupo 16: Chave = ('OpenBSD OpenSSH Information Disclosure Vulnerability (CVE-2020-14145)', 22, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: OpenBSD OpenSSH Information Disclosure Vulnerability (CVE-2020-14145)
+       Porta: 22 | Protocolo: tcp | Severidade: MEDIUM
+       Descrição: OpenBSD OpenSSH is prone to an information disclosure vulnerability. Quality of Detection (QoD): 30%
+
+Grupo 17: Chave = ("OpenSSH 'auth2-gss.c' User Enumeration Vulnerability - Linux", 22, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: OpenSSH 'auth2-gss.c' User Enumeration Vulnerability - Linux
+       Porta: 22 | Protocolo: tcp | Severidade: MEDIUM
+       Descrição: OpenSSH is prone to a user enumeration vulnerability.   Quality of Detection (QoD): 30%
+
+Grupo 18: Chave = ('OpenSSH < 7.1p2 DoS Vulnerability (Jan 2016)', 22, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: OpenSSH < 7.1p2 DoS Vulnerability (Jan 2016)
+       Porta: 22 | Protocolo: tcp | Severidade: MEDIUM
+       Descrição: OpenSSH is prone to a denial of service (DoS) vulnerability.
+
+Grupo 19: Chave = ('OpenSSH Information Disclosure Vulnerability (CVE-2016-20012)', 22, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: OpenSSH Information Disclosure Vulnerability (CVE-2016-20012)
+       Porta: 22 | Protocolo: tcp | Severidade: MEDIUM
+       Descrição: OpenBSD OpenSSH is prone to an information disclosure vulnerability.
+
+Grupo 20: Chave = ('Weak Host Key Algorithm(s) (SSH)', 22, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Weak Host Key Algorithm(s) (SSH)
+       Porta: 22 | Protocolo: tcp | Severidade: MEDIUM
+       Descrição: The remote SSH server is congured to allow / support weak host key algorithm(s).
+
+Grupo 21: Chave = ('Weak Key Exchange (KEX) Algorithm(s) Supported (SSH)', 22, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Weak Key Exchange (KEX) Algorithm(s) Supported (SSH)
+       Porta: 22 | Protocolo: tcp | Severidade: MEDIUM
+       Descrição: The remote SSH server is congured to allow / support weak key exchange (KEX) algorithm(s). Quality of Detection (QoD): 80%
+
+Grupo 22: Chave = ("OpenSSH < 7.6 'sftp-server' Security Bypass Vulnerability - Linux", 22, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: OpenSSH < 7.6 'sftp-server' Security Bypass Vulnerability - Linux
+       Porta: 22 | Protocolo: tcp | Severidade: MEDIUM
+       Descrição: OpenSSH is prone to a security bypass vulnerability.
+
+Grupo 23: Chave = ('OpenSSH < 7.8 User Enumeration Vulnerability - Linux', 22, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: OpenSSH < 7.8 User Enumeration Vulnerability - Linux
+       Porta: 22 | Protocolo: tcp | Severidade: MEDIUM
+       Descrição: OpenSSH is prone to a user enumeration vulnerability.
+
+Grupo 24: Chave = ('OpenBSD OpenSSH < 9.3 Unspecied Vulnerability', 22, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: OpenBSD OpenSSH < 9.3 Unspecied Vulnerability
+       Porta: 22 | Protocolo: tcp | Severidade: MEDIUM
+       Descrição: OpenBSD OpenSSH is prone to an unspecied vulnerability.
+
+Grupo 25: Chave = ('OpenBSD OpenSSH < 9.2 Unspecied Vulnerability', 22, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: OpenBSD OpenSSH < 9.2 Unspecied Vulnerability
+       Porta: 22 | Protocolo: tcp | Severidade: MEDIUM
+       Descrição: OpenBSD OpenSSH is prone to an unspecied vulnerability. Quality of Detection (QoD): 30%
+
+Grupo 26: Chave = ('Weak Encryption Algorithm(s) Supported (SSH)', 22, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Weak Encryption Algorithm(s) Supported (SSH)
+       Porta: 22 | Protocolo: tcp | Severidade: MEDIUM
+       Descrição: The remote SSH server is congured to allow / support weak encryption algorithm(s). Quality of Detection (QoD): 80%
+
+Grupo 27: Chave = ('OpenSSH Security Bypass Vulnerability', 22, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: OpenSSH Security Bypass Vulnerability
+       Porta: 22 | Protocolo: tcp | Severidade: MEDIUM
+       Descrição: OpenSSH is prone to a security bypass vulnerability. Quality of Detection (QoD): 30%
+
+Grupo 28: Chave = ('OpenBSD OpenSSH < 9.1 Multiple Vulnerabilities', 22, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: OpenBSD OpenSSH < 9.1 Multiple Vulnerabilities
+       Porta: 22 | Protocolo: tcp | Severidade: MEDIUM
+       Descrição: OpenBSD OpenSSH is prone to multiple vulnerabilities.
+
+Grupo 29: Chave = ('Weak MAC Algorithm(s) Supported (SSH)', 22, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Weak MAC Algorithm(s) Supported (SSH)
+       Porta: 22 | Protocolo: tcp | Severidade: LOW
+       Descrição: The remote SSH server is congured to allow / support weak MAC algorithm(s). Quality of Detection (QoD): 80%
+
+Grupo 30: Chave = ('OpenBSD OpenSSH < 10.1 Multiple Vulnerabilities', 22, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: OpenBSD OpenSSH < 10.1 Multiple Vulnerabilities
+       Porta: 22 | Protocolo: tcp | Severidade: LOW
+       Descrição: OpenBSD OpenSSH is prone to multiple vulnerabilities.
+
+Grupo 31: Chave = ('ICMP Timestamp Reply Information Disclosure', 22, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: ICMP Timestamp Reply Information Disclosure
+       Porta: 22 | Protocolo: tcp | Severidade: LOW
+       Descrição: The remote host responded to an ICMP timestamp request.
+
+Grupo 32: Chave = ('ICMP Timestamp Reply Information Disclosure', 'general', 'icmp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: ICMP Timestamp Reply Information Disclosure
+       Porta: general | Protocolo: icmp | Severidade: LOW
+       Descrição: The remote host responded to an ICMP timestamp request.
+
+Grupo 33: Chave = ('TCP Timestamps Information Disclosure', 'general', 'icmp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: TCP Timestamps Information Disclosure
+       Porta: general | Protocolo: icmp | Severidade: LOW
+       Descrição: The remote host implements TCP timestamps and therefore allows to compute the uptime.
+
+Grupo 34: Chave = ('TCP Timestamps Information Disclosure', 'general', 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: TCP Timestamps Information Disclosure
+       Porta: general | Protocolo: tcp | Severidade: LOW
+       Descrição: The remote host implements TCP timestamps and therefore allows to compute the uptime.
+
+Grupo 35: Chave = ('CPE Inventory', 'general', 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: CPE Inventory
+       Porta: general | Protocolo: tcp | Severidade: LOG
+       Descrição: This routine uses information collected by other routines about CPE identities of operating systems, services and applications detected during the scan. Note: Some CPEs for specic products might show ...
+
+Grupo 36: Chave = ('CPE Inventory', 'general', 'CPE-T')
+  Total de duplicatas neste grupo: 1
+    1. Nome: CPE Inventory
+       Porta: general | Protocolo: CPE-T | Severidade: LOG
+       Descrição: This routine uses information collected by other routines about CPE identities of operating systems, services and applications detected during the scan. Note: Some CPEs for specic products might show ...
+
+Grupo 37: Chave = ('SSH Protocol Algorithms Supported', 22, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: SSH Protocol Algorithms Supported
+       Porta: 22 | Protocolo: tcp | Severidade: LOG
+       Descrição: This script detects which algorithms are supported by the remote SSH service.
+
+Grupo 38: Chave = ('SSH Protocol Versions Supported', 22, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: SSH Protocol Versions Supported
+       Porta: 22 | Protocolo: tcp | Severidade: LOG
+       Descrição: Identification of SSH protocol versions supported by the remote SSH Server. Also reads the corresponding fingerprints from the service.
+
+Grupo 39: Chave = ('SSH Server type and version', 22, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: SSH Server type and version
+       Porta: 22 | Protocolo: tcp | Severidade: LOG
+       Descrição: This detects the SSH Server's type and version by connecting to the server and processing the buffer received.
+
+Grupo 40: Chave = (('Name', 'Services'), ('cvss', ('0.0',)), ('description', ('This plugin performs service detection.',)), ('detection_method', ()), ('detection_result', ('An ssh server is running on this port',)), ('impact', ()), ('insight', ('This plugin attempts to guess which service is running on the remote port(s). For instance, it searches for a web server which could listen on another port than 80 or 443 and makes this information available for other check routines.',)), ('instances', ()), ('log_method', ()), ('plugin', None), ('plugin_details', ()), ('port', 22), ('product_detection_result', ()), ('protocol', 'tcp'), ('references', ()), ('severity', 'LOG'), ('solution', ()), ('source', 'OPENVAS'))
+  Total de duplicatas neste grupo: 1
+    1. Nome: Services
+       Porta: 22 | Protocolo: tcp | Severidade: LOG
+       Descrição: This plugin performs service detection.
+
+Grupo 41: Chave = (('Name', 'Services'), ('cvss', ('0.0',)), ('description', ('This plugin performs service detection.', 'Quality of Detection (QoD): 80%')), ('detection_method', ()), ('detection_result', ('An ssh server is running on this port',)), ('impact', ()), ('insight', ('This plugin attempts to guess which service is running on the remote port(s). For instance, it searches for a web server which could listen on another port than 80 or 443 and makes this information available for other check routines.',)), ('instances', ()), ('log_method', ('Details: Services', 'OID:1.3.6.1.4.1.25623.1.0.10330', 'Version used: 2025-03-05T05:38:53Z')), ('plugin', None), ('plugin_details', ()), ('port', 22), ('product_detection_result', ()), ('protocol', 'tcp'), ('references', ()), ('severity', 'LOG'), ('solution', ()), ('source', 'OPENVAS'))
+  Total de duplicatas neste grupo: 1
+    1. Nome: Services
+       Porta: 22 | Protocolo: tcp | Severidade: LOG
+       Descrição: This plugin performs service detection. Quality of Detection (QoD): 80%
+
+Grupo 42: Chave = ('PQC Key Exchange (KEX) Algorithm(s) Missing (SSH)', 22, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: PQC Key Exchange (KEX) Algorithm(s) Missing (SSH)
+       Porta: 22 | Protocolo: tcp | Severidade: LOG
+       Descrição: The remote SSH server is congured to NOT allow / support at least ONE Post-Quantum Cryptography (PQC) key exchange (KEX) algorithm(s). Quality of Detection (QoD): 80%
+
+Grupo 43: Chave = ('OS Detection Consolidation and Reporting', 22, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: OS Detection Consolidation and Reporting
+       Porta: 22 | Protocolo: tcp | Severidade: LOG
+       Descrição: This script consolidates the OS information detected by several VTs and tries to nd the best matching OS. Furthermore it reports all previously collected information leading to this best matching OS. ...
+
+Grupo 44: Chave = ('OS Detection Consolidation and Reporting', 'general', 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: OS Detection Consolidation and Reporting
+       Porta: general | Protocolo: tcp | Severidade: LOG
+       Descrição: This script consolidates the OS information detected by several VTs and tries to nd the best matching OS. Furthermore it reports all previously collected information leading to this best matching OS. ...
+
+Grupo 45: Chave = ('OpenSSH Detection Consolidation', 'general', 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: OpenSSH Detection Consolidation
+       Porta: general | Protocolo: tcp | Severidade: LOG
+       Descrição: Consolidation of OpenSSH detections.
+
+Grupo 46: Chave = ('IP Forwarding Enabled - Active Check', 'general', 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: IP Forwarding Enabled - Active Check
+       Porta: general | Protocolo: tcp | Severidade: LOG
+       Descrição: Checks if the remote host has IP forwarding enabled.
+
+Grupo 47: Chave = ('Hostname Determination Reporting', 'general', 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Hostname Determination Reporting
+       Porta: general | Protocolo: tcp | Severidade: LOG
+       Descrição: The script reports information on how the hostname of the target was determined.
+
+Grupo 48: Chave = ('Traceroute', 'general', 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Traceroute
+       Porta: general | Protocolo: tcp | Severidade: LOG
+       Descrição: Collect information about the network route and network distance between the scanner host and the target host.
+Resumo final:
+Total de grupos de duplicatas: 48
+Total de vulnerabilidades agrupadas (removidas): 16

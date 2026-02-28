@@ -1,0 +1,262 @@
+# LOG DE DEDUPLICAÇÃO DE VULNERABILIDADES
+Este arquivo lista todas as vulnerabilidades consideradas duplicatas e agrupadas durante o processo.
+Cada grupo é identificado por uma chave composta (ex: nome, porta, protocolo).
+Apenas a vulnerabilidade mais completa e com descrição válida foi mantida em cada grupo.
+
+Total de grupos de duplicatas: 42
+Total de vulnerabilidades agrupadas (removidas): 24
+
+Grupo 1: Chave = ('phpLDAPadmin < 1.2.4 XSS Vulnerability - Linux', 443, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: phpLDAPadmin < 1.2.4 XSS Vulnerability - Linux
+       Porta: 443 | Protocolo: tcp | Severidade: Medium
+       Descrição: phpLDAPadmin is prone to a cross-site scripting (XSS) vulnerability.
+
+Grupo 2: Chave = ('SSL/TLS: BREACH attack against HTTP compression', 443, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: SSL/TLS: BREACH attack against HTTP compression
+       Porta: 443 | Protocolo: tcp | Severidade: Medium
+       Descrição: SSL/TLS connections are vulnerable to the 'BREACH' (Browser Reconnaissance & Exltration via Adaptive Compression of Hypertext) attack.
+
+Grupo 3: Chave = ("Missing 'Secure' Cookie Attribute (HTTP)", 443, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Missing 'Secure' Cookie Attribute (HTTP)
+       Porta: 443 | Protocolo: tcp | Severidade: Medium
+       Descrição: The remote HTTP web server / application is missing to set the 'Secure' cookie attribute for one or more sent HTTP cookie.
+
+Grupo 4: Chave = ('SSL/TLS: Certicate In Chain Expired', 443, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: SSL/TLS: Certicate In Chain Expired
+       Porta: 443 | Protocolo: tcp | Severidade: MEDIUM
+       Descrição: The remote service is using a SSL/TLS certicate chain where one or multiple CA certicates have expired.
+
+Grupo 5: Chave = ("Missing 'HttpOnly' Cookie Attribute (HTTP)", 443, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Missing 'HttpOnly' Cookie Attribute (HTTP)
+       Porta: 443 | Protocolo: tcp | Severidade: MEDIUM
+       Descrição: The remote HTTP web server / application is missing to set the 'HttpOnly' cookie attribute for one or more sent HTTP cookie.
+
+Grupo 6: Chave = ('phpLDAPadmin < 1.2.5 Multiple XSS Vulnerabilities - Linux', 443, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: phpLDAPadmin < 1.2.5 Multiple XSS Vulnerabilities - Linux
+       Porta: 443 | Protocolo: tcp | Severidade: Medium
+       Descrição: phpLDAPadmin is prone to multiple cross-site scripting (XSS) vulnerabilities.
+
+Grupo 7: Chave = ('TCP Timestamps Information Disclosure', 443, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: TCP Timestamps Information Disclosure
+       Porta: 443 | Protocolo: tcp | Severidade: Medium
+       Descrição: The remote host implements TCP timestamps and therefore allows to compute the uptime.
+
+Grupo 8: Chave = ('TCP Timestamps Information Disclosure', 'general', 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: TCP Timestamps Information Disclosure
+       Porta: general | Protocolo: tcp | Severidade: LOW
+       Descrição: The remote host implements TCP timestamps and therefore allows to compute the uptime. Quality of Detection (QoD): 80%
+
+Grupo 9: Chave = ('ICMP Timestamp Reply Information Disclosure', 'general', 'icmp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: ICMP Timestamp Reply Information Disclosure
+       Porta: general | Protocolo: icmp | Severidade: LOW
+       Descrição: The remote host responded to an ICMP timestamp request. Quality of Detection (QoD): 80%
+
+Grupo 10: Chave = ('HTTP Server type and version', 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: HTTP Server type and version
+       Porta: 80 | Protocolo: tcp | Severidade: LOG
+       Descrição: This script detects and reports the HTTP Server's banner which might provide the type and version of it.
+
+Grupo 11: Chave = ('HTTP Server Banner Enumeration', 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: HTTP Server Banner Enumeration
+       Porta: 80 | Protocolo: tcp | Severidade: LOG
+       Descrição: This script tries to detect / enumerate different HTTP server banner (e.g. from a frontend, backend or proxy server) by sending various different HTTP requests (valid and invalid ones).
+
+Grupo 12: Chave = ('HTTP Security Headers Detection', 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: HTTP Security Headers Detection
+       Porta: 80 | Protocolo: tcp | Severidade: LOG
+       Descrição: All known security headers are being checked on the remote web server. On completion a report will hand back whether a specic security header has been implemented (including its value and if it is dep...
+
+Grupo 13: Chave = ('Web Application Scanning Consolidation / Info Reporting', 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Web Application Scanning Consolidation / Info Reporting
+       Porta: 80 | Protocolo: tcp | Severidade: LOG
+       Descrição: The script consolidates and reports various information for web application (formerly called 'CGI') scanning. This information is based on the following scripts / settings: - HTTP-Version Detection (O...
+
+Grupo 14: Chave = (('Name', 'Services'), ('cvss', ('0.0',)), ('description', ('This plugin performs service detection.',)), ('detection_method', ()), ('detection_result', ('A web server is running on this port',)), ('impact', ()), ('insight', ('This plugin attempts to guess which service is running on the remote port(s). For instance, it searches for a web server which could listen on another port than 80 or 443 and makes this information available for other check routines.',)), ('instances', ()), ('log_method', ('Details: Services', 'OID:1.3.6.1.4.1.25623.1.0.10330', 'Version used: 2025-03-05T05:38:53Z')), ('plugin', None), ('plugin_details', ()), ('port', 80), ('product_detection_result', ()), ('protocol', 'tcp'), ('references', ()), ('severity', 'LOG'), ('solution', ()), ('source', 'OPENVAS'))
+  Total de duplicatas neste grupo: 1
+    1. Nome: Services
+       Porta: 80 | Protocolo: tcp | Severidade: LOG
+       Descrição: This plugin performs service detection.
+
+Grupo 15: Chave = ('SSL/TLS: Report Medium Cipher Suites', 443, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: SSL/TLS: Report Medium Cipher Suites
+       Porta: 443 | Protocolo: tcp | Severidade: LOG
+       Descrição: This routine reports all Medium SSL/TLS cipher suites accepted by a service.
+
+Grupo 16: Chave = ("SSL/TLS: 'includeSubDomains' Missing in HSTS Header", 443, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: SSL/TLS: 'includeSubDomains' Missing in HSTS Header
+       Porta: 443 | Protocolo: tcp | Severidade: LOG
+       Descrição: The remote web server is missing the 'includeSubDomains' attribute in the HTTP Strict Transport Security (HSTS) header.
+
+Grupo 17: Chave = ('SSL/TLS: Untrusted Certicate Detection', 443, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: SSL/TLS: Untrusted Certicate Detection
+       Porta: 443 | Protocolo: tcp | Severidade: LOG
+       Descrição: Checks and reports if a remote SSL/TLS service is using a certicate which is untrusted / the verication against the system wide trust store has failed.
+
+Grupo 18: Chave = ('SSL/TLS: Certicate - Subject Common Name Does Not Match Server FQDN', 443, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: SSL/TLS: Certicate - Subject Common Name Does Not Match Server FQDN
+       Porta: 443 | Protocolo: tcp | Severidade: LOG
+       Descrição: The SSL/TLS certicate contains a common name (CN) that does not match the hostname.
+
+Grupo 19: Chave = ('SSL/TLS: HTTP Strict Transport Security (HSTS) Detection', 443, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: SSL/TLS: HTTP Strict Transport Security (HSTS) Detection
+       Porta: 443 | Protocolo: tcp | Severidade: LOG
+       Descrição: Checks if the remote web server has HTTP Strict Transport Security (HSTS) enabled.
+
+Grupo 20: Chave = ('SSL/TLS: HTTP Public Key Pinning (HPKP) Missing', 443, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: SSL/TLS: HTTP Public Key Pinning (HPKP) Missing
+       Porta: 443 | Protocolo: tcp | Severidade: LOG
+       Descrição: The remote web server is not enforcing HTTP Public Key Pinning (HPKP). Note: Most major browsers have dropped / deprecated support for this header in 2020.
+
+Grupo 21: Chave = ('SSL/TLS: Report Perfect Forward Secrecy (PFS) Cipher Suites', 443, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: SSL/TLS: Report Perfect Forward Secrecy (PFS) Cipher Suites
+       Porta: 443 | Protocolo: tcp | Severidade: LOG
+       Descrição: This routine reports all SSL/TLS cipher suites accepted by a service which are supporting Perfect Forward Secrecy (PFS).
+
+Grupo 22: Chave = ('SSL/TLS: Report Non Weak Cipher Suites', 443, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: SSL/TLS: Report Non Weak Cipher Suites
+       Porta: 443 | Protocolo: tcp | Severidade: LOG
+       Descrição: This routine reports all Non Weak SSL/TLS cipher suites accepted by a service.
+
+Grupo 23: Chave = ('SSL/TLS: Report Supported Cipher Suites', 443, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: SSL/TLS: Report Supported Cipher Suites
+       Porta: 443 | Protocolo: tcp | Severidade: LOG
+       Descrição: This routine reports all SSL/TLS cipher suites accepted by a service.
+
+Grupo 24: Chave = ('SSL/TLS: Safe/Secure Renegotiation Support Status', 443, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: SSL/TLS: Safe/Secure Renegotiation Support Status
+       Porta: 443 | Protocolo: tcp | Severidade: LOG
+       Descrição: Checks and reports if a remote SSL/TLS service supports safe/secure renegotiation.
+
+Grupo 25: Chave = ("SSL/TLS: 'preload' Missing in HSTS Header", 443, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: SSL/TLS: 'preload' Missing in HSTS Header
+       Porta: 443 | Protocolo: tcp | Severidade: LOG
+       Descrição: The remote web server is missing the 'preload' attribute in the HTTP Strict Transport Security (HSTS) header.
+
+Grupo 26: Chave = ('SSL/TLS: NPN / ALPN Extension and Protocol Support Detection', 443, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: SSL/TLS: NPN / ALPN Extension and Protocol Support Detection
+       Porta: 443 | Protocolo: tcp | Severidade: LOG
+       Descrição: This routine identies services supporting the following extensions to TLS: - Application-Layer Protocol Negotiation (ALPN)  - Next Protocol Negotiation (NPN). Based on the availability of this extensi...
+
+Grupo 27: Chave = ('HTTP Server Banner Enumeration', 443, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: HTTP Server Banner Enumeration
+       Porta: 443 | Protocolo: tcp | Severidade: LOG
+       Descrição: This script tries to detect / enumerate dierent HTTP server banner (e.g. from a frontend, backend or proxy server) by sending various dierent HTTP requests (valid and invalid ones).
+
+Grupo 28: Chave = ('HTTP Server type and version', 443, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: HTTP Server type and version
+       Porta: 443 | Protocolo: tcp | Severidade: LOG
+       Descrição: This script detects and reports the HTTP Server's banner which might provide the type and version of it.
+
+Grupo 29: Chave = ('HTTP Security Headers Detection', 443, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: HTTP Security Headers Detection
+       Porta: 443 | Protocolo: tcp | Severidade: LOG
+       Descrição: All known security headers are being checked on the remote web server. On completion a report will hand back whether a specic security header has been implemented (including its value and if it is dep...
+
+Grupo 30: Chave = ('Web Application Scanning Consolidation / Info Reporting', 443, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Web Application Scanning Consolidation / Info Reporting
+       Porta: 443 | Protocolo: tcp | Severidade: LOG
+       Descrição: The script consolidates and reports various information for web application (formerly called 'CGI') scanning. This information is based on the following scripts / settings: - HTTP-Version Detection (O...
+
+Grupo 31: Chave = (('Name', 'Services'), ('cvss', ('0.0',)), ('description', ('This plugin performs service detection.',)), ('detection_method', ()), ('detection_result', ('A TLScustom server answered on this port',)), ('impact', ()), ('insight', ('This plugin attempts to guess which service is running on the remote port(s). For instance, it searches for a web server which could listen on another port than 80 or 443 and makes this information available for other check routines.',)), ('instances', ()), ('log_method', ('Details: Services', 'OID:1.3.6.1.4.1.25623.1.0.10330', 'Version used: 2025-03-05T05:38:53Z')), ('plugin', None), ('plugin_details', ()), ('port', 443), ('product_detection_result', ()), ('protocol', 'tcp'), ('references', ()), ('severity', 'LOG'), ('solution', ()), ('source', 'OPENVAS'))
+  Total de duplicatas neste grupo: 1
+    1. Nome: Services
+       Porta: 443 | Protocolo: tcp | Severidade: LOG
+       Descrição: This plugin performs service detection.
+
+Grupo 32: Chave = (('Name', 'Services'), ('cvss', ('0.0',)), ('description', ('This plugin performs service detection.',)), ('detection_method', ()), ('detection_result', ('A web server is running on this port through SSL',)), ('impact', ()), ('insight', ('This plugin attempts to guess which service is running on the remote port(s). For instance, it searches for a web server which could listen on another port than 80 or 443 and makes this information available for other check routines.',)), ('instances', ()), ('log_method', ('Details: Services', 'OID:1.3.6.1.4.1.25623.1.0.10330', 'Version used: 2025-03-05T05:38:53Z')), ('plugin', None), ('plugin_details', ()), ('port', 443), ('product_detection_result', ()), ('protocol', 'tcp'), ('references', ()), ('severity', 'LOG'), ('solution', ()), ('source', 'OPENVAS'))
+  Total de duplicatas neste grupo: 1
+    1. Nome: Services
+       Porta: 443 | Protocolo: tcp | Severidade: LOG
+       Descrição: This plugin performs service detection.
+
+Grupo 33: Chave = ('SSL/TLS: Version Detection', 443, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: SSL/TLS: Version Detection
+       Porta: 443 | Protocolo: tcp | Severidade: LOG
+       Descrição: Enumeration and reporting of SSL/TLS protocol versions supported by a remote service.
+
+Grupo 34: Chave = ('SSL/TLS: Collect and Report Certicate Details', 443, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: SSL/TLS: Collect and Report Certicate Details
+       Porta: 443 | Protocolo: tcp | Severidade: LOG
+       Descrição: This script collects and reports the details of all SSL/TLS certicates. This data will be used by other tests to verify server certicates.
+
+Grupo 35: Chave = ('phpLDAPadmin Detection (HTTP)', 443, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: phpLDAPadmin Detection (HTTP)
+       Porta: 443 | Protocolo: tcp | Severidade: LOG
+       Descrição: HTTP based detection of phpLDAPadmin.
+
+Grupo 36: Chave = ('CPE Inventory', 'general', 'CPE-T')
+  Total de duplicatas neste grupo: 1
+    1. Nome: CPE Inventory
+       Porta: general | Protocolo: CPE-T | Severidade: LOG
+       Descrição: This routine uses information collected by other routines about CPE identities of operating systems, services and applications detected during the scan. Note: Some CPEs for specic products might show ...
+
+Grupo 37: Chave = ('IP Forwarding Enabled - Active Check', 'general', 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: IP Forwarding Enabled - Active Check
+       Porta: general | Protocolo: tcp | Severidade: LOG
+       Descrição: Checks if the remote host has IP forwarding enabled. Quality of Detection (QoD): 70%
+
+Grupo 38: Chave = ('Traceroute', 'general', 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Traceroute
+       Porta: general | Protocolo: tcp | Severidade: LOG
+       Descrição: Collect information about the network route and network distance between the scanner host and the target host. Quality of Detection (QoD): 80%
+
+Grupo 39: Chave = ('Hostname Determination Reporting', 'general', 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Hostname Determination Reporting
+       Porta: general | Protocolo: tcp | Severidade: LOG
+       Descrição: The script reports information on how the hostname of the target was determined. Quality of Detection (QoD): 80%
+
+Grupo 40: Chave = ('SSL/TLS: Hostname discovery from server certicate', 'general', 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: SSL/TLS: Hostname discovery from server certicate
+       Porta: general | Protocolo: tcp | Severidade: LOG
+       Descrição: It was possible to discover an additional hostname of this server from its certicate Common or Subject Alt Name. Quality of Detection (QoD): 98%
+
+Grupo 41: Chave = ('Apache HTTP Server Detection Consolidation', 'general', 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Apache HTTP Server Detection Consolidation
+       Porta: general | Protocolo: tcp | Severidade: LOG
+       Descrição: Consolidation of Apache HTTP Server detections.
+
+Grupo 42: Chave = ('OS Detection Consolidation and Reporting', 'general', 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: OS Detection Consolidation and Reporting
+       Porta: general | Protocolo: tcp | Severidade: LOG
+       Descrição: This script consolidates the OS information detected by several VTs and tries to nd the best matching OS. Furthermore it reports all previously collected information leading to this best matching OS. ...
+Resumo final:
+Total de grupos de duplicatas: 42
+Total de vulnerabilidades agrupadas (removidas): 24

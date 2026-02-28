@@ -1,0 +1,170 @@
+# LOG DE VULNERABILIDADES REMOVIDAS (sem descrição válida)
+
+Removida 1:
+{
+  "Name": "OpenVAS / Greenbone Vulnerability Manager Detection",
+  "description": [],
+  "detection_result": [],
+  "detection_method": [],
+  "product_detection_result": [],
+  "impact": [],
+  "solution": [],
+  "insight": [],
+  "log_method": [],
+  "cvss": [
+    "0.0"
+  ],
+  "port": 22,
+  "protocol": "tcp",
+  "severity": "LOG",
+  "references": [],
+  "plugin": null,
+  "plugin_details": {},
+  "instances": [],
+  "source": "OPENVAS"
+}
+---
+Removida 2:
+{
+  "Name": "SMTP too long line",
+  "description": [],
+  "detection_result": [],
+  "detection_method": [],
+  "product_detection_result": [],
+  "impact": [],
+  "solution": [],
+  "insight": [],
+  "log_method": [],
+  "cvss": [
+    "5.0"
+  ],
+  "port": 80,
+  "protocol": "tcp",
+  "severity": "MEDIUM",
+  "references": [],
+  "plugin": null,
+  "plugin_details": {},
+  "instances": [],
+  "source": "OPENVAS"
+}
+---
+Removida 3:
+{
+  "Name": "SSL/TLS: Certificate Expired",
+  "description": [],
+  "detection_result": [],
+  "detection_method": [],
+  "product_detection_result": [],
+  "impact": [],
+  "solution": [],
+  "insight": [],
+  "log_method": [],
+  "cvss": [
+    "5.0"
+  ],
+  "port": 80,
+  "protocol": "tcp",
+  "severity": "MEDIUM",
+  "references": [],
+  "plugin": null,
+  "plugin_details": {},
+  "instances": [],
+  "source": "OPENVAS"
+}
+---
+Removida 4:
+{
+  "Name": "OpenVAS / Greenbone Vulnerability Manager Detection",
+  "description": [],
+  "detection_result": [],
+  "detection_method": [],
+  "product_detection_result": [],
+  "impact": [],
+  "solution": [],
+  "insight": [],
+  "log_method": [],
+  "cvss": [
+    "0.0"
+  ],
+  "port": 80,
+  "protocol": "tcp",
+  "severity": "LOG",
+  "references": [
+    "http://gitlab10.trabalho_vulnnet/help/development/ux_guide",
+    "http://gitlab10.trabalho_vulnnet/help/downgrade_ee_to_ce",
+    "http://gitlab10.trabalho_vulnnet/help/gitlab-basics",
+    "http://gitlab10.trabalho_vulnnet/help/install",
+    "http://gitlab10.trabalho_vulnnet/help/install/azure",
+    "http://gitlab10.trabalho_vulnnet/help/install/google_cloud_platform",
+    "http://gitlab10.trabalho_vulnnet/help/install/kubernetes",
+    "http://gitlab10.trabalho_vulnnet/help/integration",
+    "http://gitlab10.trabalho_vulnnet/help/legal",
+    "http://gitlab10.trabalho_vulnnet/help/migrate_ci_to_ce",
+    "http://gitlab10.trabalho_vulnnet/help/public_access",
+    "http://gitlab10.trabalho_vulnnet/help/raketasks",
+    "http://gitlab10.trabalho_vulnnet/help/security",
+    "http://gitlab10.trabalho_vulnnet/help/ssh",
+    "http://gitlab10.trabalho_vulnnet/help/system_hooks",
+    "http://gitlab10.trabalho_vulnnet/help/topics/authentication",
+    "http://gitlab10.trabalho_vulnnet/help/topics/autodevops",
+    "http://gitlab10.trabalho_vulnnet/help/topics/git",
+    "http://gitlab10.trabalho_vulnnet/help/university/training",
+    "http://gitlab10.trabalho_vulnnet/help/update",
+    "http://gitlab10.trabalho_vulnnet/help/user",
+    "http://gitlab10.trabalho_vulnnet/help/user/admin_area",
+    "http://gitlab10.trabalho_vulnnet/help/user/admin_area/monitoring",
+    "http://gitlab10.trabalho_vulnnet/help/user/admin_area/settings",
+    "http://gitlab10.trabalho_vulnnet/help/user/discussions",
+    "http://gitlab10.trabalho_vulnnet/help/user/group",
+    "http://gitlab10.trabalho_vulnnet/help/user/group/subgroups",
+    "http://gitlab10.trabalho_vulnnet/help/user/profile",
+    "http://gitlab10.trabalho_vulnnet/help/user/profile/account",
+    "http://gitlab10.trabalho_vulnnet/help/user/project",
+    "http://gitlab10.trabalho_vulnnet/help/user/project/gpg_signed_commits",
+    "http://gitlab10.trabalho_vulnnet/help/user/project/import",
+    "http://gitlab10.trabalho_vulnnet/help/user/project/integrations",
+    "http://gitlab10.trabalho_vulnnet/help/user/project/integrations/prometheus_library",
+    "http://gitlab10.trabalho_vulnnet/help/user/project/issues",
+    "http://gitlab10.trabalho_vulnnet/help/user/project/members",
+    "http://gitlab10.trabalho_vulnnet/help/user/project/merge_requests",
+    "http://gitlab10.trabalho_vulnnet/help/user/project/milestones",
+    "http://gitlab10.trabalho_vulnnet/help/user/project/pages",
+    "http://gitlab10.trabalho_vulnnet/help/user/project/pipelines",
+    "http://gitlab10.trabalho_vulnnet/help/user/project/repository",
+    "http://gitlab10.trabalho_vulnnet/help/user/project/repository/branches",
+    "http://gitlab10.trabalho_vulnnet/help/user/project/repository/gpg_signed_commits",
+    "http://gitlab10.trabalho_vulnnet/help/user/project/settings",
+    "http://gitlab10.trabalho_vulnnet/help/user/project/wiki",
+    "http://gitlab10.trabalho_vulnnet/help/user/search",
+    "http://gitlab10.trabalho_vulnnet/help/workflow"
+  ],
+  "plugin": null,
+  "plugin_details": {},
+  "instances": [],
+  "source": "OPENVAS"
+}
+---
+Removida 5:
+{
+  "Name": "robot.txt / robots.txt exists on the Web Server (HTTP)",
+  "description": [],
+  "detection_result": [],
+  "detection_method": [],
+  "product_detection_result": [],
+  "impact": [],
+  "solution": [],
+  "insight": [],
+  "log_method": [],
+  "cvss": [
+    "0.0"
+  ],
+  "port": 80,
+  "protocol": "tcp",
+  "severity": "LOG",
+  "references": [],
+  "plugin": null,
+  "plugin_details": {},
+  "instances": [],
+  "source": "OPENVAS"
+}
+---

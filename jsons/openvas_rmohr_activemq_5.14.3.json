@@ -1,0 +1,2019 @@
+[
+  {
+    "Name": "Mort Bay / Eclipse Jetty End of Life (EOL) Detection - Linux",
+    "description": [
+      "The Mort Bay / Eclipse Jetty version on the remote host has reached the End of Life (EOL) and should not be used anymore."
+    ],
+    "detection_result": [
+      "The \"Mort Bay / Eclipse Jetty\" version on the remote host has reached the end of life.",
+      "CPE: cpe:/a:eclipse:jetty:9.2.13.20150730",
+      "Installed version: 9.2.13.20150730",
+      "Location/URL: 8161/tcp",
+      "EOL version: 9.2",
+      "EOL date: 2018-12-31"
+    ],
+    "detection_method": [
+      "Checks if an EOL version is present on the target host.",
+      "Details: Mort Bay / Eclipse Jetty End of Life (EOL) Detection - Linux",
+      "OID:1.3.6.1.4.1.25623.1.0.117294",
+      "Version used: 2025-04-15T05:54:49Z"
+    ],
+    "product_detection_result": [
+      "cpe:/a:eclipse:jetty:9.2.13.20150730",
+      "Detected by Mort Bay / Eclipse Jetty Detection (HTTP) (OID: 1.3.6.1.4.1.25623.1.0.800953)",
+      "Product: cpe:/a:eclipse:jetty:9.2.13.20150730",
+      "Method: Mort Bay / Eclipse Jetty Detection (HTTP)",
+      "OID: 1.3.6.1.4.1.25623.1.0.800953)"
+    ],
+    "impact": [
+      "An EOL version of Mort Bay / Eclipse Jetty is not receiving any security updates from the vendor. Unxed security vulnerabilities might be leveraged by an attacker to compromise the security of this host."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update the Mort Bay / Eclipse Jetty version on the remote host to a still supported version."
+    ],
+    "insight": [],
+    "log_method": [],
+    "cvss": [
+      "10.0"
+    ],
+    "port": 8161,
+    "protocol": "tcp",
+    "severity": "Critical",
+    "references": [
+      "url: https://jetty.org/download.html#version-history"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Apache ActiveMQ Web Console Default / No Credentials (HTTP)",
+    "description": [
+      "The Apache ActiveMQ Web Console is unprotected or is using default credentials."
+    ],
+    "detection_result": [
+      "It was possible to access the Apache ActiveMQ Web Console at:",
+      "http://activemq514.trabalho_vulnnet:8161/admin/index.jsp using user \"admin\" with password \"admin\"",
+      "http://activemq514.trabalho_vulnnet:8161/admin/index.jsp using user \"user\" with password \"user\""
+    ],
+    "detection_method": [
+      "Details: Apache ActiveMQ Web Console Default / No Credentials (HTTP)",
+      "OID:1.3.6.1.4.1.25623.1.0.108253",
+      "Version used: 2023-02-28T10:20:42Z"
+    ],
+    "product_detection_result": [],
+    "impact": [
+      "This issue may be exploited by a remote attacker to gain access to sensitive information."
+    ],
+    "solution": [
+      "Solution type: Mitigation",
+      "Change or set the password."
+    ],
+    "insight": [],
+    "log_method": [],
+    "cvss": [
+      "10.0"
+    ],
+    "port": 8161,
+    "protocol": "tcp",
+    "severity": "CRITICAL",
+    "references": [
+      "url: https://activemq.apache.org/web-console.html"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Eclipse Jetty Server Fake Pipeline Request Security Bypass Vulnerability - Linux",
+    "description": [
+      "Eclipse Jetty Server is prone to a security bypass vulnerability."
+    ],
+    "detection_result": [
+      "Installed version: 9.2.13.20150730",
+      "Fixed version: 9.2.25.v20180606",
+      "Installation path / port: 8161/tcp"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: Eclipse Jetty Server Fake Pipeline Request Security Bypass Vulnerability - Linux",
+      "OID:1.3.6.1.4.1.25623.1.0.813551",
+      "Version used: 2024-06-11T05:05:40Z"
+    ],
+    "product_detection_result": [
+      "cpe:/a:eclipse:jetty:9.2.13.20150730",
+      "Detected by Mort Bay / Eclipse Jetty Detection (HTTP) (OID: 1.3.6.1.4.1.25623.1.0.800953)",
+      "Product: cpe:/a:eclipse:jetty:9.2.13.20150730",
+      "Method: Mort Bay / Eclipse Jetty Detection (HTTP)",
+      "OID: 1.3.6.1.4.1.25623.1.0.800953)"
+    ],
+    "impact": [
+      "Successful exploitation will allow an attacker to bypass authorization."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Upgrade to Eclipse Jetty Server version 9.2.25.v20180606 or 9.3.24.v20180605 or 9.4.11.v20180605 or later as per the series. Please see the references for more information."
+    ],
+    "insight": [
+      "The aw exists due to an improper validation against pipelined requests."
+    ],
+    "log_method": [],
+    "cvss": [
+      "9.8"
+    ],
+    "port": 8161,
+    "protocol": "tcp",
+    "severity": "CRITICAL",
+    "references": [
+      "cve: CVE-2017-7658",
+      "url: https://bugs.eclipse.org/bugs/show_bug.cgi?id=535669",
+      "cert-bund: WID-SEC-2022-0620",
+      "cert-bund: CB-K20/1024",
+      "dfn-cert: DFN-CERT-2024-3084",
+      "dfn-cert: DFN-CERT-2020-2287",
+      "dfn-cert: DFN-CERT-2018-1683",
+      "dfn-cert: DFN-CERT-2018-1285"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "HTTP Brute Force Logins With Default Credentials Reporting",
+    "description": [
+      "It was possible to login into the remote Web Application using default credentials.",
+      "Quality of Detection (QoD): 95%"
+    ],
+    "detection_result": [
+      "It was possible to login with the following credentials (<URL>:<User>:<Password>  ->:<HTTP status code>)",
+      "http://activemq514.trabalho_vulnnet:8161/admin/:admin:admin:HTTP/1.1 200 OK",
+      "http://activemq514.trabalho_vulnnet:8161/admin/:user:user:HTTP/1.1 200 OK",
+      "http://activemq514.trabalho_vulnnet:8161/admin/SecureDocumentLibrary:admin:admin  ->:HTTP/1.1 404 Not Found",
+      "http://activemq514.trabalho_vulnnet:8161/admin/SecureDocumentLibrary:user:user:H  ->TTP/1.1 404 Not Found",
+      "http://activemq514.trabalho_vulnnet:8161/admin/SecureDocumentLibrary/DocumentLib  ->raryManager:admin:admin:HTTP/1.1 404 Not Found",
+      "http://activemq514.trabalho_vulnnet:8161/admin/SecureDocumentLibrary/DocumentLib  ->raryManager:user:user:HTTP/1.1 404 Not Found",
+      "http://activemq514.trabalho_vulnnet:8161/admin/airflow:admin:admin:HTTP/1.1 404  ->Not Found",
+      "http://activemq514.trabalho_vulnnet:8161/admin/airflow:user:user:HTTP/1.1 404 No  ->t Found",
+      "http://activemq514.trabalho_vulnnet:8161/admin/airflow/login:admin:admin:HTTP/1.  ->1 404 Not Found",
+      "http://activemq514.trabalho_vulnnet:8161/admin/airflow/login:user:user:HTTP/1.1  ->404 Not Found",
+      "http://activemq514.trabalho_vulnnet:8161/admin/ckeditor:admin:admin:HTTP/1.1 404  -> Not Found",
+      "http://activemq514.trabalho_vulnnet:8161/admin/ckeditor:user:user:HTTP/1.1 404 N  ->ot Found",
+      "http://activemq514.trabalho_vulnnet:8161/admin/ckeditor/plugins:admin:admin:HTTP  ->/1.1 404 Not Found",
+      "http://activemq514.trabalho_vulnnet:8161/admin/ckeditor/plugins:user:user:HTTP/1  ->.1 404 Not Found",
+      "http://activemq514.trabalho_vulnnet:8161/admin/ckeditor/plugins/ajaxplorer:admin  ->:admin:HTTP/1.1 404 Not Found",
+      "http://activemq514.trabalho_vulnnet:8161/admin/ckeditor/plugins/ajaxplorer:user:  ->user:HTTP/1.1 404 Not Found",
+      "http://activemq514.trabalho_vulnnet:8161/admin/ckeditor/plugins/ajaxplorer/phpun  ->it:admin:admin:HTTP/1.1 404 Not Found",
+      "http://activemq514.trabalho_vulnnet:8161/admin/ckeditor/plugins/ajaxplorer/phpun  ->it:user:user:HTTP/1.1 404 Not Found",
+      "http://activemq514.trabalho_vulnnet:8161/admin/ckeditor/plugins/ajaxplorer/phpun  ->it/src:admin:admin:HTTP/1.1 404 Not Found",
+      "http://activemq514.trabalho_vulnnet:8161/admin/ckeditor/plugins/ajaxplorer/phpun  ->it/src:user:user:HTTP/1.1 404 Not Found",
+      "http://activemq514.trabalho_vulnnet:8161/admin/ckeditor/plugins/ajaxplorer/phpun  ->it/src/Util:admin:admin:HTTP/1.1 404 Not Found"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [],
+    "cvss": [
+      "7.0"
+    ],
+    "port": 8161,
+    "protocol": "tcp",
+    "severity": "Critical",
+    "references": [],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Apache ActiveMQ Files Found",
+    "description": [
+      "The remote web server contains files that are part of the Apache ActiveMQ web console."
+    ],
+    "detection_result": [
+      "The following files were found on the remote web server:\n\nhttp://activemq514.trabalho_vulnnet:8161/admin/lib/dojo:admin:admin:HTTP/1.1 404 -> Not Found\nhttp://activemq514.trabalho_vulnnet:8161/admin/lib/dojo:user:user:HTTP/1.1 404 N ->ot Found\nhttp://activemq514.trabalho_vulnnet:8161/admin/lib/dojox:admin:admin:HTTP/1.1 40 ->4 Not Found\nhttp://activemq514.trabalho_vulnnet:8161/admin/lib/dojox:user:user:HTTP/1.1 404 ->Not Found\nhttp://activemq514.trabalho_vulnnet:8161/admin/lib/gradient:admin:admin:HTTP/1.1 -> 404 Not Found\nhttp://activemq514.trabalho_vulnnet:8161/admin/lib/gradient:user:user:HTTP/1.1 4 ->04 Not Found\nhttp://activemq514.trabalho_vulnnet:8161/admin/lib/wap:admin:admin:HTTP/1.1 404 ->Not Found\nhttp://activemq514.trabalho_vulnnet:8161/admin/lib/wap:user:user:HTTP/1.1 404 No ->t Found\nhttp://activemq514.trabalho_vulnnet:8161/admin/lib/xwt:admin:admin:HTTP/1.1 404 ->Not Found\nhttp://activemq514.trabalho_vulnnet:8161/admin/lib/xwt:user:user:HTTP/1.1 404 No ->t Found\nhttp://activemq514.trabalho_vulnnet:8161/admin/login:admin:admin:HTTP/1.1 404 No ->t Found\nhttp://activemq514.trabalho_vulnnet:8161/admin/login:user:user:HTTP/1.1 404 Not ->Found\nhttp://activemq514.trabalho_vulnnet:8161/admin/ng:admin:admin:HTTP/1.1 404 Not F ->ound\nhttp://activemq514.trabalho_vulnnet:8161/admin/ng:user:user:HTTP/1.1 404 Not Fou ->nd\nhttp://activemq514.trabalho_vulnnet:8161/admin/ng/nls:admin:admin:HTTP/1.1 404 N ->ot Found\nhttp://activemq514.trabalho_vulnnet:8161/admin/ng/nls:user:user:HTTP/1.1 404 Not -> Found\nhttp://activemq514.trabalho_vulnnet:8161/admin/ng/v3:admin:admin:HTTP/1.1 404 No ->t Found\nhttp://activemq514.trabalho_vulnnet:8161/admin/ng/v3:user:user:HTTP/1.1 404 Not ->Found\nhttp://activemq514.trabalho_vulnnet:8161/admin/pages:admin:admin:HTTP/1.1 404 No ->t Found\nhttp://activemq514.trabalho_vulnnet:8161/admin/pages:user:user:HTTP/1.1 404 Not ->Found\nhttp://activemq514.trabalho_vulnnet:8161/admin/pages/modules:admin:admin:HTTP/1. ->1 404 Not Found\nhttp://activemq514.trabalho_vulnnet:8161/admin/pages/modules:user:user:HTTP/1.1 ->404 Not Found\nhttp://activemq514.trabalho_vulnnet:8161/admin/pages/utils:admin:admin:HTTP/1.1 ->404 Not Found\nhttp://activemq514.trabalho_vulnnet:8161/admin/pages/utils:user:user:HTTP"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [
+      "An attacker may use this information to gain knowledge about the software in use and potentially exploit known vulnerabilities."
+    ],
+    "solution": [
+      "Consider removing or restricting access to these files if they are not required for the application's functionality."
+    ],
+    "insight": [],
+    "log_method": [],
+    "cvss": [
+      "0.0"
+    ],
+    "port": 8161,
+    "protocol": "tcp",
+    "severity": "Critical",
+    "references": [],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Apache ActiveMQ Files Exposed",
+    "description": [
+      "The web application exposes files or directories that are accessible to unauthorized users. This can lead to information disclosure, source code leakage, or even remote code execution in some cases."
+    ],
+    "detection_result": [
+      "The scanner found exposed files or directories on the web server."
+    ],
+    "detection_method": [
+      "The scanner performed an HTTP request to the target URL and analyzed the response. If the response indicates that a file or directory is accessible (e.g., 200 OK, directory listing), it is flagged as exposed."
+    ],
+    "product_detection_result": [],
+    "impact": [
+      "An attacker can access sensitive files, configuration files, source code, or directories that may contain additional vulnerabilities or information useful for further attacks."
+    ],
+    "solution": [
+      "Restrict access to sensitive files and directories using proper authentication and authorization mechanisms. Implement access control lists (ACLs) and ensure that the web server configuration does not allow directory listing."
+    ],
+    "insight": [
+      "Exposed files and directories are a common misconfiguration that can be easily exploited if not properly secured."
+    ],
+    "log_method": [
+      "The scanner logs the HTTP request and response, including the status code and any exposed content."
+    ],
+    "cvss": [
+      "5.3"
+    ],
+    "port": 8161,
+    "protocol": "tcp",
+    "severity": "Critical",
+    "references": [
+      "CWE-552: Files or Directories Accessible to External Parties",
+      "OWASP: A6:2017-Security Misconfiguration"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Eclipse Jetty DoS Vulnerability (GHSA-26vr-8j45-3r4w) - Linux",
+    "description": [
+      "Eclipse Jetty is prone to a denial of service (DoS) vulnerability.",
+      "Quality of Detection (QoD): 30%"
+    ],
+    "detection_result": [
+      "Installed version: 9.2.13.20150730",
+      "Fixed version: 9.4.39",
+      "Installation",
+      "path / port: 8161/tcp"
+    ],
+    "detection_method": [
+      "Reports default credentials detected by the VT 'HTTP Brute Force Logins With Default Credentials' (OID: 1.3.6.1.4.1.25623.1.0.108041).",
+      "Details: HTTP Brute Force Logins With Default Credentials Reporting",
+      "OID:1.3.6.1.4.1.25623.1.0.103240",
+      "Version used: 2025-05-23T15:42:02Z"
+    ],
+    "product_detection_result": [
+      "cpe:/a:eclipse:jetty:9.2.13.20150730",
+      "Detected by Mort Bay / Eclipse Jetty Detection (HTTP) (OID: 1.3.6.1.4.1.25623.1.0.800953)"
+    ],
+    "impact": [
+      "This issue may be exploited by a remote attacker to e.g. gain access to sensitive information or modify system configuration."
+    ],
+    "solution": [
+      "Solution type: Mitigation",
+      "Change the password as soon as possible."
+    ],
+    "insight": [
+      "As the VT 'HTTP Brute Force Logins With Default Credentials' (OID: 1.3.6.1.4.1.25623.1.0.108041) might run into a timeout the actual reporting of this vulnerability takes place in this VT instead."
+    ],
+    "log_method": [],
+    "cvss": [
+      "7.5"
+    ],
+    "port": 8161,
+    "protocol": "tcp",
+    "severity": "Critical",
+    "references": [
+      "cve: CVE-1999-0501",
+      "cve: CVE-1999-0502",
+      "cve: CVE-1999-0507",
+      "cve: CVE-1999-0508",
+      "cve: CVE-2004-1791",
+      "cve: CVE-2023-32645",
+      "cve: CVE-2024-9643",
+      "cve: CVE-2024-20439",
+      "cve: CVE-2024-27170",
+      "cve: CVE-2024-28987",
+      "cve: CVE-2024-46328",
+      "url: https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
+      "cisa: Known Exploited Vulnerability (KEV) catalog"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "HTTP Brute Force Logins With Default Credentials",
+    "description": [
+      "Reports default credentials detected by the VT 'HTTP Brute Force Logins With Default Credentials' (OID: 1.3.6.1.4.1.25623.1.0.108041)."
+    ],
+    "detection_result": [],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [],
+    "cvss": [
+      "0.0"
+    ],
+    "port": 8161,
+    "protocol": "tcp",
+    "severity": "Critical",
+    "references": [
+      "cve: CVE-1999-0501",
+      "cve: CVE-1999-0502",
+      "cve: CVE-1999-0507",
+      "cve: CVE-1999-0508",
+      "cve: CVE-2004-1791",
+      "cve: CVE-2023-32645",
+      "cve: CVE-2024-9643",
+      "cve: CVE-2024-"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Eclipse Jetty Multiple Vulnerabilities (Jul 2022) - Linux",
+    "description": [
+      "Eclipse Jetty is prone to multiple vulnerabilities."
+    ],
+    "detection_result": [
+      "Installed version: 9.2.13.20150730",
+      "Fixed version: 9.4.47",
+      "Installation path / port: 8161/tcp"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host."
+    ],
+    "product_detection_result": [
+      "cpe:/a:eclipse:jetty:9.2.13.20150730",
+      "Detected by Mort Bay / Eclipse Jetty Detection (HTTP) (OID: 1.3.6.1.4.1.25623.1.0.800953)"
+    ],
+    "impact": [
+      "Aected Software/OS Eclipse Jetty version 9.4.46 and prior, version 10.0.x through 10.0.9 and 11.0.x through 11.0.9."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 9.4.47, 10.0.10, 11.0.10 or later."
+    ],
+    "insight": [
+      "The following vulnerabilities exist:",
+      " - CVE-2022-2047: Invalid URI parsing may produce invalid HttpURI.authority",
+      " - CVE-2022-2048: Invalid HTTP/2 requests can lead to denial of service"
+    ],
+    "log_method": [],
+    "cvss": [
+      "7.5"
+    ],
+    "port": 8161,
+    "protocol": "tcp",
+    "severity": "HIGH",
+    "references": [
+      "cve: CVE-2022-2047",
+      "cve: CVE-2022-2048",
+      "url: https://github.com/eclipse/jetty.project/security/advisories/GHSA-cj7v-27pg-wf7q",
+      "url: https://github.com/eclipse/jetty.project/security/advisories/GHSA-wgmr-mf83-7x4j",
+      "cert-bund: WID-SEC-2024-0794",
+      "cert-bund: WID-SEC-2023-2368",
+      "cert-bund: WID-SEC-2023-1808",
+      "cert-bund: WID-SEC-2023-1017",
+      "cert-bund: WID-SEC-2023-0864",
+      "cert-bund: WID-SEC-2023-0137",
+      "cert-bund: WID-SEC-2023-0133",
+      "cert-bund: WID-SEC-2023-0027",
+      "cert-bund: WID-SEC-2022-1780",
+      "cert-bund: WID-SEC-2022-1778",
+      "cert-bund: WID-SEC-2022-1767",
+      "cert-bund: WID-SEC-2022-1766",
+      "cert-bund: WID-SEC-2022-1373",
+      "cert-bund: WID-SEC-2022-0614",
+      "dfn-cert: DFN-CERT-2023-0776",
+      "dfn-cert: DFN-CERT-2023-0661",
+      "dfn-cert: DFN-CERT-2023-0445",
+      "dfn-cert: DFN-CERT-2023-0112",
+      "dfn-cert: DFN-CERT-2023-0091",
+      "dfn-cert: DFN-CERT-2022-2708",
+      "dfn-cert: DFN-CERT-2022-1994",
+      "dfn-cert: DFN-CERT-2022-1706"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Eclipse Jetty DoS Vulnerability (GHSA-7hcf-ppf8-5w5h) - Linux",
+    "description": [
+      "Eclipse Jetty is prone to a denial of service (DoS) vulnerability.",
+      "Quality of Detection (QoD): 30%"
+    ],
+    "detection_result": [
+      "Installed version: 9.2.13.20150730",
+      "Fixed version: 9.4.54",
+      "Installation",
+      "path / port: 8161/tcp"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: Eclipse Jetty DoS Vulnerability (GHSA-7hcf-ppf8-5w5h) - Linux",
+      "OID:1.3.6.1.4.1.25623.1.0.153230",
+      "Version used: 2025-07-31T05:44:45Z"
+    ],
+    "product_detection_result": [
+      "Product: cpe:/a:eclipse:jetty:9.2.13.20150730",
+      "Method: Mort Bay / Eclipse Jetty Detection (HTTP)",
+      "OID: 1.3.6.1.4.1.25623.1.0.800953)"
+    ],
+    "impact": [
+      "Aected Software/OS",
+      "Eclipse Jetty version 9.0.0 through 9.4.53, 10.0.0 through 10.0.17, 11.0.0 through 11.0.17 and",
+      "12.0.0 through 12.0.2."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 9.4.54, 10.0.18, 11.0.18, 12.0.3 or later."
+    ],
+    "insight": [
+      "There exists a security vulnerability in Jetty's DosFilter which can be exploited by unauthorized",
+      "users to cause remote denial of service (DoS) attack on the server using DosFilter. By repeatedly",
+      "sending crafted requests, attackers can trigger OutofMemory errors and exhaust the server's",
+      "memory nally."
+    ],
+    "log_method": [],
+    "cvss": [
+      "7.0"
+    ],
+    "port": 8161,
+    "protocol": "tcp",
+    "severity": "HIGH",
+    "references": [
+      "cve: CVE-2024-9823",
+      "url: https://github.com/jetty/jetty.project/security/advisories/GHSA-7hcf-ppf8-5",
+      "->w5h",
+      "url: https://www.eclipse.org//lists/jetty-announce/msg00193.html",
+      "cert-bund: WID-SEC-2024-3176",
+      "dfn-cert: DFN-CERT-2025-0835",
+      "dfn-cert: DFN-CERT-2025-0825",
+      "dfn-cert: DFN-CERT-2024-3046"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Eclipse Jetty Privilege Escalation Vulnerability - Linux",
+    "description": [
+      "Eclipse Jetty is prone to a privilege escalation vulnerability through a local temp directory."
+    ],
+    "detection_result": [
+      "Installed version: 9.2.13.20150730",
+      "Fixed version: 9.4.33.20201020",
+      "Installation path / port: 8161/tcp"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host."
+    ],
+    "product_detection_result": [
+      "cpe:/a:eclipse:jetty:9.2.13.20150730",
+      "Detected by Mort Bay / Eclipse Jetty Detection (HTTP) (OID: 1.3.6.1.4.1.25623.1.0.800953)"
+    ],
+    "impact": [
+      "Aected Software/OS Eclipse Jetty version 9.4.32.v20200930 and prior, 10.0.0.beta2 and prior and 11.0.0.beta2 and prior."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 9.4.33.v20201020, 10.0.0.beta3, 11.0.0.beta3 or later."
+    ],
+    "insight": [
+      "On Unix like systems, the system's temporary directory is shared between all users on that system. A collocated user can observe the process of creating a temporary sub directory in the shared temporary directory and race to complete the creation of the temporary subdirectory.",
+      "If the attacker wins the race then they will have read and write permission to the subdirectory used to unpack web applications, including their WEB-INF/lib jar les and JSP les. If any code is ever executed out of this temporary directory, this can lead to a local privilege escalation vulnerability."
+    ],
+    "log_method": [],
+    "cvss": [
+      "6.1"
+    ],
+    "port": 8161,
+    "protocol": "tcp",
+    "severity": "MEDIUM",
+    "references": [
+      "cve: CVE-2020-27216",
+      "url: https://github.com/eclipse/jetty.project/security/advisories/GHSA-g3wg-6mcf-8jj6",
+      "url: https://bugs.eclipse.org/bugs/show_bug.cgi?id=567921",
+      "cert-bund: WID-SEC-2024-0794",
+      "cert-bund: WID-SEC-2023-1547",
+      "cert-bund: WID-SEC-2022-1910",
+      "cert-bund: CB-K21/1095",
+      "cert-bund: CB-K21/0784",
+      "dfn-cert: DFN-CERT-2024-3084",
+      "dfn-cert: DFN-CERT-2021-2196",
+      "dfn-cert: DFN-CERT-2021-1736",
+      "dfn-cert: DFN-CERT-2021-1728",
+      "dfn-cert: DFN-CERT-2021-1665",
+      "dfn-cert: DFN-CERT-2021-1429",
+      "dfn-cert: DFN-CERT-2021-1404",
+      "dfn-cert: DFN-CERT-2021-1043",
+      "dfn-cert: DFN-CERT-2021-0223",
+      "dfn-cert: DFN-CERT-2020-2681",
+      "dfn-cert: DFN-CERT-2020-2578"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Eclipse Jetty XSS Vulnerability (CVE-2019-10241) - Linux",
+    "description": [
+      "Eclipse Jetty is prone to a cross-site scripting (XSS) vulnerability.  Quality of Detection (QoD): 30%"
+    ],
+    "detection_result": [
+      "Installed version: 9.2.13.20150730",
+      "Fixed version: 9.2.27.20190403",
+      "Installation",
+      "path / port: 8161/tcp"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: Eclipse Jetty XSS Vulnerability (CVE-2019-10241) - Linux",
+      "OID:1.3.6.1.4.1.25623.1.0.142312",
+      "Version used: 2024-06-11T05:05:40Z"
+    ],
+    "product_detection_result": [
+      "Product: cpe:/a:eclipse:jetty:9.2.13.20150730",
+      "Method: Mort Bay / Eclipse Jetty Detection (HTTP)",
+      "OID: 1.3.6.1.4.1.25623.1.0.800953)"
+    ],
+    "impact": [
+      "Eclipse Jetty version 9.2.26 and prior, 9.3.25 and prior and 9.4.15 and prior."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 9.2.27.v20190403, 9.3.26.v20190403, 9.4.16.v20190411 or later."
+    ],
+    "insight": [
+      "Eclipse Jetty is vulnerable to XSS conditions if a remote client USES a specially formatted URL",
+      "against the DefaultServlet or ResourceHandler that is congured for showing a Listing of",
+      "directory contents."
+    ],
+    "log_method": [],
+    "cvss": [
+      "5.3"
+    ],
+    "port": 8161,
+    "protocol": "tcp",
+    "severity": "MEDIUM",
+    "references": [
+      "cve: CVE-2019-10241",
+      "url: https://bugs.eclipse.org/bugs/show_bug.cgi?id=546121",
+      "dfn-cert: DFN-CERT-2021-1728",
+      "dfn-cert: DFN-CERT-2021-1665",
+      "dfn-cert: DFN-CERT-2021-1043",
+      "dfn-cert: DFN-CERT-2020-0779",
+      "dfn-cert: DFN-CERT-2020-0595"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Eclipse Jetty Information Disclosure Vulnerability (CVE-2019-10247) - Linux",
+    "description": [
+      "Eclypse Jetty is prone to an information disclosure vulnerability."
+    ],
+    "detection_result": [
+      "Installed version: 9.2.13.20150730",
+      "Fixed version: 9.2.28.20190418",
+      "Installation",
+      "path / port: 8161/tcp"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: Eclipse Jetty Information Disclosure Vulnerability (CVE-2019-10247) - Linux",
+      "OID:1.3.6.1.4.1.25623.1.0.142309",
+      "Version used: 2024-06-11T05:05:40Z"
+    ],
+    "product_detection_result": [
+      "Product: cpe:/a:eclipse:jetty:9.2.13.20150730",
+      "Method: Mort Bay / Eclipse Jetty Detection (HTTP)",
+      "OID: 1.3.6.1.4.1.25623.1.0.800953)"
+    ],
+    "impact": [
+      "Eclipse Jetty version 7.x and prior, 8.x, 9.2.27.v20190403 and prior, 9.3.26.v20190403 and prior and 9.4.16.v20190411 and prior."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 9.2.28.v20190418, 9.3.27.v20190418, 9.4.17.v20190418 or later."
+    ],
+    "insight": [
+      "The DefaultHandler will present the full path to the Resource Base directory, if the server is congured with only non-root contexts."
+    ],
+    "log_method": [],
+    "cvss": [
+      "5.3"
+    ],
+    "port": 8161,
+    "protocol": "tcp",
+    "severity": "MEDIUM",
+    "references": [
+      "cve: CVE-2019-10247",
+      "url: https://bugs.eclipse.org/bugs/show_bug.cgi?id=546577",
+      "url: https://github.com/eclipse/jetty.project/issues/3555",
+      "cert-bund: WID-SEC-2023-2946",
+      "cert-bund: CB-K19/0909",
+      "dfn-cert: DFN-CERT-2021-1728",
+      "dfn-cert: DFN-CERT-2021-1665",
+      "dfn-cert: DFN-CERT-2021-1043",
+      "dfn-cert: DFN-CERT-2021-0132",
+      "dfn-cert: DFN-CERT-2020-0779",
+      "dfn-cert: DFN-CERT-2020-0772",
+      "dfn-cert: DFN-CERT-2020-0595",
+      "dfn-cert: DFN-CERT-2020-0092"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Eclipse Jetty Information Disclosure Vulnerability (GHSA-gwcr-j4wh-j3cq)",
+    "description": [
+      "Eclipse Jetty is prone to an information disclosure vulnerability in the ConcatServlet and Wel- comeFilter servlet."
+    ],
+    "detection_result": [
+      "Installed version: 9.2.13.20150730",
+      "Fixed version: 9.4.41",
+      "Installation",
+      "path / port: 8161/tcp"
+    ],
+    "detection_method": [],
+    "product_detection_result": [
+      "Product: cpe:/a:eclipse:jetty:9.2.13.20150730",
+      "Method: Mort Bay / Eclipse Jetty Detection (HTTP)",
+      "OID: 1.3.6.1.4.1.25623.1.0.800953)"
+    ],
+    "impact": [
+      "Eclipse Jetty prior to version 9.4.41, 10.x through 10.0.2 and 11.x through 11.0.2."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 9.4.41, 10.0.3, 11.0.3 or later."
+    ],
+    "insight": [
+      "Requests to the ConcatServlet and WelcomeFilter are able to access protected resources within the WEB-INF directory. For example a request to the ConcatServlet with a URI of /concat?/%2557EB-INF/web.xml can retrieve the web.xml le. This can reveal sensitive infor- mation regarding the implementation of a web application."
+    ],
+    "log_method": [],
+    "cvss": [
+      "5.3"
+    ],
+    "port": 8161,
+    "protocol": "tcp",
+    "severity": "MEDIUM",
+    "references": [],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Eclipse Jetty Multiple Vulnerabilities (GHSA-qw69-rqj8-6qw8, GHSA-p26g-97m4-6q7c) - Linux",
+    "description": [
+      "Eclipse Jetty is prone to multiple vulnerabilities."
+    ],
+    "detection_result": [
+      "Installed version: 9.2.13.20150730",
+      "Fixed version: 9.4.51",
+      "Installation",
+      "path / port: 8161/tcp"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: Eclipse Jetty Multiple Vulnerabilities (GHSA-qw69-rqj8-6qw8, GHSA-p26g-97m4-6q7...",
+      "OID:1.3.6.1.4.1.25623.1.0.149569",
+      "Version used: 2024-06-11T05:05:40Z"
+    ],
+    "product_detection_result": [
+      "Product: cpe:/a:eclipse:jetty:9.2.13.20150730",
+      "Method: Mort Bay / Eclipse Jetty Detection (HTTP)",
+      "OID: 1.3.6.1.4.1.25623.1.0.800953)"
+    ],
+    "impact": [
+      "Eclipse Jetty version 9.4.50 and prior, version 10.0.x through 10.0.13 and 11.0.x through 11.0.13."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 9.4.51, 10.0.14, 11.0.14 or later."
+    ],
+    "insight": [
+      "The following vulnerabilities exist:",
+      "- CVE-2023-26048: OutOfMemoryError for large multipart without lename read via re- quest.getParameter()",
+      "- CVE-2023-26049: Cookie parsing of quoted values can exltrate values from other cookies"
+    ],
+    "log_method": [],
+    "cvss": [
+      "5.3"
+    ],
+    "port": 8161,
+    "protocol": "tcp",
+    "severity": "MEDIUM",
+    "references": [
+      "cve: CVE-2023-26048",
+      "cve: CVE-2023-26049",
+      "url: https://github.com/eclipse/jetty.project/security/advisories/GHSA-qw69-rqj8-6qw8",
+      "url: https://github.com/eclipse/jetty.project/security/advisories/GHSA-p26g-97m4-6q7c",
+      "cert-bund: WID-SEC-2024-0794",
+      "cert-bund: WID-SEC-2023-2688",
+      "cert-bund: WID-SEC-2023-2679",
+      "cert-bund: WID-SEC-2023-2675",
+      "cert-bund: WID-SEC-2023-2672",
+      "cert-bund: WID-SEC-2023-2625",
+      "cert-bund: WID-SEC-2023-1812",
+      "cert-bund: WID-SEC-2023-1807",
+      "cert-bund: WID-SEC-2023-1009",
+      "dfn-cert: DFN-CERT-2024-0391",
+      "dfn-cert: DFN-CERT-2024-0376",
+      "dfn-cert: DFN-CERT-2024-0368",
+      "dfn-cert: DFN-CERT-2023-3035",
+      "dfn-cert: DFN-CERT-2023-2537",
+      "dfn-cert: DFN-CERT-2023-2346",
+      "dfn-cert: DFN-CERT-2023-2341",
+      "dfn-cert: DFN-CERT-2023-2167",
+      "dfn-cert: DFN-CERT-2023-1648",
+      "dfn-cert: DFN-CERT-2023-1410"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Eclipse Jetty URI Parsing Vulnerability (GHSA-qh8g-58pp-2wxh) - Linux",
+    "description": [
+      "Eclipse Jetty is prone to an URI parsing vulnerability."
+    ],
+    "detection_result": [
+      "Installed version: 9.2.13.20150730",
+      "Fixed version: 12.0.12",
+      "Installation",
+      "path / port: 8161/tcp"
+    ],
+    "detection_method": [],
+    "product_detection_result": [
+      "cpe:/a:eclipse:jetty:9.2.13.20150730",
+      "Detected by Mort Bay / Eclipse Jetty Detection (HTTP) (OID: 1.3.6.1.4.1.25623.1.0.800953)"
+    ],
+    "impact": [
+      "Eclipse Jetty version 7.0.0 through 12.0.11."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 12.0.12 or later."
+    ],
+    "insight": [],
+    "log_method": [],
+    "cvss": [
+      "5.3"
+    ],
+    "port": 8161,
+    "protocol": "tcp",
+    "severity": "MEDIUM",
+    "references": [],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Eclipse Jetty Server InvalidPathException Information Disclosure Vulnerability - Linux",
+    "description": [
+      "Eclipse Jetty Server is prone to an information disclosure vulnerability.",
+      "Quality of Detection (QoD): 30%"
+    ],
+    "detection_result": [
+      "Installed version: 9.2.13.20150730",
+      "Fixed version: 9.3.24.v20180605",
+      "Installation",
+      "path / port: 8161/tcp"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: Eclipse Jetty Server InvalidPathException Information Disclosure Vulnerability .",
+      "->..",
+      "OID:1.3.6.1.4.1.25623.1.0.813552",
+      "Version used: 2024-06-11T05:05:40Z"
+    ],
+    "product_detection_result": [
+      "Product: cpe:/a:eclipse:jetty:9.2.13.20150730",
+      "Method: Mort Bay / Eclipse Jetty Detection (HTTP)",
+      "OID: 1.3.6.1.4.1.25623.1.0.800953)"
+    ],
+    "impact": [
+      "Successful exploitation will allow an attacker to disclose sensitive information."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Upgrade to Eclipse Jetty Server version 9.3.24.v20180605 or 9.4.11.v20180605 or later as per the",
+      "series. Please see the references for more information.",
+      "Aected Software/OS",
+      "Eclipse Jetty Server versions 9.2.x, 9.3.x before 9.3.24.v20180605 and 9.4.x before",
+      "9.4.11.v20180605."
+    ],
+    "insight": [
+      "The aw exists due to an improper handling of bad queries."
+    ],
+    "log_method": [],
+    "cvss": [
+      "5.3"
+    ],
+    "port": 8161,
+    "protocol": "tcp",
+    "severity": "MEDIUM",
+    "references": [
+      "cve: CVE-2018-12536",
+      "url: https://bugs.eclipse.org/bugs/show_bug.cgi?id=535670",
+      "cert-bund: WID-SEC-2022-0620",
+      "dfn-cert: DFN-CERT-2021-1043",
+      "dfn-cert: DFN-CERT-2018-1285"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Eclipse Jetty HTTP Header Vulnerability (GHSA-hmr7-m48g-48f6) - Linux",
+    "description": [
+      "Eclipse Jetty is prone to an HTTP header vulnerability.",
+      "Quality of Detection (QoD): 30%"
+    ],
+    "detection_result": [
+      "Installed version: 9.2.13.20150730",
+      "Fixed version: 9.4.52",
+      "Installation",
+      "path / port: 8161/tcp"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: Eclipse Jetty HTTP Header Vulnerability (GHSA-hmr7-m48g-48f6) - Linux",
+      "OID:1.3.6.1.4.1.25623.1.0.151001",
+      "Version used: 2024-06-11T05:05:40Z"
+    ],
+    "product_detection_result": [
+      "Product: cpe:/a:eclipse:jetty:9.2.13.20150730"
+    ],
+    "impact": [],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 9.4.52, 10.0.16, 11.0.16, 12.0.1 or later.",
+      "Aected Software/OS",
+      "Eclipse Jetty version 9.0.0 through 9.4.51, 10.0.0 through 10.0.15, 11.0.0 through 11.0.15 and",
+      "version 12.0.0."
+    ],
+    "insight": [
+      "Jetty accepts the '+' character proceeding the content-length value in a HTTP/1 header eld.",
+      "This is more permissive than allowed by the RFC and other servers routinely reject such requests",
+      "with 400 responses. There is no known exploit scenario, but it is conceivable that request",
+      "smuggling could result if jetty is used in combination with a server that does not close the",
+      "connection after sending such a 400 response."
+    ],
+    "log_method": [],
+    "cvss": [
+      "5.3"
+    ],
+    "port": 8161,
+    "protocol": "tcp",
+    "severity": "MEDIUM",
+    "references": [],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Cleartext Transmission of Sensitive Information via HTTP",
+    "description": [
+      "The host / application transmits sensitive information (username, passwords) in cleartext via HTTP."
+    ],
+    "detection_result": [
+      "The following URLs requires Basic Authentication (URL:realm name):",
+      "http://activemq514.trabalho_vulnnet:8161/admin/:\"ActiveMQRealm\"",
+      "http://activemq514.trabalho_vulnnet:8161/admin/SecureDocumentLibrary/DocumentLibraryManager:\"ActiveMQRealm\"",
+      "http://activemq514.trabalho_vulnnet:8161/admin/SecureDocumentLibrary:\"ActiveMQRealm\"",
+      "http://activemq514.trabalho_vulnnet:8161/admin/airflow/login:\"ActiveMQRealm\"",
+      "http://activemq514.trabalho_vulnnet:8161/admin/airflow:\"ActiveMQRealm\"",
+      "http://activemq514.trabalho_vulnnet:8161/admin/ckeditor/plugins/ajaxplorer/phpunit/src/Util/PHP:\"ActiveMQRealm\"",
+      "http://activemq514.trabalho_vulnnet:8161/admin/ckeditor/plugins/ajaxplorer/phpunit/src/Util:\"ActiveMQRealm\"",
+      "http://activemq514.trabalho_vulnnet:8161/admin/ckeditor/plugins/ajaxplorer/phpunit/src:\"ActiveMQRealm\"",
+      "http://activemq514.trabalho_vulnnet:8161/admin/ckeditor/plugins/ajaxplorer/phpunit:\"ActiveMQRealm\"",
+      "http://activemq514.trabalho_vulnnet:8161/admin/ckeditor/plugins/ajaxplorer:\"ActiveMQRealm\"",
+      "http://activemq514.trabalho_vulnnet:8161/admin/ckeditor/plugins:\"ActiveMQRealm\"",
+      "http://activemq514.trabalho_vulnnet:8161/admin/ckeditor:\"ActiveMQRealm\"",
+      "http://activemq514.trabalho_vulnnet:8161/admin/configurationview:\"ActiveMQRealm\"",
+      "http://activemq514.trabalho_vulnnet:8161/admin/fckeditor:\"ActiveMQRealm\"",
+      "http://activemq514.trabalho_vulnnet:8161/admin/help:\"ActiveMQRealm\"",
+      "http://activemq514.trabalho_vulnnet:8161/admin/helpfiles:\"ActiveMQRealm\"",
+      "http://activemq514.trabalho_vulnnet:8161/admin/htmleditor:\"ActiveMQRealm\"",
+      "http://activemq514.trabalho_vulnnet:8161/admin/lib/cisco:\"ActiveMQRealm\"",
+      "http://activemq514.trabalho_vulnnet:8161/admin/lib/cpm:\"ActiveMQRealm\"",
+      "http://activemq514.trabalho_vulnnet:8161/admin/lib/dijit:\"ActiveMQRealm\"",
+      "http://activemq514.trabalho_vulnnet:8161/admin/lib/dojo:\"ActiveMQRealm\"",
+      "http://activemq514.trabalho_vulnnet:8161/admin/lib/dojox:\"ActiveMQRealm\"",
+      "http://activemq514.trabalho_vulnnet:8161/admin/lib/gradient:\"ActiveMQRealm\"",
+      "http://activemq514.trabalho_vulnnet:8161/admin/lib/wap:\"ActiveMQRealm\"",
+      "http://activemq514.trabalho_vulnnet:8161/admin/lib/xwt:\"ActiveMQRealm\"",
+      "http://activemq514.trabalho_vulnnet:8161/admin/lib:\"ActiveMQRealm\"",
+      "http://activemq514.trabalho_vulnnet:8161/admin/login:\"ActiveMQRealm\"",
+      "http://activemq514.trabalho_vulnnet:8161/admin/ng/nls:\"ActiveMQRealm\"",
+      "http://activemq514.trabalho_vulnnet:8161/admin/ng/v3:\"ActiveMQRealm\"",
+      "http://activemq514.trabalho_vulnnet:8161/admin/ng:\"ActiveMQRealm\"",
+      "http://activemq514.trabalho_vulnnet:8161/admin/pages/modules:\"ActiveMQRealm\"",
+      "http://activemq514.trabalho_vulnnet:8161/admin/pages/utils:\"ActiveMQRealm\"",
+      "http://activemq514.trabalho_vulnnet:8161/admin/pages:\"ActiveMQRealm\"",
+      "http://activemq514.trabalho_vulnnet:8161/admin/prelogin:\"ActiveMQRealm\"",
+      "http://activemq514.trabalho_vulnnet:8161/admin/public:\"ActiveMQRealm\"",
+      "http://activemq514.trabalho_vulnnet:8161/admin/rs/uiapi:\"ActiveMQRealm\"",
+      "http://activemq514.trabalho_vulnnet:8161/admin/rs/wap:\"ActiveMQRealm\"",
+      "http://activemq514.trabalho_vulnnet:8161/admin/rs:\"ActiveMQRealm\"",
+      "http://activemq514.trabalho_vulnnet:8161/admin/scripts:\"ActiveMQRealm\"",
+      "http://activemq514.trabalho_vulnnet:8161/admin/vendor/adminLTE:\"ActiveMQRealm\"",
+      "http://activemq514.trabalho_vulnnet:8161/admin/vendor/bootstrap:\"ActiveMQRealm\"",
+      "http://activemq514.trabalho_vulnnet:8161/admin/vendor/fonts:\"ActiveMQRealm\"",
+      "http://activemq514.trabalho_vulnnet:8161/admin/vendor/nprogress:\"ActiveMQRealm\"",
+      "http://activemq514.trabalho_vulnnet:8161/admin/vendor/phpunit/phpunit/src/Util/PHP:\"ActiveMQRealm\"",
+      ". . . continues on next page . . .",
+      "2 RESULTS PER HOST",
+      "34",
+      "http://activemq514.trabalho_vulnnet:8161/admin/airflow/login:\"ActiveMQRealm\"",
+      "http://activemq514.trabalho_vulnnet:8161/admin/airflow:\"ActiveMQRealm\"",
+      "http://activemq514.trabalho_vulnnet:8161/admin/ckeditor/plugins/ajaxplorer/phpunit/src/Util/PHP:\"ActiveMQRealm\"",
+      "http://activemq514.trabalho_vulnnet:8161/admin/ckeditor/plugins/ajaxplorer/phpunit/src/Util:\"ActiveMQRealm\"",
+      "http://activemq514.trabalho_vulnnet:8161/admin/ckeditor/plugins/ajaxplorer/phpunit/src:\"ActiveMQRealm\"",
+      "http://activemq514.trabalho_vulnnet:8161/admin/ckeditor/plugins/ajaxplorer/phpunit:\"ActiveMQRealm\"",
+      "http://activemq514.trabalho_vulnnet:8161/admin/ckeditor/plugins/ajaxplorer:\"ActiveMQRealm\"",
+      "http://activemq514.trabalho_vulnnet:8161/admin/ckeditor/plugins:\"ActiveMQRealm\"",
+      "http://activemq514.trabalho_vulnnet:8161/admin/ckeditor:\"ActiveMQRealm\"",
+      "http://activemq514.trabalho_vulnnet:8161/admin/configurationview:\"ActiveMQRealm\"",
+      "http://activemq514.trabalho_vulnnet:8161/admin/fckeditor:\"ActiveMQRealm\"",
+      "http://activemq514.trabalho_vulnnet:8161/admin/help:\"ActiveMQRealm\"",
+      "http://activemq514.trabalho_vulnnet:8161/admin/helpfiles:\"ActiveMQRealm\"",
+      "http://activemq514.trabalho_vulnnet:8161/admin/htmleditor:\"ActiveMQRealm\"",
+      "http://activemq514.trabalho_vulnnet:8161/admin/lib/cisco:\"ActiveMQRealm\"",
+      "http://activemq514.trabalho_vulnnet:8161/admin/lib/cpm:\"ActiveMQRealm\"",
+      "http://activemq514.trabalho_vulnnet:8161/admin/lib/dijit:\"ActiveMQRealm\"",
+      "http://activemq514.trabalho_vulnnet:8161/admin/lib/dojo:\"ActiveMQRealm\"",
+      "http://activemq514.trabalho_vulnnet:8161/admin/lib/dojox:\"ActiveMQRealm\"",
+      "http://activemq514.trabalho_vulnnet:8161/admin/lib/gradient:\"ActiveMQRealm\"",
+      "http://activemq514.trabalho_vulnnet:8161/admin/lib/wap:\"ActiveMQRealm\"",
+      "http://activemq514.trabalho_vulnnet:8161/admin/lib/xwt:\"ActiveMQRealm\"",
+      "http://activemq514.trabalho_vulnnet:8161/admin/lib:\"ActiveMQRealm\"",
+      "http://activemq514.trabalho_vulnnet:8161/admin/login:\"ActiveMQRealm\"",
+      "http://activemq514.trabalho_vulnnet:8161/admin/ng/nls:\"ActiveMQRealm\"",
+      "http://activemq514.trabalho_vulnnet:8161/admin/ng/v3:\"ActiveMQRealm\"",
+      "http://activemq514.trabalho_vulnnet:8161/admin/ng:\"ActiveMQRealm\"",
+      "http://activemq514.trabalho_vulnnet:8161/admin/pages/modules:\"ActiveMQRealm\"",
+      "http://activemq514.trabalho_vulnnet:8161/admin/pages/utils:\"ActiveMQRealm\"",
+      "http://activemq514.trabalho_vulnnet:8161/admin/pages:\"ActiveMQRealm\""
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [],
+    "cvss": [
+      "5.0"
+    ],
+    "port": 8161,
+    "protocol": "tcp",
+    "severity": "MEDIUM",
+    "references": [],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Apache ActiveMQ Fileserver Remote Code Execution Vulnerability",
+    "description": [
+      "Apache ActiveMQ is an open source message broker written in Java together with a full Java Message Service (JMS) client. It provides 'Enterprise Features' which in this case includes exposing a fileserver to clients. The fileserver is used for fileserver update functionality. Multiple vulnerabilities exist that allow an attacker to upload arbitrary files to the fileserver or move them to other locations which may lead to code execution."
+    ],
+    "detection_result": [
+      "The remote host is affected by the vulnerability."
+    ],
+    "detection_method": [
+      "The detection is based on a banner check."
+    ],
+    "product_detection_result": [
+      "The remote host is running Apache ActiveMQ version 5.14.0."
+    ],
+    "impact": [
+      "An attacker may be able to upload arbitrary files to the fileserver or move them to other locations which may lead to code execution."
+    ],
+    "solution": [
+      "Update to Apache ActiveMQ version 5.14.1 or later."
+    ],
+    "insight": [
+      "The vulnerability is caused by insufficient input validation in the fileserver functionality."
+    ],
+    "log_method": [
+      "The detection is based on a banner check."
+    ],
+    "cvss": [
+      "9.8"
+    ],
+    "port": 8161,
+    "protocol": "tcp",
+    "severity": "CRITICAL",
+    "references": [
+      "CVE-2016-3088",
+      "https://activemq.apache.org/security-advisories.data/CVE-2016-3088-announcement.txt"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "MQTT Broker Does Not Require Authentication (TCP)",
+    "description": [
+      "The remote MQTT broker does not require authentication.",
+      "Quality of Detection (QoD): 99%"
+    ],
+    "detection_result": [
+      "Vulnerability was detected according to the Vulnerability Detection Method."
+    ],
+    "detection_method": [
+      "Checks if authentication is required for the remote MQTT broker.",
+      "Notes:",
+      "- No scan result is expected if localhost (127.0.0.1) was scanned (self scanning)",
+      "- If the scanned network is e.g. a private LAN / private WAN which contains systems not accessible to the public (access restricted) and it is accepted that the service is accessible without authentication please set the 'Network type' conguration of the following VT to e.g. 'Private LAN' or 'Private WAN':",
+      "Global variable settings (OID: 1.3.6.1.4.1.25623.1.0.12288)",
+      "Details: MQTT Broker Does Not Require Authentication (TCP)",
+      "OID:1.3.6.1.4.1.25623.1.0.140167",
+      "Version used: 2025-11-25T05:40:35Z"
+    ],
+    "product_detection_result": [
+      "cpe:/a:mqtt:mqtt",
+      "Detected by MQTT Broker Detection (TCP) (OID: 1.3.6.1.4.1.25623.1.0.140166)",
+      "Product: cpe:/a:mqtt:mqtt",
+      "Method: MQTT Broker Detection (TCP)",
+      "OID: 1.3.6.1.4.1.25623.1.0.140166)"
+    ],
+    "impact": [
+      "This issue may be exploited by a remote attacker to gain access to sensitive information."
+    ],
+    "solution": [
+      "Solution type: Mitigation",
+      "Enable authentication."
+    ],
+    "insight": [],
+    "log_method": [],
+    "cvss": [
+      "6.4"
+    ],
+    "port": 1883,
+    "protocol": "tcp",
+    "severity": "MEDIUM",
+    "references": [
+      "url: https://www.heise.de/newsticker/meldung/MQTT-Protokoll-IoT-Kommunikation-von-Reaktoren-und-Gefaengnissen-oeffentlich-einsehbar-3629650.html"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "MQTT Broker Does Not Require Authentication",
+    "description": [
+      "The remote MQTT broker does not require authentication."
+    ],
+    "detection_result": [
+      "Vulnerability was detected according to the Vulnerability Detection Method."
+    ],
+    "detection_method": [
+      "Checks if authentication is required for the remote MQTT broker.",
+      "Notes:",
+      "- No scan result is expected if localhost (127.0.0.1) was scanned (self scanning)",
+      "- If the scanned network is e.g. a private LAN / private WAN which contains systems not accessible to the public (access restricted) and it is accepted that the service is accessible without authentication please set the 'Network type' configuration of the following VT to e.g. 'Private LAN' or 'Private WAN':",
+      "Global variable settings (OID: 1.3.6.1.4.1.25623.1.0.12288)",
+      "Details: MQTT Broker Does Not Require Authentication (TCP)",
+      "OID:1.3.6.1.4.1.25623.1.0.140167",
+      "Version used: 2025-11-25T05:40:35Z"
+    ],
+    "product_detection_result": [
+      "Product: cpe:/a:mqtt:mqtt",
+      "Method: MQTT Broker Detection (TCP)",
+      "OID: 1.3.6.1.4.1.25623.1.0.140166)"
+    ],
+    "impact": [
+      "This issue may be exploited by a remote attacker to gain access to sensitive information."
+    ],
+    "solution": [
+      "Solution type: Mitigation",
+      "Enable authentication."
+    ],
+    "insight": [],
+    "log_method": [],
+    "cvss": [
+      "2.1"
+    ],
+    "port": "general",
+    "protocol": "tcp",
+    "severity": "LOW",
+    "references": [
+      "url: https://www.heise.de/newsticker/meldung/MQTT-Protokoll-IoT-Kommunikation-von-Reaktoren-und-Gefaengnissen-oeffentlich-einsehbar-3629650.html"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "TCP Timestamps Information Disclosure",
+    "description": [
+      "The remote host implements TCP timestamps and therefore allows to compute the uptime.",
+      "Quality of Detection (QoD): 80%"
+    ],
+    "detection_result": [
+      "It was detected that the host implements RFC1323/RFC7323.",
+      "The following timestamps were retrieved with a delay of 1 seconds in-between:",
+      "Packet 1: 1892358772",
+      "Packet 2: 1892359859"
+    ],
+    "detection_method": [
+      "Special IP packets are forged and sent with a little delay in between to the target IP. The responses are searched for a timestamps. If found, the timestamps are reported.",
+      "Details: TCP Timestamps Information Disclosure",
+      "OID:1.3.6.1.4.1.25623.1.0.80091",
+      "Version used: 2023-12-15T16:10:08Z"
+    ],
+    "product_detection_result": [],
+    "impact": [
+      "A side eect of this feature is that the uptime of the remote host can sometimes be computed."
+    ],
+    "solution": [
+      "Solution type: Mitigation",
+      "To disable TCP timestamps on linux add the line 'net.ipv4.tcp_timestamps = 0' to /etc/sysctl.conf. Execute 'sysctl -p' to apply the settings at runtime.",
+      "To disable TCP timestamps on Windows execute 'netsh int tcp set global timestamps=disabled'",
+      "Starting with Windows Server 2008 and Vista, the timestamp can not be completely disabled.",
+      "The default behavior of the TCP/IP stack on this Systems is to not use the Timestamp options when initiating TCP connections, but use them if the TCP peer that is initiating communication includes them in their synchronize (SYN) segment.",
+      "See the references for more information."
+    ],
+    "insight": [
+      "The remote host implements TCP timestamps, as dened by RFC1323/RFC7323."
+    ],
+    "log_method": [],
+    "cvss": [
+      "2.6"
+    ],
+    "port": "general",
+    "protocol": "tcp",
+    "severity": "LOW",
+    "references": [
+      "url: https://datatracker.ietf.org/doc/html/rfc1323",
+      "url: https://datatracker.ietf.org/doc/html/rfc7323",
+      "url: https://web.archive.org/web/20151213072445/http://www.microsoft.com/en-us/download/details.aspx?id=9152",
+      "url: https://www.fortiguard.com/psirt/FG-IR-16-090"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Eclipse Jetty Session Vulnerability (GHSA-m6cp-vxjx-65j6) - Linux",
+    "description": [
+      "Eclipse Jetty is prone to a vulnerability in the session management.",
+      "Quality of Detection (QoD): 30%"
+    ],
+    "detection_result": [
+      "Installed version: 9.2.13.20150730",
+      "Fixed version: 9.4.41.20210516",
+      "Installation",
+      "path / port: 8161/tcp"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: Eclipse Jetty Session Vulnerability (GHSA-m6cp-vxjx-65j6) - Linux",
+      "OID:1.3.6.1.4.1.25623.1.0.146164",
+      "Version used: 2024-06-11T05:05:40Z"
+    ],
+    "product_detection_result": [
+      "cpe:/a:eclipse:jetty:9.2.13.20150730",
+      "Detected by Mort Bay / Eclipse Jetty Detection (HTTP) (OID: 1.3.6.1.4.1.25623.1.0.800953)",
+      "Product: cpe:/a:eclipse:jetty:9.2.13.20150730",
+      "Method: Mort Bay / Eclipse Jetty Detection (HTTP)   OID: 1.3.6.1.4.1.25623.1.0.800953)"
+    ],
+    "impact": [
+      "If an exception is thrown from the SessionListener#sessionDestroyed() method, then the session ID is not invalidated in the session ID manager. On deployments with clustered sessions and multiple contexts this can result in a session not being invalidated. This can result in an application used on a shared computer being left logged in."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 9.4.41.v20210516, 10.0.3, 11.0.3 or later."
+    ],
+    "insight": [
+      "If an exception is thrown from the SessionListener#sessionDestroyed() method, then the ses- sion ID is not invalidated in the session ID manager. On deployments with clustered sessions and multiple contexts this can result in a session not being invalidated. This can result in an application used on a shared computer being left logged in."
+    ],
+    "log_method": [],
+    "cvss": [
+      "3.4"
+    ],
+    "port": 8161,
+    "protocol": "tcp",
+    "severity": "LOW",
+    "references": [
+      "cve: CVE-2021-34428",
+      "url: https://github.com/eclipse/jetty.project/security/advisories/GHSA-m6cp-vxjx-65j6",
+      "cert-bund: WID-SEC-2024-0794",
+      "cert-bund: WID-SEC-2022-1596",
+      "cert-bund: WID-SEC-2022-1161",
+      "dfn-cert: DFN-CERT-2024-3084",
+      "dfn-cert: DFN-CERT-2021-2620",
+      "dfn-cert: DFN-CERT-2021-2186",
+      "dfn-cert: DFN-CERT-2021-2045",
+      "dfn-cert: DFN-CERT-2021-1780",
+      "dfn-cert: DFN-CERT-2021-1728",
+      "dfn-cert: DFN-CERT-2021-1665"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Eclipse Jetty XXE Vulnerability (GHSA-58qw-p7qm-5rvh) - Linux",
+    "description": [
+      "Eclipse Jetty is prone to a XML external entity (XXE) vulnerability in the XMLParser.",
+      "Quality of Detection (QoD): 30%"
+    ],
+    "detection_result": [
+      "Installed version: 9.2.13.20150730",
+      "Fixed version: 9.4.52",
+      "Installation",
+      "path / port: 8161/tcp"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: Eclipse Jetty XXE Vulnerability (GHSA-58qw-p7qm-5rvh) - Linux",
+      "OID:1.3.6.1.4.1.25623.1.0.151573",
+      "Version used: 2024-06-11T05:05:40Z"
+    ],
+    "product_detection_result": [
+      "cpe:/a:eclipse:jetty:9.2.13.20150730",
+      "Detected by Mort Bay / Eclipse Jetty Detection (HTTP) (OID: 1.3.6.1.4.1.25623.1.0.800953)",
+      "Product: cpe:/a:eclipse:jetty:9.2.13.20150730",
+      "Method: Mort Bay / Eclipse Jetty Detection (HTTP)",
+      "OID: 1.3.6.1.4.1.25623.1.0.800953)"
+    ],
+    "impact": [
+      "XmlParser is being used when parsing Jetty's xml conguration les. An attacker might exploit this vulnerability in order to achieve SSRF or cause a denial of service.",
+      "One possible scenario is importing a (remote) malicious WAR into a Jetty's server, while the WAR includes a malicious web.xml."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 9.4.52, 10.0.16, 11.0.16 or later."
+    ],
+    "insight": [
+      "XmlParser is being used when parsing Jetty's xml conguration les. An attacker might exploit this vulnerability in order to achieve SSRF or cause a denial of service.",
+      "One possible scenario is importing a (remote) malicious WAR into a Jetty's server, while the WAR includes a malicious web.xml."
+    ],
+    "log_method": [],
+    "cvss": [
+      "3.1"
+    ],
+    "port": 8161,
+    "protocol": "tcp",
+    "severity": "LOW",
+    "references": [
+      "url: https://github.com/jetty/jetty.project/security/advisories/GHSA-58qw-p7qm-5rvh"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Eclipse Jetty CgiServlet Vulnerability (GHSA-3gh6-v5v9-6v9j) - Linux",
+    "description": [
+      "Eclipse Jetty is prone to a vulnerability in the CgiServlet.",
+      "Quality of Detection (QoD): 30%"
+    ],
+    "detection_result": [
+      "Installed version: 9.2.13.20150730",
+      "Fixed version: 9.4.52",
+      "Installation path / port: 8161/tcp"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: Eclipse Jetty CgiServlet Vulnerability (GHSA-3gh6-v5v9-6v9j) - Linux OID:1.3.6.1.4.1.25623.1.0.151003 Version used: 2025-05-28T05:40:15Z"
+    ],
+    "product_detection_result": [
+      "cpe:/a:eclipse:jetty:9.2.13.20150730",
+      "Detected by Mort Bay / Eclipse Jetty Detection (HTTP) (OID: 1.3.6.1.4.1.25623.1.0.800953)"
+    ],
+    "impact": [],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 9.4.52, 10.0.16, 11.0.16 or later."
+    ],
+    "insight": [
+      "Users of the CgiServlet with a very specific command structure may have the wrong command executed. If a user sends a request to a org.eclipse.jetty.servlets.CGI Servlet for a binary with a space in its name, the servlet will escape the command by wrapping it in quotation marks. This wrapped command, plus an optional command prefix, will then be executed through a call to Runtime.exec. If the original binary name provided by the user contains a quotation mark followed by a space, the resulting command line will contain multiple tokens instead of one."
+    ],
+    "log_method": [],
+    "cvss": [
+      "2.0"
+    ],
+    "port": 8161,
+    "protocol": "tcp",
+    "severity": "LOW",
+    "references": [
+      "cve: CVE-2023-36479",
+      "url: https://github.com/eclipse/jetty.project/security/advisories/GHSA-3gh6-v5v9-6v9j",
+      "cert-bund: WID-SEC-2024-0949",
+      "cert-bund: WID-SEC-2024-0794",
+      "cert-bund: WID-SEC-2023-2359",
+      "dfn-cert: DFN-CERT-2024-1568",
+      "dfn-cert: DFN-CERT-2024-1404",
+      "dfn-cert: DFN-CERT-2024-1089",
+      "dfn-cert: DFN-CERT-2024-0376",
+      "dfn-cert: DFN-CERT-2023-3167",
+      "dfn-cert: DFN-CERT-2023-2892",
+      "dfn-cert: DFN-CERT-2023-2646",
+      "dfn-cert: DFN-CERT-2023-2346",
+      "dfn-cert: DFN-CERT-2023-2341"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "ICMP Timestamp Reply Information Disclosure",
+    "description": [
+      "The remote host responded to an ICMP timestamp request.",
+      "Quality of Detection (QoD): 80%"
+    ],
+    "detection_result": [
+      "The following response / ICMP packet has been received:",
+      "- ICMP Type: 14",
+      "- ICMP Code: 0"
+    ],
+    "detection_method": [
+      "Sends an ICMP Timestamp (Type 13) request and checks if a Timestamp Reply (Type 14) is received.",
+      "Details: ICMP Timestamp Reply Information Disclosure",
+      "OID:1.3.6.1.4.1.25623.1.0.103190",
+      "Version used: 2025-01-21T05:37:33Z"
+    ],
+    "product_detection_result": [],
+    "impact": [
+      "This information could theoretically be used to exploit weak time-based random number generators in other services."
+    ],
+    "solution": [
+      "Solution type: Mitigation",
+      "Various mitigations are possible:",
+      "- Disable the support for ICMP timestamp on the remote host completely",
+      "- Protect the remote host by a firewall, and block ICMP packets passing through the firewall in either direction (either completely or only for untrusted networks)"
+    ],
+    "insight": [
+      "The Timestamp Reply is an ICMP message which replies to a Timestamp message. It consists of the originating timestamp sent by the sender of the Timestamp as well as a receive timestamp and a transmit timestamp."
+    ],
+    "log_method": [],
+    "cvss": [
+      "2.1"
+    ],
+    "port": "general",
+    "protocol": "icmp",
+    "severity": "LOW",
+    "references": [
+      "cve: CVE-1999-0524",
+      "url: https://datatracker.ietf.org/doc/html/rfc792",
+      "url: https://datatracker.ietf.org/doc/html/rfc2780",
+      "cert-bund: CB-K15/1514",
+      "cert-bund: CB-K14/0632",
+      "dfn-cert: DFN-CERT-2014-0658"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "OS Detection Consolidation and Reporting",
+    "description": [
+      "This script consolidates the OS information detected by several VTs and tries to nd the best matching OS.",
+      "Furthermore it reports all previously collected information leading to this best matching OS. It also reports possible additional information which might help to improve the OS detection.",
+      "If any of this information is wrong or could be improved please consider to report these to the referenced community forum.",
+      "Quality of Detection (QoD): 80%"
+    ],
+    "detection_result": [
+      "Best matching OS:",
+      "OS: Linux Kernel",
+      "CPE: cpe:/o:linux:kernel",
+      "Found by VT: 1.3.6.1.4.1.25623.1.0.102002 (Operating System (OS) Detection (ICM ->P))",
+      "Concluded from ICMP based OS fingerprint",
+      "Setting key \"Host/runs_unixoide\" based on this information"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [
+      "Details: OS Detection Consolidation and Reporting",
+      "OID:1.3.6.1.4.1.25623.1.0.105937",
+      "Version used: 2026-01-21T05:50:46Z"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": "general",
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [
+      "url: https://forum.greenbone.net/c/vulnerability-tests/7"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "IP Forwarding Enabled - Active Check",
+    "description": [
+      "Checks if the remote host has IP forwarding enabled.",
+      "Quality of Detection (QoD): 70%"
+    ],
+    "detection_result": [
+      "It was possible to route a TCP packet through the target host and received an an ->swer which means IP forwarding is enabled."
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [
+      "Sends a crafted Local Link Layer (LLL) frame and checks the response.",
+      "Details: IP Forwarding Enabled - Active Check",
+      "OID:1.3.6.1.4.1.25623.1.0.147205",
+      "Version used: 2021-12-03T08:27:06Z"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": "general",
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [
+      "cve: CVE-1999-0511"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Traceroute",
+    "description": [
+      "Collect information about the network route and network distance between the scanner host and the target host.",
+      "Quality of Detection (QoD): 80%"
+    ],
+    "detection_result": [
+      "Network route from scanner (172.30.0.2) to target (172.31.1.61):",
+      "172.30.0.2",
+      "172.31.1.61",
+      "Network distance between scanner and target: 2"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [
+      "For internal networks, the distances are usually small, often less than 4 hosts between scanner and target. For public targets the distance is greater and might be 10 hosts or more."
+    ],
+    "log_method": [
+      "A combination of the protocols ICMP and TCP is used to determine the route. This method is applicable for IPv4 only and it is also known as 'traceroute'.",
+      "Details: Traceroute",
+      "OID:1.3.6.1.4.1.25623.1.0.51662",
+      "Version used: 2022-10-17T11:13:19Z"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": "general",
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Hostname Determination Reporting",
+    "description": [
+      "The script reports information on how the hostname of the target was determined.",
+      "Quality of Detection (QoD): 80%"
+    ],
+    "detection_result": [
+      "Hostname determination for IP 172.31.1.61:",
+      "Hostname|Source",
+      "activemq514.trabalho_vulnnet|Reverse-DNS"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [
+      "Details: Hostname Determination Reporting",
+      "OID:1.3.6.1.4.1.25623.1.0.108449",
+      "Version used: 2022-07-27T10:11:28Z"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": "general",
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Apache ActiveMQ Detection Consolidation",
+    "description": [
+      "Consolidation of Apache ActiveMQ detections.",
+      "Quality of Detection (QoD): 80%"
+    ],
+    "detection_result": [
+      "Detected Apache ActiveMQ",
+      "Version: unknown",
+      "Location: /",
+      "CPE: cpe:/a:apache:activemq",
+      "Detection methods:",
+      "HTTP(s) on port 8161/tcp",
+      "Concluded from version/product identification location: http://activemq514.tra ->balho_vulnnet:8161/admin/index.jsp"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [
+      "Details: Apache ActiveMQ Detection Consolidation",
+      "OID:1.3.6.1.4.1.25623.1.0.143776",
+      "Version used: 2024-07-03T06:48:05Z"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": "general",
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [
+      "url: https://activemq.apache.org/"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Mort Bay / Eclipse Jetty Detection (HTTP)",
+    "description": [
+      "HTTP based detection of Mort Bay / Eclipse Jetty."
+    ],
+    "detection_result": [
+      "Detected Mort Bay / Eclipse Jetty",
+      "Version: 9.2.13.20150730",
+      "Location: 8161/tcp",
+      "CPE: cpe:/a:eclipse:jetty:9.2.13.20150730",
+      "Concluded from version/product identification result:",
+      "Server: Jetty(9.2.13.v20150730)"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [
+      "Details: Mort Bay / Eclipse Jetty Detection (HTTP)",
+      "OID:1.3.6.1.4.1.25623.1.0.800953",
+      "Version used: 2024-06-12T05:05:44Z"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": 8161,
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [
+      "url: https://www.eclipse.org/jetty/"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Services",
+    "description": [
+      "This plugin performs service detection."
+    ],
+    "detection_result": [
+      "A web server is running on this port"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [
+      "This plugin attempts to guess which service is running on the remote port(s). For instance, it searches for a web server which could listen on another port than 80 or 443 and makes this information available for other check routines."
+    ],
+    "log_method": [
+      "Details: Services",
+      "OID:1.3.6.1.4.1.25623.1.0.10330",
+      "Version used: 2025-03-05T05:38:53Z"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": 8161,
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "HTTP Server type and version",
+    "description": [
+      "This script detects and reports the HTTP Server's banner which might provide the type and version of it."
+    ],
+    "detection_result": [
+      "The remote HTTP Server banner is:",
+      "Server: Jetty(9.2.13.v20150730)"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [
+      "Details: HTTP Server type and version",
+      "OID:1.3.6.1.4.1.25623.1.0.10107",
+      "Version used: 2023-08-01T13:29:10Z"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": 8161,
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "HTTP Server Banner Enumeration",
+    "description": [
+      "This script tries to detect / enumerate dierent HTTP server banner (e.g. from a frontend, backend or proxy server) by sending various dierent HTTP requests (valid and invalid ones)."
+    ],
+    "detection_result": [
+      "It was possible to enumerate the following HTTP server banner(s):",
+      "Server banner | Enumeration technique",
+      "--------------------------------------------------------------------------------",
+      "->------------------",
+      "Server: Jetty(9.2.13.v20150730) | Invalid HTTP 00.5 GET request (non-existent HT",
+      "->TP version) to '/'"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [
+      "Details: HTTP Server Banner Enumeration",
+      "OID:1.3.6.1.4.1.25623.1.0.108708",
+      "Version used: 2025-01-31T15:39:24Z"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": 8161,
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "HTTP Security Headers Detection",
+    "description": [
+      "All known security headers are being checked on the remote web server.",
+      "On completion a report will hand back whether a specic security header has been implemented (including its value and if it is deprecated) or is missing on the target.",
+      "Quality of Detection (QoD): 80%"
+    ],
+    "detection_result": [
+      "Header Name | Header Value",
+      "------------------------------",
+      "X-FRAME-OPTIONS | SAMEORIGIN",
+      "Missing Headers | More Information",
+      "--------------------------------------------------------------------------------",
+      "->------------------------------------------------------------------------------",
+      "->------------------------------------------------",
+      "Content-Security-Policy | https://owasp.org/www-project-secure-headers",
+      "->/#content-security-policy",
+      "Cross-Origin-Embedder-Policy | https://scotthelme.co.uk/coop-and-coep/, Not",
+      "->e: This is an upcoming header",
+      "Cross-Origin-Opener-Policy | https://scotthelme.co.uk/coop-and-coep/, Not",
+      "->e: This is an upcoming header",
+      "Cross-Origin-Resource-Policy | https://scotthelme.co.uk/coop-and-coep/, Not",
+      "->e: This is an upcoming header",
+      "Document-Policy | https://w3c.github.io/webappsec-feature-poli",
+      "->cy/document-policy#document-policy-http-header",
+      "Feature-Policy | https://owasp.org/www-project-secure-headers",
+      "->/#feature-policy, Note: The Feature Policy header has been renamed to Permissi",
+      "->ons Policy",
+      "Permissions-Policy | https://w3c.github.io/webappsec-feature-poli",
+      "->cy/#permissions-policy-http-header-field",
+      "Referrer-Policy | https://owasp.org/www-project-secure-headers",
+      "->/#referrer-policy",
+      "Sec-Fetch-Dest | https://developer.mozilla.org/en-US/docs/Web  ->/HTTP/Headers#fetch_metadata_request_headers, Note: This is a new header suppo  ->rted only in newer browsers like e.g. Firefox 90   Sec-Fetch-Mode | https://developer.mozilla.org/en-US/docs/Web  ->/HTTP/Headers#fetch_metadata_request_headers, Note: This is a new header suppo  ->rted only in newer browsers like e.g. Firefox 90   Sec-Fetch-Site | https://developer.mozilla.org/en-US/docs/Web  ->/HTTP/Headers#fetch_metadata_request_headers, Note: This is a new header suppo  ->rted only in newer browsers like e.g. Firefox 90   Sec-Fetch-User | https://developer.mozilla.org/en-US/docs/Web  ->/HTTP/Headers#fetch_metadata_request_headers, Note: This is a new header suppo  ->rted only in newer browsers like e.g. Firefox 90   X-Content-Type-Options | https://owasp.org/www-project-secure-headers  ->/#x-content-type-options   X-Permitted-Cross-Domain-Policies | https://owasp.org/www-project-secure-headers  ->/#x-permitted-cross-domain-policies   X-XSS-Protection | https://owasp.org/www-project-secure-headers  ->/#x-xss-protection, Note: Most major browsers have dropped / deprecated suppor  ->t for this header in 2020."
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [
+      "Details: HTTP Security Headers Detection",
+      "OID:1.3.6.1.4.1.25623.1.0.112081",
+      "Version used: 2025-03-21T15:40:43Z"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": 8161,
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [
+      "url: https://owasp.org/www-project-secure-headers/",
+      "url: https://owasp.org/www-project-secure-headers/#div-headers",
+      "url: https://securityheaders.com/"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Web Application Scanning Consolidation / Info Reporting",
+    "description": [
+      "The script consolidates and reports various information for web application (formerly called 'CGI') scanning.",
+      "This information is based on the following scripts / settings:",
+      "- HTTP-Version Detection (OID: 1.3.6.1.4.1.25623.1.0.100034)",
+      "- No 404 check (OID: 1.3.6.1.4.1.25623.1.0.10386)",
+      "- Web mirroring / webmirror.nasl (OID: 1.3.6.1.4.1.25623.1.0.10662)",
+      "- Directory Scanner / DDI_Directory_Scanner.nasl (OID: 1.3.6.1.4.1.25623.1.0.11032)",
+      "- The congured 'cgi_path' within the 'Scanner Preferences' of the scan cong in use"
+    ],
+    "detection_result": [],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [],
+    "cvss": [
+      "0.0"
+    ],
+    "port": 8161,
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Web Application Directory Scanner",
+    "description": [
+      "The scanner has found a number of directories on the web server. While this is not, in and of itself, a bug, you should manually inspect these directories to ensure that they are in compliance with company security standards."
+    ],
+    "detection_result": [
+      "The following directories were used for web application scanning: http://activemq514.trabalho_vulnnet:8161/, http://activemq514.trabalho_vulnnet:8161/demo"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [
+      "An attacker may find sensitive information or functionality in these directories."
+    ],
+    "solution": [
+      "Manually inspect the discovered directories and remove any that are not required for the application to function."
+    ],
+    "insight": [],
+    "log_method": [],
+    "cvss": [
+      "0.0"
+    ],
+    "port": 8161,
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Allowed HTTP Methods Enumeration",
+    "description": [
+      "Enumerates which HTTP methods are allowed."
+    ],
+    "detection_result": [
+      "The following list contains the URLs and corresponding supported HTTP methods.",
+      "URL | HTTP Methods",
+      "--------------------------------------------------------",
+      "http://activemq514.trabalho_vulnnet:8161/ | GET,HEAD"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [
+      "- Basic HTTP methods: GET, HEAD, POST, PUT, DELETE, CONNECT, OPTIONS, TRACE"
+    ],
+    "log_method": [
+      "Details: Web Application Scanning Consolidation / Info Reporting",
+      "OID:1.3.6.1.4.1.25623.1.0.111038",
+      "Version used: 2026-01-13T05:47:36Z"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": 8161,
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [
+      "url: https://forum.greenbone.net/c/vulnerability-tests/7"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "CPE Inventory",
+    "description": [
+      "This routine uses information collected by other routines about CPE identities of operating systems, services and applications detected during the scan.",
+      "Note: Some CPEs for specic products might show up twice or more in the output. Background: After a product got renamed or a specic vendor was acquired by another one it might happen that a product gets a new CPE within the NVD CPE Dictionary but older entries are kept with the older CPE."
+    ],
+    "detection_result": [
+      "172.31.1.61|cpe:/a:apache:activemq",
+      "172.31.1.61|cpe:/a:eclipse:jetty:9.2.13.20150730",
+      "172.31.1.61|cpe:/o:linux:kernel"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [],
+    "cvss": [
+      "0.0"
+    ],
+    "port": 8161,
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "CPE Inventory",
+    "description": [
+      "This routine uses information collected by other routines about CPE identities of operating systems, services and applications detected during the scan.",
+      "Note: Some CPEs for specic products might show up twice or more in the output. Background: After a product got renamed or a specic vendor was acquired by another one it might happen that a product gets a new CPE within the NVD CPE Dictionary but older entries are kept with the older CPE."
+    ],
+    "detection_result": [
+      "172.31.1.61|cpe:/a:apache:activemq",
+      "172.31.1.61|cpe:/a:eclipse:jetty:9.2.13.20150730",
+      "172.31.1.61|cpe:/o:linux:kernel"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [
+      "Details: CPE Inventory",
+      "OID:1.3.6.1.4.1.25623.1.0.810002   Version used: 2022-07-27T10:11:28Z   References   url: https://nvd.nist.gov/products/cpe   [ return to 172.31.1.61 ]"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": "general",
+    "protocol": "CPE-T",
+    "severity": "LOG",
+    "references": [
+      "url: https://nvd.nist.gov/products/cpe"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "MQTT Broker Detection (TCP)",
+    "description": [
+      "TCP based detection of a MQTT Broker."
+    ],
+    "detection_result": [
+      "A MQTT Broker is running at this port."
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [
+      "Details: MQTT Broker Detection (TCP)",
+      "OID:1.3.6.1.4.1.25623.1.0.140166   Version used: 2025-04-29T05:39:55Z   [ return to 172.31.1.61 ]"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": 1883,
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Service Detection with 'GET' Request",
+    "description": [
+      "This plugin performs service detection.",
+      "Quality of Detection (QoD): 80%"
+    ],
+    "detection_result": [
+      "An AMQP service seems to be running on this port."
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [
+      "This plugin is a complement of the plugin 'Services' (OID: 1.3.6.1.4.1.25623.1.0.10330). It sends a HTTP 'GET' request to the remaining unknown services and tries to identify them."
+    ],
+    "log_method": [
+      "Details: Service Detection with 'GET' Request",
+      "OID:1.3.6.1.4.1.25623.1.0.17975",
+      "Version used: 2025-09-12T15:39:53Z"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": 5672,
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  }
+]

@@ -1,0 +1,34 @@
+# LOG DE VULNERABILIDADES REMOVIDAS (sem descrição válida)
+
+Removida 1:
+{
+  "Name": "OpenVAS / Greenbone Vulnerability Manager Detection",
+  "description": [],
+  "detection_result": [
+    "A web server is running on this port"
+  ],
+  "detection_method": [],
+  "product_detection_result": [],
+  "impact": [],
+  "solution": [],
+  "insight": [
+    "This plugin attempts to guess which service is running on the remote port(s). For instance, it searches for a web server which could listen on another port than 80 or 443 and makes this information available for other check routines."
+  ],
+  "log_method": [
+    "Details: Services",
+    "OID:1.3.6.1.4.1.25623.1.0.10330",
+    "Version used: 2025-03-05T05:38:53Z"
+  ],
+  "cvss": [
+    "0.0"
+  ],
+  "port": 9200,
+  "protocol": "tcp",
+  "severity": "LOG",
+  "references": [],
+  "plugin": null,
+  "plugin_details": {},
+  "instances": [],
+  "source": "OPENVAS"
+}
+---

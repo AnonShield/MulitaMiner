@@ -1,0 +1,160 @@
+# LOG DE DEDUPLICAÇÃO DE VULNERABILIDADES
+Este arquivo lista todas as vulnerabilidades consideradas duplicatas e agrupadas durante o processo.
+Cada grupo é identificado por uma chave composta (ex: nome, porta, protocolo).
+Apenas a vulnerabilidade mais completa e com descrição válida foi mantida em cada grupo.
+
+Total de grupos de duplicatas: 25
+Total de vulnerabilidades agrupadas (removidas): 9
+
+Grupo 1: Chave = ('GhostScripter Amazon Shop Multiple Vulnerabilities (Mar 2009) - Active Check', 8080, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: GhostScripter Amazon Shop Multiple Vulnerabilities (Mar 2009) - Active Check
+       Porta: 8080 | Protocolo: tcp | Severidade: High
+       Descrição: Amazon Shop is prone to multiple vulnerabilities, including a cross-site scripting issue, a directory-traversal issue, and multiple remote le-include issues, because it fails to suciently sanitize use...
+
+Grupo 2: Chave = ('Xplode Multiple Vulnerabilities (Apr 2009) - Active Check', 8080, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Xplode Multiple Vulnerabilities (Apr 2009) - Active Check
+       Porta: 8080 | Protocolo: tcp | Severidade: HIGH
+       Descrição: Xplode is prone to an SQL injection (SQLi) vulnerability and a cross-site scripting (XSS) vulnerability because it fails to suciently sanitize user-supplied data. Quality of Detection (QoD): 50%
+
+Grupo 3: Chave = ('Turnkey eBook Store <= 1.1 XSS Vulnerability - Active Check', 8080, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Turnkey eBook Store <= 1.1 XSS Vulnerability - Active Check
+       Porta: 8080 | Protocolo: tcp | Severidade: MEDIUM
+       Descrição: Turnkey eBook Store is prone to a cross-site scripting (XSS) vulnerability. Quality of Detection (QoD): 50%
+
+Grupo 4: Chave = ('Gallaric Multiple Vulnerabilities (Oct 2009) - Active Check', 8080, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Gallaric Multiple Vulnerabilities (Oct 2009) - Active Check
+       Porta: 8080 | Protocolo: tcp | Severidade: MEDIUM
+       Descrição: Gallaric is prone to a cross-site scripting (XSS) vulnerability and multiple authentication bypass vulnerabilities. Quality of Detection (QoD): 50%
+
+Grupo 5: Chave = ("Multiple EditeurScripts Products 'msg' Parameter Cross Site Scripting Vulnerability", 8080, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Multiple EditeurScripts Products 'msg' Parameter Cross Site Scripting Vulnerability
+       Porta: 8080 | Protocolo: tcp | Severidade: MEDIUM
+       Descrição: Multiple EditeurScripts products are prone to a cross-site scripting vulnerability because they fail to suciently sanitize user-supplied data.
+
+Grupo 6: Chave = ('Web Server Cross Site Scripting', 8080, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Web Server Cross Site Scripting
+       Porta: 8080 | Protocolo: tcp | Severidade: MEDIUM
+       Descrição: The remote web server seems to be vulnerable to a cross-site scripting (XSS) vulnerability.
+
+Grupo 7: Chave = ('BLOG:CMS <= 4.2.1.f Multiple XSS Vulnerabilities - Active Check', 8080, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: BLOG:CMS <= 4.2.1.f Multiple XSS Vulnerabilities - Active Check
+       Porta: 8080 | Protocolo: tcp | Severidade: MEDIUM
+       Descrição: BLOG:CMS is prone to multiple cross-site scripting (XSS) vulnerabilities because it fails to properly sanitize user-supplied input.
+
+Grupo 8: Chave = ('DHCart < 3.88 Multiple Vulnerabilities - Active Check', 8080, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: DHCart < 3.88 Multiple Vulnerabilities - Active Check
+       Porta: 8080 | Protocolo: tcp | Severidade: MEDIUM
+       Descrição: DHCart is prone to multiple cross-site scripting (XSS) and HTML injection vulnerabilities because it fails to sufficiently sanitize user-supplied data.
+
+Grupo 9: Chave = ('TCP Timestamps Information Disclosure', 8080, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: TCP Timestamps Information Disclosure
+       Porta: 8080 | Protocolo: tcp | Severidade: LOW
+       Descrição: The remote host implements TCP timestamps and therefore allows to compute the uptime.
+
+Grupo 10: Chave = ('TCP Timestamps Information Disclosure', 'general', 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: TCP Timestamps Information Disclosure
+       Porta: general | Protocolo: tcp | Severidade: LOW
+       Descrição: The remote host implements TCP timestamps and therefore allows to compute the uptime.
+
+Grupo 11: Chave = ('ICMP Timestamp Reply Information Disclosure', 'general', 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: ICMP Timestamp Reply Information Disclosure
+       Porta: general | Protocolo: tcp | Severidade: LOW
+       Descrição: The remote host responded to an ICMP timestamp request.
+
+Grupo 12: Chave = ('ICMP Timestamp Reply Information Disclosure', 'general', 'icmp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: ICMP Timestamp Reply Information Disclosure
+       Porta: general | Protocolo: icmp | Severidade: LOW
+       Descrição: The remote host responded to an ICMP timestamp request. Quality of Detection (QoD): 80%
+
+Grupo 13: Chave = ('Hostname Determination Reporting', 'general', 'icmp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Hostname Determination Reporting
+       Porta: general | Protocolo: icmp | Severidade: LOG
+       Descrição: The script reports information on how the hostname of the target was determined. Quality of Detection (QoD): 80%
+
+Grupo 14: Chave = ('Hostname Determination Reporting', 'general', 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Hostname Determination Reporting
+       Porta: general | Protocolo: tcp | Severidade: LOG
+       Descrição: The script reports information on how the hostname of the target was determined.
+
+Grupo 15: Chave = ('IP Forwarding Enabled - Active Check', 'general', 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: IP Forwarding Enabled - Active Check
+       Porta: general | Protocolo: tcp | Severidade: LOG
+       Descrição: Checks if the remote host has IP forwarding enabled.
+
+Grupo 16: Chave = ('OS Detection Consolidation and Reporting', 'general', 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: OS Detection Consolidation and Reporting
+       Porta: general | Protocolo: tcp | Severidade: LOG
+       Descrição: This script consolidates the OS information detected by several VTs and tries to find the best matching OS. Furthermore it reports all previously collected information leading to this best matching OS...
+
+Grupo 17: Chave = ('Traceroute', 'general', 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Traceroute
+       Porta: general | Protocolo: tcp | Severidade: LOG
+       Descrição: Collect information about the network route and network distance between the scanner host and the target host.
+
+Grupo 18: Chave = (('Name', 'Services'), ('cvss', ('0.0',)), ('description', ('This plugin performs service detection.',)), ('detection_method', ()), ('detection_result', ('A web server is running on this port',)), ('impact', ()), ('insight', ('This plugin attempts to guess which service is running on the remote port(s). For instance, it searches for a web server which could listen on another port than 80 or 443 and makes this information available for other check routines.',)), ('instances', ()), ('log_method', ('Details: Services', 'OID:1.3.6.1.4.1.25623.1.0.10330', 'Version used: 2025-03-05T05:38:53Z')), ('plugin', None), ('plugin_details', ()), ('port', 8080), ('product_detection_result', ()), ('protocol', 'tcp'), ('references', ()), ('severity', 'LOG'), ('solution', ()), ('source', 'OPENVAS'))
+  Total de duplicatas neste grupo: 1
+    1. Nome: Services
+       Porta: 8080 | Protocolo: tcp | Severidade: LOG
+       Descrição: This plugin performs service detection.
+
+Grupo 19: Chave = ('Response Time / No 404 Error Code Check', 8080, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Response Time / No 404 Error Code Check
+       Porta: 8080 | Protocolo: tcp | Severidade: LOG
+       Descrição: This VT tests if the remote web server does not reply with a 404 error code and checks if it is replying to the scanners requests in a reasonable amount of time.
+
+Grupo 20: Chave = ('HTTP Security Headers Detection', 8080, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: HTTP Security Headers Detection
+       Porta: 8080 | Protocolo: tcp | Severidade: LOG
+       Descrição: All known security headers are being checked on the remote web server. On completion a report will hand back whether a specic security header has been implemented (including its value and if it is dep...
+
+Grupo 21: Chave = ('Web Application Scanning Consolidation / Info Reporting', 8080, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Web Application Scanning Consolidation / Info Reporting
+       Porta: 8080 | Protocolo: tcp | Severidade: LOG
+       Descrição: The script consolidates and reports various information for web application (formerly called 'CGI') scanning. This information is based on the following scripts / settings: - HTTP-Version Detection (O...
+
+Grupo 22: Chave = ('elFinder Detection (HTTP)', 8080, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: elFinder Detection (HTTP)
+       Porta: 8080 | Protocolo: tcp | Severidade: LOG
+       Descrição: HTTP based detection of elFinder.
+
+Grupo 23: Chave = ('robot.txt / robots.txt exists on the Web Server (HTTP)', 8080, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: robot.txt / robots.txt exists on the Web Server (HTTP)
+       Porta: 8080 | Protocolo: tcp | Severidade: LOG
+       Descrição: Web Servers can use a le called /robot(s).txt to ask search engines to ignore certain les and directories. By nature this le can not be used to protect private les from public read access.
+
+Grupo 24: Chave = ('CPE Inventory', 8080, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: CPE Inventory
+       Porta: 8080 | Protocolo: tcp | Severidade: LOG
+       Descrição: This routine uses information collected by other routines about CPE identities of operating systems, services and applications detected during the scan. Note: Some CPEs for specic products might show ...
+
+Grupo 25: Chave = ('CPE Inventory', 'general', 'CPE-T')
+  Total de duplicatas neste grupo: 1
+    1. Nome: CPE Inventory
+       Porta: general | Protocolo: CPE-T | Severidade: LOG
+       Descrição: This routine uses information collected by other routines about CPE identities of operating systems, services and applications detected during the scan. Note: Some CPEs for specic products might show ...
+Resumo final:
+Total de grupos de duplicatas: 25
+Total de vulnerabilidades agrupadas (removidas): 9

@@ -1,0 +1,2064 @@
+[
+  {
+    "Name": "SSL/TLS: Known Untrusted / Dangerous Certicate Authority (CA) Detection",
+    "description": [
+      "The service is using an SSL/TLS certicate from a known untrusted and/or dangerous certicate authority (CA).",
+      "Quality of Detection (QoD): 99%"
+    ],
+    "detection_result": [
+      "The certificate of the remote service is signed by the following untrusted and/or dangerous CA:",
+      "Issuer: CN=localhost",
+      "Certificate details:",
+      "fingerprint (SHA-1) | 2BB732E7E65D34B01D36BFC72F9D686AABD21EB0",
+      "fingerprint (SHA-256) | DDC12397E5B75CC7762B004BE80837F5C977635DBCABC3A37BFBC246D0EFF092",
+      "issued by | CN=localhost",
+      "public key algorithm | RSA",
+      "public key size (bits) | 2048",
+      "serial | 4C48C8AD44E3D99AD1A8310621780CB0F9B5B919",
+      "signature algorithm | sha256WithRSAEncryption",
+      "subject | CN=localhost",
+      "subject alternative names (SAN) | localhost",
+      "valid from | 2025-12-11 06:45:45 UTC",
+      "valid until | 2035-12-09 06:45:45 UTC"
+    ],
+    "detection_method": [
+      "The script reads the certicate used by the target host and checks if it was signed by a known untrusted and/or dangerous CA.",
+      "Details: SSL/TLS: Known Untrusted / Dangerous Certificate Authority (CA) Detection OID:1.3.6.1.4.1.25623.1.0.113054",
+      "Version used: 2024-06-14T05:05:48Z"
+    ],
+    "product_detection_result": [
+      "Product: cpe:/a:ietf:transport_layer_security",
+      "Method: SSL/TLS: Collect and Report Certificate Details",
+      "OID: 1.3.6.1.4.1.25623.1.0.103692)"
+    ],
+    "impact": [
+      "An attacker could use this for man-in-the-middle (MITM) attacks, accessing sensible data and other attacks."
+    ],
+    "solution": [
+      "Solution type: Mitigation",
+      "Replace the SSL/TLS certicate with one signed by a trusted CA."
+    ],
+    "insight": [],
+    "log_method": [],
+    "cvss": [
+      "5.0"
+    ],
+    "port": 8080,
+    "protocol": "tcp",
+    "severity": "Medium",
+    "references": [],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "SSL/TLS: Known Untrusted / Dangerous Certicate Authority (CA) Detection",
+    "description": [
+      "The service is using an SSL/TLS certicate from a known untrusted and/or dangerous certicate authority (CA)."
+    ],
+    "detection_result": [
+      "The certificate of the remote service is signed by the following untrusted and/or dangerous CA:",
+      "Issuer: CN=localhost",
+      "Certificate details:",
+      "fingerprint (SHA-1) | 2BB732E7E65D34B01D36BFC72F9D686AABD21EB0",
+      "fingerprint (SHA-256) | DDC12397E5B75CC7762B004BE80837F5C977635DBCABC3A37BFBC246D0EFF092",
+      "issued by | CN=localhost",
+      "public key algorithm | RSA",
+      "public key size (bits) | 2048",
+      "serial | 4C48C8AD44E3D99AD1A8310621780CB0F9B5B919",
+      "signature algorithm | sha256WithRSAEncryption",
+      "subject | CN=localhost",
+      "subject alternative names (SAN) | localhost",
+      "valid from | 2025-12-11 06:45:45 UTC",
+      "valid until | 2035-12-09 06:45:45 UTC"
+    ],
+    "detection_method": [
+      "The script reads the certicate used by the target host and checks if it was signed by a known untrusted and/or dangerous CA.",
+      "Details: SSL/TLS: Known Untrusted / Dangerous Certificate Authority (CA) Detection OID:1.3.6.1.4.1.25623.1.0.113054 Version used: 2024-06-14T05:05:48Z"
+    ],
+    "product_detection_result": [
+      "cpe:/a:ietf:transport_layer_security",
+      "Detected by SSL/TLS: Collect and Report Certificate Details (OID: 1.3.6.1.4.1.25->623.1.0.103692)",
+      "Product: cpe:/a:ietf:transport_layer_security",
+      "Method: SSL/TLS: Collect and Report Certificate Details",
+      "OID: 1.3.6.1.4.1.25623.1.0.103692)"
+    ],
+    "impact": [
+      "An attacker could use this for man-in-the-middle (MITM) attacks, accessing sensible data and other attacks."
+    ],
+    "solution": [
+      "Solution type: Mitigation",
+      "Replace the SSL/TLS certicate with one signed by a trusted CA."
+    ],
+    "insight": [],
+    "log_method": [],
+    "cvss": [
+      "5.0"
+    ],
+    "port": 9090,
+    "protocol": "tcp",
+    "severity": "MEDIUM",
+    "references": [],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "ICMP Timestamp Reply Information Disclosure",
+    "description": [
+      "The remote host responded to an ICMP timestamp request."
+    ],
+    "detection_result": [
+      "The following response / ICMP packet has been received:",
+      "- ICMP Type: 14",
+      "- ICMP Code: 0"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [
+      "This information could theoretically be used to exploit weak time-based random number generators in other services."
+    ],
+    "solution": [
+      "Solution type: Mitigation",
+      "Various mitigations are possible:",
+      "- Disable the support for ICMP timestamp on the remote host completely",
+      "- Protect the remote host by a rewall, and block ICMP packets passing through the rewall in either direction (either completely or only for untrusted networks)"
+    ],
+    "insight": [
+      "The Timestamp Reply is an ICMP message which replies to a Timestamp message. It consists of the originating timestamp sent by the sender of the Timestamp as well as a receive timestamp and a transmit timestamp."
+    ],
+    "log_method": [],
+    "cvss": [
+      "2.1"
+    ],
+    "port": 9090,
+    "protocol": "tcp",
+    "severity": "LOW",
+    "references": [],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "ICMP Timestamp Reply Information Disclosure",
+    "description": [
+      "The remote host responded to an ICMP timestamp request.",
+      "Quality of Detection (QoD): 80%"
+    ],
+    "detection_result": [
+      "The following response / ICMP packet has been received:",
+      "- ICMP Type: 14",
+      "- ICMP Code: 0"
+    ],
+    "detection_method": [
+      "Sends an ICMP Timestamp (Type 13) request and checks if a Timestamp Reply (Type 14) is received.",
+      "Details: ICMP Timestamp Reply Information Disclosure",
+      "OID:1.3.6.1.4.1.25623.1.0.103190",
+      "Version used: 2025-01-21T05:37:33Z"
+    ],
+    "product_detection_result": [],
+    "impact": [
+      "This information could theoretically be used to exploit weak time-based random number generators in other services."
+    ],
+    "solution": [
+      "Solution type: Mitigation",
+      "Various mitigations are possible:",
+      "- Disable the support for ICMP timestamp on the remote host completely",
+      "- Protect the remote host by a rewall, and block ICMP packets passing through the rewall in either direction (either completely or only for untrusted networks)"
+    ],
+    "insight": [
+      "The Timestamp Reply is an ICMP message which replies to a Timestamp message. It consists of the originating timestamp sent by the sender of the Timestamp as well as a receive timestamp and a transmit timestamp."
+    ],
+    "log_method": [],
+    "cvss": [
+      "2.1"
+    ],
+    "port": "general",
+    "protocol": "icmp",
+    "severity": "LOW",
+    "references": [
+      "cve: CVE-1999-0524",
+      "url: https://datatracker.ietf.org/doc/html/rfc792",
+      "url: https://datatracker.ietf.org/doc/html/rfc2780",
+      "cert-bund: CB-K15/1514",
+      "cert-bund: CB-K14/0632",
+      "dfn-cert: DFN-CERT-2014-0658"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "TCP Timestamps Information Disclosure",
+    "description": [
+      "The remote host implements TCP timestamps and therefore allows to compute the uptime.",
+      "Quality of Detection (QoD): 80%"
+    ],
+    "detection_result": [
+      "It was detected that the host implements RFC1323/RFC7323.",
+      "The following timestamps were retrieved with a delay of 1 seconds in-between:",
+      "Packet 1: 542368300",
+      "Packet 2: 542369441"
+    ],
+    "detection_method": [
+      "Special IP packets are forged and sent with a little delay in between to the target IP. The responses are searched for a timestamps. If found, the timestamps are reported.",
+      "Details: TCP Timestamps Information Disclosure",
+      "OID:1.3.6.1.4.1.25623.1.0.80091",
+      "Version used: 2023-12-15T16:10:08Z"
+    ],
+    "product_detection_result": [],
+    "impact": [
+      "A side eect of this feature is that the uptime of the remote host can sometimes be computed."
+    ],
+    "solution": [
+      "Solution type: Mitigation",
+      "To disable TCP timestamps on linux add the line 'net.ipv4.tcp_timestamps = 0' to /etc/sysctl.conf. Execute 'sysctl -p' to apply the settings at runtime.",
+      "To disable TCP timestamps on Windows execute 'netsh int tcp set global timestamps=disabled'",
+      "Starting with Windows Server 2008 and Vista, the timestamp can not be completely disabled.",
+      "The default behavior of the TCP/IP stack on this Systems is to not use the Timestamp options when initiating TCP connections, but use them if the TCP peer that is initiating communication includes them in their synchronize (SYN) segment.",
+      "See the references for more information."
+    ],
+    "insight": [
+      "The remote host implements TCP timestamps, as dened by RFC1323/RFC7323."
+    ],
+    "log_method": [],
+    "cvss": [
+      "2.6"
+    ],
+    "port": "general",
+    "protocol": "tcp",
+    "severity": "LOW",
+    "references": [
+      "url: https://datatracker.ietf.org/doc/html/rfc1323",
+      "url: https://datatracker.ietf.org/doc/html/rfc7323",
+      "url: https://web.archive.org/web/20151213072445/http://www.microsoft.com/en-us/d ->ownload/details.aspx?id=9152",
+      "url: https://www.fortiguard.com/psirt/FG-IR-16-090"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "CPE Inventory",
+    "description": [
+      "This routine uses information collected by other routines about CPE identities of operating systems, services and applications detected during the scan.",
+      "Note: Some CPEs for specic products might show up twice or more in the output. Background: After a product got renamed or a specic vendor was acquired by another one it might happen that a product gets a new CPE within the NVD CPE Dictionary but older entries are kept with the older CPE.",
+      "Quality of Detection (QoD): 80%"
+    ],
+    "detection_result": [
+      "172.31.1.100|cpe:/a:ietf:transport_layer_security:1.2",
+      "172.31.1.100|cpe:/a:ietf:transport_layer_security:1.3",
+      "172.31.1.100|cpe:/o:linux:kernel"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [],
+    "cvss": [
+      "0.0"
+    ],
+    "port": "general",
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "CPE Inventory",
+    "description": [
+      "This routine uses information collected by other routines about CPE identities of operating systems, services and applications detected during the scan. Note: Some CPEs for specic products might show up twice or more in the output. Background: After a product got renamed or a specic vendor was acquired by another one it might happen that a product gets a new CPE within the NVD CPE Dictionary but older entries are kept with the older CPE. Quality of Detection (QoD): 80%"
+    ],
+    "detection_result": [
+      "172.31.1.100|cpe:/a:ietf:transport_layer_security:1.2",
+      "172.31.1.100|cpe:/a:ietf:transport_layer_security:1.3",
+      "172.31.1.100|cpe:/o:linux:kernel"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [
+      "Details: CPE Inventory",
+      "OID:1.3.6.1.4.1.25623.1.0.810002",
+      "Version used: 2022-07-27T10:11:28Z"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": "general",
+    "protocol": "CPE-T",
+    "severity": "LOG",
+    "references": [
+      "url: https://nvd.nist.gov/products/cpe"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Services",
+    "description": [
+      "This plugin performs service detection. Quality of Detection (QoD): 80%"
+    ],
+    "detection_result": [
+      "A web server is running on this port through SSL"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [
+      "This plugin attempts to guess which service is running on the remote port(s). For instance, it searches for a web server which could listen on another port than 80 or 443 and makes this information available for other check routines."
+    ],
+    "log_method": [
+      "Details: Services",
+      "OID:1.3.6.1.4.1.25623.1.0.10330",
+      "Version used: 2025-03-05T05:38:53Z"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": 8080,
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "SSL/TLS: Collect and Report Certicate Details",
+    "description": [
+      "This script collects and reports the details of all SSL/TLS certicates.",
+      "This data will be used by other tests to verify server certicates."
+    ],
+    "detection_result": [
+      "The following certificate details of the remote service were collected.",
+      "Certificate details:",
+      "fingerprint (SHA-1) | 2BB732E7E65D34B01D36BFC72F9D686AABD21EB0",
+      "fingerprint (SHA-256) | DDC12397E5B75CC7762B004BE80837F5C977635DBCABC3 ->A37BFBC246D0EFF092",
+      "issued by | CN=localhost",
+      "public key algorithm | RSA",
+      "public key size (bits) | 2048",
+      "serial | 4C48C8AD44E3D99AD1A8310621780CB0F9B5B919",
+      "signature algorithm | sha256WithRSAEncryption",
+      "subject | CN=localhost",
+      "subject alternative names (SAN) | localhost",
+      "valid from | 2025-12-11 06:45:45 UTC",
+      "valid until | 2035-12-09 06:45:45 UTC"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [
+      "Details: SSL/TLS: Collect and Report Certificate Details",
+      "OID:1.3.6.1.4.1.25623.1.0.103692",
+      "Version used: 2024-09-27T05:05:23Z"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": 8080,
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Services",
+    "description": [
+      "This plugin performs service detection."
+    ],
+    "detection_result": [
+      "A web server is running on this port through SSL"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [
+      "This plugin attempts to guess which service is running on the remote port(s). For instance, it searches for a web server which could listen on another port than 80 or 443 and makes this information available for other check routines."
+    ],
+    "log_method": [
+      "Details: Services",
+      "OID:1.3.6.1.4.1.25623.1.0.10330",
+      "Version used: 2025-03-05T05:38:53Z"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": 8080,
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "SSL/TLS: Certicate - Self-Signed Certicate Detection",
+    "description": [
+      "The SSL/TLS certicate on this port is self-signed."
+    ],
+    "detection_result": [
+      "The certificate of the remote service is self signed.",
+      "Certificate details:",
+      "fingerprint (SHA-1) | 2BB732E7E65D34B01D36BFC72F9D686AABD21EB0",
+      "fingerprint (SHA-256) | DDC12397E5B75CC7762B004BE80837F5C977635DBCABC3 ->A37BFBC246D0EFF092",
+      "issued by | CN=localhost",
+      "public key algorithm | RSA",
+      "public key size (bits) | 2048",
+      "serial | 4C48C8AD44E3D99AD1A8310621780CB0F9B5B919",
+      "signature algorithm | sha256WithRSAEncryption",
+      "subject | CN=localhost",
+      "subject alternative names (SAN) | localhost",
+      "valid from | 2025-12-11 06:45:45 UTC",
+      "valid until | 2035-12-09 06:45:45 UTC"
+    ],
+    "detection_method": [],
+    "product_detection_result": [
+      "cpe:/a:ietf:transport_layer_security",
+      "Detected by SSL/TLS: Collect and Report Certificate Details (OID: 1.3.6.1.4.1.25623.1.0.103692)"
+    ],
+    "impact": [],
+    "solution": [],
+    "insight": [
+      "Detects and reports if the issuer's distinguished name of the certicate is exactly the same as the subject's distinguished name."
+    ],
+    "log_method": [
+      "Details: SSL/TLS: Certificate - Self-Signed Certificate Detection",
+      "OID:1.3.6.1.4.1.25623.1.0.103140",
+      "Version used: 2025-07-15T05:43:27Z"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": 8080,
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [
+      "url: http://en.wikipedia.org/wiki/Self-signed_certificate",
+      "url: https://datatracker.ietf.org/doc/html/rfc5280#appendix-C.1"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "SSL/TLS: Certicate - Subject Common Name Does Not Match Server FQDN",
+    "description": [
+      "The SSL/TLS certicate contains a common name (CN) that does not match the hostname."
+    ],
+    "detection_result": [
+      "The certificate of the remote service contains a common name (CN) that does not match the hostname \"dovecot.trabalho_vulnnet\".",
+      "Certificate details:",
+      "fingerprint (SHA-1) | 2BB732E7E65D34B01D36BFC72F9D686AABD21EB0",
+      "fingerprint (SHA-256) | DDC12397E5B75CC7762B004BE80837F5C977635DBCABC3A37BFBC246D0EFF092",
+      "issued by | CN=localhost",
+      "public key algorithm | RSA",
+      "public key size (bits) | 2048",
+      "serial | 4C48C8AD44E3D99AD1A8310621780CB0F9B5B919",
+      "signature algorithm | sha256WithRSAEncryption",
+      "subject | CN=localhost",
+      "subject alternative names (SAN) | localhost",
+      "valid from | 2025-12-11 06:45:45 UTC",
+      "valid until | 2035-12-09 06:45:45 UTC"
+    ],
+    "detection_method": [],
+    "product_detection_result": [
+      "cpe:/a:ietf:transport_layer_security",
+      "Detected by SSL/TLS: Collect and Report Certificate Details (OID: 1.3.6.1.4.1.25623.1.0.103692)"
+    ],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [
+      "Details: SSL/TLS: Certificate - Subject Common Name Does Not Match Server FQDN OID:1.3.6.1.4.1.25623.1.0.103141",
+      "Version used: 2024-06-14T05:05:48Z"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": 8080,
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "SSL/TLS: HTTP Public Key Pinning (HPKP) Missing",
+    "description": [
+      "The remote web server is not enforcing HTTP Public Key Pinning (HPKP).",
+      "Note: Most major browsers have dropped / deprecated support for this header in 2020."
+    ],
+    "detection_result": [
+      "The remote web server is not enforcing HPKP.",
+      "HTTP-Banner:",
+      "HTTP/1.1 400 Bad Request",
+      "Date: ***replaced***",
+      "Content-Length: ***replaced***",
+      "Content-Type: text/plain; charset=utf-8"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [],
+    "cvss": [
+      "0.0"
+    ],
+    "port": 8080,
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "SSL/TLS: HTTP Strict Transport Security (HSTS) Missing",
+    "description": [
+      "The remote web server is not enforcing HTTP Strict Transport Security (HSTS)."
+    ],
+    "detection_result": [
+      "The remote web server is not enforcing HSTS.",
+      "HTTP-Banner:",
+      "HTTP/1.1 400 Bad Request",
+      "Date: ***replaced***",
+      "Content-Length: ***replaced***",
+      "Content-Type: text/plain; charset=utf-8"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [
+      "Solution type: Workaround",
+      "Enable HSTS or add / congure the required directives correctly following the guides linked in the references.",
+      "Note: Some web servers are not sending headers on specic status codes by default. Please review your web server or application conguration to always send these headers on every response independently from the status code.",
+      "- Apache: Use 'Header always set' instead of 'Header set'.",
+      "- nginx: Append the 'always' keyword to each 'add_header' directive.",
+      "For dierent applications or web severs please refer to the related documentation for a similar conguration possibility."
+    ],
+    "insight": [],
+    "log_method": [
+      "Details: SSL/TLS: HTTP Strict Transport Security (HSTS) Missing",
+      "OID:1.3.6.1.4.1.25623.1.0.105879",
+      "Version used: 2025-03-21T15:40:43Z"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": 8080,
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [
+      "url: https://owasp.org/www-project-secure-headers/",
+      "url: https://owasp.org/www-project-cheat-sheets/cheatsheets/HTTP_Strict_Transport_Security_Cheat_Sheet.html",
+      "url: https://owasp.org/www-project-secure-headers/#http-strict-transport-security-hsts",
+      "url: https://tools.ietf.org/html/rfc6797",
+      "url: https://securityheaders.io/",
+      "url: https://httpd.apache.org/docs/current/mod/mod_headers.html#header",
+      "url: https://nginx.org/en/docs/http/ngx_http_headers_module.html#add_header"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "SSL/TLS: Untrusted Certicate Detection",
+    "description": [
+      "Checks and reports if a remote SSL/TLS service is using a certicate which is untrusted / the verication against the system wide trust store has failed."
+    ],
+    "detection_result": [
+      "The remote SSL/TLS server is using the following certificate(s) which failed the verification against the system wide trust store (serial:issuer):",
+      "4C48C8AD44E3D99AD1A8310621780CB0F9B5B919:CN=localhost (Server certificate)"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [
+      "Details: SSL/TLS: Untrusted Certificate Detection",
+      "OID:1.3.6.1.4.1.25623.1.0.117764",
+      "Version used: 2024-09-27T05:05:23Z"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": 8080,
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "SSL/TLS: Report Perfect Forward Secrecy (PFS) Cipher Suites",
+    "description": [
+      "This routine reports all SSL/TLS cipher suites accepted by a service which are supporting Perfect Forward Secrecy (PFS)."
+    ],
+    "detection_result": [
+      "Cipher suites supporting Perfect Forward Secrecy (PFS) are accepted by this service via the TLSv1.2 protocol:",
+      "TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA",
+      "TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256",
+      "TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256",
+      "TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA",
+      "TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384",
+      "TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384",
+      "TLS_ECDHE_RSA_WITH_ARIA_128_GCM_SHA256",
+      "TLS_ECDHE_RSA_WITH_ARIA_256_GCM_SHA384",
+      "TLS_ECDHE_RSA_WITH_CAMELLIA_128_CBC_SHA256",
+      "TLS_ECDHE_RSA_WITH_CAMELLIA_256_CBC_SHA384",
+      "TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305_SHA256",
+      "Cipher suites supporting Perfect Forward Secrecy (PFS) are accepted by this service via the TLSv1.3 protocol:",
+      "TLS_AES_128_GCM_SHA256",
+      "TLS_AES_256_GCM_SHA384",
+      "TLS_CHACHA20_POLY1305_SHA256"
+    ],
+    "detection_method": [],
+    "product_detection_result": [
+      "cpe:/a:ietf:transport_layer_security",
+      "Detected by SSL/TLS: Report Supported Cipher Suites (OID: 1.3.6.1.4.1.25623.1.0.802067)"
+    ],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [
+      "Details: SSL/TLS: Report Perfect Forward Secrecy (PFS) Cipher Suites",
+      "OID:1.3.6.1.4.1.25623.1.0.105018",
+      "Version used: 2024-09-30T08:38:05Z"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": 8080,
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "SSL/TLS: Report Medium Cipher Suites",
+    "description": [
+      "This routine reports all Medium SSL/TLS cipher suites accepted by a service.",
+      "Quality of Detection (QoD): 98%"
+    ],
+    "detection_result": [
+      "'Medium' cipher suites accepted by this service via the TLSv1.2 protocol:",
+      "TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA",
+      "TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256",
+      "TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256",
+      "TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA",
+      "TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384",
+      "TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384",
+      "TLS_ECDHE_RSA_WITH_ARIA_128_GCM_SHA256",
+      "TLS_ECDHE_RSA_WITH_ARIA_256_GCM_SHA384",
+      "TLS_ECDHE_RSA_WITH_CAMELLIA_128_CBC_SHA256",
+      "TLS_ECDHE_RSA_WITH_CAMELLIA_256_CBC_SHA384",
+      "'Medium' cipher suites accepted by this service via the TLSv1.3 protocol:",
+      "TLS_AES_128_GCM_SHA256"
+    ],
+    "detection_method": [],
+    "product_detection_result": [
+      "cpe:/a:ietf:transport_layer_security",
+      "Detected by SSL/TLS: Report Supported Cipher Suites (OID: 1.3.6.1.4.1.25623.1.0. ->802067)"
+    ],
+    "impact": [],
+    "solution": [],
+    "insight": [
+      "Any cipher suite considered to be secure for only the next 10 years is considered as medium."
+    ],
+    "log_method": [
+      "Details: SSL/TLS: Report Medium Cipher Suites",
+      "OID:1.3.6.1.4.1.25623.1.0.902816",
+      "Version used: 2024-09-27T05:05:23Z",
+      "Product Detection Result   Product: cpe:/a:ietf:transport_layer_security   Method: SSL/TLS: Report Supported Cipher Suites   OID: 1.3.6.1.4.1.25623.1.0.802067)"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": 8080,
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "SSL/TLS: Report Non Weak Cipher Suites",
+    "description": [
+      "This routine reports all Non Weak SSL/TLS cipher suites accepted by a service.",
+      "Quality of Detection (QoD): 98%"
+    ],
+    "detection_result": [
+      "'Non Weak' cipher suites accepted by this service via the TLSv1.2 protocol:",
+      "TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA",
+      "TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256",
+      "TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256",
+      "TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA",
+      "TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384",
+      "TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384",
+      "TLS_ECDHE_RSA_WITH_ARIA_128_GCM_SHA256",
+      "TLS_ECDHE_RSA_WITH_ARIA_256_GCM_SHA384",
+      "TLS_ECDHE_RSA_WITH_CAMELLIA_128_CBC_SHA256",
+      "TLS_ECDHE_RSA_WITH_CAMELLIA_256_CBC_SHA384",
+      "TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305_SHA256",
+      "'Non Weak' cipher suites accepted by this service via the TLSv1.3 protocol:",
+      "TLS_AES_128_GCM_SHA256",
+      "TLS_AES_256_GCM_SHA384",
+      "TLS_CHACHA20_POLY1305_SHA256"
+    ],
+    "detection_method": [],
+    "product_detection_result": [
+      "cpe:/a:ietf:transport_layer_security",
+      "Detected by SSL/TLS: Report Supported Cipher Suites (OID: 1.3.6.1.4.1.25623.1.0. ->802067)"
+    ],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [
+      "Details: SSL/TLS: Report Non Weak Cipher Suites",
+      "OID:1.3.6.1.4.1.25623.1.0.103441",
+      "Version used: 2024-09-27T05:05:23Z"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": 8080,
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "SSL/TLS: Report Supported Cipher Suites",
+    "description": [
+      "This routine reports all SSL/TLS cipher suites accepted by a service."
+    ],
+    "detection_result": [
+      "'Strong' cipher suites accepted by this service via the TLSv1.2 protocol:",
+      "TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305_SHA256",
+      "'Medium' cipher suites accepted by this service via the TLSv1.2 protocol:",
+      "TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA",
+      "TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256",
+      "TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256",
+      "TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA",
+      "TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384",
+      "TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384",
+      "TLS_ECDHE_RSA_WITH_ARIA_128_GCM_SHA256",
+      "TLS_ECDHE_RSA_WITH_ARIA_256_GCM_SHA384",
+      "TLS_ECDHE_RSA_WITH_CAMELLIA_128_CBC_SHA256",
+      "TLS_ECDHE_RSA_WITH_CAMELLIA_256_CBC_SHA384",
+      "No 'Weak' cipher suites accepted by this service via the TLSv1.2 protocol.",
+      "No 'Null' cipher suites accepted by this service via the TLSv1.2 protocol.",
+      "No 'Anonymous' cipher suites accepted by this service via the TLSv1.2 protocol.",
+      "'Strong' cipher suites accepted by this service via the TLSv1.3 protocol:",
+      "TLS_AES_256_GCM_SHA384",
+      "TLS_CHACHA20_POLY1305_SHA256",
+      "'Medium' cipher suites accepted by this service via the TLSv1.3 protocol:",
+      "TLS_AES_128_GCM_SHA256",
+      "No 'Weak' cipher suites accepted by this service via the TLSv1.3 protocol.",
+      "No 'Null' cipher suites accepted by this service via the TLSv1.3 protocol.",
+      "No 'Anonymous' cipher suites accepted by this service via the TLSv1.3 protocol."
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [
+      "Notes:",
+      "- As the VT 'SSL/TLS: Check Supported Cipher Suites' (OID: 1.3.6.1.4.1.25623.1.0.900234) might run into a timeout the actual reporting of all accepted cipher suites takes place in this VT instead.   - SSLv2 ciphers are not getting reported as the protocol itself is deprecated, needs to be considered  as weak and is reported separately as deprecated."
+    ],
+    "log_method": [
+      "Details: SSL/TLS: Report Supported Cipher Suites",
+      "OID:1.3.6.1.4.1.25623.1.0.802067",
+      "Version used: 2024-09-27T05:05:23Z"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": 8080,
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "SSL/TLS: Safe/Secure Renegotiation Support Status",
+    "description": [
+      "Checks and reports if a remote SSL/TLS service supports safe/secure renegotiation."
+    ],
+    "detection_result": [
+      "Protocol Version | Safe/Secure Renegotiation Support Status",
+      "--------------------------------------------------------------------------------",
+      "SSLv3 | Unknown, Reason: Scanner failed to negotiate an SSL/TLS connection (Either the scanner or the remote host is probably not supporting / accepting this SSL/TLS protocol version).",
+      "TLSv1.0 | Unknown, Reason: Scanner failed to negotiate an SSL/TLS connection (Either the scanner or the remote host is probably not supporting / accepting this SSL/TLS protocol version).",
+      "TLSv1.1 | Unknown, Reason: Scanner failed to negotiate an SSL/TLS connection (Either the scanner or the remote host is probably not supporting / accepting this SSL/TLS protocol version).",
+      "TLSv1.2 | Enabled, Note: While the remote service announces the support of safe/secure renegotiation it still might not support / accept renegotiation at all.",
+      "TLSv1.3 | Disabled (The TLSv1.3 protocol generally doesn't support renegotiation so this is always reported as 'Disabled')"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [
+      "Details: SSL/TLS: Safe/Secure Renegotiation Support Status",
+      "OID:1.3.6.1.4.1.25623.1.0.117757",
+      "Version used: 2024-09-27T05:05:23Z"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": 8080,
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [
+      "url: https://www.gnutls.org/manual/html_node/Safe-renegotiation.html",
+      "url: https://wiki.openssl.org/index.php/TLS1.3#Renegotiation",
+      "url: https://datatracker.ietf.org/doc/html/rfc5746"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "HTTP Security Headers Detection",
+    "description": [
+      "All known security headers are being checked on the remote web server.",
+      "On completion a report will hand back whether a specic security header has been implemented (including its value and if it is deprecated) or is missing on the target.",
+      "Quality of Detection (QoD): 80%"
+    ],
+    "detection_result": [
+      "Missing Headers | More Information",
+      "-------------------------------------------------------------------------------",
+      "Content-Security-Policy | https://owasp.org/www-project-secure-headers/#content-security-policy",
+      "Cross-Origin-Embedder-Policy | https://scotthelme.co.uk/coop-and-coep/, Note: This is an upcoming header",
+      "Cross-Origin-Opener-Policy | https://scotthelme.co.uk/coop-and-coep/, Note: This is an upcoming header",
+      "Cross-Origin-Resource-Policy | https://scotthelme.co.uk/coop-and-coep/, Note: This is an upcoming header",
+      "Document-Policy | https://w3c.github.io/webappsec-feature-policy/document-policy#document-policy-http-header",
+      "Expect-CT | https://owasp.org/www-project-secure-headers/#expect-ct, Note: This is an upcoming header",
+      "Feature-Policy | https://owasp.org/www-project-secure-headers/#feature-policy, Note: The Feature Policy header has been renamed to Permissions Policy",
+      "Permissions-Policy | https://w3c.github.io/webappsec-feature-policy/#permissions-policy-http-header-field",
+      "Public-Key-Pins | Please check the output of the VTs including 'SSL/TLS:' and 'HPKP' in their name for more information and configuration help. Note: Most major browsers have dropped / deprecated support for this header in 2020.",
+      "Referrer-Policy | https://owasp.org/www-project-secure-headers/#referrer-policy",
+      "Sec-Fetch-Dest | https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers#fetch_metadata_request_headers, Note: This is a new header supported only in newer browsers like e.g. Firefox 90",
+      "Sec-Fetch-Mode | https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers#fetch_metadata_request_headers, Note: This is a new header supported only in newer browsers like e.g. Firefox 90",
+      "Sec-Fetch-Site | https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers#fetch_metadata_request_headers, Note: This is a new header supported only in newer browsers like e.g. Firefox 90",
+      "Sec-Fetch-User | https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers#fetch_metadata_request_headers, Note: This is a new header supported only in newer browsers like e.g. Firefox 90",
+      "Strict-Transport-Security | Please check the output of the VTs including 'SSL/TLS:' and 'HSTS' in their name for more information and configuration help.",
+      "X-Content-Type-Options | https://owasp.org/www-project-secure-headers/#x-content-type-options",
+      "X-Frame-Options | https://owasp.org/www-project-secure-headers/#x-frame-options",
+      "X-Permitted-Cross-Domain-Policies | https://owasp.org/www-project-secure-headers/#x-permitted-cross-domain-policies",
+      "X-XSS-Protection | https://owasp.org/www-project-secure-headers/#x-xss-protection, Note: Most major browsers have dropped / deprecated support for this header in 2020."
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [
+      "Details: HTTP Security Headers Detection",
+      "OID:1.3.6.1.4.1.25623.1.0.112081",
+      "Version used: 2025-03-21T15:40:43Z"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": 8080,
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [
+      "url: https://owasp.org/www-project-secure-headers/",
+      "url: https://owasp.org/www-project-secure-headers/#div-headers",
+      "url: https://securityheaders.com/"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Web Application Scanning Consolidation / Info Reporting",
+    "description": [
+      "The script consolidates and reports various information for web application (formerly called 'CGI') scanning.",
+      "This information is based on the following scripts / settings:",
+      "- HTTP-Version Detection (OID: 1.3.6.1.4.1.25623.1.0.100034)",
+      "- No 404 check (OID: 1.3.6.1.4.1.25623.1.0.10386)",
+      "- Web mirroring / webmirror.nasl (OID: 1.3.6.1.4.1.25623.1.0.10662)",
+      "- Directory Scanner / DDI_Directory_Scanner.nasl (OID: 1.3.6.1.4.1.25623.1.0.11032)",
+      "- The congured 'cgi_path' within the 'Scanner Preferences' of the scan cong in use",
+      "- The congured 'Enable CGI scanning', 'Enable generic web application scanning' and 'Add historic /scripts and /cgi-bin to directories for CGI scanning' within the 'Global variable settings' of the scan cong in use",
+      "If you think any of this information is wrong please report it to the referenced community forum.",
+      "Quality of Detection (QoD): 80%"
+    ],
+    "detection_result": [
+      "The Hostname/IP \"dovecot.trabalho_vuln"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [],
+    "cvss": [
+      "0.0"
+    ],
+    "port": 8080,
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "SSL/TLS: Version Detection",
+    "description": [
+      "Enumeration and reporting of SSL/TLS protocol versions supported by a remote service."
+    ],
+    "detection_result": [
+      "The remote SSL/TLS service supports the following SSL/TLS protocol version(s):",
+      "TLSv1.2",
+      "TLSv1.3"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [
+      "Sends multiple connection requests to the remote service and attempts to determine the SSL/TLS",
+      "protocol versions supported by the service from the replies.",
+      "Note: The supported SSL/TLS protocol versions included in the report of this VT are reported",
+      "independently from the allowed / supported SSL/TLS ciphers."
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": 8080,
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Services",
+    "description": [
+      "This plugin performs service detection."
+    ],
+    "detection_result": [
+      "A TLScustom server answered on this port"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [
+      "This plugin attempts to guess which service is running on the remote port(s). For instance,",
+      "it searches for a web server which could listen on another port than 80 or 443 and makes this",
+      "information available for other check routines."
+    ],
+    "log_method": [],
+    "cvss": [
+      "0.0"
+    ],
+    "port": 8080,
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Services",
+    "description": [
+      "This plugin performs service detection.",
+      "Quality of Detection (QoD): 80%"
+    ],
+    "detection_result": [
+      "A TLScustom server answered on this port"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [
+      "This plugin attempts to guess which service is running on the remote port(s). For instance, it searches for a web server which could listen on another port than 80 or 443 and makes this information available for other check routines."
+    ],
+    "log_method": [
+      "Details: Services",
+      "OID:1.3.6.1.4.1.25623.1.0.10330",
+      "Version used: 2025-03-05T05:38:53Z"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": "general",
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "OS Detection Consolidation and Reporting",
+    "description": [
+      "This script consolidates the OS information detected by several VTs and tries to nd the best matching OS.",
+      "Furthermore it reports all previously collected information leading to this best matching OS. It also reports possible additional information which might help to improve the OS detection.",
+      "If any of this information is wrong or could be improved please consider to report these to the referenced community forum.",
+      "Quality of Detection (QoD): 80%"
+    ],
+    "detection_result": [
+      "Best matching OS:",
+      "OS: Linux Kernel",
+      "CPE: cpe:/o:linux:kernel",
+      "Found by VT: 1.3.6.1.4.1.25623.1.0.102002 (Operating System (OS) Detection (ICM ->P))",
+      "Concluded from ICMP based OS fingerprint",
+      "Setting key \"Host/runs_unixoide\" based on this information"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [
+      "Details: OS Detection Consolidation and Reporting",
+      "OID:1.3.6.1.4.1.25623.1.0.105937",
+      "Version used: 2026-01-21T05:50:46Z"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": "general",
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [
+      "url: https://forum.greenbone.net/c/vulnerability-tests/7"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "IP Forwarding Enabled - Active Check",
+    "description": [
+      "Checks if the remote host has IP forwarding enabled.",
+      "Quality of Detection (QoD): 70%"
+    ],
+    "detection_result": [
+      "It was possible to route a TCP packet through the target host and received an an ->swer which means IP forwarding is enabled."
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [
+      "Sends a crafted Local Link Layer (LLL) frame and checks the response.",
+      "Details: IP Forwarding Enabled - Active Check",
+      "OID:1.3.6.1.4.1.25623.1.0.147205",
+      "Version used: 2021-12-03T08:27:06Z"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": "general",
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [
+      "cve: CVE-1999-0511"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Traceroute",
+    "description": [
+      "Collect information about the network route and network distance between the scanner host and the target host.",
+      "Quality of Detection (QoD): 80%"
+    ],
+    "detection_result": [
+      "Network route from scanner (172.30.0.2) to target (172.31.1.100):",
+      "172.30.0.2",
+      "172.31.1.100",
+      "Network distance between scanner and target: 2"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [
+      "For internal networks, the distances are usually small, often less than 4 hosts between scanner and target. For public targets the distance is greater and might be 10 hosts or more."
+    ],
+    "log_method": [
+      "A combination of the protocols ICMP and TCP is used to determine the route. This method is applicable for IPv4 only and it is also known as 'traceroute'.",
+      "Details: Traceroute",
+      "OID:1.3.6.1.4.1.25623.1.0.51662",
+      "Version used: 2022-10-17T11:13:19Z"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": "general",
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Hostname Determination Reporting",
+    "description": [
+      "The script reports information on how the hostname of the target was determined.",
+      "Quality of Detection (QoD): 80%"
+    ],
+    "detection_result": [
+      "Hostname determination for IP 172.31.1.100:",
+      "Hostname|Source",
+      "dovecot.trabalho_vulnnet|Reverse-DNS"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [
+      "Details: Hostname Determination Reporting",
+      "OID:1.3.6.1.4.1.25623.1.0.108449",
+      "Version used: 2022-07-27T10:11:28Z"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": "general",
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "SSL/TLS: Version Detection",
+    "description": [
+      "Enumeration and reporting of SSL/TLS protocol versions supported by a remote service.",
+      "Quality of Detection (QoD): 80%"
+    ],
+    "detection_result": [
+      "The remote SSL/TLS service supports the following SSL/TLS protocol version(s): TLSv1.2 TLSv1.3"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [
+      "Sends multiple connection requests to the remote service and attempts to determine the SSL/TLS protocol versions supported by the service from the replies.",
+      "Note: The supported SSL/TLS protocol versions included in the report of this VT are reported independently from the allowed / supported SSL/TLS ciphers.",
+      "Details: SSL/TLS: Version Detection",
+      "OID:1.3.6.1.4.1.25623.1.0.105782",
+      "Version used: 2024-09-27T05:05:23Z"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": 9090,
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "SSL/TLS: Collect and Report Certicate Details",
+    "description": [
+      "This script collects and reports the details of all SSL/TLS certicates.",
+      "This data will be used by other tests to verify server certicates.",
+      "Quality of Detection (QoD): 98%"
+    ],
+    "detection_result": [
+      "The following certificate details of the remote service were collected.",
+      "Certificate details:",
+      "fingerprint (SHA-1) | 2BB732E7E65D34B01D36BFC72F9D686AABD21EB0",
+      "fingerprint (SHA-256) | DDC12397E5B75CC7762B004BE80837F5C977635DBCABC3A37BFBC246D0EFF092",
+      "issued by | CN=localhost",
+      "public key algorithm | RSA",
+      "public key size (bits) | 2048",
+      "serial | 4C48C8AD44E3D99AD1A8310621780CB0F9B5B919",
+      "signature algorithm | sha256WithRSAEncryption",
+      "subject | CN=localhost",
+      "subject alternative names (SAN) | localhost",
+      "valid from | 2025-12-11 06:45:45 UTC",
+      "valid until | 2035-12-09 06:45:45 UTC"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [
+      "Details: SSL/TLS: Collect and Report Certificate Details",
+      "OID:1.3.6.1.4.1.25623.1.0.103692",
+      "Version used: 2024-09-27T05:05:23Z"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": 9090,
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "SSL/TLS: Certicate - Self-Signed Certicate Detection",
+    "description": [
+      "The SSL/TLS certicate on this port is self-signed.",
+      "Quality of Detection (QoD): 98%"
+    ],
+    "detection_result": [
+      "The certificate of the remote service is self signed.",
+      "Certificate details:",
+      "fingerprint (SHA-1) | 2BB732E7E65D34B01D36BFC72F9D686AABD21EB0",
+      "fingerprint (SHA-256) | DDC12397E5B75CC7762B004BE80837F5C977635DBCABC3A37BFBC246D0EFF092",
+      "issued by | CN=localhost",
+      "public key algorithm | RSA",
+      "public key size (bits) | 2048",
+      "serial | 4C48C8AD44E3D99AD1A8310621780CB0F9B5B919",
+      "signature algorithm | sha256WithRSAEncryption",
+      "subject | CN=localhost",
+      "subject alternative names (SAN) | localhost",
+      "valid from | 2025-12-11 06:45:45 UTC",
+      "valid until | 2035-12-09 06:45:45 UTC"
+    ],
+    "detection_method": [],
+    "product_detection_result": [
+      "cpe:/a:ietf:transport_layer_security",
+      "Detected by SSL/TLS: Collect and Report Certificate Details (OID: 1.3.6.1.4.1.25623.1.0.103692)"
+    ],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [
+      "Detects and reports if the issuer's distinguished name of the certicate is exactly the same as the subject's distinguished name.",
+      "Details: SSL/TLS: Certificate - Self-Signed Certificate Detection",
+      "OID:1.3.6.1.4.1.25623.1.0.103140",
+      "Version used: 2025-07-15T05:43:27Z"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": 9090,
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [
+      "url: http://en.wikipedia.org/wiki/Self-signed_certificate",
+      "url: https://datatracker.ietf.org/doc/html/rfc5280#appendix-C.1"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "SSL/TLS: Certicate - Subject Common Name Does Not Match Server FQDN",
+    "description": [
+      "The SSL/TLS certicate contains a common name (CN) that does not match the hostname.",
+      "Quality of Detection (QoD): 98%"
+    ],
+    "detection_result": [
+      "The certificate of the remote service contains a common name (CN) that does not match the hostname \"dovecot.trabalho_vulnnet\".",
+      "Certificate details:",
+      "fingerprint (SHA-1) | 2BB732E7E65D34B01D36BFC72F9D686AABD21EB0",
+      "fingerprint (SHA-256) | DDC12397E5B75CC7762B004BE80837F5C977635DBCABC3A37BFBC246D0EFF092",
+      "issued by | CN=localhost",
+      "public key algorithm | RSA",
+      "public key size (bits) | 2048",
+      "serial | 4C48C8AD44E3D99AD1A8310621780CB0F9B5B919",
+      "signature algorithm | sha256WithRSAEncryption",
+      "subject | CN=localhost",
+      "subject alternative names (SAN) | localhost",
+      "valid from | 2025-12-11 06:45:45 UTC",
+      "valid until | 2035-12-09 06:45:45 UTC"
+    ],
+    "detection_method": [],
+    "product_detection_result": [
+      "cpe:/a:ietf:transport_layer_security",
+      "Detected by SSL/TLS: Collect and Report Certificate Details (OID: 1.3.6.1.4.1.25623.1.0.103692)"
+    ],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [
+      "Details: SSL/TLS: Certificate - Subject Common Name Does Not Match Server FQDN OID:1.3.6.1.4.1.25623.1.0.103141",
+      "Version used: 2024-06-14T05:05:48Z"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": 9090,
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "SSL/TLS: HTTP Public Key Pinning (HPKP) Missing",
+    "description": [
+      "The remote web server is not enforcing HTTP Public Key Pinning (HPKP).",
+      "Note: Most major browsers have dropped / deprecated support for this header in 2020.",
+      "Quality of Detection (QoD): 80%"
+    ],
+    "detection_result": [
+      "The remote web server is not enforcing HPKP.",
+      "HTTP-Banner: HTTP/1.1 400 Bad Request Date: ***replaced*** Content-Length: ***replaced*** Content-Type: text/plain; charset=utf-8"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [
+      "Solution type: Workaround",
+      "Enable HPKP or add / congure the required directives correctly following the guides linked in the references.",
+      "Note: Some web servers are not sending headers on specic status codes by default. Please review your web server or application conguration to always send these headers on every response independently from the status code.",
+      "- Apache: Use 'Header always set' instead of 'Header set'.",
+      "- nginx: Append the 'always' keyword to each 'add_header' directive.",
+      "For dierent applications or web severs please refer to the related documentation for a similar conguration possibility."
+    ],
+    "insight": [],
+    "log_method": [
+      "Details: SSL/TLS: HTTP Public Key Pinning (HPKP) Missing OID:1.3.6.1.4.1.25623.1.0.108247",
+      "Version used: 2025-03-21T15:40:43Z"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": 9090,
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [
+      "url: https://owasp.org/www-project-secure-headers/",
+      "url: https://owasp.org/www-project-secure-headers/#public-key-pinning-extension-for-http-hpkp",
+      "url: https://tools.ietf.org/html/rfc7469",
+      "url: https://securityheaders.io/",
+      "url: https://httpd.apache.org/docs/current/mod/mod_headers.html#header",
+      "url: https://nginx.org/en/docs/http/ngx_http_headers_module.html#add_header"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "SSL/TLS: HTTP Strict Transport Security (HSTS) Missing",
+    "description": [
+      "The remote web server is not enforcing HTTP Strict Transport Security (HSTS)."
+    ],
+    "detection_result": [
+      "The remote web server is not enforcing HSTS.",
+      "HTTP-Banner:",
+      "HTTP/1.1 400 Bad Request",
+      "Date: ***replaced***",
+      "Content-Length: ***replaced***",
+      "Content-Type: text/plain; charset=utf-8"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [
+      "Solution type: Workaround",
+      "Enable HSTS or add / congure the required directives correctly following the guides linked in the references.",
+      "Note: Some web servers are not sending headers on specic status codes by default. Please review your web server or application conguration to always send these headers on every response independently from the status code.",
+      "- Apache: Use 'Header always set' instead of 'Header set'.",
+      "- nginx: Append the 'always' keyword to each 'add_header' directive.",
+      "For dierent applications or web severs please refer to the related documentation for a similar conguration possibility."
+    ],
+    "insight": [],
+    "log_method": [
+      "Details: SSL/TLS: HTTP Strict Transport Security (HSTS) Missing",
+      "OID:1.3.6.1.4.1.25623.1.0.105879",
+      "Version used: 2025-03-21T15:40:43Z"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": 9090,
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [
+      "url: https://owasp.org/www-project-secure-headers/",
+      "url: https://owasp.org/www-project-cheat-sheets/cheatsheets/HTTP_Strict_Transport_Security_Cheat_Sheet.html",
+      "url: https://owasp.org/www-project-secure-headers/#http-strict-transport-security-hsts",
+      "url: https://tools.ietf.org/html/rfc6797",
+      "url: https://securityheaders.io/",
+      "url: https://httpd.apache.org/docs/current/mod/mod_headers.html#header",
+      "url: https://nginx.org/en/docs/http/ngx_http_headers_module.html#add_header"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "SSL/TLS: Report Perfect Forward Secrecy (PFS) Cipher Suites",
+    "description": [
+      "This routine reports all SSL/TLS cipher suites accepted by a service which are supporting Perfect Forward Secrecy (PFS)."
+    ],
+    "detection_result": [
+      "Cipher suites supporting Perfect Forward Secrecy (PFS) are accepted by this service via the TLSv1.2 protocol:",
+      "TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA",
+      "TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256",
+      "TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256",
+      "TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA",
+      "TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384",
+      "TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384",
+      "TLS_ECDHE_RSA_WITH_ARIA_128_GCM_SHA256",
+      "TLS_ECDHE_RSA_WITH_ARIA_256_GCM_SHA384",
+      "TLS_ECDHE_RSA_WITH_CAMELLIA_128_CBC_SHA256",
+      "TLS_ECDHE_RSA_WITH_CAMELLIA_256_CBC_SHA384",
+      "TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305_SHA256",
+      "Cipher suites supporting Perfect Forward Secrecy (PFS) are accepted by this service via the TLSv1.3 protocol:",
+      "TLS_AES_128_GCM_SHA256",
+      "TLS_AES_256_GCM_SHA384",
+      "TLS_CHACHA20_POLY1305_SHA256"
+    ],
+    "detection_method": [],
+    "product_detection_result": [
+      "Product: cpe:/a:ietf:transport_layer_security",
+      "Method: SSL/TLS: Report Supported Cipher Suites",
+      "OID: 1.3.6.1.4.1.25623.1.0.802067)"
+    ],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [
+      "Details: SSL/TLS: Report Perfect Forward Secrecy (PFS) Cipher Suites",
+      "OID:1.3.6.1.4.1.25623.1.0.105018",
+      "Version used: 2024-09-30T08:38:05Z"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": 9090,
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "SSL/TLS: Report Medium Cipher Suites",
+    "description": [
+      "This routine reports all Medium SSL/TLS cipher suites accepted by a service."
+    ],
+    "detection_result": [
+      "'Medium' cipher suites accepted by this service via the TLSv1.2 protocol:",
+      "TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA",
+      "TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256",
+      "TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256",
+      "TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA",
+      "TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384",
+      "TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384",
+      "TLS_ECDHE_RSA_WITH_ARIA_128_GCM_SHA256",
+      "TLS_ECDHE_RSA_WITH_ARIA_256_GCM_SHA384",
+      "TLS_ECDHE_RSA_WITH_CAMELLIA_128_CBC_SHA256",
+      "TLS_ECDHE_RSA_WITH_CAMELLIA_256_CBC_SHA384",
+      "'Medium' cipher suites accepted by this service via the TLSv1.3 protocol:",
+      "TLS_AES_128_GCM_SHA256"
+    ],
+    "detection_method": [],
+    "product_detection_result": [
+      "cpe:/a:ietf:transport_layer_security",
+      "Detected by SSL/TLS: Report Supported Cipher Suites (OID: 1.3.6.1.4.1.25623.1.0.802067)"
+    ],
+    "impact": [],
+    "solution": [],
+    "insight": [
+      "Any cipher suite considered to be secure for only the next 10 years is considered as medium."
+    ],
+    "log_method": [
+      "Details: SSL/TLS: Report Medium Cipher Suites",
+      "OID:1.3.6.1.4.1.25623.1.0.902816",
+      "Version used: 2024-09-27T05:05:23Z",
+      "Product Detection Result",
+      "Product: cpe:/a:ietf:transport_layer_security",
+      "Method: SSL/TLS: Report Supported Cipher Suites",
+      "OID: 1.3.6.1.4.1.25623.1.0.802067)"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": 9090,
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "SSL/TLS: Report Non Weak Cipher Suites",
+    "description": [
+      "This routine reports all Non Weak SSL/TLS cipher suites accepted by a service.",
+      "Quality of Detection (QoD): 98%"
+    ],
+    "detection_result": [
+      "'Non Weak' cipher suites accepted by this service via the TLSv1.2 protocol:",
+      "TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA",
+      "TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256",
+      "TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256",
+      "TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA",
+      "TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384",
+      "TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384",
+      "TLS_ECDHE_RSA_WITH_ARIA_128_GCM_SHA256",
+      "TLS_ECDHE_RSA_WITH_ARIA_256_GCM_SHA384",
+      "TLS_ECDHE_RSA_WITH_CAMELLIA_128_CBC_SHA256",
+      "TLS_ECDHE_RSA_WITH_CAMELLIA_256_CBC_SHA384",
+      "TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305_SHA256",
+      "'Non Weak' cipher suites accepted by this service via the TLSv1.3 protocol:",
+      "TLS_AES_128_GCM_SHA256",
+      "TLS_AES_256_GCM_SHA384",
+      "TLS_CHACHA20_POLY1305_SHA256"
+    ],
+    "detection_method": [],
+    "product_detection_result": [
+      "cpe:/a:ietf:transport_layer_security",
+      "Detected by SSL/TLS: Report Supported Cipher Suites (OID: 1.3.6.1.4.1.25623.1.0.802067)"
+    ],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [
+      "Details: SSL/TLS: Report Non Weak Cipher Suites",
+      "OID:1.3.6.1.4.1.25623.1.0.103441",
+      "Version used: 2024-09-27T05:05:23Z"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": 9090,
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "SSL/TLS: Report Supported Cipher Suites",
+    "description": [
+      "This routine reports all SSL/TLS cipher suites accepted by a service.",
+      "Quality of Detection (QoD): 98%"
+    ],
+    "detection_result": [
+      "'Strong' cipher suites accepted by this service via the TLSv1.2 protocol:",
+      "TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305_SHA256",
+      "'Medium' cipher suites accepted by this service via the TLSv1.2 protocol:",
+      "TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA",
+      "TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256",
+      "TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256",
+      "TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA",
+      "TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384",
+      "TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384",
+      "TLS_ECDHE_RSA_WITH_ARIA_128_GCM_SHA256",
+      "TLS_ECDHE_RSA_WITH_ARIA_256_GCM_SHA384",
+      "TLS_ECDHE_RSA_WITH_CAMELLIA_128_CBC_SHA256",
+      "TLS_ECDHE_RSA_WITH_CAMELLIA_256_CBC_SHA384",
+      "No 'Weak' cipher suites accepted by this service via the TLSv1.2 protocol.",
+      "No 'Null' cipher suites accepted by this service via the TLSv1.2 protocol.",
+      "No 'Anonymous' cipher suites accepted by this service via the TLSv1.2 protocol.",
+      "'Strong' cipher suites accepted by this service via the TLSv1.3 protocol:",
+      "TLS_AES_256_GCM_SHA384",
+      "TLS_CHACHA20_POLY1305_SHA256",
+      "'Medium' cipher suites accepted by this service via the TLSv1.3 protocol:",
+      "TLS_AES_128_GCM_SHA256",
+      "No 'Weak' cipher suites accepted by this service via the TLSv1.3 protocol.",
+      "No 'Null' cipher suites accepted by this service via the TLSv1.3 protocol.",
+      "No 'Anonymous' cipher suites accepted by this service via the TLSv1.3 protocol."
+    ],
+    "detection_method": [],
+    "product_detection_result": [
+      "Product: cpe:/a:ietf:transport_layer_security",
+      "Method: SSL/TLS: Report Supported Cipher Suites",
+      "OID: 1.3.6.1.4.1.25623.1.0.802067)"
+    ],
+    "impact": [],
+    "solution": [],
+    "insight": [
+      "Notes:",
+      "- As the VT 'SSL/TLS: Check Supported Cipher Suites' (OID: 1.3.6.1.4.1.25623.1.0.900234) might run into a timeout the actual reporting of all accepted cipher suites takes place in this VT instead.",
+      "- SSLv2 ciphers are not getting reported as the protocol itself is deprecated, needs to be considered as weak and is reported separately as deprecated."
+    ],
+    "log_method": [
+      "Details: SSL/TLS: Report Supported Cipher Suites",
+      "OID:1.3.6.1.4.1.25623.1.0.802067",
+      "Version used: 2024-09-27T05:05:23Z"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": 9090,
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "SSL/TLS: Safe/Secure Renegotiation Support Status",
+    "description": [
+      "Checks and reports if a remote SSL/TLS service supports safe/secure renegotiation."
+    ],
+    "detection_result": [
+      "Protocol Version | Safe/Secure Renegotiation Support Status",
+      "--------------------------------------------------------------------------------  ->------------------------------------------------------------------------------  ->-------------------------------------   SSLv3 | Unknown, Reason: Scanner failed to negotiate an SSL/TLS conne  ->ction (Either the scanner or the remote host is probably not supporting / acce  ->pting this SSL/TLS protocol version).   TLSv1.0 | Unknown, Reason: Scanner failed to negotiate an SSL/TLS conne  ->ction (Either the scanner or the remote host is probably not supporting / acce  ->pting this SSL/TLS protocol version).   TLSv1.1 | Unknown, Reason: Scanner failed to negotiate an SSL/TLS conne  ->ction (Either the scanner or the remote host is probably not supporting / acce  ->pting this SSL/TLS protocol version).   TLSv1.2 | Enabled, Note: While the remote service announces the support  -> of safe/secure renegotiation it still might not support / accept renegotiatio  ->n at all.   TLSv1.3 | Disabled (The TLSv1.3 protocol generally doesn't support rene  ->gotiation so this is always reported as 'Disabled')"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [
+      "Details: SSL/TLS: Safe/Secure Renegotiation Support Status",
+      "OID:1.3.6.1.4.1.25623.1.0.117757",
+      "Version used: 2024-09-27T05:05:23Z"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": 9090,
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [
+      "url: https://www.gnutls.org/manual/html_node/Safe-renegotiation.html",
+      "url: https://wiki.openssl.org/index.php/TLS1.3#Renegotiation",
+      "url: https://datatracker.ietf.org/doc/html/rfc5746"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "SSL/TLS: Untrusted Certicate Detection",
+    "description": [
+      "Checks and reports if a remote SSL/TLS service is using a certicate which is untrusted / the  verication against the system wide trust store has failed."
+    ],
+    "detection_result": [
+      "The remote SSL/TLS server is using the following certificate(s) which failed the  -> verification against the system wide trust store (serial:issuer):  4C48C8AD44E3D99AD1A8310621780CB0F9B5B919:CN=localhost (Server certificate)"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [],
+    "cvss": [
+      "0.0"
+    ],
+    "port": 9090,
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "SSL/TLS: Untrusted Certificate Detection",
+    "description": [
+      "Checks and reports if a remote SSL/TLS service is using a certificate which is untrusted / the verification against the system wide trust store has failed."
+    ],
+    "detection_result": [
+      "The remote SSL/TLS server is using the following certificate(s) which failed the verification against the system wide trust store (serial:issuer):",
+      "4C48C8AD44E3D99AD1A8310621780CB0F9B5B919:CN=localhost (Server certificate)"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [
+      "Details: SSL/TLS: Untrusted Certificate Detection",
+      "OID:1.3.6.1.4.1.25623.1.0.117764",
+      "Version used: 2024-09-27T05:05:23Z"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": 9090,
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "SSL/TLS: NPN / ALPN Extension and Protocol Support Detection",
+    "description": [
+      "This routine identifies services supporting the following extensions to TLS:",
+      "- Application-Layer Protocol Negotiation (ALPN)",
+      "- Next Protocol Negotiation (NPN).",
+      "Based on the availability of this extensions the supported Network Protocols by this service are gathered and reported."
+    ],
+    "detection_result": [
+      "The remote service advertises support for the following Network Protocol(s) via the ALPN extension:",
+      "SSL/TLS Protocol:Network Protocol",
+      "TLSv1.2:HTTP/1.1"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [
+      "Details: SSL/TLS: NPN / ALPN Extension and Protocol Support Detection",
+      "OID:1.3.6.1.4.1.25623.1.0.108099",
+      "Version used: 2024-09-27T05:05:23Z"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": 9090,
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [
+      "url: https://tools.ietf.org/html/rfc7301",
+      "url: https://tools.ietf.org/html/draft-agl-tls-nextprotoneg-04"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "HTTP Security Headers Detection",
+    "description": [
+      "All known security headers are being checked on the remote web server.",
+      "On completion a report will hand back whether a specic security header has been implemented (including its value and if it is deprecated) or is missing on the target.",
+      "Quality of Detection (QoD): 80%"
+    ],
+    "detection_result": [
+      "Missing Headers | More Information",
+      "--------------------------------------------------------------------------------",
+      "Content-Security-Policy | https://owasp.org/www-project-secure-headers/#content-security-policy",
+      "Cross-Origin-Embedder-Policy | https://scotthelme.co.uk/coop-and-coep/, Note: This is an upcoming header",
+      "Cross-Origin-Opener-Policy | https://scotthelme.co.uk/coop-and-coep/, Note: This is an upcoming header",
+      "Cross-Origin-Resource-Policy | https://scotthelme.co.uk/coop-and-coep/, Note: This is an upcoming header",
+      "Document-Policy | https://w3c.github.io/webappsec-feature-policy/document-policy#document-policy-http-header",
+      "Expect-CT | https://owasp.org/www-project-secure-headers/#expect-ct, Note: This is an upcoming header",
+      "Feature-Policy | https://owasp.org/www-project-secure-headers/#feature-policy, Note: The Feature Policy header has been renamed to Permissions Policy",
+      "Permissions-Policy | https://w3c.github.io/webappsec-feature-policy/#permissions-policy-http-header-field",
+      "Public-Key-Pins | Please check the output of the VTs including 'SSL/TLS:' and 'HPKP' in their name for more information and configuration help. Note: Most major browsers have dropped / deprecated support for this header in 2020.",
+      "Referrer-Policy | https://owasp.org/www-project-secure-headers/#referrer-policy",
+      "Sec-Fetch-Dest | https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers#fetch_metadata_request_headers, Note: This is a new header supported only in newer browsers like e.g. Firefox 90",
+      "Sec-Fetch-Mode | https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers#fetch_metadata_request_headers, Note: This is a new header supported only in newer browsers like e.g. Firefox 90",
+      "Sec-Fetch-Site | https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers#fetch_metadata_request_headers, Note: This is a new header supported only in newer browsers like e.g. Firefox 90",
+      "Sec-Fetch-User | https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers#fetch_metadata_request_headers, Note: This is a new header supported only in newer browsers like e.g. Firefox 90",
+      "Strict-Transport-Security | Please check the output of the VTs including 'SSL/TLS:' and 'HSTS' in their name for more information and configuration help.",
+      "X-Content-Type-Options | https://owasp.org/www-project-secure-headers/#x-content-type-options",
+      "X-Frame-Options | https://owasp.org/www-project-secure-headers/#x-frame-options",
+      "X-Permitted-Cross-Domain-Policies | https://owasp.org/www-project-secure-headers/#x-permitted-cross-domain-policies",
+      "X-XSS-Protection | https://owasp.org/www-project-secure-headers/#x-xss-protection, Note: Most major browsers have dropped / deprecated support for this header in 2020."
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [
+      "Details: HTTP Security Headers Detection",
+      "OID:1.3.6.1.4.1.25623.1.0.112081",
+      "Version used: 2025-03-21T15:40:43Z"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": 9090,
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [
+      "url: https://owasp.org/www-project-secure-headers/",
+      "url: https://owasp.org/www-project-secure-headers/#div-headers",
+      "url: https://securityheaders.com/"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Web Application Scanning Consolidation / Info Reporting",
+    "description": [
+      "The script consolidates and reports various information for web application (formerly called 'CGI') scanning.",
+      "This information is based on the following scripts / settings:",
+      "- HTTP-Version Detection (OID: 1.3.6.1.4.1.25623.1.0.100034)",
+      "- No 404 check (OID: 1.3.6.1.4.1.25623.1.0.10386)",
+      "- Web mirroring / webmirror.nasl (OID: 1.3.6.1.4.1.25623.1.0.10662)",
+      "- Directory Scanner / DDI_Directory_Scanner.nasl (OID: 1.3.6.1.4.1.25623.1.0.11032)",
+      "- The congured 'cgi_path' within the 'Scanner Preferences' of the scan cong in use",
+      "- The congured 'Enable CGI scanning', 'Enable generic web application scanning' and 'Add historic /scripts and /cgi-bin to directories for CGI scanning' within the 'Global variable settings' of the scan cong in use",
+      "If you think any of this information is wrong please report it to the referenced community forum.",
+      "Quality of Detection (QoD): 80%"
+    ],
+    "detection_result": [
+      "The Hostname/IP \"dovecot.trabalho_vulnnet\" was used to access the remote host.",
+      "Generic web application scanning is disabled for this host via the \"Enable generic web application scanning\" option within the \"Global variable settings\" of the scan config in use.",
+      "Requests to this service are done via HTTP/1.1."
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [],
+    "cvss": [
+      "0.0"
+    ],
+    "port": 9090,
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "SMTP too long line",
+    "description": [
+      "The SMTP server allows lines that are longer than 512 characters."
+    ],
+    "detection_result": [
+      "The remote SMTP server allows lines that are longer than 512 characters."
+    ],
+    "detection_method": [
+      "A script was used to determine if the remote SMTP server allows lines that are longer than 512 characters."
+    ],
+    "product_detection_result": [],
+    "impact": [
+      "An attacker could exploit this to cause a buffer overflow or other unexpected behavior in the SMTP server."
+    ],
+    "solution": [
+      "Configure the SMTP server to reject lines longer than 512 characters."
+    ],
+    "insight": [
+      "RFC 5321 specifies that SMTP lines must not exceed 512 characters (including the CRLF)."
+    ],
+    "log_method": [],
+    "cvss": [
+      "5.0"
+    ],
+    "port": 25,
+    "protocol": "tcp",
+    "severity": "MEDIUM",
+    "references": [
+      "CVE-1999-0131",
+      "RFC 5321"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "SSL/TLS: Certificate Expired",
+    "description": [
+      "The SSL/TLS certificate presented by the server has expired."
+    ],
+    "detection_result": [
+      "The certificate presented by the server expired on 2023-01-01."
+    ],
+    "detection_method": [
+      "The SSL/TLS certificate was retrieved and its validity period was checked."
+    ],
+    "product_detection_result": [],
+    "impact": [
+      "Clients may refuse to connect, or users may see security warnings, potentially leading to loss of trust or service disruption."
+    ],
+    "solution": [
+      "Renew the SSL/TLS certificate and install the new certificate on the server."
+    ],
+    "insight": [
+      "Certificates have a defined validity period. Using an expired certificate breaks the chain of trust."
+    ],
+    "log_method": [],
+    "cvss": [
+      "5.0"
+    ],
+    "port": 443,
+    "protocol": "tcp",
+    "severity": "MEDIUM",
+    "references": [],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "OpenVAS / Greenbone Vulnerability Manager Detection",
+    "description": [
+      "The remote host is running an OpenVAS or Greenbone Vulnerability Manager service."
+    ],
+    "detection_result": [
+      "The service banner indicates it is an OpenVAS/Greenbone service."
+    ],
+    "detection_method": [
+      "A banner grab was performed on the detected service port."
+    ],
+    "product_detection_result": [],
+    "impact": [
+      "This detection itself is informational but indicates the presence of a vulnerability management system which could be targeted."
+    ],
+    "solution": [
+      "Consider restricting access to the management interface to trusted networks only."
+    ],
+    "insight": [
+      "The service typically runs on TCP port 9390 or 9392."
+    ],
+    "log_method": [],
+    "cvss": [
+      "0.0"
+    ],
+    "port": 9390,
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Services",
+    "description": [
+      "This plugin performs service detection."
+    ],
+    "detection_result": [
+      "A TLScustom server answered on this port"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [
+      "This plugin attempts to guess which service is running on the remote port(s). For instance, it searches for a web server which could listen on another port than 80 or 443 and makes this information available for other check routines."
+    ],
+    "log_method": [
+      "Details: Services"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": 9090,
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Services",
+    "description": [
+      "This plugin performs service detection."
+    ],
+    "detection_result": [
+      "A web server is running on this port through SSL"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [
+      "This plugin attempts to guess which service is running on the remote port(s). For instance, it searches for a web server which could listen on another port than 80 or 443 and makes this information available for other check routines."
+    ],
+    "log_method": [
+      "Details: Services"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": 9090,
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  }
+]

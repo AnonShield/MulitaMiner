@@ -1,0 +1,274 @@
+# LOG DE DEDUPLICAÇÃO DE VULNERABILIDADES
+Este arquivo lista todas as vulnerabilidades consideradas duplicatas e agrupadas durante o processo.
+Cada grupo é identificado por uma chave composta (ex: nome, porta, protocolo).
+Apenas a vulnerabilidade mais completa e com descrição válida foi mantida em cada grupo.
+
+Total de grupos de duplicatas: 44
+Total de vulnerabilidades agrupadas (removidas): 23
+
+Grupo 1: Chave = ('Mort Bay / Eclipse Jetty End of Life (EOL) Detection - Linux', 8161, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Mort Bay / Eclipse Jetty End of Life (EOL) Detection - Linux
+       Porta: 8161 | Protocolo: tcp | Severidade: Critical
+       Descrição: The Mort Bay / Eclipse Jetty version on the remote host has reached the End of Life (EOL) and should not be used anymore.
+
+Grupo 2: Chave = ('Apache ActiveMQ Web Console Default / No Credentials (HTTP)', 8161, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Apache ActiveMQ Web Console Default / No Credentials (HTTP)
+       Porta: 8161 | Protocolo: tcp | Severidade: CRITICAL
+       Descrição: The Apache ActiveMQ Web Console is unprotected or is using default credentials.
+
+Grupo 3: Chave = ('Eclipse Jetty Server Fake Pipeline Request Security Bypass Vulnerability - Linux', 8161, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Eclipse Jetty Server Fake Pipeline Request Security Bypass Vulnerability - Linux
+       Porta: 8161 | Protocolo: tcp | Severidade: CRITICAL
+       Descrição: Eclipse Jetty Server is prone to a security bypass vulnerability.
+
+Grupo 4: Chave = ('HTTP Brute Force Logins With Default Credentials Reporting', 8161, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: HTTP Brute Force Logins With Default Credentials Reporting
+       Porta: 8161 | Protocolo: tcp | Severidade: Critical
+       Descrição: It was possible to login into the remote Web Application using default credentials. Quality of Detection (QoD): 95%
+
+Grupo 5: Chave = ('Apache ActiveMQ Files Found', 8161, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Apache ActiveMQ Files Found
+       Porta: 8161 | Protocolo: tcp | Severidade: Critical
+       Descrição: The remote web server contains files that are part of the Apache ActiveMQ web console.
+
+Grupo 6: Chave = ('Apache ActiveMQ Files Exposed', 8161, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Apache ActiveMQ Files Exposed
+       Porta: 8161 | Protocolo: tcp | Severidade: Critical
+       Descrição: The web application exposes files or directories that are accessible to unauthorized users. This can lead to information disclosure, source code leakage, or even remote code execution in some cases.
+
+Grupo 7: Chave = ('Eclipse Jetty DoS Vulnerability (GHSA-26vr-8j45-3r4w) - Linux', 8161, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Eclipse Jetty DoS Vulnerability (GHSA-26vr-8j45-3r4w) - Linux
+       Porta: 8161 | Protocolo: tcp | Severidade: Critical
+       Descrição: Eclipse Jetty is prone to a denial of service (DoS) vulnerability. Quality of Detection (QoD): 30%
+
+Grupo 8: Chave = ('HTTP Brute Force Logins With Default Credentials', 8161, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: HTTP Brute Force Logins With Default Credentials
+       Porta: 8161 | Protocolo: tcp | Severidade: Critical
+       Descrição: Reports default credentials detected by the VT 'HTTP Brute Force Logins With Default Credentials' (OID: 1.3.6.1.4.1.25623.1.0.108041).
+
+Grupo 9: Chave = ('Eclipse Jetty Multiple Vulnerabilities (Jul 2022) - Linux', 8161, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Eclipse Jetty Multiple Vulnerabilities (Jul 2022) - Linux
+       Porta: 8161 | Protocolo: tcp | Severidade: HIGH
+       Descrição: Eclipse Jetty is prone to multiple vulnerabilities.
+
+Grupo 10: Chave = ('Eclipse Jetty DoS Vulnerability (GHSA-7hcf-ppf8-5w5h) - Linux', 8161, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Eclipse Jetty DoS Vulnerability (GHSA-7hcf-ppf8-5w5h) - Linux
+       Porta: 8161 | Protocolo: tcp | Severidade: HIGH
+       Descrição: Eclipse Jetty is prone to a denial of service (DoS) vulnerability. Quality of Detection (QoD): 30%
+
+Grupo 11: Chave = ('Eclipse Jetty Privilege Escalation Vulnerability - Linux', 8161, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Eclipse Jetty Privilege Escalation Vulnerability - Linux
+       Porta: 8161 | Protocolo: tcp | Severidade: MEDIUM
+       Descrição: Eclipse Jetty is prone to a privilege escalation vulnerability through a local temp directory.
+
+Grupo 12: Chave = ('Eclipse Jetty XSS Vulnerability (CVE-2019-10241) - Linux', 8161, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Eclipse Jetty XSS Vulnerability (CVE-2019-10241) - Linux
+       Porta: 8161 | Protocolo: tcp | Severidade: MEDIUM
+       Descrição: Eclipse Jetty is prone to a cross-site scripting (XSS) vulnerability.  Quality of Detection (QoD): 30%
+
+Grupo 13: Chave = ('Eclipse Jetty Information Disclosure Vulnerability (CVE-2019-10247) - Linux', 8161, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Eclipse Jetty Information Disclosure Vulnerability (CVE-2019-10247) - Linux
+       Porta: 8161 | Protocolo: tcp | Severidade: MEDIUM
+       Descrição: Eclypse Jetty is prone to an information disclosure vulnerability.
+
+Grupo 14: Chave = ('Eclipse Jetty Information Disclosure Vulnerability (GHSA-gwcr-j4wh-j3cq)', 8161, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Eclipse Jetty Information Disclosure Vulnerability (GHSA-gwcr-j4wh-j3cq)
+       Porta: 8161 | Protocolo: tcp | Severidade: MEDIUM
+       Descrição: Eclipse Jetty is prone to an information disclosure vulnerability in the ConcatServlet and Wel- comeFilter servlet.
+
+Grupo 15: Chave = ('Eclipse Jetty Multiple Vulnerabilities (GHSA-qw69-rqj8-6qw8, GHSA-p26g-97m4-6q7c) - Linux', 8161, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Eclipse Jetty Multiple Vulnerabilities (GHSA-qw69-rqj8-6qw8, GHSA-p26g-97m4-6q7c) - Linux
+       Porta: 8161 | Protocolo: tcp | Severidade: MEDIUM
+       Descrição: Eclipse Jetty is prone to multiple vulnerabilities.
+
+Grupo 16: Chave = ('Eclipse Jetty URI Parsing Vulnerability (GHSA-qh8g-58pp-2wxh) - Linux', 8161, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Eclipse Jetty URI Parsing Vulnerability (GHSA-qh8g-58pp-2wxh) - Linux
+       Porta: 8161 | Protocolo: tcp | Severidade: MEDIUM
+       Descrição: Eclipse Jetty is prone to an URI parsing vulnerability.
+
+Grupo 17: Chave = ('Eclipse Jetty Server InvalidPathException Information Disclosure Vulnerability - Linux', 8161, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Eclipse Jetty Server InvalidPathException Information Disclosure Vulnerability - Linux
+       Porta: 8161 | Protocolo: tcp | Severidade: MEDIUM
+       Descrição: Eclipse Jetty Server is prone to an information disclosure vulnerability. Quality of Detection (QoD): 30%
+
+Grupo 18: Chave = ('Eclipse Jetty HTTP Header Vulnerability (GHSA-hmr7-m48g-48f6) - Linux', 8161, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Eclipse Jetty HTTP Header Vulnerability (GHSA-hmr7-m48g-48f6) - Linux
+       Porta: 8161 | Protocolo: tcp | Severidade: MEDIUM
+       Descrição: Eclipse Jetty is prone to an HTTP header vulnerability. Quality of Detection (QoD): 30%
+
+Grupo 19: Chave = ('Cleartext Transmission of Sensitive Information via HTTP', 8161, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Cleartext Transmission of Sensitive Information via HTTP
+       Porta: 8161 | Protocolo: tcp | Severidade: MEDIUM
+       Descrição: The host / application transmits sensitive information (username, passwords) in cleartext via HTTP.
+
+Grupo 20: Chave = ('Apache ActiveMQ Fileserver Remote Code Execution Vulnerability', 8161, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Apache ActiveMQ Fileserver Remote Code Execution Vulnerability
+       Porta: 8161 | Protocolo: tcp | Severidade: CRITICAL
+       Descrição: Apache ActiveMQ is an open source message broker written in Java together with a full Java Message Service (JMS) client. It provides 'Enterprise Features' which in this case includes exposing a filese...
+
+Grupo 21: Chave = ('MQTT Broker Does Not Require Authentication (TCP)', 1883, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: MQTT Broker Does Not Require Authentication (TCP)
+       Porta: 1883 | Protocolo: tcp | Severidade: MEDIUM
+       Descrição: The remote MQTT broker does not require authentication. Quality of Detection (QoD): 99%
+
+Grupo 22: Chave = ('MQTT Broker Does Not Require Authentication', 'general', 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: MQTT Broker Does Not Require Authentication
+       Porta: general | Protocolo: tcp | Severidade: LOW
+       Descrição: The remote MQTT broker does not require authentication.
+
+Grupo 23: Chave = ('TCP Timestamps Information Disclosure', 'general', 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: TCP Timestamps Information Disclosure
+       Porta: general | Protocolo: tcp | Severidade: LOW
+       Descrição: The remote host implements TCP timestamps and therefore allows to compute the uptime. Quality of Detection (QoD): 80%
+
+Grupo 24: Chave = ('Eclipse Jetty Session Vulnerability (GHSA-m6cp-vxjx-65j6) - Linux', 8161, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Eclipse Jetty Session Vulnerability (GHSA-m6cp-vxjx-65j6) - Linux
+       Porta: 8161 | Protocolo: tcp | Severidade: LOW
+       Descrição: Eclipse Jetty is prone to a vulnerability in the session management. Quality of Detection (QoD): 30%
+
+Grupo 25: Chave = ('Eclipse Jetty XXE Vulnerability (GHSA-58qw-p7qm-5rvh) - Linux', 8161, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Eclipse Jetty XXE Vulnerability (GHSA-58qw-p7qm-5rvh) - Linux
+       Porta: 8161 | Protocolo: tcp | Severidade: LOW
+       Descrição: Eclipse Jetty is prone to a XML external entity (XXE) vulnerability in the XMLParser. Quality of Detection (QoD): 30%
+
+Grupo 26: Chave = ('Eclipse Jetty CgiServlet Vulnerability (GHSA-3gh6-v5v9-6v9j) - Linux', 8161, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Eclipse Jetty CgiServlet Vulnerability (GHSA-3gh6-v5v9-6v9j) - Linux
+       Porta: 8161 | Protocolo: tcp | Severidade: LOW
+       Descrição: Eclipse Jetty is prone to a vulnerability in the CgiServlet. Quality of Detection (QoD): 30%
+
+Grupo 27: Chave = ('ICMP Timestamp Reply Information Disclosure', 'general', 'icmp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: ICMP Timestamp Reply Information Disclosure
+       Porta: general | Protocolo: icmp | Severidade: LOW
+       Descrição: The remote host responded to an ICMP timestamp request. Quality of Detection (QoD): 80%
+
+Grupo 28: Chave = ('OS Detection Consolidation and Reporting', 'general', 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: OS Detection Consolidation and Reporting
+       Porta: general | Protocolo: tcp | Severidade: LOG
+       Descrição: This script consolidates the OS information detected by several VTs and tries to nd the best matching OS. Furthermore it reports all previously collected information leading to this best matching OS. ...
+
+Grupo 29: Chave = ('IP Forwarding Enabled - Active Check', 'general', 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: IP Forwarding Enabled - Active Check
+       Porta: general | Protocolo: tcp | Severidade: LOG
+       Descrição: Checks if the remote host has IP forwarding enabled. Quality of Detection (QoD): 70%
+
+Grupo 30: Chave = ('Traceroute', 'general', 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Traceroute
+       Porta: general | Protocolo: tcp | Severidade: LOG
+       Descrição: Collect information about the network route and network distance between the scanner host and the target host. Quality of Detection (QoD): 80%
+
+Grupo 31: Chave = ('Hostname Determination Reporting', 'general', 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Hostname Determination Reporting
+       Porta: general | Protocolo: tcp | Severidade: LOG
+       Descrição: The script reports information on how the hostname of the target was determined. Quality of Detection (QoD): 80%
+
+Grupo 32: Chave = ('Apache ActiveMQ Detection Consolidation', 'general', 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Apache ActiveMQ Detection Consolidation
+       Porta: general | Protocolo: tcp | Severidade: LOG
+       Descrição: Consolidation of Apache ActiveMQ detections. Quality of Detection (QoD): 80%
+
+Grupo 33: Chave = ('Mort Bay / Eclipse Jetty Detection (HTTP)', 8161, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Mort Bay / Eclipse Jetty Detection (HTTP)
+       Porta: 8161 | Protocolo: tcp | Severidade: LOG
+       Descrição: HTTP based detection of Mort Bay / Eclipse Jetty.
+
+Grupo 34: Chave = (('Name', 'Services'), ('cvss', ('0.0',)), ('description', ('This plugin performs service detection.',)), ('detection_method', ()), ('detection_result', ('A web server is running on this port',)), ('impact', ()), ('insight', ('This plugin attempts to guess which service is running on the remote port(s). For instance, it searches for a web server which could listen on another port than 80 or 443 and makes this information available for other check routines.',)), ('instances', ()), ('log_method', ('Details: Services', 'OID:1.3.6.1.4.1.25623.1.0.10330', 'Version used: 2025-03-05T05:38:53Z')), ('plugin', None), ('plugin_details', ()), ('port', 8161), ('product_detection_result', ()), ('protocol', 'tcp'), ('references', ()), ('severity', 'LOG'), ('solution', ()), ('source', 'OPENVAS'))
+  Total de duplicatas neste grupo: 1
+    1. Nome: Services
+       Porta: 8161 | Protocolo: tcp | Severidade: LOG
+       Descrição: This plugin performs service detection.
+
+Grupo 35: Chave = ('HTTP Server type and version', 8161, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: HTTP Server type and version
+       Porta: 8161 | Protocolo: tcp | Severidade: LOG
+       Descrição: This script detects and reports the HTTP Server's banner which might provide the type and version of it.
+
+Grupo 36: Chave = ('HTTP Server Banner Enumeration', 8161, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: HTTP Server Banner Enumeration
+       Porta: 8161 | Protocolo: tcp | Severidade: LOG
+       Descrição: This script tries to detect / enumerate dierent HTTP server banner (e.g. from a frontend, backend or proxy server) by sending various dierent HTTP requests (valid and invalid ones).
+
+Grupo 37: Chave = ('HTTP Security Headers Detection', 8161, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: HTTP Security Headers Detection
+       Porta: 8161 | Protocolo: tcp | Severidade: LOG
+       Descrição: All known security headers are being checked on the remote web server. On completion a report will hand back whether a specic security header has been implemented (including its value and if it is dep...
+
+Grupo 38: Chave = ('Web Application Scanning Consolidation / Info Reporting', 8161, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Web Application Scanning Consolidation / Info Reporting
+       Porta: 8161 | Protocolo: tcp | Severidade: LOG
+       Descrição: The script consolidates and reports various information for web application (formerly called 'CGI') scanning. This information is based on the following scripts / settings: - HTTP-Version Detection (O...
+
+Grupo 39: Chave = ('Web Application Directory Scanner', 8161, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Web Application Directory Scanner
+       Porta: 8161 | Protocolo: tcp | Severidade: LOG
+       Descrição: The scanner has found a number of directories on the web server. While this is not, in and of itself, a bug, you should manually inspect these directories to ensure that they are in compliance with co...
+
+Grupo 40: Chave = ('Allowed HTTP Methods Enumeration', 8161, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Allowed HTTP Methods Enumeration
+       Porta: 8161 | Protocolo: tcp | Severidade: LOG
+       Descrição: Enumerates which HTTP methods are allowed.
+
+Grupo 41: Chave = ('CPE Inventory', 8161, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: CPE Inventory
+       Porta: 8161 | Protocolo: tcp | Severidade: LOG
+       Descrição: This routine uses information collected by other routines about CPE identities of operating systems, services and applications detected during the scan. Note: Some CPEs for specic products might show ...
+
+Grupo 42: Chave = ('CPE Inventory', 'general', 'CPE-T')
+  Total de duplicatas neste grupo: 1
+    1. Nome: CPE Inventory
+       Porta: general | Protocolo: CPE-T | Severidade: LOG
+       Descrição: This routine uses information collected by other routines about CPE identities of operating systems, services and applications detected during the scan. Note: Some CPEs for specic products might show ...
+
+Grupo 43: Chave = ('MQTT Broker Detection (TCP)', 1883, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: MQTT Broker Detection (TCP)
+       Porta: 1883 | Protocolo: tcp | Severidade: LOG
+       Descrição: TCP based detection of a MQTT Broker.
+
+Grupo 44: Chave = ("Service Detection with 'GET' Request", 5672, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Service Detection with 'GET' Request
+       Porta: 5672 | Protocolo: tcp | Severidade: LOG
+       Descrição: This plugin performs service detection. Quality of Detection (QoD): 80%
+Resumo final:
+Total de grupos de duplicatas: 44
+Total de vulnerabilidades agrupadas (removidas): 23

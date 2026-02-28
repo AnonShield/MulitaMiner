@@ -1,0 +1,3053 @@
+[
+  {
+    "Name": "Operating System (OS) End of Life (EOL) Detection",
+    "description": [
+      "The Operating System (OS) on the remote host has reached the end of life (EOL) and should not be used anymore.",
+      "Quality of Detection (QoD): 80%"
+    ],
+    "detection_result": [
+      "The \"Debian GNU/Linux\" Operating System on the remote host has reached the end of life.",
+      "CPE: cpe:/o:debian:debian_linux:8",
+      "Installed version, build or SP: 8",
+      "EOL date: 2020-06-30",
+      "EOL info: https://en.wikipedia.org/wiki/List_of_Debian_releases#Release_table"
+    ],
+    "detection_method": [
+      "Checks if an EOL version of an OS is present on the target host.",
+      "Details: Operating System (OS) End of Life (EOL) Detection",
+      "OID:1.3.6.1.4.1.25623.1.0.103674",
+      "Version used: 2025-05-21T05:40:19Z"
+    ],
+    "product_detection_result": [
+      "Product: cpe:/o:debian:debian_linux:8",
+      "Method: OS Detection Consolidation and Reporting",
+      "OID: 1.3.6.1.4.1.25623.1.0.105937)"
+    ],
+    "impact": [
+      "An EOL version of an OS is not receiving any security updates from the vendor. Unxed security vulnerabilities might be leveraged by an attacker to compromise the security of this host."
+    ],
+    "solution": [
+      "Solution type: Mitigation",
+      "Update the OS on the remote host to a version which is still supported and receiving security updates by the vendor.",
+      "Note / Important: Please create an override for this result if the target host is a:",
+      "- Windows system with Extended Security Updates (ESU)",
+      "- System with additional 3rd-party / non-vendor security updates like e.g. from 'TuxCare', 'Freexian Extended LTS' or similar"
+    ],
+    "insight": [],
+    "log_method": [],
+    "cvss": [
+      "7.0"
+    ],
+    "port": "general",
+    "protocol": "tcp",
+    "severity": "Critical",
+    "references": [],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Apache HTTP Server < 2.4.49 Multiple Vulnerabilities - Linux",
+    "description": [
+      "Apache HTTP Server is prone to multiple vulnerabilities.",
+      "Quality of Detection (QoD): 30%"
+    ],
+    "detection_result": [
+      "Installed version: 2.4.10",
+      "Fixed version: 2.4.49",
+      "Installation",
+      "path / port: 80/tcp"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: Apache HTTP Server < 2.4.49 Multiple Vulnerabilities - Linux",
+      "OID:1.3.6.1.4.1.25623.1.0.146725",
+      "Version used: 2022-08-09T10:11:17Z"
+    ],
+    "product_detection_result": [
+      "Product: cpe:/a:apache:http_server:2.4.10",
+      "Method: Apache HTTP Server Detection Consolidation",
+      "OID: 1.3.6.1.4.1.25623.1.0.117232)"
+    ],
+    "impact": [
+      "Aected Software/OS",
+      "Apache HTTP Server version 2.4.48 and prior."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 2.4.49 or later."
+    ],
+    "insight": [
+      "The following vulnerabilities exist:",
+      "- CVE-2021-34798: NULL pointer dereference in httpd core",
+      "- CVE-2021-39275: ap_escape_quotes buer overow",
+      "- CVE-2021-40438: mod_proxy SSRF"
+    ],
+    "log_method": [],
+    "cvss": [
+      "9.8"
+    ],
+    "port": 80,
+    "protocol": "tcp",
+    "severity": "CRITICAL",
+    "references": [
+      "cve: CVE-2021-34798",
+      "cve: CVE-2021-39275",
+      "cve: CVE-2021-40438",
+      "cisa: Known Exploited Vulnerability (KEV) catalog",
+      "url: https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
+      "url: https://httpd.apache.org/security/vulnerabilities_24.html",
+      "cert-bund: WID-SEC-2024-2180",
+      "cert-bund: WID-SEC-2024-1591",
+      "cert-bund: WID-SEC-2024-0186",
+      "cert-bund: WID-SEC-2024-0064",
+      "cert-bund: WID-SEC-2023-1969",
+      "cert-bund: WID-SEC-2023-1016",
+      "cert-bund: WID-SEC-2022-1298",
+      "cert-bund: WID-SEC-2022-1189",
+      "cert-bund: WID-SEC-2022-0724",
+      "cert-bund: WID-SEC-2022-0190",
+      "cert-bund: CB-K22/0476",
+      "cert-bund: CB-K22/0465",
+      "cert-bund: CB-K22/0463",
+      "cert-bund: CB-K21/0992",
+      "dfn-cert: DFN-CERT-2023-0881",
+      "dfn-cert: DFN-CERT-2022-2405",
+      "dfn-cert: DFN-CERT-2022-2167",
+      "dfn-cert: DFN-CERT-2022-0904",
+      "dfn-cert: DFN-CERT-2022-0878",
+      "dfn-cert: DFN-CERT-2022-0872",
+      "dfn-cert: DFN-CERT-2022-0869",
+      "dfn-cert: DFN-CERT-2022-0672",
+      "dfn-cert: DFN-CERT-2022-0207",
+      "dfn-cert: DFN-CERT-2022-0119",
+      "dfn-cert: DFN-CERT-2022-0098",
+      "dfn-cert: DFN-CERT-2021-2629",
+      "dfn-cert: DFN-CERT-2021-2471",
+      "dfn-cert: DFN-CERT-2021-2185",
+      "dfn-cert: DFN-CERT-2021-2164",
+      "dfn-cert: DFN-CERT-2021-2153",
+      "dfn-cert: DFN-CERT-2021-2098",
+      "dfn-cert: DFN-CERT-2021-2090",
+      "dfn-cert: DFN-CERT-2021-2047",
+      "dfn-cert: DFN-CERT-2021-2020",
+      "dfn-cert: DFN-CERT-2021-1961"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Apache HTTP Server < 2.4.54 Multiple Vulnerabilities - Linux",
+    "description": [
+      "Apache HTTP Server is prone to multiple vulnerabilities.",
+      "Quality of Detection (QoD): 30%"
+    ],
+    "detection_result": [
+      "Installed version: 2.4.10",
+      "Fixed version: 2.4.54",
+      "Installation",
+      "path / port: 80/tcp"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: Apache HTTP Server < 2.4.54 Multiple Vulnerabilities - Linux",
+      "OID:1.3.6.1.4.1.25623.1.0.148252",
+      "Version used: 2022-06-20T03:04:15Z"
+    ],
+    "product_detection_result": [
+      "Product: cpe:/a:apache:http_server:2.4.10",
+      "Method: Apache HTTP Server Detection Consolidation",
+      "OID: 1.3.6.1.4.1.25623.1.0.117232)"
+    ],
+    "impact": [
+      "Aected Software/OS",
+      "Apache HTTP Server version 2.4.53 and prior."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 2.4.54 or later."
+    ],
+    "insight": [
+      "The following vulnerabilities exist:",
+      "- CVE-2022-26377: mod_proxy_ajp: Possible request smuggling",
+      "- CVE-2022-28614: Read beyond bounds via ap_rwrite()",
+      "- CVE-2022-28615: Read beyond bounds in ap_strcmp_match()",
+      "- CVE-2022-29404: Denial of service in mod_lua r:parsebody",
+      "- CVE-2022-30556: Information disclosure in mod_lua with websockets",
+      "- CVE-2022-31813: mod_proxy X-Forwarded-For dropped by hop-by-hop mechanism"
+    ],
+    "log_method": [],
+    "cvss": [
+      "9.8"
+    ],
+    "port": 80,
+    "protocol": "tcp",
+    "severity": "CRITICAL",
+    "references": [
+      "cve: CVE-2022-26377",
+      "cve: CVE-2022-28614",
+      "cve: CVE-2022-28615",
+      "cve: CVE-2022-29404",
+      "cve: CVE-2022-30556",
+      "cve: CVE-2022-31813",
+      "url: https://httpd.apache.org/security/vulnerabilities_24.html#2.4.54",
+      "cert-bund: WID-SEC-2024-1591",
+      "cert-bund: WID-SEC-2023-1969",
+      "cert-bund: WID-SEC-2023-0134",
+      "cert-bund: WID-SEC-2023-0132",
+      "cert-bund: WID-SEC-2022-1767",
+      "cert-bund: WID-SEC-2022-1766",
+      "cert-bund: WID-SEC-2022-1764",
+      "cert-bund: WID-SEC-2022-0858",
+      "cert-bund: WID-SEC-2022-0192",
+      "cert-bund: CB-K22/0692",
+      "dfn-cert: DFN-CERT-2023-0119",
+      "dfn-cert: DFN-CERT-2022-2799",
+      "dfn-cert: DFN-CERT-2022-2789",
+      "dfn-cert: DFN-CERT-2022-2652",
+      "dfn-cert: DFN-CERT-2022-2509",
+      "dfn-cert: DFN-CERT-2022-2310",
+      "dfn-cert: DFN-CERT-2022-2167",
+      "dfn-cert: DFN-CERT-2022-1837",
+      "dfn-cert: DFN-CERT-2022-1833",
+      "dfn-cert: DFN-CERT-2022-1720",
+      "dfn-cert: DFN-CERT-2022-1353",
+      "dfn-cert: DFN-CERT-2022-1296"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Apache HTTP Server 2.4.0 - 2.4.55 HTTP Request Smuggling Vulnerability - Linux",
+    "description": [
+      "Apache HTTP Server is prone to a HTTP request smuggling vulnerability.",
+      "Quality of Detection (QoD): 30%"
+    ],
+    "detection_result": [],
+    "detection_method": [],
+    "product_detection_result": [
+      "cpe:/a:apache:http_server:2.4.10",
+      "Detected by Apache HTTP Server Detection Consolidation (OID: 1.3.6.1.4.1.25623.1",
+      "->.0.117232)"
+    ],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [],
+    "cvss": [
+      "9.8"
+    ],
+    "port": 80,
+    "protocol": "tcp",
+    "severity": "CRITICAL",
+    "references": [],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Apache HTTP Server 2.4.0 - 2.4.46 Multiple Vulnerabilities - Linux",
+    "description": [
+      "Apache HTTP Server is prone to multiple vulnerabilities.",
+      "Quality of Detection (QoD): 30%"
+    ],
+    "detection_result": [
+      "Installed version: 2.4.10",
+      "Fixed version: 2.4.48",
+      "Installation path / port: 80/tcp"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: Apache HTTP Server 2.4.0 - 2.4.46 Multiple Vulnerabilities - Linux",
+      "OID:1.3.6.1.4.1.25623.1.0.112897",
+      "Version used: 2021-08-24T09:01:06Z"
+    ],
+    "product_detection_result": [
+      "cpe:/a:apache:http_server:2.4.10",
+      "Detected by Apache HTTP Server Detection Consolidation (OID: 1.3.6.1.4.1.25623.1.0.117232)",
+      "Product: cpe:/a:apache:http_server:2.4.10",
+      "Method: Apache HTTP Server Detection Consolidation",
+      "OID: 1.3.6.1.4.1.25623.1.0.117232)"
+    ],
+    "impact": [
+      "- CVE-2020-35452: A specially crafted Digest nonce can cause a stack overflow in mod_auth_digest.",
+      "- CVE-2021-26690: A specially crafted Cookie header handled by mod_session can cause a NULL pointer dereference and crash, leading to a possible Denial Of Service.",
+      "- CVE-2021-26691: A specially crafted SessionHeader sent by an origin server could cause a heap overflow."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 2.4.48 or later."
+    ],
+    "insight": [
+      "The following vulnerabilities exist:",
+      "- CVE-2020-35452: mod_auth_digest possible stack overflow by one null byte",
+      "- CVE-2021-26690: mod_session NULL pointer dereference",
+      "- CVE-2021-26691: mod_session response handling heap overflow"
+    ],
+    "log_method": [],
+    "cvss": [
+      "7.0"
+    ],
+    "port": 80,
+    "protocol": "tcp",
+    "severity": "HIGH",
+    "references": [
+      "cve: CVE-2020-35452",
+      "cve: CVE-2021-26690",
+      "cve: CVE-2021-26691",
+      "url: https://httpd.apache.org/security/vulnerabilities_24.html",
+      "cert-bund: WID-SEC-2024-1591",
+      "cert-bund: WID-SEC-2024-0064",
+      "cert-bund: WID-SEC-2022-0438",
+      "cert-bund: WID-SEC-2022-0190",
+      "cert-bund: CB-K22/0072",
+      "cert-bund: CB-K21/1092",
+      "cert-bund: CB-K21/1090",
+      "cert-bund: CB-K21/0646",
+      "dfn-cert: DFN-CERT-2022-1047",
+      "dfn-cert: DFN-CERT-2022-0207",
+      "dfn-cert: DFN-CERT-2022-0122",
+      "dfn-cert: DFN-CERT-2022-0098",
+      "dfn-cert: DFN-CERT-2021-2394",
+      "dfn-cert: DFN-CERT-2021-2365",
+      "dfn-cert: DFN-CERT-2021-2300",
+      "dfn-cert: DFN-CERT-2021-2187",
+      "dfn-cert: DFN-CERT-2021-2153",
+      "dfn-cert: DFN-CERT-2021-1467",
+      "dfn-cert: DFN-CERT-2021-1412",
+      "dfn-cert: DFN-CERT-2021-1355",
+      "dfn-cert: DFN-CERT-2021-1340"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Apache HTTP Server Multiple Vulnerabilities (Jun 2017) - Linux",
+    "description": [
+      "Apache HTTP Server is prone to multiple vulnerabilities."
+    ],
+    "detection_result": [
+      "Installed version: 2.4.10",
+      "Fixed version: 2.4.26",
+      "Installation path / port: 80/tcp"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: Apache HTTP Server Multiple Vulnerabilities (Jun 2017) - Linux OID:1.3.6.1.4.1.25623.1.0.811214 Version used: 2024-02-16T05:06:55Z"
+    ],
+    "product_detection_result": [
+      "Product: cpe:/a:apache:http_server:2.4.10",
+      "Method: Apache HTTP Server Detection Consolidation",
+      "OID: 1.3.6.1.4.1.25623.1.0.117232)"
+    ],
+    "impact": [
+      "Successful exploitation will allow remote attackers to bypass authentication and perform unauthorized actions, cause a denial-of-service condition and gain access to potentially sensitive information."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to Apache HTTP Server 2.2.33 or 2.4.26 or later."
+    ],
+    "insight": [
+      "Multiple aws exist as,",
+      "- The mod_mime can read one byte past the end of a buer when sending a malicious Content-Type response header.",
+      "- The mod_ssl may dereference a NULL pointer when third-party modules call ap_hook_process_connection() during an HTTP request to an HTTPS port.",
+      "- An use of the ap_get_basic_auth_pw() by third-party modules outside of the authentication phase may lead to authentication requirements being bypassed."
+    ],
+    "log_method": [],
+    "cvss": [
+      "9.8"
+    ],
+    "port": 80,
+    "protocol": "tcp",
+    "severity": "CRITICAL",
+    "references": [
+      "cve: CVE-2017-7679",
+      "cve: CVE-2017-3169",
+      "cve: CVE-2017-3167",
+      "url: http://seclists.org/oss-sec/2017/q2/509",
+      "url: http://www.securityfocus.com/bid/99135",
+      "url: http://www.securityfocus.com/bid/99134",
+      "url: http://httpd.apache.org/security/vulnerabilities_24.html",
+      "url: http://httpd.apache.org/security/vulnerabilities_22.html",
+      "cert-bund: WID-SEC-2025-0370",
+      "cert-bund: WID-SEC-2022-0673",
+      "cert-bund: CB-K22/0045",
+      "cert-bund: CB-K18/0066",
+      "cert-bund: CB-K17/2188",
+      "cert-bund: CB-K17/2013",
+      "cert-bund: CB-K17/1936",
+      "cert-bund: CB-K17/1854",
+      "cert-bund: CB-K17/1842",
+      "cert-bund: CB-K17/1768",
+      "cert-bund: CB-K17/1747",
+      "cert-bund: CB-K17/1622",
+      "cert-bund: CB-K17/1382",
+      "cert-bund: CB-K17/1279",
+      "cert-bund: CB-K17/1154",
+      "cert-bund: CB-K17/1023",
+      "dfn-cert: DFN-CERT-2019-0358",
+      "dfn-cert: DFN-CERT-2018-0077",
+      "dfn-cert: DFN-CERT-2017-2290",
+      "dfn-cert: DFN-CERT-2017-2104",
+      "dfn-cert: DFN-CERT-2017-2021",
+      "dfn-cert: DFN-CERT-2017-1926",
+      "dfn-cert: DFN-CERT-2017-1925",
+      "dfn-cert: DFN-CERT-2017-1843",
+      "dfn-cert: DFN-CERT-2017-1828",
+      "dfn-cert: DFN-CERT-2017-1692",
+      "dfn-cert: DFN-CERT-2017-1443",
+      "dfn-cert: DFN-CERT-2017-1327",
+      "dfn-cert: DFN-CERT-2017-1193",
+      "dfn-cert: DFN-CERT-2017-1058"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Apache HTTP Server < 2.4.60 Multiple Vulnerabilities - Linux",
+    "description": [
+      "Apache HTTP Server is prone to multiple vulnerabilities."
+    ],
+    "detection_result": [
+      "Installed version: 2.4.10",
+      "Fixed version: 2.4.60",
+      "Installation path / port: 80/tcp"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: Apache HTTP Server < 2.4.60 Multiple Vulnerabilities - Linux OID:1.3.6.1.4.1.25623.1.0.114682 Version used: 2025-08-07T05:44:51Z"
+    ],
+    "product_detection_result": [
+      "Product: cpe:/a:apache:http_server:2.4.10",
+      "Method: Apache HTTP Server Detection Consolidation",
+      "OID: 1.3.6.1.4.1.25623.1.0.117232)"
+    ],
+    "impact": [],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 2.4.60 or later."
+    ],
+    "insight": [
+      "The following aws exist:",
+      "- CVE-2024-36387: Denial of Service (DoS) by Null pointer in websocket over HTTP/2",
+      "- CVE-2024-38473: Proxy encoding problem",
+      "- CVE-2024-38474: Weakness with encoded question marks in backreferences",
+      "- CVE-2024-38475: Weakness in mod_rewrite when rst segment of substitution matches lesystem path",
+      "- CVE-2024-38476: May use exploitable/malicious backend application output to run local handlers via internal redirect",
+      "- CVE-2024-38477: Crash resulting in DoS in mod_proxy via a malicious request",
+      "- CVE-2024-39573: mod_rewrite proxy handler substitution"
+    ],
+    "log_method": [],
+    "cvss": [
+      "9.8"
+    ],
+    "port": 80,
+    "protocol": "tcp",
+    "severity": "CRITICAL",
+    "references": [
+      "cve: CVE-2024-36387",
+      "cve: CVE-2024-38473",
+      "cve: CVE-2024-38474",
+      "cve: CVE-2024-38475",
+      "cve: CVE-2024-38476",
+      "cve: CVE-2024-38477",
+      "cve: CVE-2024-395"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Apache HTTP Server Multiple Vulnerabilities (Apr 2018) - Linux",
+    "description": [
+      "Apache HTTP Server is prone to multiple vulnerabilities.",
+      "Quality of Detection (QoD): 30%"
+    ],
+    "detection_result": [
+      "Installed version: 2.4.10",
+      "Fixed version: 2.4.30",
+      "Installation path / port: 80/tcp"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: Apache HTTP Server Multiple Vulnerabilities (Apr 2018) - Linux OID:1.3.6.1.4.1.25623.1.0.812844 Version used: 2024-02-09T05:06:25Z"
+    ],
+    "product_detection_result": [
+      "cpe:/a:apache:http_server:2.4.10",
+      "Detected by Apache HTTP Server Detection Consolidation (OID: 1.3.6.1.4.1.25623.1.0.117232)",
+      "Product: cpe:/a:apache:http_server:2.4.10",
+      "Method: Apache HTTP Server Detection Consolidation OID: 1.3.6.1.4.1.25623.1.0.117232)"
+    ],
+    "impact": [
+      "Successful exploitation will allow an attacker to replay HTTP requests across servers without detection, influence the user content, upload a malicious file, crash the Apache HTTP Server and perform denial of service attack."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 2.4.30 or later. Please see the references for more information."
+    ],
+    "insight": [
+      "Multiple flaws exist due to:",
+      "- Apache HTTP Server fails to correctly generate the nonce sent to prevent reply attacks.",
+      "- Misconfigured mod_session variable, HTTP_SESSION.",
+      "- Apache HTTP Server fails to sanitize the expression specified in '<FilesMatch>'.",
+      "- An error in Apache HTTP Server 'mod_authnz_ldap' when configured with AuthLDAPCharsetConfig.",
+      "- Apache HTTP Server fails to sanitize against a specially crafted request."
+    ],
+    "log_method": [],
+    "cvss": [
+      "7.0"
+    ],
+    "port": 80,
+    "protocol": "tcp",
+    "severity": "HIGH",
+    "references": [
+      "cve: CVE-2018-1312",
+      "cve: CVE-2018-1283",
+      "cve: CVE-2017-15715",
+      "cve: CVE-2017-15710",
+      "cve: CVE-2018-1301",
+      "url: https://httpd.apache.org/security/vulnerabilities_24.html",
+      "url: http://www.securityfocus.com/bid/103524",
+      "url: http://www.securityfocus.com/bid/103520",
+      "url: http://www.securityfocus.com/bid/103525",
+      "url: http://www.securityfocus.com/bid/103512",
+      "url: http://www.securityfocus.com/bid/103515",
+      "cert-bund: WID-SEC-2023-1594",
+      "cert-bund: CB-K20/1030",
+      "cert-bund: CB-K19/0354",
+      "cert-bund: CB-K18/0535",
+      "dfn-cert: DFN-CERT-2020-2133",
+      "dfn-cert: DFN-CERT-2020-0673",
+      "dfn-cert: DFN-CERT-2019-1550",
+      "dfn-cert: DFN-CERT-2019-0736",
+      "dfn-cert: DFN-CERT-2019-0359",
+      "dfn-cert: DFN-CERT-2019-0351",
+      "dfn-cert: DFN-CERT-2018-2316",
+      "dfn-cert: DFN-CERT-2018-0985",
+      "dfn-cert: DFN-CERT-2018-0795",
+      "dfn-cert: DFN-CERT-2018-0703",
+      "dfn-cert: DFN-CERT-2018-0570"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Apache HTTP Server <= 2.4.51 Buffer Overflow Vulnerability - Linux",
+    "description": [
+      "Apache HTTP Server is prone to a buffer overflow vulnerability."
+    ],
+    "detection_result": [
+      "Installed version: 2.4.10",
+      "Fixed version: 2.4.52",
+      "Installation path / port: 80/tcp"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: Apache HTTP Server <= 2.4.51 Buffer Overflow Vulnerability - Linux",
+      "OID:1.3.6.1.4.1.25623.1.0.117856",
+      "Version used: 2021-12-23T12:12:57Z"
+    ],
+    "product_detection_result": [
+      "cpe:/a:apache:http_server:2.4.10",
+      "Detected by Apache HTTP Server Detection Consolidation (OID: 1.3.6.1.4.1.25623.1.0.117232)",
+      "Product: cpe:/a:apache:http_server:2.4.10",
+      "Method: Apache HTTP Server Detection Consolidation",
+      "OID: 1.3.6.1.4.1.25623.1.0.117232)"
+    ],
+    "impact": [
+      "A carefully crafted request body can cause a buffer overflow in the mod_lua multipart parser (r:parsebody() called from Lua scripts)."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 2.4.52 or later."
+    ],
+    "insight": [
+      "A carefully crafted request body can cause a buffer overflow in the mod_lua multipart parser (r:parsebody() called from Lua scripts)."
+    ],
+    "log_method": [],
+    "cvss": [
+      "9.8"
+    ],
+    "port": 80,
+    "protocol": "tcp",
+    "severity": "CRITICAL",
+    "references": [
+      "cve: CVE-2021-44790",
+      "url: https://httpd.apache.org/security/vulnerabilities_24.html",
+      "cert-bund: WID-SEC-2024-1591",
+      "cert-bund: WID-SEC-2024-0064",
+      "cert-bund: WID-SEC-2022-1908",
+      "cert-bund: WID-SEC-2022-1767",
+      "cert-bund: WID-SEC-2022-1057",
+      "cert-bund: WID-SEC-2022-0727",
+      "cert-bund: WID-SEC-2022-0432",
+      "cert-bund: WID-SEC-2022-0302",
+      "cert-bund: WID-SEC-2022-0190",
+      "cert-bund: CB-K22/0619",
+      "cert-bund: CB-K21/1296",
+      "dfn-cert: DFN-CERT-2022-1116",
+      "dfn-cert: DFN-CERT-2022-1115",
+      "dfn-cert: DFN-CERT-2022-1114",
+      "dfn-cert: DFN-CERT-2022-0747",
+      "dfn-cert: DFN-CERT-2022-0369",
+      "dfn-cert: DFN-CERT-2022-0192",
+      "dfn-cert: DFN-CERT-2022-0098",
+      "dfn-cert: DFN-CERT-2022-0068",
+      "dfn-cert: DFN-CERT-2021-2656"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Apache HTTP Server <= 2.4.52 Multiple Vulnerabilities - Linux",
+    "description": [
+      "Apache HTTP Server is prone to multiple vulnerabilities.",
+      "Quality of Detection (QoD): 30%"
+    ],
+    "detection_result": [
+      "Installed version: 2.4.10",
+      "Fixed version: 2.4.53",
+      "Installation",
+      "path / port: 80/tcp"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: Apache HTTP Server <= 2.4.52 Multiple Vulnerabilities - Linux",
+      "OID:1.3.6.1.4.1.25623.1.0.113837",
+      "Version used: 2022-03-21T03:03:41Z"
+    ],
+    "product_detection_result": [
+      "Product: cpe:/a:apache:http_server:2.4.10",
+      "Method: Apache HTTP Server Detection Consolidation",
+      "OID: 1.3.6.1.4.1.25623.1.0.117232)"
+    ],
+    "impact": [
+      "Apache HTTP Server version 2.4.52 and prior.",
+      "The following vulnerabilities exist:",
+      "- CVE-2022-22719: mod_lua Use of uninitialized value of in r:parsebody",
+      "- CVE-2022-22720: HTTP request smuggling vulnerability",
+      "- CVE-2022-22721: Possible buer overow with very large or unlimited LimitXMLRequestBody",
+      "- CVE-2022-23943: mod_sed: Read/write beyond bounds"
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 2.4.53 or later."
+    ],
+    "insight": [
+      "The following vulnerabilities exist:",
+      "- CVE-2022-22719: mod_lua Use of uninitialized value of in r:parsebody",
+      "- CVE-2022-22720: HTTP request smuggling vulnerability",
+      "- CVE-2022-22721: Possible buer overow with very large or unlimited LimitXMLRequestBody",
+      "- CVE-2022-23943: mod_sed: Read/write beyond bounds"
+    ],
+    "log_method": [],
+    "cvss": [
+      "9.1"
+    ],
+    "port": 80,
+    "protocol": "tcp",
+    "severity": "CRITICAL",
+    "references": [
+      "cve: CVE-2022-22719",
+      "cve: CVE-2022-22720",
+      "cve: CVE-2022-22721",
+      "cve: CVE-2022-23943",
+      "url: https://httpd.apache.org/security/vulnerabilities_24.html#2.4.53",
+      "cert-bund: WID-SEC-2024-1591",
+      "cert-bund: WID-SEC-2022-1772",
+      "cert-bund: WID-SEC-2022-1335",
+      "cert-bund: WID-SEC-2022-1228",
+      "cert-bund: WID-SEC-2022-1161",
+      "cert-bund: WID-SEC-2022-1057",
+      "cert-bund: WID-SEC-2022-0898",
+      "cert-bund: WID-SEC-2022-0799",
+      "cert-bund: WID-SEC-2022-0755",
+      "cert-bund: WID-SEC-2022-0646",
+      "cert-bund: WID-SEC-2022-0432",
+      "cert-bund: WID-SEC-2022-0302",
+      "cert-bund: WID-SEC-2022-0290",
+      "cert-bund: CB-K22/0619",
+      "cert-bund: CB-K22/0306",
+      "dfn-cert: DFN-CERT-2022-2799",
+      "dfn-cert: DFN-CERT-2022-2509",
+      "dfn-cert: DFN-CERT-2022-2305",
+      "dfn-cert: DFN-CERT-2022-2167",
+      "dfn-cert: DFN-CERT-2022-1116",
+      "dfn-cert: DFN-CERT-2022-1115",
+      "dfn-cert: DFN-CERT-2022-1114",
+      "dfn-cert: DFN-CERT-2022-0899",
+      "dfn-cert: DFN-CERT-2022-0898",
+      "dfn-cert: DFN-CERT-2022-0865",
+      "dfn-cert: DFN-CERT-2022-0747",
+      "dfn-cert: DFN-CERT-2022-0678",
+      "dfn-cert: DFN-CERT-2022-0582"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Apache HTTP Server 'mod_auth_digest' Multiple Vulnerabilities - Linux",
+    "description": [
+      "Apache HTTP Server is prone to multiple vulnerabilities."
+    ],
+    "detection_result": [
+      "Installed version: 2.4.10",
+      "Fixed version: 2.4.27",
+      "Installation path / port: 80/tcp"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: Apache HTTP Server 'mod_auth_digest' Multiple Vulnerabilities - Linux OID:1.3.6.1.4.1.25623.1.0.811237",
+      "Version used: 2024-02-15T05:05:40Z"
+    ],
+    "product_detection_result": [
+      "Product: cpe:/a:apache:http_server:2.4.10",
+      "Method: Apache HTTP Server Detection Consolidation",
+      "OID: 1.3.6.1.4.1.25623.1.0.117232)"
+    ],
+    "impact": [
+      "Successful exploitation will allow remote attackers to cause the target service to crash. A remote user can obtain potentially sensitive information as well on the target system."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to Apache HTTP Server 2.2.34 or 2.4.27 or later."
+    ],
+    "insight": [
+      "The aw exists due to error in Apache 'mod_auth_digest' which does not properly initialize memory used to process 'Digest' type HTTP Authorization headers."
+    ],
+    "log_method": [],
+    "cvss": [
+      "9.0"
+    ],
+    "port": 80,
+    "protocol": "tcp",
+    "severity": "CRITICAL",
+    "references": [
+      "cve: CVE-2017-9788",
+      "url: http://www.securitytracker.com/id/1038906",
+      "url: http://www.securityfocus.com/bid/99569",
+      "url: http://httpd.apache.org/security/vulnerabilities_22.html",
+      "url: http://httpd.apache.org/security/vulnerabilities_24.html",
+      "cert-bund: WID-SEC-2025-0370",
+      "cert-bund: CB-K18/0066",
+      "cert-bund: CB-K17/2013",
+      "cert-bund: CB-K17/1980",
+      "cert-bund: CB-K17/1936",
+      "cert-bund: CB-K17/1871",
+      "cert-bund: CB-K17/1854",
+      "cert-bund: CB-K17/1842",
+      "cert-bund: CB-K17/1768",
+      "cert-bund: CB-K17/1747",
+      "cert-bund: CB-K17/1622",
+      "cert-bund: CB-K17/1558",
+      "cert-bund: CB-K17/1382",
+      "cert-bund: CB-K17/1197",
+      "cert-bund: CB-K17/1177",
+      "cert-bund: CB-K17/1023",
+      "dfn-cert: DFN-CERT-2019-0358",
+      "dfn-cert: DFN-CERT-2018-0077",
+      "dfn-cert: DFN-CERT-2017-2104",
+      "dfn-cert: DFN-CERT-2017-2070",
+      "dfn-cert: DFN-CERT-2017-2021",
+      "dfn-cert: DFN-CERT-2017-1954",
+      "dfn-cert: DFN-CERT-2017-1926",
+      "dfn-cert: DFN-CERT-2017-1925",
+      "dfn-cert: DFN-CERT-2017-1843",
+      "dfn-cert: DFN-CERT-2017-1828",
+      "dfn-cert: DFN-CERT-2017-1692",
+      "dfn-cert: DFN-CERT-2017-1626",
+      "dfn-cert: DFN-CERT-2017-1443",
+      "dfn-cert: DFN-CERT-2017-1240",
+      "dfn-cert: DFN-CERT-2017-1217",
+      "dfn-cert: DFN-CERT-2017-1058"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Apache HTTP Server < 2.4.55 Multiple Vulnerabilities - Linux",
+    "description": [
+      "Apache HTTP Server is prone to multiple vulnerabilities.",
+      "Quality of Detection (QoD): 30%"
+    ],
+    "detection_result": [
+      "Installed version: 2.4.10",
+      "Fixed version: 2.4.55",
+      "Installation path / port: 80/tcp"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: Apache HTTP Server < 2.4.55 Multiple Vulnerabilities - Linux",
+      "OID:1.3.6.1.4.1.25623.1.0.149152",
+      "Version used: 2024-02-15T05:05:40Z"
+    ],
+    "product_detection_result": [
+      "Product: cpe:/a:apache:http_server:2.4.10",
+      "Method: Apache HTTP Server Detection Consolidation OID: 1.3.6.1.4.1.25623.1.0.117232)"
+    ],
+    "impact": [
+      "Apache HTTP Server version 2.4.54 and prior.",
+      "The following vulnerabilities exist:",
+      "- CVE-2006-20001: mod_dav out of bounds read, or write of zero byte",
+      "- CVE-2022-36760: Possible request smuggling in mod_proxy_ajp",
+      "- CVE-2022-37436: mod_proxy allows a backend to trigger HTTP response splitting"
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 2.4.55 or later."
+    ],
+    "insight": [],
+    "log_method": [],
+    "cvss": [
+      "8.2"
+    ],
+    "port": 80,
+    "protocol": "tcp",
+    "severity": "HIGH",
+    "references": [
+      "cve: CVE-2006-20001",
+      "cve: CVE-2022-36760",
+      "cve: CVE-2022-37436",
+      "url: https://httpd.apache.org/security/vulnerabilities_24.html#2.4.55",
+      "cert-bund: WID-SEC-2024-3195",
+      "cert-bund: WID-SEC-2024-1591",
+      "cert-bund: WID-SEC-2024-0794",
+      "cert-bund: WID-SEC-2023-2674",
+      "cert-bund: WID-SEC-2023-1424",
+      "cert-bund: WID-SEC-2023-1022",
+      "cert-bund: WID-SEC-2023-0561",
+      "cert-bund: WID-SEC-2023-0110",
+      "dfn-cert: DFN-CERT-2023-2545",
+      "dfn-cert: DFN-CERT-2023-1895",
+      "dfn-cert: DFN-CERT-2023-1297",
+      "dfn-cert: DFN-CERT-2023-0658",
+      "dfn-cert: DFN-CERT-2023-0548",
+      "dfn-cert: DFN-CERT-2023-0497",
+      "dfn-cert: DFN-CERT-2023-0118"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Apache HTTP Server 2.4.7 - 2.4.51 Multiple Vulnerabilities - Linux",
+    "description": [
+      "Apache HTTP Server is prone to multiple vulnerabilities."
+    ],
+    "detection_result": [
+      "Installed version: 2.4.10",
+      "Fixed version: 2.4.52",
+      "Installation   path / port: 80/tcp"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: Apache HTTP Server 2.4.7 - 2.4.51 Multiple Vulnerabilities - Linux",
+      "OID:1.3.6.1.4.1.25623.1.0.117854",
+      "Version used: 2021-12-23T12:12:57Z"
+    ],
+    "product_detection_result": [
+      "Product: cpe:/a:apache:http_server:2.4.10",
+      "Method: Apache HTTP Server Detection Consolidation",
+      "OID: 1.3.6.1.4.1.25623.1.0.117232)"
+    ],
+    "impact": [
+      "A crafted URI sent to httpd congured as a forward proxy (ProxyRequests on) can cause a crash (NULL pointer dereference) or, for congurations mixing forward and reverse proxy declarations, can allow for requests to be directed to a declared Unix Domain Socket endpoint (Server Side Request Forgery)."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 2.4.52 or later."
+    ],
+    "insight": [
+      "A crafted URI sent to httpd congured as a forward proxy (ProxyRequests on) can cause a crash (NULL pointer dereference) or, for congurations mixing forward and reverse proxy declarations, can allow for requests to be directed to a declared Unix Domain Socket endpoint (Server Side Request Forgery)."
+    ],
+    "log_method": [],
+    "cvss": [
+      "8.1"
+    ],
+    "port": 80,
+    "protocol": "tcp",
+    "severity": "HIGH",
+    "references": [
+      "cve: CVE-2021-44224",
+      "url: https://httpd.apache.org/security/vulnerabilities_24.html",
+      "cert-bund: WID-SEC-2024-2180",
+      "cert-bund: WID-SEC-2024-1591",
+      "cert-bund: WID-SEC-2022-1057",
+      "cert-bund: WID-SEC-2022-0727",
+      "cert-bund: WID-SEC-2022-0432",
+      "cert-bund: WID-SEC-2022-0302",
+      "cert-bund: CB-K22/0619",
+      "cert-bund: CB-K21/1296",
+      "dfn-cert: DFN-CERT-2022-2405",
+      "dfn-cert: DFN-CERT-2022-2167",
+      "dfn-cert: DFN-CERT-2022-1116",
+      "dfn-cert: DFN-CERT-2022-1115",
+      "dfn-cert: DFN-CERT-2022-1114",
+      "dfn-cert: DFN-CERT-2022-1047",
+      "dfn-cert: DFN-CERT-2022-0872",
+      "dfn-cert: DFN-CERT-2022-0068",
+      "dfn-cert: DFN-CERT-2021-2656"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Apache HTTP Server Man-in-the-Middle Attack Vulnerability (Jul 2016) - Linux",
+    "description": [
+      "Apache HTTP Server is prone to a man-in-the-middle attack vulnerability.",
+      "Quality of Detection (QoD): 30%"
+    ],
+    "detection_result": [
+      "Installed version: 2.4.10",
+      "Fixed version: 2.4.24",
+      "Installation path / port: 80/tcp"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: Apache HTTP Server Man-in-the-Middle Attack Vulnerability (Jul 2016) - Linux",
+      "OID:1.3.6.1.4.1.25623.1.0.808632",
+      "Version used: 2024-02-08T14:36:53Z"
+    ],
+    "product_detection_result": [
+      "Product: cpe:/a:apache:http_server:2.4.10",
+      "Method: Apache HTTP Server Detection Consolidation",
+      "OID: 1.3.6.1.4.1.25623.1.0.117232)"
+    ],
+    "impact": [
+      "Successful exploitation will allow remote attackers to redirect an application's outbound HTTP traffic to an arbitrary proxy server via a crafted proxy header in an HTTP request."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 2.4.24, or 2.2.32, or later."
+    ],
+    "insight": [
+      "The flaw is due to 'CGI Servlet' does not protect applications from the presence of untrusted client data in the 'HTTP_PROXY' environment variable."
+    ],
+    "log_method": [],
+    "cvss": [
+      "7.5"
+    ],
+    "port": 80,
+    "protocol": "tcp",
+    "severity": "HIGH",
+    "references": [
+      "cve: CVE-2016-5387",
+      "url: https://www.apache.org/security/asf-httpoxy-response.txt",
+      "url: http://www.securityfocus.com/bid/91816",
+      "cert-bund: WID-SEC-2025-2522",
+      "cert-bund: WID-SEC-2025-0370",
+      "cert-bund: CB-K17/2013",
+      "cert-bund: CB-K17/1854",
+      "cert-bund: CB-K17/1842",
+      "cert-bund: CB-K17/1622",
+      "cert-bund: CB-K17/0527",
+      "cert-bund: CB-K17/0055",
+      "cert-bund: CB-K16/1995",
+      "cert-bund: CB-K16/1620",
+      "cert-bund: CB-K16/1289",
+      "cert-bund: CB-K16/1103",
+      "cert-bund: CB-K16/1088",
+      "cert-bund: CB-K16/1087",
+      "dfn-cert: DFN-CERT-2017-2104",
+      "dfn-cert: DFN-CERT-2017-1926",
+      "dfn-cert: DFN-CERT-2017-1925",
+      "dfn-cert: DFN-CERT-2017-1692",
+      "dfn-cert: DFN-CERT-2017-0532",
+      "dfn-cert: DFN-CERT-2017-0060",
+      "dfn-cert: DFN-CERT-2016-2108",
+      "dfn-cert: DFN-CERT-2016-1717",
+      "dfn-cert: DFN-CERT-2016-1372",
+      "dfn-cert: DFN-CERT-2016-1175",
+      "dfn-cert: DFN-CERT-2016-1162",
+      "dfn-cert: DFN-CERT-2016-1153"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Apache HTTP Server < 2.4.59 Multiple Vulnerabilities - Linux",
+    "description": [
+      "Apache HTTP Server is prone to multiple vulnerabilities.",
+      "Quality of Detection (QoD): 30%"
+    ],
+    "detection_result": [
+      "Installed version: 2.4.10",
+      "Fixed version: 2.4.59",
+      "Installation path / port: 80/tcp"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: Apache HTTP Server < 2.4.59 Multiple Vulnerabilities - Linux",
+      "OID:1.3.6.1.4.1.25623.1.0.152039",
+      "Version used: 2024-06-07T05:05:42Z"
+    ],
+    "product_detection_result": [
+      "cpe:/a:apache:http_server:2.4.10",
+      "Detected by Apache HTTP Server Detection Consolidation (OID: 1.3.6.1.4.1.25623.1.0.117232)"
+    ],
+    "impact": [
+      "Apache HTTP Server version 2.4.58 and prior.",
+      "The following vulnerabilities exist:",
+      "- CVE-2023-38709: HTTP response splitting",
+      "- CVE-2024-24795: HTTP response splitting in multiple modules",
+      "- CVE-2024-27316: HTTP/2 DoS by memory exhaustion on endless continuation frames"
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 2.4.59 or later."
+    ],
+    "insight": [],
+    "log_method": [],
+    "cvss": [
+      "7.5"
+    ],
+    "port": 80,
+    "protocol": "tcp",
+    "severity": "HIGH",
+    "references": [
+      "cve: CVE-2023-38709",
+      "cve: CVE-2024-24795",
+      "cve: CVE-2024-27316",
+      "url: https://httpd.apache.org/security/vulnerabilities_24.html#2.4.59",
+      "url: https://kb.cert.org/vuls/id/421644",
+      "url: https://nowotarski.info/http2-continuation-flood/",
+      "url: https://nowotarski.info/http2-continuation-flood-technical-details/",
+      "cert-bund: WID-SEC-2025-1529",
+      "cert-bund: WID-SEC-2024-1725",
+      "cert-bund: WID-SEC-2024-1643",
+      "cert-bund: WID-SEC-2024-1642",
+      "cert-bund: WID-SEC-2024-1504",
+      "cert-bund: WID-SEC-2024-1248",
+      "cert-bund: WID-SEC-2024-1226",
+      "cert-bund: WID-SEC-2024-0801",
+      "cert-bund: WID-SEC-2024-0789",
+      "dfn-cert: DFN-CERT-2025-2802",
+      "dfn-cert: DFN-CERT-2025-2658",
+      "dfn-cert: DFN-CERT-2025-2657",
+      "dfn-cert: DFN-CERT-2024-2900",
+      "dfn-cert: DFN-CERT-2024-2534",
+      "dfn-cert: DFN-CERT-2024-2076",
+      "dfn-cert: DFN-CERT-2024-1958",
+      "dfn-cert: DFN-CERT-2024-1853",
+      "dfn-cert: DFN-CERT-2024-1749",
+      "dfn-cert: DFN-CERT-2024-1697",
+      "dfn-cert: DFN-CERT-2024-1411",
+      "dfn-cert: DFN-CERT-2024-1335",
+      "dfn-cert: DFN-CERT-2024-1238",
+      "dfn-cert: DFN-CERT-2024-1031",
+      "dfn-cert: DFN-CERT-2024-1010",
+      "dfn-cert: DFN-CERT-2024-0964",
+      "dfn-cert: DFN-CERT-2024-0901",
+      "dfn-cert: DFN-CERT-2024-0890"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Apache HTTP Server < 2.4.39 mod_auth_digest Access Control Bypass Vulnerability - Linux",
+    "description": [
+      "In Apache HTTP Server, a race condition in mod_auth_digest when running in a threaded server could allow a user with valid credentials to authenticate using another username, bypassing configured access control restrictions."
+    ],
+    "detection_result": [],
+    "detection_method": [],
+    "product_detection_result": [
+      "cpe:/a:apache:http_server:2.4.10",
+      "Detected by Apache HTTP Server Detection Consolidation (OID: 1.3.6.1.4.1.25623.1.0.117232)"
+    ],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [],
+    "cvss": [
+      "7.5"
+    ],
+    "port": 80,
+    "protocol": "tcp",
+    "severity": "HIGH",
+    "references": [],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Apache HTTP Server 'mod_auth_digest' DoS Vulnerability - Linux",
+    "description": [
+      "Apache HTTP Server is prone to a denial of service (DoS) vulnerability.",
+      "Quality of Detection (QoD): 30%"
+    ],
+    "detection_result": [
+      "Installed version: 2.4.10",
+      "Fixed version: 2.4.25",
+      "Installation",
+      "path / port: 80/tcp"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: Apache HTTP Server 'mod_auth_digest' DoS Vulnerability - Linux",
+      "OID:1.3.6.1.4.1.25623.1.0.812067",
+      "Version used: 2024-02-15T05:05:40Z"
+    ],
+    "product_detection_result": [
+      "Product: cpe:/a:apache:http_server:2.4.10",
+      "Method: Apache HTTP Server Detection Consolidation",
+      "OID: 1.3.6.1.4.1.25623.1.0.117232)"
+    ],
+    "impact": [
+      "Successful exploitation will allow remote attackers to cause a denial-of-service condition."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to Apache HTTP Server 2.4.25 or later."
+    ],
+    "insight": [
+      "The aw exists due to insucient handling of malicious input to 'mod_auth_digest'."
+    ],
+    "log_method": [],
+    "cvss": [
+      "7.5"
+    ],
+    "port": 80,
+    "protocol": "tcp",
+    "severity": "HIGH",
+    "references": [
+      "cve: CVE-2016-2161",
+      "url: https://httpd.apache.org/security/vulnerabilities_24.html#CVE-2016-2161",
+      "url: http://www.securityfocus.com/bid/95076",
+      "cert-bund: WID-SEC-2025-0370",
+      "cert-bund: CB-K19/0354",
+      "cert-bund: CB-K17/1854",
+      "cert-bund: CB-K17/1622",
+      "cert-bund: CB-K17/0955",
+      "cert-bund: CB-K17/0794",
+      "cert-bund: CB-K17/0704",
+      "cert-bund: CB-K17/0527",
+      "cert-bund: CB-K17/0477",
+      "cert-bund: CB-K16/1995",
+      "dfn-cert: DFN-CERT-2017-1925",
+      "dfn-cert: DFN-CERT-2017-1692",
+      "dfn-cert: DFN-CERT-2017-0988",
+      "dfn-cert: DFN-CERT-2017-0814",
+      "dfn-cert: DFN-CERT-2017-0723",
+      "dfn-cert: DFN-CERT-2017-0532",
+      "dfn-cert: DFN-CERT-2017-0489",
+      "dfn-cert: DFN-CERT-2016-2108"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Apache HTTP Server OPTIONS Memory Leak Vulnerability (Optionsbleed) - Version Check",
+    "description": [
+      "Apache HTTP Server allows remote attackers to read secret data from process memory if the Limit directive can be set in a user's .htaccess le, or if httpd.conf has certain miscongurations, aka Optionsbleed.",
+      "Quality of Detection (QoD): 30%"
+    ],
+    "detection_result": [
+      "Installed version: 2.4.10",
+      "Fixed version: 2.4.28",
+      "Installation",
+      "path / port: 80/tcp"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: Apache HTTP Server OPTIONS Memory Leak Vulnerability (Optionsbleed) - Version C.",
+      "OID: ..."
+    ],
+    "product_detection_result": [
+      "Product: cpe:/a:apache:http_server:2.4.10",
+      "Method: Apache HTTP Server Detection Consolidation",
+      "OID: 1.3.6.1.4.1.25623.1.0.117232)"
+    ],
+    "impact": [
+      "The successful exploitation allows the attacker to read chunks of the host's memory."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to Apache HTTP Server 2.4.28. For Apache HTTP Server running version 2.2.34 apply the patch linked in the references.",
+      "As a workaround the usage of .htaccess should be disabled completely via the 'AllowOverride None' directive within the webservers conguration. Furthermore all <Limit> statements within the webserver conguration needs to be veried for invalid HTTP methods."
+    ],
+    "insight": [
+      "Optionsbleed is a use after free error in the Apache HTTP Server that causes a corrupted Allow header to be constructed in response to HTTP OPTIONS requests. This can leak pieces of arbitrary memory from the server process that may contain secrets. The memory pieces change after multiple requests, so for a vulnerable host an arbitrary number of memory chunks can be leaked.",
+      "The bug appears if a webmaster tries to use the 'Limit' directive with an invalid HTTP method.",
+      "Example .htaccess:",
+      "<Limit abcxyz> </Limit>"
+    ],
+    "log_method": [],
+    "cvss": [
+      "7.5"
+    ],
+    "port": 80,
+    "protocol": "tcp",
+    "severity": "HIGH",
+    "references": [],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Apache HTTP Server mod_session_crypto Vulnerability (Dec 2016) - Linux",
+    "description": [
+      "Apache HTTP Server is prone to a vulnerability in mod_session_crypto."
+    ],
+    "detection_result": [
+      "Installed version: 2.4.10",
+      "Fixed version: 2.4.25",
+      "Installation",
+      "path / port: 80/tcp"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host."
+    ],
+    "product_detection_result": [
+      "cpe:/a:apache:http_server:2.4.10",
+      "Detected by Apache HTTP Server Detection Consolidation (OID: 1.3.6.1.4.1.25623.1.0.117232)"
+    ],
+    "impact": [
+      "Apache HTTP Server version 2.4.1 through 2.4.23."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 2.4.25 or later."
+    ],
+    "insight": [
+      "mod_sessioncrypto is encrypting its data/cookie using the congured ciphers with possibly either CBC or ECB modes of operation (AES256-CBC by default), hence no selectable or builtin authenticated encryption. This makes it vulnerable to padding oracle attacks, particularly with CBC. An authentication tag (SipHash MAC) is now added to prevent such attacks."
+    ],
+    "log_method": [],
+    "cvss": [
+      "7.5"
+    ],
+    "port": 80,
+    "protocol": "tcp",
+    "severity": "HIGH",
+    "references": [
+      "cve: CVE-2016-0736",
+      "url: https://httpd.apache.org/security/vulnerabilities_24.html",
+      "cert-bund: WID-SEC-2025-0370",
+      "cert-bund: CB-K19/0354",
+      "cert-bund: CB-K17/1854",
+      "cert-bund: CB-K17/1622",
+      "cert-bund: CB-K17/0955",
+      "cert-bund: CB-K17/0794",
+      "cert-bund: CB-K17/0704",
+      "cert-bund: CB-K17/0527",
+      "cert-bund: CB-K16/1995",
+      "dfn-cert: DFN-CERT-2017-1925",
+      "dfn-cert: DFN-CERT-2017-1692",
+      "dfn-cert: DFN-CERT-2017-0988",
+      "dfn-cert: DFN-CERT-2017-0814",
+      "dfn-cert: DFN-CERT-2017-0723",
+      "dfn-cert: DFN-CERT-2017-0532",
+      "dfn-cert: DFN-CERT-2016-2108"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Apache HTTP Server < 2.4.58 'mod_macro' Out-of-bounds Read Vulnerability - Linux",
+    "description": [
+      "Apache HTTP Server is prone to an out-of-bounds read vulnerability in mod_macro."
+    ],
+    "detection_result": [
+      "Installed version: 2.4.10",
+      "Fixed version: 2.4.58",
+      "Installation",
+      "path / port: 80/tcp"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: Apache HTTP Server < 2.4.58 'mod_macro' Out-of-bounds Read Vulnerability - Linux",
+      "OID:1.3.6.1.4.1.25623.1.0.100272",
+      "Version used: 2024-02-15T05:05:40Z"
+    ],
+    "product_detection_result": [
+      "cpe:/a:apache:http_server:2.4.10",
+      "Detected by Apache HTTP Server Detection Consolidation (OID: 1.3.6.1.4.1.25623.1",
+      "->.0.117232)"
+    ],
+    "impact": [
+      "Aected Software/OS",
+      "Apache HTTP Server version 2.4.57 and prior."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 2.4.58 or later."
+    ],
+    "insight": [],
+    "log_method": [],
+    "cvss": [
+      "7.5"
+    ],
+    "port": 80,
+    "protocol": "tcp",
+    "severity": "HIGH",
+    "references": [
+      "cve: CVE-2023-31122",
+      "url: https://httpd.apache.org/security/vulnerabilities_24.html#2.4.58",
+      "url: https://www.openwall.com/lists/oss-security/2023/10/19/4",
+      "cert-bund: WID-SEC-2024-1226",
+      "cert-bund: WID-SEC-2024-0899",
+      "cert-bund: WID-SEC-2024-0869",
+      "cert-bund: WID-SEC-2024-0769",
+      "cert-bund: WID-SEC-2024-0107",
+      "cert-bund: WID-SEC-2023-2917",
+      "cert-bund: WID-SEC-2023-2712",
+      "dfn-cert: DFN-CERT-2024-1411",
+      "dfn-cert: DFN-CERT-2024-1010",
+      "dfn-cert: DFN-CERT-2024-1000",
+      "dfn-cert: DFN-CERT-2024-0732",
+      "dfn-cert: DFN-CERT-2023-2640",
+      "dfn-cert: DFN-CERT-2023-2583"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Apache HTTP Server < 2.4.38 mod_session_cookie Vulnerability - Linux",
+    "description": [
+      "In Apache HTTP Server mod_session checks the session expiry time before decoding the session.",
+      "This causes session expiry time to be ignored for mod_session_cookie sessions since the expiry",
+      "time is loaded when the session is decoded."
+    ],
+    "detection_result": [
+      "Installed version: 2.4.10",
+      "Fixed version: 2.4.38",
+      "Installation",
+      "path / port: 80/tcp"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: Apache HTTP Server < 2.4.38 mod_session_cookie Vulnerability - Linux",
+      "OID:1.3.6.1.4.1.25623.1.0.141964",
+      "Version used: 2024-02-15T05:05:40Z"
+    ],
+    "product_detection_result": [
+      "cpe:/a:apache:http_server:2.4.10",
+      "Detected by Apache HTTP Server Detection Consolidation (OID: 1.3.6.1.4.1.25623.1",
+      "->.0.117232)"
+    ],
+    "impact": [
+      "Aected Software/OS",
+      "Apache HTTP Server version 2.4.37 and prior."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 2.4.38 or later."
+    ],
+    "insight": [],
+    "log_method": [],
+    "cvss": [
+      "7.5"
+    ],
+    "port": 80,
+    "protocol": "tcp",
+    "severity": "HIGH",
+    "references": [
+      "cve: CVE-2018-17199",
+      "url: https://httpd.apache.org/security/vulnerabilities_24.html",
+      "cert-bund: CB-K19/0316",
+      "cert-bund: CB-K19/0071",
+      "dfn-cert: DFN-CERT-2021-1069",
+      "dfn-cert: DFN-CERT-2020-0673",
+      "dfn-cert: DFN-CERT-2019-2592",
+      "dfn-cert: DFN-CERT-2019-2456",
+      "dfn-cert: DFN-CERT-2019-0857",
+      "dfn-cert: DFN-CERT-2019-0690",
+      "dfn-cert: DFN-CERT-2019-0687",
+      "dfn-cert: DFN-CERT-2019-0198",
+      "dfn-cert: DFN-CERT-2019-0184"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Apache HTTP Server 'Whitespace Defects' Multiple Vulnerabilities",
+    "description": [
+      "Apache HTTP Server is prone to multiple vulnerabilities."
+    ],
+    "detection_result": [
+      "Installed version: 2.4.10",
+      "Fixed version: 2.4.25",
+      "Installation path / port: 80/tcp"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: Apache HTTP Server 'Whitespace Defects' Multiple Vulnerabilities OID:1.3.6.1.4.1.25623.1.0.812033 Version used: 2022-09-09T10:12:35Z"
+    ],
+    "product_detection_result": [
+      "cpe:/a:apache:http_server:2.4.10",
+      "Detected by Apache HTTP Server Detection Consolidation (OID: 1.3.6.1.4.1.25623.1.0.117232)"
+    ],
+    "impact": [
+      "Successful exploitation will allow remote attackers to conduct request smuggling, response splitting and cache pollution attacks."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to Apache HTTP Server 2.2.32 or 2.4.25 or later."
+    ],
+    "insight": [
+      "Multiple flaws exist because the application accepted a broad pattern of unusual whitespace patterns from the user-agent, including bare CR, FF, VTAB in parsing the request line and request header lines, as well as HTAB in parsing the request line. Any bare CR present in request lines was treated as whitespace and remained in the request field member 'the_request', while a bare CR in the request header field name would be honored as whitespace, and a bare CR in the request header field value was retained the input headers array. Implied additional whitespace was accepted in the request line and prior to the ':' delimiter of any request header lines."
+    ],
+    "log_method": [],
+    "cvss": [
+      "5.0"
+    ],
+    "port": 80,
+    "protocol": "tcp",
+    "severity": "MEDIUM",
+    "references": [
+      "cve: CVE-2016-8743",
+      "url: https://httpd.apache.org/security/vulnerabilities_22.html",
+      "url: http://www.securityfocus.com/bid/95077",
+      "url: https://httpd.apache.org/security/vulnerabilities_24.html",
+      "cert-bund: WID-SEC-2025-0370"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Apache HTTP Server Multiple Vulnerabilities (Sep 2014) - Linux",
+    "description": [
+      "Apache HTTP Server is prone to multiple vulnerabilities.   Quality of Detection (QoD): 30%"
+    ],
+    "detection_result": [
+      "Installed version: 2.4.10",
+      "Fixed version: 2.4.12",
+      "Installation",
+      "path / port: 80/tcp"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: Apache HTTP Server Multiple Vulnerabilities (Sep 2014) - Linux",
+      "OID:1.3.6.1.4.1.25623.1.0.147048",
+      "Version used: 2021-11-01T03:59:12Z"
+    ],
+    "product_detection_result": [
+      "cpe:/a:apache:http_server:2.4.10",
+      "Detected by Apache HTTP Server Detection Consolidation (OID: 1.3.6.1.4.1.25623.1.0.117232)",
+      "Product: cpe:/a:apache:http_server:2.4.10",
+      "Method: Apache HTTP Server Detection Consolidation",
+      "OID: 1.3.6.1.4.1.25623.1.0.117232)"
+    ],
+    "impact": [
+      "Apache HTTP Server version 2.2.0 through 2.2.27 and 2.4.1 through 2.4.10."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 2.2.29, 2.4.12 or later."
+    ],
+    "insight": [
+      "The following vulnerabilities exist:",
+      "- CVE-2013-5704: HTTP trailers could be used to replace HTTP headers late during request processing, potentially undoing or otherwise confusing modules that examined or modified request headers earlier. This fix adds the 'MergeTrailers' directive to restore legacy behavior.",
+      "- CVE-2014-0118: A resource consumption flaw was found in mod_deflate. If request body decompression was configured (using the 'DEFLATE' input filter), a remote attacker could cause the server to consume significant memory and/or CPU resources. The use of request body decompression is not a common configuration.",
+      "- CVE-2014-0226: A race condition was found in mod_status. An attacker able to access a public server status page on a server using a threaded MPM could send a carefully crafted request which could lead to a heap buffer overflow. Note that it is not a default or recommended configuration to have a public accessible server status page.",
+      "- CVE-2014-0231: A flaw was found in mod_cgid. If a server using mod_cgid hosted CGI scripts which did not consume standard input, a remote attacker could cause child processes to hang indefinitely, leading to denial of service."
+    ],
+    "log_method": [],
+    "cvss": [
+      "5.0"
+    ],
+    "port": 80,
+    "protocol": "tcp",
+    "severity": "MEDIUM",
+    "references": [
+      "cve: CVE-2013-5704",
+      "cve: CVE-2014-0118",
+      "cve: CVE-2014-0226",
+      "cve: CVE-2014-0231",
+      "url: https://httpd.apache.org/security/vulnerabilities_22.html",
+      "url: https://httpd.apache.org/security/vulnerabilities_24.html",
+      "cert-bund: CB-K16/0112",
+      "cert-bund: CB-K15/1841",
+      "cert-bund: CB-K15/1517",
+      "cert-bund: CB-K15/1360",
+      "cert-bund: CB-K15/1078",
+      "cert-bund: CB-K15/1011",
+      "cert-bund: CB-K15/0960",
+      "cert-bund: CB-K15/0954",
+      "cert-bund: CB-K15/0806",
+      "cert-bund: CB-K15/0493",
+      "cert-bund: CB-K15/0469",
+      "cert-bund: CB-K15/0079",
+      "cert-bund: CB-K15/0075",
+      "cert-bund: CB-K14/1626",
+      "cert-bund: CB-K14/1592",
+      "cert-bund: CB-K14/1568",
+      "cert-bund: CB-K14/1545",
+      "cert-bund: CB-K14/1095",
+      "cert-bund: CB-K14/1050",
+      "cert-bund: CB-K14/1043",
+      "cert-bund: CB-K14/0969",
+      "cert-bund: CB-K14/0968",
+      "cert-bund: CB-K14/0924",
+      "cert-bund: CB-K14/0883",
+      "dfn-cert: DFN-CERT-2016-0125",
+      "dfn-cert: DFN-CERT-2015-1950",
+      "dfn-cert: DFN-CERT-2015-1608",
+      "dfn-cert: DFN-CERT-2015-1435",
+      "dfn-cert: DFN-CERT-2015-1137",
+      "dfn-cert: DFN-CERT-2015-1069",
+      "dfn-cert: DFN-CERT-2015-1008",
+      "dfn-cert: DFN-CERT-2015-1002",
+      "dfn-cert: DFN-CERT-2015-0842",
+      "dfn-cert: DFN-CERT-2015-0495",
+      "dfn-cert: DFN-CERT-2015-0083",
+      "dfn-cert: DFN-CERT-2015-0079",
+      "dfn-cert: DFN-CERT-2014-1727",
+      "dfn-cert: DFN-CERT-2014-1691",
+      "dfn-cert: DFN-CERT-2014-1668",
+      "dfn-cert: DFN-CERT-2014-1633",
+      "dfn-cert: DFN-CERT-2014-1145"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Apache HTTP Server 2.4.0 - 2.4.40 Multiple Vulnerabilities - Linux",
+    "description": [
+      "Apache HTTP Server is prone to multiple vulnerabilities.",
+      "Quality of Detection (QoD): 30%"
+    ],
+    "detection_result": [
+      "Installed version: 2.4.10",
+      "Fixed version: 2.4.41",
+      "Installation path / port: 80/tcp"
+    ],
+    "detection_method": [],
+    "product_detection_result": [
+      "cpe:/a:apache:http_server:2.4.10",
+      "Detected by Apache HTTP Server Detection Consolidation (OID: 1.3.6.1.4.1.25623.1.0.117232)"
+    ],
+    "impact": [
+      "Apache HTTP Server version 2.4.0 to 2.4.40."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 2.4.41 or later."
+    ],
+    "insight": [
+      "Apache HTTP server is prone to multiple vulnerabilities:",
+      "- A limited cross-site scripting issue affecting the mod_proxy error page. An attacker could cause the link on the error page to be malformed and instead point to a page of their choice. This would be exploitable where a server was set up with proxying enabled but was misconfigured in such a way that the Proxy Error page was displayed. (CVE-2019-10092)",
+      "- Redirects configured with mod_rewrite that were intended to be self referential might be fooled by encoded newlines and redirect instead to an unexpected URL within the request URL. (CVE-2019-10098)"
+    ],
+    "log_method": [],
+    "cvss": [
+      "6.1"
+    ],
+    "port": 80,
+    "protocol": "tcp",
+    "severity": "MEDIUM",
+    "references": [
+      "dfn-cert: DFN-CERT-2014-1145",
+      "dfn-cert: DFN-CERT-2014-1094",
+      "dfn-cert: DFN-CERT-2014-1088",
+      "dfn-cert: DFN-CERT-2014-1019",
+      "dfn-cert: DFN-CERT-2014-1017",
+      "dfn-cert: DFN-CERT-2014-0967",
+      "dfn-cert: DFN-CERT-2014-0926"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Apache HTTP Server CRLF Injection Vulnerability (Dec 2016) - Linux",
+    "description": [
+      "Apache HTTP Server is prone to a CRLF injection vulnerability."
+    ],
+    "detection_result": [
+      "Installed version: 2.4.10",
+      "Fixed version: 2.4.25",
+      "Installation",
+      "path / port: 80/tcp"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: Apache HTTP Server CRLF Injection Vulnerability (Dec 2016) - Linux",
+      "OID:1.3.6.1.4.1.25623.1.0.147044",
+      "Version used: 2021-11-01T14:03:43Z"
+    ],
+    "product_detection_result": [
+      "Product: cpe:/a:apache:http_server:2.4.10",
+      "Method: Apache HTTP Server Detection Consolidation",
+      "OID: 1.3.6.1.4.1.25623.1.0.117232)"
+    ],
+    "impact": [
+      "Apache HTTP Server version 2.2.0 through 2.2.31 and 2.4.1 through 2.4.23."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 2.2.32, 2.4.25 or later."
+    ],
+    "insight": [
+      "Possible CRLF injection allowing HTTP response splitting attacks for sites which use mod_userdir. This issue was mitigated to prohibit CR or LF injection into the 'Location' or other outbound header key or value."
+    ],
+    "log_method": [],
+    "cvss": [
+      "6.1"
+    ],
+    "port": 80,
+    "protocol": "tcp",
+    "severity": "MEDIUM",
+    "references": [
+      "cve: CVE-2016-4975",
+      "url: https://httpd.apache.org/security/vulnerabilities_22.html",
+      "url: https://httpd.apache.org/security/vulnerabilities_24.html",
+      "cert-bund: CB-K19/0354",
+      "dfn-cert: DFN-CERT-2019-0358",
+      "dfn-cert: DFN-CERT-2018-1764"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "phpLDAPadmin < 1.2.4 XSS Vulnerability - Linux",
+    "description": [
+      "phpLDAPadmin is prone to a cross-site scripting (XSS) vulnerability."
+    ],
+    "detection_result": [
+      "Installed version: 1.2.3",
+      "Fixed version: 1.2.4",
+      "Installation",
+      "path / port: /htdocs"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: phpLDAPadmin < 1.2.4 XSS Vulnerability - Linux",
+      "OID:1.3.6.1.4.1.25623.1.0.117015",
+      "Version used: 2024-12-24T05:05:31Z"
+    ],
+    "product_detection_result": [],
+    "impact": [
+      "The aw allows remote users to inject arbitrary web script or HTML."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 1.2.4 or later."
+    ],
+    "insight": [
+      "A XSS vulnerability exists in htdocs/entry_chooser.php via the form, element, rdn, or container parameter."
+    ],
+    "log_method": [],
+    "cvss": [
+      "6.1"
+    ],
+    "port": 80,
+    "protocol": "tcp",
+    "severity": "MEDIUM",
+    "references": [
+      "cve: CVE-2017-11107",
+      "url: https://github.com/leenooks/phpLDAPadmin/issues/50",
+      "url: https://github.com/leenooks/phpLDAPadmin/pull/71",
+      "cert-bund: CB-K17/1188",
+      "dfn-cert: DFN-CERT-2017-1228"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Apache HTTP Server 2.4.0 < 2.4.42 Multiple Vulnerabilities - Linux",
+    "description": [
+      "Apache HTTP Server is prone to multiple vulnerabilities."
+    ],
+    "detection_result": [
+      "Installed version: 2.4.10",
+      "Fixed version: 2.4.42",
+      "Installation",
+      "path / port: 80/tcp"
+    ],
+    "detection_method": [],
+    "product_detection_result": [
+      "cpe:/a:apache:http_server:2.4.10",
+      "Detected by Apache HTTP Server Detection Consolidation (OID: 1.3.6.1.4.1.25623.1",
+      "->.0.117232)"
+    ],
+    "impact": [
+      "Apache HTTP Server version 2.4.0 to 2.4.41."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 2.4.42 or later."
+    ],
+    "insight": [],
+    "log_method": [],
+    "cvss": [
+      "6.1"
+    ],
+    "port": 80,
+    "protocol": "tcp",
+    "severity": "MEDIUM",
+    "references": [],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Apache HTTP Server 2.4.7 - 2.4.65 Authentication Bypass Vulnerability - Linux",
+    "description": [
+      "Apache HTTP Server is prone to an authentication bypass vulnerability."
+    ],
+    "detection_result": [
+      "Installed version: 2.4.10",
+      "Fixed version: 2.4.66",
+      "Installation path / port: 80/tcp"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: Apache HTTP Server 2.4.7 - 2.4.65 Authentication Bypass Vulnerability - Linux OID:1.3.6.1.4.1.25623.1.0.125567 Version used: 2025-12-05T05:44:55Z"
+    ],
+    "product_detection_result": [
+      "cpe:/a:apache:http_server:2.4.10",
+      "Detected by Apache HTTP Server Detection Consolidation (OID: 1.3.6.1.4.1.25623.1.0.117232)"
+    ],
+    "impact": [
+      "mod_userdir+suexec bypass via AllowOverride FileInfo vulnerability in Apache HTTP Server. Users with access to use the RequestHeader directive in htaccess can cause some CGI scripts to run under an unexpected userid."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 2.4.66 or later."
+    ],
+    "insight": [
+      "mod_userdir+suexec bypass via AllowOverride FileInfo vulnerability in Apache HTTP Server. Users with access to use the RequestHeader directive in htaccess can cause some CGI scripts to run under an unexpected userid."
+    ],
+    "log_method": [],
+    "cvss": [
+      "5.3"
+    ],
+    "port": 80,
+    "protocol": "tcp",
+    "severity": "MEDIUM",
+    "references": [
+      "cve: CVE-2025-66200",
+      "url: https://httpd.apache.org/security/vulnerabilities_24.html#2.4.66",
+      "url: https://www.openwall.com/lists/oss-security/2025/12/04/8",
+      "cert-bund: WID-SEC-2025-2750",
+      "dfn-cert: DFN-CERT-2025-3602",
+      "dfn-cert: DFN-CERT-2025-3581",
+      "dfn-cert: DFN-CERT-2025-3512",
+      "dfn-cert: DFN-CERT-2025-3405"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Apache HTTP Server < 2.4.39 URL Normalization Vulnerability - Linux",
+    "description": [
+      "When the path component of a request URL contains multiple consecutive slashes ('/'), directives such as LocationMatch and RewriteRule must account for duplicates in regular expressions while other aspects of the servers processing will implicitly collapse them."
+    ],
+    "detection_result": [
+      "Installed version: 2.4.10",
+      "Fixed version: 2.4.39",
+      "Installation path / port: 80/tcp"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: Apache HTTP Server < 2.4.39 URL Normalization Vulnerability - Linux OID:1.3.6.1.4.1.25623.1.0.142228 Version used: 2024-02-15T05:05:40Z"
+    ],
+    "product_detection_result": [
+      "cpe:/a:apache:http_server:2.4.10",
+      "Detected by Apache HTTP Server Detection Consolidation (OID: 1.3.6.1.4.1.25623.1.0.117232)"
+    ],
+    "impact": [],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 2.4.39 or later."
+    ],
+    "insight": [],
+    "log_method": [],
+    "cvss": [
+      "5.3"
+    ],
+    "port": 80,
+    "protocol": "tcp",
+    "severity": "MEDIUM",
+    "references": [
+      "cve: CVE-2019-0220",
+      "url: https://httpd.apache.org/security/vulnerabilities_24.html",
+      "cert-bund: WID-SEC-2023-2047",
+      "cert-bund: WID-SEC-2023-1969",
+      "cert-bund: WID-SEC-2023-1594",
+      "cert-bund: WID-SEC-2022-0757",
+      "cert-bund: CB-K20/0708",
+      "cert-bund: CB-K19/0623",
+      "cert-bund: CB-K19/0267",
+      "dfn-cert: DFN-CERT-2022-1610",
+      "dfn-cert: DFN-CERT-2020-0184",
+      "dfn-cert: DFN-CERT-2019-2592",
+      "dfn-cert: DFN-CERT-2019-1519",
+      "dfn-cert: DFN-CERT-2019-0815",
+      "dfn-cert: DFN-CERT-2019-0690",
+      "dfn-cert: DFN-CERT-2019-0687",
+      "dfn-cert: DFN-CERT-2019-0680",
+      "dfn-cert: DFN-CERT-2019-0676"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Apache HTTP Server 2.4.1 < 2.4.24 IP Spoofing Vulnerability - Linux",
+    "description": [
+      "Apache HTTP Server is prone to an IP address spoofing vulnerability when proxying using mod_remoteip and mod_rewrite."
+    ],
+    "detection_result": [
+      "Installed version: 2.4.10",
+      "Fixed version: 2.4.24",
+      "Installation path / port: 80/tcp"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: Apache HTTP Server 2.4.1 < 2.4.24 IP Spoofing Vulnerability - Linux OID:1.3.6.1.4.1.25623.1.0.144376",
+      "Version used: 2024-02-15T05:05:40Z"
+    ],
+    "product_detection_result": [
+      "Product: cpe:/a:apache:http_server:2.4.10",
+      "Method: Apache HTTP Server Detection Consolidation",
+      "OID: 1.3.6.1.4.1.25623.1.0.117232)"
+    ],
+    "impact": [],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 2.4.24 or later."
+    ],
+    "insight": [],
+    "log_method": [],
+    "cvss": [
+      "5.3"
+    ],
+    "port": 80,
+    "protocol": "tcp",
+    "severity": "MEDIUM",
+    "references": [
+      "cve: CVE-2020-11985",
+      "url: https://httpd.apache.org/security/vulnerabilities_24.html",
+      "cert-bund: WID-SEC-2024-3319",
+      "cert-bund: CB-K20/0798",
+      "dfn-cert: DFN-CERT-2020-1905",
+      "dfn-cert: DFN-CERT-2020-1854"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Apache HTTP Server 2.4.6 - 2.4.46 Tunneling Misconfiguration Vulnerability - Linux",
+    "description": [
+      "Apache HTTP Server is prone to a tunneling misconfiguration vulnerability."
+    ],
+    "detection_result": [
+      "Installed version: 2.4.10",
+      "Fixed version: 2.4.48",
+      "Installation path / port: 80/tcp"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: Apache HTTP Server 2.4.6 - 2.4.46 Tunneling Misconfiguration Vulnerability - Li... OID:1.3.6.1.4.1.25623.1.0.112898",
+      "Version used: 2021-08-24T09:01:06Z"
+    ],
+    "product_detection_result": [
+      "Product: cpe:/a:apache:http_server:2.4.10",
+      "Method: Apache HTTP Server Detection Consolidation",
+      "OID: 1.3.6.1.4.1.25623.1.0.117232)"
+    ],
+    "impact": [],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 2.4.48 or later."
+    ],
+    "insight": [
+      "mod_proxy_wstunnel configured on an URL that is not necessarily upgraded by the origin server was tunneling the whole connection regardless, thus allowing for subsequent requests on the same connection to pass through with no HTTP validation, authentication or authorization possibly configured."
+    ],
+    "log_method": [],
+    "cvss": [
+      "5.3"
+    ],
+    "port": 80,
+    "protocol": "tcp",
+    "severity": "MEDIUM",
+    "references": [
+      "cve: CVE-2019-17567",
+      "url: https://httpd.apache.org/security/vulnerabilities_24.html",
+      "cert-bund: WID-SEC-2024-1591",
+      "cert-bund: WID-SEC-2022-0438",
+      "cert-bund: CB-K21/0646",
+      "dfn-cert: DFN-CERT-2024-1411",
+      "dfn-cert: DFN-CERT-2021-2394",
+      "dfn-cert: DFN-CERT-2021-1273"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Apache HTTP Server Multiple Vulnerabilities (Aug 2015) - Linux",
+    "description": [
+      "Apache HTTP Server is prone to multiple vulnerabilities.",
+      "Quality of Detection (QoD): 30%"
+    ],
+    "detection_result": [
+      "Installed version: 2.4.10",
+      "Fixed version: 2.4.14",
+      "Installation path / port: 80/tcp"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: Apache HTTP Server Multiple Vulnerabilities (Aug 2015) - Linux OID:1.3.6.1.4.1.25623.1.0.806018 Version used: 2024-02-16T05:06:55Z"
+    ],
+    "product_detection_result": [
+      "cpe:/a:apache:http_server:2.4.10",
+      "Detected by Apache HTTP Server Detection Consolidation (OID: 1.3.6.1.4.1.25623.1.0.117232)"
+    ],
+    "impact": [
+      "Successful exploitation will allow remote attackers to bypass intended access restrictions in opportunistic circumstances and to cause cache poisoning or credential hijacking if an intermediary proxy is in use."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 2.4.14 or later."
+    ],
+    "insight": [
+      "Multiple flaws are due to: - an error in 'ap_some_auth_required' function in 'server/request.c' script which does not consider that a Require directive may be associated with an authorization setting rather than an authentication setting. - an error in chunked transfer coding implementation."
+    ],
+    "log_method": [],
+    "cvss": [
+      "5.0"
+    ],
+    "port": 80,
+    "protocol": "tcp",
+    "severity": "MEDIUM",
+    "references": [
+      "cve: CVE-2015-3185",
+      "cve: CVE-2015-3183",
+      "url: http://www.apache.org/dist/httpd/CHANGES_2.4",
+      "url: http://www.securityfocus.com/bid/75965",
+      "url: http://www.securityfocus.com/bid/75963",
+      "url: http://httpd.apache.org/security/vulnerabilities_24.html",
+      "cert-bund: CB-K17/1558",
+      "cert-bund: CB-K16/1972",
+      "cert-bund: CB-K16/1593",
+      "cert-bund: CB-K16/1102",
+      "cert-bund: CB-K16/0564",
+      "cert-bund: CB-K16/0112",
+      "cert-bund: CB-K16/0090",
+      "cert-bund: CB-K16/0030",
+      "cert-bund: CB-K15/1841",
+      "cert-bund: CB-K15/1578",
+      "cert-bund: CB-K15/1517",
+      "cert-bund: CB-K15/1464",
+      "cert-bund: CB-K15/1360",
+      "cert-bund: CB-K15/1358",
+      "cert-bund: CB-K15/1281",
+      "cert-bund: CB-K15/1188",
+      "cert-bund: CB-K15/1146",
+      "cert-bund: CB-K15/1089",
+      "cert-bund: CB-K15/1051",
+      "dfn-cert: DFN-CERT-2017-1626",
+      "dfn-cert: DFN-CERT-2016-2081",
+      "dfn-cert: DFN-CERT-2016-1692",
+      "dfn-cert: DFN-CERT-2016-1168"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Apache HTTP Server 'mod_proxy_fcgi' Denial of Service Vulnerability (May 2015)",
+    "description": [
+      "Apache HTTP Server is prone to a denial of service vulnerability.",
+      "Quality of Detection (QoD): 30%"
+    ],
+    "detection_result": [
+      "Installed version: 2.4.10",
+      "Fixed version: 2.4.12",
+      "Installation path / port: 80/tcp"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: Apache HTTP Server 'mod_proxy_fcgi' Denial of Service Vulnerability (May 2015) OID:1.3.6.1.4.1.25623.1.0.805636",
+      "Version used: 2024-02-20T05:05:48Z"
+    ],
+    "product_detection_result": [
+      "Product: cpe:/a:apache:http_server:2.4.10",
+      "Method: Apache HTTP Server Detection Consolidation",
+      "OID: 1.3.6.1.4.1.25623.1.0.117232)"
+    ],
+    "impact": [
+      "Successful exploitation will allow a remote attacker to cause a denial of service via specially crafted response."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 2.4.12 or later.",
+      "Aected Software/OS Apache HTTP Server version 2.4.10."
+    ],
+    "insight": [
+      "Flaw is due to an out-of-bounds read condition in the 'handle_headers' function in mod_proxy_fcgi that is triggered as user-supplied input is not properly validated when handling responses from FastCGI servers."
+    ],
+    "log_method": [],
+    "cvss": [
+      "5.0"
+    ],
+    "port": 80,
+    "protocol": "tcp",
+    "severity": "MEDIUM",
+    "references": [
+      "cve: CVE-2014-3583",
+      "url: https://bugzilla.redhat.com/show_bug.cgi?id=1163555",
+      "url: http://www.securityfocus.com/bid/71657",
+      "url: http://httpd.apache.org/security/vulnerabilities_24.html",
+      "cert-bund: CB-K15/1360",
+      "cert-bund: CB-K15/1188",
+      "cert-bund: CB-K15/0559",
+      "cert-bund: CB-K14/1592",
+      "dfn-cert: DFN-CERT-2015-1435",
+      "dfn-cert: DFN-CERT-2015-1252",
+      "dfn-cert: DFN-CERT-2015-0581",
+      "dfn-cert: DFN-CERT-2014-1691"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Apache HTTP Server 'mod_lua' Denial of Service Vulnerability -01 (May 2015)",
+    "description": [
+      "Apache HTTP Server is prone to a denial of service vulnerability.",
+      "Quality of Detection (QoD): 30%"
+    ],
+    "detection_result": [
+      "Installed version: 2.4.10",
+      "Fixed version: 2.4.13",
+      "Installation path / port: 80/tcp"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: Apache HTTP Server 'mod_lua' Denial of Service Vulnerability -01 (May 2015) OID:1.3.6.1.4.1.25623.1.0.805616",
+      "Version used: 2024-02-20T05:05:48Z"
+    ],
+    "product_detection_result": [
+      "Product: cpe:/a:apache:http_server:2.4.10",
+      "Method: Apache HTTP Server Detection Consolidation",
+      "OID: 1.3.6.1.4.1.25623.1.0.117232)"
+    ],
+    "impact": [
+      "Successful exploitation will allow a remote attacker to cause a denial of service via some crafted dimension."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 2.4.13 or later.",
+      "Aected Software/OS Apache HTTP Server versions through 2.4.12."
+    ],
+    "insight": [
+      "Flaw is due to vulnerability in lua_websocket_read function in lua_request.c in the mod_lua module."
+    ],
+    "log_method": [],
+    "cvss": [
+      "5.0"
+    ],
+    "port": 80,
+    "protocol": "tcp",
+    "severity": "MEDIUM",
+    "references": [
+      "cve: CVE-2015-0228",
+      "url: https://bugs.mageia.org/show_bug.cgi?id=15428",
+      "url: http://www.securityfocus.com/bid/73041",
+      "url: http://svn.apache.org/repos/asf/httpd/httpd/branches/2.4.x/CHANGES",
+      "cert-bund: CB-K15/1360",
+      "cert-bund: CB-K15/1188",
+      "cert-bund: CB-K15/1051",
+      "cert-bund: CB-K15/0273",
+      "cert-bund: CB-K14/1592",
+      "dfn-cert: DFN-CERT-2015-1435",
+      "dfn-cert: DFN-CERT-2015-1252",
+      "dfn-cert: DFN-CERT-2015-1087"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Apache HTTP Server DoS Vulnerability (Sep 2014) - Linux",
+    "description": [
+      "Apache HTTP Server is prone to a denial of service (DoS) vulnerability."
+    ],
+    "detection_result": [
+      "Installed version: 2.4.10",
+      "Fixed version: 2.4.12",
+      "Installation path / port: 80/tcp"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: Apache HTTP Server DoS Vulnerability (Sep 2014) - Linux OID:1.3.6.1.4.1.25623.1.0.147046 Version used: 2021-11-01T03:59:12Z"
+    ],
+    "product_detection_result": [
+      "cpe:/a:apache:http_server:2.4.10",
+      "Detected by Apache HTTP Server Detection Consolidation (OID: 1.3.6.1.4.1.25623.1.0.117232)"
+    ],
+    "impact": [
+      "A NULL pointer deference was found in mod_cache. A malicious HTTP server could cause a crash in a caching forward proxy configuration. This crash would only be a denial of service if using a threaded MPM."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 2.4.12 or later."
+    ],
+    "insight": [
+      "A NULL pointer deference was found in mod_cache. A malicious HTTP server could cause a crash in a caching forward proxy configuration. This crash would only be a denial of service if using a threaded MPM."
+    ],
+    "log_method": [],
+    "cvss": [
+      "5.0"
+    ],
+    "port": 80,
+    "protocol": "tcp",
+    "severity": "MEDIUM",
+    "references": [
+      "cve: CVE-2014-3581",
+      "url: https://httpd.apache.org/security/vulnerabilities_24.html",
+      "cert-bund: CB-K15/1841",
+      "cert-bund: CB-K15/1360",
+      "cert-bund: CB-K15/1188",
+      "cert-bund: CB-K15/0469",
+      "cert-bund: CB-K14/1592",
+      "cert-bund: CB-K14/1545",
+      "dfn-cert: DFN-CERT-2015-1950",
+      "dfn-cert: DFN-CERT-2015-1435",
+      "dfn-cert: DFN-CERT-2015-1252",
+      "dfn-cert: DFN-CERT-2015-0495",
+      "dfn-cert: DFN-CERT-2014-1691",
+      "dfn-cert: DFN-CERT-2014-1633"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Apache HTTP Server < 2.4.64 Multiple Vulnerabilities - Linux",
+    "description": [
+      "Apache HTTP Server is prone to multiple vulnerabilities."
+    ],
+    "detection_result": [
+      "Installed version: 2.4.10",
+      "Fixed version: 2.4.64",
+      "Installation path / port: 80/tcp"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: Apache HTTP Server < 2.4.64 Multiple Vulnerabilities - Linux OID:1.3.6.1.4.1.25623.1.0.154909 Version used: 2025-07-11T15:43:14Z"
+    ],
+    "product_detection_result": [
+      "cpe:/a:apache:http_server:2.4.10",
+      "Method: Apache HTTP Server Detection Consolidation OID: 1.3.6.1.4.1.25623.1.0.117232)"
+    ],
+    "impact": [
+      "Apache HTTP Server version 2.4.63 and prior."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 2.4.64 or later."
+    ],
+    "insight": [
+      "The following flaws exist:",
+      "- CVE-2024-42516: HTTP response splitting",
+      "- CVE-2024-43204: SSRF with mod_headers setting Content-Type header",
+      "- CVE-2024-47252: mod_ssl error log variable escaping",
+      "- CVE-2025-49812: mod_ssl TLS upgrade attack"
+    ],
+    "log_method": [],
+    "cvss": [
+      "4.3"
+    ],
+    "port": 80,
+    "protocol": "tcp",
+    "severity": "MEDIUM",
+    "references": [
+      "cve: CVE-2024-42516",
+      "cve: CVE-2024-43204",
+      "cve: CVE-2024-47252",
+      "cve: CVE-2025-49812",
+      "url: https://httpd.apache.org/security/vulnerabilities_24.html#2.4.64",
+      "cert-bund: WID-SEC-2026-0162",
+      "cert-bund: WID-SEC-2025-1850",
+      "cert-bund: WID-SEC-2025-1529",
+      "dfn-cert: DFN-CERT-2026-0205",
+      "dfn-cert: DFN-CERT-2025-2421",
+      "dfn-cert: DFN-CERT-2025-2403",
+      "dfn-cert: DFN-CERT-2025-2402",
+      "dfn-cert: DFN-CERT-2025-2373",
+      "dfn-cert: DFN-CERT-2025-2231",
+      "dfn-cert: DFN-CERT-2025-2182",
+      "dfn-cert: DFN-CERT-2025-1917",
+      "dfn-cert: DFN-CERT-2025-1860"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "phpLDAPadmin < 1.2.5 Multiple XSS Vulnerabilities - Linux",
+    "description": [
+      "phpLDAPadmin is prone to multiple cross-site scripting (XSS) vulnerabilities."
+    ],
+    "detection_result": [
+      "Installed version: 1.2.3",
+      "Fixed version: 1.2.5",
+      "Installation path / port: /htdocs"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: phpLDAPadmin < 1.2.5 Multiple XSS Vulnerabilities - Linux OID:1.3.6.1.4.1.25623.1.0.117017 Version used: 2024-12-24T05:05:31Z"
+    ],
+    "product_detection_result": [],
+    "impact": [
+      "The flaw allows remote users to inject arbitrary web script or HTML."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 1.2.5 or later."
+    ],
+    "insight": [
+      "The following vulnerabilities exist:",
+      "- CVE-2019-14377: XSS in htdocs/create.php",
+      "- CVE-2019-14376: XSS in htdocs/password_checker.php",
+      "- CVE-2019-14375: XSS in htdocs/rename_form.php"
+    ],
+    "log_method": [],
+    "cvss": [
+      "4.3"
+    ],
+    "port": 80,
+    "protocol": "tcp",
+    "severity": "MEDIUM",
+    "references": [
+      "cve: CVE-2019-14375",
+      "cve: CVE-2019-14376",
+      "cve: CVE-2019-14377"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Apache HTTP Server < 2.4.66 SSI Vulnerability - Linux",
+    "description": [
+      "Apache HTTP Server is prone to a Server Side Includes (SSI) vulnerability.",
+      "Quality of Detection (QoD): 30%"
+    ],
+    "detection_result": [
+      "Installed version: 2.4.10",
+      "Fixed version: 2.4.66",
+      "Installation",
+      "path / port: 80/tcp"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: Apache HTTP Server < 2.4.66 SSI Vulnerability - Linux",
+      "OID:1.3.6.1.4.1.25623.1.0.125564",
+      "Version used: 2025-12-05T05:44:55Z"
+    ],
+    "product_detection_result": [
+      "Product: cpe:/a:apache:http_server:2.4.10",
+      "Method: Apache HTTP Server Detection Consolidation",
+      "OID: 1.3.6.1.4.1.25623.1.0.117232)"
+    ],
+    "impact": [],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 2.4.66 or later."
+    ],
+    "insight": [
+      "Apache HTTP Server with SSI enabled and mod_cgid (but not mod_cgi) passes the shell- escaped query string to #exec cmd='...' directives."
+    ],
+    "log_method": [],
+    "cvss": [
+      "4.3"
+    ],
+    "port": 80,
+    "protocol": "tcp",
+    "severity": "MEDIUM",
+    "references": [
+      "cve: CVE-2025-58098",
+      "url: https://httpd.apache.org/security/vulnerabilities_24.html#2.4.66",
+      "url: https://www.openwall.com/lists/oss-security/2025/12/04/5",
+      "cert-bund: WID-SEC-2026-0153",
+      "cert-bund: WID-SEC-2025-2750",
+      "dfn-cert: DFN-CERT-2026-0027",
+      "dfn-cert: DFN-CERT-2026-0012",
+      "dfn-cert: DFN-CERT-2025-3602",
+      "dfn-cert: DFN-CERT-2025-3581",
+      "dfn-cert: DFN-CERT-2025-3512",
+      "dfn-cert: DFN-CERT-2025-3405"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Apache HTTP Server 'mod_lua' Denial of Service Vulnerability (May 2015)",
+    "description": [
+      "Apache HTTP Server is prone to a denial of service vulnerability.",
+      "Quality of Detection (QoD): 30%"
+    ],
+    "detection_result": [
+      "Installed version: 2.4.10",
+      "Fixed version: 2.4.12",
+      "Installation",
+      "path / port: 80/tcp"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: Apache HTTP Server 'mod_lua' Denial of Service Vulnerability (May 2015)",
+      "OID:1.3.6.1.4.1.25623.1.0.805637",
+      "Version used: 2024-02-20T05:05:48Z"
+    ],
+    "product_detection_result": [
+      "Product: cpe:/a:apache:http_server:2.4.10",
+      "Method: Apache HTTP Server Detection Consolidation",
+      "OID: 1.3.6.1.4.1.25623.1.0.117232)"
+    ],
+    "impact": [
+      "Successful exploitation will allow a remote attacker to bypass intended access restrictions in opportunistic circumstances by leveraging multiple Require directives."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 2.4.12 or later."
+    ],
+    "insight": [
+      "Flaw is due to a vulnerability in LuaAuthzProvider that is triggered if a user-supplied LUA script is supplied more than once with dierent arguments."
+    ],
+    "log_method": [],
+    "cvss": [
+      "4.3"
+    ],
+    "port": 80,
+    "protocol": "tcp",
+    "severity": "MEDIUM",
+    "references": [
+      "cve: CVE-2014-8109",
+      "url: http://httpd.apache.org/security/vulnerabilities_24.html",
+      "url: http://www.securityfocus.com/bid/73040",
+      "url: http://www.rapid7.com/db/vulnerabilities/apache-httpd-cve-2014-8109",
+      "cert-bund: CB-K15/1360",
+      "cert-bund: CB-K15/1188",
+      "cert-bund: CB-K15/0736",
+      "cert-bund: CB-K14/1626",
+      "cert-bund: CB-K14/1592",
+      "dfn-cert: DFN-CERT-2015-1435",
+      "dfn-cert: DFN-CERT-2015-1252",
+      "dfn-cert: DFN-CERT-2015-0771",
+      "dfn-cert: DFN-CERT-2014-1727",
+      "dfn-cert: DFN-CERT-2014-1691"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Apache HTTP Server 2.4.x < 2.4.66 Improper Neutralization Vulnerability - Linux",
+    "description": [
+      "Apache HTTP Server is prone to an improper neutralization vulnerability."
+    ],
+    "detection_result": [
+      "Installed version: 2.4.10",
+      "Fixed version: 2.4.66",
+      "Installation path / port: 80/tcp"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: Apache HTTP Server 2.4.x < 2.4.66 Improper Neutralization Vulnerability - Linux OID:1.3.6.1.4.1.25623.1.0.125566",
+      "Version used: 2025-12-05T05:44:55Z"
+    ],
+    "product_detection_result": [
+      "cpe:/a:apache:http_server:2.4.10",
+      "Detected by Apache HTTP Server Detection Consolidation (OID: 1.3.6.1.4.1.25623.1.0.117232)"
+    ],
+    "impact": [
+      "Aected Software/OS Apache HTTP Server version 2.4.x prior to 2.4.66."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 2.4.66 or later."
+    ],
+    "insight": [
+      "Improper neutralization of escape, meta, or control sequences vulnerability in Apache HTTP Server through environment variables set via the Apache conguration unexpectedly superseding variables calculated by the server for CGI programs."
+    ],
+    "log_method": [],
+    "cvss": [
+      "2.6"
+    ],
+    "port": 80,
+    "protocol": "tcp",
+    "severity": "LOW",
+    "references": [
+      "cve: CVE-2025-65082",
+      "url: https://httpd.apache.org/security/vulnerabilities_24.html#2.4.66",
+      "url: https://www.openwall.com/lists/oss-security/2025/12/04/7",
+      "cert-bund: WID-SEC-2026-0155",
+      "cert-bund: WID-SEC-2025-2750",
+      "dfn-cert: DFN-CERT-2026-0214",
+      "dfn-cert: DFN-CERT-2025-3602",
+      "dfn-cert: DFN-CERT-2025-3581",
+      "dfn-cert: DFN-CERT-2025-3512",
+      "dfn-cert: DFN-CERT-2025-3405"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "TCP Timestamps Information Disclosure",
+    "description": [
+      "The remote host implements TCP timestamps and therefore allows to compute the uptime."
+    ],
+    "detection_result": [],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [],
+    "cvss": [
+      "2.6"
+    ],
+    "port": 80,
+    "protocol": "tcp",
+    "severity": "LOW",
+    "references": [],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "TCP Timestamps Information Disclosure",
+    "description": [
+      "The remote host implements TCP timestamps and therefore allows to compute the uptime.",
+      "Quality of Detection (QoD): 80%"
+    ],
+    "detection_result": [
+      "It was detected that the host implements RFC1323/RFC7323.",
+      "The following timestamps were retrieved with a delay of 1 seconds in-between:",
+      "Packet 1: 3669712214",
+      "Packet 2: 3669713342"
+    ],
+    "detection_method": [
+      "Special IP packets are forged and sent with a little delay in between to the target IP. The responses are searched for a timestamps. If found, the timestamps are reported.",
+      "Details: TCP Timestamps Information Disclosure",
+      "OID:1.3.6.1.4.1.25623.1.0.80091",
+      "Version used: 2023-12-15T16:10:08Z"
+    ],
+    "product_detection_result": [],
+    "impact": [
+      "A side effect of this feature is that the uptime of the remote host can sometimes be computed."
+    ],
+    "solution": [
+      "Solution type: Mitigation",
+      "To disable TCP timestamps on linux add the line 'net.ipv4.tcp_timestamps = 0' to /etc/sysctl.conf. Execute 'sysctl -p' to apply the settings at runtime.",
+      "To disable TCP timestamps on Windows execute 'netsh int tcp set global timestamps=disabled'",
+      "Starting with Windows Server 2008 and Vista, the timestamp can not be completely disabled.",
+      "The default behavior of the TCP/IP stack on this Systems is to not use the Timestamp options when initiating TCP connections, but use them if the TCP peer that is initiating communication includes them in their synchronize (SYN) segment.",
+      "See the references for more information."
+    ],
+    "insight": [
+      "The remote host implements TCP timestamps, as defined by RFC1323/RFC7323."
+    ],
+    "log_method": [],
+    "cvss": [
+      "2.6"
+    ],
+    "port": "general",
+    "protocol": "tcp",
+    "severity": "LOW",
+    "references": [
+      "url: https://datatracker.ietf.org/doc/html/rfc1323",
+      "url: https://datatracker.ietf.org/doc/html/rfc7323",
+      "url: https://web.archive.org/web/20151213072445/http://www.microsoft.com/en-us/download/details.aspx?id=9152",
+      "url: https://www.fortiguard.com/psirt/FG-IR-16-090"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "ICMP Timestamp Reply Information Disclosure",
+    "description": [
+      "The remote host responded to an ICMP timestamp request.   Quality of Detection (QoD): 80%"
+    ],
+    "detection_result": [
+      "The following response / ICMP packet has been received:",
+      "- ICMP Type: 14",
+      "- ICMP Code: 0"
+    ],
+    "detection_method": [
+      "Sends an ICMP Timestamp (Type 13) request and checks if a Timestamp Reply (Type 14) is received.",
+      "Details: ICMP Timestamp Reply Information Disclosure",
+      "OID:1.3.6.1.4.1.25623.1.0.103190",
+      "Version used: 2025-01-21T05:37:33Z"
+    ],
+    "product_detection_result": [],
+    "impact": [
+      "This information could theoretically be used to exploit weak time-based random number generators in other services."
+    ],
+    "solution": [
+      "Solution type: Mitigation",
+      "Various mitigations are possible:",
+      "- Disable the support for ICMP timestamp on the remote host completely",
+      "- Protect the remote host by a rewall, and block ICMP packets passing through the rewall in either direction (either completely or only for untrusted networks)"
+    ],
+    "insight": [
+      "The Timestamp Reply is an ICMP message which replies to a Timestamp message. It consists of the originating timestamp sent by the sender of the Timestamp as well as a receive timestamp and a transmit timestamp."
+    ],
+    "log_method": [],
+    "cvss": [
+      "2.1"
+    ],
+    "port": "general",
+    "protocol": "icmp",
+    "severity": "LOW",
+    "references": [
+      "cve: CVE-1999-0524",
+      "url: https://datatracker.ietf.org/doc/html/rfc792",
+      "url: https://datatracker.ietf.org/doc/html/rfc2780",
+      "cert-bund: CB-K15/1514",
+      "cert-bund: CB-K14/0632",
+      "dfn-cert: DFN-CERT-2014-0658"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Hostname Determination Reporting",
+    "description": [
+      "The script reports information on how the hostname of the target was determined.",
+      "Quality of Detection (QoD): 80%"
+    ],
+    "detection_result": [
+      "Hostname determination for IP 172.30.40.5:",
+      "Hostname|Source",
+      "phpldapadmin-remote-dump.trabalho_vulnnet|Reverse-DNS"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [
+      "Details: Hostname Determination Reporting",
+      "OID:1.3.6.1.4.1.25623.1.0.108449",
+      "Version used: 2022-07-27T10:11:28Z"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": "general",
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Traceroute",
+    "description": [
+      "Collect information about the network route and network distance between the scanner host and the target host.",
+      "Quality of Detection (QoD): 80%"
+    ],
+    "detection_result": [
+      "Network route from scanner (172.30.0.2) to target (172.30.40.5):",
+      "172.30.0.2",
+      "172.30.40.5",
+      "Network distance between scanner and target: 2"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [
+      "For internal networks, the distances are usually small, often less than 4 hosts between scanner and target. For public targets the distance is greater and might be 10 hosts or more."
+    ],
+    "log_method": [
+      "A combination of the protocols ICMP and TCP is used to determine the route. This method is applicable for IPv4 only and it is also known as 'traceroute'.",
+      "Details: Traceroute",
+      "OID:1.3.6.1.4.1.25623.1.0.51662",
+      "Version used: 2022-10-17T11:13:19Z"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": "general",
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "OS Detection Consolidation and Reporting",
+    "description": [
+      "This script consolidates the OS information detected by several VTs and tries to nd the best matching OS.",
+      "Furthermore it reports all previously collected information leading to this best matching OS. It also reports possible additional information which might help to improve the OS detection. If any of this information is wrong or could be improved please consider to report these to the referenced community forum.",
+      "Quality of Detection (QoD): 80%"
+    ],
+    "detection_result": [
+      "Best matching OS:",
+      "OS: Debian GNU/Linux 8",
+      "Version: 8",
+      "CPE: cpe:/o:debian:debian_linux:8",
+      "Found by VT: 1.3.6.1.4.1.25623.1.0.111067 (Operating System (OS) Detection (HTT ->P))",
+      "Concluded from HTTP Server banner on port 80/tcp: Server: Apache/2.4.10 (Debian)",
+      "Setting key \"Host/runs_unixoide\" based on this information"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [
+      "Details: OS Detection Consolidation and Reporting",
+      "OID:1.3.6.1.4.1.25623.1.0.105937",
+      "Version used: 2026-01-21T05:50:46Z"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": "general",
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [
+      "url: https://forum.greenbone.net/c/vulnerability-tests/7"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "IP Forwarding Enabled - Active Check",
+    "description": [
+      "Checks if the remote host has IP forwarding enabled.",
+      "Quality of Detection (QoD): 70%"
+    ],
+    "detection_result": [
+      "It was possible to route a TCP packet through the target host and received an an ->swer which means IP forwarding is enabled."
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [
+      "Sends a crafted Local Link Layer (LLL) frame and checks the response.",
+      "Details: IP Forwarding Enabled - Active Check",
+      "OID:1.3.6.1.4.1.25623.1.0.147205",
+      "Version used: 2021-12-03T08:27:06Z"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": "general",
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [
+      "cve: CVE-1999-0511"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Apache HTTP Server Detection Consolidation",
+    "description": [
+      "Consolidation of Apache HTTP Server detections.",
+      "Quality of Detection (QoD): 80%"
+    ],
+    "detection_result": [
+      "Detected Apache HTTP Server",
+      "Version: 2.4.10",
+      "Location: 80/tcp",
+      "CPE: cpe:/a:apache:http_server:2.4.10",
+      "Concluded from version/product identification result:",
+      "Server: Apache/2.4.10 (Debian)"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [
+      "Details: Apache HTTP Server Detection Consolidation",
+      "OID:1.3.6.1.4.1.25623.1.0.117232",
+      "Version used: 2024-03-08T15:37:10Z"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": "general",
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [
+      "url: https://httpd.apache.org"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "phpLDAPadmin Detection (HTTP)",
+    "description": [
+      "HTTP based detection of phpLDAPadmin.",
+      "Quality of Detection (QoD): 80%"
+    ],
+    "detection_result": [
+      "Detected phpLDAPadmin",
+      "Version: 1.2.3",
+      "Location: /htdocs",
+      "CPE: cpe:/a:phpldapadmin_project:phpldapadmin:1.2.3",
+      "Concluded from version/product identification result:",
+      "phpLDAPadmin (1.2.3)",
+      "Concluded from version/product identification location:",
+      "http://phpldapadmin-remote-dump.trabalho_vulnnet/htdocs/index.php"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [
+      "Details: phpLDAPadmin Detection (HTTP)",
+      "OID:1.3.6.1.4.1.25623.1.0.100395",
+      "Version used: 2024-12-24T05:05:31Z"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": 80,
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [
+      "url: https://github.com/leenooks/phpLDAPadmin"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "HTTP Server Banner Enumeration",
+    "description": [
+      "This script tries to detect / enumerate dierent HTTP server banner (e.g. from a frontend, backend or proxy server) by sending various dierent HTTP requests (valid and invalid ones).",
+      "Quality of Detection (QoD): 80%"
+    ],
+    "detection_result": [
+      "It was possible to enumerate the following HTTP server banner(s):",
+      "Server banner | Enumeration technique",
+      "--------------------------------------------------------------------------------",
+      "->-----------------",
+      "Server: Apache/2.4.10 (Debian) | Invalid HTTP 00.5 GET request (non-existent HTT",
+      "->P version) to '/'"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [
+      "Details: HTTP Server Banner Enumeration",
+      "OID:1.3.6.1.4.1.25623.1.0.108708",
+      "Version used: 2025-01-31T15:39:24Z"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": 80,
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "HTTP Server type and version",
+    "description": [
+      "This script detects and reports the HTTP Server's banner which might provide the type and version of it.",
+      "Quality of Detection (QoD): 80%"
+    ],
+    "detection_result": [
+      "The remote HTTP Server banner is:",
+      "Server: Apache/2.4.10 (Debian)"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [
+      "Details: HTTP Server type and version",
+      "OID:1.3.6.1.4.1.25623.1.0.10107",
+      "Version used: 2023-08-01T13:29:10Z"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": 80,
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Services",
+    "description": [
+      "This plugin performs service detection.",
+      "Quality of Detection (QoD): 80%"
+    ],
+    "detection_result": [
+      "A web server is running on this port"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [
+      "This plugin attempts to guess which service is running on the remote port(s). For instance, it searches for a web server which could listen on another port than 80 or 443 and makes this information available for other check routines."
+    ],
+    "log_method": [
+      "Details: Services",
+      "OID:1.3.6.1.4.1.25623.1.0.10330",
+      "Version used: 2025-03-05T05:38:53Z"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": 80,
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "HTTP Security Headers Detection",
+    "description": [
+      "All known security headers are being checked on the remote web server.",
+      "On completion a report will hand back whether a specic security header has been implemented (including its value and if it is deprecated) or is missing on the target.",
+      "Quality of Detection (QoD): 80%"
+    ],
+    "detection_result": [
+      "Missing Headers | More Information",
+      "--------------------------------------------------------------------------------",
+      "Content-Security-Policy | https://owasp.org/www-project-secure-headers/#content-security-policy",
+      "Cross-Origin-Embedder-Policy | https://scotthelme.co.uk/coop-and-coep/, Note: This is an upcoming header",
+      "Cross-Origin-Opener-Policy | https://scotthelme.co.uk/coop-and-coep/, Note: This is an upcoming header",
+      "Cross-Origin-Resource-Policy | https://scotthelme.co.uk/coop-and-coep/, Note: This is an upcoming header",
+      "Document-Policy | https://w3c.github.io/webappsec-feature-policy/document-policy#document-policy-http-header",
+      "Feature-Policy | https://owasp.org/www-project-secure-headers/#feature-policy, Note: The Feature Policy header has been renamed to Permissions Policy",
+      "Permissions-Policy | https://w3c.github.io/webappsec-feature-policy/#permissions-policy-http-header-field",
+      "Referrer-Policy | https://owasp.org/www-project-secure-headers/#referrer-policy",
+      "Sec-Fetch-Dest | https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers#fetch_metadata_request_headers, Note: This is a new header supported only in newer browsers like e.g. Firefox 90",
+      "Sec-Fetch-Mode | https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers#fetch_metadata_request_headers, Note: This is a new header supported only in newer browsers like e.g. Firefox 90",
+      "Sec-Fetch-Site | https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers#fetch_metadata_request_headers, Note: This is a new header supported only in newer browsers like e.g. Firefox 90",
+      "Sec-Fetch-User | https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers#fetch_metadata_request_headers, Note: This is a new header supported only in newer browsers like e.g. Firefox 90",
+      "X-Content-Type-Options | https://owasp.org/www-project-secure-headers/#x-content-type-options",
+      "X-Frame-Options | https://owasp.org/www-project-secure-headers/#x-frame-options",
+      "X-Permitted-Cross-Domain-Policies | https://owasp.org/www-project-secure-headers/#x-permitted-cross-domain-policies",
+      "X-XSS-Protection | https://owasp.org/www-project-secure-headers/#x-xss-protection, Note: Most major browsers have dropped / deprecated support for this header in 2020."
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [
+      "Details: HTTP Security Headers Detection",
+      "OID:1.3.6.1.4.1.25623.1.0.112081",
+      "Version used: 2025-03-21T15:40:43Z"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": 80,
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [
+      "url: https://owasp.org/www-project-secure-headers/",
+      "url: https://owasp.org/www-project-secure-headers/#div-headers",
+      "url: https://securityheaders.com/"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Web Application Scanning Consolidation / Info Reporting",
+    "description": [
+      "The script consolidates and reports various information for web application (formerly called 'CGI') scanning.",
+      "This information is based on the following scripts / settings:",
+      "- HTTP-Version Detection (OID: 1.3.6.1.4.1.25623.1.0.100034)",
+      "- No 404 check (OID: 1.3.6.1.4.1.25623.1.0.10386)",
+      "- Web mirroring / webmirror.nasl (OID: 1.3.6.1.4.1.25623.1.0.10662)",
+      "- Directory Scanner / DDI_Directory_Scanner.nasl (OID: 1.3.6.1.4.1.25623.1.0.11032)",
+      "- The congured 'cgi_path' within the 'Scanner Preferences' of the scan cong in use",
+      "- The congured 'Enable CGI scanning', 'Enable generic web application scanning' and 'Add historic /scripts and /cgi-bin to directories for CGI scanning' within the 'Global variable settings' of the scan cong in use",
+      "If you think any of this information is wrong please report it to the referenced community forum."
+    ],
+    "detection_result": [],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [],
+    "cvss": [
+      "0.0"
+    ],
+    "port": 80,
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "LDAP Service Detection (TCP)",
+    "description": [
+      "TCP based detection of services supporting the Lightweight Directory Access Protocol (LDAP).",
+      "Quality of Detection (QoD): 80%"
+    ],
+    "detection_result": [
+      "The LDAP Server supports LDAPv3."
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [
+      "The Lightweight Directory Access Protocol, or LDAP is an application protocol for querying and modifying directory services running over TCP/IP."
+    ],
+    "log_method": [
+      "Details: LDAP Service Detection (TCP)",
+      "OID:1.3.6.1.4.1.25623.1.0.100082",
+      "Version used: 2023-07-12T05:05:05Z"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": 389,
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "CPE Inventory",
+    "description": [
+      "This routine uses information collected by other routines about CPE identities of operating systems, services and applications detected during the scan.",
+      "Note: Some CPEs for specic products might show up twice or more in the output. Background: After a product got renamed or a specic vendor was acquired by another one it might happen that a product gets a new CPE within the NVD CPE Dictionary but older entries are kept with the older CPE."
+    ],
+    "detection_result": [
+      "172.30.40.5|cpe:/a:apache:http_server:2.4.10",
+      "172.30.40.5|cpe:/a:phpldapadmin_project:phpldapadmin:1.2.3",
+      "172.30.40.5|cpe:/o:debian:debian_linux:8"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [
+      "Details: CPE Inventory",
+      "OID:1.3.6.1.4.1.25623.1.0.810002",
+      "Version used: 2022-07-27T10:11:28Z"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": "general",
+    "protocol": "CPE-T",
+    "severity": "LOG",
+    "references": [
+      "url: https://nvd.nist.gov/products/cpe"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  }
+]

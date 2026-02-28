@@ -1,0 +1,1552 @@
+# LOG DE DEDUPLICAÇÃO DE VULNERABILIDADES
+Este arquivo lista todas as vulnerabilidades consideradas duplicatas e agrupadas durante o processo.
+Cada grupo é identificado por uma chave composta (ex: nome, porta, protocolo).
+Apenas a vulnerabilidade mais completa e com descrição válida foi mantida em cada grupo.
+
+Total de grupos de duplicatas: 257
+Total de vulnerabilidades agrupadas (removidas): 60
+
+Grupo 1: Chave = ('Oracle Mysql Security Update (cpuoct2018 - 02) - Linux', 3306, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Oracle Mysql Security Update (cpuoct2018 - 02) - Linux
+       Porta: 3306 | Protocolo: tcp | Severidade: Critical
+       Descrição: Oracle MySQL is prone to multiple vulnerabilities. Quality of Detection (QoD): 30%
+
+Grupo 2: Chave = ('Oracle MySQL Server <= 5.7.43, 8.x <= 8.0.34, 8.1.0 Security Update (cpuoct2023) - Linux', 3306, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Oracle MySQL Server <= 5.7.43, 8.x <= 8.0.34, 8.1.0 Security Update (cpuoct2023) - Linux
+       Porta: 3306 | Protocolo: tcp | Severidade: CRITICAL
+       Descrição: Oracle MySQL Server is prone to multiple vulnerabilities. Quality of Detection (QoD): 30%
+
+Grupo 3: Chave = ('Oracle MySQL Server <= 5.7.35 / 8.0 <= 8.0.26 Security Update (cpuoct2021) - Linux', 3306, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Oracle MySQL Server <= 5.7.35 / 8.0 <= 8.0.26 Security Update (cpuoct2021) - Linux
+       Porta: 3306 | Protocolo: tcp | Severidade: Critical
+       Descrição: Oracle MySQL Server is prone to multiple vulnerabilities.
+
+Grupo 4: Chave = ('Oracle MySQL Server <= 5.7.40, 8.x <= 8.0.31 Security Update (cpujan2023) - Linux', 3306, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Oracle MySQL Server <= 5.7.40, 8.x <= 8.0.31 Security Update (cpujan2023) - Linux
+       Porta: 3306 | Protocolo: tcp | Severidade: Critical
+       Descrição: Oracle MySQL Server is prone to a vulnerability in libcurl.
+
+Grupo 5: Chave = ('Oracle MySQL Server <= 5.7.41, 8.x <= 8.0.31 Security Update (cpuapr2023) - Linux', 3306, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Oracle MySQL Server <= 5.7.41, 8.x <= 8.0.31 Security Update (cpuapr2023) - Linux
+       Porta: 3306 | Protocolo: tcp | Severidade: CRITICAL
+       Descrição: Oracle MySQL Server is prone to a vulnerability in InnoDB (zlib).
+
+Grupo 6: Chave = ('PHP End of Life (EOL) Detection - Linux', 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: PHP End of Life (EOL) Detection - Linux
+       Porta: 80 | Protocolo: tcp | Severidade: CRITICAL
+       Descrição: The PHP version on the remote host has reached the end of life (EOL) and should not be used anymore.
+
+Grupo 7: Chave = ('phpMyAdmin End of Life (EOL) Detection - Linux', 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: phpMyAdmin End of Life (EOL) Detection - Linux
+       Porta: 80 | Protocolo: tcp | Severidade: CRITICAL
+       Descrição: The phpMyAdmin version on the remote host has reached the End of Life (EOL) and should not be used anymore.
+
+Grupo 8: Chave = ('jQuery End of Life (EOL) Detection - Linux', 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: jQuery End of Life (EOL) Detection - Linux
+       Porta: 80 | Protocolo: tcp | Severidade: CRITICAL
+       Descrição: The jQuery version on the remote host has reached the end of life (EOL) and should not be used anymore.
+
+Grupo 9: Chave = ('PHP < 8.1.29, 8.2.x < 8.2.20, 8.3.x < 8.3.8 Multiple Vulnerabilities - Linux', 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: PHP < 8.1.29, 8.2.x < 8.2.20, 8.3.x < 8.3.8 Multiple Vulnerabilities - Linux
+       Porta: 80 | Protocolo: tcp | Severidade: MEDIUM
+       Descrição: PHP is prone to multiple vulnerabilities.
+
+Grupo 10: Chave = ('PHP < 8.1.31, 8.2.x < 8.2.26, 8.3.x < 8.3.14 Multiple Vulnerabilities - Linux', 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: PHP < 8.1.31, 8.2.x < 8.2.26, 8.3.x < 8.3.14 Multiple Vulnerabilities - Linux
+       Porta: 80 | Protocolo: tcp | Severidade: CRITICAL
+       Descrição: PHP is prone to multiple vulnerabilities. Quality of Detection (QoD): 30%
+
+Grupo 11: Chave = ('PHP < 8.1.32, 8.2.x < 8.2.28 Multiple Vulnerabilities - Linux', 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: PHP < 8.1.32, 8.2.x < 8.2.28 Multiple Vulnerabilities - Linux
+       Porta: 80 | Protocolo: tcp | Severidade: CRITICAL
+       Descrição: PHP is prone to multiple vulnerabilities. Quality of Detection (QoD): 30%
+
+Grupo 12: Chave = ('PHP < 5.5.37, 5.6.x < 5.6.23, 7.x < 7.0.8 Multiple Vulnerabilities (Aug 2016) - Linux', 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: PHP < 5.5.37, 5.6.x < 5.6.23, 7.x < 7.0.8 Multiple Vulnerabilities (Aug 2016) - Linux
+       Porta: 80 | Protocolo: tcp | Severidade: HIGH
+       Descrição: PHP is prone to multiple vulnerabilities.   Quality of Detection (QoD): 30%
+
+Grupo 13: Chave = ('PHP < 7.4.33, 8.0.x < 8.0.25, 8.1.x < 8.1.12 Security Update - Linux', 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: PHP < 7.4.33, 8.0.x < 8.0.25, 8.1.x < 8.1.12 Security Update - Linux
+       Porta: 80 | Protocolo: tcp | Severidade: CRITICAL
+       Descrição: PHP is prone to multiple vulnerabilities.
+
+Grupo 14: Chave = ('Apache HTTP Server < 2.4.60 Multiple Vulnerabilities - Linux', 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Apache HTTP Server < 2.4.60 Multiple Vulnerabilities - Linux
+       Porta: 80 | Protocolo: tcp | Severidade: CRITICAL
+       Descrição: Apache HTTP Server is prone to multiple vulnerabilities.
+
+Grupo 15: Chave = ('PHP < 8.0.30, 8.1.x < 8.1.22, 8.2.x < 8.2.9 Security Update - Linux', 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: PHP < 8.0.30, 8.1.x < 8.1.22, 8.2.x < 8.2.9 Security Update - Linux
+       Porta: 80 | Protocolo: tcp | Severidade: MEDIUM
+       Descrição: PHP is prone to multiple vulnerabilities. Quality of Detection (QoD): 30%
+
+Grupo 16: Chave = ('Apache HTTP Server <= 2.4.51 Buer Overow Vulnerability - Linux', 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Apache HTTP Server <= 2.4.51 Buer Overow Vulnerability - Linux
+       Porta: 80 | Protocolo: tcp | Severidade: CRITICAL
+       Descrição: Apache HTTP Server is prone to a buer overow vulnerability.
+
+Grupo 17: Chave = ('PHP < 5.4.44, 5.5.x < 5.5.28, 5.6.x < 5.6.12 Multiple Vulnerabilities (Jul 2016) - Linux', 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: PHP < 5.4.44, 5.5.x < 5.5.28, 5.6.x < 5.6.12 Multiple Vulnerabilities (Jul 2016) - Linux
+       Porta: 80 | Protocolo: tcp | Severidade: CRITICAL
+       Descrição: PHP is prone to multiple vulnerabilities.
+
+Grupo 18: Chave = ('PHP < 5.4.43, 5.5.x < 5.5.27, 5.6.x < 5.6.11 Multiple Vulnerabilities (Mar 2016) - Linux', 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: PHP < 5.4.43, 5.5.x < 5.5.27, 5.6.x < 5.6.11 Multiple Vulnerabilities (Mar 2016) - Linux
+       Porta: 80 | Protocolo: tcp | Severidade: CRITICAL
+       Descrição: PHP is prone to multiple vulnerabilities. Quality of Detection (QoD): 30%
+
+Grupo 19: Chave = ('PHP < 5.4.42, 5.5.x < 5.5.26, 5.6.x < 5.6.10 Multiple Vulnerabilities (Aug 2016) - Linux', 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: PHP < 5.4.42, 5.5.x < 5.5.26, 5.6.x < 5.6.10 Multiple Vulnerabilities (Aug 2016) - Linux
+       Porta: 80 | Protocolo: tcp | Severidade: CRITICAL
+       Descrição: PHP is prone to multiple vulnerabilities. Quality of Detection (QoD): 30%
+
+Grupo 20: Chave = ('PHP < 5.4.42, 5.5.x < 5.5.26, 5.6.x < 5.6.10 Multiple Vulnerabilities (Aug 2016)', 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: PHP < 5.4.42, 5.5.x < 5.5.26, 5.6.x < 5.6.10 Multiple Vulnerabilities (Aug 2016)
+       Porta: 80 | Protocolo: tcp | Severidade: CRITICAL
+       Descrição: PHP is prone to multiple vulnerabilities. - Improper validation of token extraction for table names, in the php_pgsql_meta_data function in pgsql.c in the PostgreSQL extension. - Integer overflow in t...
+
+Grupo 21: Chave = ('PHP < 5.6.31, 7.0.x < 7.0.21, 7.1.x < 7.1.7 Multiple Vulnerabilities (Jul 2017) - Linux', 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: PHP < 5.6.31, 7.0.x < 7.0.21, 7.1.x < 7.1.7 Multiple Vulnerabilities (Jul 2017) - Linux
+       Porta: 80 | Protocolo: tcp | Severidade: CRITICAL
+       Descrição: PHP is prone to multiple vulnerabilities.
+
+Grupo 22: Chave = ('PHP < 5.4.40, 5.5.x < 5.5.24, 5.6.x < 5.6.8 Multiple Vulnerabilities - Linux', 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: PHP < 5.4.40, 5.5.x < 5.5.24, 5.6.x < 5.6.8 Multiple Vulnerabilities - Linux
+       Porta: 80 | Protocolo: tcp | Severidade: HIGH
+       Descrição: PHP is prone to multiple vulnerabilities.
+
+Grupo 23: Chave = ('PHP < 5.3.29, 5.4.x < 5.4.30, 5.5.x < 5.5.14 Multiple Vulnerabilities (Jun/Aug 2014) - Linux', 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: PHP < 5.3.29, 5.4.x < 5.4.30, 5.5.x < 5.5.14 Multiple Vulnerabilities (Jun/Aug 2014) - Linux
+       Porta: 80 | Protocolo: tcp | Severidade: CRITICAL
+       Descrição: PHP is prone to multiple vulnerabilities.
+
+Grupo 24: Chave = ('PHP 5.x < 5.6.34, 7.x < 7.0.28, 7.1.x < 7.1.15, 7.2.x < 7.2.3 Stack Buffer Overflow Vulnerability (Mar 2018) - Linux', 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: PHP 5.x < 5.6.34, 7.x < 7.0.28, 7.1.x < 7.1.15, 7.2.x < 7.2.3 Stack Buffer Overflow Vulnerability (Mar 2018) - Linux
+       Porta: 80 | Protocolo: tcp | Severidade: CRITICAL
+       Descrição: PHP is prone to a stack buffer overflow vulnerability.
+
+Grupo 25: Chave = ("PHP 'CVE-2019-13224' Use-After-Free Vulnerability - Linux", 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: PHP 'CVE-2019-13224' Use-After-Free Vulnerability - Linux
+       Porta: 80 | Protocolo: tcp | Severidade: CRITICAL
+       Descrição: PHP is prone to a use-after-free vulnerability in a used third-pary library. Quality of Detection (QoD): 30%
+
+Grupo 26: Chave = ('PHP < 5.6.27, 7.x < 7.0.12 Multiple DoS Vulnerabilities (Oct 2016) - Linux', 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: PHP < 5.6.27, 7.x < 7.0.12 Multiple DoS Vulnerabilities (Oct 2016) - Linux
+       Porta: 80 | Protocolo: tcp | Severidade: CRITICAL
+       Descrição: PHP is prone to multiple denial of service (DoS) vulnerabilities. Quality of Detection (QoD): 30%
+
+Grupo 27: Chave = ('Apache HTTP Server Multiple Vulnerabilities (Jun 2017) - Linux', 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Apache HTTP Server Multiple Vulnerabilities (Jun 2017) - Linux
+       Porta: 80 | Protocolo: tcp | Severidade: CRITICAL
+       Descrição: Apache HTTP Server is prone to multiple vulnerabilities.
+
+Grupo 28: Chave = ('Apache HTTP Server Multiple Vulnerabilities (Apr 2018) - Linux', 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Apache HTTP Server Multiple Vulnerabilities (Apr 2018) - Linux
+       Porta: 80 | Protocolo: tcp | Severidade: CRITICAL
+       Descrição: Apache HTTP Server is prone to multiple vulnerabilities.
+
+Grupo 29: Chave = ('phpMyAdmin < 4.9.6, 5.x < 5.0.3 Multiple Vulnerabilities (PMASA-2020-5, PMASA-2020-6) - Linux', 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: phpMyAdmin < 4.9.6, 5.x < 5.0.3 Multiple Vulnerabilities (PMASA-2020-5, PMASA-2020-6) - Linux
+       Porta: 80 | Protocolo: tcp | Severidade: CRITICAL
+       Descrição: phpMyAdmin is prone to multiple vulnerabilities.
+
+Grupo 30: Chave = ('PHP < 5.6.26, 7.x < 7.0.11 Multiple Vulnerabilities (Sep 2016) - Linux', 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: PHP < 5.6.26, 7.x < 7.0.11 Multiple Vulnerabilities (Sep 2016) - Linux
+       Porta: 80 | Protocolo: tcp | Severidade: CRITICAL
+       Descrição: PHP is prone to multiple vulnerabilities.
+
+Grupo 31: Chave = ('PHP < 5.6.26 DoS Vulnerability - Linux', 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: PHP < 5.6.26 DoS Vulnerability - Linux
+       Porta: 80 | Protocolo: tcp | Severidade: CRITICAL
+       Descrição: PHP is prone to a denial of service (DoS) vulnerability.
+
+Grupo 32: Chave = ('PHP < 5.6.29, 7.0.x < 7.0.14 DoS Vulnerability - Linux', 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: PHP < 5.6.29, 7.0.x < 7.0.14 DoS Vulnerability - Linux
+       Porta: 80 | Protocolo: tcp | Severidade: CRITICAL
+       Descrição: PHP is prone to a denial of service (DoS) vulnerability.
+
+Grupo 33: Chave = ('PHP < 5.6.25, 7.x < 7.0.10 Multiple Vulnerabilities (Sep 2016) - Linux', 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: PHP < 5.6.25, 7.x < 7.0.10 Multiple Vulnerabilities (Sep 2016) - Linux
+       Porta: 80 | Protocolo: tcp | Severidade: CRITICAL
+       Descrição: PHP is prone to multiple vulnerabilities.
+
+Grupo 34: Chave = ('PHP < 5.6.7 DoS Vulnerability - Linux', 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: PHP < 5.6.7 DoS Vulnerability - Linux
+       Porta: 80 | Protocolo: tcp | Severidade: CRITICAL
+       Descrição: PHP is prone to a denial of service (DoS) vulnerability.
+
+Grupo 35: Chave = ('PHP <= 5.6.27 / 7.0.x <= 7.0.12 DoS Vulnerability', 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: PHP <= 5.6.27 / 7.0.x <= 7.0.12 DoS Vulnerability
+       Porta: 80 | Protocolo: tcp | Severidade: CRITICAL
+       Descrição: PHP is prone to a denial of service (DoS) vulnerability.
+
+Grupo 36: Chave = ('PHP <= 7.1.5 Multiple DoS Vulnerabilities', 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: PHP <= 7.1.5 Multiple DoS Vulnerabilities
+       Porta: 80 | Protocolo: tcp | Severidade: CRITICAL
+       Descrição: PHP is prone to multiple denial of service (DoS) vulnerabilities.
+
+Grupo 37: Chave = ('PHP Multiple Vulnerabilities (Feb 2019) - Linux', 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: PHP Multiple Vulnerabilities (Feb 2019) - Linux
+       Porta: 80 | Protocolo: tcp | Severidade: MEDIUM
+       Descrição: PHP is prone to multiple vulnerabilities.
+
+Grupo 38: Chave = ('PHP < 5.5.38, 5.6.x < 5.6.24, 7.0.x < 7.0.9 Multiple Vulnerabilities (Jul 2016) - Linux', 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: PHP < 5.5.38, 5.6.x < 5.6.24, 7.0.x < 7.0.9 Multiple Vulnerabilities (Jul 2016) - Linux
+       Porta: 80 | Protocolo: tcp | Severidade: MEDIUM
+       Descrição: PHP is prone to multiple vulnerabilities.
+
+Grupo 39: Chave = ('Apache HTTP Server <= 2.4.52 Multiple Vulnerabilities - Linux', 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Apache HTTP Server <= 2.4.52 Multiple Vulnerabilities - Linux
+       Porta: 80 | Protocolo: tcp | Severidade: CRITICAL
+       Descrição: Apache HTTP Server is prone to multiple vulnerabilities. Quality of Detection (QoD): 30%
+
+Grupo 40: Chave = ('PHP < 5.5.37, 5.6.x < 5.6.23 Multiple Vulnerabilities (Aug 2016) - Linux', 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: PHP < 5.5.37, 5.6.x < 5.6.23 Multiple Vulnerabilities (Aug 2016) - Linux
+       Porta: 80 | Protocolo: tcp | Severidade: CRITICAL
+       Descrição: PHP is prone to multiple vulnerabilities.
+
+Grupo 41: Chave = ('PHP < 7.4.28, 8.0.x < 8.0.16, 8.1.x < 8.1.3 Security Update (Feb 2022) - Linux', 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: PHP < 7.4.28, 8.0.x < 8.0.16, 8.1.x < 8.1.3 Security Update (Feb 2022) - Linux
+       Porta: 80 | Protocolo: tcp | Severidade: CRITICAL
+       Descrição: PHP released new versions which include a security x.
+
+Grupo 42: Chave = ('Apache HTTP Server < 2.4.54 Multiple Vulnerabilities - Linux', 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Apache HTTP Server < 2.4.54 Multiple Vulnerabilities - Linux
+       Porta: 80 | Protocolo: tcp | Severidade: CRITICAL
+       Descrição: Apache HTTP Server is prone to multiple vulnerabilities. Quality of Detection (QoD): 30%
+
+Grupo 43: Chave = ('Apache HTTP Server < 2.4.49 Multiple Vulnerabilities - Linux', 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Apache HTTP Server < 2.4.49 Multiple Vulnerabilities - Linux
+       Porta: 80 | Protocolo: tcp | Severidade: CRITICAL
+       Descrição: Apache HTTP Server is prone to multiple vulnerabilities. Quality of Detection (QoD): 30%
+
+Grupo 44: Chave = ('Apache HTTP Server 2.4.0 - 2.4.46 Multiple Vulnerabilities - Linux', 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Apache HTTP Server 2.4.0 - 2.4.46 Multiple Vulnerabilities - Linux
+       Porta: 80 | Protocolo: tcp | Severidade: CRITICAL
+       Descrição: Apache HTTP Server is prone to multiple vulnerabilities. Quality of Detection (QoD): 30%
+
+Grupo 45: Chave = ('Apache HTTP Server 2.4.0 - 2.4.55 HTTP Request Smuggling Vulnerability - Linux', 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Apache HTTP Server 2.4.0 - 2.4.55 HTTP Request Smuggling Vulnerability - Linux
+       Porta: 80 | Protocolo: tcp | Severidade: CRITICAL
+       Descrição: Apache HTTP Server is prone to a HTTP request smuggling vulnerability.
+
+Grupo 46: Chave = ('PHP < 7.0.12 RCE / DoS Vulnerability - Linux', 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: PHP < 7.0.12 RCE / DoS Vulnerability - Linux
+       Porta: 80 | Protocolo: tcp | Severidade: CRITICAL
+       Descrição: PHP is prone to a remote code execution (RCE) or denial of service (DoS) vulnerability.
+
+Grupo 47: Chave = ('phpMyAdmin < 4.9.2 Multiple Vulnerabilities (PMASA-2019-5) - Linux', 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: phpMyAdmin < 4.9.2 Multiple Vulnerabilities (PMASA-2019-5) - Linux
+       Porta: 80 | Protocolo: tcp | Severidade: CRITICAL
+       Descrição: phpMyAdmin is prone to multiple vulnerabilities.
+
+Grupo 48: Chave = ('PHP < 5.5.35, 5.6.x < 5.6.21, 7.x < 7.0.6 Multiple Vulnerabilities (Jul 2016) - Linux', 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: PHP < 5.5.35, 5.6.x < 5.6.21, 7.x < 7.0.6 Multiple Vulnerabilities (Jul 2016) - Linux
+       Porta: 80 | Protocolo: tcp | Severidade: CRITICAL
+       Descrição: PHP is prone to multiple vulnerabilities. Quality of Detection (QoD): 30%
+
+Grupo 49: Chave = ('PHP < 7.1.33, 7.2.x < 7.2.24, 7.3.x < 7.3.11 RCE Vulnerability - Version Check', 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: PHP < 7.1.33, 7.2.x < 7.2.24, 7.3.x < 7.3.11 RCE Vulnerability - Version Check
+       Porta: 80 | Protocolo: tcp | Severidade: CRITICAL
+       Descrição: PHP is prone to a remote code execution (RCE) vulnerability in certain nginx + php-fpm congurations. Quality of Detection (QoD): 30%
+
+Grupo 50: Chave = ('PHP < 5.5.34, 5.6.x < 5.6.20, 7.x < 7.0.5 Multiple Vulnerabilities (Jul 2016) - Linux', 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: PHP < 5.5.34, 5.6.x < 5.6.20, 7.x < 7.0.5 Multiple Vulnerabilities (Jul 2016) - Linux
+       Porta: 80 | Protocolo: tcp | Severidade: CRITICAL
+       Descrição: PHP is prone to multiple vulnerabilities.
+
+Grupo 51: Chave = ('PHP < 5.6.30, 7.x < 7.0.15, 7.1.x < 7.1.1 Multiple Vulnerabilities (Jan 2017) - Linux', 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: PHP < 5.6.30, 7.x < 7.0.15, 7.1.x < 7.1.1 Multiple Vulnerabilities (Jan 2017) - Linux
+       Porta: 80 | Protocolo: tcp | Severidade: CRITICAL
+       Descrição: PHP is prone to multiple vulnerabilities.
+
+Grupo 52: Chave = ('PHP < 5.5.33, 5.6.x < 5.6.19 Multiple Vulnerabilities (Apr 2016) - Linux', 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: PHP < 5.5.33, 5.6.x < 5.6.19 Multiple Vulnerabilities (Apr 2016) - Linux
+       Porta: 80 | Protocolo: tcp | Severidade: CRITICAL
+       Descrição: PHP is prone to multiple vulnerabilities.
+
+Grupo 53: Chave = ('PHP < 5.5.32, 5.6.x < 5.6.18, 7.x < 7.0.3 Multiple Vulnerabilities (Jul 2016) - Linux', 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: PHP < 5.5.32, 5.6.x < 5.6.18, 7.x < 7.0.3 Multiple Vulnerabilities (Jul 2016) - Linux
+       Porta: 80 | Protocolo: tcp | Severidade: CRITICAL
+       Descrição: PHP is prone to multiple vulnerabilities.
+
+Grupo 54: Chave = ('phpMyAdmin < 4.8.6 SQL Injection Vulnerability (PMASA-2019-3) - Linux', 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: phpMyAdmin < 4.8.6 SQL Injection Vulnerability (PMASA-2019-3) - Linux
+       Porta: 80 | Protocolo: tcp | Severidade: CRITICAL
+       Descrição: phpMyAdmin is prone to an SQL injection vulnerability.
+
+Grupo 55: Chave = ('PHP < 5.5.27, 5.6.x < 5.6.11 Arbitrary Code Execution Vulnerability (Aug 2016) - Linux', 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: PHP < 5.5.27, 5.6.x < 5.6.11 Arbitrary Code Execution Vulnerability (Aug 2016) - Linux
+       Porta: 80 | Protocolo: tcp | Severidade: CRITICAL
+       Descrição: PHP is prone to an arbitrary code execution vulnerability. Quality of Detection (QoD): 30%
+
+Grupo 56: Chave = ('PHP < 5.6.28, 7.x < 7.0.13 Multiple Vulnerabilities (Nov 2016) - Linux', 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: PHP < 5.6.28, 7.x < 7.0.13 Multiple Vulnerabilities (Nov 2016) - Linux
+       Porta: 80 | Protocolo: tcp | Severidade: CRITICAL
+       Descrição: PHP is prone to multiple vulnerabilities. Quality of Detection (QoD): 30%
+
+Grupo 57: Chave = ('PHP < 5.4.45, 5.5.x < 5.5.29, 5.6.x < 5.6.13 Multiple Vulnerabilities (Jul 2016) - Linux', 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: PHP < 5.4.45, 5.5.x < 5.5.29, 5.6.x < 5.6.13 Multiple Vulnerabilities (Jul 2016) - Linux
+       Porta: 80 | Protocolo: tcp | Severidade: CRITICAL
+       Descrição: PHP is prone to multiple vulnerabilities.
+
+Grupo 58: Chave = ('PHP < 5.5.22, 5.6.x < 5.6.6 XXE Vulnerability - Linux', 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: PHP < 5.5.22, 5.6.x < 5.6.6 XXE Vulnerability - Linux
+       Porta: 80 | Protocolo: tcp | Severidade: MEDIUM
+       Descrição: PHP is prone to an XML external entity (XXE) vulnerability. Quality of Detection (QoD): 30%
+
+Grupo 59: Chave = ('PHP < 5.5.31, 5.6.x < 5.6.17, 7.x < 7.0.2 DoS Vulnerability (Aug 2016) - Linux', 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: PHP < 5.5.31, 5.6.x < 5.6.17, 7.x < 7.0.2 DoS Vulnerability (Aug 2016) - Linux
+       Porta: 80 | Protocolo: tcp | Severidade: CRITICAL
+       Descrição: PHP is prone to a denial of service (DoS) vulnerability.
+
+Grupo 60: Chave = ('PHP < 5.5.31, 5.6.x < 5.6.17, 7.x < 7.0.2 Out of Bounds Read Memory Corruption Vulnerability (Mar 2016) - Linux', 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: PHP < 5.5.31, 5.6.x < 5.6.17, 7.x < 7.0.2 Out of Bounds Read Memory Corruption Vulnerability (Mar 2016) - Linux
+       Porta: 80 | Protocolo: tcp | Severidade: CRITICAL
+       Descrição: PHP is prone to an out-of-bounds read memory corruption vulnerability.
+
+Grupo 61: Chave = ("Apache HTTP Server 'mod_auth_digest' Multiple Vulnerabilities - Linux", 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Apache HTTP Server 'mod_auth_digest' Multiple Vulnerabilities - Linux
+       Porta: 80 | Protocolo: tcp | Severidade: MEDIUM
+       Descrição: Apache HTTP Server is prone to multiple vulnerabilities. Quality of Detection (QoD): 30%
+
+Grupo 62: Chave = ('PHP < 7.2.27, 7.3.x < 7.3.14, 7.4.x < 7.4.2 Multiple Vulnerabilities (Jan 2020) - Linux', 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: PHP < 7.2.27, 7.3.x < 7.3.14, 7.4.x < 7.4.2 Multiple Vulnerabilities (Jan 2020) - Linux
+       Porta: 80 | Protocolo: tcp | Severidade: CRITICAL
+       Descrição: PHP is prone to multiple vulnerabilities.
+
+Grupo 63: Chave = ('Apache HTTP Server < 2.4.55 Multiple Vulnerabilities - Linux', 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Apache HTTP Server < 2.4.55 Multiple Vulnerabilities - Linux
+       Porta: 80 | Protocolo: tcp | Severidade: CRITICAL
+       Descrição: Apache HTTP Server is prone to multiple vulnerabilities.
+
+Grupo 64: Chave = ('Oracle MySQL Server <= 5.7.38 / 8.0 <= 8.0.29 Security Update (cpujul2022) - Linux', 3306, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Oracle MySQL Server <= 5.7.38 / 8.0 <= 8.0.29 Security Update (cpujul2022) - Linux
+       Porta: 3306 | Protocolo: tcp | Severidade: HIGH
+       Descrição: Oracle MySQL Server is prone to multiple vulnerabilities.
+
+Grupo 65: Chave = ('Oracle MySQL Server <= 5.7.34 / 8.0 <= 8.0.25 Security Update (cpujul2021) - Linux', 3306, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Oracle MySQL Server <= 5.7.34 / 8.0 <= 8.0.25 Security Update (cpujul2021) - Linux
+       Porta: 3306 | Protocolo: tcp | Severidade: HIGH
+       Descrição: Oracle MySQL Server is prone to multiple vulnerabilities.
+
+Grupo 66: Chave = ('Oracle MySQL Server <= 5.7.41, 8.x <= 8.0.32 Security Update (cpuapr2023) - Linux', 3306, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Oracle MySQL Server <= 5.7.41, 8.x <= 8.0.32 Security Update (cpuapr2023) - Linux
+       Porta: 3306 | Protocolo: tcp | Severidade: HIGH
+       Descrição: Oracle MySQL Server is prone to multiple vulnerabilities.
+
+Grupo 67: Chave = ('Oracle MySQL Denial Of Service Vulnerability (Feb 2017) - Linux', 3306, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Oracle MySQL Denial Of Service Vulnerability (Feb 2017) - Linux
+       Porta: 3306 | Protocolo: tcp | Severidade: HIGH
+       Descrição: Oracle MySQL is prone to a denial of service (DoS) vulnerability. Quality of Detection (QoD): 30%
+
+Grupo 68: Chave = ('Oracle MySQL Server <= 5.6.48 Security Update (cpujul2020) - Linux', 3306, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Oracle MySQL Server <= 5.6.48 Security Update (cpujul2020) - Linux
+       Porta: 3306 | Protocolo: tcp | Severidade: HIGH
+       Descrição: Oracle MySQL Server is prone to multiple vulnerabilities.
+
+Grupo 69: Chave = ('Oracle MySQL Server <= 5.7.33 / 8.0 <= 8.0.23 Security Update (cpuapr2021) - Linux', 3306, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Oracle MySQL Server <= 5.7.33 / 8.0 <= 8.0.23 Security Update (cpuapr2021) - Linux
+       Porta: 3306 | Protocolo: tcp | Severidade: HIGH
+       Descrição: Oracle MySQL Server is prone to multiple vulnerabilities.
+
+Grupo 70: Chave = ('Oracle MySQL Server <= 5.7.36 / 8.0 <= 8.0.27 Security Update (cpujan2022) - Linux', 3306, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Oracle MySQL Server <= 5.7.36 / 8.0 <= 8.0.27 Security Update (cpujan2022) - Linux
+       Porta: 3306 | Protocolo: tcp | Severidade: HIGH
+       Descrição: Oracle MySQL Server is prone to multiple vulnerabilities.
+
+Grupo 71: Chave = ('Oracle MySQL Server <= 5.7.37 / 8.0 <= 8.0.28 Security Update (cpuapr2022) - Linux', 3306, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Oracle MySQL Server <= 5.7.37 / 8.0 <= 8.0.28 Security Update (cpuapr2022) - Linux
+       Porta: 3306 | Protocolo: tcp | Severidade: HIGH
+       Descrição: Oracle MySQL Server is prone to multiple vulnerabilities.
+
+Grupo 72: Chave = ('Oracle MySQL Server <= 5.7.41, 8.x <= 8.0.30 Security Update (cpuapr2023) - Linux', 3306, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Oracle MySQL Server <= 5.7.41, 8.x <= 8.0.30 Security Update (cpuapr2023) - Linux
+       Porta: 3306 | Protocolo: tcp | Severidade: HIGH
+       Descrição: Oracle MySQL Server is prone to a denial of service (DoS) vulnerability.
+
+Grupo 73: Chave = ('Oracle MySQL Server <= 5.7.42, 8.x <= 8.0.33 Security Update (cpuoct2023) - Linux', 3306, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Oracle MySQL Server <= 5.7.42, 8.x <= 8.0.33 Security Update (cpuoct2023) - Linux
+       Porta: 3306 | Protocolo: tcp | Severidade: HIGH
+       Descrição: Oracle MySQL Server is prone to multiple vulnerabilities.
+
+Grupo 74: Chave = ('Oracle MySQL Server <= 8.0.39, 8.1 <= 8.4.2, 9.0 <= 9.0.1 Security Update (cpuoct2024) - Linux', 3306, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Oracle MySQL Server <= 8.0.39, 8.1 <= 8.4.2, 9.0 <= 9.0.1 Security Update (cpuoct2024) - Linux
+       Porta: 3306 | Protocolo: tcp | Severidade: HIGH
+       Descrição: Oracle MySQL Server is prone to multiple vulnerabilities.
+
+Grupo 75: Chave = ('Oracle MySQL Server <= 5.7.29 / 8.0 <= 8.0.19 Security Update (cpuapr2021) - Linux', 3306, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Oracle MySQL Server <= 5.7.29 / 8.0 <= 8.0.19 Security Update (cpuapr2021) - Linux
+       Porta: 3306 | Protocolo: tcp | Severidade: HIGH
+       Descrição: Oracle MySQL Server is prone to a vulnerability in the parser. Quality of Detection (QoD): 30%
+
+Grupo 76: Chave = ('Oracle MySQL Server <= 5.6.42 / 5.7 <= 5.7.24 / 8.0 <= 8.0.13 Security Update (cpu-jan2019) - Linux', 3306, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Oracle MySQL Server <= 5.6.42 / 5.7 <= 5.7.24 / 8.0 <= 8.0.13 Security Update (cpu-jan2019) - Linux
+       Porta: 3306 | Protocolo: tcp | Severidade: HIGH
+       Descrição: Oracle MySQL Server is prone to multiple vulnerabilities. Quality of Detection (QoD): 30%
+
+Grupo 77: Chave = ('PHP < 7.4.30, 8.0.x < 8.0.20, 8.1.x < 8.1.7 Security Update (Jun 2022) - Linux', 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: PHP < 7.4.30, 8.0.x < 8.0.20, 8.1.x < 8.1.7 Security Update (Jun 2022) - Linux
+       Porta: 80 | Protocolo: tcp | Severidade: HIGH
+       Descrição: PHP released new versions which include a security x.
+
+Grupo 78: Chave = ('PHP < 5.6.18, 7.x < 7.0.3 DoS Vulnerability (Jul 2016) - Linux', 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: PHP < 5.6.18, 7.x < 7.0.3 DoS Vulnerability (Jul 2016) - Linux
+       Porta: 80 | Protocolo: tcp | Severidade: HIGH
+       Descrição: PHP is prone to a denial of service (DoS) vulnerability.
+
+Grupo 79: Chave = ('PHP < 5.6.36, 7.x < 7.0.30, 7.1.x < 7.1.17, 7.2.x < 7.2.5 Multiple Vulnerabilities (May 2018) - Linux', 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: PHP < 5.6.36, 7.x < 7.0.30, 7.1.x < 7.1.17, 7.2.x < 7.2.5 Multiple Vulnerabilities (May 2018) - Linux
+       Porta: 80 | Protocolo: tcp | Severidade: HIGH
+       Descrição: PHP is prone to multiple vulnerabilities.
+
+Grupo 80: Chave = ('phpMyAdmin < 4.9.4, 5.x < 5.0.1 SQL Injection Vulnerability (PMASA-2020-1) - Linux', 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: phpMyAdmin < 4.9.4, 5.x < 5.0.1 SQL Injection Vulnerability (PMASA-2020-1) - Linux
+       Porta: 80 | Protocolo: tcp | Severidade: HIGH
+       Descrição: phpMyAdmin is prone to an SQL injection vulnerability. Quality of Detection (QoD): 30%
+
+Grupo 81: Chave = ('PHP < 8.1.30, 8.2.x < 8.2.24, 8.3.x < 8.3.12 Multiple Vulnerabilities - Linux', 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: PHP < 8.1.30, 8.2.x < 8.2.24, 8.3.x < 8.3.12 Multiple Vulnerabilities - Linux
+       Porta: 80 | Protocolo: tcp | Severidade: HIGH
+       Descrição: PHP is prone to multiple vulnerabilities. Quality of Detection (QoD): 30%
+
+Grupo 82: Chave = ('phpMyAdmin <= 5.1.1 CSV Injection Vulnerability - Linux', 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: phpMyAdmin <= 5.1.1 CSV Injection Vulnerability - Linux
+       Porta: 80 | Protocolo: tcp | Severidade: HIGH
+       Descrição: phpMyAdmin is prone to a CSV injection vulnerability via Export Section. Quality of Detection (QoD): 30%
+
+Grupo 83: Chave = ('PHP < 5.5.36, 5.6.x < 5.6.22 Multiple Vulnerabilities (Aug 2016) - Linux', 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: PHP < 5.5.36, 5.6.x < 5.6.22 Multiple Vulnerabilities (Aug 2016) - Linux
+       Porta: 80 | Protocolo: tcp | Severidade: HIGH
+       Descrição: PHP is prone to multiple vulnerabilities. Quality of Detection (QoD): 30%
+
+Grupo 84: Chave = ('PHP < 5.5.36, 5.6.x < 5.6.22, 7.x < 7.0.7 Multiple Vulnerabilities (Aug 2016) - Linux', 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: PHP < 5.5.36, 5.6.x < 5.6.22, 7.x < 7.0.7 Multiple Vulnerabilities (Aug 2016) - Linux
+       Porta: 80 | Protocolo: tcp | Severidade: MEDIUM
+       Descrição: PHP is prone to multiple vulnerabilities.
+
+Grupo 85: Chave = ('Apache HTTP Server 2.4.7 - 2.4.51 Multiple Vulnerabilities - Linux', 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Apache HTTP Server 2.4.7 - 2.4.51 Multiple Vulnerabilities - Linux
+       Porta: 80 | Protocolo: tcp | Severidade: HIGH
+       Descrição: Apache HTTP Server is prone to multiple vulnerabilities.
+
+Grupo 86: Chave = ('PHP < 8.2.30, 8.3.x < 8.3.29, 8.4.x < 8.4.16 Multiple Vulnerabilities - Linux', 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: PHP < 8.2.30, 8.3.x < 8.3.29, 8.4.x < 8.4.16 Multiple Vulnerabilities - Linux
+       Porta: 80 | Protocolo: tcp | Severidade: HIGH
+       Descrição: PHP is prone to multiple vulnerabilities. Quality of Detection (QoD): 30%
+
+Grupo 87: Chave = ('PHP < 8.0.28, 8.1.x < 8.1.16, 8.2.x < 8.2.3 Security Update - Linux', 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: PHP < 8.0.28, 8.1.x < 8.1.16, 8.2.x < 8.2.3 Security Update - Linux
+       Porta: 80 | Protocolo: tcp | Severidade: HIGH
+       Descrição: PHP is prone to multiple vulnerabilities. Quality of Detection (QoD): 30%
+
+Grupo 88: Chave = ('PHP < 5.6.24, 7.x <= 7.0.8 Multiple Vulnerabilities (Jul 2016) - Linux', 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: PHP < 5.6.24, 7.x <= 7.0.8 Multiple Vulnerabilities (Jul 2016) - Linux
+       Porta: 80 | Protocolo: tcp | Severidade: HIGH
+       Descrição: PHP is prone to multiple vulnerabilities.
+
+Grupo 89: Chave = ('Apache HTTP Server Man-in-the-Middle Attack Vulnerability (Jul 2016) - Linux', 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Apache HTTP Server Man-in-the-Middle Attack Vulnerability (Jul 2016) - Linux
+       Porta: 80 | Protocolo: tcp | Severidade: HIGH
+       Descrição: Apache HTTP Server is prone to a man-in-the-middle attack vulnerability.
+
+Grupo 90: Chave = ('phpMyAdmin < 4.9.5, 5.x < 5.0.2 Multiple SQL Injection Vulnerabilities (PMASA-2020-2, PMASA-2020-3, PMASA-2020-4) - Linux', 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: phpMyAdmin < 4.9.5, 5.x < 5.0.2 Multiple SQL Injection Vulnerabilities (PMASA-2020-2, PMASA-2020-3, PMASA-2020-4) - Linux
+       Porta: 80 | Protocolo: tcp | Severidade: HIGH
+       Descrição: phpMyAdmin is prone to multiple SQL injection vulnerabilities.
+
+Grupo 91: Chave = ('PHP < 8.0.27, 8.1.x < 8.1.14, 8.2.x < 8.2.1 Security Update - Linux', 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: PHP < 8.0.27, 8.1.x < 8.1.14, 8.2.x < 8.2.1 Security Update - Linux
+       Porta: 80 | Protocolo: tcp | Severidade: HIGH
+       Descrição: PHP is prone to an integer overow vulnerability.
+
+Grupo 92: Chave = ('PHP < 5.6.5 Multiple Vulnerabilities (Jan 2015)', 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: PHP < 5.6.5 Multiple Vulnerabilities (Jan 2015)
+       Porta: 80 | Protocolo: tcp | Severidade: HIGH
+       Descrição: PHP is prone to multiple vulnerabilities.
+
+Grupo 93: Chave = ('PHP < 7.2.28 Multiple Vulnerabilities (Feb 2020) - Linux', 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: PHP < 7.2.28 Multiple Vulnerabilities (Feb 2020) - Linux
+       Porta: 80 | Protocolo: tcp | Severidade: HIGH
+       Descrição: PHP is prone to multiple vulnerabilities.
+
+Grupo 94: Chave = ('phpMyAdmin < 4.9.10, 5.x < 5.1.3 Information Disclosure Vulnerability - Linux', 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: phpMyAdmin < 4.9.10, 5.x < 5.1.3 Information Disclosure Vulnerability - Linux
+       Porta: 80 | Protocolo: tcp | Severidade: HIGH
+       Descrição: phpMyAdmin is prone to an information disclosure vulnerability.
+
+Grupo 95: Chave = ('PHP < 5.5.21, 5.6.x < 5.6.5 Multiple DoS Vulnerabilities (Jan 2015)', 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: PHP < 5.5.21, 5.6.x < 5.6.5 Multiple DoS Vulnerabilities (Jan 2015)
+       Porta: 80 | Protocolo: tcp | Severidade: HIGH
+       Descrição: PHP is prone to multiple denial of service (DoS) vulnerabilities. Quality of Detection (QoD): 30%
+
+Grupo 96: Chave = ('PHP < 5.5.24, 5.6.x < 5.6.8 DoS Vulnerability - Linux', 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: PHP < 5.5.24, 5.6.x < 5.6.8 DoS Vulnerability - Linux
+       Porta: 80 | Protocolo: tcp | Severidade: HIGH
+       Descrição: PHP is prone to a denial of service (DoS) vulnerability. Quality of Detection (QoD): 30%
+
+Grupo 97: Chave = ('PHP < 5.6.12 Multiple DoS Vulnerabilities - Linux', 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: PHP < 5.6.12 Multiple DoS Vulnerabilities - Linux
+       Porta: 80 | Protocolo: tcp | Severidade: HIGH
+       Descrição: PHP is prone to multiple denial of service (DoS) vulnerabilities. Quality of Detection (QoD): 30%
+
+Grupo 98: Chave = ('PHP < 5.6.31 DoS Vulnerability - Linux', 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: PHP < 5.6.31 DoS Vulnerability - Linux
+       Porta: 80 | Protocolo: tcp | Severidade: HIGH
+       Descrição: PHP is prone to a denial of service (DoS) vulnerability. Quality of Detection (QoD): 30%
+
+Grupo 99: Chave = ('PHP < 5.6.31, 7.x < 7.0.17, 7.1.x < 7.1.3 DoS Vulnerability (Jul 2017) - Linux', 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: PHP < 5.6.31, 7.x < 7.0.17, 7.1.x < 7.1.3 DoS Vulnerability (Jul 2017) - Linux
+       Porta: 80 | Protocolo: tcp | Severidade: HIGH
+       Descrição: PHP is prone to a denial of service (DoS) vulnerability. Quality of Detection (QoD): 30%
+
+Grupo 100: Chave = ('PHP Multiple Vulnerabilities (Jan 2015)', 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: PHP Multiple Vulnerabilities (Jan 2015)
+       Porta: 80 | Protocolo: tcp | Severidade: HIGH
+       Descrição: PHP is prone to multiple vulnerabilities. Quality of Detection (QoD): 30%
+
+Grupo 101: Chave = ('PHP Out of Bounds Read Vulnerability (Jan 2015)', 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: PHP Out of Bounds Read Vulnerability (Jan 2015)
+       Porta: 80 | Protocolo: tcp | Severidade: HIGH
+       Descrição: PHP is prone to an out of bounds read vulnerability. Quality of Detection (QoD): 30%
+
+Grupo 102: Chave = ('PHP Multiple Heap Buer Overow and Information Disclosure Vulnerabilities (Aug 2018) - Linux', 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: PHP Multiple Heap Buer Overow and Information Disclosure Vulnerabilities (Aug 2018) - Linux
+       Porta: 80 | Protocolo: tcp | Severidade: HIGH
+       Descrição: PHP is prone to multiple heap buer overow and information disclosure vulnerabilities.
+
+Grupo 103: Chave = ('PHP < 8.1.33, 8.2.x < 8.2.29, 8.3.x < 8.3.23, 8.4.x < 8.4.10 Multiple Vulnerabilities - Linux', 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: PHP < 8.1.33, 8.2.x < 8.2.29, 8.3.x < 8.3.23, 8.4.x < 8.4.10 Multiple Vulnerabilities - Linux
+       Porta: 80 | Protocolo: tcp | Severidade: HIGH
+       Descrição: PHP is prone to multiple vulnerabilities.
+
+Grupo 104: Chave = ("Apache HTTP Server 'Whitespace Defects' Multiple Vulnerabilities", 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Apache HTTP Server 'Whitespace Defects' Multiple Vulnerabilities
+       Porta: 80 | Protocolo: tcp | Severidade: HIGH
+       Descrição: Apache HTTP Server is prone to multiple vulnerabilities.
+
+Grupo 105: Chave = ("Apache HTTP Server 'mod_auth_digest' DoS Vulnerability - Linux", 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Apache HTTP Server 'mod_auth_digest' DoS Vulnerability - Linux
+       Porta: 80 | Protocolo: tcp | Severidade: HIGH
+       Descrição: Apache HTTP Server is prone to a denial of service (DoS) vulnerability.
+
+Grupo 106: Chave = ('Apache HTTP Server < 2.4.38 mod_session_cookie Vulnerability - Linux', 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Apache HTTP Server < 2.4.38 mod_session_cookie Vulnerability - Linux
+       Porta: 80 | Protocolo: tcp | Severidade: MEDIUM
+       Descrição: In Apache HTTP Server mod_session checks the session expiry time before decoding the session. This causes session expiry time to be ignored for mod_session_cookie sessions since the expiry time is loa...
+
+Grupo 107: Chave = ('Apache HTTP Server < 2.4.39 mod_auth_digest Access Control Bypass Vulnerability - Linux', 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Apache HTTP Server < 2.4.39 mod_auth_digest Access Control Bypass Vulnerability - Linux
+       Porta: 80 | Protocolo: tcp | Severidade: HIGH
+       Descrição: In Apache HTTP Server, a race condition in mod_auth_digest when running in a threaded server could allow a user with valid credentials to authenticate using another username, bypassing configured acce...
+
+Grupo 108: Chave = ("Apache HTTP Server < 2.4.58 'mod_macro' Out-of-bounds Read Vulnerability - Linux", 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Apache HTTP Server < 2.4.58 'mod_macro' Out-of-bounds Read Vulnerability - Linux
+       Porta: 80 | Protocolo: tcp | Severidade: HIGH
+       Descrição: Apache HTTP Server is prone to an out-of-bounds read vulnerability in mod_macro.
+
+Grupo 109: Chave = ('Apache HTTP Server < 2.4.59 Multiple Vulnerabilities - Linux', 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Apache HTTP Server < 2.4.59 Multiple Vulnerabilities - Linux
+       Porta: 80 | Protocolo: tcp | Severidade: HIGH
+       Descrição: Apache HTTP Server is prone to multiple vulnerabilities.
+
+Grupo 110: Chave = ('Apache HTTP Server Denial of Service Vulnerability-02 (Apr 2018) - Linux', 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Apache HTTP Server Denial of Service Vulnerability-02 (Apr 2018) - Linux
+       Porta: 80 | Protocolo: tcp | Severidade: HIGH
+       Descrição: Apache HTTP Server is prone to a denial of service vulnerability.
+
+Grupo 111: Chave = ('PHP < 7.3.27, 7.4.x < 7.4.15, 8.0.x < 8.0.2 NULL Deference Vulnerability (Feb 2021) - Linux', 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: PHP < 7.3.27, 7.4.x < 7.4.15, 8.0.x < 8.0.2 NULL Deference Vulnerability (Feb 2021) - Linux
+       Porta: 80 | Protocolo: tcp | Severidade: MEDIUM
+       Descrição: PHP is prone to a NULL dereference vulnerability in the SoapClient.
+
+Grupo 112: Chave = ('Apache HTTP Server OPTIONS Memory Leak Vulnerability (Optionsbleed) - Version Check', 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Apache HTTP Server OPTIONS Memory Leak Vulnerability (Optionsbleed) - Version Check
+       Porta: 80 | Protocolo: tcp | Severidade: HIGH
+       Descrição: Apache HTTP Server allows remote attackers to read secret data from process memory if the Limit directive can be set in a user's .htaccess le, or if httpd.conf has certain miscongurations, aka Options...
+
+Grupo 113: Chave = ("PHP 'CVE-2017-7189' Improper Input Validation Vulnerability - Linux", 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: PHP 'CVE-2017-7189' Improper Input Validation Vulnerability - Linux
+       Porta: 80 | Protocolo: tcp | Severidade: HIGH
+       Descrição: PHP is improperly validating input from untrusted input. Quality of Detection (QoD): 30%
+
+Grupo 114: Chave = ('PHP 5.4.44, 5.5.x < 5.5.28, 5.6.x < 5.6.12 Multiple Vulnerabilities (Mar 2016) - Linux', 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: PHP 5.4.44, 5.5.x < 5.5.28, 5.6.x < 5.6.12 Multiple Vulnerabilities (Mar 2016) - Linux
+       Porta: 80 | Protocolo: tcp | Severidade: HIGH
+       Descrição: PHP is prone to multiple vulnerabilities. Quality of Detection (QoD): 30%
+
+Grupo 115: Chave = ('PHP < 5.6.32, 7.x < 7.0.24, 7.1.x < 7.1.11 Heap Based Buer Overow Vulnerability - Linux', 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: PHP < 5.6.32, 7.x < 7.0.24, 7.1.x < 7.1.11 Heap Based Buer Overow Vulnerability - Linux
+       Porta: 80 | Protocolo: tcp | Severidade: HIGH
+       Descrição: PHP is prone to a heap buer overow vulnerability. Quality of Detection (QoD): 30%
+
+Grupo 116: Chave = ('PHP 5.4.x < 5.4.36, 5.5.x < 5.5.20, 5.6.x < 5.6.4 Use After Free Vulnerability (Jan 2015)', 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: PHP 5.4.x < 5.4.36, 5.5.x < 5.5.20, 5.6.x < 5.6.4 Use After Free Vulnerability (Jan 2015)
+       Porta: 80 | Protocolo: tcp | Severidade: HIGH
+       Descrição: PHP is prone to an use after free vulnerability. Quality of Detection (QoD): 30%
+
+Grupo 117: Chave = ('PHP 5.4.x < 5.4.37, 5.5.x < 5.5.21, 5.6.x < 5.6.5 Multiple Vulnerabilities (Feb 2015)', 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: PHP 5.4.x < 5.4.37, 5.5.x < 5.5.21, 5.6.x < 5.6.5 Multiple Vulnerabilities (Feb 2015)
+       Porta: 80 | Protocolo: tcp | Severidade: HIGH
+       Descrição: PHP is prone to multiple vulnerabilities. Quality of Detection (QoD): 30%
+
+Grupo 118: Chave = ('PHP 5.4.x < 5.4.40, 5.5.x < 5.5.22, 5.6.x < 5.6.6 RCE Vulnerability (Jul 2015) - Linux', 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: PHP 5.4.x < 5.4.40, 5.5.x < 5.5.22, 5.6.x < 5.6.6 RCE Vulnerability (Jul 2015) - Linux
+       Porta: 80 | Protocolo: tcp | Severidade: HIGH
+       Descrição: PHP is prone to a remote code execution (RCE) vulnerability. Quality of Detection (QoD): 30%
+
+Grupo 119: Chave = ('PHP 5.x < 5.6.39, 7.x < 7.0.33, 7.1.x < 7.1.26, 7.2.x < 7.2.14 DoS Vulnerability - Linux', 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: PHP 5.x < 5.6.39, 7.x < 7.0.33, 7.1.x < 7.1.26, 7.2.x < 7.2.14 DoS Vulnerability - Linux
+       Porta: 80 | Protocolo: tcp | Severidade: HIGH
+       Descrição: PHP is prone to a denial of service (DoS) vulnerability.
+
+Grupo 120: Chave = ('PHP < 7.2.30, 7.3 < 7.3.17, 7.4 < 7.4.5 DoS Vulnerability (Apr 2020) - Linux', 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: PHP < 7.2.30, 7.3 < 7.3.17, 7.4 < 7.4.5 DoS Vulnerability (Apr 2020) - Linux
+       Porta: 80 | Protocolo: tcp | Severidade: HIGH
+       Descrição: PHP is prone to a denial of service (DoS) vulnerability.
+
+Grupo 121: Chave = ('PHP < 5.4.38, 5.5.x < 5.5.22, 5.6.x < 5.6.6 Multiple RCE Vulnerabilities (Jul 2015) - Linux', 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: PHP < 5.4.38, 5.5.x < 5.5.22, 5.6.x < 5.6.6 Multiple RCE Vulnerabilities (Jul 2015) - Linux
+       Porta: 80 | Protocolo: tcp | Severidade: HIGH
+       Descrição: PHP is prone to multiple vulnerabilities. Quality of Detection (QoD): 30%
+
+Grupo 122: Chave = ('PHP < 5.4.39, 5.5.x < 5.5.23, 5.6.x < 5.6.7 Multiple Vulnerabilities - Linux', 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: PHP < 5.4.39, 5.5.x < 5.5.23, 5.6.x < 5.6.7 Multiple Vulnerabilities - Linux
+       Porta: 80 | Protocolo: tcp | Severidade: HIGH
+       Descrição: PHP is prone to multiple vulnerabilities. Quality of Detection (QoD): 30%
+
+Grupo 123: Chave = ('PHP < 5.4.41, 5.5.x < 5.5.25, 5.6.x < 5.6.9 Multiple Vulnerabilities - Linux', 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: PHP < 5.4.41, 5.5.x < 5.5.25, 5.6.x < 5.6.9 Multiple Vulnerabilities - Linux
+       Porta: 80 | Protocolo: tcp | Severidade: MEDIUM
+       Descrição: PHP is prone to multiple vulnerabilities.
+
+Grupo 124: Chave = ('PHP < 5.5.32, 5.6.x < 5.6.18, 7.x < 7.0.3 Privilege Escalation Vulnerability - Linux', 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: PHP < 5.5.32, 5.6.x < 5.6.18, 7.x < 7.0.3 Privilege Escalation Vulnerability - Linux
+       Porta: 80 | Protocolo: tcp | Severidade: HIGH
+       Descrição: PHP is prone to a privilege escalation vulnerability.
+
+Grupo 125: Chave = ('PHP < 5.6.0 DoS Vulnerability - Linux', 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: PHP < 5.6.0 DoS Vulnerability - Linux
+       Porta: 80 | Protocolo: tcp | Severidade: HIGH
+       Descrição: PHP is prone to a denial of service (DoS) vulnerability.
+
+Grupo 126: Chave = ('PHP < 5.4.45, 5.5.x < 5.5.29, 5.6.x < 5.6.13 RCE Vulnerability (Mar 2016) - Linux', 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: PHP < 5.4.45, 5.5.x < 5.5.29, 5.6.x < 5.6.13 RCE Vulnerability (Mar 2016) - Linux
+       Porta: 80 | Protocolo: tcp | Severidade: HIGH
+       Descrição: PHP is prone to a remote code execution (RCE) vulnerability.
+
+Grupo 127: Chave = ('PHP 5.4.x < 5.4.27, 5.5.x < 5.5.12 Privilege Escalation Vulnerability', 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: PHP 5.4.x < 5.4.27, 5.5.x < 5.5.12 Privilege Escalation Vulnerability
+       Porta: 80 | Protocolo: tcp | Severidade: HIGH
+       Descrição: PHP is prone to a privilege escalation vulnerability.
+
+Grupo 128: Chave = ('PHP < 5.4.44, 5.5.x < 5.5.28, 5.6.x < 5.6.12, 7.x < 7.0.4 DoS and Information Disclosure Vulnerability - Linux', 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: PHP < 5.4.44, 5.5.x < 5.5.28, 5.6.x < 5.6.12, 7.x < 7.0.4 DoS and Information Disclosure Vulnerability - Linux
+       Porta: 80 | Protocolo: tcp | Severidade: HIGH
+       Descrição: PHP is prone to a denial of service (DoS) and an information disclosure vulnerability.
+
+Grupo 129: Chave = ('PHP 5.3.7 - 7.3.31, 7.4.x < 7.4.25, 8.0.x < 8.0.12 Security Update (Oct 2021) - Linux', 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: PHP 5.3.7 - 7.3.31, 7.4.x < 7.4.25, 8.0.x < 8.0.12 Security Update (Oct 2021) - Linux
+       Porta: 80 | Protocolo: tcp | Severidade: HIGH
+       Descrição: PHP released new versions which includes a security x.
+
+Grupo 130: Chave = ('Oracle MySQL Security Update (cpujul2018 - 02) - Linux', 3306, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Oracle MySQL Security Update (cpujul2018 - 02) - Linux
+       Porta: 3306 | Protocolo: tcp | Severidade: MEDIUM
+       Descrição: Oracle MySQL is prone to multiple vulnerabilities.
+
+Grupo 131: Chave = ('Oracle MySQL Server <= 5.6.49 / 5.7 <= 5.7.31 / 8.0 <= 8.0.21 Security Update (cpuoct2020) - Linux', 3306, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Oracle MySQL Server <= 5.6.49 / 5.7 <= 5.7.31 / 8.0 <= 8.0.21 Security Update (cpuoct2020) - Linux
+       Porta: 3306 | Protocolo: tcp | Severidade: MEDIUM
+       Descrição: Oracle MySQL Server is prone to multiple vulnerabilities.
+
+Grupo 132: Chave = ('Oracle MySQL Server <= 8.0.41, 8.1 <= 8.4.4, 9.0 <= 9.2.0 Security Update (cpuapr2025)', 3306, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Oracle MySQL Server <= 8.0.41, 8.1 <= 8.4.4, 9.0 <= 9.2.0 Security Update (cpuapr2025)
+       Porta: 3306 | Protocolo: tcp | Severidade: MEDIUM
+       Descrição: Oracle MySQL Server is prone to multiple vulnerabilities.
+
+Grupo 133: Chave = ('Oracle MySQL Server <= 5.6.45 / 5.7 <= 5.7.27 / 8.0 <= 8.0.17 Security Update (cpuoct2019) - Linux', 3306, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Oracle MySQL Server <= 5.6.45 / 5.7 <= 5.7.27 / 8.0 <= 8.0.17 Security Update (cpuoct2019) - Linux
+       Porta: 3306 | Protocolo: tcp | Severidade: MEDIUM
+       Descrição: Oracle MySQL Server is prone to multiple vulnerabilities. Quality of Detection (QoD): 30%
+
+Grupo 134: Chave = ('Oracle MySQL Server <= 5.7.32 / 8.0 <= 8.0.22 Security Update (cpuapr2021) - Linux', 3306, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Oracle MySQL Server <= 5.7.32 / 8.0 <= 8.0.22 Security Update (cpuapr2021) - Linux
+       Porta: 3306 | Protocolo: tcp | Severidade: MEDIUM
+       Descrição: Oracle MySQL Server is prone to multiple vulnerabilities. Quality of Detection (QoD): 30%
+
+Grupo 135: Chave = ('Oracle MySQL Server <= 5.6.46 Security Update (cpujan2020) - Linux', 3306, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Oracle MySQL Server <= 5.6.46 Security Update (cpujan2020) - Linux
+       Porta: 3306 | Protocolo: tcp | Severidade: MEDIUM
+       Descrição: Oracle MySQL Server is prone to an unspecied denial of service vulnerability. Quality of Detection (QoD): 30%
+
+Grupo 136: Chave = ('Oracle MySQL Server <= 5.6.44 / 5.7 <= 5.7.26 / 8.0 <= 8.0.16 Security Update (cpu-jul2019) - Linux', 3306, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Oracle MySQL Server <= 5.6.44 / 5.7 <= 5.7.26 / 8.0 <= 8.0.16 Security Update (cpu-jul2019) - Linux
+       Porta: 3306 | Protocolo: tcp | Severidade: MEDIUM
+       Descrição: Oracle MySQL Server is prone to multiple vulnerabilities.
+
+Grupo 137: Chave = ('Oracle MySQL Server <= 5.6.44 / 5.7 <= 5.7.26 / 8.0 <= 8.0.16 Security Update (cpuoct2019) - Linux', 3306, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Oracle MySQL Server <= 5.6.44 / 5.7 <= 5.7.26 / 8.0 <= 8.0.16 Security Update (cpuoct2019) - Linux
+       Porta: 3306 | Protocolo: tcp | Severidade: MEDIUM
+       Descrição: Oracle MySQL Server is prone to a local unauthenticated vulnerability.
+
+Grupo 138: Chave = ('Oracle MySQL Server <= 5.6.42 / 5.7 <= 5.7.24 / 8.0 <= 8.0.13 Security Update (cpuapr2019) - Linux', 3306, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Oracle MySQL Server <= 5.6.42 / 5.7 <= 5.7.24 / 8.0 <= 8.0.13 Security Update (cpuapr2019) - Linux
+       Porta: 3306 | Protocolo: tcp | Severidade: MEDIUM
+       Descrição: Oracle MySQL Server is prone to a vulnerability in the libmysqld subcomponent.
+
+Grupo 139: Chave = ('Oracle MySQL Backronym Vulnerability (Jun 2016) - Linux', 3306, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Oracle MySQL Backronym Vulnerability (Jun 2016) - Linux
+       Porta: 3306 | Protocolo: tcp | Severidade: MEDIUM
+       Descrição: Oracle MySQL is prone to a backronym vulnerability.
+
+Grupo 140: Chave = ('Oracle MySQL Server <= 5.7.42, 8.x <= 8.0.33 Security Update (cpujul2023) - Linux', 3306, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Oracle MySQL Server <= 5.7.42, 8.x <= 8.0.33 Security Update (cpujul2023) - Linux
+       Porta: 3306 | Protocolo: tcp | Severidade: MEDIUM
+       Descrição: Oracle MySQL Server is prone to a unspecied vulnerability.
+
+Grupo 141: Chave = ('Oracle MySQL Server <= 5.6.43 / 5.7 <= 5.7.25 / 8.0 <= 8.0.15 Security Update (cpuapr2019) - Linux', 3306, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Oracle MySQL Server <= 5.6.43 / 5.7 <= 5.7.25 / 8.0 <= 8.0.15 Security Update (cpuapr2019) - Linux
+       Porta: 3306 | Protocolo: tcp | Severidade: MEDIUM
+       Descrição: Oracle MySQL Server is prone to multiple vulnerabilities.
+
+Grupo 142: Chave = ('Oracle MySQL Server <= 8.0.43, 8.1.x <= 8.4.7, 9.0.0 <= 9.4.0 Security Update (cpuoct2025) - Linux', 3306, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Oracle MySQL Server <= 8.0.43, 8.1.x <= 8.4.7, 9.0.0 <= 9.4.0 Security Update (cpuoct2025) - Linux
+       Porta: 3306 | Protocolo: tcp | Severidade: MEDIUM
+       Descrição: Oracle MySQL Server is prone to multiple vulnerabilities.
+
+Grupo 143: Chave = ('Oracle MySQL Server <= 8.0.43, 8.1.x <= 8.4.7, 9.0.0 <= 9.4.0 Security Update (.', 3306, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Oracle MySQL Server <= 8.0.43, 8.1.x <= 8.4.7, 9.0.0 <= 9.4.0 Security Update (.
+       Porta: 3306 | Protocolo: tcp | Severidade: MEDIUM
+       Descrição: Oracle MySQL Server is prone to multiple vulnerabilities.
+
+Grupo 144: Chave = ('Oracle MySQL Server <= 5.6.46 / 5.7 <= 5.7.26 Security Update (cpuapr2020) - Linux', 3306, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Oracle MySQL Server <= 5.6.46 / 5.7 <= 5.7.26 Security Update (cpuapr2020) - Linux
+       Porta: 3306 | Protocolo: tcp | Severidade: MEDIUM
+       Descrição: Oracle MySQL Server is prone to multiple vulnerabilities in OpenSSL.
+
+Grupo 145: Chave = ('Oracle MySQL Server <= 8.0.39, 8.1 <= 8.4.1, 9.0 <= 9.0.1 Security Update (cpuoct2024) - Linux', 3306, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Oracle MySQL Server <= 8.0.39, 8.1 <= 8.4.1, 9.0 <= 9.0.1 Security Update (cpuoct2024) - Linux
+       Porta: 3306 | Protocolo: tcp | Severidade: MEDIUM
+       Descrição: Oracle MySQL Server is prone to a denial of service (DoS) vulnerability.
+
+Grupo 146: Chave = ('Oracle MySQL Server <= 5.7.39 / 8.0 <= 8.0.30 Security Update (cpuoct2022) - Linux', 3306, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Oracle MySQL Server <= 5.7.39 / 8.0 <= 8.0.30 Security Update (cpuoct2022) - Linux
+       Porta: 3306 | Protocolo: tcp | Severidade: MEDIUM
+       Descrição: Oracle MySQL Server is prone to multiple vulnerabilities.
+
+Grupo 147: Chave = ('Oracle MySQL Server <= 5.6.45 / 5.7 <= 5.7.27 Security Update (cpuoct2019) - Linux', 3306, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Oracle MySQL Server <= 5.6.45 / 5.7 <= 5.7.27 Security Update (cpuoct2019) - Linux
+       Porta: 3306 | Protocolo: tcp | Severidade: MEDIUM
+       Descrição: Oracle MySQL Server is prone to multiple vulnerabilities.
+
+Grupo 148: Chave = ('Oracle MySQL Server <= 5.7.43, 8.x <= 8.0.31 Security Update (cpuoct2023) - Linux', 3306, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Oracle MySQL Server <= 5.7.43, 8.x <= 8.0.31 Security Update (cpuoct2023) - Linux
+       Porta: 3306 | Protocolo: tcp | Severidade: MEDIUM
+       Descrição: Oracle MySQL Server is prone to denial of service (DoS) vulnerability.
+
+Grupo 149: Chave = ('Oracle MySQL Server <= 5.6.50 / 5.7 <= 5.7.32 / 8.0 <= 8.0.22 Security Update (cpujan2021) - Linux', 3306, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Oracle MySQL Server <= 5.6.50 / 5.7 <= 5.7.32 / 8.0 <= 8.0.22 Security Update (cpujan2021) - Linux
+       Porta: 3306 | Protocolo: tcp | Severidade: MEDIUM
+       Descrição: Oracle MySQL Server is prone to multiple vulnerabilities.
+
+Grupo 150: Chave = ('Oracle MySQL Server <= 5.7.41, 8.x <= 8.0.32 Security Update (cpujul2023) - Linux', 3306, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Oracle MySQL Server <= 5.7.41, 8.x <= 8.0.32 Security Update (cpujul2023) - Linux
+       Porta: 3306 | Protocolo: tcp | Severidade: MEDIUM
+       Descrição: Oracle MySQL Server is prone to a denial of service (DoS) vulnerability.
+
+Grupo 151: Chave = ('Oracle MySQL Server <= 5.7.33 Security Update (cpuapr2021) - Linux', 3306, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Oracle MySQL Server <= 5.7.33 Security Update (cpuapr2021) - Linux
+       Porta: 3306 | Protocolo: tcp | Severidade: MEDIUM
+       Descrição: Oracle MySQL Server is prone to a denial of service (DoS) vulnerability.
+
+Grupo 152: Chave = ('Oracle MySQL Server <= 5.7.42, 8.x <= 8.0.31 Security Update (cpuoct2023) - Linux', 3306, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Oracle MySQL Server <= 5.7.42, 8.x <= 8.0.31 Security Update (cpuoct2023) - Linux
+       Porta: 3306 | Protocolo: tcp | Severidade: MEDIUM
+       Descrição: Oracle MySQL Server is prone to multiple vulnerabilities.
+
+Grupo 153: Chave = ('Oracle MySQL Server <= 5.7.30 / 8.0 <= 8.0.17 Security Update (cpuapr2021) - Linux', 3306, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Oracle MySQL Server <= 5.7.30 / 8.0 <= 8.0.17 Security Update (cpuapr2021) - Linux
+       Porta: 3306 | Protocolo: tcp | Severidade: MEDIUM
+       Descrição: Oracle MySQL Server is prone to a denial of service (DoS) vulnerability.
+
+Grupo 154: Chave = ('Oracle MySQL Server <= 5.6.50 / 5.7 <= 5.7.30 / 8.0 <= 8.0.17 Security Update (cpujan2021) - Linux', 3306, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Oracle MySQL Server <= 5.6.50 / 5.7 <= 5.7.30 / 8.0 <= 8.0.17 Security Update (cpujan2021) - Linux
+       Porta: 3306 | Protocolo: tcp | Severidade: MEDIUM
+       Descrição: Oracle MySQL Server is prone to a denial of service (DoS) vulnerability.
+
+Grupo 155: Chave = ('Oracle MySQL Server <= 8.0.35 Security Update (cpuoct2024) - Linux', 3306, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Oracle MySQL Server <= 8.0.35 Security Update (cpuoct2024) - Linux
+       Porta: 3306 | Protocolo: tcp | Severidade: MEDIUM
+       Descrição: Oracle MySQL Server is prone to a denial of service (DoS) vulnerability. Quality of Detection (QoD): 30%
+
+Grupo 156: Chave = ('Oracle MySQL Server <= 8.0.38, 8.1 <= 8.4.1, 9.0 <= 9.0.1 Security Update (cpuoct2024) - Linux', 3306, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Oracle MySQL Server <= 8.0.38, 8.1 <= 8.4.1, 9.0 <= 9.0.1 Security Update (cpuoct2024) - Linux
+       Porta: 3306 | Protocolo: tcp | Severidade: MEDIUM
+       Descrição: Oracle MySQL Server is prone to a denial of service (DoS) vulnerability. Quality of Detection (QoD): 30%
+
+Grupo 157: Chave = ('Oracle MySQL Server <= 5.7.40 Security Update (cpujan2023) - Linux', 3306, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Oracle MySQL Server <= 5.7.40 Security Update (cpujan2023) - Linux
+       Porta: 3306 | Protocolo: tcp | Severidade: MEDIUM
+       Descrição: Oracle MySQL Server is prone to a denial of service (DoS) vulnerability. Quality of Detection (QoD): 30%
+
+Grupo 158: Chave = ('Oracle MySQL Security Update (cpujul2018 - 04) - Linux', 3306, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Oracle MySQL Security Update (cpujul2018 - 04) - Linux
+       Porta: 3306 | Protocolo: tcp | Severidade: MEDIUM
+       Descrição: Oracle MySQL is prone to a denial of service (DoS) vulnerability. Quality of Detection (QoD): 30%
+
+Grupo 159: Chave = ('Oracle MySQL Server <= 8.0.39, 8.1 <= 8.4.0 Security Update (cpuoct2024) - Linux', 3306, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Oracle MySQL Server <= 8.0.39, 8.1 <= 8.4.0 Security Update (cpuoct2024) - Linux
+       Porta: 3306 | Protocolo: tcp | Severidade: MEDIUM
+       Descrição: Oracle MySQL Server is prone to a denial of service (DoS) vulnerability. Quality of Detection (QoD): 30%
+
+Grupo 160: Chave = ('Oracle MySQL Server <= 5.7.36 / 8.0 <= 8.0.27 Security Update (cpuoct2022) - Linux', 3306, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Oracle MySQL Server <= 5.7.36 / 8.0 <= 8.0.27 Security Update (cpuoct2022) - Linux
+       Porta: 3306 | Protocolo: tcp | Severidade: MEDIUM
+       Descrição: Oracle MySQL Server is prone to a denial of service (DoS) vulnerability.
+
+Grupo 161: Chave = ('Oracle MySQL Server <= 5.7.39 / 8.0 <= 8.0.16 Security Update (cpuoct2022) - Linux', 3306, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Oracle MySQL Server <= 5.7.39 / 8.0 <= 8.0.16 Security Update (cpuoct2022) - Linux
+       Porta: 3306 | Protocolo: tcp | Severidade: MEDIUM
+       Descrição: Oracle MySQL Server is prone to an information disclosure vulnerability.
+
+Grupo 162: Chave = ('Oracle MySQL Server <= 5.7.39 / 8.0 <= 8.0.29 Security Update (cpuoct2022) - Linux', 3306, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Oracle MySQL Server <= 5.7.39 / 8.0 <= 8.0.29 Security Update (cpuoct2022) - Linux
+       Porta: 3306 | Protocolo: tcp | Severidade: MEDIUM
+       Descrição: Oracle MySQL Server is prone to an information disclosure vulnerability.
+
+Grupo 163: Chave = ('Apache HTTP Server Multiple Vulnerabilities (May 2015)', 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Apache HTTP Server Multiple Vulnerabilities (May 2015)
+       Porta: 80 | Protocolo: tcp | Severidade: MEDIUM
+       Descrição: Apache HTTP Server is prone to a denial of service vulnerability.
+
+Grupo 164: Chave = ('Apache HTTP Server Multiple Vulnerabilities (Sep 2014) - Linux', 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Apache HTTP Server Multiple Vulnerabilities (Sep 2014) - Linux
+       Porta: 80 | Protocolo: tcp | Severidade: MEDIUM
+       Descrição: Apache HTTP Server is prone to multiple vulnerabilities. Quality of Detection (QoD): 30%
+
+Grupo 165: Chave = ('PHP < 5.4.40, 5.5.x < 5.5.24, 5.6.x < 5.6.8 Improper Input Validation Vulnerability (Jun 2015) - Linux', 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: PHP < 5.4.40, 5.5.x < 5.5.24, 5.6.x < 5.6.8 Improper Input Validation Vulnerability (Jun 2015) - Linux
+       Porta: 80 | Protocolo: tcp | Severidade: MEDIUM
+       Descrição: PHP is prone to an improper input validation vulnerability.
+
+Grupo 166: Chave = ('PHP < 5.5.30, 5.6.x < 5.6.14 Multiple DoS Vulnerabilities - Linux', 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: PHP < 5.5.30, 5.6.x < 5.6.14 Multiple DoS Vulnerabilities - Linux
+       Porta: 80 | Protocolo: tcp | Severidade: MEDIUM
+       Descrição: PHP is prone to multiple denial of service (DoS) vulnerabilities.
+
+Grupo 167: Chave = ('PHP Heap Use-After-Free Vulnerability (Sep 2019) - Linux', 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: PHP Heap Use-After-Free Vulnerability (Sep 2019) - Linux
+       Porta: 80 | Protocolo: tcp | Severidade: MEDIUM
+       Descrição: PHP is prone to a heap-based use-after-free vulnerability.
+
+Grupo 168: Chave = ('PHP Multiple Vulnerabilities (Sep 2019) - Linux', 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: PHP Multiple Vulnerabilities (Sep 2019) - Linux
+       Porta: 80 | Protocolo: tcp | Severidade: MEDIUM
+       Descrição: PHP is prone to multiple vulnerabilities.
+
+Grupo 169: Chave = ('PHP 5.4.x < 5.4.32, 5.5.x < 5.5.15 Multiple Vulnerabilities (Aug 2014)', 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: PHP 5.4.x < 5.4.32, 5.5.x < 5.5.15 Multiple Vulnerabilities (Aug 2014)
+       Porta: 80 | Protocolo: tcp | Severidade: MEDIUM
+       Descrição: PHP is prone to multiple vulnerabilities.
+
+Grupo 170: Chave = ('PHP < 7.2.34, 7.3 < 7.3.23, 7.4 < 7.4.11 Multiple Vulnerabilities (Oct 2020) - Linux', 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: PHP < 7.2.34, 7.3 < 7.3.23, 7.4 < 7.4.11 Multiple Vulnerabilities (Oct 2020) - Linux
+       Porta: 80 | Protocolo: tcp | Severidade: MEDIUM
+       Descrição: PHP is prone to multiple vulnerabilities.
+
+Grupo 171: Chave = ('PHP < 7.3.31, 7.4.x < 7.4.24, 8.0.x < 8.0.11 Security Update (Sep 2021) - Linux', 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: PHP < 7.3.31, 7.4.x < 7.4.24, 8.0.x < 8.0.11 Security Update (Sep 2021) - Linux
+       Porta: 80 | Protocolo: tcp | Severidade: MEDIUM
+       Descrição: PHP released new versions which includes a security x. Quality of Detection (QoD): 30%
+
+Grupo 172: Chave = ('PHP < 7.2.26 Multiple Vulnerabilities (Dec 2019) - Linux', 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: PHP < 7.2.26 Multiple Vulnerabilities (Dec 2019) - Linux
+       Porta: 80 | Protocolo: tcp | Severidade: MEDIUM
+       Descrição: PHP is prone to multiple vulnerabilities. Quality of Detection (QoD): 30%
+
+Grupo 173: Chave = ('PHP < 7.4.31, 8.0.x < 8.0.24, 8.1.x < 8.1.11 Security Update - Linux', 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: PHP < 7.4.31, 8.0.x < 8.0.24, 8.1.x < 8.1.11 Security Update - Linux
+       Porta: 80 | Protocolo: tcp | Severidade: MEDIUM
+       Descrição: PHP is prone to multiple vulnerabilities. Quality of Detection (QoD): 30%
+
+Grupo 174: Chave = ('PHP 5.x < 7.1.20, 7.2.x < 7.2.8, 7.3.0alpha1 < 7.3.0alpha3 DoS Vulnerability - Linux', 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: PHP 5.x < 7.1.20, 7.2.x < 7.2.8, 7.3.0alpha1 < 7.3.0alpha3 DoS Vulnerability - Linux
+       Porta: 80 | Protocolo: tcp | Severidade: MEDIUM
+       Descrição: PHP is prone to a denial of service (DoS) vulnerability.   Quality of Detection (QoD): 30%
+
+Grupo 175: Chave = ('phpMyAdmin < 4.9.0 CSRF Vulnerability (PMASA-2019-4) - Linux', 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: phpMyAdmin < 4.9.0 CSRF Vulnerability (PMASA-2019-4) - Linux
+       Porta: 80 | Protocolo: tcp | Severidade: MEDIUM
+       Descrição: phpMyAdmin is prone to a CSRF vulnerability.
+
+Grupo 176: Chave = ('phpMyAdmin < 4.9.1 CSRF Vulnerability - Linux', 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: phpMyAdmin < 4.9.1 CSRF Vulnerability - Linux
+       Porta: 80 | Protocolo: tcp | Severidade: MEDIUM
+       Descrição: phpMyAdmin is prone to a CSRF vulnerability. Quality of Detection (QoD): 30%
+
+Grupo 177: Chave = ('jQuery < 3.4.0 Object Extensions Vulnerability', 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: jQuery < 3.4.0 Object Extensions Vulnerability
+       Porta: 80 | Protocolo: tcp | Severidade: MEDIUM
+       Descrição: jQuery is prone to multiple vulnerabilities regarding property injection in Object.prototype. Quality of Detection (QoD): 30%
+
+Grupo 178: Chave = ('phpMyAdmin Cross-Site Scripting Vulnerability (PMASA-2018-3) - Linux', 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: phpMyAdmin Cross-Site Scripting Vulnerability (PMASA-2018-3) - Linux
+       Porta: 80 | Protocolo: tcp | Severidade: MEDIUM
+       Descrição: phpMyAdmin is prone to a cross-site scripting (XSS) vulnerability. Quality of Detection (QoD): 30%
+
+Grupo 179: Chave = ('phpMyAdmin Multiple XSS Vulnerabilities (PMASA-2013-1) - Linux', 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: phpMyAdmin Multiple XSS Vulnerabilities (PMASA-2013-1) - Linux
+       Porta: 80 | Protocolo: tcp | Severidade: MEDIUM
+       Descrição: phpMyAdmin is prone to multiple cross-site scripting (XSS) vulnerabilities. Quality of Detection (QoD): 30%
+
+Grupo 180: Chave = ('phpMyAdmin <= 4.8.2 XSS Vulnerability (PMASA-2018-5) - Linux', 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: phpMyAdmin <= 4.8.2 XSS Vulnerability (PMASA-2018-5) - Linux
+       Porta: 80 | Protocolo: tcp | Severidade: MEDIUM
+       Descrição: phpMyAdmin is prone to an authenticated cross-site scripting (XSS) vulnerability. Quality of Detection (QoD): 30%
+
+Grupo 181: Chave = ('jQuery 1.0.3 < 3.5.0 XSS Vulnerability', 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: jQuery 1.0.3 < 3.5.0 XSS Vulnerability
+       Porta: 80 | Protocolo: tcp | Severidade: MEDIUM
+       Descrição: jQuery is prone to a cross-site scripting (XSS) vulnerability when appending HTML containing option elements. Quality of Detection (QoD): 30%
+
+Grupo 182: Chave = ('jQuery 1.2 < 3.5.0 XSS Vulnerability', 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: jQuery 1.2 < 3.5.0 XSS Vulnerability
+       Porta: 80 | Protocolo: tcp | Severidade: MEDIUM
+       Descrição: jQuery is prone to a cross-site scripting (XSS) vulnerability in jQuery.htmlPrelter and related methods.
+
+Grupo 183: Chave = ('PHP < 5.4.38, 5.5.x < 5.5.22, 5.6.x < 5.6.6 XSS Vulnerability (Aug 2016) - Linux', 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: PHP < 5.4.38, 5.5.x < 5.5.22, 5.6.x < 5.6.6 XSS Vulnerability (Aug 2016) - Linux
+       Porta: 80 | Protocolo: tcp | Severidade: MEDIUM
+       Descrição: PHP is prone to a cross-site scripting (XSS) vulnerability.
+
+Grupo 184: Chave = ('jQuery 1.4.2 <= 1.11.0 XSS Vulnerability', 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: jQuery 1.4.2 <= 1.11.0 XSS Vulnerability
+       Porta: 80 | Protocolo: tcp | Severidade: MEDIUM
+       Descrição: jQuery is prone to a cross-site scripting (XSS) vulnerability via vectors related to use of the text method inside after.
+
+Grupo 185: Chave = ('jQuery < 1.9.0 XSS Vulnerability', 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: jQuery < 1.9.0 XSS Vulnerability
+       Porta: 80 | Protocolo: tcp | Severidade: MEDIUM
+       Descrição: jQuery is prone to a cross-site scripting (XSS) vulnerability.
+
+Grupo 186: Chave = ('PHP < 5.6.33, 7.x < 7.0.27, 7.1.x < 7.1.13, 7.2.x < 7.2.1 Multiple Vulnerabilities - Linux', 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: PHP < 5.6.33, 7.x < 7.0.27, 7.1.x < 7.1.13, 7.2.x < 7.2.1 Multiple Vulnerabilities - Linux
+       Porta: 80 | Protocolo: tcp | Severidade: MEDIUM
+       Descrição: PHP is prone to multiple vulnerabilities.   Quality of Detection (QoD): 30%
+
+Grupo 187: Chave = ('jQuery < 3.0.0 XSS Vulnerability', 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: jQuery < 3.0.0 XSS Vulnerability
+       Porta: 80 | Protocolo: tcp | Severidade: MEDIUM
+       Descrição: jQuery is prone to a cross-site scripting (XSS) vulnerability. Quality of Detection (QoD): 30%
+
+Grupo 188: Chave = ('Apache HTTP Server 2.4.0 < 2.4.42 Multiple Vulnerabilities - Linux', 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Apache HTTP Server 2.4.0 < 2.4.42 Multiple Vulnerabilities - Linux
+       Porta: 80 | Protocolo: tcp | Severidade: MEDIUM
+       Descrição: Apache HTTP Server is prone to multiple vulnerabilities.
+
+Grupo 189: Chave = ('Apache HTTP Server 2.4.0 - 2.4.40 Multiple Vulnerabilities - Linux', 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Apache HTTP Server 2.4.0 - 2.4.40 Multiple Vulnerabilities - Linux
+       Porta: 80 | Protocolo: tcp | Severidade: MEDIUM
+       Descrição: Apache HTTP Server is prone to multiple vulnerabilities.
+
+Grupo 190: Chave = ('Apache HTTP Server CRLF Injection Vulnerability (Dec 2016) - Linux', 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Apache HTTP Server CRLF Injection Vulnerability (Dec 2016) - Linux
+       Porta: 80 | Protocolo: tcp | Severidade: MEDIUM
+       Descrição: Apache HTTP Server is prone to a CRLF injection vulnerability.
+
+Grupo 191: Chave = ('phpMyAdmin Multiple Security Vulnerabilities (Apr 2013) - Linux', 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: phpMyAdmin Multiple Security Vulnerabilities (Apr 2013) - Linux
+       Porta: 80 | Protocolo: tcp | Severidade: MEDIUM
+       Descrição: phpMyAdmin is prone to multiple security vulnerabilities.
+
+Grupo 192: Chave = ('PHP < 5.5.28, 5.6.x < 5.6.12 DoS Vulnerability (Jul 2016) - Linux', 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: PHP < 5.5.28, 5.6.x < 5.6.12 DoS Vulnerability (Jul 2016) - Linux
+       Porta: 80 | Protocolo: tcp | Severidade: MEDIUM
+       Descrição: PHP is prone to a denial of service (DoS) vulnerability.
+
+Grupo 193: Chave = ('PHP < 7.3.29 Multiple Vulnerabilities (Jul 2021) - Linux', 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: PHP < 7.3.29 Multiple Vulnerabilities (Jul 2021) - Linux
+       Porta: 80 | Protocolo: tcp | Severidade: MEDIUM
+       Descrição: PHP is prone to multiple vulnerabilities. Quality of Detection (QoD): 30%
+
+Grupo 194: Chave = ('PHP < 8.1.28, 8.2.x < 8.2.18, 8.3.x < 8.3.6 Security Update (GHSA-h746-cjrr-wfmr) - Linux', 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: PHP < 8.1.28, 8.2.x < 8.2.18, 8.3.x < 8.3.6 Security Update (GHSA-h746-cjrr-wfmr) - Linux
+       Porta: 80 | Protocolo: tcp | Severidade: MEDIUM
+       Descrição: PHP is prone to a vulnerability in password_verify. Quality of Detection (QoD): 30%
+
+Grupo 195: Chave = ('Apache HTTP Server 2.4.7 - 2.4.65 Authentication Bypass Vulnerability - Linux', 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Apache HTTP Server 2.4.7 - 2.4.65 Authentication Bypass Vulnerability - Linux
+       Porta: 80 | Protocolo: tcp | Severidade: MEDIUM
+       Descrição: Apache HTTP Server is prone to an authentication bypass vulnerability.
+
+Grupo 196: Chave = ('PHP < 8.0.22, 8.1.x < 8.1.9 Security Update - Linux', 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: PHP < 8.0.22, 8.1.x < 8.1.9 Security Update - Linux
+       Porta: 80 | Protocolo: tcp | Severidade: MEDIUM
+       Descrição: PHP is prone to a buer overow vulnerability.
+
+Grupo 197: Chave = ('PHP < 7.2.29 Multiple Vulnerabilities (Mar 2020) - Linux', 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: PHP < 7.2.29 Multiple Vulnerabilities (Mar 2020) - Linux
+       Porta: 80 | Protocolo: tcp | Severidade: MEDIUM
+       Descrição: PHP is prone to multiple vulnerabilities.
+
+Grupo 198: Chave = ('Apache HTTP Server 2.4.1 < 2.4.24 IP Spoofing Vulnerability - Linux', 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Apache HTTP Server 2.4.1 < 2.4.24 IP Spoofing Vulnerability - Linux
+       Porta: 80 | Protocolo: tcp | Severidade: MEDIUM
+       Descrição: Apache HTTP Server is prone to an IP address spoofing vulnerability when proxying using mod_remoteip and mod_rewrite.
+
+Grupo 199: Chave = ('Apache HTTP Server 2.4.6 - 2.4.46 Tunneling Misconfiguration Vulnerability - Linux', 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Apache HTTP Server 2.4.6 - 2.4.46 Tunneling Misconfiguration Vulnerability - Linux
+       Porta: 80 | Protocolo: tcp | Severidade: MEDIUM
+       Descrição: Apache HTTP Server is prone to a tunneling misconfiguration vulnerability.
+
+Grupo 200: Chave = ('PHP < 7.2.31, 7.3 < 7.3.18, 7.4 < 7.4.6 Multiple DoS Vulnerabilities (May 2020) - Linux', 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: PHP < 7.2.31, 7.3 < 7.3.18, 7.4 < 7.4.6 Multiple DoS Vulnerabilities (May 2020) - Linux
+       Porta: 80 | Protocolo: tcp | Severidade: MEDIUM
+       Descrição: PHP is prone to two Denial-of-Service vulnerabilities.
+
+Grupo 201: Chave = ('Apache HTTP Server < 2.4.39 URL Normalization Vulnerability - Linux', 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Apache HTTP Server < 2.4.39 URL Normalization Vulnerability - Linux
+       Porta: 80 | Protocolo: tcp | Severidade: MEDIUM
+       Descrição: When the path component of a request URL contains multiple consecutive slashes ('/'), directives such as LocationMatch and RewriteRule must account for duplicates in regular expressions while other as...
+
+Grupo 202: Chave = ('PHP < 7.3.26, 7.4.x < 7.4.14, 8.0.x < 8.0.1 Filter Vulnerability (Jan 2021) - Linux', 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: PHP < 7.3.26, 7.4.x < 7.4.14, 8.0.x < 8.0.1 Filter Vulnerability (Jan 2021) - Linux
+       Porta: 80 | Protocolo: tcp | Severidade: MEDIUM
+       Descrição: PHP is prone to a vulnerability where FILTER_VALIDATE_URL accepts URLs with invalid userinfo. Quality of Detection (QoD): 30%
+
+Grupo 203: Chave = ('phpinfo() Output Reporting (HTTP)', 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: phpinfo() Output Reporting (HTTP)
+       Porta: 80 | Protocolo: tcp | Severidade: MEDIUM
+       Descrição: Reporting of les containing the output of the phpinfo() PHP function previously detected via HTTP.
+
+Grupo 204: Chave = ('PHP < 7.3.33, 7.4.x < 7.4.26, 8.0.x < 8.0.13 Security Update (Nov 2021) - Linux', 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: PHP < 7.3.33, 7.4.x < 7.4.26, 8.0.x < 8.0.13 Security Update (Nov 2021) - Linux
+       Porta: 80 | Protocolo: tcp | Severidade: MEDIUM
+       Descrição: PHP released new versions which include a security x.
+
+Grupo 205: Chave = ('PHP 5.3.x < 5.3.29, 5.4.x < 5.4.30, 5.5.x < 5.5.14, 5.6.0alpha1 < 5.6.0 Heap Based Buer Overow Vulnerability - Linux', 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: PHP 5.3.x < 5.3.29, 5.4.x < 5.4.30, 5.5.x < 5.5.14, 5.6.0alpha1 < 5.6.0 Heap Based Buer Overow Vulnerability - Linux
+       Porta: 80 | Protocolo: tcp | Severidade: MEDIUM
+       Descrição: PHP is prone to a heap-based buer overow vulnerability.
+
+Grupo 206: Chave = ('Apache HTTP Server Multiple Vulnerabilities (Mar 2014) - Linux', 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Apache HTTP Server Multiple Vulnerabilities (Mar 2014) - Linux
+       Porta: 80 | Protocolo: tcp | Severidade: MEDIUM
+       Descrição: Apache HTTP Server is prone to multiple vulnerabilities.
+
+Grupo 207: Chave = ("Apache HTTP Server 'mod_lua' Denial of Service Vulnerability -01 (May 2015)", 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Apache HTTP Server 'mod_lua' Denial of Service Vulnerability -01 (May 2015)
+       Porta: 80 | Protocolo: tcp | Severidade: MEDIUM
+       Descrição: Apache HTTP Server is prone to a denial of service vulnerability. Quality of Detection (QoD): 30%
+
+Grupo 208: Chave = ('Apache HTTP Server < 2.4.64 Multiple Vulnerabilities - Linux', 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Apache HTTP Server < 2.4.64 Multiple Vulnerabilities - Linux
+       Porta: 80 | Protocolo: tcp | Severidade: MEDIUM
+       Descrição: Apache HTTP Server is prone to multiple vulnerabilities. Quality of Detection (QoD): 30%
+
+Grupo 209: Chave = ('Apache HTTP Server DoS Vulnerability (Sep 2014) - Linux', 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Apache HTTP Server DoS Vulnerability (Sep 2014) - Linux
+       Porta: 80 | Protocolo: tcp | Severidade: MEDIUM
+       Descrição: Apache HTTP Server is prone to a denial of service (DoS) vulnerability.
+
+Grupo 210: Chave = ('Apache HTTP Server Multiple Vulnerabilities (Aug 2015) - Linux', 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Apache HTTP Server Multiple Vulnerabilities (Aug 2015) - Linux
+       Porta: 80 | Protocolo: tcp | Severidade: MEDIUM
+       Descrição: Apache HTTP Server is prone to multiple vulnerabilities. Quality of Detection (QoD): 30%
+
+Grupo 211: Chave = ('Enabled Directory Listing/Indexing Detection (HTTP)', 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Enabled Directory Listing/Indexing Detection (HTTP)
+       Porta: 80 | Protocolo: tcp | Severidade: MEDIUM
+       Descrição: The script attempts to identify directories with an enabled directory listing/indexing on a remote web server. Quality of Detection (QoD): 30%
+
+Grupo 212: Chave = ("Missing 'HttpOnly' Cookie Attribute (HTTP)", 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Missing 'HttpOnly' Cookie Attribute (HTTP)
+       Porta: 80 | Protocolo: tcp | Severidade: MEDIUM
+       Descrição: The remote HTTP web server / application is missing to set the 'HttpOnly' cookie attribute for one or more sent HTTP cookie.
+
+Grupo 213: Chave = ('PHP 5.4.x < 5.4.35, 5.5.x < 5.5.19, 5.6.x < 5.6.3 DoS Vulnerability (Nov 2014)', 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: PHP 5.4.x < 5.4.35, 5.5.x < 5.5.19, 5.6.x < 5.6.3 DoS Vulnerability (Nov 2014)
+       Porta: 80 | Protocolo: tcp | Severidade: MEDIUM
+       Descrição: PHP is prone to a denial of service (DoS) vulnerability.
+
+Grupo 214: Chave = ('PHP 5.x < 5.4.29, 5.5.x < 5.5.13 Multiple DoS Vulnerabilities (Jun 2014)', 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: PHP 5.x < 5.4.29, 5.5.x < 5.5.13 Multiple DoS Vulnerabilities (Jun 2014)
+       Porta: 80 | Protocolo: tcp | Severidade: MEDIUM
+       Descrição: PHP is prone to multiple denial of service (DoS) vulnerabilities.
+
+Grupo 215: Chave = ('PHP < 7.3.28, 7.4.x < 7.4.18 IMAP Header Injection Vulnerability (Apr 2021) - Linux', 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: PHP < 7.3.28, 7.4.x < 7.4.18 IMAP Header Injection Vulnerability (Apr 2021) - Linux
+       Porta: 80 | Protocolo: tcp | Severidade: MEDIUM
+       Descrição: PHP is prone to an IMAP header injection vulnerability.
+
+Grupo 216: Chave = ('PHP < 7.3.30, 7.4.x < 7.4.23, 8.0.x < 8.0.10 Security Update (Aug 2021) - Linux', 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: PHP < 7.3.30, 7.4.x < 7.4.23, 8.0.x < 8.0.10 Security Update (Aug 2021) - Linux
+       Porta: 80 | Protocolo: tcp | Severidade: MEDIUM
+       Descrição: PHP released new versions which include security xes.
+
+Grupo 217: Chave = ('Unprotected Web App / Device Installers (HTTP)', 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Unprotected Web App / Device Installers (HTTP)
+       Porta: 80 | Protocolo: tcp | Severidade: MEDIUM
+       Descrição: The script attempts to identify installation/setup pages of various web apps/devices that are publicly accessible and not protected by e.g. account restrictions or having their setup nished.
+
+Grupo 218: Chave = ('Source Control Management (SCM) Files/Folders Accessible (HTTP)', 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Source Control Management (SCM) Files/Folders Accessible (HTTP)
+       Porta: 80 | Protocolo: tcp | Severidade: MEDIUM
+       Descrição: The script attempts to identify les/folders of a SCM accessible at the webserver. Quality of Detection (QoD): 70%
+
+Grupo 219: Chave = ('PHP < 5.6.35, 7.x < 7.0.29, 7.1.x < 7.1.16, 7.2.x < 7.2.4 Security Bypass Vulnerability (May 2018) - Linux', 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: PHP < 5.6.35, 7.x < 7.0.29, 7.1.x < 7.1.16, 7.2.x < 7.2.4 Security Bypass Vulnerability (May 2018) - Linux
+       Porta: 80 | Protocolo: tcp | Severidade: MEDIUM
+       Descrição: PHP is prone to a security bypass vulnerability. Quality of Detection (QoD): 30%
+
+Grupo 220: Chave = ('PHP 5.5.x < 5.5.15 Multiple Use After Free Vulnerabilities (Jul 2014)', 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: PHP 5.5.x < 5.5.15 Multiple Use After Free Vulnerabilities (Jul 2014)
+       Porta: 80 | Protocolo: tcp | Severidade: MEDIUM
+       Descrição: PHP is prone to multiple use after free vulnerabilities. Quality of Detection (QoD): 30%
+
+Grupo 221: Chave = ('phpMyAdmin 3.5.x < 3.5.3 Multiple Vulnerabilities (PMASA-2012-6, PMASA-2012-7) - Linux', 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: phpMyAdmin 3.5.x < 3.5.3 Multiple Vulnerabilities (PMASA-2012-6, PMASA-2012-7) - Linux
+       Porta: 80 | Protocolo: tcp | Severidade: MEDIUM
+       Descrição: phpMyAdmin is prone to multiple cross-site scripting (XSS) vulnerabilities.
+
+Grupo 222: Chave = ("Apache HTTP Server 'mod_lua' Denial of Service Vulnerability (May 2015)", 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Apache HTTP Server 'mod_lua' Denial of Service Vulnerability (May 2015)
+       Porta: 80 | Protocolo: tcp | Severidade: MEDIUM
+       Descrição: Apache HTTP Server is prone to a denial of service vulnerability.
+
+Grupo 223: Chave = ("Apache HTTP Server 'mod_cache' Denial of Service Vulnerability -01 (May 2015)", 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Apache HTTP Server 'mod_cache' Denial of Service Vulnerability -01 (May 2015)
+       Porta: 80 | Protocolo: tcp | Severidade: MEDIUM
+       Descrição: Apache HTTP Server is prone to a denial of service vulnerability. Quality of Detection (QoD): 30%
+
+Grupo 224: Chave = ('Apache HTTP Server < 2.4.66 SSI Vulnerability - Linux', 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Apache HTTP Server < 2.4.66 SSI Vulnerability - Linux
+       Porta: 80 | Protocolo: tcp | Severidade: MEDIUM
+       Descrição: Apache HTTP Server is prone to a Server Side Includes (SSI) vulnerability.
+
+Grupo 225: Chave = ('PHP < 5.4.32, 5.5.x < 5.5.16 DoS Vulnerability', 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: PHP < 5.4.32, 5.5.x < 5.5.16 DoS Vulnerability
+       Porta: 80 | Protocolo: tcp | Severidade: MEDIUM
+       Descrição: PHP is prone to a denial of service (DoS) vulnerability.
+
+Grupo 226: Chave = ('Apache HTTP Server 2.4.x < 2.4.66 Improper Neutralization Vulnerability - Linux', 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Apache HTTP Server 2.4.x < 2.4.66 Improper Neutralization Vulnerability - Linux
+       Porta: 80 | Protocolo: tcp | Severidade: MEDIUM
+       Descrição: Apache HTTP Server is prone to an improper neutralization vulnerability.
+
+Grupo 227: Chave = ('jQuery < 1.6.3 XSS Vulnerability', 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: jQuery < 1.6.3 XSS Vulnerability
+       Porta: 80 | Protocolo: tcp | Severidade: MEDIUM
+       Descrição: jQuery is prone to a cross-site scripting (XSS) vulnerability.
+
+Grupo 228: Chave = ('PHP < 8.0.29, 8.1.x < 8.1.20, 8.2.x < 8.2.7 Security Update - Linux', 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: PHP < 8.0.29, 8.1.x < 8.1.20, 8.2.x < 8.2.7 Security Update - Linux
+       Porta: 80 | Protocolo: tcp | Severidade: MEDIUM
+       Descrição: PHP is prone to a missing error check and insucient random bytes in HTTP Digest authenti- cation for SOAP vulnerability.
+
+Grupo 229: Chave = ('Oracle MySQL Server <= 5.7.40, 8.x <= 8.0.31 Security Update (cpuapr2023) - Linux', 3306, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Oracle MySQL Server <= 5.7.40, 8.x <= 8.0.31 Security Update (cpuapr2023) - Linux
+       Porta: 3306 | Protocolo: tcp | Severidade: LOW
+       Descrição: Oracle MySQL Server is prone to a denial of service (DoS) vulnerability.
+
+Grupo 230: Chave = ('Oracle MySQL Server <= 5.6.44 / 5.7 <= 5.7.18 Security Update (cpujul2019) - Linux', 3306, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Oracle MySQL Server <= 5.6.44 / 5.7 <= 5.7.18 Security Update (cpujul2019) - Linux
+       Porta: 3306 | Protocolo: tcp | Severidade: LOW
+       Descrição: Oracle MySQL Server is prone to an unspecied vulnerability.
+
+Grupo 231: Chave = ('TCP Timestamps Information Disclosure', 3306, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: TCP Timestamps Information Disclosure
+       Porta: 3306 | Protocolo: tcp | Severidade: LOW
+       Descrição: The remote host implements TCP timestamps and therefore allows to compute the uptime.
+
+Grupo 232: Chave = ('TCP Timestamps Information Disclosure', 'general', 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: TCP Timestamps Information Disclosure
+       Porta: general | Protocolo: tcp | Severidade: LOW
+       Descrição: The remote host implements TCP timestamps and therefore allows to compute the uptime.
+
+Grupo 233: Chave = ("PHP <= 5.6.0 'PEAR' Symlink Attack Vulnerability", 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: PHP <= 5.6.0 'PEAR' Symlink Attack Vulnerability
+       Porta: 80 | Protocolo: tcp | Severidade: LOW
+       Descrição: PHP is prone to a symlink attack vulnerability in the included PEAR installer. Quality of Detection (QoD): 30%
+
+Grupo 234: Chave = ('PHP < 7.2.33, 7.3 < 7.3.21, 7.4 < 7.4.9 DoS Vulnerability (Aug 2020) - Linux', 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: PHP < 7.2.33, 7.3 < 7.3.21, 7.4 < 7.4.9 DoS Vulnerability (Aug 2020) - Linux
+       Porta: 80 | Protocolo: tcp | Severidade: LOW
+       Descrição: PHP is prone to a denial of service vulnerability in the phar_parse_ziple function. Quality of Detection (QoD): 30%
+
+Grupo 235: Chave = ('ICMP Timestamp Reply Information Disclosure', 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: ICMP Timestamp Reply Information Disclosure
+       Porta: 80 | Protocolo: tcp | Severidade: LOW
+       Descrição: The remote host responded to an ICMP timestamp request. Quality of Detection (QoD): 80%
+
+Grupo 236: Chave = ('ICMP Timestamp Reply Information Disclosure', 'general', 'icmp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: ICMP Timestamp Reply Information Disclosure
+       Porta: general | Protocolo: icmp | Severidade: LOW
+       Descrição: The remote host responded to an ICMP timestamp request.
+
+Grupo 237: Chave = ('Database Open Access Information Disclosure Vulnerability', 3306, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Database Open Access Information Disclosure Vulnerability
+       Porta: 3306 | Protocolo: tcp | Severidade: LOG
+       Descrição: Various Database server might be prone to an information disclosure vulnerability if accessible to remote systems.
+
+Grupo 238: Chave = ('MariaDB / Oracle MySQL Detection (MySQL Protocol)', 3306, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: MariaDB / Oracle MySQL Detection (MySQL Protocol)
+       Porta: 3306 | Protocolo: tcp | Severidade: LOG
+       Descrição: MySQL protocol-based detection of MariaDB / Oracle MySQL.
+
+Grupo 239: Chave = (('Name', 'Services'), ('cvss', ('0.0',)), ('description', ('This plugin performs service detection.',)), ('detection_method', ()), ('detection_result', ('A MySQL server is running on this port',)), ('impact', ()), ('insight', ('This plugin attempts to guess which service is running on the remote port(s). For instance, it searches for a web server which could listen on another port than 80 or 443 and makes this information available for other check routines.',)), ('instances', ()), ('log_method', ()), ('plugin', None), ('plugin_details', ()), ('port', 3306), ('product_detection_result', ()), ('protocol', 'tcp'), ('references', ()), ('severity', 'LOG'), ('solution', ()), ('source', 'OPENVAS'))
+  Total de duplicatas neste grupo: 1
+    1. Nome: Services
+       Porta: 3306 | Protocolo: tcp | Severidade: LOG
+       Descrição: This plugin performs service detection.
+
+Grupo 240: Chave = ('Hostname Determination Reporting', 3306, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Hostname Determination Reporting
+       Porta: 3306 | Protocolo: tcp | Severidade: LOG
+       Descrição: The script reports information on how the hostname of the target was determined.
+
+Grupo 241: Chave = ('Hostname Determination Reporting', 'general', 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Hostname Determination Reporting
+       Porta: general | Protocolo: tcp | Severidade: LOG
+       Descrição: The script reports information on how the hostname of the target was determined.
+
+Grupo 242: Chave = ('Traceroute', 'general', 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Traceroute
+       Porta: general | Protocolo: tcp | Severidade: LOG
+       Descrição: Collect information about the network route and network distance between the scanner host and the target host.
+
+Grupo 243: Chave = ('IP Forwarding Enabled - Active Check', 'general', 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: IP Forwarding Enabled - Active Check
+       Porta: general | Protocolo: tcp | Severidade: LOG
+       Descrição: Checks if the remote host has IP forwarding enabled.
+
+Grupo 244: Chave = ('jQuery Detection Consolidation', 'general', 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: jQuery Detection Consolidation
+       Porta: general | Protocolo: tcp | Severidade: LOG
+       Descrição: Consolidation of jQuery detections.
+
+Grupo 245: Chave = ('OS Detection Consolidation and Reporting', 'general', 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: OS Detection Consolidation and Reporting
+       Porta: general | Protocolo: tcp | Severidade: LOG
+       Descrição: This script consolidates the OS information detected by several VTs and tries to find the best matching OS. Furthermore it reports all previously collected information leading to this best matching OS...
+
+Grupo 246: Chave = ('PHP Detection Consolidation', 'general', 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: PHP Detection Consolidation
+       Porta: general | Protocolo: tcp | Severidade: LOG
+       Descrição: Consolidation of PHP detections.
+
+Grupo 247: Chave = ('Apache HTTP Server Detection Consolidation', 'general', 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Apache HTTP Server Detection Consolidation
+       Porta: general | Protocolo: tcp | Severidade: LOG
+       Descrição: Consolidation of Apache HTTP Server detections.
+
+Grupo 248: Chave = ('CPE Inventory', 'general', 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: CPE Inventory
+       Porta: general | Protocolo: tcp | Severidade: LOG
+       Descrição: This routine uses information collected by other routines about CPE identities of operating systems, services and applications detected during the scan. Note: Some CPEs for specic products might show ...
+
+Grupo 249: Chave = ('CPE Inventory', 'general', 'CPE-T')
+  Total de duplicatas neste grupo: 1
+    1. Nome: CPE Inventory
+       Porta: general | Protocolo: CPE-T | Severidade: LOG
+       Descrição: This routine uses information collected by other routines about CPE identities of operating systems, services and applications detected during the scan. Note: Some CPEs for specic products might show ...
+
+Grupo 250: Chave = ('HTTP Security Headers Detection', 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: HTTP Security Headers Detection
+       Porta: 80 | Protocolo: tcp | Severidade: LOG
+       Descrição: All known security headers are being checked on the remote web server. On completion a report will hand back whether a specic security header has been implemented (including its value and if it is dep...
+
+Grupo 251: Chave = (('Name', 'Services'), ('cvss', ('0.0',)), ('description', ('This plugin performs service detection.', 'Quality of Detection (QoD): 80%')), ('detection_method', ()), ('detection_result', ('A web server is running on this port',)), ('impact', ()), ('insight', ('This plugin attempts to guess which service is running on the remote port(s). For instance, it searches for a web server which could listen on another port than 80 or 443 and makes this information available for other check routines.',)), ('instances', ()), ('log_method', ('Details: Services', 'OID:1.3.6.1.4.1.25623.1.0.10330', 'Version used: 2025-03-05T05:38:53Z')), ('plugin', None), ('plugin_details', ()), ('port', 80), ('product_detection_result', ()), ('protocol', 'tcp'), ('references', ()), ('severity', 'LOG'), ('solution', ()), ('source', 'OPENVAS'))
+  Total de duplicatas neste grupo: 1
+    1. Nome: Services
+       Porta: 80 | Protocolo: tcp | Severidade: LOG
+       Descrição: This plugin performs service detection. Quality of Detection (QoD): 80%
+
+Grupo 252: Chave = ('robot.txt / robots.txt exists on the Web Server (HTTP)', 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: robot.txt / robots.txt exists on the Web Server (HTTP)
+       Porta: 80 | Protocolo: tcp | Severidade: LOG
+       Descrição: Web Servers can use a le called /robot(s).txt to ask search engines to ignore certain les and directories. By nature this le can not be used to protect private les from public read access. Quality of ...
+
+Grupo 253: Chave = ('HTTP Server Banner Enumeration', 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: HTTP Server Banner Enumeration
+       Porta: 80 | Protocolo: tcp | Severidade: LOG
+       Descrição: This script tries to detect / enumerate different HTTP server banner (e.g. from a frontend, backend or proxy server) by sending various different HTTP requests (valid and invalid ones).
+
+Grupo 254: Chave = ('HTTP Server type and version', 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: HTTP Server type and version
+       Porta: 80 | Protocolo: tcp | Severidade: LOG
+       Descrição: This script detects and reports the HTTP Server's banner which might provide the type and version of it.
+
+Grupo 255: Chave = ('phpMyAdmin Detection (HTTP)', 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: phpMyAdmin Detection (HTTP)
+       Porta: 80 | Protocolo: tcp | Severidade: LOG
+       Descrição: HTTP based detection of phpMyAdmin.
+
+Grupo 256: Chave = ('Web Application Scanning Consolidation / Info Reporting', 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Web Application Scanning Consolidation / Info Reporting
+       Porta: 80 | Protocolo: tcp | Severidade: LOG
+       Descrição: The script consolidates and reports various information for web application (formerly called 'CGI') scanning. This information is based on the following scripts / settings: - HTTP-Version Detection (O...
+
+Grupo 257: Chave = ("'favicon.ico' Based Fingerprinting (HTTP)", 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: 'favicon.ico' Based Fingerprinting (HTTP)
+       Porta: 80 | Protocolo: tcp | Severidade: LOG
+       Descrição: HTTP based ngerprinting of web applications based on an exposed 'favicon.ico' le.
+Resumo final:
+Total de grupos de duplicatas: 257
+Total de vulnerabilidades agrupadas (removidas): 60

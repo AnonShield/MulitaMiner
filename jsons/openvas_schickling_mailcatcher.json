@@ -1,0 +1,827 @@
+[
+  {
+    "Name": "SMTP Server on non standard port",
+    "description": [
+      "This SMTP server is running on a non standard port.",
+      "This might be a backdoor set up by attackers to send spam or even control the system."
+    ],
+    "detection_result": [
+      "Vulnerability was detected according to the Vulnerability Detection Method."
+    ],
+    "detection_method": [
+      "Details: SMTP Server on non standard port",
+      "OID:1.3.6.1.4.1.25623.1.0.18391",
+      "Version used: 2023-08-03T05:05:16Z"
+    ],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [
+      "Solution type: Mitigation",
+      "Check and clean your conguration."
+    ],
+    "insight": [],
+    "log_method": [],
+    "cvss": [
+      "5.0"
+    ],
+    "port": 1025,
+    "protocol": "tcp",
+    "severity": "Medium",
+    "references": [],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "ICMP Timestamp Reply Information Disclosure",
+    "description": [
+      "The remote host responded to an ICMP timestamp request."
+    ],
+    "detection_result": [
+      "The following response / ICMP packet has been received:",
+      "- ICMP Type: 14",
+      "- ICMP Code: 0"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [
+      "This information could theoretically be used to exploit weak time-based random number gener- ators in other services."
+    ],
+    "solution": [
+      "Solution type: Mitigation",
+      "Various mitigations are possible:",
+      "- Disable the support for ICMP timestamp on the remote host completely",
+      "- Protect the remote host by a rewall, and block ICMP packets passing through the rewall in either direction (either completely or only for untrusted networks)"
+    ],
+    "insight": [],
+    "log_method": [],
+    "cvss": [
+      "2.1"
+    ],
+    "port": 1025,
+    "protocol": "tcp",
+    "severity": "LOW",
+    "references": [],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "ICMP Timestamp Reply Information Disclosure",
+    "description": [
+      "The remote host responded to an ICMP timestamp request.",
+      "Quality of Detection (QoD): 80%"
+    ],
+    "detection_result": [
+      "The following response / ICMP packet has been received:",
+      "- ICMP Type: 14",
+      "- ICMP Code: 0"
+    ],
+    "detection_method": [
+      "Sends an ICMP Timestamp (Type 13) request and checks if a Timestamp Reply (Type 14) is received.",
+      "Details: ICMP Timestamp Reply Information Disclosure",
+      "OID:1.3.6.1.4.1.25623.1.0.103190",
+      "Version used: 2025-01-21T05:37:33Z"
+    ],
+    "product_detection_result": [],
+    "impact": [
+      "This information could theoretically be used to exploit weak time-based random number generators in other services."
+    ],
+    "solution": [
+      "Solution type: Mitigation",
+      "Various mitigations are possible:",
+      "- Disable the support for ICMP timestamp on the remote host completely",
+      "- Protect the remote host by a rewall, and block ICMP packets passing through the rewall in either direction (either completely or only for untrusted networks)"
+    ],
+    "insight": [
+      "The Timestamp Reply is an ICMP message which replies to a Timestamp message. It consists of the originating timestamp sent by the sender of the Timestamp as well as a receive timestamp and a transmit timestamp."
+    ],
+    "log_method": [],
+    "cvss": [
+      "2.1"
+    ],
+    "port": "general",
+    "protocol": "icmp",
+    "severity": "LOW",
+    "references": [
+      "cve: CVE-1999-0524",
+      "url: https://datatracker.ietf.org/doc/html/rfc792",
+      "url: https://datatracker.ietf.org/doc/html/rfc2780",
+      "cert-bund: CB-K15/1514",
+      "cert-bund: CB-K14/0632",
+      "dfn-cert: DFN-CERT-2014-0658"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "TCP Timestamps Information Disclosure",
+    "description": [
+      "The remote host implements TCP timestamps and therefore allows to compute the uptime.",
+      "Quality of Detection (QoD): 80%"
+    ],
+    "detection_result": [
+      "It was detected that the host implements RFC1323/RFC7323.",
+      "The following timestamps were retrieved with a delay of 1 seconds in-between:",
+      "Packet 1: 696489843",
+      "Packet 2: 696490927"
+    ],
+    "detection_method": [
+      "Sends an ICMP Timestamp (Type 13) request and checks if a Timestamp Reply (Type 14) is received.",
+      "Details: ICMP Timestamp Reply Information Disclosure",
+      "OID:1.3.6.1.4.1.25623.1.0.103190",
+      "Version used: 2025-01-21T05:37:33Z"
+    ],
+    "product_detection_result": [],
+    "impact": [
+      "A side eect of this feature is that the uptime of the remote host can sometimes be computed."
+    ],
+    "solution": [
+      "Solution type: Mitigation",
+      "To disable TCP timestamps on linux add the line 'net.ipv4.tcp_timestamps = 0' to /etc/sysctl.conf. Execute 'sysctl -p' to apply the settings at runtime.",
+      "To disable TCP timestamps on Windows execute 'netsh int tcp set global timestamps=disabled'"
+    ],
+    "insight": [
+      "The Timestamp Reply is an ICMP message which replies to a Timestamp message. It consists of the originating timestamp sent by the sender of the Timestamp as well as a receive timestamp and a transmit timestamp."
+    ],
+    "log_method": [],
+    "cvss": [
+      "2.6"
+    ],
+    "port": "general",
+    "protocol": "tcp",
+    "severity": "LOW",
+    "references": [
+      "cve: CVE-1999-0524",
+      "url: https://datatracker.ietf.org/doc/html/rfc792",
+      "url: https://datatracker.ietf.org/doc/html/rfc2780",
+      "cert-bund: CB-K15/1514",
+      "cert-bund: CB-K14/0632",
+      "dfn-cert: DFN-CERT-2014-0658"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "CPE Inventory",
+    "description": [
+      "This routine uses information collected by other routines about CPE identities of operating systems, services and applications detected during the scan.",
+      "Note: Some CPEs for specic products might show up twice or more in the output. Background: After a product got renamed or a specic vendor was acquired by another one it might happen that a product gets a new CPE within the NVD CPE Dictionary but older entries are kept with the older CPE."
+    ],
+    "detection_result": [],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [],
+    "cvss": [
+      "0.0"
+    ],
+    "port": "general",
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "CPE Inventory",
+    "description": [
+      "This routine uses information collected by other routines about CPE identities of operating systems, services and applications detected during the scan.",
+      "Note: Some CPEs for specic products might show up twice or more in the output. Background: After a product got renamed or a specic vendor was acquired by another one it might happen that a product gets a new CPE within the NVD CPE Dictionary but older entries are kept with the older CPE."
+    ],
+    "detection_result": [
+      "172.30.17.1|cpe:/o:linux:kernel"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [
+      "Details: CPE Inventory",
+      "OID:1.3.6.1.4.1.25623.1.0.810002",
+      "Version used: 2022-07-27T10:11:28Z"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": "general",
+    "protocol": "CPE-T",
+    "severity": "LOG",
+    "references": [
+      "url: https://nvd.nist.gov/products/cpe"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "SSL/TLS: SMTP Missing Support For STARTTLS",
+    "description": [
+      "The remote SMTP server does not support the 'STARTTLS' command."
+    ],
+    "detection_result": [
+      "The remote SMTP server does not support the 'STARTTLS' command."
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [
+      "Details: SSL/TLS: SMTP Missing Support For STARTTLS",
+      "OID:1.3.6.1.4.1.25623.1.0.105091",
+      "Version used: 2021-03-19T08:13:38Z"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": 1025,
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Service Detection (3 ASCII digit codes like FTP, SMTP, NNTP...)",
+    "description": [
+      "This plugin performs service detection."
+    ],
+    "detection_result": [
+      "A SMTP server is running on this port."
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [
+      "This plugin is a complement of the plugin 'Services' (OID: 1.3.6.1.4.1.25623.1.0.10330). It attempts to identify services that return 3 ASCII digit codes (ie: FTP, SMTP, NNTP, ...)."
+    ],
+    "log_method": [
+      "Details: Service Detection (3 ASCII digit codes like FTP, SMTP, NNTP...)",
+      "OID:1.3.6.1.4.1.25623.1.0.14773",
+      "Version used: 2023-06-14T05:05:19Z"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": 1025,
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [
+      "url: https://forum.greenbone.net/c/vulnerability-tests/7"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "SMTP Server type and version",
+    "description": [
+      "This detects the SMTP Server's type and version by connecting to the server and processing the buffer received."
+    ],
+    "detection_result": [
+      "Remote SMTP server banner:",
+      "220 EventMachine SMTP Server",
+      "The remote SMTP server is announcing the following available ESMTP commands (EHL",
+      "->O response) via an unencrypted connection:",
+      "NO-SOLICITING, SIZE 20000000"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [
+      "Details: SMTP Server type and version",
+      "OID:1.3.6.1.4.1.25623.1.0.10263",
+      "Version used: 2026-01-07T05:47:44Z"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": 1025,
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "OS Detection Consolidation and Reporting",
+    "description": [
+      "This script consolidates the OS information detected by several VTs and tries to nd the best matching OS.",
+      "Furthermore it reports all previously collected information leading to this best matching OS. It also reports possible additional information which might help to improve the OS detection.",
+      "If any of this information is wrong or could be improved please consider to report these to the referenced community forum.",
+      "Quality of Detection (QoD): 80%"
+    ],
+    "detection_result": [
+      "Best matching OS:",
+      "OS: Linux Kernel",
+      "CPE: cpe:/o:linux:kernel",
+      "Found by VT: 1.3.6.1.4.1.25623.1.0.102002 (Operating System (OS) Detection (ICM ->P))",
+      "Concluded from ICMP based OS fingerprint",
+      "Setting key \"Host/runs_unixoide\" based on this information"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [
+      "Details: OS Detection Consolidation and Reporting",
+      "OID:1.3.6.1.4.1.25623.1.0.105937",
+      "Version used: 2026-01-21T05:50:46Z"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": "general",
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [
+      "url: https://forum.greenbone.net/c/vulnerability-tests/7"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "IP Forwarding Enabled - Active Check",
+    "description": [
+      "Checks if the remote host has IP forwarding enabled.",
+      "Quality of Detection (QoD): 70%"
+    ],
+    "detection_result": [
+      "It was possible to route a TCP packet through the target host and received an an ->swer which means IP forwarding is enabled."
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [
+      "Sends a crafted Local Link Layer (LLL) frame and checks the response.",
+      "Details: IP Forwarding Enabled - Active Check",
+      "OID:1.3.6.1.4.1.25623.1.0.147205",
+      "Version used: 2021-12-03T08:27:06Z"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": "general",
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [
+      "cve: CVE-1999-0511"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Traceroute",
+    "description": [
+      "Collect information about the network route and network distance between the scanner host and the target host.",
+      "Quality of Detection (QoD): 80%"
+    ],
+    "detection_result": [
+      "Network route from scanner (172.30.0.2) to target (172.30.17.1):",
+      "172.30.0.2",
+      "172.30.17.1",
+      "Network distance between scanner and target: 2"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [
+      "For internal networks, the distances are usually small, often less than 4 hosts between scanner and target. For public targets the distance is greater and might be 10 hosts or more."
+    ],
+    "log_method": [
+      "A combination of the protocols ICMP and TCP is used to determine the route. This method is applicable for IPv4 only and it is also known as 'traceroute'.",
+      "Details: Traceroute",
+      "OID:1.3.6.1.4.1.25623.1.0.51662",
+      "Version used: 2022-10-17T11:13:19Z"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": "general",
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Unknown OS and Service Banner Reporting",
+    "description": [
+      "This VT consolidates and reports the information collected by the following VTs:",
+      "- Collect banner of unknown services (OID: 1.3.6.1.4.1.25623.1.0.11154)",
+      "- Service Detection (unknown) with nmap (OID: 1.3.6.1.4.1.25623.1.0.66286)",
+      "- Service Detection (wrapped) with nmap (OID: 1.3.6.1.4.1.25623.1.0.108525)",
+      "- OS Detection Consolidation and Reporting (OID: 1.3.6.1.4.1.25623.1.0.105937)",
+      "If you know any of the information reported here, please send the full output to the referenced community forum.",
+      "Quality of Detection (QoD): 80%"
+    ],
+    "detection_result": [
+      "Unknown banners have been collected which might help to identify the OS running ->on this host. If these banners containing information about the host OS please -> report the following information to https://forum.greenbone.net/c/vulnerabili ->ty-tests/7:",
+      "Banner: Server: thin 1.5.1 codename Straight Razor",
+      "Identified from: HTTP Server banner on port 1080/tcp",
+      "Banner: 220 EventMachine SMTP Server",
+      "Identified from: SMTP banner on port 1025/tcp"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [
+      "Details: Unknown OS and Service Banner Reporting",
+      "OID:1.3.6.1.4.1.25623.1.0.108441",
+      "Version used: 2023-06-22T10:34:15Z"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": "general",
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [
+      "url: https://forum.greenbone.net/c/vulnerability-tests/7"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Hostname Determination Reporting",
+    "description": [
+      "The script reports information on how the hostname of the target was determined."
+    ],
+    "detection_result": [
+      "Hostname determination for IP 172.30.17.1:",
+      "Hostname|Source",
+      "mailcatcher.trabalho_vulnnet|Reverse-DNS"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [
+      "Details: Hostname Determination Reporting",
+      "OID:1.3.6.1.4.1.25623.1.0.108449",
+      "Version used: 2022-07-27T10:11:28Z"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": "general",
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "HTTP Server type and version",
+    "description": [
+      "This script detects and reports the HTTP Server's banner which might provide the type and version of it."
+    ],
+    "detection_result": [
+      "The remote HTTP Server banner is:",
+      "Server: thin 1.5.1 codename Straight Razor"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [
+      "Details: HTTP Server type and version",
+      "OID:1.3.6.1.4.1.25623.1.0.10107",
+      "Version used: 2023-08-01T13:29:10Z"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": 1080,
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "HTTP Server Banner Enumeration",
+    "description": [
+      "This script tries to detect / enumerate different HTTP server banner (e.g. from a frontend, backend or proxy server) by sending various different HTTP requests (valid and invalid ones)."
+    ],
+    "detection_result": [
+      "It was possible to enumerate the following HTTP server banner(s):",
+      "Server banner | Enumeration technique",
+      "--------------------------------------------------------------------------------",
+      "->-----------------------------",
+      "Server: thin 1.5.1 codename Straight Razor | Invalid HTTP 00.5 GET request (non-"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [],
+    "cvss": [
+      "0.0"
+    ],
+    "port": "general",
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "HTTP Server Banner Enumeration",
+    "description": [
+      "This script tries to detect / enumerate dierent HTTP server banner (e.g. from a frontend, backend or proxy server) by sending various dierent HTTP requests (valid and invalid ones)."
+    ],
+    "detection_result": [
+      "It was possible to enumerate the following HTTP server banner(s):",
+      "Server banner | Enumeration technique",
+      "--------------------------------------------------------------------------------",
+      "->-----------------------------",
+      "Server: thin 1.5.1 codename Straight Razor | Invalid HTTP 00.5 GET request (non-  ->existent HTTP version) to '/'"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [
+      "Details: HTTP Server Banner Enumeration",
+      "OID:1.3.6.1.4.1.25623.1.0.108708",
+      "Version used: 2025-01-31T15:39:24Z"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": 1080,
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Thin Webserver Detection",
+    "description": [
+      "This host is running Thin, a Ruby web server."
+    ],
+    "detection_result": [
+      "Thin Version '1.5.1' was detected on the remote host"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [
+      "Details: Thin Webserver Detection",
+      "OID:1.3.6.1.4.1.25623.1.0.100300",
+      "Version used: 2023-07-28T16:09:08Z"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": 1080,
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [
+      "url: http://code.macournoyer.com/thin/"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "HTTP Security Headers Detection",
+    "description": [
+      "All known security headers are being checked on the remote web server.",
+      "On completion a report will hand back whether a specic security header has been implemented (including its value and if it is deprecated) or is missing on the target."
+    ],
+    "detection_result": [
+      "Header Name | Header Value",
+      "--------------------------------------",
+      "X-Content-Type-Options | nosniff",
+      "X-Frame-Options | SAMEORIGIN",
+      "X-XSS-Protection | 1; mode=block",
+      "Missing Headers | More Information",
+      "--------------------------------------------------------------------------------",
+      "->------------------------------------------------------------------------------",
+      "->------------------------------------------------",
+      "Content-Security-Policy | https://owasp.org/www-project-secure-headers",
+      "->/#content-security-policy",
+      "Cross-Origin-Embedder-Policy | https://scotthelme.co.uk/coop-and-coep/, Not",
+      "->e: This is an upcoming header",
+      "Cross-Origin-Opener-Policy | https://scotthelme.co.uk/coop-and-coep/, Not",
+      "->e: This is an upcoming header",
+      "Cross-Origin-Resource-Policy | https://scotthelme.co.uk/coop-and-coep/, Not",
+      "->e: This is an upcoming header",
+      "Document-Policy | https://w3c.github.io/webappsec-feature-poli",
+      "->cy/document-policy#document-policy-http-header",
+      "Feature-Policy | https://owasp.org/www-project-secure-headers",
+      "->/#feature-policy, Note: The Feature Policy header has been renamed to Permissi",
+      "->ons Policy",
+      "Permissions-Policy | https://w3c.github.io/webappsec-feature-poli",
+      "->cy/#permissions-policy-http-header-field",
+      "Referrer-Policy | https://owasp.org/www-project-secure-headers",
+      "->/#referrer-policy",
+      "Sec-Fetch-Dest | https://developer.mozilla.org/en-US/docs/Web",
+      "->/HTTP/Headers#fetch_metadata_request_headers, Note: This is a new header suppo",
+      "->rted only in newer browsers like e.g. Firefox 90",
+      "Sec-Fetch-Mode | https://developer.mozilla.org/en-US/docs/Web",
+      "->/HTTP/Headers#fetch_metadata_request_headers, Note: This is a new header suppo",
+      "->rted only in newer browsers like e.g. Firefox 90",
+      "Sec-Fetch-Site | https://developer.mozilla.org/en-US/docs/Web",
+      "->/HTTP/Headers#fetch_metadata_request_headers, Note: This is a new header suppo",
+      "->rted only in newer browsers like e.g. Firefox 90",
+      "Sec-Fetch-User | https://developer.mozilla.org/en-US/docs/Web",
+      "->/HTTP/Headers#fetch_metadata_request_headers, Note: This is a new header suppo",
+      "->rted only in newer browsers like e.g. Firefox 90",
+      "X-Permitted-Cross-Domain-Policies | https://owasp.org/www-project-secure-headers",
+      "->/#x-permitted-cross-domain-policies"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [
+      "Details: HTTP Security Headers Detection",
+      "OID:1.3.6.1.4.1.25623.1.0.112081",
+      "Version used: 2025-03-21T15:40:43Z"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": 1080,
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [
+      "url: https://owasp.org/www-project-secure-headers/",
+      "url: https://owasp.org/www-project-secure-headers/#div-headers",
+      "url: https://securityheaders.com/"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Web Application Scanning Consolidation / Info Reporting",
+    "description": [
+      "The script consolidates and reports various information for web application (formerly called 'CGI') scanning.",
+      "This information is based on the following scripts / settings:",
+      "- HTTP-Version Detection (OID: 1.3.6.1.4.1.25623.1.0.100034)",
+      "- No 404 check (OID: 1.3.6.1.4.1.25623.1.0.10386)",
+      "- Web mirroring / webmirror.nasl (OID: 1.3.6.1.4.1.25623.1.0.10662)",
+      "- Directory Scanner / DDI_Directory_Scanner.nasl (OID: 1.3.6.1.4.1.25623.1.0.11032)",
+      "- The congured 'cgi_path' within the 'Scanner Preferences' of the scan cong in use",
+      "- The congured 'Enable CGI scanning', 'Enable generic web application scanning' and 'Add historic /scripts and /cgi-bin to directories for CGI scanning' within the 'Global variable settings' of the scan cong in use",
+      "If you think any of this information is wrong please report it to the referenced community forum."
+    ],
+    "detection_result": [
+      "The Hostname/IP \"mailcatcher.trabalho_vulnnet\" was used to access the remote host.",
+      "Generic web application scanning is disabled for this host via the \"Enable generic web application scanning\" option within the \"Global variable settings\" of the scan config in use.",
+      "Requests to this service are done via HTTP/1.1.",
+      "This service seems to be able to host PHP scripts.",
+      "This service seems to be able to host ASP scripts.",
+      "The User-Agent \"Mozilla/5.0 [en] (X11, U; OpenVAS-VT <version replaced>)\" was used to access the remote host.",
+      "Historic /scripts and /cgi-bin are not added to the directories used for web application scanning. You can enable this again with the \"Add historic /scripts and /cgi-bin to directories for CGI scanning\" option within the \"Global variable settings\" of the scan config in use.",
+      "The following directories were used for web application scanning:",
+      "http://mailcatcher.trabalho_vulnnet:1080/",
+      "http://mailcatcher.trabalho_vulnnet:1080/assets",
+      "While this is not, in and of itself, a bug, you should manually inspect these directories to ensure that they are in compliance with company security standards"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [],
+    "cvss": [
+      "0.0"
+    ],
+    "port": 1080,
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Allowed HTTP Methods Enumeration",
+    "description": [
+      "Enumerates which HTTP methods are allowed."
+    ],
+    "detection_result": [
+      "The following list contains the URLs and corresponding supported HTTP methods.",
+      "URL | HTTP Methods",
+      "--------------------------------------------------------------------------------",
+      "http://mailcatcher.trabalho_vulnnet:1080/ | GET,HEAD,POST,PUT,CONNECT,OPTIONS,TRACE"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [
+      "- Basic HTTP methods: GET, HEAD, POST, PUT, DELETE, CONNECT, OPTIONS, TRACE",
+      "- Extended HTTP methods: ACL, BASELINE-CONTROL, BIND, CHECKIN, CHECK- OUT, COPY, LABEL, LINK, LOCK, MERGE, MKACTIVITY, MKCALENDAR, MKCOL, MKREDIRECTREF, MKWORKSPACE, MOVE, ORDERPATCH, PATCH, PRI, PROPFIND, PROPPATCH, REBIND, REPORT, SEARCH, UNBIND, UNCHECKOUT, UNLINK, UN- LOCK, UPDATE, UPDATEREDIRECTREF, VERSION-CONTROL"
+    ],
+    "log_method": [
+      "Sends multiple HTTP requests and checks the responses.",
+      "Disclaimer:",
+      "- This enumeration script is provided 'as is' (means no support is given) and only providing rudimentary information about the possible enabled methods",
+      "- This script doesn't guarantee completeness or full reliability",
+      "For more reliable determination of the enabled HTTP methods please inspect the conguration of the web server manually and directly on the target host."
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": 1080,
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [
+      "url: https://forum.greenbone.net/c/vulnerability-tests/7"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Services",
+    "description": [
+      "This plugin performs service detection."
+    ],
+    "detection_result": [
+      "A web server is running on this port"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [
+      "This plugin attempts to guess which service is running on the remote port(s). For instance, it searches for a web server which could listen on another port than 80 or 443 and makes this information available for other check routines."
+    ],
+    "log_method": [
+      "Details: Services"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": 1080,
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  }
+]

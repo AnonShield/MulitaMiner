@@ -1,0 +1,1836 @@
+[
+  {
+    "Name": "Grafana Authentication Bypass Vulnerability",
+    "description": [
+      "Grafana is prone to an Authentication Bypass vulnerability.   Quality of Detection (QoD): 80%"
+    ],
+    "detection_result": [
+      "Installed version: 5.1.0",
+      "Fixed version: 5.2.3"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: Grafana Authentication Bypass Vulnerability",
+      "OID:1.3.6.1.4.1.25623.1.0.113260",
+      "Version used: 2023-07-20T05:05:17Z"
+    ],
+    "product_detection_result": [],
+    "impact": [
+      "Knowing only the username, an attacker can get access with the privilege level of any user."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 4.6.4 and 5.2.3 respectively."
+    ],
+    "insight": [
+      "An attacker can generate a valid remember me cookie knowing only a username of an LDAP or OAuth user."
+    ],
+    "log_method": [],
+    "cvss": [
+      "9.0"
+    ],
+    "port": 3000,
+    "protocol": "tcp",
+    "severity": "Critical",
+    "references": [
+      "cve: CVE-2018-15727",
+      "url: https://grafana.com/blog/2018/08/29/grafana-5.2.3-and-4.6.4-released-with-i ->mportant-security-fix/",
+      "cert-bund: CB-K18/1179",
+      "dfn-cert: DFN-CERT-2020-1033",
+      "dfn-cert: DFN-CERT-2019-2274",
+      "dfn-cert: DFN-CERT-2019-2166",
+      "dfn-cert: DFN-CERT-2018-2574"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Grafana CSRF Vulnerability (GHSA-cmf4-h3xc-jw8w)",
+    "description": [
+      "Grafana is prone to a cross-site request forgery (CSRF) vulnerability."
+    ],
+    "detection_result": [
+      "Installed version: 5.1.0",
+      "Fixed version: 7.5.15",
+      "Installation path / port: /"
+    ],
+    "detection_method": [
+      "An attacker can exploit this vulnerability for privilege escalation by tricking an authenticated user into inviting the attacker as a new user with high privileges."
+    ],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 7.5.15, 8.3.5 or later."
+    ],
+    "insight": [],
+    "log_method": [],
+    "cvss": [
+      "8.2"
+    ],
+    "port": 3000,
+    "protocol": "tcp",
+    "severity": "HIGH",
+    "references": [
+      "cve: CVE-2022-21703",
+      "url: https://github.com/grafana/grafana/security/advisories/GHSA-cmf4-h3xc-jw8w",
+      "cert-bund: WID-SEC-2022-0407",
+      "cert-bund: CB-K22/0159",
+      "dfn-cert: DFN-CERT-2022-2496",
+      "dfn-cert: DFN-CERT-2022-2397",
+      "dfn-cert: DFN-CERT-2022-2350",
+      "dfn-cert: DFN-CERT-2022-1386",
+      "dfn-cert: DFN-CERT-2022-0922",
+      "dfn-cert: DFN-CERT-2022-0794"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Grafana 3.0.1 < 6.7.4, 7.0 < 7.0.2 SSRF Vulnerability",
+    "description": [
+      "Grafana is prone to a server-side request forgery (SSRF) vulnerability."
+    ],
+    "detection_result": [
+      "Installed version: 5.1.0",
+      "Fixed version: 6.7.4",
+      "Installation path / port: /"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host."
+    ],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 6.7.4, 7.0.2 or later."
+    ],
+    "insight": [
+      "The avatar feature in Grafana has an SSRF Incorrect Access Control issue. This vulnerability allows any unauthenticated user/client to make Grafana send HTTP requests to any URL and return its result to the user/client. This can be used to gain information about the network that Grafana is running on."
+    ],
+    "log_method": [],
+    "cvss": [
+      "8.1"
+    ],
+    "port": 3000,
+    "protocol": "tcp",
+    "severity": "HIGH",
+    "references": [
+      "cve: CVE-2020-13379",
+      "url: https://community.grafana.com/t/grafana-7-0-2-and-6-7-4-security-update/314->08",
+      "cert-bund: CB-K20/0533",
+      "dfn-cert: DFN-CERT-2021-1282",
+      "dfn-cert: DFN-CERT-2021-0979",
+      "dfn-cert: DFN-CERT-2021-0786",
+      "dfn-cert: DFN-CERT-2021-0078",
+      "dfn-cert: DFN-CERT-2020-2502",
+      "dfn-cert: DFN-CERT-2020-2246",
+      "dfn-cert: DFN-CERT-2020-2203",
+      "dfn-cert: DFN-CERT-2020-2171",
+      "dfn-cert: DFN-CERT-2020-1587",
+      "dfn-cert: DFN-CERT-2020-1532",
+      "dfn-cert: DFN-CERT-2020-1422",
+      "dfn-cert: DFN-CERT-2020-1371",
+      "dfn-cert: DFN-CERT-2020-1274",
+      "dfn-cert: DFN-CERT-2020-1201"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Grafana < 8.5.15, 9 < 9.2.4 Multiple Vulnerabilities",
+    "description": [
+      "Grafana is prone to multiple vulnerabilities."
+    ],
+    "detection_result": [
+      "Installed version: 5.1.0",
+      "Fixed version: 8.5.15",
+      "Installation path / port: /"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host."
+    ],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 8.5.15, 9.2.4 or later."
+    ],
+    "insight": [
+      "The following vulnerabilities exist:",
+      "- CVE-2022-39306: Vulnerability makes it possible to use the invitation link to sign up with an arbitrary username/email with a malicious intent",
+      "- CVE-2022-39307: The impacted endpoint leaks information to unauthenticated users and introduces a security risk."
+    ],
+    "log_method": [],
+    "cvss": [
+      "8.1"
+    ],
+    "port": 3000,
+    "protocol": "tcp",
+    "severity": "HIGH",
+    "references": [
+      "cve: CVE-2022-39306",
+      "cve: CVE-2022-39307",
+      "url: https://github.com/grafana/grafana/security/advisories/GHSA-2x6g-h2hg-rq84",
+      "url: https://github.com/grafana/grafana/security/advisories/GHSA-3p62-42x7-gxg5",
+      "cert-bund: WID-SEC-2023-0334",
+      "dfn-cert: DFN-CERT-2023-2756",
+      "dfn-cert: DFN-CERT-2023-1395",
+      "dfn-cert: DFN-CERT-2023-0322"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Grafana Image Renderer Vulnerability (GHSA-2cfh-233g-m4c5)",
+    "description": [
+      "Grafana is prone to a vulnerability in Grafana Image Renderer.",
+      "Quality of Detection (QoD): 80%"
+    ],
+    "detection_result": [
+      "Installed version: 5.1.0",
+      "Fixed version: 8.3.11",
+      "Installation",
+      "path / port: /"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: Grafana Image Renderer Vulnerability (GHSA-2cfh-233g-m4c5)",
+      "OID:1.3.6.1.4.1.25623.1.0.148673",
+      "Version used: 2023-10-18T05:05:17Z"
+    ],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 8.3.11, 8.4.11, 8.5.11, 9.0.8, 9.1.2 or later."
+    ],
+    "insight": [
+      "The Chromium browser embedded in the Grafana image renderer allows for 'printing' of unauthorized files in a PNG file. This makes it possible for a malicious user to retrieve unauthorized files under some network conditions or via a fake datasource (if the user has admin permissions in Grafana). This vulnerability permits unauthorized file disclosure and is a potential DoS vector through targeting of extremely large files."
+    ],
+    "log_method": [],
+    "cvss": [
+      "7.5"
+    ],
+    "port": 3000,
+    "protocol": "tcp",
+    "severity": "HIGH",
+    "references": [
+      "cve: CVE-2022-31176",
+      "url: https://github.com/grafana/grafana-image-renderer/security/advisories/GHSA-2cfh-233g-m4c5",
+      "cert-bund: WID-SEC-2022-1221"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Grafana 2.0.0 < 5.4.5, 6.x < 6.3.4 DoS Vulnerability",
+    "description": [
+      "Grafana is prone to a denial of service vulnerability.",
+      "Quality of Detection (QoD): 80%"
+    ],
+    "detection_result": [
+      "Installed version: 5.1.0",
+      "Fixed version: 5.4.5",
+      "Installation",
+      "path / port: /"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 5.4.5, 6.3.4 or later."
+    ],
+    "insight": [
+      "Parts of the HTTP API allow unauthenticated use. This makes it possible to run a denial of service attack"
+    ],
+    "log_method": [],
+    "cvss": [
+      "7.5"
+    ],
+    "port": 3000,
+    "protocol": "tcp",
+    "severity": "HIGH",
+    "references": [],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Grafana Privilege Escalation Vulnerability (GHSA-x744-mm8v-vpgr)",
+    "description": [
+      "Grafana is prone to a privilege escalation vulnerability."
+    ],
+    "detection_result": [
+      "Installed version: 5.1.0",
+      "Fixed version: 8.5.14",
+      "Installation",
+      "path / port: /"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: Grafana Privilege Escalation Vulnerability (GHSA-x744-mm8v-vpgr)",
+      "OID:1.3.6.1.4.1.25623.1.0.124198",
+      "Version used: 2023-10-18T05:05:17Z"
+    ],
+    "product_detection_result": [],
+    "impact": [
+      "The destination plugin could receive a Grafana authentication cookie of the user."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 8.5.14, 9.1.8 or later."
+    ],
+    "insight": [],
+    "log_method": [],
+    "cvss": [
+      "7.5"
+    ],
+    "port": 3000,
+    "protocol": "tcp",
+    "severity": "HIGH",
+    "references": [
+      "cve: CVE-2022-39201",
+      "url: https://github.com/grafana/grafana/security/advisories/GHSA-x744-mm8v-vpgr",
+      "cert-bund: WID-SEC-2022-1702",
+      "dfn-cert: DFN-CERT-2023-2756",
+      "dfn-cert: DFN-CERT-2023-1395",
+      "dfn-cert: DFN-CERT-2023-0322"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Grafana < 7.4.2 DoS Vulnerability",
+    "description": [
+      "Grafana is prone to a denial of service (DoS) vulnerability."
+    ],
+    "detection_result": [
+      "Installed version: 5.1.0",
+      "Fixed version: 7.4.2",
+      "Installation",
+      "path / port: /"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: Grafana < 7.4.2 DoS Vulnerability",
+      "OID:1.3.6.1.4.1.25623.1.0.145598",
+      "Version used: 2021-08-17T14:01:00Z"
+    ],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 7.4.2 or later."
+    ],
+    "insight": [
+      "The snapshot feature in Grafana can allow an unauthenticated remote attacker to trigger a DoS via a remote API call if a commonly used conguration is set."
+    ],
+    "log_method": [],
+    "cvss": [
+      "7.3"
+    ],
+    "port": 3000,
+    "protocol": "tcp",
+    "severity": "HIGH",
+    "references": [
+      "cve: CVE-2021-27358",
+      "url: https://grafana.com/docs/grafana/latest/release-notes/release-notes-7-4-2/",
+      "cert-bund: CB-K21/0294",
+      "dfn-cert: DFN-CERT-2021-2376",
+      "dfn-cert: DFN-CERT-2021-1739",
+      "dfn-cert: DFN-CERT-2021-1670",
+      "dfn-cert: DFN-CERT-2021-1622",
+      "dfn-cert: DFN-CERT-2021-1282",
+      "dfn-cert: DFN-CERT-2021-1281"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Grafana 2.0.1 < 7.5.11, 8.x < 8.1.6 Snapshot Authentication Bypass Vulnerability (GHSA-69j6-29vr-p3j9)",
+    "description": [
+      "Grafana is prone to an authentication bypass vulnerability in the snapshot functionality."
+    ],
+    "detection_result": [
+      "Installed version: 5.1.0",
+      "Fixed version: 7.5.11",
+      "Installation",
+      "path / port: /"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: Grafana 2.0.1 < 7.5.11, 8.x < 8.1.6 Snapshot Authentication Bypass Vulnerabilit.",
+      "OID:1.3.6.1.4.1.25623.1.0.146863",
+      "Version used: 2022-09-14T10:57:19Z"
+    ],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 7.5.11, 8.1.6 or later."
+    ],
+    "insight": [
+      "Unauthenticated and authenticated users are able to view the snapshot with the lowest database key by accessing the literal paths:",
+      "/dashboard/snapshot/:key, or",
+      "/api/snapshots/:key",
+      "If the snapshot 'public_mode' conguration setting is set to true (vs default of false), unauthenticated users are able to delete the snapshot with the lowest database key by accessing the literal path:",
+      "/api/snapshots-delete/:deleteKey",
+      "Regardless of the snapshot 'public_mode' setting, authenticated users are able to delete the snapshot with the lowest database key by accessing the literal paths:",
+      "/api/snapshots/:key, or",
+      "/api/snapshots-delete/:deleteKey",
+      "The combination of deletion and viewing enables a complete walk through all snapshot data while resulting in complete snapshot data loss."
+    ],
+    "log_method": [],
+    "cvss": [
+      "7.3"
+    ],
+    "port": 3000,
+    "protocol": "tcp",
+    "severity": "HIGH",
+    "references": [
+      "cve: CVE-2021-39226",
+      "cisa: Known Exploited Vulnerability (KEV) catalog",
+      "url: https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
+      "url: https://github.com/grafana/grafana/security/advisories/GHSA-69j6-29vr-p3j9",
+      "cert-bund: WID-SEC-2022-0401",
+      "cert-bund: CB-K21/1040",
+      "dfn-cert: DFN-CERT-2022-2121",
+      "dfn-cert: DFN-CERT-2022-2048",
+      "dfn-cert: DFN-CERT-2022-2003",
+      "dfn-cert: DFN-CERT-2022-1386",
+      "dfn-cert: DFN-CERT-2022-0922"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Grafana Privilege Escalation Vulnerability (GHSA-5c-938w-8c9q)",
+    "description": [
+      "Grafana is prone to a privilege escalation vulnerability.",
+      "Quality of Detection (QoD): 80%"
+    ],
+    "detection_result": [
+      "Installed version: 5.1.0",
+      "Fixed version: 8.5.13",
+      "Installation",
+      "path / port: /"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: Grafana Privilege Escalation Vulnerability (GHSA-ff5c-938w-8c9q)",
+      "OID:1.3.6.1.4.1.25623.1.0.148743",
+      "Version used: 2023-10-18T05:05:17Z"
+    ],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 8.5.13, 9.0.9, 9.1.6 or later.",
+      "Aected Software/OS",
+      "Grafana prior to version 8.5.13, version 9.0.x through 9.0.8 and 9.1.x through 9.1.5 if the Auth Proxy is used."
+    ],
+    "insight": [
+      "Grafana allows an escalation from Admin privileges to Server Admin when Auth proxy authentication is used.",
+      "Auth proxy allows to authenticate a user by only providing the username (or email) in a X-WEBAUTH-USER HTTP header: the trust assumption is that a front proxy will take care of authentication and that Grafana server is publicly reachable only with this front proxy.",
+      "Datasource proxy breaks this assumption:",
+      "- it is possible to congure a fake datasource pointing to a localhost Grafana install with a X-WEBAUTH-USER HTTP header containing admin username.",
+      "- This fake datasource can be called publicly via this proxying feature."
+    ],
+    "log_method": [],
+    "cvss": [
+      "6.5"
+    ],
+    "port": 3000,
+    "protocol": "tcp",
+    "severity": "MEDIUM",
+    "references": [
+      "cve: CVE-2022-35957",
+      "url: https://github.com/grafana/grafana/security/advisories/GHSA-ff5c-938w-8c9q",
+      "cert-bund: WID-SEC-2022-1486",
+      "dfn-cert: DFN-CERT-2023-1430",
+      "dfn-cert: DFN-CERT-2023-1395",
+      "dfn-cert: DFN-CERT-2023-1045",
+      "dfn-cert: DFN-CERT-2022-2825",
+      "dfn-cert: DFN-CERT-2022-2350"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Grafana < 6.4.4 Information Disclosure Vulnerability",
+    "description": [
+      "Grafana is prone to an information disclosure vulnerability.",
+      "Quality of Detection (QoD): 80%"
+    ],
+    "detection_result": [
+      "Installed version: 5.1.0",
+      "Fixed version: 6.4.4",
+      "Installation",
+      "path / port: /"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: Grafana < 6.4.4 Information Disclosure Vulnerability",
+      "OID:1.3.6.1.4.1.25623.1.0.144507",
+      "Version used: 2021-07-08T11:00:45Z"
+    ],
+    "product_detection_result": [],
+    "impact": [
+      "An authenticated attacker may read arbitrary les."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 6.4.4 or later.",
+      "Aected Software/OS",
+      "Grafana through version 6.4.3."
+    ],
+    "insight": [
+      "Grafana has an arbitrary le read vulnerability, which could be exploited by an authenticated attacker that has privileges to modify the data source congurations."
+    ],
+    "log_method": [],
+    "cvss": [
+      "6.5"
+    ],
+    "port": 3000,
+    "protocol": "tcp",
+    "severity": "MEDIUM",
+    "references": [
+      "cve: CVE-2019-19499",
+      "url: https://swarm.ptsecurity.com/grafana-6-4-3-arbitrary-file-read/",
+      "url: https://github.com/grafana/grafana/blob/master/CHANGELOG.md#644-2019-11-06",
+      "dfn-cert: DFN-CERT-2021-0786",
+      "dfn-cert: DFN-CERT-2020-2387"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Grafana 4.1.0 < 4.6.5, 5.0 < 5.3.3 Information Disclosure Vulnerability",
+    "description": [
+      "Grafana is prone to an information disclosure vulnerability.",
+      "Quality of Detection (QoD): 80%"
+    ],
+    "detection_result": [
+      "Installed version: 5.1.0",
+      "Fixed version: 5.3.3",
+      "Installation",
+      "path / port: /"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: Grafana 4.1.0 < 4.6.5, 5.0 < 5.3.3 Information Disclosure Vulnerability",
+      "OID:1.3.6.1.4.1.25623.1.0.112497",
+      "Version used: 2022-07-20T10:33:02Z"
+    ],
+    "product_detection_result": [],
+    "impact": [
+      "Successful exploitation of these vulnerabilities could lead to disclosure of sensitive information or addition or modication of data."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 4.6.5 or 5.3.3 respectively.",
+      "Aected Software/OS",
+      "Grafana 4.1.0 through 5.3.2."
+    ],
+    "insight": [
+      "The vulnerability allows any users with Editor or Admin permissions in Grafana to read any le that the Grafana process can read from the lesystem."
+    ],
+    "log_method": [],
+    "cvss": [
+      "6.5"
+    ],
+    "port": 3000,
+    "protocol": "tcp",
+    "severity": "MEDIUM",
+    "references": [
+      "cve: CVE-2018-19039"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Grafana < 8.5.26, 9.x < 9.2.19, 9.3.x < 9.3.15, 9.4.x < 9.4.12, 9.5.0 < 9.5.3 Access Control Vulnerability",
+    "description": [
+      "Grafana is prone to an access control vulnerability in the alert manager."
+    ],
+    "detection_result": [
+      "Installed version: 5.1.0",
+      "Fixed version: 8.5.26",
+      "Installation",
+      "path / port: /"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host."
+    ],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 8.5.26, 9.2.19, 9.3.15, 9.4.12, 9.5.3 or later."
+    ],
+    "insight": [
+      "The option to send a test alert is not available from the user panel UI for users having the Viewer role. It is still possible for a user with the Viewer role to send a test alert using the API as the API does not check access to this function. This might enable malicious users to abuse the functionality by sending multiple alert messages to e-mail and Slack, spamming users, prepare phishing attack or block SMTP server."
+    ],
+    "log_method": [],
+    "cvss": [
+      "6.4"
+    ],
+    "port": 3000,
+    "protocol": "tcp",
+    "severity": "MEDIUM",
+    "references": [],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Grafana < 6.7.3 Multiple Vulnerabilities",
+    "description": [
+      "Grafana is prone to multiple cross-site scripting vulnerabilities."
+    ],
+    "detection_result": [
+      "Installed version: 5.1.0",
+      "Fixed version: 6.7.3",
+      "Installation",
+      "path / port: /"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: Grafana < 6.7.3 Multiple Vulnerabilities",
+      "OID:1.3.6.1.4.1.25623.1.0.143778",
+      "Version used: 2021-07-08T11:00:45Z"
+    ],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 6.7.3 or later."
+    ],
+    "insight": [
+      "Grafana is prone to multiple cross-site scripting vulnerabilities:",
+      "- Annotation popup XSS vulnerability (CVE-2020-12052)",
+      "- Table-panel XSS via column.title or cellLinkTooltip (CVE-2020-12245)"
+    ],
+    "log_method": [],
+    "cvss": [
+      "6.1"
+    ],
+    "port": 3000,
+    "protocol": "tcp",
+    "severity": "MEDIUM",
+    "references": [
+      "cve: CVE-2020-12052",
+      "cve: CVE-2020-12245",
+      "url: https://community.grafana.com/t/release-notes-v6-7-x/27119",
+      "cert-bund: CB-K20/1049",
+      "cert-bund: CB-K20/0654",
+      "cert-bund: CB-K20/0416",
+      "dfn-cert: DFN-CERT-2021-1282",
+      "dfn-cert: DFN-CERT-2021-0786",
+      "dfn-cert: DFN-CERT-2020-2502",
+      "dfn-cert: DFN-CERT-2020-2387",
+      "dfn-cert: DFN-CERT-2020-2335",
+      "dfn-cert: DFN-CERT-2020-2246",
+      "dfn-cert: DFN-CERT-2020-2203",
+      "dfn-cert: DFN-CERT-2020-2171",
+      "dfn-cert: DFN-CERT-2020-1587",
+      "dfn-cert: DFN-CERT-2020-1532",
+      "dfn-cert: DFN-CERT-2020-1422",
+      "dfn-cert: DFN-CERT-2020-1371"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Grafana < 7.1.0-beta1 XSS Vulnerability",
+    "description": [
+      "Grafana is vulnerable to a cross-site scripting (XSS) vulnerability."
+    ],
+    "detection_result": [
+      "Installed version: 5.1.0",
+      "Fixed version: 7.1.0-beta1",
+      "Installation",
+      "path / port: /"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: Grafana < 7.1.0-beta1 XSS Vulnerability",
+      "OID:1.3.6.1.4.1.25623.1.0.113774",
+      "Version used: 2021-07-08T11:00:45Z"
+    ],
+    "product_detection_result": [],
+    "impact": [
+      "Successful exploitation would allow an attacker to inject arbitrary HTML and JavaScript into the site."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 7.1.0-beta1 or later."
+    ],
+    "insight": [
+      "The vulnerability is exploitable via a query alias for the ElasticSearch datasource."
+    ],
+    "log_method": [],
+    "cvss": [
+      "6.1"
+    ],
+    "port": 3000,
+    "protocol": "tcp",
+    "severity": "MEDIUM",
+    "references": [
+      "cve: CVE-2020-24303",
+      "url: https://github.com/grafana/grafana/pull/25401",
+      "url: https://github.com/grafana/grafana/blob/master/CHANGELOG.md#710-beta-1-2020-07-01",
+      "cert-bund: CB-K20/1053",
+      "dfn-cert: DFN-CERT-2021-1282",
+      "dfn-cert: DFN-CERT-2021-1078",
+      "dfn-cert: DFN-CERT-2021-0786",
+      "dfn-cert: DFN-CERT-2020-2792",
+      "dfn-cert: DFN-CERT-2020-2790",
+      "dfn-cert: DFN-CERT-2020-2653"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Grafana < 6.0.0 XSS Vulnerability",
+    "description": [
+      "Grafana is prone to a cross-site scripting (XSS) vulnerability."
+    ],
+    "detection_result": [
+      "Installed version: 5.1.0",
+      "Fixed version: 6.0.0",
+      "Installation",
+      "path / port: /"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: Grafana < 6.0.0 XSS Vulnerability",
+      "OID:1.3.6.1.4.1.25623.1.0.126642",
+      "Version used: 2024-01-12T05:05:56Z"
+    ],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 6.0.0 or later."
+    ],
+    "insight": [
+      "Cross-site scripting via the 'Dashboard > Text Panel' screen."
+    ],
+    "log_method": [],
+    "cvss": [
+      "6.1"
+    ],
+    "port": 3000,
+    "protocol": "tcp",
+    "severity": "MEDIUM",
+    "references": [
+      "cve: CVE-2018-18623",
+      "url: https://github.com/grafana/grafana/issues/15293",
+      "dfn-cert: DFN-CERT-2021-1282",
+      "dfn-cert: DFN-CERT-2021-0786",
+      "dfn-cert: DFN-CERT-2020-2502",
+      "dfn-cert: DFN-CERT-2020-2246",
+      "dfn-cert: DFN-CERT-2020-2203"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Grafana <= 6.0.0 Multiple XSS Vulnerabilities",
+    "description": [
+      "Grafana is prone to multiple cross-site scripting (XSS) vulnerabilities."
+    ],
+    "detection_result": [
+      "Installed version: 5.1.0",
+      "Fixed version: None",
+      "Installation",
+      "path / port: /"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host."
+    ],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [
+      "Solution type: WillNotFix",
+      "No known solution was made available for at least one year since the disclosure of this vulnerability. Likely none will be provided anymore. General solution options are to upgrade to a newer release, disable respective features, remove the product or replace the product by another one."
+    ],
+    "insight": [
+      "The following vulnerabilities exist:",
+      "- CVE-2018-18624: XSS via a column style on the 'Dashboard > Table Panel' screen",
+      "- CVE-2018-18625: XSS via a link on the 'Dashboard > All Panels > General' screen"
+    ],
+    "log_method": [],
+    "cvss": [
+      "5.4"
+    ],
+    "port": 3000,
+    "protocol": "tcp",
+    "severity": "MEDIUM",
+    "references": [
+      "cve: CVE-2018-18624",
+      "cve: CVE-2018-18625",
+      "url: https://security.netapp.com/advisory/ntap-20200608-0008/",
+      "cert-bund: CB-K20/1049",
+      "dfn-cert: DFN-CERT-2021-1282",
+      "dfn-cert: DFN-CERT-2020-2502",
+      "dfn-cert: DFN-CERT-2020-2387",
+      "dfn-cert: DFN-CERT-2020-2335",
+      "dfn-cert: DFN-CERT-2020-2246",
+      "dfn-cert: DFN-CERT-2020-2203"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Grafana < 5.3.2 XSS Vulnerability",
+    "description": [
+      "Grafana is prone to a stored cross-site scripting (XSS) vulnerability."
+    ],
+    "detection_result": [
+      "Installed version: 5.1.0",
+      "Fixed version: 5.3.2",
+      "Installation",
+      "path / port: /"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host."
+    ],
+    "product_detection_result": [],
+    "impact": [
+      "Successful exploitation would result in arbitrary JavaScript code being run in the victims browser."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 5.3.2 or later."
+    ],
+    "insight": [
+      "The vulnerability is triggered when clicking the eld in the query editor's 'FROM'-row in which the payload was previously inserted."
+    ],
+    "log_method": [],
+    "cvss": [
+      "5.4"
+    ],
+    "port": 3000,
+    "protocol": "tcp",
+    "severity": "MEDIUM",
+    "references": [
+      "cve: CVE-2018-1000816",
+      "url: https://github.com/grafana/grafana/issues/13667"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Grafana XSS Vulnerability (GHSA-xc3p-28hw-q24g)",
+    "description": [
+      "Grafana is prone to a cross-site scripting (XSS) vulnerability."
+    ],
+    "detection_result": [
+      "Installed version: 5.1.0",
+      "Fixed version: 7.5.15",
+      "Installation",
+      "path / port: /"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host."
+    ],
+    "product_detection_result": [],
+    "impact": [
+      "An attacker could serve HTML content through the Grafana datasource or plugin proxy and trick a user to visit this HTML page using a specially crafted link and execute an XSS attack. The attacker could either compromise an existing datasource for a specic Grafana instance or either set up its own public service and instruct anyone to set it up in their Grafana instance."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 7.5.15, 8.3.5 or later."
+    ],
+    "insight": [],
+    "log_method": [],
+    "cvss": [
+      "5.4"
+    ],
+    "port": 3000,
+    "protocol": "tcp",
+    "severity": "MEDIUM",
+    "references": [
+      "cve: CVE-2022-21702",
+      "url: https://github.com/grafana/grafana/security/advisories/GHSA-xc3p-28hw-q24g"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Grafana < 6.2.5 HTML Injection Vulnerability",
+    "description": [
+      "Grafana is prone to an HTML injection vulnerability."
+    ],
+    "detection_result": [
+      "Installed version: 5.1.0",
+      "Fixed version: 6.2.5",
+      "Installation path / port: /"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: Grafana < 6.2.5 HTML Injection Vulnerability",
+      "OID:1.3.6.1.4.1.25623.1.0.112596",
+      "Version used: 2021-08-30T14:01:20Z"
+    ],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 6.2.5 or later."
+    ],
+    "insight": [
+      "public/app/features/panel/panel_ctrl.ts allows HTML Injection in panel drilldown links (via the Title or url eld)."
+    ],
+    "log_method": [],
+    "cvss": [
+      "5.4"
+    ],
+    "port": 3000,
+    "protocol": "tcp",
+    "severity": "MEDIUM",
+    "references": [
+      "cve: CVE-2019-13068",
+      "url: https://github.com/grafana/grafana/issues/17718",
+      "url: https://github.com/grafana/grafana/releases/tag/v6.2.5"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Grafana < 6.7.2 XSS Vulnerability",
+    "description": [
+      "Grafana is prone to a cross-site scripting (XSS) vulnerability."
+    ],
+    "detection_result": [
+      "Installed version: 5.1.0",
+      "Fixed version: 6.7.2",
+      "Installation",
+      "path / port: /"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: Grafana < 6.7.2 XSS Vulnerability",
+      "OID:1.3.6.1.4.1.25623.1.0.112787",
+      "Version used: 2023-02-13T10:19:38Z"
+    ],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 6.7.2 or later."
+    ],
+    "insight": [],
+    "log_method": [],
+    "cvss": [
+      "5.4"
+    ],
+    "port": 3000,
+    "protocol": "tcp",
+    "severity": "MEDIUM",
+    "references": [
+      "cve: CVE-2020-11110",
+      "url: https://github.com/grafana/grafana/blob/master/CHANGELOG.md#672-2020-04-02",
+      "cert-bund: CB-K20/1049",
+      "dfn-cert: DFN-CERT-2021-1282",
+      "dfn-cert: DFN-CERT-2020-2502",
+      "dfn-cert: DFN-CERT-2020-2387",
+      "dfn-cert: DFN-CERT-2020-2335",
+      "dfn-cert: DFN-CERT-2020-2246",
+      "dfn-cert: DFN-CERT-2020-2203",
+      "dfn-cert: DFN-CERT-2020-2062"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Grafana < 8.5.21, 9.2.x < 9.2.13, 9.3.x < 9.3.8 Multiple Vulnerabilities",
+    "description": [
+      "Grafana is prone to multiple vulnerabilities."
+    ],
+    "detection_result": [
+      "Installed version: 5.1.0",
+      "Fixed version: 8.5.21",
+      "Installation",
+      "path / port: /"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: Grafana < 8.5.21, 9.2.x < 9.2.13, 9.3.x < 9.3.8 Multiple Vulnerabilities",
+      "OID:1.3.6.1.4.1.25623.1.0.149399",
+      "Version used: 2023-10-13T05:06:10Z"
+    ],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 8.5.21, 9.2.13, 9.3.8 or later."
+    ],
+    "insight": [
+      "The following vulnerabilities exist:",
+      "- CVE-2023-0507: Stored XSS in geomap panel plugin via attribution",
+      "- CVE-2023-0594: Stored XSS in TraceView panel"
+    ],
+    "log_method": [],
+    "cvss": [
+      "5.3"
+    ],
+    "port": 3000,
+    "protocol": "tcp",
+    "severity": "MEDIUM",
+    "references": [
+      "cve: CVE-2023-0507",
+      "cve: CVE-2023-0594",
+      "url: https://grafana.com/blog/2023/02/28/grafana-security-release-new-versions-w",
+      "->ith-security-fixes-for-cve-2023-0594-cve-2023-0507-and-cve-2023-22462/",
+      "cert-bund: WID-SEC-2023-0528",
+      "dfn-cert: DFN-CERT-2024-0349",
+      "dfn-cert: DFN-CERT-2023-0901"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Grafana < 9.4.12, 9.5.0 < 9.5.3 DoS Vulnerability",
+    "description": [
+      "Grafana is prone to a denial of service (DoS) vulnerability."
+    ],
+    "detection_result": [
+      "Installed version: 5.1.0",
+      "Fixed version: 9.4.12",
+      "Installation",
+      "path / port: /"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: Grafana < 9.4.12, 9.5.0 < 9.5.3 DoS Vulnerability",
+      "OID:1.3.6.1.4.1.25623.1.0.149748",
+      "Version used: 2023-10-13T05:06:10Z"
+    ],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 9.4.12, 9.5.3 or later."
+    ],
+    "insight": [
+      "Using public dashboards users can query multiple distinct data sources using mixed queries. However such query has a possibility of crashing a Grafana instance. The only feature that uses mixed queries at the moment is public dashboards, but it's also possible to cause this by calling the query API directly. This might enable malicious users to crash Grafana instances through that endpoint."
+    ],
+    "log_method": [],
+    "cvss": [
+      "4.9"
+    ],
+    "port": 3000,
+    "protocol": "tcp",
+    "severity": "MEDIUM",
+    "references": [
+      "cve: CVE-2023-2801",
+      "url: https://grafana.com/security/security-advisories/cve-2023-2801/",
+      "cert-bund: WID-SEC-2023-1384",
+      "dfn-cert: DFN-CERT-2023-3124",
+      "dfn-cert: DFN-CERT-2023-1676"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Grafana <= 5.4.0 Information Disclosure Vulnerability",
+    "description": [
+      "Grafana is prone to an information disclosure vulnerability."
+    ],
+    "detection_result": [
+      "Installed version: 5.1.0",
+      "Fixed version: None"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: Grafana <= 5.4.0 Information Disclosure Vulnerability",
+      "OID:1.3.6.1.4.1.25623.1.0.126288",
+      "Version used: 2023-01-06T10:11:13Z"
+    ],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [
+      "Solution type: WillNotFix",
+      "No known solution was made available for at least one year since the disclosure of this vulnera- bility. Likely none will be provided anymore. General solution options are to upgrade to a newer release, disable respective features, remove the product or replace the product by another one."
+    ],
+    "insight": [
+      "Grafana allows a local authenticated attacker to obtain sensitive information, caused by wrong encryption of passwords for data sources that it uses."
+    ],
+    "log_method": [],
+    "cvss": [
+      "4.8"
+    ],
+    "port": 3000,
+    "protocol": "tcp",
+    "severity": "MEDIUM",
+    "references": [
+      "cve: CVE-2019-15635",
+      "url: https://exchange.xforce.ibmcloud.com/vulnerabilities/167244"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Grafana < 8.5.22, 9.2.x < 9.2.15, 9.3.x < 9.3.11, 9.4.x < 9.4.7 XSS Vulnerability (GHSA-qrrg-gw7w-vp76)",
+    "description": [
+      "Grafana is prone to a cross-site scripting (XSS) vulnerability."
+    ],
+    "detection_result": [
+      "Installed version: 5.1.0",
+      "Fixed version: 8.5.22",
+      "Installation path / port: /"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: Grafana < 8.5.22, 9.2.x < 9.2.15, 9.3.x < 9.3.11, 9.4.x < 9.4.7 XSS Vulnerabili.",
+      "OID:1.3.6.1.4.1.25623.1.0.127372",
+      "Version used: 2023-10-13T05:06:10Z"
+    ],
+    "product_detection_result": [],
+    "impact": [
+      "Aected Software/OS Grafana prior to version 8.5.22, 9.2.x prior to 9.2.15, 9.3.x prior to 9.3.11 and 9.4.x prior to 9.4.7."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 8.5.22, 9.2.15, 9.3.11, 9.4.7 or later."
+    ],
+    "insight": [
+      "The stored cross-site scripting (XSS) is possible due to improper sanitization of the Function Description value."
+    ],
+    "log_method": [],
+    "cvss": [
+      "4.3"
+    ],
+    "port": 3000,
+    "protocol": "tcp",
+    "severity": "MEDIUM",
+    "references": [
+      "cve: CVE-2023-1410",
+      "url: https://github.com/grafana/bugbounty/security/advisories/GHSA-qrrg-gw7w-vp76",
+      "url: https://grafana.com/blog/2023/03/22/grafana-security-release-new-versions-with-security-fixes-for-cve-2023-1410/",
+      "cert-bund: WID-SEC-2023-1130",
+      "cert-bund: WID-SEC-2023-0726",
+      "dfn-cert: DFN-CERT-2023-3124",
+      "dfn-cert: DFN-CERT-2023-1430",
+      "dfn-cert: DFN-CERT-2023-0999",
+      "dfn-cert: DFN-CERT-2023-0901"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Grafana 5.0.0 - 8.3.1 Directory Traversal Vulnerability",
+    "description": [
+      "Grafana is prone to a directory traversal vulnerability for '.md' les."
+    ],
+    "detection_result": [
+      "Installed version: 5.1.0",
+      "Fixed version: 7.5.12",
+      "Installation path / port: /"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: Grafana 5.0.0 - 8.3.1 Directory Traversal Vulnerability",
+      "OID:1.3.6.1.4.1.25623.1.0.147337",
+      "Version used: 2021-12-16T10:21:14Z"
+    ],
+    "product_detection_result": [],
+    "impact": [
+      "Aected Software/OS Grafana version 5.0.0 through 8.3.1."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 7.5.12, 8.3.2 or later."
+    ],
+    "insight": [
+      "Grafana contains a directory traversal vulnerability for fully lowercase or fully uppercase .md les. The vulnerability is limited in scope, and only allows access to les with the extension .md to authenticated users only."
+    ],
+    "log_method": [],
+    "cvss": [
+      "4.3"
+    ],
+    "port": 3000,
+    "protocol": "tcp",
+    "severity": "MEDIUM",
+    "references": [
+      "cve: CVE-2021-43813",
+      "cve: CVE-2021-43815",
+      "url: https://github.com/grafana/grafana/security/advisories/GHSA-c3q8-26ph-9g2q",
+      "cert-bund: WID-SEC-2022-0405",
+      "cert-bund: CB-K21/1270",
+      "dfn-cert: DFN-CERT-2024-0423",
+      "dfn-cert: DFN-CERT-2022-2825",
+      "dfn-cert: DFN-CERT-2022-2350",
+      "dfn-cert: DFN-CERT-2022-1790",
+      "dfn-cert: DFN-CERT-2022-1386",
+      "dfn-cert: DFN-CERT-2022-1142",
+      "dfn-cert: DFN-CERT-2022-1068",
+      "dfn-cert: DFN-CERT-2022-0922",
+      "dfn-cert: DFN-CERT-2022-0569",
+      "dfn-cert: DFN-CERT-2022-0152",
+      "dfn-cert: DFN-CERT-2022-0144"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Grafana IDOR Vulnerability (GHSA-63g3-9jq3-mccv)",
+    "description": [
+      "Grafana is prone to an insecure direct object reference (IDOR) vulnerability on Grafana Teams APIs."
+    ],
+    "detection_result": [
+      "Installed version: 5.1.0",
+      "Fixed version: 7.5.15",
+      "Installation path / port: /"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: Grafana IDOR Vulnerability (GHSA-63g3-9jq3-mccv)",
+      "OID:1.3.6.1.4.1.25623.1.0.147616",
+      "Version used: 2022-02-16T03:03:58Z"
+    ],
+    "product_detection_result": [],
+    "impact": [
+      "This vulnerability only impacts the following API endpoints:",
+      "- /teams/:teamId - an authenticated attacker can view unintended data by querying for the specic team ID.",
+      "- /teams/:search - an authenticated attacker can search for teams and see the total number of available teams, including for those teams that the user does not have access to.",
+      "- /teams/:teamId/members - when editors_can_admin ag is enabled, an authenticated attacker can see unintended data by querying for the specic team ID."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 7.5.15, 8.3.5 or later."
+    ],
+    "insight": [],
+    "log_method": [],
+    "cvss": [
+      "4.3"
+    ],
+    "port": 3000,
+    "protocol": "tcp",
+    "severity": "MEDIUM",
+    "references": [
+      "cve: CVE-2022-21713",
+      "url: https://github.com/grafana/grafana/security/advisories/GHSA-63g3-9jq3-mccv",
+      "cert-bund: WID-SEC-2022-0407",
+      "cert-bund: CB-K22/0159",
+      "dfn-cert: DFN-CERT-2022-2496",
+      "dfn-cert: DFN-CERT-2022-2397",
+      "dfn-cert: DFN-CERT-2022-2350",
+      "dfn-cert: DFN-CERT-2022-1386",
+      "dfn-cert: DFN-CERT-2022-0922",
+      "dfn-cert: DFN-CERT-2022-0794"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "TCP Timestamps Information Disclosure",
+    "description": [
+      "The remote host implements TCP timestamps and therefore allows to compute the uptime."
+    ],
+    "detection_result": [
+      "It was detected that the host implements RFC1323/RFC7323.",
+      "The following timestamps were retrieved with a delay of 1 seconds in-between:",
+      "Packet 1: 392323150",
+      "Packet 2: 392324258"
+    ],
+    "detection_method": [
+      "Special IP packets are forged and sent with a little delay in between to the target IP. The responses are searched for a timestamps. If found, the timestamps are reported.",
+      "Details: TCP Timestamps Information Disclosure",
+      "OID:1.3.6.1.4.1.25623.1.0.80091",
+      "Version used: 2023-12-15T16:10:08Z"
+    ],
+    "product_detection_result": [],
+    "impact": [
+      "A side eect of this feature is that the uptime of the remote host can sometimes be computed."
+    ],
+    "solution": [
+      "Solution type: Mitigation",
+      "To disable TCP timestamps on linux add the line 'net.ipv4.tcp_timestamps = 0' to /etc/sysctl.conf. Execute 'sysctl -p' to apply the settings at runtime.",
+      "To disable TCP timestamps on Windows execute 'netsh int tcp set global timestamps=disabled'",
+      "Starting with Windows Server 2008 and Vista, the timestamp can not be completely disabled.",
+      "The default behavior of the TCP/IP stack on this Systems is to not use the Timestamp options when initiating TCP connections, but use them if the TCP peer that is initiating communication includes them in their synchronize (SYN) segment.",
+      "See the references for more information."
+    ],
+    "insight": [
+      "The remote host implements TCP timestamps, as dened by RFC1323/RFC7323."
+    ],
+    "log_method": [],
+    "cvss": [
+      "2.6"
+    ],
+    "port": "general",
+    "protocol": "tcp",
+    "severity": "LOW",
+    "references": [
+      "url: https://datatracker.ietf.org/doc/html/rfc1323",
+      "url: https://datatracker.ietf.org/doc/html/rfc7323",
+      "url: https://web.archive.org/web/20151213072445/http://www.microsoft.com/en-us/download/details.aspx?id=9152",
+      "url: https://www.fortiguard.com/psirt/FG-IR-16-090"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "ICMP Timestamp Reply Information Disclosure",
+    "description": [
+      "The remote host responded to an ICMP timestamp request."
+    ],
+    "detection_result": [
+      "The following response / ICMP packet has been received:",
+      "- ICMP Type: 14",
+      "- ICMP Code: 0"
+    ],
+    "detection_method": [
+      "Sends an ICMP Timestamp (Type 13) request and checks if a Timestamp Reply (Type 14) is received."
+    ],
+    "product_detection_result": [],
+    "impact": [
+      "This information could theoretically be used to exploit weak time-based random number generators in other services."
+    ],
+    "solution": [
+      "Solution type: Mitigation",
+      "Various mitigations are possible:",
+      "- Disable the support for ICMP timestamp on the remote host completely",
+      "- Protect the remote host by a rewall, and block ICMP packets passing through the rewall in either direction (either completely or only for untrusted networks)"
+    ],
+    "insight": [
+      "The Timestamp Reply is an ICMP message which replies to a Timestamp message. It consists of the originating timestamp sent by the sender of the Timestamp as well as a receive timestamp and a transmit timestamp."
+    ],
+    "log_method": [],
+    "cvss": [
+      "2.1"
+    ],
+    "port": "general",
+    "protocol": "icmp",
+    "severity": "LOW",
+    "references": [
+      "cve: CVE-1999-0524",
+      "url: https://datatracker.ietf.org/doc/html/rfc792",
+      "url: https://datatracker.ietf.org/doc/html/rfc2780",
+      "cert-bund: CB-K15/1514",
+      "cert-bund: CB-K14/0632",
+      "dfn-cert: DFN-CERT-2014-0658"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Grafana Detection (HTTP)",
+    "description": [
+      "HTTP based detection of Grafana."
+    ],
+    "detection_result": [
+      "Detected Grafana",
+      "Version: 5.1.0",
+      "Location: /",
+      "CPE: cpe:/a:grafana:grafana:5.1.0",
+      "Concluded from version/product identification result:",
+      "Grafana v5.1.0 (",
+      "Concluded from version/product identification location:",
+      "http://grafana-old.trabalho_vulnnet:3000/login"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [
+      "Details: Grafana Detection (HTTP)",
+      "OID:1.3.6.1.4.1.25623.1.0.113259",
+      "Version used: 2025-11-18T05:39:54Z"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": 3000,
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [
+      "url: https://grafana.com/"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "HTTP Security Headers Detection",
+    "description": [
+      "All known security headers are being checked on the remote web server.",
+      "On completion a report will hand back whether a specic security header has been implemented (including its value and if it is deprecated) or is missing on the target."
+    ],
+    "detection_result": [
+      "Missing Headers | More Information",
+      "-------------------------------------------------------------------------------",
+      "Content-Security-Policy | https://owasp.org/www-project-secure-headers/#content-security-policy",
+      "Cross-Origin-Embedder-Policy | https://scotthelme.co.uk/coop-and-coep/, Note: This is an upcoming header",
+      "Cross-Origin-Opener-Policy | https://scotthelme.co.uk/coop-and-coep/, Note: This is an upcoming header",
+      "Cross-Origin-Resource-Policy | https://scotthelme.co.uk/coop-and-coep/, Note: This is an upcoming header",
+      "Document-Policy | https://w3c.github.io/webappsec-feature-policy/document-policy#document-policy-http-header",
+      "Feature-Policy | https://owasp.org/www-project-secure-headers/#feature-policy, Note: The Feature Policy header has been renamed to Permissions Policy",
+      "Permissions-Policy | https://w3c.github.io/webappsec-feature-policy/#permissions-policy-http-header-field",
+      "Referrer-Policy | https://owasp.org/www-project-secure-headers/#referrer-policy",
+      "Sec-Fetch-Dest | https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers#fetch_metadata_request_headers, Note: This is a new header supported only in newer browsers like e.g. Firefox 90",
+      "Sec-Fetch-Mode | https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers#fetch_metadata_request_headers, Note: This is a new header supported only in newer browsers like e.g. Firefox 90",
+      "Sec-Fetch-Site | https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers#fetch_metadata_request_headers, Note: This is a new header supported only in newer browsers like e.g. Firefox 90",
+      "Sec-Fetch-User | https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers#fetch_metadata_request_headers, Note: This is a new header supported only in newer browsers like e.g. Firefox 90",
+      "X-Content-Type-Options | https://owasp.org/www-project-secure-headers/#x-content-type-options",
+      "X-Frame-Options | https://owasp.org/www-project-secure-headers/#x-frame-options",
+      "X-Permitted-Cross-Domain-Policies | https://owasp.org/www-project-secure-headers/#x-permitted-cross-domain-policies",
+      "X-XSS-Protection | https://owasp.org/www-project-secure-headers/#x-xss-protection, Note: Most major browsers have dropped / deprecated support for this header in 2020."
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [
+      "Details: HTTP Security Headers Detection",
+      "OID:1.3.6.1.4.1.25623.1.0.112081",
+      "Version used: 2025-03-21T15:40:43Z"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": 3000,
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [
+      "url: https://owasp.org/www-project-secure-headers/",
+      "url: https://owasp.org/www-project-secure-headers/#div-headers",
+      "url: https://securityheaders.com/"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Web Application Scanning Consolidation / Info Reporting",
+    "description": [
+      "The script consolidates and reports various information for web application (formerly called 'CGI') scanning.",
+      "This information is based on the following scripts / settings:",
+      "- HTTP-Version Detection (OID: 1.3.6.1.4.1.25623.1.0.100034)",
+      "- No 404 check (OID: 1.3.6.1.4.1.25623.1.0.10386)",
+      "- Web mirroring / webmirror.nasl (OID: 1.3.6.1.4.1.25623.1.0.10662)",
+      "- Directory Scanner / DDI_Directory_Scanner.nasl (OID: 1.3.6.1.4.1.25623.1.0.11032)",
+      "- The congured 'cgi_path' within the 'Scanner Preferences' of the scan cong in use",
+      "- The congured 'Enable CGI scanning', 'Enable generic web application scanning' and 'Add historic /scripts and /cgi-bin to directories for CGI scanning' within the 'Global variable settings' of the scan cong in use",
+      "If you think any of this information is wrong please report it to the referenced community forum."
+    ],
+    "detection_result": [
+      "The Hostname/IP \"grafana-old.trabalho_vulnnet\" was used to access the remote host.",
+      "Generic web application scanning is disabled for this host via the \"Enable generic web application scanning\" option within the \"Global variable settings\" of the scan config in use.",
+      "Requests to this service are done via HTTP/1.1.",
+      "This service seems to be able to host PHP scripts.",
+      "This service seems to be able to host ASP scripts.",
+      "The User-Agent \"Mozilla/5.0 [en] (X11, U; OpenVAS-VT <version replaced>)\" was used to access the remote host.",
+      "Historic /scripts and /cgi-bin are not added to the directories used for web application scanning. You can enable this again with the \"Add historic /scripts and /cgi-bin to directories for CGI scanning\" option within the \"Global variable settings\" of the scan config in use.",
+      "A possible recursion was detected during web application scanning:",
+      "The service is using a relative URL in one or more HTML references where e.g. /file1.html contains <a href=\"subdir/file2.html\"> and a subsequent request for subdir/file2.html is linking to subdir/file2.html. This would resolves to subdir/subdir/file2.html causing a recursion. To work around this counter-measures have been enabled but the service should be fixed as well to not use such problematic links. Below an excerpt of URLs is shown to help identify those issues"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [],
+    "cvss": [
+      "0.0"
+    ],
+    "port": 3000,
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "robot.txt / robots.txt exists on the Web Server (HTTP)",
+    "description": [
+      "Web Servers can use a le called /robot(s).txt to ask search engines to ignore certain les and directories. By nature this le can not be used to protect private les from public read access. Quality of Detection (QoD): 80%"
+    ],
+    "detection_result": [
+      "The file 'http://grafana-old.trabalho_vulnnet:3000/robots.txt' contains the foll ->owing: User-agent: * Disallow: /"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [
+      "Solution type: Mitigation Review the content of the /robot(s).txt le and consider removing the les from the server or protect them in other ways in case you actually intended non-public availability."
+    ],
+    "insight": [
+      "Any serious web search engine will honor the /robot(s).txt le and not scan the les and direc- tories listed there. Any entries listed in this le are not even hidden anymore."
+    ],
+    "log_method": [
+      "Details: robot.txt / robots.txt exists on the Web Server (HTTP) OID:1.3.6.1.4.1.25623.1.0.10302 Version used: 2024-02-26T14:36:40Z"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": 3000,
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [
+      "url: https://www.robotstxt.org/",
+      "url: https://www.robotstxt.org/norobots-rfc.txt"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Allowed HTTP Methods Enumeration",
+    "description": [
+      "Enumerates which HTTP methods are allowed. Quality of Detection (QoD): 70%"
+    ],
+    "detection_result": [
+      "The following list contains the URLs and corresponding supported HTTP methods. URL | HTTP Methods -------------------------------------------------------- http://grafana-old.trabalho_vulnnet:3000/ | GET,HEAD"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [
+      "- Basic HTTP methods: GET, HEAD, POST, PUT, DELETE, CONNECT, OPTIONS, TRACE - Extended HTTP methods: ACL, BASELINE-CONTROL, BIND, CHECKIN, CHECK- OUT, COPY, LABEL, LINK, LOCK, MERGE, MKACTIVITY, MKCALENDAR, MKCOL, MKREDIRECTREF, MKWORKSPACE, MOVE, ORDERPATCH, PATCH, PRI, PROPFIND, PROPPATCH, REBIND, REPORT, SEARCH, UNBIND, UNCHECKOUT, UNLINK, UN- LOCK, UPDATE, UPDATEREDIRECTREF, VERSION-CONTROL"
+    ],
+    "log_method": [
+      "Sends multiple HTTP requests and checks the responses. Disclaimer: - This enumeration script is provided 'as is' (means no support is given) and only providing rudimentary information about the possible enabled methods - This script doesn't guarantee completeness or full reliability For more reliable determination of the enabled HTTP methods please inspect the conguration of the web server manually and directly on the target host. Details: Allowed HTTP Methods Enumeration OID:1.3.6.1.4.1.25623.1.0.153974 Version used: 2025-02-28T05:38:49Z"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": 3000,
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Services",
+    "description": [
+      "This plugin performs service detection. Quality of Detection (QoD): 80%"
+    ],
+    "detection_result": [
+      "A web server is running on this port"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [
+      "This plugin attempts to guess which service is running on the remote port(s). For instance, it searches for a web server which could listen on another port than 80 or 443 and makes this information available for other check routines."
+    ],
+    "log_method": [
+      "Details: Services OID:1.3.6.1.4.1.25623.1.0.10330 Version used: 2025-03-05T05:38:53Z"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": 3000,
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Hostname Determination Reporting",
+    "description": [
+      "The script reports information on how the hostname of the target was determined. Quality of Detection (QoD): 80%"
+    ],
+    "detection_result": [
+      "Hostname determination for IP 172.30.19.2: Hostname|Source grafana-old.trabalho_vulnnet|Reverse-DNS"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [
+      "Details: Hostname Determination Reporting OID:1.3.6.1.4.1.25623.1.0.108449 Version used: 2022-07-27T10:11:28Z"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": 3000,
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "OS Detection Consolidation and Reporting",
+    "description": [
+      "This script consolidates the OS information detected by several VTs and tries to nd the best matching OS. Furthermore it reports all previously collected information leading to this best matching OS. It also reports possible additional information which might help to improve the OS detection. If any of this information is wrong or could be improved please consider to report these to the referenced community forum. Quality of Detection (QoD): 80%"
+    ],
+    "detection_result": [
+      "Best matching OS: OS: Linux Kernel"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [],
+    "cvss": [
+      "0.0"
+    ],
+    "port": 3000,
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Hostname Determination Reporting",
+    "description": [
+      "The script reports information on how the hostname of the target was determined."
+    ],
+    "detection_result": [
+      "Hostname determination for IP 172.30.19.2:",
+      "Hostname|Source",
+      "grafana-old.trabalho_vulnnet|Reverse-DNS"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [
+      "Details: Hostname Determination Reporting",
+      "OID:1.3.6.1.4.1.25623.1.0.108449",
+      "Version used: 2022-07-27T10:11:28Z"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": "general",
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "OS Detection Consolidation and Reporting",
+    "description": [
+      "This script consolidates the OS information detected by several VTs and tries to nd the best matching OS.",
+      "Furthermore it reports all previously collected information leading to this best matching OS. It also reports possible additional information which might help to improve the OS detection.",
+      "If any of this information is wrong or could be improved please consider to report these to the referenced community forum."
+    ],
+    "detection_result": [
+      "Best matching OS:",
+      "OS: Linux Kernel",
+      "CPE: cpe:/o:linux:kernel",
+      "Found by VT: 1.3.6.1.4.1.25623.1.0.102002 (Operating System (OS) Detection (ICM ->P))",
+      "Concluded from ICMP based OS fingerprint",
+      "Setting key \"Host/runs_unixoide\" based on this information"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [
+      "Details: OS Detection Consolidation and Reporting",
+      "OID:1.3.6.1.4.1.25623.1.0.105937",
+      "Version used: 2026-01-21T05:50:46Z"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": "general",
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [
+      "url: https://forum.greenbone.net/c/vulnerability-tests/7"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "IP Forwarding Enabled - Active Check",
+    "description": [
+      "Checks if the remote host has IP forwarding enabled."
+    ],
+    "detection_result": [
+      "It was possible to route a TCP packet through the target host and received an an ->swer which means IP forwarding is enabled."
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [
+      "Sends a crafted Local Link Layer (LLL) frame and checks the response.",
+      "Details: IP Forwarding Enabled - Active Check",
+      "OID:1.3.6.1.4.1.25623.1.0.147205",
+      "Version used: 2021-12-03T08:27:06Z"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": "general",
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [
+      "cve: CVE-1999-0511"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Traceroute",
+    "description": [
+      "Collect information about the network route and network distance between the scanner host and the target host."
+    ],
+    "detection_result": [
+      "Network route from scanner (172.30.0.2) to target (172.30.19.2):",
+      "172.30.0.2",
+      "172.30.19.2",
+      "Network distance between scanner and target: 2"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [
+      "For internal networks, the distances are usually small, often less than 4 hosts between scanner and target. For public targets the distance is greater and might be 10 hosts or more."
+    ],
+    "log_method": [
+      "A combination of the protocols ICMP and TCP is used to determine the route. This method is applicable for IPv4 only and it is also known as 'traceroute'.",
+      "Details: Traceroute",
+      "OID:1.3.6.1.4.1.25623.1.0.51662",
+      "Version used: 2022-10-17T11:13:19Z"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": "general",
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "CPE Inventory",
+    "description": [
+      "This routine uses information collected by other routines about CPE identities of operating systems, services and applications detected during the scan.",
+      "Note: Some CPEs for specic products might show up twice or more in the output. Background: After a product got renamed or a specic vendor was acquired by another one it might happen that a product gets a new CPE within the NVD CPE Dictionary but older entries are kept with the older CPE.",
+      "Quality of Detection (QoD): 80%"
+    ],
+    "detection_result": [
+      "172.30.19.2|cpe:/a:grafana:grafana:5.1.0",
+      "172.30.19.2|cpe:/o:linux:kernel"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [
+      "Details: CPE Inventory",
+      "OID:1.3.6.1.4.1.25623.1.0.810002",
+      "Version used: 2022-07-27T10:11:28Z"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": "general",
+    "protocol": "CPE-T",
+    "severity": "LOG",
+    "references": [
+      "url: https://nvd.nist.gov/products/cpe"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  }
+]

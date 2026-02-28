@@ -1,0 +1,178 @@
+# LOG DE DEDUPLICAÇÃO DE VULNERABILIDADES
+Este arquivo lista todas as vulnerabilidades consideradas duplicatas e agrupadas durante o processo.
+Cada grupo é identificado por uma chave composta (ex: nome, porta, protocolo).
+Apenas a vulnerabilidade mais completa e com descrição válida foi mantida em cada grupo.
+
+Total de grupos de duplicatas: 28
+Total de vulnerabilidades agrupadas (removidas): 12
+
+Grupo 1: Chave = ('Python Multiple Vulnerabilities (Jun 2025) - Linux', 5000, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Python Multiple Vulnerabilities (Jun 2025) - Linux
+       Porta: 5000 | Protocolo: tcp | Severidade: Critical
+       Descrição: Python is prone to multiple vulnerabilities. Quality of Detection (QoD): 30%
+
+Grupo 2: Chave = ('Python DoS Vulnerability (Dec 2025) - Linux', 5000, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Python DoS Vulnerability (Dec 2025) - Linux
+       Porta: 5000 | Protocolo: tcp | Severidade: Critical
+       Descrição: Python is prone to a denial of service (DoS) vulnerability.
+
+Grupo 3: Chave = ('Python DoS Vulnerability (Jul 2025) - Linux', 5000, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Python DoS Vulnerability (Jul 2025) - Linux
+       Porta: 5000 | Protocolo: tcp | Severidade: HIGH
+       Descrição: Python is prone to a denial of service (DoS) vulnerability.
+
+Grupo 4: Chave = ('Python Command Injection Vulnerability (Oct 2024) - Linux', 5000, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Python Command Injection Vulnerability (Oct 2024) - Linux
+       Porta: 5000 | Protocolo: tcp | Severidade: MEDIUM
+       Descrição: Python is prone to a command injection vulnerability in the venv module.
+
+Grupo 5: Chave = ("Python <= 3.12.1 'RecursionError' Vulnerability - Linux", 5000, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Python <= 3.12.1 'RecursionError' Vulnerability - Linux
+       Porta: 5000 | Protocolo: tcp | Severidade: HIGH
+       Descrição: Python is prone to a 'RecursionError' vulnerability.
+
+Grupo 6: Chave = ('Python <= 2.7.18, 3.x <= 3.12.3 Security Bypass Vulnerability - Linux', 5000, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Python <= 2.7.18, 3.x <= 3.12.3 Security Bypass Vulnerability - Linux
+       Porta: 5000 | Protocolo: tcp | Severidade: MEDIUM
+       Descrição: Python is prone to a security bypass vulnerability in the e-mail module.
+
+Grupo 7: Chave = ('Python DoS Vulnerability (Oct 2025) - Linux', 5000, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Python DoS Vulnerability (Oct 2025) - Linux
+       Porta: 5000 | Protocolo: tcp | Severidade: MEDIUM
+       Descrição: Python is prone to a denial of service (DoS) vulnerability. Quality of Detection (QoD): 30%
+
+Grupo 8: Chave = ("Python 'ziple' Module Vulnerability (Oct 2025) - Linux", 5000, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Python 'ziple' Module Vulnerability (Oct 2025) - Linux
+       Porta: 5000 | Protocolo: tcp | Severidade: MEDIUM
+       Descrição: Python is prone to a vulnerability in the 'ziple' module. Quality of Detection (QoD): 30%
+
+Grupo 9: Chave = ('Python Use After Free Vulnerability (May 2025) - Linux', 5000, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Python Use After Free Vulnerability (May 2025) - Linux
+       Porta: 5000 | Protocolo: tcp | Severidade: MEDIUM
+       Descrição: Python is prone to an use after free vulnerability.
+
+Grupo 10: Chave = ('Python DoS Vulnerability (Jun 2025) - Linux', 5000, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Python DoS Vulnerability (Jun 2025) - Linux
+       Porta: 5000 | Protocolo: tcp | Severidade: MEDIUM
+       Descrição: Python is prone to a denial of service (DoS) vulnerability. Quality of Detection (QoD): 30%
+
+Grupo 11: Chave = ('ICMP Timestamp Reply Information Disclosure', 'general', 'icmp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: ICMP Timestamp Reply Information Disclosure
+       Porta: general | Protocolo: icmp | Severidade: LOW
+       Descrição: The remote host responded to an ICMP timestamp request. Quality of Detection (QoD): 80%
+
+Grupo 12: Chave = ('Python Improper Input Validation Vulnerability (Jan 2025) - Linux', 5000, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Python Improper Input Validation Vulnerability (Jan 2025) - Linux
+       Porta: 5000 | Protocolo: tcp | Severidade: LOW
+       Descrição: Python is prone to an improper input validation vulnerability in the urllib.parse.urlsplit and urlparse standard functions.
+
+Grupo 13: Chave = ('TCP Timestamps Information Disclosure', 'general', 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: TCP Timestamps Information Disclosure
+       Porta: general | Protocolo: tcp | Severidade: LOW
+       Descrição: The remote host implements TCP timestamps and therefore allows to compute the uptime. Quality of Detection (QoD): 80%
+
+Grupo 14: Chave = (('Name', 'Services'), ('cvss', ('0.0',)), ('description', ('This plugin performs service detection.', 'Quality of Detection (QoD): 80%')), ('detection_method', ()), ('detection_result', ()), ('impact', ()), ('insight', ()), ('instances', ()), ('log_method', ()), ('plugin', None), ('plugin_details', ()), ('port', 5000), ('product_detection_result', ()), ('protocol', 'tcp'), ('references', ()), ('severity', 'LOG'), ('solution', ()), ('source', 'OPENVAS'))
+  Total de duplicatas neste grupo: 1
+    1. Nome: Services
+       Porta: 5000 | Protocolo: tcp | Severidade: LOG
+       Descrição: This plugin performs service detection. Quality of Detection (QoD): 80%
+
+Grupo 15: Chave = (('Name', 'Services'), ('cvss', ('0.0',)), ('description', ('This plugin performs service detection.',)), ('detection_method', ()), ('detection_result', ('A web server is running on this port',)), ('impact', ()), ('insight', ('This plugin attempts to guess which service is running on the remote port(s). For instance, it searches for a web server which could listen on another port than 80 or 443 and makes this information available for other check routines.',)), ('instances', ()), ('log_method', ('Details: Services', 'OID:1.3.6.1.4.1.25623.1.0.10330', 'Version used: 2025-03-05T05:38:53Z')), ('plugin', None), ('plugin_details', ()), ('port', 5000), ('product_detection_result', ()), ('protocol', 'tcp'), ('references', ()), ('severity', 'LOG'), ('solution', ()), ('source', 'OPENVAS'))
+  Total de duplicatas neste grupo: 1
+    1. Nome: Services
+       Porta: 5000 | Protocolo: tcp | Severidade: LOG
+       Descrição: This plugin performs service detection.
+
+Grupo 16: Chave = ('HTTP Server type and version', 5000, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: HTTP Server type and version
+       Porta: 5000 | Protocolo: tcp | Severidade: LOG
+       Descrição: This script detects and reports the HTTP Server's banner which might provide the type and version of it.
+
+Grupo 17: Chave = ('HTTP Server Banner Enumeration', 5000, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: HTTP Server Banner Enumeration
+       Porta: 5000 | Protocolo: tcp | Severidade: LOG
+       Descrição: This script tries to detect / enumerate dierent HTTP server banner (e.g. from a frontend, backend or proxy server) by sending various dierent HTTP requests (valid and invalid ones).
+
+Grupo 18: Chave = ('HTTP Security Headers Detection', 5000, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: HTTP Security Headers Detection
+       Porta: 5000 | Protocolo: tcp | Severidade: LOG
+       Descrição: All known security headers are being checked on the remote web server. On completion a report will hand back whether a specic security header has been implemented (including its value and if it is dep...
+
+Grupo 19: Chave = ('Web Application Scanning Consolidation / Info Reporting', 5000, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Web Application Scanning Consolidation / Info Reporting
+       Porta: 5000 | Protocolo: tcp | Severidade: LOG
+       Descrição: The script consolidates and reports various information for web application (formerly called 'CGI') scanning. This information is based on the following scripts / settings: - HTTP-Version Detection (O...
+
+Grupo 20: Chave = ('Allowed HTTP Methods Enumeration', 5000, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Allowed HTTP Methods Enumeration
+       Porta: 5000 | Protocolo: tcp | Severidade: LOG
+       Descrição: Enumerates which HTTP methods are allowed.
+
+Grupo 21: Chave = ('OS Detection Consolidation and Reporting', 'general', 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: OS Detection Consolidation and Reporting
+       Porta: general | Protocolo: tcp | Severidade: LOG
+       Descrição: This script consolidates the OS information detected by several VTs and tries to nd the best matching OS. Furthermore it reports all previously collected information leading to this best matching OS. ...
+
+Grupo 22: Chave = ('Python Detection Consolidation', 'general', 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Python Detection Consolidation
+       Porta: general | Protocolo: tcp | Severidade: LOG
+       Descrição: Consolidation of Python detections. Quality of Detection (QoD): 80%
+
+Grupo 23: Chave = ('Traceroute', 'general', 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Traceroute
+       Porta: general | Protocolo: tcp | Severidade: LOG
+       Descrição: Collect information about the network route and network distance between the scanner host and the target host. Quality of Detection (QoD): 80%
+
+Grupo 24: Chave = ('IP Forwarding Enabled - Active Check', 'general', 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: IP Forwarding Enabled - Active Check
+       Porta: general | Protocolo: tcp | Severidade: LOG
+       Descrição: Checks if the remote host has IP forwarding enabled. Quality of Detection (QoD): 70%
+
+Grupo 25: Chave = ('Unknown OS and Service Banner Reporting', 'general', 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Unknown OS and Service Banner Reporting
+       Porta: general | Protocolo: tcp | Severidade: LOG
+       Descrição: This VT consolidates and reports the information collected by the following VTs: - Collect banner of unknown services (OID: 1.3.6.1.4.1.25623.1.0.11154) - Service Detection (unknown) with nmap (OID: 1...
+
+Grupo 26: Chave = ('Hostname Determination Reporting', 'general', 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Hostname Determination Reporting
+       Porta: general | Protocolo: tcp | Severidade: LOG
+       Descrição: The script reports information on how the hostname of the target was determined.
+
+Grupo 27: Chave = ('CPE Inventory', 'general', 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: CPE Inventory
+       Porta: general | Protocolo: tcp | Severidade: LOG
+       Descrição: This routine uses information collected by other routines about CPE identities of operating systems, services and applications detected during the scan. Note: Some CPEs for specic products might show ...
+
+Grupo 28: Chave = ('CPE Inventory', 'general', 'CPE-T')
+  Total de duplicatas neste grupo: 1
+    1. Nome: CPE Inventory
+       Porta: general | Protocolo: CPE-T | Severidade: LOG
+       Descrição: This routine uses information collected by other routines about CPE identities of operating systems, services and applications detected during the scan. Note: Some CPEs for specic products might show ...
+Resumo final:
+Total de grupos de duplicatas: 28
+Total de vulnerabilidades agrupadas (removidas): 12

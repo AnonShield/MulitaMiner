@@ -1,0 +1,3144 @@
+[
+  {
+    "Name": "Mort Bay / Eclipse Jetty End of Life (EOL) Detection - Linux",
+    "description": [
+      "The Mort Bay / Eclipse Jetty version on the remote host has reached the End of Life (EOL) and should not be used anymore."
+    ],
+    "detection_result": [
+      "The \"Mort Bay / Eclipse Jetty\" version on the remote host has reached the end of life.",
+      "CPE: cpe:/a:eclipse:jetty:9.2",
+      "Installed version: 9.2",
+      "Location/URL: 8080/tcp",
+      "EOL version: 9.2",
+      "EOL date: 2018-12-31"
+    ],
+    "detection_method": [
+      "Checks if an EOL version is present on the target host.",
+      "Details: Mort Bay / Eclipse Jetty End of Life (EOL) Detection - Linux",
+      "OID:1.3.6.1.4.1.25623.1.0.117294",
+      "Version used: 2025-04-15T05:54:49Z"
+    ],
+    "product_detection_result": [
+      "Product: cpe:/a:eclipse:jetty:9.2",
+      "Method: Mort Bay / Eclipse Jetty Detection (HTTP)",
+      "OID: 1.3.6.1.4.1.25623.1.0.800953)"
+    ],
+    "impact": [
+      "An EOL version of Mort Bay / Eclipse Jetty is not receiving any security updates from the vendor. Unxed security vulnerabilities might be leveraged by an attacker to compromise the security of this host."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update the Mort Bay / Eclipse Jetty version on the remote host to a still supported version."
+    ],
+    "insight": [],
+    "log_method": [],
+    "cvss": [
+      "0.0"
+    ],
+    "port": 8080,
+    "protocol": "tcp",
+    "severity": "Critical",
+    "references": [
+      "url: https://jetty.org/download.html#version-history"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Jenkins < 2.154 and < 2.138.4 LTS Multiple Vulnerabilities - Linux",
+    "description": [
+      "Jenkins is prone to multiple vulnerabilities."
+    ],
+    "detection_result": [
+      "Installed version: 2.60",
+      "Fixed version: 2.154",
+      "Installation path / port: /"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: Jenkins < 2.154 and < 2.138.4 LTS Multiple Vulnerabilities - Linux",
+      "OID:1.3.6.1.4.1.25623.1.0.108511",
+      "Version used: 2023-07-20T05:05:17Z"
+    ],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [
+      "Solution type: VendorFix",
+      "Upgrade to Jenkins weekly to 2.154 or later / Jenkins LTS to either 2.138.4 or 2.150.1 or later."
+    ],
+    "insight": [
+      "Jenkins is prone to the following vulnerabilities:",
+      "- Code execution through crafted URLs (CVE-2018-1000861).",
+      "- Forced migration of user records (CVE-2018-1000863).",
+      "- Workspace browser allowed accessing les outside the workspace (CVE-2018-1000862).",
+      "- Potential denial of service through cron expression form validation (CVE-2018-1000864)."
+    ],
+    "log_method": [],
+    "cvss": [
+      "9.8"
+    ],
+    "port": 8080,
+    "protocol": "tcp",
+    "severity": "CRITICAL",
+    "references": [
+      "cve: CVE-2018-1000861",
+      "cve: CVE-2018-1000862",
+      "cve: CVE-2018-1000863",
+      "cve: CVE-2018-1000864",
+      "cisa: Known Exploited Vulnerability (KEV) catalog",
+      "url: https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
+      "url: https://jenkins.io/security/advisory/2018-12-05/",
+      "dfn-cert: DFN-CERT-2018-2487"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Jenkins < 2.303.3, < 2.319 Multiple Vulnerabilities - Linux",
+    "description": [
+      "Jenkins is prone to multiple vulnerabilities."
+    ],
+    "detection_result": [
+      "Installed version: 2.60",
+      "Fixed version: 2.319",
+      "Installation path / port: /"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: Jenkins < 2.303.3, < 2.319 Multiple Vulnerabilities - Linux",
+      "OID:1.3.6.1.4.1.25623.1.0.147111",
+      "Version used: 2021-11-10T03:03:45Z"
+    ],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 2.319, 2.303.3 LTS or later."
+    ],
+    "insight": [
+      "The following vulnerabilities exist:",
+      "- CVE-2021-21685, CVE-2021-21686, CVE-2021-21687, CVE-2021-21688, CVE-2021-21689, CVE-2021-21690, CVE-2021-21691, CVE-2021-21692, CVE-2021-21693, CVE-2021-21694, CVE-2021-21695: Bypassing path ltering of agent-to-controller access control",
+      "- CVE-2021-21696: Agent-to-controller access control allowed writing to sensitive directory used by Pipeline: Shared Groovy Libraries Plugin",
+      "- CVE-2021-21697: Agent-to-controller access control allows reading/writing most content of build directories"
+    ],
+    "log_method": [],
+    "cvss": [
+      "9.8"
+    ],
+    "port": 8080,
+    "protocol": "tcp",
+    "severity": "CRITICAL",
+    "references": [
+      "cve: CVE-2021-21685",
+      "cve: CVE-2021-21686",
+      "cve: CVE-2021-21687",
+      "cve: CVE-2021-21688",
+      "cve: CVE-2021-21689",
+      "cve: CVE-2021-21690",
+      "cve: CVE-2021-21691",
+      "cve: CVE-2021-21692",
+      "cve: CVE-2021-21693",
+      "cve: CVE-2021-21694",
+      "cve: CVE-2021-21695",
+      "cve: CVE-2021-21696",
+      "cve: CVE-2021-21697",
+      "url: https://www.jenkins.io/security/advisory/2021-11-04/",
+      "dfn-cert: DFN-CERT-2021-2487",
+      "dfn-cert: DFN-CERT-2021-2308"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Jenkins < 2.243, < 2.235.5 LTS Buer Corruption in bundled Jetty - Linux",
+    "description": [
+      "Jenkins is prone to a buer corruption in bundled Jetty."
+    ],
+    "detection_result": [
+      "Installed version: 2.60",
+      "Fixed version: 2.243",
+      "Installation",
+      "path / port: /"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.   Details: Jenkins < 2.243, < 2.235.5 LTS Buffer Corruption in bundled Jetty - Linux  OID:1.3.6.1.4.1.25623.1.0.112811   Version used: 2021-07-08T11:00:45Z"
+    ],
+    "product_detection_result": [],
+    "impact": [
+      "This vulnerability may allow unauthenticated attackers to obtain HTTP response headers that may include sensitive data intended for another user."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 2.243, 2.235.5 LTS or later."
+    ],
+    "insight": [
+      "In Eclipse Jetty in case of too large response headers, Jetty throws an exception to produce an HTTP 431 error. When this happens, the ByteBuer containing the HTTP response headers is released back to the ByteBuerPool twice. Because of this double release, two threads can acquire the same ByteBuer from the pool and while thread1 is about to use the ByteBuer to write response1 data, thread2 lls the ByteBuer with response2 data. Thread1 then proceeds to write the buer that now contains response2 data.",
+      "This results in client1, which issued request1 and expects responses, to see response2 which could contain sensitive data belonging to client2 (HTTP session ids, authentication credentials, etc.)."
+    ],
+    "log_method": [],
+    "cvss": [
+      "8.8"
+    ],
+    "port": 8080,
+    "protocol": "tcp",
+    "severity": "Critical",
+    "references": [
+      "cve: CVE-2019-17638",
+      "url: https://www.jenkins.io/security/advisory/2020-08-17/",
+      "cert-bund: CB-K20/1023",
+      "dfn-cert: DFN-CERT-2021-0819",
+      "dfn-cert: DFN-CERT-2020-2762",
+      "dfn-cert: DFN-CERT-2020-2141",
+      "dfn-cert: DFN-CERT-2020-1837",
+      "dfn-cert: DFN-CERT-2020-1814"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Jenkins < 2.133 and < 2.121.2 LTS Multiple Vulnerabilities - Linux",
+    "description": [
+      "Jenkins is prone to multiple vulnerabilities."
+    ],
+    "detection_result": [
+      "Installed version: 2.60",
+      "Fixed version: 2.133",
+      "Installation",
+      "path / port: /"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: Jenkins < 2.133 and < 2.121.2 LTS Multiple Vulnerabilities - Linux",
+      "OID:1.3.6.1.4.1.25623.1.0.112331",
+      "Version used: 2023-11-03T05:05:46Z"
+    ],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [
+      "Solution type: VendorFix",
+      "Upgrade to Jenkins weekly to 2.132 or later / Jenkins LTS to 2.121.2 or later."
+    ],
+    "insight": [
+      "Jenkins is prone to the following vulnerabilities:",
+      "- Users without Overall/Read permission can have Jenkins reset parts of global conguration on the next restart (CVE-2018-1999001).",
+      "- Arbitrary le read vulnerability (CVE-2018-1999002).",
+      "- Unauthorized users could cancel queued builds (CVE-2018-1999003).",
+      "- Unauthorized users could initiate and abort agent launches (CVE-2018-1999004).",
+      "- Stored XSS vulnerability (CVE-2018-1999005).",
+      "- Unauthorized users are able to determine when a plugin was extracted from its JPI package (CVE-2018-1999006).",
+      "- XSS vulnerability in Stapler debug mode (CVE-2018-1999007)."
+    ],
+    "log_method": [],
+    "cvss": [
+      "8.8"
+    ],
+    "port": 8080,
+    "protocol": "tcp",
+    "severity": "HIGH",
+    "references": [
+      "cve: CVE-2018-1999001",
+      "cve: CVE-2018-1999002",
+      "cve: CVE-2018-1999003",
+      "cve: CVE-2018-1999004",
+      "cve: CVE-2018-1999005",
+      "cve: CVE-2018-1999006",
+      "cve: CVE-2018-1999007",
+      "url: https://jenkins.io/security/advisory/2018-07-18/",
+      "dfn-cert: DFN-CERT-2018-1419"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Jenkins < 2.192 and < 2.176.3 LTS Multiple Vulnerabilities - Linux",
+    "description": [
+      "Jenkins is prone to multiple vulnerabilities."
+    ],
+    "detection_result": [
+      "Installed version: 2.60",
+      "Fixed version: 2.192",
+      "Installation",
+      "path / port: /"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: Jenkins < 2.192 and < 2.176.3 LTS Multiple Vulnerabilities - Linux",
+      "OID:1.3.6.1.4.1.25623.1.0.142823",
+      "Version used: 2022-06-15T03:04:08Z"
+    ],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 2.176.3 LTS, 2.192 weekly or later."
+    ],
+    "insight": [
+      "Jenkins is prone to multiple vulnerabilities:",
+      "- Stored XSS vulnerability in update center (CVE-2019-10383)",
+      "- CSRF protection tokens for anonymous users does not expire in some circumstances (CVE-2019-10384)"
+    ],
+    "log_method": [],
+    "cvss": [
+      "8.8"
+    ],
+    "port": 8080,
+    "protocol": "tcp",
+    "severity": "HIGH",
+    "references": [
+      "cve: CVE-2019-10383",
+      "cve: CVE-2019-10384",
+      "url: https://jenkins.io/security/advisory/2019-08-28/",
+      "dfn-cert: DFN-CERT-2019-1972",
+      "dfn-cert: DFN-CERT-2019-1802"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Jenkins < 2.228, < 2.204.6 LTS Multiple Vulnerabilities - Linux",
+    "description": [
+      "Jenkins is prone to multiple vulnerabilities."
+    ],
+    "detection_result": [
+      "Installed version: 2.60",
+      "Fixed version: 2.228",
+      "Installation",
+      "path / port: /"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: Jenkins < 2.228, < 2.204.6 LTS Multiple Vulnerabilities - Linux",
+      "OID:1.3.6.1.4.1.25623.1.0.143641",
+      "Version used: 2021-07-08T11:00:45Z"
+    ],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 2.228, 2.204.6 LTS or later."
+    ],
+    "insight": [
+      "Jenkins is prone to multiple vulnerabilities:",
+      "- CSRF protection for any URL could be bypassed (CVE-2020-2160)",
+      "- Stored XSS vulnerability in label expression validation (CVE-2020-2161)",
+      "- Stored XSS vulnerability in le parameters (CVE-2020-2162)",
+      "- Stored XSS vulnerability in list view column headers (CVE-2020-2163)"
+    ],
+    "log_method": [],
+    "cvss": [
+      "8.8"
+    ],
+    "port": 8080,
+    "protocol": "tcp",
+    "severity": "HIGH",
+    "references": [
+      "cve: CVE-2020-2160",
+      "cve: CVE-2020-2161",
+      "cve: CVE-2020-2162",
+      "cve: CVE-2020-2163",
+      "url: https://jenkins.io/security/advisory/2020-03-25/",
+      "dfn-cert: DFN-CERT-2020-1441",
+      "dfn-cert: DFN-CERT-2020-0624"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Jenkins Multiple Vulnerabilities (Oct 2017) - Linux",
+    "description": [
+      "Jenkins is prone to multiple vulnerabilities."
+    ],
+    "detection_result": [
+      "Installed version: 2.60",
+      "Fixed version: 2.84",
+      "Installation",
+      "path / port: /"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: Jenkins Multiple Vulnerabilities (Oct 2017) - Linux",
+      "OID:1.3.6.1.4.1.25623.1.0.112106",
+      "Version used: 2023-07-25T05:05:58Z"
+    ],
+    "product_detection_result": [],
+    "impact": [
+      "Successful exploitation will allow remote attackers to obtain sensitive information, and execute arbitrary code."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Upgrade to Jenkins weekly to 2.84 or later / Jenkins LTS to 2.73.2 or later."
+    ],
+    "insight": [
+      "Multiple aws are due to:",
+      "- arbitrary shell command execution",
+      "- bundling vulnerable libraries",
+      "- disclosing various information",
+      "- sending form validation for passwords via GET"
+    ],
+    "log_method": [],
+    "cvss": [
+      "8.8"
+    ],
+    "port": 8080,
+    "protocol": "tcp",
+    "severity": "HIGH",
+    "references": [
+      "cve: CVE-2017-1000393",
+      "cve: CVE-2017-1000394",
+      "cve: CVE-2017-1000395",
+      "cve: CVE-2017-1000396",
+      "cve: CVE-2017-1000398",
+      "cve: CVE-2017-1000399",
+      "cve: CVE-2017-1000400",
+      "cve: CVE-2017-1000401",
+      "cve: CVE-2012-6153",
+      "url: https://jenkins.io/security/advisory/2017-10-11/",
+      "cert-bund: WID-SEC-2026-0180",
+      "cert-bund: CB-K15/1508",
+      "cert-bund: CB-K15/1506",
+      "cert-bund: CB-K15/0678",
+      "cert-bund: CB-K15/0391",
+      "cert-bund: CB-K15/0330",
+      "cert-bund: CB-K15/0186",
+      "cert-bund: CB-K15/0148",
+      "cert-bund: CB-K14/1598",
+      "cert"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Jenkins < 2.214, < 2.204.2 LTS Authentication Bypass Vulnerability - Linux",
+    "description": [
+      "Jenkins is prone to an inbound TCP Agent Protocol/3 authentication bypass vulnerability.",
+      "Quality of Detection (QoD): 30%"
+    ],
+    "detection_result": [
+      "Installed version: 2.60",
+      "Fixed version: 2.214",
+      "Installation",
+      "path / port: /"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: Jenkins < 2.214, < 2.204.2 LTS Authentication Bypass Vulnerability - Linux",
+      "OID:1.3.6.1.4.1.25623.1.0.143437",
+      "Version used: 2021-07-08T11:00:45Z"
+    ],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 2.214, 2.204.2 LTS or later."
+    ],
+    "insight": [
+      "Jenkins includes support for the Inbound TCP Agent Protocol/3 for communication between master and agents. While this protocol has been deprecated in 2018 and was recently removed from Jenkins in 2.214, it could still easily be enabled in Jenkins LTS 2.204.1, 2.213, and older.",
+      "This protocol incorrectly reuses encryption parameters which allow an unauthenticated remote attacker to determine the connection secret. This secret can then be used to connect attacker-controlled Jenkins agents to the Jenkins master."
+    ],
+    "log_method": [],
+    "cvss": [
+      "8.1"
+    ],
+    "port": 8080,
+    "protocol": "tcp",
+    "severity": "HIGH",
+    "references": [
+      "cve: CVE-2020-2099",
+      "url: https://jenkins.io/security/advisory/2020-01-29/#SECURITY-1682",
+      "dfn-cert: DFN-CERT-2020-0207"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Jenkins < 2.121 and < 2.107.3 LTS Multiple Vulnerabilities - Linux",
+    "description": [
+      "Jenkins is prone to multiple vulnerabilities.",
+      "Quality of Detection (QoD): 30%"
+    ],
+    "detection_result": [
+      "Installed version: 2.60",
+      "Fixed version: 2.121",
+      "Installation",
+      "path / port: /"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: Jenkins < 2.121 and < 2.107.3 LTS Multiple Vulnerabilities - Linux",
+      "OID:1.3.6.1.4.1.25623.1.0.112297",
+      "Version used: 2023-07-20T05:05:17Z"
+    ],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [
+      "Solution type: VendorFix",
+      "Upgrade to Jenkins weekly to 2.121 or later / Jenkins LTS to 2.107.3 or later."
+    ],
+    "insight": [
+      "Jenkins is prone to the following vulnerabilities:",
+      "- An information exposure vulnerability in AboutJenkins.java, ListPluginsCommand.java that allows users with Overall/Read access to enumerate all installed plugins. (CVE-2018-1000192)",
+      "- An improper neutralization of control sequences vulnerability in HudsonPrivateSecurityRealm.java that allows users to sign up using user names containing control characters that can then appear to have the same name as other users, and cannot be deleted via the UI. (CVE-2018-1000193)",
+      "- A path traversal vulnerability in FilePath.java, SoloFilePathFilter.java that allows malicious agents to read and write arbitrary les on the Jenkins master, bypassing the agent-to-master security subsystem protection. (CVE-2018-1000194)",
+      "- A server-side request forgery vulnerability in ZipExtractionInstaller.java that allows users with Overall/Read permission to have Jenkins submit a HTTP GET request to an arbitrary URL and learn whether the response is successful (200) or not. (CVE-2018-1000195)"
+    ],
+    "log_method": [],
+    "cvss": [
+      "8.1"
+    ],
+    "port": 8080,
+    "protocol": "tcp",
+    "severity": "HIGH",
+    "references": [
+      "cve: CVE-2018-1000192",
+      "cve: CVE-2018-1000193",
+      "cve: CVE-2018-1000194",
+      "cve: CVE-2018-1000195",
+      "url: https://jenkins.io/security/advisory/2018-05-09/"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Jenkins CSRF Protection Delay Vulnerability - Linux",
+    "description": [
+      "A race condition during Jenkins startup could result in the wrong order of execution of commands during initialization.",
+      "Quality of Detection (QoD): 30%"
+    ],
+    "detection_result": [
+      "Installed version: 2.60",
+      "Fixed version: 2.95",
+      "Installation",
+      "path / port: /"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: Jenkins CSRF Protection Delay Vulnerability - Linux",
+      "OID:1.3.6.1.4.1.25623.1.0.112196",
+      "Version used: 2023-07-20T05:05:17Z"
+    ],
+    "product_detection_result": [],
+    "impact": [
+      "Successfully exploiting this issue would reduce the system security severely."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Upgrade to Jenkins weekly to 2.95 or later / Jenkins LTS to 2.89.2 or later."
+    ],
+    "insight": [
+      "There's a very short window of time after startup during which Jenkins may no longer show the 'Please wait while Jenkins is getting ready to work' message, but Cross-Site Request Forgery (CSRF) protection may not yet be eective."
+    ],
+    "log_method": [],
+    "cvss": [
+      "8.1"
+    ],
+    "port": 8080,
+    "protocol": "tcp",
+    "severity": "HIGH",
+    "references": [
+      "cve: CVE-2017-1000504",
+      "url: https://jenkins.io/security/advisory/2017-12-14/"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Jenkins < 2.164.2 LTS and < 2.172 Multiple Vulnerabilities - Linux",
+    "description": [
+      "Jenkins is prone to multiple vulnerabilities.   Quality of Detection (QoD): 30%"
+    ],
+    "detection_result": [
+      "Installed version: 2.60",
+      "Fixed version: 2.172",
+      "Installation",
+      "path / port: /"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: Jenkins < 2.164.2 LTS and < 2.172 Multiple Vulnerabilities - Linux  OID:1.3.6.1.4.1.25623.1.0.142269   Version used: 2021-08-31T08:01:19Z"
+    ],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 2.164.2 (LTS) and 2.172 (weekly).",
+      "Aected Software/OS   Jenkins LTS 2.164.1 and prior and Jenkins weekly 2.171 and prior."
+    ],
+    "insight": [
+      "Jenkins is prone to multiple vulnerabilities:",
+      "- Users who cached their CLI authentication would remain authenticated, because the x for  CVE-2019-1003004 does not reject existing remoting-based CLI authentication caches (CVE-  2019-1003049)",
+      "- The f:validateButton form control for the Jenkins UI does not properly escape job URLs,  resulting in a cross-site scripting (XSS) vulnerability exploitable by users with the ability to  control job names (CVE-2019-1003050)"
+    ],
+    "log_method": [],
+    "cvss": [
+      "8.0"
+    ],
+    "port": 8080,
+    "protocol": "tcp",
+    "severity": "HIGH",
+    "references": [
+      "cve: CVE-2019-1003049",
+      "cve: CVE-2019-1003050",
+      "url: https://jenkins.io/security/advisory/2019-04-10/",
+      "dfn-cert: DFN-CERT-2019-1326",
+      "dfn-cert: DFN-CERT-2019-0747"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Jenkins CSRF Vulnerability (CVE-2023-35141) - Linux",
+    "description": [
+      "Jenkins is prone to a cross-site request forgery (CSRF) vulnerability.",
+      "Quality of Detection (QoD): 30%"
+    ],
+    "detection_result": [
+      "Installed version: 2.60",
+      "Fixed version: 2.400",
+      "Installation",
+      "path / port: /"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: Jenkins CSRF Vulnerability (CVE-2023-35141) - Linux",
+      "OID:1.3.6.1.4.1.25623.1.0.124339",
+      "Version used: 2023-10-13T05:06:10Z"
+    ],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 2.401.1 (LTS), 2.400 or later."
+    ],
+    "insight": [
+      "POST requests are sent in order to load the list of context actions. If part of the URL includes insuciently escaped user-provided values, a victim may be tricked into sending a POST request to an unexpected endpoint by opening a context menu."
+    ],
+    "log_method": [],
+    "cvss": [
+      "8.0"
+    ],
+    "port": 8080,
+    "protocol": "tcp",
+    "severity": "HIGH",
+    "references": [
+      "cve: CVE-2023-35141",
+      "url: https://www.jenkins.io/security/advisory/2023-06-14/#SECURITY-3135",
+      "cert-bund: WID-SEC-2023-1471",
+      "dfn-cert: DFN-CERT-2023-1382"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Jenkins < 2.275, < 2.263.2 Multiple Vulnerabilities - Linux",
+    "description": [
+      "Jenkins is prone to multiple vulnerabilities."
+    ],
+    "detection_result": [
+      "Installed version: 2.60",
+      "Fixed version: 2.275",
+      "Installation",
+      "path / port: /"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: Jenkins < 2.275, < 2.263.2 Multiple Vulnerabilities - Linux",
+      "OID:1.3.6.1.4.1.25623.1.0.112853",
+      "Version used: 2021-08-17T14:01:00Z"
+    ],
+    "product_detection_result": [],
+    "impact": [
+      "Successful exploitation would allow an attacker to:",
+      "- achieve stored and/or reected cross-site scripting",
+      "- inject crafted content into Old Data Monitor that results in the instantiation of potentially unsafe objects when discarded by an administrator",
+      "- create symbolic links that allow them to access les outside workspaces using the workspace browser",
+      "- start up the application with unsafe legacy defaults after a restart",
+      "- check for the existence of XML les on the controller le system where the relative path can be constructed as 32 characters",
+      "- request or have legitimate Jenkins users request crafted URLs that rapidly use all available memory in Jenkins, potentially leading to out of memory errors",
+      "- access plugin-provided URLs without having the actual permissions to do so."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 2.275, 2.263.2 LTS or later."
+    ],
+    "insight": [
+      "The following vulnerabilities exist:",
+      "- Arbitrary le read vulnerability in workspace browsers (CVE-2021-21602)",
+      "- XSS vulnerability in notication bar (CVE-2021-21603)",
+      "- Improper handling of REST API XML deserialization errors (CVE-2021-21604)",
+      "- Path traversal vulnerability in agent names (CVE-2021-21605)",
+      "- Arbitrary le existence check in le ngerprints (CVE-2021-21606)",
+      "- Excessive memory allocation in graph URLs leads to denial of service (CVE-2021-21607)",
+      "- Stored XSS vulnerability in button labels (CVE-2021-21608)",
+      "- Missing permission check for paths with specic prex (CVE-2021-21609)",
+      "- Reected XSS vulnerability in markup formatter preview (CVE-2021-21610)",
+      "- Stored XSS vulnerability on new item page (CVE-2021-21611)"
+    ],
+    "log_method": [],
+    "cvss": [
+      "7.8"
+    ],
+    "port": 8080,
+    "protocol": "tcp",
+    "severity": "HIGH",
+    "references": [
+      "cve: CVE-2021-21602",
+      "cve: CVE-2021-21603",
+      "cve: CVE-2021-21604",
+      "cve: CVE-2021-21605",
+      "cve: CVE-2021-21606",
+      "cve: CVE-2021-21607",
+      "cve: CVE-2021-21608",
+      "cve: CVE-2021-21609",
+      "cve: CVE-2021-21610",
+      "cve: CVE-2021-21611",
+      "url: https://www.jenkins.io/security/advisory/2021-01-13/",
+      "dfn-cert: DFN-CERT-2021-0376",
+      "dfn-cert: DFN-CERT-2021-0102"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Jenkins < 2.146 and < 2.138.2 LTS Multiple Vulnerabilities - Linux",
+    "description": [
+      "Jenkins is prone to multiple vulnerabilities."
+    ],
+    "detection_result": [
+      "Installed version: 2.60",
+      "Fixed version: 2.146",
+      "Installation",
+      "path / port: /"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: Jenkins < 2.146 and < 2.138.2 LTS Multiple Vulnerabilities - Linux",
+      "OID:1.3.6.1.4.1.25623.1.0.108509"
+    ],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [
+      "Solution type: VendorFix",
+      "Upgrade to Jenkins weekly to 2.146 or later / Jenkins LTS to 2.138.2 or later."
+    ],
+    "insight": [
+      "Jenkins is prone to the following vulnerabilities:",
+      "- Path traversal vulnerability in Stapler allowed accessing internal data (CVE-2018-1000997).",
+      "- Arbitrary le write vulnerability using le parameter denitions (CVE-2018-1000406).",
+      "- Reected XSS vulnerability (CVE-2018-1000407).",
+      "- Ephemeral user record was created on some invalid authentication attempts (CVE-2018-1999043).",
+      "- Ephemeral user record creation (CVE-2018-1000408).",
+      "- Session xation vulnerability on user signup (CVE-2018-1000409).",
+      "- Failures to process form submission data could result in secrets being displayed or written to logs (CVE-2018-1000410)."
+    ],
+    "log_method": [],
+    "cvss": [
+      "7.8"
+    ],
+    "port": 8080,
+    "protocol": "tcp",
+    "severity": "HIGH",
+    "references": [],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Jenkins < 2.528.3, 2.541 Multiple Vulnerabilities - Linux",
+    "description": [
+      "Jenkins is prone to multiple vulnerabilities.",
+      "Quality of Detection (QoD): 30%"
+    ],
+    "detection_result": [
+      "Installed version: 2.60",
+      "Fixed version: 2.541",
+      "Installation",
+      "path / port: /"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: Jenkins < 2.528.3, 2.541 Multiple Vulnerabilities - Linux",
+      "OID:1.3.6.1.4.1.25623.1.0.128185",
+      "Version used: 2025-12-15T05:47:36Z"
+    ],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version Jenkins 2.541, LTS 2.528.3 or later."
+    ],
+    "insight": [
+      "The following aws exist:",
+      "- CVE-2025-67635: Jenkins does not properly close HTTP-based CLI connections when the connection stream becomes corrupted, allowing unauthenticated attackers to cause a denial of service.",
+      "- CVE-2025-67636: A missing permission check in Jenkins allows attackers with View/Read permission to view encrypted password values in views.",
+      "- CVE-2025-67637: Jenkins stores build authorization tokens unencrypted in job cong.xml les on the Jenkins controller where they can be viewed by users with Item/Extended Read permission or access to the Jenkins controller le system.",
+      "- CVE-2025-67638: Jenkins does not mask build authorization tokens displayed on the job con- guration form, increasing the potential for attackers to observe and capture them.",
+      "- CVE-2025-67639: A cross-site request forgery (CSRF) vulnerability in Jenkins allows attackers to trick users into logging in to the attacker's account."
+    ],
+    "log_method": [],
+    "cvss": [
+      "7.5"
+    ],
+    "port": 8080,
+    "protocol": "tcp",
+    "severity": "HIGH",
+    "references": [
+      "cve: CVE-2025-67635",
+      "cve: CVE-2025-67636",
+      "cve: CVE-2025-67637",
+      "cve: CVE-2025-67638",
+      "cve: CVE-2025-67639",
+      "url: https://www.jenkins.io/security/advisory/2025-12-10/#SECURITY-3630",
+      "url: https://www.jenkins.io/security/advisory/2025-12-10/#SECURITY-1809",
+      "url: https://www.jenkins.io/security/advisory/2025-12-10/#SECURITY-783",
+      "url: https://www.jenkins.io/security/advisory/2025-12-10/#SECURITY-1166",
+      "cert-bund: WID-SEC-2025-2819",
+      "dfn-cert: DFN-CERT-2025-3457"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Eclipse Jetty Multiple Vulnerabilities (Jul 2022) - Linux",
+    "description": [
+      "Eclipse Jetty is prone to multiple vulnerabilities.",
+      "Quality of Detection (QoD): 30%"
+    ],
+    "detection_result": [
+      "Installed version: 9.2",
+      "Fixed version: 9.4.47",
+      "Installation",
+      "path / port: 8080/tcp"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: Eclipse Jetty Multiple Vulnerabilities (Jul 2022) - Linux",
+      "OID:1.3.6.1.4.1.25623.1.0.148412",
+      "Version used: 2024-06-11T05:05:40Z"
+    ],
+    "product_detection_result": [
+      "cpe:/a:eclipse:jetty:9.2",
+      "Detected by Mort Bay / Eclipse Jetty Detection (HTTP) (OID: 1.3.6.1.4.1.25623.1. ->0.800953)"
+    ],
+    "impact": [],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 9.4.47, 10.0.10, 11.0.10 or later."
+    ],
+    "insight": [
+      "The following vulnerabilities exist:",
+      "- CVE-2022-2047: Invalid URI parsing may produce invalid HttpURI.authority",
+      "- CVE-2022-2048: Invalid HTTP/2 requests can lead to denial of service"
+    ],
+    "log_method": [],
+    "cvss": [
+      "7.5"
+    ],
+    "port": 8080,
+    "protocol": "tcp",
+    "severity": "HIGH",
+    "references": [
+      "cve: CVE-2022-2047",
+      "cve: CVE-2022-2048",
+      "url: https://github.com/eclipse/jetty.project/security/advisories/GHSA-cj7v-27pg ->-wf7q",
+      "url: https://github.com/eclipse/jetty.project/security/advisories/GHSA-wgmr-mf83 ->-7x4j",
+      "cert-bund: WID-SEC-2024-0794",
+      "cert-bund: WID-SEC-2023-2368",
+      "cert-bund: WID-SEC-2023-1808",
+      "cert-bund: WID-SEC-2023-1017",
+      "cert-bund: WID-SEC-2023-0864",
+      "cert-bund: WID-SEC-2023-0137",
+      "cert-bund: WID-SEC-2023-0133",
+      "cert-bund: WID-SEC-2023-0027",
+      "cert-bund: WID-SEC-2022-1780",
+      "cert-bund: WID-SEC-2022-1778",
+      "cert-bund: WID-SEC-2022-1767",
+      "cert-bund: WID-SEC-2022-1766",
+      "cert-bund: WID-SEC-2022-1373",
+      "cert-bund: WID-SEC-2022-0614",
+      "dfn-cert: DFN-CERT-2023-0776",
+      "dfn-cert: DFN-CERT-2023-0661",
+      "dfn-cert: DFN-CERT-2023-0445",
+      "dfn-cert: DFN-CERT-2023-0112",
+      "dfn-cert: DFN-CERT-2023-0091"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Jenkins < 2.186 and < 2.176.2 LTS Multiple Vulnerabilities - Linux",
+    "description": [
+      "Jenkins is prone to multiple vulnerabilities."
+    ],
+    "detection_result": [
+      "Installed version: 2.60",
+      "Fixed version: 2.186",
+      "Installation",
+      "path / port: /",
+      "Solution:",
+      "Solution type: VendorFix",
+      "Update to version 2.176.2 LTS, 2.186 weekly or later."
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: Jenkins < 2.186 and < 2.176.2 LTS Multiple Vulnerabilities - Linux",
+      "OID:1.3.6.1.4.1.25623.1.0.142679",
+      "Version used: 2021-08-31T08:01:19Z"
+    ],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 2.176.2 LTS, 2.186 weekly or later."
+    ],
+    "insight": [
+      "Jenkins is prone to multiple vulnerabilities:",
+      "- Arbitrary le write vulnerability using le parameter denitions (CVE-2019-10352)",
+      "- CSRF protection tokens does not expire (CVE-2019-10353)",
+      "- Unauthorized view fragment access (CVE-2019-10354)"
+    ],
+    "log_method": [],
+    "cvss": [
+      "7.5"
+    ],
+    "port": 8080,
+    "protocol": "tcp",
+    "severity": "HIGH",
+    "references": [
+      "cve: CVE-2019-10352",
+      "cve: CVE-2019-10353",
+      "cve: CVE-2019-10354",
+      "url: https://jenkins.io/security/advisory/2019-07-17/",
+      "dfn-cert: DFN-CERT-2019-1469"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Eclipse Jetty DoS Vulnerability (GHSA-26vr-8j45-3r4w) - Linux",
+    "description": [
+      "Eclipse Jetty is prone to a denial of service (DoS) vulnerability."
+    ],
+    "detection_result": [
+      "Installed version: 9.2",
+      "Fixed version: 9.4.39",
+      "Installation",
+      "path / port: 8080/tcp"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: Eclipse Jetty DoS Vulnerability (GHSA-26vr-8j45-3r4w) - Linux",
+      "OID:1.3.6.1.4.1.25623.1.0.117487",
+      "Version used: 2024-06-11T05:05:40Z"
+    ],
+    "product_detection_result": [
+      "Product: cpe:/a:eclipse:jetty:9.2",
+      "Method: Mort Bay / Eclipse Jetty Detection (HTTP)",
+      "OID: 1.3.6.1.4.1.25623.1.0.800953)"
+    ],
+    "impact": [
+      "When using SSL/TLS with Jetty, either with HTTP/1.1, HTTP/2, or WebSocket, the server",
+      "may receive an invalid large (greater than 17408) TLS frame that is incorrectly handled, causing",
+      "CPU resources to eventually reach 100% usage."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 9.4.39, 10.0.2, 11.0.2 or later. See the referenced vendor advisory for a possible",
+      "mitigation."
+    ],
+    "insight": [],
+    "log_method": [],
+    "cvss": [
+      "7.5"
+    ],
+    "port": 8080,
+    "protocol": "tcp",
+    "severity": "HIGH",
+    "references": [
+      "cve: CVE-2021-28165",
+      "url: https://github.com/eclipse/jetty.project/security/advisories/GHSA-26vr-8j45",
+      "->-3r4w",
+      "cert-bund: WID-SEC-2025-2372",
+      "cert-bund: WID-SEC-2025-0227",
+      "cert-bund: WID-SEC-2024-0794",
+      "cert-bund: WID-SEC-2023-2993",
+      "cert-bund: WID-SEC-2023-2674",
+      "cert-bund: WID-SEC-2023-1821",
+      "cert-bund: WID-SEC-2022-1767",
+      "cert-bund: WID-SEC-2022-1365",
+      "cert-bund: WID-SEC-2022-1161",
+      "cert-bund: WID-SEC-2022-0624",
+      "cert-bund: WID-SEC-2022-0623",
+      "cert-bund: CB-K22/0071",
+      "cert-bund: CB-K21/1094",
+      "cert-bund: CB-K21/1093",
+      "dfn-cert: DFN-CERT-2024-3084",
+      "dfn-cert: DFN-CERT-2023-2545",
+      "dfn-cert: DFN-CERT-2021-2152",
+      "dfn-cert: DFN-CERT-2021-2045",
+      "dfn-cert: DFN-CERT-2021-1780",
+      "dfn-cert: DFN-CERT-2021-1736",
+      "dfn-cert: DFN-CERT-2021-1728",
+      "dfn-cert: DFN-CERT-2021-1665",
+      "dfn-cert: DFN-CERT-2021-1475",
+      "dfn-cert: DFN-CERT-2021-1332",
+      "dfn-cert: DFN-CERT-2021-1103",
+      "dfn-cert: DFN-CERT-2021-0840",
+      "dfn-cert: DFN-CERT-2021-0832"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Jenkins HTTP/2 DoS Vulnerability (CVE-2022-2048) - Linux",
+    "description": [
+      "Jenkins is prone to an HTTP/2 denial of service (DoS) vulnerability in Jetty."
+    ],
+    "detection_result": [
+      "Installed version: 2.60",
+      "Fixed version: 2.363",
+      "Installation",
+      "path / port: /"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: Jenkins HTTP/2 DoS Vulnerability (CVE-2022-2048) - Linux",
+      "OID:1.3.6.1.4.1.25623.1.0.148712",
+      "Version used: 2022-09-12T10:18:03Z"
+    ],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 2.361.1 (LTS), 2.363 or later."
+    ],
+    "insight": [
+      "Jenkins bundles Winstone-Jetty, a wrapper around Jetty, to act as HTTP and servlet server",
+      "when started using java -jar jenkins.war. This is how Jenkins is run when using any of the",
+      "installers or packages, but not when run using servlet containers such as Tomcat.",
+      "Jenkins bundle versions of Jetty aected by the security vulnerability CVE-2022-2048. This",
+      "vulnerability allows unauthenticated attackers to make the Jenkins UI unresponsive by exploiting",
+      "Jetty's handling of invalid HTTP/2 requests, causing a denial of service."
+    ],
+    "log_method": [],
+    "cvss": [
+      "7.5"
+    ],
+    "port": 8080,
+    "protocol": "tcp",
+    "severity": "HIGH",
+    "references": [
+      "cve: CVE-2022-2048",
+      "url: https://www.jenkins.io/security/advisory/2022-09-09/",
+      "cert-bund: WID-SEC-2024-0794",
+      "cert-bund: WID-SEC-2023-1808",
+      "cert-bund: WID-SEC-2023-1017",
+      "cert-bund: WID-SEC-2023-0137",
+      "cert-bund: WID-SEC-2023-0133",
+      "cert-bund: WID-SEC-2023-0027",
+      "cert-bund: WID-SEC-2022-1780",
+      "cert-bund: WID-SEC-2022-1778",
+      "cert-bund: WID-SEC-2022-1767",
+      "cert-bund: WID-SEC-2022-1766",
+      "cert-bund: WID-SEC-2022-1373",
+      "cert-bund: WID-SEC-2022-0614",
+      "dfn-cert: DFN-CERT-2023-0445",
+      "dfn-cert: DFN-CERT-2023-0112",
+      "dfn-cert: D"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Jenkins < 2.356, < 2.332.4 LTS Information Disclosure Vulnerability (SECURITY-2566) - Linux",
+    "description": [
+      "Jenkins is prone to an information disclosure vulnerability.",
+      "Quality of Detection (QoD): 30%"
+    ],
+    "detection_result": [
+      "Installed version: 2.60",
+      "Fixed version: 2.356",
+      "Installation",
+      "path / port: /"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: Jenkins < 2.356, < 2.332.4 LTS Information Disclosure Vulnerability (SECURITY-2.",
+      "OID:1.3.6.1.4.1.25623.1.0.148331",
+      "Version used: 2022-07-01T10:11:09Z"
+    ],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 2.356, 2.332.4 LTS or later."
+    ],
+    "insight": [
+      "An observable timing discrepancy on the login form allows distinguishing between login attempts with an invalid username, and login attempts with a valid username and wrong password, when using the Jenkins user database security realm. This allows attackers to determine the validity of attacker-specied usernames."
+    ],
+    "log_method": [],
+    "cvss": [
+      "7.5"
+    ],
+    "port": 8080,
+    "protocol": "tcp",
+    "severity": "HIGH",
+    "references": [
+      "cve: CVE-2022-34174",
+      "url: https://www.jenkins.io/security/advisory/2022-06-22/#SECURITY-2566",
+      "cert-bund: WID-SEC-2022-0445",
+      "dfn-cert: DFN-CERT-2023-0445",
+      "dfn-cert: DFN-CERT-2023-0388",
+      "dfn-cert: DFN-CERT-2023-0091",
+      "dfn-cert: DFN-CERT-2022-1408"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Eclipse Jetty DoS Vulnerability (GHSA-7hcf-ppf8-5w5h) - Linux",
+    "description": [
+      "Eclipse Jetty is prone to a denial of service (DoS) vulnerability.",
+      "Quality of Detection (QoD): 30%"
+    ],
+    "detection_result": [
+      "Installed version: 9.2",
+      "Fixed version: 9.4.54",
+      "Installation",
+      "path / port: 8080/tcp"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: Eclipse Jetty DoS Vulnerability (GHSA-7hcf-ppf8-5w5h) - Linux",
+      "OID:1.3.6.1.4.1.25623.1.0.153230",
+      "Version used: 2025-07-31T05:44:45Z"
+    ],
+    "product_detection_result": [
+      "Product: cpe:/a:eclipse:jetty:9.2",
+      "Method: Mort Bay / Eclipse Jetty Detection (HTTP)",
+      "OID: 1.3.6.1.4.1.25623.1.0.800953)"
+    ],
+    "impact": [],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 9.4.54, 10.0.18, 11.0.18, 12.0.3 or later."
+    ],
+    "insight": [
+      "There exists a security vulnerability in Jetty's DosFilter which can be exploited by unauthorized users to cause remote denial of service (DoS) attack on the server using DosFilter. By repeatedly sending crafted requests, attackers can trigger OutofMemory errors and exhaust the server's memory nally."
+    ],
+    "log_method": [],
+    "cvss": [
+      "7.5"
+    ],
+    "port": 8080,
+    "protocol": "tcp",
+    "severity": "HIGH",
+    "references": [
+      "cve: CVE-2024-9823",
+      "url: https://github.com/jetty/jetty.project/security/advisories/GHSA-7hcf-ppf8-5w5h",
+      "url: https://www.eclipse.org//lists/jetty-announce/msg00193.html",
+      "cert-bund: WID-SEC-2024-3176",
+      "dfn-cert: DFN-CERT-2025-0835",
+      "dfn-cert: DFN-CERT-2025-0825",
+      "dfn-cert: DFN-CERT-2024-3046"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Jenkins < 2.289.2, < 2.300 Multiple Vulnerabilities - Linux",
+    "description": [
+      "Jenkins is prone to multiple vulnerabilities.",
+      "Quality of Detection (QoD): 30%"
+    ],
+    "detection_result": [
+      "Installed version: 2.60",
+      "Fixed version: 2.300",
+      "Installation",
+      "path / port: /"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: Jenkins < 2.289.2, < 2.300 Multiple Vulnerabilities - Linux",
+      "OID:1.3.6.1.4.1.25623.1.0.146201",
+      "Version used: 2021-08-17T14:01:00Z"
+    ],
+    "product_detection_result": [],
+    "impact": [
+      "Successful exploitation would allow an attacker to:",
+      "- cancel queue items and abort builds of jobs for which they have Item/Cancel permission even when they do not have Item/Read permission.",
+      "- use social engineering techniques to gain administrator access to Jenkins"
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 2.300, 2.289.2 LTS or later."
+    ],
+    "insight": [
+      "The following vulnerabilities exist:",
+      "- CVE-2021-21670: Improper permission checks allow canceling queue items and aborting builds",
+      "- CVE-2021-21671: Session xation"
+    ],
+    "log_method": [],
+    "cvss": [
+      "7.5"
+    ],
+    "port": 8080,
+    "protocol": "tcp",
+    "severity": "HIGH",
+    "references": [
+      "cve: CVE-2021-21670",
+      "cve: CVE-2021-21671",
+      "url: https://www.jenkins.io/security/advisory/2021-06-30/",
+      "dfn-cert: DFN-CERT-2021-2216",
+      "dfn-cert: DFN-CERT-2021-2215",
+      "dfn-cert: DFN-CERT-2021-2028",
+      "dfn-cert: DFN-CERT-2021-1425"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Jenkins < 2.319.3, < 2.334 DoS Vulnerability - Linux",
+    "description": [
+      "Jenkins is prone to a denial of service (DoS) vulnerability.",
+      "Quality of Detection (QoD): 30%"
+    ],
+    "detection_result": [
+      "Installed version: 2.60",
+      "Fixed version: 2.334",
+      "Installation",
+      "path / port: /"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: Jenkins < 2.319.3, < 2.334 DoS Vulnerability - Linux",
+      "OID:1.3.6.1.4.1.25623.1.0.147621",
+      "Version used: 2022-02-10T14:05:57Z"
+    ],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 2.334, 2.319.3 LTS or later."
+    ],
+    "insight": [
+      "Jenkins is aected by the XStream library's vulnerability CVE-2021-43859. This library is used by Jenkins to serialize and deserialize various XML les, like global and job cong.xml, build.xml, and numerous others.",
+      "This allows attackers able to submit crafted XML les to Jenkins to be parsed as conguration, e.g. through the POST cong.xml API, to cause a denial of service (DoS)."
+    ],
+    "log_method": [],
+    "cvss": [
+      "7.5"
+    ],
+    "port": 8080,
+    "protocol": "tcp",
+    "severity": "HIGH",
+    "references": [],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Jenkins < 2.375.4 (LTS), < 2.394 Multiple Vulnerabilities - Linux",
+    "description": [
+      "Jenkins is prone to multiple vulnerabilities."
+    ],
+    "detection_result": [
+      "Installed version: 2.60",
+      "Fixed version: 2.394",
+      "Installation",
+      "path / port: /"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: Jenkins < 2.375.4 (LTS), < 2.394 Multiple Vulnerabilities - Linux",
+      "OID:1.3.6.1.4.1.25623.1.0.170356",
+      "Version used: 2023-10-13T05:06:10Z"
+    ],
+    "product_detection_result": [],
+    "impact": [
+      "Jenkins version 2.375.3 (LTS) and prior and 2.393 and prior."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 2.375.4 (LTS), 2.394 or later."
+    ],
+    "insight": [
+      "The following vulnerabilities exist:",
+      "- CVE-2023-27899: Temporary plugin le created with insecure permissions",
+      "- CVE-2023-24998, CVE-2023-27900, CVE-2023-27901: DoS vulnerability in bundled Apache Commons FileUpload library",
+      "- CVE-2023-27902: Workspace temporary directories accessible through directory browser",
+      "- CVE-2023-27903: Temporary le parameter created with insecure permissions",
+      "- CVE-2023-27904: Information disclosure through error stack traces related to agents"
+    ],
+    "log_method": [],
+    "cvss": [
+      "7.5"
+    ],
+    "port": 8080,
+    "protocol": "tcp",
+    "severity": "HIGH",
+    "references": [
+      "cve: CVE-2023-27899",
+      "cve: CVE-2023-24998",
+      "cve: CVE-2023-27900",
+      "cve: CVE-2023-27901",
+      "cve: CVE-2023-27902",
+      "cve: CVE-2023-27903",
+      "cve: CVE-2023-27904",
+      "url: https://www.jenkins.io/security/advisory/2023-03-08/",
+      "cert-bund: WID-SEC-2025-0810",
+      "cert-bund: WID-SEC-2024-1652",
+      "cert-bund: WID-SEC-2024-1642",
+      "cert-bund: WID-SEC-2024-1637",
+      "cert-bund: WID-SEC-2024-1622",
+      "cert-bund: WID-SEC-2024-1238",
+      "cert-bund: WID-SEC-2024-0890",
+      "cert-bund: WID-SEC-2024-0888",
+      "cert-bund: WID-SEC-2024-0794",
+      "cert-bund: WID-SEC-2024-0124",
+      "cert-bund: WID-SEC-2024-0117",
+      "cert-bund: WID-SEC-2024-0054",
+      "cert-bund: WID-SEC-2023-2688",
+      "cert-bund: WID-SEC-2023-2675",
+      "cert-bund: WID-SEC-2023-2674",
+      "cert-bund: WID-SEC-2023-2625",
+      "cert-bund: WID-SEC-2023-2309",
+      "cert-bund: WID-SEC-2023-2031",
+      "cert-bund: WID-SEC-2023-1817",
+      "cert-bund: WID-SEC-2023-1815",
+      "cert-bund: WID-SEC-2023-1813",
+      "cert-bund: WID-SEC-2023-1812",
+      "cert-bund: WID-SEC-2023-1811",
+      "cert-bund: WID-SEC-2023-1809",
+      "cert-bund: WID-SEC-2023-1808",
+      "cert-bund: WID-SEC-2023-1807",
+      "cert-bund: WID-SEC-2023-1794",
+      "cert-bund: WID-SEC-2023-1792",
+      "cert-bund: WID-SEC-2023-1791",
+      "cert-bund: WID-SEC-2023-1784",
+      "cert-bund: WID-SEC-2023-1783",
+      "cert-bund: WID-SEC-2023-1782",
+      "cert-bund: WID-SEC-2023-1424",
+      "cert-bund: WID-SEC-2023-1142",
+      "cert-bund: WID-SEC-2023-1021",
+      "cert-bund: WID-SEC-2023-1017",
+      "cert-bund: WID-SEC-2023-1016",
+      "cert-bund: WID-SEC-2023-1012",
+      "cert-bund: WID-SEC-2023-1007",
+      "cert-bund: WID-SEC-2023-1005",
+      "cert-bund: WID-SEC-2023-0609",
+      "cert-bund: WID-SEC-2023-0433",
+      "dfn-cert: DFN-CERT-2025-1992",
+      "dfn-cert: DFN-CERT-2024-2151",
+      "dfn-cert: DFN-CERT-2024-1865",
+      "dfn-cert: DFN-CERT-2024-1006",
+      "dfn-cert: DFN-CERT-2024-0368",
+      "dfn-cert: DFN-CERT-2024-0365",
+      "dfn-cert: DFN-CERT-2024-0059",
+      "dfn-cert: DFN-CERT-2024-0048",
+      "dfn-cert: DFN-CERT-2023-2778",
+      "dfn-cert: DFN-CERT-2023-2545",
+      "dfn-cert: DFN-CERT-2023-2469",
+      "dfn-cert: DFN-CERT-2023-2054",
+      "dfn-cert: DFN-CERT-2023-1648",
+      "dfn-cert: DFN-CERT-2023-1643",
+      "dfn-cert: DFN-CERT-2023-1642",
+      "dfn-cert: DFN-CERT-2023-1423",
+      "dfn-cert: DFN-CERT-2023-1362"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Jenkins < 2.138 and < 2.121.3 LTS Multiple Vulnerabilities - Linux",
+    "description": [
+      "Jenkins is prone to multiple vulnerabilities.",
+      "Quality of Detection (QoD): 30%"
+    ],
+    "detection_result": [
+      "Installed version: 2.60",
+      "Fixed version: 2.138",
+      "Installation",
+      "path / port: /"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: Jenkins < 2.138 and < 2.121.3 LTS Multiple Vulnerabilities - Linux",
+      "OID:1.3.6.1.4.1.25623.1.0.112359",
+      "Version used: 2023-11-03T05:05:46Z"
+    ],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [
+      "Solution type: VendorFix",
+      "Upgrade to Jenkins weekly to 2.138 or later / Jenkins LTS to 2.121.3 or later."
+    ],
+    "insight": [
+      "Jenkins is prone to the following vulnerabilities:",
+      "- Jenkins allowed deserialization of URL objects via Remoting (agent communication) and XStream (CVE-2018-1999042).",
+      "- Ephemeral user record was created on some invalid authentication attempts (CVE-2018-1999043).",
+      "- Cron expression form validation could enter innite loop, potentially resulting in denial of service (CVE-2018-1999044).",
+      "- 'Remember me' cookie was evaluated even if that feature is disabled (CVE-2018-1999045).",
+      "- Unauthorized users could access agent logs (CVE-2018-1999046).",
+      "- Unauthorized users could cancel scheduled restarts initiated from the update center (CVE-2018-1999047)."
+    ],
+    "log_method": [],
+    "cvss": [
+      "7.5"
+    ],
+    "port": 8080,
+    "protocol": "tcp",
+    "severity": "HIGH",
+    "references": [
+      "cve: CVE-2018-1999042",
+      "cve: CVE-2018-1999043",
+      "cve: CVE-2018-1999044",
+      "cve: CVE-2018-1999045",
+      "cve: CVE-2018-1999046",
+      "cve: CVE-2018-1999047",
+      "url: https://jenkins.io/security/advisory/2018-08-15/"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Jenkins Multiple Vulnerabilities (Nov 2017) - Linux",
+    "description": [
+      "Jenkins is prone to multiple vulnerabilities.",
+      "Quality of Detection (QoD): 30%"
+    ],
+    "detection_result": [
+      "Installed version: 2.60",
+      "Fixed version: 2.89",
+      "Installation",
+      "path / port: /"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: Jenkins Multiple Vulnerabilities (Nov 2017) - Linux",
+      "OID:1.3.6.1.4.1.25623.1.0.112130",
+      "Version used: 2023-07-25T05:05:58Z"
+    ],
+    "product_detection_result": [],
+    "impact": [
+      "Successful exploitation will allow remote attackers to aect the integrity of the application."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Upgrade to Jenkins weekly to 2.89 or later / Jenkins LTS to 2.73.3 or later."
+    ],
+    "insight": [
+      "Multiple aws are due to:",
+      "- unsafe use of user names as directory names",
+      "- a persisted XSS vulnerability in autocompletion suggestions"
+    ],
+    "log_method": [],
+    "cvss": [
+      "7.3"
+    ],
+    "port": 8080,
+    "protocol": "tcp",
+    "severity": "HIGH",
+    "references": [
+      "cve: CVE-2017-1000391",
+      "cve: CVE-2017-1000392",
+      "url: https://jenkins.io/security/advisory/2017-11-08/"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Jenkins < 2.160 and < 2.150.2 LTS Multiple Vulnerabilities - Linux",
+    "description": [
+      "Jenkins and is prone to multiple vulnerabilities.",
+      "Quality of Detection (QoD): 30%"
+    ],
+    "detection_result": [
+      "Installed version: 2.60",
+      "Fixed version: 2.160",
+      "Installation",
+      "path / port: /"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: Jenkins < 2.160 and < 2.150.2 LTS Multiple Vulnerabilities - Linux",
+      "OID:1.3.6.1.4.1.25623.1.0.112496",
+      "Version used: 2023-07-14T16:09:27Z"
+    ],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [
+      "Solution type: VendorFix",
+      "Upgrade Jenkins weekly to 2.160 or later / Jenkins LTS to 2.150.2 or later."
+    ],
+    "insight": [
+      "Jenkins is prone to the following vulnerabilities:",
+      "- Administrators could persist access to Jenkins using crafted 'Remember me' cookie (CVE-2019-1003003).",
+      "- Deleting a user in an external security realm did not invalidate their session or 'Remember me' cookie (CVE-2019-1003004)."
+    ],
+    "log_method": [],
+    "cvss": [
+      "7.2"
+    ],
+    "port": 8080,
+    "protocol": "tcp",
+    "severity": "HIGH",
+    "references": [
+      "cve: CVE-2019-1003003",
+      "cve: CVE-2019-1003004",
+      "url: https://jenkins.io/security/advisory/2019-01-16/"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Jenkins < 2.107 and < 2.89.4 LTS Multiple Vulnerabilities - Linux",
+    "description": [
+      "Jenkins is prone to multiple vulnerabilities.",
+      "Quality of Detection (QoD): 30%"
+    ],
+    "detection_result": [
+      "Installed version: 2.60",
+      "Fixed version: 2.107",
+      "Installation",
+      "path / port: /"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: Jenkins < 2.107 and < 2.89.4 LTS Multiple Vulnerabilities - Linux",
+      "OID:1.3.6.1.4.1.25623.1.0.112227",
+      "Version used: 2023-11-03T05:05:46Z"
+    ],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [
+      "Solution type: VendorFix",
+      "Upgrade to Jenkins weekly to 2.107 or later / Jenkins LTS to 2.89.4 or later."
+    ],
+    "insight": [
+      "Jenkins is prone to the following vulnerabilities:",
+      "- Path traversal vulnerability which allows access to les outside plugin resources. (CVE-2018-6356)",
+      "- Improperly secured form validation for proxy conguration, allowing Server-Side Request Forgery. (CVE-2018-1000067)",
+      "- Improper input validation, allowing unintended access to plugin resource les on case-insensitive le systems. (CVE-2018-1000068)"
+    ],
+    "log_method": [],
+    "cvss": [
+      "5.8"
+    ],
+    "port": 8080,
+    "protocol": "tcp",
+    "severity": "MEDIUM",
+    "references": [
+      "cve: CVE-2018-6356",
+      "cve: CVE-2018-1000067",
+      "cve: CVE-2018-1000068",
+      "url: https://jenkins.io/security/advisory/2018-02-14/",
+      "cert-bund: CB-K18/0315",
+      "dfn-cert: DFN-CERT-2018-0340"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Jenkins < 2.219, < 2.204.2 LTS Multiple Vulnerabilities - Linux",
+    "description": [
+      "Jenkins is prone to multiple vulnerabilities.",
+      "Quality of Detection (QoD): 30%"
+    ],
+    "detection_result": [
+      "Installed version: 2.60",
+      "Fixed version: 2.219",
+      "Installation",
+      "path / port: /"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: Jenkins < 2.219, < 2.204.2 LTS Multiple Vulnerabilities - Linux",
+      "OID:1.3.6.1.4.1.25623.1.0.143439",
+      "Version used: 2021-07-08T11:00:45Z"
+    ],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 2.219, 2.204.2 LTS or later."
+    ],
+    "insight": [
+      "Jenkins is prone to multiple vulnerabilities:",
+      "- UDP amplication reection attack (CVE-2020-2100)",
+      "- Non-constant time comparison of inbound TCP agent connection secret (CVE-2020-2101)",
+      "- Non-constant time HMAC comparison (CVE-2020-2102)",
+      "- Diagnostic page exposed session cookies (CVE-2020-2103)",
+      "- Memory usage graphs accessible to anyone with Overall/Read (CVE-2020-2104)",
+      "- Jenkins REST APIs vulnerable to clickjacking (CVE-2020-2105)"
+    ],
+    "log_method": [],
+    "cvss": [
+      "5.8"
+    ],
+    "port": 8080,
+    "protocol": "tcp",
+    "severity": "MEDIUM",
+    "references": [
+      "cve: CVE-2020-2100",
+      "cve: CVE-2020-2101",
+      "cve: CVE-2020-2102",
+      "cve: CVE-2020-2103",
+      "cve: CVE-2020-2104",
+      "cve: CVE-2020-2105",
+      "url: https://jenkins.io/security/advisory/2020-01-29/",
+      "dfn-cert: DFN-CERT-2020-0207"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Jenkins < 2.303.2, < 2.315 HTTP Library Vulnerability - Linux",
+    "description": [
+      "Jenkins is prone to a vulnerability in the bundled version of commons-httpclient library.",
+      "Quality of Detection (QoD): 30%"
+    ],
+    "detection_result": [
+      "Installed version: 2.60",
+      "Fixed version: 2.315",
+      "Installation",
+      "path / port: /"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: Jenkins < 2.303.2, < 2.315 HTTP Library Vulnerability - Linux",
+      "OID:1.3.6.1.4.1.25623.1.0.146872",
+      "Version used: 2021-10-08T08:43:41Z"
+    ],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 2.315, 2.303.2 LTS or later."
+    ],
+    "insight": [
+      "Jenkins bundles a version of the commons-httpclient library with the vulnerability CVE-2014-3577 that incorrectly veried SSL/TLS certicates, making it susceptible to man-in-the-middle attacks.",
+      "This library is widely used as a transitive dependency in Jenkins plugins."
+    ],
+    "log_method": [],
+    "cvss": [
+      "5.8"
+    ],
+    "port": 8080,
+    "protocol": "tcp",
+    "severity": "MEDIUM",
+    "references": [
+      "cve: CVE-2014-3577",
+      "url: https://www.jenkins.io/security/advisory/2021-10-06/",
+      "cert-bund: WID-SEC-2025-1459",
+      "cert-bund: WID-SEC-2023-0432",
+      "cert-bund: WID-SEC-2023-0306",
+      "cert-bund: WID-SEC-2022-1375",
+      "cert-bund: CB-K16/1303",
+      "cert-bund: CB-K15/1508",
+      "cert-bund: CB-K15/1506",
+      "cert-bund: CB-K15/0929",
+      "cert-bund: CB-K15/0928",
+      "cert-bund: CB-K15/0678",
+      "cert-bund: CB-K15/0391",
+      "cert-bund: CB-K15/0330",
+      "cert-bund: CB-K15/0186",
+      "cert-bund: CB-K15/0148",
+      "cert-bund: CB-K14/1598",
+      "cert-bund: CB-K14/1485",
+      "cert-bund: CB-K14/1111",
+      "cert-bund: CB-K14/1035",
+      "dfn-cert: DFN-CERT-2023-2261",
+      "dfn-cert: DFN-CERT-2022-0569",
+      "dfn-cert: DFN-CERT-2021-2094",
+      "dfn-cert: DFN-CERT-2021-1111",
+      "dfn-cert: DFN-CERT-2020-2385",
+      "dfn-cert: DFN-CERT-2016-1386",
+      "dfn-cert: DFN-CERT-2015-1595",
+      "dfn-cert: DFN-CERT-2015-1576",
+      "dfn-cert: DFN-CERT-2015-0953",
+      "dfn-cert: DFN-CERT-2015-0951",
+      "dfn-cert: DFN-CERT-2015-0712",
+      "dfn-cert: DFN-CERT-2015-0403",
+      "dfn-cert: DFN-CERT-2015-0342",
+      "dfn-cert: DFN-CERT-2015-0191",
+      "dfn-cert: DFN-CERT-2015-0152",
+      "dfn-cert: DFN-CERT-2014-1693",
+      "dfn-cert: DFN-CERT-2014-1572",
+      "dfn-cert: DFN-CERT-2014-1157",
+      "dfn-cert: DFN-CERT-2014-1078"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Jenkins < 2.252, < 2.235.4 Multiple XSS Vulnerabilities - Linux",
+    "description": [
+      "Jenkins is prone to multiple cross-site scripting (XSS) vulnerabilities.",
+      "Quality of Detection (QoD): 30%"
+    ],
+    "detection_result": [
+      "Installed version: 2.60",
+      "Fixed version: 2.252",
+      "Installation",
+      "path / port: /"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: Jenkins < 2.252, < 2.235.4 Multiple XSS Vulnerabilities - Linux",
+      "OID:1.3.6.1.4.1.25623.1.0.144388",
+      "Version used: 2021-07-08T11:00:45Z"
+    ],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 2.252, 2.235.4 LTS or later."
+    ],
+    "insight": [
+      "The following vulnerabilities exist:",
+      "- Stored XSS vulnerability in help icons (CVE-2020-2229)",
+      "- Stored XSS vulnerability in project naming strategy (CVE-2020-2230)",
+      "- Stored XSS vulnerability in 'Trigger builds remotely' (CVE-2020-2231)"
+    ],
+    "log_method": [],
+    "cvss": [
+      "5.4"
+    ],
+    "port": 8080,
+    "protocol": "tcp",
+    "severity": "MEDIUM",
+    "references": [
+      "cve: CVE-2020-2229",
+      "cve: CVE-2020-2230",
+      "cve: CVE-2020-2231",
+      "url: https://www.jenkins.io/security/advisory/2020-08-12/",
+      "cert-bund: WID-SEC-2022-1627",
+      "dfn-cert: DFN-CERT-2020-2141",
+      "dfn-cert: DFN-CERT-2020-1787"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Jenkins < 2.197 and < 2.176.4 LTS Multiple Vulnerabilities - Linux",
+    "description": [
+      "Jenkins is prone to multiple vulnerabilities.",
+      "Quality of Detection (QoD): 30%"
+    ],
+    "detection_result": [
+      "Installed version: 2.60",
+      "Fixed version: 2.197",
+      "Installation path / port: /"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: Jenkins < 2.252, < 2.235.4 Multiple XSS Vulnerabilities - Linux",
+      "OID:1.3.6.1.4.1.25623.1.0.144388",
+      "Version used: 2021-07-08T11:00:45Z"
+    ],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update Jenkins weekly to version 2.197 or later / Jenkins LTS to version 2.176.4 or later."
+    ],
+    "insight": [
+      "The following vulnerabilities exist:",
+      "- Stored XSS vulnerability in help icons (CVE-2020-2229)",
+      "- Stored XSS vulnerability in project naming strategy (CVE-2020-2230)",
+      "- Stored XSS vulnerability in 'Trigger builds remotely' (CVE-2020-2231)"
+    ],
+    "log_method": [],
+    "cvss": [
+      "5.4"
+    ],
+    "port": 8080,
+    "protocol": "tcp",
+    "severity": "MEDIUM",
+    "references": [
+      "cve: CVE-2020-2229",
+      "cve: CVE-2020-2230",
+      "cve: CVE-2020-2231",
+      "url: https://www.jenkins.io/security/advisory/2020-08-12/",
+      "cert-bund: WID-SEC-2022-1627",
+      "dfn-cert: DFN-CERT-2020-2141",
+      "dfn-cert: DFN-CERT-2020-1787"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Jenkins Multiple Vulnerabilities (Apr 2018) - Linux",
+    "description": [
+      "Jenkins is prone to multiple vulnerabilities."
+    ],
+    "detection_result": [
+      "Installed version: 2.60",
+      "Fixed version: 2.116",
+      "Installation path / port: /"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host."
+    ],
+    "product_detection_result": [],
+    "impact": [
+      "Successful exploitation will allow remote attackers to execute a script on victim's Web browser within the security context of the hosting Web site and also disclose sensitive information."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to Jenkins weekly to 2.116 or later, Jenkins LTS to 2.107.2 or later. Please see the references for more information."
+    ],
+    "insight": [
+      "Multiple aws are due to:",
+      "- Some JavaScript conrmation dialogs included the item name in an unsafe manner.",
+      "- The Jenkins CLI send dierent error responses for commands with view and agent arguments depending on the existence of the specied views or agents to unauthorized users."
+    ],
+    "log_method": [],
+    "cvss": [
+      "5.4"
+    ],
+    "port": 8080,
+    "protocol": "tcp",
+    "severity": "MEDIUM",
+    "references": [
+      "cve: CVE-2018-1000169",
+      "cve: CVE-2018-1000170",
+      "url: https://jenkins.io/security/advisory/2018-04-11/"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Jenkins < 2.245, < 2.235.2 LTS Multiple XSS Vulnerabilities - Linux",
+    "description": [
+      "Jenkins is prone to multiple cross-site scripting (XSS) vulnerabilities."
+    ],
+    "detection_result": [
+      "Installed version: 2.60",
+      "Fixed version: 2.245",
+      "Installation path / port: /"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host."
+    ],
+    "product_detection_result": [],
+    "impact": [
+      "Successful exploitation will allow remote attackers to execute a script on victim's Web browser within the security context of the hosting Web site and also disclose sensitive information."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 2.245, 2.235.2 LTS or later."
+    ],
+    "insight": [
+      "The following vulnerabilities exist:",
+      "- Stored XSS vulnerability in job build time trend (CVE-2020-2220)",
+      "- Stored XSS vulnerability in upstream cause (CVE-2020-2221)",
+      "- Stored XSS vulnerability in 'keep forever' badge icons (CVE-2020-2222)",
+      "- Stored XSS vulnerability in console links (CVE-2020-2223)"
+    ],
+    "log_method": [],
+    "cvss": [
+      "5.3"
+    ],
+    "port": 8080,
+    "protocol": "tcp",
+    "severity": "MEDIUM",
+    "references": [
+      "cve: CVE-2020-2220",
+      "cve: CVE-2020-2221",
+      "cve: CVE-2020-2222",
+      "cve: CVE-2020-2223",
+      "url: https://jenkins.io/security/advisory/2020-07-15/",
+      "dfn-cert: DFN-CERT-2020-1871",
+      "dfn-cert: DFN-CERT-2020-1851",
+      "dfn-cert: DFN-CERT-2020-1607"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Eclipse Jetty URI Parsing Vulnerability (GHSA-qh8g-58pp-2wxh) - Linux",
+    "description": [
+      "Eclipse Jetty is prone to an URI parsing vulnerability."
+    ],
+    "detection_result": [
+      "Installed version: 9.2",
+      "Fixed version: 12.0.12",
+      "Installation path / port: 8080/tcp"
+    ],
+    "detection_method": [],
+    "product_detection_result": [
+      "cpe:/a:eclipse:jetty:9.2",
+      "Detected by Mort Bay / Eclipse Jetty Detection (HTTP) (OID: 1.3.6.1.4.1.25623.1. ->0.800953)"
+    ],
+    "impact": [],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 12.0.12 or later."
+    ],
+    "insight": [],
+    "log_method": [],
+    "cvss": [
+      "5.3"
+    ],
+    "port": 8080,
+    "protocol": "tcp",
+    "severity": "MEDIUM",
+    "references": [],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Eclipse Jetty Multiple Vulnerabilities (GHSA-qw69-rqj8-6qw8, GHSA-p26g-97m4-6q7c) - Linux",
+    "description": [
+      "Eclipse Jetty is prone to multiple vulnerabilities.",
+      "Quality of Detection (QoD): 30%"
+    ],
+    "detection_result": [
+      "Installed version: 9.2",
+      "Fixed version: 9.4.51",
+      "Installation path / port: 8080/tcp"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: Eclipse Jetty Multiple Vulnerabilities (GHSA-qw69-rqj8-6qw8, GHSA-p26g-97m4-6q7c) ...",
+      "OID:1.3.6.1.4.1.25623.1.0.149569",
+      "Version used: 2024-06-11T05:05:40Z"
+    ],
+    "product_detection_result": [
+      "cpe:/a:eclipse:jetty:9.2",
+      "Detected by Mort Bay / Eclipse Jetty Detection (HTTP) (OID: 1.3.6.1.4.1.25623.1.0.800953)"
+    ],
+    "impact": [
+      "Aected Software/OS Eclipse Jetty version 9.4.50 and prior, version 10.0.x through 10.0.13 and 11.0.x through 11.0.13."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 9.4.51, 10.0.14, 11.0.14 or later."
+    ],
+    "insight": [
+      "The following vulnerabilities exist:",
+      "- CVE-2023-26048: OutOfMemoryError for large multipart without lename read via request.getParameter()",
+      "- CVE-2023-26049: Cookie parsing of quoted values can exltrate values from other cookies"
+    ],
+    "log_method": [],
+    "cvss": [
+      "5.3"
+    ],
+    "port": 8080,
+    "protocol": "tcp",
+    "severity": "MEDIUM",
+    "references": [
+      "cve: CVE-2023-26048",
+      "cve: CVE-2023-26049",
+      "url: https://github.com/eclipse/jetty.project/security/advisories/GHSA-qw69-rqj8-6qw8",
+      "url: https://github.com/eclipse/jetty.project/security/advisories/GHSA-p26g-97m4-6q7c",
+      "cert-bund: WID-SEC-2024-0794",
+      "cert-bund: WID-SEC-2023-2688",
+      "cert-bund: WID-SEC-2023-2679",
+      "cert-bund: WID-SEC-2023-2675",
+      "cert-bund: WID-SEC-2023-2672",
+      "cert-bund: WID-SEC-2023-2625",
+      "cert-bund: WID-SEC-2023-1812",
+      "cert-bund: WID-SEC-2023-1807",
+      "cert-bund: WID-SEC-2023-1009",
+      "dfn-cert: DFN-CERT-2024-0391",
+      "dfn-cert: DFN-CERT-2024-0376",
+      "dfn-cert: DFN-CERT-2024-0368",
+      "dfn-cert: DFN-CERT-2023-3035",
+      "dfn-cert: DFN-CERT-2023-2537",
+      "dfn-cert: DFN-CERT-2023-2346",
+      "dfn-cert: DFN-CERT-2023-2341",
+      "dfn-cert: DFN-CERT-2023-2167",
+      "dfn-cert: DFN-CERT-2023-1648",
+      "dfn-cert: DFN-CERT-2023-1410"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Eclipse Jetty Information Disclosure Vulnerability (GHSA-gwcr-j4wh-j3cq)",
+    "description": [
+      "Eclipse Jetty is prone to an information disclosure vulnerability in the ConcatServlet and WelcomeFilter servlet."
+    ],
+    "detection_result": [],
+    "detection_method": [],
+    "product_detection_result": [
+      "cpe:/a:eclipse:jetty:9.2",
+      "Detected by Mort Bay / Eclipse Jetty Detection (HTTP) (OID: 1.3.6.1.4.1.25623.1.0.800953)"
+    ],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [],
+    "cvss": [
+      "5.3"
+    ],
+    "port": 8080,
+    "protocol": "tcp",
+    "severity": "MEDIUM",
+    "references": [],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Jenkins < 2.276, < 2.263.3 Arbitrary File Read Vulnerability",
+    "description": [
+      "Jenkins is prone to an arbitrary le read vulnerability.",
+      "Quality of Detection (QoD): 80%"
+    ],
+    "detection_result": [
+      "Installed version: 2.60",
+      "Fixed version: 2.276",
+      "Installation",
+      "path / port: /"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: Jenkins < 2.276, < 2.263.3 Arbitrary File Read Vulnerability",
+      "OID:1.3.6.1.4.1.25623.1.0.145266",
+      "Version used: 2021-08-17T14:01:00Z"
+    ],
+    "product_detection_result": [],
+    "impact": [
+      "The vulnerability allows attackers with Job/Workspace permission and the ability to control workspace contents, e.g., with Job/Congure permission or the ability to change SCM contents, to create symbolic links that allow them to access les outside workspaces using the workspace browser."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 2.276, 2.263.3 LTS or later."
+    ],
+    "insight": [
+      "Due to a time-of-check to time-of-use (TOCTOU) race condition, the le browser for workspaces, archived artifacts, and $JENKINS_HOME/userContent/ follows symbolic links to locations outside the directory being browsed in Jenkins."
+    ],
+    "log_method": [],
+    "cvss": [
+      "5.3"
+    ],
+    "port": 8080,
+    "protocol": "tcp",
+    "severity": "MEDIUM",
+    "references": [
+      "cve: CVE-2021-21615",
+      "url: https://www.jenkins.io/security/advisory/2021-01-26/#SECURITY-2197",
+      "dfn-cert: DFN-CERT-2021-0376",
+      "dfn-cert: DFN-CERT-2021-0173"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Eclipse Jetty HTTP Header Vulnerability (GHSA-hmr7-m48g-48f6) - Linux",
+    "description": [
+      "Eclipse Jetty is prone to an HTTP header vulnerability.",
+      "Quality of Detection (QoD): 30%"
+    ],
+    "detection_result": [
+      "Installed version: 9.2",
+      "Fixed version: 9.4.52",
+      "Installation",
+      "path / port: 8080/tcp"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: Eclipse Jetty HTTP Header Vulnerability (GHSA-hmr7-m48g-48f6) - Linux",
+      "OID:1.3.6.1.4.1.25623.1.0.151001",
+      "Version used: 2024-06-11T05:05:40Z"
+    ],
+    "product_detection_result": [
+      "Product: cpe:/a:eclipse:jetty:9.2",
+      "Method: Mort Bay / Eclipse Jetty Detection (HTTP)",
+      "OID: 1.3.6.1.4.1.25623.1.0.800953"
+    ],
+    "impact": [],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 9.4.52, 10.0.16, 11.0.16, 12.0.1 or later."
+    ],
+    "insight": [
+      "Jetty accepts the '+' character proceeding the content-length value in a HTTP/1 header eld. This is more permissive than allowed by the RFC and other servers routinely reject such requests with 400 responses. There is no known exploit scenario, but it is conceivable that request smuggling could result if jetty is used in combination with a server that does not close the connection after sending such a 400 response."
+    ],
+    "log_method": [],
+    "cvss": [
+      "5.3"
+    ],
+    "port": 8080,
+    "protocol": "tcp",
+    "severity": "MEDIUM",
+    "references": [],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Jenkins 'CVE-2017-17383' XSS Vulnerability - Linux",
+    "description": [
+      "Jenkins is prone to an XSS vulnerability."
+    ],
+    "detection_result": [
+      "Installed version: 2.60",
+      "Fixed version: See workaround in vendor advisory",
+      "Installation",
+      "path / port: /"
+    ],
+    "detection_method": [
+      "The script checks if the vulnerable version is present on the target host.",
+      "Details: Jenkins 'CVE-2017-17383' XSS Vulnerability - Linux",
+      "OID:1.3.6.1.4.1.25623.1.0.113063",
+      "Version used: 2023-07-25T05:05:58Z"
+    ],
+    "product_detection_result": [],
+    "impact": [
+      "Successful exploitation would allow an authenticated attacker to expose other users to malicious code."
+    ],
+    "solution": [
+      "Solution type: Workaround",
+      "Please refer to the vendor advisory for a workaround."
+    ],
+    "insight": [
+      "An authenticated attacker can use a crafted tool name in a job conguration form to conduct XSS attacks."
+    ],
+    "log_method": [],
+    "cvss": [
+      "4.3"
+    ],
+    "port": 8080,
+    "protocol": "tcp",
+    "severity": "MEDIUM",
+    "references": [
+      "cve: CVE-2017-17383",
+      "url: https://jenkins.io/security/advisory/2017-12-05/"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Jenkins < 2.319.2, < 2.330 CSRF Vulnerability - Linux",
+    "description": [
+      "Jenkins is prone to a cross-site request forgery (CSRF) vulnerability."
+    ],
+    "detection_result": [
+      "Installed version: 2.60",
+      "Fixed version: 2.330",
+      "Installation",
+      "path / port: /"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: Jenkins < 2.319.2, < 2.330 CSRF Vulnerability - Linux",
+      "OID:1.3.6.1.4.1.25623.1.0.147444",
+      "Version used: 2022-01-20T03:03:39Z"
+    ],
+    "product_detection_result": [],
+    "impact": [
+      "This vulnerability allows attackers to trigger build of job without parameters."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 2.330, 2.319.2 LTS or later."
+    ],
+    "insight": [
+      "Jenkins does not require POST requests for the HTTP endpoint handling manual build requests when no security realm is set, resulting in a CSRF vulnerability."
+    ],
+    "log_method": [],
+    "cvss": [
+      "4.3"
+    ],
+    "port": 8080,
+    "protocol": "tcp",
+    "severity": "MEDIUM",
+    "references": [
+      "cve: CVE-2022-20612",
+      "url: https://www.jenkins.io/security/advisory/2022-01-12/",
+      "cert-bund: WID-SEC-2022-1908",
+      "dfn-cert: DFN-CERT-2022-0328",
+      "dfn-cert: DFN-CERT-2022-0086"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Jenkins < 2.287, < 2.277.2 LTS Multiple Vulnerabilities - Linux",
+    "description": [
+      "Jenkins is prone to multiple vulnerabilities."
+    ],
+    "detection_result": [
+      "Installed version: 2.60",
+      "Fixed version: 2.287",
+      "Installation",
+      "path / port: /"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: Jenkins < 2.287, < 2.277.2 LTS Multiple Vulnerabilities - Linux",
+      "OID:1.3.6.1.4.1.25623.1.0.127167",
+      "Version used: 2022-09-07T10:10:59Z"
+    ],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 2.287, 2.277.2 LTS or later."
+    ],
+    "insight": [
+      "The following vulnerabilities exist:",
+      "- CVE-2021-21639: Jenkins does not validate the type of object created after loading the data submitted to the cong.xml REST API endpoint of a node.",
+      "- CVE-2021-21640: Jenkins does not properly check that a newly created view has an allowed name allowing attackers with View/Create permission to create views with invalid or used names."
+    ],
+    "log_method": [],
+    "cvss": [
+      "4.3"
+    ],
+    "port": 8080,
+    "protocol": "tcp",
+    "severity": "MEDIUM",
+    "references": [
+      "cve: CVE-2021-21639",
+      "cve: CVE-2021-21640",
+      "url: https://www.jenkins.io/security/advisory/2021-04-07/#SECURITY-1871",
+      "url: https://www.jenkins.io/security/advisory/2021-04-07/#SECURITY-1721",
+      "dfn-cert: DFN-CERT-2021-1618",
+      "dfn-cert: DFN-CERT-2021-0711"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Eclipse Jetty Session Vulnerability (GHSA-m6cp-vxjx-65j6) - Linux",
+    "description": [
+      "Eclipse Jetty is prone to a vulnerability in the session management."
+    ],
+    "detection_result": [
+      "Installed version: 9.2",
+      "Fixed version: 9.4.41.20210516",
+      "Installation path / port: 8080/tcp"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: Eclipse Jetty Session Vulnerability (GHSA-m6cp-vxjx-65j6) - Linux OID:1.3.6.1.4.1.25623.1.0.146164 Version used: 2024-06-11T05:05:40Z"
+    ],
+    "product_detection_result": [
+      "Product: cpe:/a:eclipse:jetty:9.2",
+      "Method: Mort Bay / Eclipse Jetty Detection (HTTP)",
+      "OID: 1.3.6.1.4.1.25623.1.0.800953)"
+    ],
+    "impact": [
+      "If an exception is thrown from the SessionListener#sessionDestroyed() method, then the session ID is not invalidated in the session ID manager. On deployments with clustered sessions and multiple contexts this can result in a session not being invalidated. This can result in an application used on a shared computer being left logged in."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 9.4.41.v20210516, 10.0.3, 11.0.3 or later."
+    ],
+    "insight": [
+      "If an exception is thrown from the SessionListener#sessionDestroyed() method, then the session ID is not invalidated in the session ID manager. On deployments with clustered sessions and multiple contexts this can result in a session not being invalidated. This can result in an application used on a shared computer being left logged in."
+    ],
+    "log_method": [],
+    "cvss": [
+      "3.4"
+    ],
+    "port": 8080,
+    "protocol": "tcp",
+    "severity": "LOW",
+    "references": [
+      "cve: CVE-2021-34428",
+      "url: https://github.com/eclipse/jetty.project/security/advisories/GHSA-m6cp-vxjx-65j6",
+      "cert-bund: WID-SEC-2024-0794",
+      "cert-bund: WID-SEC-2022-1596",
+      "cert-bund: WID-SEC-2022-1161",
+      "dfn-cert: DFN-CERT-2024-3084",
+      "dfn-cert: DFN-CERT-2021-2620",
+      "dfn-cert: DFN-CERT-2021-2186",
+      "dfn-cert: DFN-CERT-2021-2045",
+      "dfn-cert: DFN-CERT-2021-1780",
+      "dfn-cert: DFN-CERT-2021-1728",
+      "dfn-cert: DFN-CERT-2021-1665"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Eclipse Jetty XXE Vulnerability (GHSA-58qw-p7qm-5rvh) - Linux",
+    "description": [
+      "Eclipse Jetty is prone to a XML external entity (XXE) vulnerability in the XMLParser."
+    ],
+    "detection_result": [
+      "Installed version: 9.2",
+      "Fixed version: 9.4.52",
+      "Installation path / port: 8080/tcp"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: Eclipse Jetty XXE Vulnerability (GHSA-58qw-p7qm-5rvh) - Linux OID:1.3.6.1.4.1.25623.1.0.151573 Version used: 2024-06-11T05:05:40Z"
+    ],
+    "product_detection_result": [
+      "Product: cpe:/a:eclipse:jetty:9.2",
+      "Method: Mort Bay / Eclipse Jetty Detection (HTTP)",
+      "OID: 1.3.6.1.4.1.25623.1.0.800953)"
+    ],
+    "impact": [
+      "XmlParser is being used when parsing Jetty's xml configuration files. An attacker might exploit this vulnerability in order to achieve SSRF or cause a denial of service. One possible scenario is importing a (remote) malicious WAR into a Jetty's server, while the WAR includes a malicious web.xml."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 9.4.52, 10.0.16, 11.0.16 or later."
+    ],
+    "insight": [
+      "XmlParser is being used when parsing Jetty's xml configuration files. An attacker might exploit this vulnerability in order to achieve SSRF or cause a denial of service. One possible scenario is importing a (remote) malicious WAR into a Jetty's server, while the WAR includes a malicious web.xml."
+    ],
+    "log_method": [],
+    "cvss": [
+      "3.4"
+    ],
+    "port": 8080,
+    "protocol": "tcp",
+    "severity": "LOW",
+    "references": [
+      "url: https://github.com/jetty/jetty.project/security/advisories/GHSA-58qw-p7qm-5rvh"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Eclipse Jetty CgiServlet Vulnerability (GHSA-3gh6-v5v9-6v9j) - Linux",
+    "description": [
+      "Eclipse Jetty is prone to a vulnerability in the CgiServlet.",
+      "Quality of Detection (QoD): 30%"
+    ],
+    "detection_result": [
+      "Installed version: 9.2",
+      "Fixed version: 9.4.52",
+      "Installation path / port: 8080/tcp"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: Eclipse Jetty CgiServlet Vulnerability (GHSA-3gh6-v5v9-6v9j) - Linux",
+      "OID:1.3.6.1.4.1.25623.1.0.151003",
+      "Version used: 2025-05-28T05:40:15Z"
+    ],
+    "product_detection_result": [
+      "cpe:/a:eclipse:jetty:9.2",
+      "Detected by Mort Bay / Eclipse Jetty Detection (HTTP) (OID: 1.3.6.1.4.1.25623.1.0.800953)"
+    ],
+    "impact": [
+      "Aected Software/OS Eclipse Jetty version 9.0.0 through 9.4.51, 10.0.0 through 10.0.15 and 11.0.0 through 11.0.15."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 9.4.52, 10.0.16, 11.0.16 or later."
+    ],
+    "insight": [
+      "Users of the CgiServlet with a very specic command structure may have the wrong command executed. If a user sends a request to a org.eclipse.jetty.servlets.CGI Servlet for a binary with a space in its name, the servlet will escape the command by wrapping it in quotation marks. This wrapped command, plus an optional command prex, will then be executed through a call to Runtime.exec. If the original binary name provided by the user contains a quotation mark followed by a space, the resulting command line will contain multiple tokens instead of one."
+    ],
+    "log_method": [],
+    "cvss": [
+      "2.6"
+    ],
+    "port": 8080,
+    "protocol": "tcp",
+    "severity": "LOW",
+    "references": [
+      "cve: CVE-2023-36479",
+      "url: https://github.com/eclipse/jetty.project/security/advisories/GHSA-3gh6-v5v9-6v9j",
+      "cert-bund: WID-SEC-2024-0949",
+      "cert-bund: WID-SEC-2024-0794",
+      "cert-bund: WID-SEC-2023-2359",
+      "dfn-cert: DFN-CERT-2024-1568",
+      "dfn-cert: DFN-CERT-2024-1404",
+      "dfn-cert: DFN-CERT-2024-1089",
+      "dfn-cert: DFN-CERT-2024-0376",
+      "dfn-cert: DFN-CERT-2023-3167",
+      "dfn-cert: DFN-CERT-2023-2892",
+      "dfn-cert: DFN-CERT-2023-2646",
+      "dfn-cert: DFN-CERT-2023-2346",
+      "dfn-cert: DFN-CERT-2023-2341"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "TCP Timestamps Information Disclosure",
+    "description": [
+      "The remote host implements TCP timestamps and therefore allows to compute the uptime.",
+      "Quality of Detection (QoD): 80%"
+    ],
+    "detection_result": [
+      "It was detected that the host implements RFC1323/RFC7323.",
+      "The following timestamps were retrieved with a delay of 1 seconds in-between: Packet"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [],
+    "cvss": [
+      "2.6"
+    ],
+    "port": 8080,
+    "protocol": "tcp",
+    "severity": "LOW",
+    "references": [],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "TCP timestamps",
+    "description": [
+      "A side effect of this feature is that the uptime of the remote host can sometimes be computed."
+    ],
+    "detection_result": [],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [
+      "Solution type: Mitigation",
+      "To disable TCP timestamps on linux add the line 'net.ipv4.tcp_timestamps = 0' to /etc/sysctl.conf. Execute 'sysctl -p' to apply the settings at runtime."
+    ],
+    "insight": [],
+    "log_method": [],
+    "cvss": [
+      "0.0"
+    ],
+    "port": 8080,
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Mort Bay / Eclipse Jetty Detection (HTTP)",
+    "description": [
+      "HTTP based detection of Mort Bay / Eclipse Jetty.",
+      "Quality of Detection (QoD): 80%"
+    ],
+    "detection_result": [
+      "Detected Mort Bay / Eclipse Jetty",
+      "Version: 9.2",
+      "Location: 8080/tcp",
+      "CPE: cpe:/a:eclipse:jetty:9.2",
+      "Concluded from version/product identification result:",
+      "Server: Jetty(9.2.z-SNAPSHOT)"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [
+      "Details: Mort Bay / Eclipse Jetty Detection (HTTP)",
+      "OID:1.3.6.1.4.1.25623.1.0.800953",
+      "Version used: 2024-06-12T05:05:44Z"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": 8080,
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [
+      "url: https://www.eclipse.org/jetty/"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "TCP Timestamps Information Disclosure",
+    "description": [
+      "The remote host implements TCP timestamps and therefore allows to compute the uptime."
+    ],
+    "detection_result": [
+      "It was detected that the host implements RFC1323/RFC7323.",
+      "The following timestamps were retrieved with a delay of 1 seconds in-between:",
+      "Packet 1: 492149003",
+      "Packet 2: 492150091"
+    ],
+    "detection_method": [
+      "Special IP packets are forged and sent with a little delay in between to the target IP. The responses are searched for a timestamps. If found, the timestamps are reported.",
+      "Details: TCP Timestamps Information Disclosure",
+      "OID:1.3.6.1.4.1.25623.1.0.80091",
+      "Version used: 2023-12-15T16:10:08Z"
+    ],
+    "product_detection_result": [],
+    "impact": [
+      "A side eect of this feature is that the uptime of the remote host can sometimes be computed."
+    ],
+    "solution": [
+      "Solution type: Mitigation",
+      "To disable TCP timestamps on linux add the line 'net.ipv4.tcp_timestamps = 0' to /etc/sysctl.conf. Execute 'sysctl -p' to apply the settings at runtime.  To disable TCP timestamps on Windows execute 'netsh int tcp set global timestamps=disabled'  Starting with Windows Server 2008 and Vista, the timestamp can not be completely disabled.  The default behavior of the TCP/IP stack on this Systems is to not use the Timestamp options  when initiating TCP connections, but use them if the TCP peer that is initiating communication  includes them in their synchronize (SYN) segment.   See the references for more information.   Aected Software/OS   TCP implementations that implement RFC1323/RFC7323."
+    ],
+    "insight": [
+      "The remote host implements TCP timestamps, as dened by RFC1323/RFC7323."
+    ],
+    "log_method": [],
+    "cvss": [
+      "2.6"
+    ],
+    "port": "general",
+    "protocol": "tcp",
+    "severity": "LOW",
+    "references": [
+      "url: https://datatracker.ietf.org/doc/html/rfc1323",
+      "url: https://datatracker.ietf.org/doc/html/rfc7323",
+      "url: https://web.archive.org/web/20151213072445/http://www.microsoft.com/en-us/d ->ownload/details.aspx?id=9152",
+      "url: https://www.fortiguard.com/psirt/FG-IR-16-090"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "ICMP Timestamp Reply Information Disclosure",
+    "description": [
+      "The remote host responded to an ICMP timestamp request."
+    ],
+    "detection_result": [
+      "The following response / ICMP packet has been received:",
+      "- ICMP Type: 14",
+      "- ICMP Code: 0"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [],
+    "cvss": [
+      "2.1"
+    ],
+    "port": "general",
+    "protocol": "tcp",
+    "severity": "LOW",
+    "references": [],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "ICMP Timestamp Reply Information Disclosure",
+    "description": [
+      "The remote host responded to an ICMP timestamp request.",
+      "Quality of Detection (QoD): 80%"
+    ],
+    "detection_result": [
+      "The following response / ICMP packet has been received:",
+      "- ICMP Type: 14",
+      "- ICMP Code: 0"
+    ],
+    "detection_method": [
+      "Sends an ICMP Timestamp (Type 13) request and checks if a Timestamp Reply (Type 14) is received."
+    ],
+    "product_detection_result": [],
+    "impact": [
+      "This information could theoretically be used to exploit weak time-based random number generators in other services."
+    ],
+    "solution": [
+      "Solution type: Mitigation",
+      "Various mitigations are possible:",
+      "- Disable the support for ICMP timestamp on the remote host completely",
+      "- Protect the remote host by a firewall, and block ICMP packets passing through the firewall in either direction (either completely or only for untrusted networks)"
+    ],
+    "insight": [
+      "The Timestamp Reply is an ICMP message which replies to a Timestamp message. It consists of the originating timestamp sent by the sender of the Timestamp as well as a receive timestamp and a transmit timestamp."
+    ],
+    "log_method": [],
+    "cvss": [
+      "2.1"
+    ],
+    "port": "general",
+    "protocol": "icmp",
+    "severity": "LOW",
+    "references": [
+      "cve: CVE-1999-0524",
+      "url: https://datatracker.ietf.org/doc/html/rfc792",
+      "url: https://datatracker.ietf.org/doc/html/rfc2780",
+      "cert-bund: CB-K15/1514",
+      "cert-bund: CB-K14/0632",
+      "dfn-cert: DFN-CERT-2014-0658"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "HTTP Security Headers Detection",
+    "description": [
+      "All known security headers are being checked on the remote web server.",
+      "On completion a report will hand back whether a specic security header has been implemented (including its value and if it is deprecated) or is missing on the target.",
+      "Quality of Detection (QoD): 80%"
+    ],
+    "detection_result": [],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [
+      "This information could theoretically be used to exploit weak time-based random number generators in other services."
+    ],
+    "solution": [
+      "Solution type: Mitigation",
+      "Various mitigations are possible:",
+      "- Disable the support for ICMP timestamp on the remote host completely",
+      "- Protect the remote host by a rewall, and block ICMP packets passing through the rewall in either direction (either completely or only for untrusted networks)"
+    ],
+    "insight": [
+      "The Timestamp Reply is an ICMP message which replies to a Timestamp message. It consists of the originating timestamp sent by the sender of the Timestamp as well as a receive timestamp and a transmit timestamp."
+    ],
+    "log_method": [],
+    "cvss": [
+      "0.0"
+    ],
+    "port": 8080,
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [
+      "cve: CVE-1999-0524",
+      "url: https://datatracker.ietf.org/doc/html/rfc792",
+      "url: https://datatracker.ietf.org/doc/html/rfc2780",
+      "cert-bund: CB-K15/1514",
+      "cert-bund: CB-K14/0632",
+      "dfn-cert: DFN-CERT-2014-0658"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Services",
+    "description": [
+      "This plugin performs service detection."
+    ],
+    "detection_result": [
+      "A web server is running on this port"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [
+      "This plugin attempts to guess which service is running on the remote port(s). For instance, it searches for a web server which could listen on another port than 80 or 443 and makes this information available for other check routines."
+    ],
+    "log_method": [
+      "Details: Services",
+      "OID:1.3.6.1.4.1.25623.1.0.10330",
+      "Version used: 2025-03-05T05:38:53Z"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": 8080,
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "'favicon.ico' Based Fingerprinting (HTTP)",
+    "description": [
+      "HTTP based ngerprinting of web applications based on an exposed 'favicon.ico' le."
+    ],
+    "detection_result": [
+      "The following apps/services were identified:",
+      "\"Jenkins\" fingerprinted by the file: \"http://jenkins260.trabalho_vulnnet:8080/fa",
+      "->vicon.ico\""
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [],
+    "cvss": [
+      "0.0"
+    ],
+    "port": 8080,
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "HTTP Server Banner Enumeration",
+    "description": [
+      "This script tries to detect / enumerate dierent HTTP server banner (e.g. from a frontend, backend or proxy server) by sending various dierent HTTP requests (valid and invalid ones)."
+    ],
+    "detection_result": [
+      "It was possible to enumerate the following HTTP server banner(s):",
+      "Server banner | Enumeration technique",
+      "--------------------------------------------------------------------------------",
+      "->----------------",
+      "Server: Jetty(9.2.z-SNAPSHOT) | Invalid HTTP 00.5 GET request (non-existent HTTP",
+      "-> version) to '/'"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [],
+    "cvss": [
+      "0.0"
+    ],
+    "port": 8080,
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "HTTP Server type and version",
+    "description": [
+      "This script detects and reports the HTTP Server's banner which might provide the type and version of it."
+    ],
+    "detection_result": [
+      "The remote HTTP Server banner is:",
+      "Server: Jetty(9.2.z-SNAPSHOT)"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [],
+    "cvss": [
+      "0.0"
+    ],
+    "port": 8080,
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Web Application Scanning Consolidation / Info Reporting",
+    "description": [
+      "The script consolidates and reports various information for web application (formerly called 'CGI') scanning.",
+      "This information is based on the following scripts / settings:",
+      "- HTTP-Version Detection (OID: 1.3.6.1.4.1.25623.1.0.100034)",
+      "- No 404 check (OID: 1.3.6.1.4.1.25623.1.0.10386)",
+      "- Web mirroring / webmirror.nasl (OID: 1.3.6.1.4.1.25623.1.0.10662)",
+      "- Directory Scanner / DDI_Directory_Scanner.nasl (OID: 1.3.6.1.4.1.25623.1.0.11032)",
+      "- The congured 'cgi_path' within the 'Scanner Preferences' of the scan cong in use",
+      "- The congured 'Enable CGI scanning', 'Enable generic web application scanning' and 'Add historic /scripts and /cgi-bin to directories for CGI scanning' within the 'Global variable settings' of the scan cong in use",
+      "If you think any of this information is wrong please report it to the referenced community forum.",
+      "Quality of Detection (QoD): 80%"
+    ],
+    "detection_result": [
+      "The Hostname/IP \"jenkins260.trabalho_vulnnet\" was used to access the remote host ->.",
+      "Generic web application scanning is disabled for this host via the \"Enable gener ->ic web application scanning\" option within the \"Global variable settings\" of t ->he scan config in use.",
+      "Requests to this service are done via HTTP/1.1.",
+      "This service seems to be able to host PHP scripts.",
+      "This service seems to be able to host ASP scripts.",
+      "The User-Agent \"Mozilla/5.0 [en] (X11, U; OpenVAS-VT <version replaced>)\" was us ->ed to access the remote host.",
+      "Historic /scripts and /cgi-bin are not added to the directories used for web app ->lication scanning. You can enable this again with the \"Add historic /scripts a ->nd /cgi-bin to directories for CGI scanning\" option within the \"Global variabl ->e settings\" of the scan config in use.",
+      "The following directories were used for web application scanning:",
+      "http://jenkins260.trabalho_vulnnet:8080/",
+      "http://jenkins260.trabalho_vulnnet:8080/whoAmI",
+      "While this is not, in and of itself, a bug, you should manually inspect these di ->rectories to ensure that they are in compliance with company security standard ->s"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [
+      "Details: Web Application Scanning Consolidation / Info Reporting",
+      "OID:1.3.6.1.4.1.25623.1.0.111038",
+      "Version used: 2026-01-13T05:47:36Z"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": 8080,
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [
+      "url: https://forum.greenbone.net/c/vulnerability-tests/7"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "robot.txt / robots.txt exists on the Web Server (HTTP)",
+    "description": [
+      "Web Servers can use a le called /robot(s).txt to ask search engines to ignore certain les and directories. By nature this le can not be used to protect private les from public read access.",
+      "Quality of Detection (QoD): 80%"
+    ],
+    "detection_result": [
+      "The file 'http://jenkins260.trabalho_vulnnet:8080/robots.txt' contains the follo ->wing:",
+      "# we don't want robots to click \"build\" links",
+      "User-agent: *",
+      "Disallow: /"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [
+      "Solution type: Mitigation",
+      "Review the content of the /robot(s).txt le and consider removing the les from the server or protect them in other ways in case you actually intended non-public availability."
+    ],
+    "insight": [
+      "Any serious web search engine will honor the /robot(s).txt le and not scan the les and direc- tories listed there.",
+      "Any entries listed in this le are not even hidden anymore."
+    ],
+    "log_method": [
+      "Details: robot.txt / robots.txt exists on the Web Server (HTTP)",
+      "OID:1.3.6.1.4.1.25623.1.0.10302",
+      "Version used: 2024-02-26T14:36:40Z"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": 8080,
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [
+      "url: https://www.robotstxt.org/",
+      "url: https://www.robotstxt.org/norobots-rfc.txt"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "CPE Inventory",
+    "description": [
+      "This routine uses information collected by other routines about CPE identities of operating systems, services and applications detected during the scan.   Note: Some CPEs for specic products might show up twice or more in the output. Background:  After a product got renamed or a specic vendor was acquired by another one it might happen  that a product gets a new CPE within the NVD CPE Dictionary but older entries are kept with  the older CPE.   Quality of Detection (QoD): 80%"
+    ],
+    "detection_result": [
+      "172.31.1.48|cpe:/a:eclipse:jetty:9.2",
+      "172.31.1.48|cpe:/a:jenkins:jenkins:2.60",
+      "172.31.1.48|cpe:/o:linux:kernel"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [
+      "Details: CPE Inventory",
+      "OID:1.3.6.1.4.1.25623.1.0.810002",
+      "Version used: 2022-07-27T10:11:28Z"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": "general",
+    "protocol": "CPE-T",
+    "severity": "LOG",
+    "references": [
+      "url: https://nvd.nist.gov/products/cpe"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Hostname Determination Reporting",
+    "description": [
+      "The script reports information on how the hostname of the target was determined.  Quality of Detection (QoD): 80%"
+    ],
+    "detection_result": [
+      "Hostname determination for IP 172.31.1.48:",
+      "Hostname|Source",
+      "jenkins260.trabalho_vulnnet|Reverse-DNS"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [],
+    "cvss": [
+      "0.0"
+    ],
+    "port": "general",
+    "protocol": "CPE-T",
+    "severity": "LOG",
+    "references": [],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Hostname Determination Reporting",
+    "description": [
+      "The script reports information on how the hostname of the target was determined."
+    ],
+    "detection_result": [
+      "Hostname determination for IP 172.31.1.48:",
+      "Hostname|Source",
+      "jenkins260.trabalho_vulnnet|Reverse-DNS"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [
+      "Details: Hostname Determination Reporting   OID:1.3.6.1.4.1.25623.1.0.108449   Version used: 2022-07-27T10:11:28Z"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": "general",
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Traceroute",
+    "description": [
+      "Collect information about the network route and network distance between the scanner host and the target host."
+    ],
+    "detection_result": [
+      "Network route from scanner (172.30.0.2) to target (172.31.1.48):",
+      "172.30.0.2",
+      "172.31.1.48",
+      "Network distance between scanner and target: 2"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [
+      "For internal networks, the distances are usually small, often less than 4 hosts between scanner and target. For public targets the distance is greater and might be 10 hosts or more."
+    ],
+    "log_method": [
+      "A combination of the protocols ICMP and TCP is used to determine the route. This method is applicable for IPv4 only and it is also known as 'traceroute'."
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": "general",
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "IP Forwarding Enabled - Active Check",
+    "description": [
+      "Checks if the remote host has IP forwarding enabled."
+    ],
+    "detection_result": [
+      "It was possible to route a TCP packet through the target host and received an an ->swer which means IP forwarding is enabled."
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [
+      "Sends a crafted Local Link Layer (LLL) frame and checks the response."
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": "general",
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [
+      "cve: CVE-1999-0511"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "OS Detection Consolidation and Reporting",
+    "description": [
+      "This script consolidates the OS information detected by several VTs and tries to nd the best matching OS.",
+      "Furthermore it reports all previously collected information leading to this best matching OS. It also reports possible additional information which might help to improve the OS detection.",
+      "If any of this information is wrong or could be improved please consider to report these to the referenced community forum."
+    ],
+    "detection_result": [
+      "Best matching OS:",
+      "OS: Linux Kernel",
+      "CPE: cpe:/o:linux:kernel",
+      "Found by VT: 1.3.6.1.4.1.25623.1.0.102002 (Operating System (OS) Detection (ICM ->P))",
+      "Concluded from ICMP based OS fingerprint",
+      "Setting key \"Host/runs_unixoide\" based on this information"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [
+      "Details: OS Detection Consolidation and Reporting"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": "general",
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [
+      "url: https://forum.greenbone.net/c/vulnerability-tests/7"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Jenkins Detection Consolidation",
+    "description": [
+      "Consolidation of Jenkins automation server detections."
+    ],
+    "detection_result": [
+      "Detected Jenkins",
+      "Version: 2.60",
+      "Location: /",
+      "CPE: cpe:/a:jenkins:jenkins:2.60",
+      "Concluded from version/product identification result:",
+      "X-Jenkins: 2.60",
+      "Extra information:",
+      "- Detected on HTTP(s) port 8080/tcp",
+      "- The \"Who am I\" page which might provide additional information about the Jenki ->ns installation is available at: http://jenkins260.trabalho_vulnnet:8080/whoAm ->I/"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [
+      "Details: Jenkins Detection Consolidation"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": "general",
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [
+      "url: https://www.jenkins.io/"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  }
+]

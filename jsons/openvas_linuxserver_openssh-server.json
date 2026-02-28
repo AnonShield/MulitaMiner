@@ -1,0 +1,796 @@
+[
+  {
+    "Name": "Prex Truncation Attacks in SSH Specication (Terrapin Attack)",
+    "description": [
+      "The remote SSH server is supporting an specic encryption algorithm or MAC. Parts of their SSH specication are vulnerable to a novel prex truncation attack (a.k.a. Terrapin attack). Quality of Detection (QoD): 30%"
+    ],
+    "detection_result": [
+      "The remote SSH server supports the following possible affected client-to-server ->encryption algorithm(s):",
+      "chacha20-poly1305@openssh.com",
+      "The remote SSH server supports the following possible affected server-to-client ->encryption algorithm(s):",
+      "chacha20-poly1305@openssh.com",
+      "The remote SSH server supports the following \"strict kex\" algorithm as a possibl ->e mitigation:",
+      "kex-strict-s-v00@openssh.com"
+    ],
+    "detection_method": [
+      "Checks the supported algorithms and MACs of the remote SSH server.",
+      "Note: This VT has a low QoD because mitigation is possible / available via software updates.",
+      "Details: Prefix Truncation Attacks in SSH Specification (Terrapin Attack)",
+      "OID:1.3.6.1.4.1.25623.1.0.114238",
+      "Version used: 2025-04-23T05:39:47Z"
+    ],
+    "product_detection_result": [
+      "Product: cpe:/a:ietf:secure_shell_protocol",
+      "Method: SSH Protocol Algorithms Supported",
+      "OID: 1.3.6.1.4.1.25623.1.0.105565)"
+    ],
+    "impact": [
+      "Parts of the SSH specication are vulnerable to a novel prex truncation attack (a.k.a. Terrapin attack), which allows a man-in-the-middle attacker to strip an arbitrary number of messages right after the initial key exchange, breaking SSH extension negotiation (RFC8308) in the process and thus downgrading connection security."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "- Update OpenSSH to version 9.6 or later",
+      "- Update Apache MINA SSHD to version 2.12.0 or later",
+      "- For other products please contact the vendor for possible xes / updates",
+      "Mitigation:",
+      "- To mitigate this protocol vulnerability, OpenSSH suggested a so-called 'strict kex' which alters the SSH handshake to ensure a Man-in-the-Middle attacker cannot introduce unauthenticated messages as well as convey sequence number manipulation across handshakes. Support for strict key exchange has been added to a variety of SSH implementations, including OpenSSH itself, PuTTY, libssh, and more.",
+      "Warning: To take eect, both the client and server must support this countermeasure.",
+      "As a stop-gap measure, peers may also (temporarily) disable the aected algorithms and use unaected alternatives like AES-GCM instead until patches are available."
+    ],
+    "insight": [
+      "Parts of the SSH specication are vulnerable to a novel prex truncation attack (a.k.a. Terrapin attack), which allows a man-in-the-middle attacker to strip an arbitrary number of messages right after the initial key exchange, breaking SSH extension negotiation (RFC8308) in the process and thus downgrading connection security."
+    ],
+    "log_method": [],
+    "cvss": [
+      "7.0"
+    ],
+    "port": 2222,
+    "protocol": "tcp",
+    "severity": "Medium",
+    "references": [
+      "cve: CVE-2023-48795",
+      "cve: CVE-2024-41909",
+      "url: https://terrapin-attack.com",
+      "url: https://www.openssh.com/txt/release-9.6",
+      "url: https://lists.apache.org/thread/vwf1ot8wx1njyy8n19j5j2tcnjnozt3b",
+      "url: https://github.com/apache/mina-sshd/issues/445",
+      "url: https://github.com/apache/mina-sshd/pull/449",
+      "cert-bund: WID-SEC-2025-2359",
+      "cert-bund: WID-SEC-2025-0810",
+      "cert-bund: WID-SEC-2025-0168",
+      "cert-bund: WID-SEC-2025-0144",
+      "cert-bund: WID-SEC-2025-0139",
+      "cert-bund: WID-SEC-2024-3377",
+      "cert-bund: WID-SEC-2024-3320",
+      "cert-bund: WID-SEC-2024-3221",
+      "cert-bund: WID-SEC-2024-3198",
+      "cert-bund: WID-SEC-2024-3195",
+      "cert-bund: WID-SEC-2024-1913",
+      "cert-bund: WID-SEC-2024-1781",
+      "cert-bund: WID-SEC-2024-1701",
+      "cert-bund: WID-SEC-2024-1656",
+      "cert-bund: WID-SEC-2024-1655",
+      "cert-bund: WID-SEC-2024-1643",
+      "cert-bund: WID-SEC-2024-1642",
+      "cert-bund: WID-SEC-2024-1639",
+      "cert-bund: WID-SEC-2024-1637",
+      "cert-bund: WID-SEC-2024-1630",
+      "cert-bund: WID-SEC-2024-1474",
+      "cert-bund: WID-SEC-2024-1248",
+      "cert-bund: WID-SEC-2024-1228",
+      "cert-bund: WID-SEC-2024-1186",
+      "cert-bund: WID-SEC-2024-1082",
+      "cert-bund: WID-SEC-2024-0899"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "OpenSSH Information Disclosure Vulnerability (CVE-2016-20012)",
+    "description": [
+      "OpenBSD OpenSSH is prone to an information disclosure vulnerability.",
+      "Quality of Detection (QoD): 50%"
+    ],
+    "detection_result": [
+      "Installed version: 10.2",
+      "Fixed version: None",
+      "Installation path / port: 2222/tcp"
+    ],
+    "detection_method": [],
+    "product_detection_result": [
+      "cpe:/a:openbsd:openssh:10.2",
+      "Detected by OpenSSH Detection Consolidation (OID: 1.3.6.1.4.1.25623.1.0.108577)"
+    ],
+    "impact": [],
+    "solution": [
+      "Solution type: WillNotFix",
+      "No known solution was made available for at least one year since the disclosure of this vulnerability. Likely none will be provided anymore. General solution options are to upgrade to a newer release, disable respective features, remove the product or replace the product by another one."
+    ],
+    "insight": [],
+    "log_method": [],
+    "cvss": [
+      "5.3"
+    ],
+    "port": 2222,
+    "protocol": "tcp",
+    "severity": "Medium",
+    "references": [],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "PKCS 1 Version 1.5 Session Key Retrieval",
+    "description": [
+      "You are running SSH protocol version 1.5."
+    ],
+    "detection_result": [
+      "Vulnerability was detected according to the Vulnerability Detection Method."
+    ],
+    "detection_method": [
+      "Details: PKCS 1 Version 1.5 Session Key Retrieval",
+      "OID:1.3.6.1.4.1.25623.1.0.11342",
+      "Version used: 2023-08-03T05:05:16Z"
+    ],
+    "product_detection_result": [],
+    "impact": [
+      "This version allows a remote attacker to decrypt and/or alter trac via an attack on PKCS#1 version 1.5 knows as a Bleichenbacher attack."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Patch and new version are available from SSH/OpenSSH."
+    ],
+    "insight": [],
+    "log_method": [],
+    "cvss": [
+      "4.0"
+    ],
+    "port": 2222,
+    "protocol": "tcp",
+    "severity": "Medium",
+    "references": [
+      "cve: CVE-2001-0361",
+      "url: http://www.securityfocus.com/bid/2344"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "TCP Timestamps Information Disclosure",
+    "description": [
+      "The remote host implements TCP timestamps and therefore allows to compute the uptime."
+    ],
+    "detection_result": [
+      "It was detected that the host implements RFC1323/RFC7323.",
+      "The following timestamps were retrieved with a delay of 1 seconds in-between:",
+      "Packet 1: 1690339510",
+      "Packet 2: 1690340582"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [
+      "A side eect of this feature is that the uptime of the remote host can sometimes be computed."
+    ],
+    "solution": [
+      "Solution type: Mitigation",
+      "To disable TCP timestamps on linux add the line 'net.ipv4.tcp_timestamps = 0' to /etc/sysctl.conf. Execute 'sysctl -p' to apply the settings at runtime.",
+      "To disable TCP timestamps on Windows execute 'netsh int tcp set global timestamps=disabled'",
+      "Starting with Windows Server 2008 and Vista, the timestamp can not be completely disabled.",
+      "The default behavior of the TCP/IP stack on this Systems is to not use the Timestamp options when initiating TCP connections, but use them if the TCP peer that is initiating communication includes them in their synchronize (SYN) segment."
+    ],
+    "insight": [],
+    "log_method": [],
+    "cvss": [
+      "2.6"
+    ],
+    "port": 2222,
+    "protocol": "tcp",
+    "severity": "LOW",
+    "references": [],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "TCP Timestamps Information Disclosure",
+    "description": [
+      "The remote host implements TCP timestamps and therefore allows to compute the uptime.",
+      "Quality of Detection (QoD): 80%"
+    ],
+    "detection_result": [
+      "It was detected that the host implements RFC1323/RFC7323.",
+      "The following timestamps were retrieved with a delay of 1 seconds in-between:",
+      "Packet 1: 1690339510",
+      "Packet 2: 1690340582"
+    ],
+    "detection_method": [
+      "Special IP packets are forged and sent with a little delay in between to the target IP. The responses are searched for a timestamps. If found, the timestamps are reported."
+    ],
+    "product_detection_result": [],
+    "impact": [
+      "A side eect of this feature is that the uptime of the remote host can sometimes be computed."
+    ],
+    "solution": [
+      "Solution type: Mitigation",
+      "To disable TCP timestamps on linux add the line 'net.ipv4.tcp_timestamps = 0' to /etc/sysctl.conf. Execute 'sysctl -p' to apply the settings at runtime.",
+      "To disable TCP timestamps on Windows execute 'netsh int tcp set global timestamps=disabled'",
+      "Starting with Windows Server 2008 and Vista, the timestamp can not be completely disabled.",
+      "The default behavior of the TCP/IP stack on this Systems is to not use the Timestamp options when initiating TCP connections, but use them if the TCP peer that is initiating communication includes them in their synchronize (SYN) segment.   See the references for more information.   Aected Software/OS   TCP implementations that implement RFC1323/RFC7323.   Vulnerability Insight   The remote host implements TCP timestamps, as dened by RFC1323/RFC7323.  Vulnerability Detection Method   Special IP packets are forged and sent with a little delay in between to the target IP. The  responses are searched for a timestamps. If found, the timestamps are reported.  Details: TCP Timestamps Information Disclosure   OID:1.3.6.1.4.1.25623.1.0.80091   Version used: 2023-12-15T16:10:08Z   References   url: https://datatracker.ietf.org/doc/html/rfc1323   url: https://datatracker.ietf.org/doc/html/rfc7323   url: https://web.archive.org/web/20151213072445/http://www.microsoft.com/en-us/d  ->ownload/details.aspx?id=9152   url: https://www.fortiguard.com/psirt/FG-IR-16-090   [ return to 172.31.1.96 ]   2.1.3 Low 2222/tcp   Low (CVSS: 2.6)   NVT: Weak MAC Algorithm(s) Supported (SSH)   Product detection result   cpe:/a:ietf:secure_shell_protocol   Detected by SSH Protocol Algorithms Supported (OID: 1.3.6.1.4.1.25623.1.0.105565  ->)   Summary   The remote SSH server is congured to allow / support weak MAC algorithm(s).  Quality of Detection (QoD): 80%   Vulnerability Detection Result   The remote SSH server supports the following weak client-to-server MAC algorithm  ->(s):   umac-64-etm@openssh.com   . . . continues on next page . . ."
+    ],
+    "insight": [
+      "The remote host implements TCP timestamps, as dened by RFC1323/RFC7323."
+    ],
+    "log_method": [],
+    "cvss": [
+      "2.6"
+    ],
+    "port": "general",
+    "protocol": "tcp",
+    "severity": "LOW",
+    "references": [
+      "url: https://datatracker.ietf.org/doc/html/rfc1323",
+      "url: https://datatracker.ietf.org/doc/html/rfc7323",
+      "url: https://web.archive.org/web/20151213072445/http://www.microsoft.com/en-us/d ->ownload/details.aspx?id=9152",
+      "url: https://www.fortiguard.com/psirt/FG-IR-16-090"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Weak MAC Algorithm(s) Supported (SSH)",
+    "description": [
+      "The remote SSH server is configured to allow / support weak MAC algorithm(s). Quality of Detection (QoD): 80%"
+    ],
+    "detection_result": [
+      "The remote SSH server supports the following weak client-to-server MAC algorithm(s):",
+      "umac-64-etm@openssh.com   umac-64@openssh.com   The remote SSH server supports the following weak server-to-client MAC algorithm(s):   umac-64-etm@openssh.com   umac-64@openssh.com"
+    ],
+    "detection_method": [
+      "Checks the supported MAC algorithms (client-to-server and server-to-client) of the remote SSH server.",
+      "Currently weak MAC algorithms are defined as the following:",
+      "- MD5 based algorithms",
+      "- 96-bit based algorithms",
+      "- 64-bit based algorithms",
+      "- 'none' algorithm",
+      "Details: Weak MAC Algorithm(s) Supported (SSH)",
+      "OID:1.3.6.1.4.1.25623.1.0.105610",
+      "Version used: 2024-06-14T05:05:48Z"
+    ],
+    "product_detection_result": [
+      "Product: cpe:/a:ietf:secure_shell_protocol",
+      "Method: SSH Protocol Algorithms Supported",
+      "OID: 1.3.6.1.4.1.25623.1.0.105565)"
+    ],
+    "impact": [],
+    "solution": [
+      "Solution type: Mitigation",
+      "Disable the reported weak MAC algorithm(s)."
+    ],
+    "insight": [],
+    "log_method": [],
+    "cvss": [
+      "2.6"
+    ],
+    "port": 2222,
+    "protocol": "tcp",
+    "severity": "LOW",
+    "references": [
+      "url: https://www.rfc-editor.org/rfc/rfc6668",
+      "url: https://www.rfc-editor.org/rfc/rfc4253#section-6.4"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "ICMP Timestamp Reply Information Disclosure",
+    "description": [
+      "The remote host responded to an ICMP timestamp request.",
+      "Quality of Detection (QoD): 80%"
+    ],
+    "detection_result": [],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [],
+    "cvss": [
+      "2.1"
+    ],
+    "port": 2222,
+    "protocol": "tcp",
+    "severity": "LOW",
+    "references": [],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "ICMP Timestamp Reply Information Disclosure",
+    "description": [
+      "The remote host responded to an ICMP timestamp request."
+    ],
+    "detection_result": [
+      "The following response / ICMP packet has been received:",
+      "- ICMP Type: 14",
+      "- ICMP Code: 0"
+    ],
+    "detection_method": [
+      "Sends an ICMP Timestamp (Type 13) request and checks if a Timestamp Reply (Type 14) is received."
+    ],
+    "product_detection_result": [],
+    "impact": [
+      "This information could theoretically be used to exploit weak time-based random number generators in other services."
+    ],
+    "solution": [
+      "Solution type: Mitigation",
+      "Various mitigations are possible:",
+      "- Disable the support for ICMP timestamp on the remote host completely",
+      "- Protect the remote host by a rewall, and block ICMP packets passing through the rewall in either direction (either completely or only for untrusted networks)"
+    ],
+    "insight": [
+      "The Timestamp Reply is an ICMP message which replies to a Timestamp message. It consists of the originating timestamp sent by the sender of the Timestamp as well as a receive timestamp and a transmit timestamp."
+    ],
+    "log_method": [],
+    "cvss": [
+      "2.1"
+    ],
+    "port": "general",
+    "protocol": "icmp",
+    "severity": "LOW",
+    "references": [
+      "cve: CVE-1999-0524",
+      "url: https://datatracker.ietf.org/doc/html/rfc792",
+      "url: https://datatracker.ietf.org/doc/html/rfc2780",
+      "cert-bund: CB-K15/1514",
+      "cert-bund: CB-K14/0632",
+      "dfn-cert: DFN-CERT-2014-0658"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "CPE Inventory",
+    "description": [
+      "This routine uses information collected by other routines about CPE identities of operating systems, services and applications detected during the scan."
+    ],
+    "detection_result": [],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [],
+    "cvss": [
+      "0.0"
+    ],
+    "port": "general",
+    "protocol": "icmp",
+    "severity": "LOG",
+    "references": [],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "CPE Inventory",
+    "description": [
+      "This routine uses information collected by other routines about CPE identities of operating systems, services and applications detected during the scan.   Note: Some CPEs for specic products might show up twice or more in the output. Background:  After a product got renamed or a specic vendor was acquired by another one it might happen  that a product gets a new CPE within the NVD CPE Dictionary but older entries are kept with  the older CPE."
+    ],
+    "detection_result": [
+      "172.31.1.96|cpe:/a:openbsd:openssh:10.2",
+      "172.31.1.96|cpe:/o:linux:kernel"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [
+      "Details: CPE Inventory",
+      "OID:1.3.6.1.4.1.25623.1.0.810002",
+      "Version used: 2022-07-27T10:11:28Z"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": "general",
+    "protocol": "CPE-T",
+    "severity": "LOG",
+    "references": [
+      "url: https://nvd.nist.gov/products/cpe"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Traceroute",
+    "description": [
+      "Collect information about the network route and network distance between the scanner host and the target host."
+    ],
+    "detection_result": [
+      "Network route from scanner (172.30.0.2) to target (172.31.1.96):",
+      "172.30.0.2",
+      "172.31.1.96",
+      "Network distance between scanner and target: 2"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [],
+    "cvss": [
+      "0.0"
+    ],
+    "port": "general",
+    "protocol": "CPE-T",
+    "severity": "LOG",
+    "references": [],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Traceroute",
+    "description": [
+      "Collect information about the network route and network distance between the scanner host and the target host."
+    ],
+    "detection_result": [
+      "Network route from scanner (172.30.0.2) to target (172.31.1.96):",
+      "172.30.0.2",
+      "172.31.1.96",
+      "Network distance between scanner and target: 2"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [
+      "For internal networks, the distances are usually small, often less than 4 hosts between scanner and target. For public targets the distance is greater and might be 10 hosts or more."
+    ],
+    "log_method": [
+      "A combination of the protocols ICMP and TCP is used to determine the route. This method is applicable for IPv4 only and it is also known as 'traceroute'."
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": "general",
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Hostname Determination Reporting",
+    "description": [
+      "The script reports information on how the hostname of the target was determined."
+    ],
+    "detection_result": [
+      "Hostname determination for IP 172.31.1.96:",
+      "Hostname|Source",
+      "openssh.trabalho_vulnnet|Reverse-DNS"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [],
+    "cvss": [
+      "0.0"
+    ],
+    "port": "general",
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "OpenSSH Detection Consolidation",
+    "description": [
+      "Consolidation of OpenSSH detections."
+    ],
+    "detection_result": [
+      "Detected OpenSSH Server",
+      "Version: 10.2",
+      "Location: 2222/tcp",
+      "CPE: cpe:/a:openbsd:openssh:10.2",
+      "Concluded from version/product identification result:",
+      "SSH-2.0-OpenSSH_10.2"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [],
+    "cvss": [
+      "0.0"
+    ],
+    "port": "general",
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [
+      "url: https://www.openssh.com/"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "OS Detection Consolidation and Reporting",
+    "description": [
+      "This script consolidates the OS information detected by several VTs and tries to nd the best matching OS.",
+      "Furthermore it reports all previously collected information leading to this best matching OS. It also reports possible additional information which might help to improve the OS detection. If any of this information is wrong or could be improved please consider to report these to the referenced community forum."
+    ],
+    "detection_result": [
+      "Best matching OS:",
+      "OS: Linux Kernel",
+      "CPE: cpe:/o:linux:kernel",
+      "Found by VT: 1.3.6.1.4.1.25623.1.0.102002 (Operating System (OS) Detection (ICM ->P))",
+      "Concluded from ICMP based OS fingerprint",
+      "Setting key \"Host/runs_unixoide\" based on this information"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [],
+    "cvss": [
+      "0.0"
+    ],
+    "port": "general",
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [
+      "url: https://forum.greenbone.net/c/vulnerability-tests/7"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "IP Forwarding Enabled - Active Check",
+    "description": [
+      "Checks if the remote host has IP forwarding enabled."
+    ],
+    "detection_result": [
+      "It was possible to route a TCP packet through the target host and received an an ->swer which means IP forwarding is enabled."
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [
+      "Sends a crafted Local Link Layer (LLL) frame and checks the response."
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": "general",
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [
+      "cve: CVE-1999-0511"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "PQC Key Exchange (KEX) Algorithm(s) Supported (SSH)",
+    "description": [
+      "The remote SSH server is congured to allow / support at least ONE Post-Quantum Cryptography (PQC) key exchange (KEX) algorithm(s).",
+      "Quality of Detection (QoD): 80%"
+    ],
+    "detection_result": [
+      "The remote SSH server supports the following PQC KEX algorithm(s):",
+      "- mlkem768x25519-sha256",
+      "- sntrup761x25519-sha512",
+      "- sntrup761x25519-sha512@openssh.com"
+    ],
+    "detection_method": [],
+    "product_detection_result": [
+      "cpe:/a:ietf:secure_shell_protocol",
+      "Detected by SSH Protocol Algorithms Supported (OID: 1.3.6.1.4.1.25623.1.0.105565)"
+    ],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [
+      "Checks the (previously collected) supported KEX algorithms of the remote SSH server.",
+      "Currently the following PQC KEX algorithms are dened / getting used for this check:",
+      "- sntrup761x25519-sha512@openssh.com",
+      "- sntrup761x25519-sha512",
+      "- mlkem768x25519-sha256",
+      "- sntrup4591761x25519-sha512@tinyssh.org",
+      "- ecdh-nistp256-kyber-512r3-sha256-d00@openquantumsafe.org",
+      "- ecdh-nistp384-kyber-768r3-sha384-d00@openquantumsafe.org",
+      "- ecdh-nistp521-kyber-1024r3-sha512-d00@openquantumsafe.org",
+      "- x25519-kyber-512r3-sha256-d00@amazon.com",
+      "- mlkem1024nistp384-sha384",
+      "- mlkem768nistp256-sha256",
+      "- curve25519-frodokem1344-sha512@ssh.com",
+      "- ecdh-nistp521-kyber1024-sha512@ssh.com",
+      "Details: PQC Key Exchange (KEX) Algorithm(s) Supported (SSH)",
+      "OID:1.3.6.1.4.1.25623.1.0.119215",
+      "Version used: 2025-10-31T05:40:56Z",
+      "Product Detection Result",
+      "Product: cpe:/a:ietf:secure_shell_protocol",
+      "Method: SSH Protocol Algorithms Supported",
+      "OID: 1.3.6.1.4.1.25623.1.0.105565)"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": 2222,
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [
+      "url: https://openssh.com/pq.html",
+      "url: https://quantumcomputingreport.com/openssh-10-0-introduces-default-post-quantum-key-exchange-algorithm/",
+      "url: https://www.nist.gov/news-events/news/2024/08/nist-releases-first-3-finalized-post-quantum-encryption-standards",
+      "url: https://csrc.nist.gov/News/2024/postquantum-cryptography-fips-approved",
+      "url: https://www.forescout.com/blog/post-quantum-cryptography-the-real-risks-of-not-adopting-it/"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Services",
+    "description": [
+      "This plugin performs service detection.",
+      "Quality of Detection (QoD): 80%"
+    ],
+    "detection_result": [
+      "An ssh server is running on this port"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [
+      "This plugin attempts to guess which service is running on the remote port(s). For instance, it searches for a web server which could listen on another port than 80 or 443 and makes this information available for other check routines."
+    ],
+    "log_method": [
+      "Details: Services",
+      "OID:1.3.6.1.4.1.25623.1.0.10330",
+      "Version used: 2025-03-05T05:38:53Z"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": 2222,
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "SSH Server type and version",
+    "description": [
+      "This detects the SSH Server's type and version by connecting to the server and processing the buer received."
+    ],
+    "detection_result": [
+      "Remote SSH server banner: SSH-2.0-OpenSSH_10.2",
+      "Remote SSH supported authentication: publickey,keyboard-interactive",
+      "Remote SSH text/login banner: (not available)",
+      "This is probably (a):",
+      "- OpenSSH",
+      "Concluded from remote connection attempt with credentials:",
+      "Login: OpenVASVT",
+      "Password: OpenVASVT"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [
+      "This information gives potential attackers additional information about the system they are attacking. Versions and Types should be omitted where possible."
+    ],
+    "log_method": [
+      "Details: SSH Server type and version",
+      "OID:1.3.6.1.4.1.25623.1.0.10267",
+      "Version used: 2025-11-13T05:40:19Z"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": 2222,
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "SSH Protocol Algorithms Supported",
+    "description": [
+      "This script detects which algorithms are supported by the remote SSH service."
+    ],
+    "detection_result": [
+      "The following options are supported by the remote SSH service:",
+      "kex_algorithms:",
+      "mlkem768x25519-sha256,sntrup761x25519-sha512,sntrup761x25519-sha512@openssh.com,",
+      "->curve25519-sha256,curve25519-sha256@libssh.org,ecdh-sha2-nistp256,ecdh-sha2-ni",
+      "->stp384,ecdh-sha2-nistp521,ext-info-s,kex-strict-s-v00@openssh.com",
+      "server_host_key_algorithms:",
+      "ecdsa-sha2-nistp256,ssh-ed25519,rsa-sha2-512,rsa-sha2-256",
+      "encryption_algorithms_client_to_server:",
+      "chacha20-poly1305@openssh.com,aes128-gcm@openssh.com,aes256-gcm@openssh.com,aes1",
+      "->28-ctr,aes192-ctr,aes256-ctr",
+      "encryption_algorithms_server_to_client:",
+      "chacha20-poly1305@openssh.com,aes128-gcm@openssh.com,aes256-gcm@openssh.com,aes1",
+      "->28-ctr,aes192-ctr,aes256-ctr",
+      "mac_algorithms_client_to_server:",
+      "umac-64-etm@openssh.com,umac-128-etm@openssh.com,hmac-sha2-256-etm@openssh.com,h",
+      "->mac-sha2-512-etm@openssh.com,hmac-sha1-etm@openssh.com,umac-64@openssh.com,uma",
+      "->c-128@openssh.com,hmac-sha2-256,hmac-sha2-512,hmac-sha1",
+      "mac_algorithms_server_to_client:",
+      "umac-64-etm@openssh.com,umac-128-etm@openssh.com,hmac-sha2-256-etm@openssh.com,h",
+      "->mac-sha2-512-etm@openssh.com,hmac-sha1-etm@openssh.com,umac-64@openssh.com,uma",
+      "->c-128@openssh.com,hmac-sha2-256,hmac-sha2-512,hmac-sha1",
+      "compression_algorithms_client_to_server:",
+      "none,zlib@openssh.com",
+      "compression_algorithms_server_to_client:",
+      "none,zlib@openssh.com"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [
+      "Details: SSH Protocol Algorithms Supported",
+      "OID:1.3.6.1.4.1.25623.1.0.105565",
+      "Version used: 2026-01-21T05:50:46Z"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": 2222,
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  }
+]

@@ -1,0 +1,2827 @@
+[
+  {
+    "Name": "Java JMX Insecure Configuration Vulnerability - Active Check",
+    "description": [
+      "The Java JMX interface is configured in an insecure way by allowing unauthenticated attackers to load classes from any remote URL."
+    ],
+    "detection_result": [
+      "It was possible to call 'javax.management.remote.rmi.RMIServer.newClient' on the -> RMI port 8686/tcp without providing any credentials."
+    ],
+    "detection_method": [
+      "Sends crafted RMI requests and checks the responses."
+    ],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [
+      "Enable password authentication and/or SSL client certificate authentication for the JMX agent."
+    ],
+    "insight": [],
+    "log_method": [],
+    "cvss": [
+      "7.0"
+    ],
+    "port": 8686,
+    "protocol": "tcp",
+    "severity": "High",
+    "references": [
+      "url: https://mogwailabs.de/blog/2019/04/attacking-rmi-based-jmx-services/",
+      "url: https://www.optiv.com/blog/exploiting-jmx-rmi",
+      "url: https://www.rapid7.com/db/modules/exploit/multi/misc/java_jmx_server"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Oracle GlassFish Server <= 4.1.1 Directory Traversal Vulnerability - Active Check",
+    "description": [
+      "GlassFish server is prone to a directory traversal vulnerability.",
+      "Quality of Detection (QoD): 99%"
+    ],
+    "detection_result": [
+      "Vulnerable URL: http://glassfish41.trabalho_vulnnet:4848/theme/META-INF/%c0%ae%c0%ae/%c0%ae%c0%ae/%c0%ae%c0%ae/%c0%ae%c0%ae/%c0%ae%c0%ae/%c0%ae%c0%ae/%c0%ae%c0%ae/%c0%ae%c0%ae/%c0%ae%c0%ae/etc/passwd"
+    ],
+    "detection_method": [
+      "Sends a crafted HTTP GET request and checks the response.",
+      "Details: Oracle GlassFish Server <= 4.1.1 Directory Traversal Vulnerability - Active Che..",
+      "OID:1.3.6.1.4.1.25623.1.0.806848",
+      "Version used: 2025-04-15T05:54:49Z"
+    ],
+    "product_detection_result": [],
+    "impact": [
+      "Successful exploitation will allow remote attackers to gain access to sensitive information.",
+      "Solution type: WillNotFix",
+      "No known solution was made available for at least one year since the disclosure of this vulnerability. Likely none will be provided anymore. General solution options are to upgrade to a newer release, disable respective features, remove the product or replace the product by another one.",
+      "Aected Software/OS",
+      "Oracle GlassFish Server version 4.1.1 and probably prior."
+    ],
+    "solution": [],
+    "insight": [
+      "The aw is due to",
+      "- Improper sanitization of parameter 'META-INF' in 'theme.php' le."
+    ],
+    "log_method": [],
+    "cvss": [
+      "7.5"
+    ],
+    "port": 4848,
+    "protocol": "tcp",
+    "severity": "HIGH",
+    "references": [
+      "cve: CVE-2017-1000028",
+      "url: https://www.exploit-db.com/exploits/39241"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Die-Hellman Ephemeral Key Exchange DoS Vulnerability (SSL/TLS, D(HE)ater)",
+    "description": [
+      "The remote SSL/TLS server is supporting Die-Hellman ephemeral (DHE) Key Exchange algorithms and thus could be prone to a denial of service (DoS) vulnerability."
+    ],
+    "detection_result": [
+      "'DHE' cipher suites accepted by this service via the TLSv1.0 protocol:",
+      "TLS_DHE_RSA_WITH_3DES_EDE_CBC_SHA",
+      "TLS_DHE_RSA_WITH_AES_128_CBC_SHA",
+      "TLS_DHE_RSA_WITH_AES_256_CBC_SHA",
+      "'DHE' cipher suites accepted by this service via the TLSv1.1 protocol:",
+      "TLS_DHE_RSA_WITH_3DES_EDE_CBC_SHA",
+      "TLS_DHE_RSA_WITH_AES_128_CBC_SHA",
+      "TLS_DHE_RSA_WITH_AES_256_CBC_SHA",
+      "'DHE' cipher suites accepted by this service via the TLSv1.2 protocol:",
+      "TLS_DHE_RSA_WITH_3DES_EDE_CBC_SHA",
+      "TLS_DHE_RSA_WITH_AES_128_CBC_SHA",
+      "TLS_DHE_RSA_WITH_AES_128_CBC_SHA256",
+      "TLS_DHE_RSA_WITH_AES_128_GCM_SHA256",
+      "TLS_DHE_RSA_WITH_AES_256_CBC_SHA",
+      "TLS_DHE_RSA_WITH_AES_256_CBC_SHA256",
+      "TLS_DHE_RSA_WITH_AES_256_GCM_SHA384"
+    ],
+    "detection_method": [
+      "Checks the supported cipher suites of the remote SSL/TLS server.",
+      "Details: Diffie-Hellman Ephemeral Key Exchange DoS Vulnerability (SSL/TLS, D(HE)ater)",
+      "OID:1.3.6.1.4.1.25623.1.0.117840",
+      "Version used: 2024-10-03T05:05:33Z"
+    ],
+    "product_detection_result": [
+      "Product: cpe:/a:ietf:transport_layer_security",
+      "Method: SSL/TLS: Report Supported Cipher Suites",
+      "OID: 1.3.6.1.4.1.25623.1.0.802067)"
+    ],
+    "impact": [
+      "This vulnerability allows remote attackers (from the client side) to send arbitrary numbers that are actually not public keys, and trigger expensive server-side DHE modular-exponentiation calculations, also known as a D(HE)ater attack.",
+      "There could be an increase in CPU usage in the aected component. For OpenSSH, users may observe issues such as a slowdown in SSH connections."
+    ],
+    "solution": [
+      "Solution type: Mitigation",
+      "- DHE key exchange should be disabled if no other mitigation mechanism can be used and either elliptic-curve variant of Die-Hellman (ECDHE) or RSA key exchange is supported by the clients. The fact that RSA key exchange is not forward secret should be considered.",
+      "- Limit the maximum number of concurrent connections in e.g. the conguration of the remote server. For Postx this limit can be congured via 'smtpd_client_new_tls_session_rate_limit' option, for other products please refer to the manual of the product in question on conguration possibilities."
+    ],
+    "insight": [
+      "- CVE-2002-20001: The Die-Hellman Key Agreement Protocol allows remote attackers (from the client side) to send arbitrary numbers that are actually not public keys, and trigger expensive server-side DHE modular-exponentiation calculations, aka a D(HE)ater attack. The client needs very little CPU resources and network bandwidth. The attack may be more disruptive in cases where a client can require a server to select its largest supported key size. The basic attack scenario is that the client must claim that it can only communicate with DHE, and the server must be congured to allow DHE.",
+      "- CVE-2022-40735: The Die-Hellman Key Agreement Protocol allows use of long exponents that arguably make certain calculations unnecessarily expensive, because the 1996 van Oorschot and Wiener paper found that '(appropriately) short exponents' can be used when there are adequate subgroup constraints, and these short exponents can lead to less expensive calculations than for long exponents. This issue is dierent from CVE-2002-20001 because it is based on an observation about exponent size, rather than an observation about numbers that are not public keys. The specic situations in which calculation expense would constitute a server-side vulnerability depend on the protocol (e.g., TLS, SSH, or IKE) and the DHE implementation details. In general, there might be an availability concern because of server-side resource consumption from DHE modular-exponentiation calculations. Finally, it is possible for an attacker to exploit this vulnerability and CVE-2002-20001 together.",
+      "- CVE-2024-41996: Validating the order of the public keys in the Die-Hellman Key Agreement Protocol, when an approved safe prime is used, allows remote attackers (from the client side) to trigger unnecessarily expensive server-side DHE modular-exponentiation calculations. The client may cause asymmetric resource consumption. The basic attack scenario is that the client must claim that it can only communicate with DHE, and the server must be congured to allow DHE and validate the order of the public key."
+    ],
+    "log_method": [],
+    "cvss": [
+      "5.0"
+    ],
+    "port": 8181,
+    "protocol": "tcp",
+    "severity": "MEDIUM",
+    "references": [
+      "cve: CVE-2002-20001",
+      "cve: CVE-2022-40735",
+      "cve: CVE-2024-41996",
+      "url: https://dheatattack.gitlab.io/",
+      "url: https://dheatattack.gitlab.io/details/",
+      "url: https://www.researchgate.net/profile/Anton-Stiglic-2/publication/2401745_Security_Issues_in_the_Diffie-Hellman_Key_Agreement_Protocol",
+      "url: https://github.com/Balasys/dheater",
+      "url: https://github.com/c0r0n3r/dheater",
+      "cert-bund: WID-SEC-2024-3056",
+      "cert-bund: WID-SEC-2023-1886",
+      "cert-bund: WID-SEC-2023-1352",
+      "cert-bund: WID-SEC-2022-2251",
+      "cert-bund: WID-SEC-2022-2000",
+      "cert-bund: CB-K22/0224",
+      "cert-bund: CB-K21/1276"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "SSL/TLS: Report Vulnerable Cipher Suites for HTTPS",
+    "description": [
+      "This routine reports all SSL/TLS cipher suites accepted by a service where attack vectors exists only on HTTPS services.",
+      "Quality of Detection (QoD): 98%"
+    ],
+    "detection_result": [
+      "'Vulnerable' cipher suites accepted by this service via the TLSv1.0 protocol:",
+      "TLS_DHE_RSA_WITH_3DES_EDE_CBC_SHA (SWEET32)",
+      "TLS_ECDHE_RSA_WITH_3DES_EDE_CBC_SHA (SWEET32)",
+      "TLS_RSA_WITH_3DES_EDE_CBC_SHA (SWEET32)",
+      "'Vulnerable' cipher suites accepted by this service via the TLSv1.1 protocol:",
+      "TLS_DHE_RSA_WITH_3DES_EDE_CBC_SHA (SWEET32)",
+      "TLS_ECDHE_RSA_WITH_3DES_EDE_CBC_SHA (SWEET32)",
+      "TLS_RSA_WITH_3DES_EDE_CBC_SHA (SWEET32)",
+      "'Vulnerable' cipher suites accepted by this service via the TLSv1.2 protocol:",
+      "TLS_DHE_RSA_WITH_3DES_EDE_CBC_SHA (SWEET32)",
+      "TLS_ECDHE_RSA_WITH_3DES_EDE_CBC_SHA (SWEET32)",
+      "TLS_RSA_WITH_3DES_EDE_CBC_SHA (SWEET32)"
+    ],
+    "detection_method": [
+      "Checks previous collected cipher suites.",
+      "Details: SSL/TLS: Report Vulnerable Cipher Suites for HTTPS",
+      "OID:1.3.6.1.4.1.25623.1.0.108031",
+      "Version used: 2025-03-27T05:38:50Z"
+    ],
+    "product_detection_result": [
+      "cpe:/a:ietf:transport_layer_security",
+      "Detected by SSL/TLS: Report Supported Cipher Suites (OID: 1.3.6.1.4.1.25623.1.0.802067)",
+      "Product: cpe:/a:ietf:transport_layer_security",
+      "Method: SSL/TLS: Report Supported Cipher Suites",
+      "OID: 1.3.6.1.4.1.25623.1.0.802067)"
+    ],
+    "impact": [
+      "This could allow remote attackers to obtain sensitive information or have other, unspecied impacts."
+    ],
+    "solution": [
+      "Solution type: Mitigation",
+      "The conguration of this services should be changed so that it does not accept the listed cipher suites anymore.",
+      "Please see the references for more resources supporting you with this task."
+    ],
+    "insight": [
+      "These rules are applied for the evaluation of the vulnerable cipher suites:",
+      "- 64-bit block cipher 3DES vulnerable to the SWEET32 attack (CVE-2016-2183)."
+    ],
+    "log_method": [],
+    "cvss": [
+      "7.0"
+    ],
+    "port": 8181,
+    "protocol": "tcp",
+    "severity": "HIGH",
+    "references": [
+      "cve: CVE-2016-2183",
+      "cve: CVE-2016-6329",
+      "cve: CVE-2020-12872",
+      "url: https://ssl-config.mozilla.org",
+      "url: https://www.bsi.bund.de/SharedDocs/Downloads/EN/BSI/Publications/TechGuidelines/TG02102/BSI-TR-02102-1.html",
+      "url: https://www.bsi.bund.de/EN/Themen/Oeffentliche-Verwaltung/Mindeststandards/TLS-Protokoll/TLS-Protokoll_node.html",
+      "url: https://www.bsi.bund.de/SharedDocs/Downloads/DE/BSI/Publikationen/TechnischeRichtlinien/TR03116/BSI-TR-03116-4.html",
+      "url: https://www.bsi.bund.de/SharedDocs/Downloads/DE/BSI/Mindeststandards/Mindeststandard_BSI_TLS_Version_2_4.html",
+      "url: https://web.archive.org/web/20240113175943/https://www.bettercrypto.org",
+      "url: https://www.enisa.europa.eu/publications/algorithms-key-size-and-parameters-report-2014",
+      "url: https://sweet32.info",
+      "cert-bund: WID-SEC-2026-0180",
+      "cert-bund: WID-SEC-2024-1277",
+      "cert-bund: WID-SEC-2024-0209",
+      "cert-bund: WID-SEC-2024-0064",
+      "cert-bund: WID-SEC-2022-2226",
+      "cert-bund: WID-SEC-2022-1955",
+      "cert-bund: CB-K21/1094",
+      "cert-bund: CB-K20/1023",
+      "cert-bund: CB-K20/0321",
+      "cert-bund: CB-K20/0314",
+      "cert-bund: CB-K20/0157",
+      "cert-bund: CB-K19/0618",
+      "cert-bund: CB-K19/0615",
+      "cert-bund: CB-K18/0296",
+      "cert-bund: CB-K17/1980",
+      "cert-bund: CB-K17/1871",
+      "cert-bund: CB-K17/1803",
+      "cert-bund: CB-K17/1753",
+      "cert-bund: CB-K17/1750",
+      "cert-bund: CB-K17/1709",
+      "cert-bund: CB-K17/1558",
+      "cert-bund: CB-K17/1273",
+      "cert-bund: CB-K17/1202",
+      "cert-bund: CB-K17/1196",
+      "cert-bund: CB-K17/1055",
+      "cert-bund: CB-K17/1026",
+      "cert-bund: CB-K17/0939",
+      "cert-bund: CB-K17/0917",
+      "cert-bund: CB-K17/0915",
+      "cert-bund: CB-K17/0877",
+      "cert-bund: CB-K17/0796",
+      "cert-bund: CB-K17/0724",
+      "cert-bund: CB-K17/0661",
+      "cert-bund: CB-K17/0657",
+      "cert-bund: CB-K17/0582",
+      "cert-bund: CB-K17/0581",
+      "cert-bund: CB-K17/0506",
+      "cert-bund: CB-K17/0504",
+      "cert-bund: CB-K17/0467",
+      "cert-bund: CB-K17/0345",
+      "cert-bund: CB-K17/0098",
+      "cert-bund: CB-K17/0089",
+      "cert-bund: CB-K17/0086",
+      "cert-bund: CB-K17/0082",
+      "cert-bund: CB-K16/1837",
+      "cert-bund: CB-K16/1830",
+      "cert-bund: CB-K16/1635",
+      "cert-bund: CB-K16/1630",
+      "cert-bund: CB-K16/1624",
+      "cert-bund: CB-K16/1622",
+      "cert-bund: CB-K16/1500",
+      "cert-bund: CB-K16/1465",
+      "cert-bund: CB-K16/1307",
+      "cert-bund: CB-K16/1296",
+      "dfn-cert: DFN-CERT-2025-0041",
+      "dfn-cert: DFN-CERT-2021-1618",
+      "dfn-cert: DFN-CERT-2021-0775",
+      "dfn-cert: DFN-CERT-2021-0770",
+      "dfn-cert: DFN-CERT-2021-0274",
+      "dfn-cert: DFN-CERT-2020-2141",
+      "dfn-cert: DFN-CERT-2020-0368"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Cleartext Transmission of Sensitive Information via HTTP",
+    "description": [
+      "The host / application transmits sensitive information (username, passwords) in cleartext via HTTP."
+    ],
+    "detection_result": [
+      "The following input fields were identified (URL:input name):",
+      "http://glassfish41.trabalho_vulnnet:4848/:j_password"
+    ],
+    "detection_method": [
+      "Evaluate previous collected information and check if the host / application is not enforcing the transmission of sensitive data via an encrypted SSL/TLS connection.",
+      "The script is currently checking the following:",
+      "- HTTP Basic Authentication (Basic Auth)",
+      "- HTTP Forms (e.g. Login) with input eld of type 'password'"
+    ],
+    "product_detection_result": [],
+    "impact": [
+      "An attacker could use this situation to compromise or eavesdrop on the HTTP communication between the client and the server using a man-in-the-middle attack to get access to sensitive data like usernames or passwords."
+    ],
+    "solution": [
+      "Solution type: Workaround",
+      "Enforce the transmission of sensitive data via an encrypted SSL/TLS connection. Additionally make sure the host / application is redirecting all users to the secured SSL/TLS connection before allowing to input sensitive data into the mentioned functions."
+    ],
+    "insight": [],
+    "log_method": [],
+    "cvss": [
+      "4.8"
+    ],
+    "port": 4848,
+    "protocol": "tcp",
+    "severity": "MEDIUM",
+    "references": [
+      "url: https://www.owasp.org/index.php/Top_10_2013-A2-Broken_Authentication_and_Session_Management",
+      "url: https://www.owasp.org/index.php/Top_10_2013-A6-Sensitive_Data_Exposure",
+      "url: https://cwe.mitre.org/data/definitions/319.html"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "SSL/TLS: Certificate Expired",
+    "description": [
+      "The remote server's SSL/TLS certificate has already expired."
+    ],
+    "detection_result": [
+      "The certificate of the remote service expired on 2024-08-18 13:30:10.",
+      "Certificate details:",
+      "fingerprint (SHA-1) | 1FF8EFF1B17DC744191E213A31029AA75982A63C",
+      "fingerprint (SHA-256) | 08DEFEE67D8B168E29B80A97E5233C8BE32B316ED389AACE05BE31DAA702036B",
+      "issued by | CN=localhost,OU=GlassFish,O=Oracle Corporation,L=Santa Clara,ST=California,C=US",
+      "public key algorithm | RSA",
+      "public key size (bits) | 2048",
+      "serial | 31EB8D9F",
+      "signature algorithm | sha256WithRSAEncryption",
+      "subject | CN=localhost,OU=GlassFish,O=Oracle Corporation,L=Santa Clara,ST=California,C=US",
+      "subject alternative names (SAN) | None",
+      "valid from | 2014-08-21 13:30:10 UTC",
+      "valid until | 2024-08-18 13:30:10 UTC"
+    ],
+    "detection_method": [],
+    "product_detection_result": [
+      "cpe:/a:ietf:transport_layer_security",
+      "Detected by SSL/TLS: Collect and Report Certificate Details (OID: 1.3.6.1.4.1.25623.1.0.103692)"
+    ],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [],
+    "cvss": [
+      "5.0"
+    ],
+    "port": 8181,
+    "protocol": "tcp",
+    "severity": "MEDIUM",
+    "references": [],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "SSL/TLS: Certicate Expired",
+    "description": [
+      "The remote server's SSL/TLS certicate has already expired.",
+      "Quality of Detection (QoD): 99%"
+    ],
+    "detection_result": [
+      "The certificate of the remote service expired on 2024-08-18 13:30:10.",
+      "Certificate details:",
+      "fingerprint (SHA-1) | 1FF8EFF1B17DC744191E213A31029AA75982A63C",
+      "fingerprint (SHA-256) | 08DEFEE67D8B168E29B80A97E5233C8BE32B316ED389AA",
+      "->CE05BE31DAA702036B",
+      "issued by | CN=localhost,OU=GlassFish,O=Oracle Corporation",
+      "->,L=Santa Clara,ST=California,C=US",
+      "public key algorithm | RSA",
+      "public key size (bits) | 2048",
+      "serial | 31EB8D9F",
+      "signature algorithm | sha256WithRSAEncryption",
+      "subject | CN=localhost,OU=GlassFish,O=Oracle Corporation",
+      "->,L=Santa Clara,ST=California,C=US",
+      "subject alternative names (SAN) | None",
+      "valid from | 2014-08-21 13:30:10 UTC",
+      "valid until | 2024-08-18 13:30:10 UTC"
+    ],
+    "detection_method": [
+      "Details: SSL/TLS: Certificate Expired",
+      "OID:1.3.6.1.4.1.25623.1.0.103955",
+      "Version used: 2024-06-14T05:05:48Z"
+    ],
+    "product_detection_result": [
+      "cpe:/a:ietf:transport_layer_security",
+      "Detected by SSL/TLS: Collect and Report Certificate Details (OID: 1.3.6.1.4.1.25",
+      "->623.1.0.103692)",
+      "Product: cpe:/a:ietf:transport_layer_security",
+      "Method: SSL/TLS: Collect and Report Certificate Details",
+      "OID: 1.3.6.1.4.1.25623.1.0.103692)"
+    ],
+    "impact": [],
+    "solution": [
+      "Solution type: Mitigation",
+      "Replace the SSL/TLS certicate by a new one."
+    ],
+    "insight": [
+      "This script checks expiry dates of certicates associated with SSL/TLS-enabled services on the target and reports whether any have already expired."
+    ],
+    "log_method": [],
+    "cvss": [
+      "5.0"
+    ],
+    "port": 8181,
+    "protocol": "tcp",
+    "severity": "MEDIUM",
+    "references": [],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "SSL/TLS: Renegotiation DoS Vulnerability (CVE-2011-1473, CVE-2011-5094)",
+    "description": [
+      "The remote SSL/TLS service is prone to a denial of service (DoS) vulnerability."
+    ],
+    "detection_result": [
+      "The following indicates that the remote SSL/TLS service is affected:",
+      "Protocol Version | Successful re-done SSL/TLS handshakes (Renegotiation) over an",
+      "-> existing / already established SSL/TLS connection",
+      "--------------------------------------------------------------------------------",
+      "->--------------------------------------------------",
+      "TLSv1.0 | 10",
+      "TLSv1.1 | 10",
+      "TLSv1.2 | 10"
+    ],
+    "detection_method": [
+      "Checks if the remote service allows to re-do the same SSL/TLS handshake (Renegotiation) over",
+      "an existing / already established SSL/TLS connection.",
+      "Details: SSL/TLS: Renegotiation DoS Vulnerability (CVE-2011-1473, CVE-2011-5094)",
+      "OID:1.3.6.1.4.1.25623.1.0.117761",
+      "Version used: 2024-09-27T05:05:23Z"
+    ],
+    "product_detection_result": [],
+    "impact": [
+      "The aw might make it easier for remote attackers to cause a DoS (CPU consumption) by",
+      "performing many renegotiations within a single connection."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Users should contact their vendors for specic patch information.",
+      "A general solution is to remove/disable renegotiation capabilities altogether from/in the aected",
+      "SSL/TLS service.   Aected Software/OS   Every SSL/TLS service which does not properly restrict client-initiated renegotiation."
+    ],
+    "insight": [
+      "The aw exists because the remote SSL/TLS service does not properly restrict client-initiated",
+      "renegotiation within the SSL and TLS protocols.",
+      "Note: The referenced CVEs are aecting OpenSSL and Mozilla Network Security Services (NSS)",
+      "but both are in a DISPUTED state with the following rationale:",
+      "> It can also be argued that it is the responsibility of server deployments, not a security library,",
+      "to prevent or limit renegotiation when it is inappropriate within a specic environment.",
+      "Both CVEs are still kept in this VT as a reference to the origin of this aw."
+    ],
+    "log_method": [],
+    "cvss": [
+      "5.0"
+    ],
+    "port": 8181,
+    "protocol": "tcp",
+    "severity": "MEDIUM",
+    "references": [
+      "cve: CVE-2011-1473",
+      "cve: CVE-2011-5094",
+      "url: https://web.archive.org/web/20211201133213/https://orchilles.com/ssl-renego",
+      "->tiation-dos/",
+      "url: https://mailarchive.ietf.org/arch/msg/tls/wdg46VE_jkYBbgJ5yE4P9nQ-8IU/",
+      "url: https://vincent.bernat.ch/en/blog/2011-ssl-dos-mitigation",
+      "url: https://www.openwall.com/lists/oss-security/2011/07/08/2",
+      "cert-bund: WID-SEC-2026-0180",
+      "cert-bund: WID-SEC-2024-1591",
+      "cert-bund: WID-SEC-2024-0796",
+      "cert-bund: WID-SEC-2023-1435",
+      "cert-bund: CB-K17/0980",
+      "cert-bund: CB-K17/0979",
+      "cert-bund: CB-K14/0772",
+      "cert-bund: CB-K13/0915",
+      "cert-bund: CB-K13/0462",
+      "dfn-cert: DFN-CERT-2025-0933",
+      "dfn-cert: DFN-CERT-2017-1013",
+      "dfn-cert: DFN-CERT-2017-1012",
+      "dfn-cert: DFN-CERT-2014-0809",
+      "dfn-cert: DFN-CERT-2013-1928",
+      "dfn-cert: DFN-CERT-2012-1112"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "SSL/TLS: Known Untrusted / Dangerous Certicate Authority (CA) Detection",
+    "description": [
+      "The service is using an SSL/TLS certicate from a known untrusted and/or dangerous certicate",
+      "authority (CA)."
+    ],
+    "detection_result": [
+      "The certificate of the remote service is signed by the following untrusted and/o",
+      "->r dangerous CA:",
+      "Issuer: CN=localhost,OU=GlassFish,O=Oracle Corporation,L=Santa Clara,ST=Californ",
+      "->ia,C=US",
+      "Certificate details:",
+      "fingerprint (SHA-1) | 1FF8EFF1B17DC744191E213A31029AA75982A63C",
+      "fingerprint (SHA-256) | 08DEFEE67D8B168E29B80A97E5233C8BE32B316ED389AA",
+      "->CE05BE31DAA702036B",
+      "issued by | CN=localhost,OU=GlassFish,O=Oracle Corporation",
+      "->,L=Santa Clara,ST=California,C=US",
+      "public key algorithm | RSA",
+      "public key size (bits) | 2048",
+      "serial | 31EB8D9F",
+      "signature algorithm | sha256WithRSAEncryption",
+      "subject | CN=localhost,OU=GlassFish,O=Oracle Corporation",
+      "->,L=Santa Clara,ST=California,C=US",
+      "subject alternative names (SAN) | None",
+      "valid from | 2014-08-21 13:30:10 UTC",
+      "valid until | 2024-08-18 13:30:10 UTC"
+    ],
+    "detection_method": [
+      "The script reads the certicate used by the target host and checks if it was signed by a known",
+      "untrusted and/or dangerous CA.",
+      "Details: SSL/TLS: Known Untrusted / Dangerous Certificate Authority (CA) Detection",
+      "OID:1.3.6.1.4.1.25623.1.0.113054",
+      "Version used: 2024-06-14T05:05:48Z"
+    ],
+    "product_detection_result": [
+      "cpe:/a:ietf:transport_layer_security",
+      "Detected by SSL/TLS: Collect and Report Certificate Details (OID: 1.3.6.1.4.1.25",
+      "->623.1.0.103692)"
+    ],
+    "impact": [
+      "An attacker could use this for man-in-the-middle (MITM) attacks, accessing sensible data and",
+      "other attacks."
+    ],
+    "solution": [
+      "Solution type: Mitigation",
+      "Replace the SSL/TLS certicate with one signed by a trusted CA."
+    ],
+    "insight": [],
+    "log_method": [],
+    "cvss": [
+      "5.0"
+    ],
+    "port": 8181,
+    "protocol": "tcp",
+    "severity": "MEDIUM",
+    "references": [],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "SSL/TLS: Deprecated TLSv1.0 and TLSv1.1 Protocol Detection",
+    "description": [
+      "It was possible to detect the usage of the deprecated TLSv1.0 and/or TLSv1.1 protocol on this system."
+    ],
+    "detection_result": [
+      "In addition to TLSv1.2+ the service is also providing the deprecated TLSv1.0 and TLSv1.1 protocols and supports one or more ciphers. Those supported ciphers can be found in the 'SSL/TLS: Report Supported Cipher Suites' (OID: 1.3.6.1.4.1.25623.1.0.802067) VT."
+    ],
+    "detection_method": [
+      "Checks the used TLS protocols of the services provided by this system.",
+      "Details: SSL/TLS: Deprecated TLSv1.0 and TLSv1.1 Protocol Detection",
+      "OID:1.3.6.1.4.1.25623.1.0.117274",
+      "Version used: 2025-04-30T05:39:51Z"
+    ],
+    "product_detection_result": [
+      "cpe:/a:ietf:transport_layer_security:1.0",
+      "Detected by SSL/TLS: Version Detection (OID: 1.3.6.1.4.1.25623.1.0.105782)",
+      "Product: cpe:/a:ietf:transport_layer_security:1.0",
+      "Method: SSL/TLS: Version Detection",
+      "OID: 1.3.6.1.4.1.25623.1.0.105782)"
+    ],
+    "impact": [
+      "An attacker might be able to use the known cryptographic aws to eavesdrop the connection between clients and the service to get access to sensitive data transferred within the secured connection.",
+      "Furthermore newly uncovered vulnerabilities in this protocols won't receive security updates anymore."
+    ],
+    "solution": [
+      "Solution type: Mitigation",
+      "It is recommended to disable the deprecated TLSv1.0 and/or TLSv1.1 protocols in favor of the TLSv1.2+ protocols.",
+      "Please see the references for more resources supporting you with this task."
+    ],
+    "insight": [
+      "The TLSv1.0 and TLSv1.1 protocols contain known cryptographic aws like:",
+      "- CVE-2011-3389: Browser Exploit Against SSL/TLS (BEAST)",
+      "- CVE-2015-0204: Factoring Attack on RSA-EXPORT Keys Padding Oracle On Downgraded Legacy Encryption (FREAK)"
+    ],
+    "log_method": [],
+    "cvss": [
+      "5.0"
+    ],
+    "port": 8181,
+    "protocol": "tcp",
+    "severity": "MEDIUM",
+    "references": [
+      "cve: CVE-2011-3389",
+      "cve: CVE-2015-0204",
+      "cve: CVE-2023-41928",
+      "cve: CVE-2024-41270",
+      "cve: CVE-2025-3200",
+      "url: https://ssl-config.mozilla.org",
+      "url: https://www.bsi.bund.de/SharedDocs/Downloads/EN/BSI/Publications/TechGuidelines/TG02102/BSI-TR-02102-1.html",
+      "url: https://www.bsi.bund.de/EN/Themen/Oeffentliche-Verwaltung/Mindeststandards/TLS-Protokoll/TLS-Protokoll_node.html",
+      "url: https://www.bsi.bund.de/SharedDocs/Downloads/DE/BSI/Publikationen/TechnischeRichtlinien/TR03116/BSI-TR-03116-4.html",
+      "url: https://www.bsi.bund.de/SharedDocs/Downloads/DE/BSI/Mindeststandards/Mindeststandard_BSI_TLS_Version_2_4.html",
+      "url: https://web.archive.org/web/20240113175943/https://www.bettercrypto.org",
+      "url: https://www.enisa.europa.eu/publications/algorithms-key-size-and-parameters-report-2014",
+      "url: https://datatracker.ietf.org/doc/rfc8996/",
+      "url: https://vnhacker.blogspot.com/2011/09/beast.html",
+      "url: https://web.archive.org/web/20201108095603/https://censys.io/blog/freak",
+      "url: https://certvde.com/en/advisories/VDE-2025-031/",
+      "url: https://gist.github.com/nyxfqq/cfae38fada582a0f576d154be1aeb1fc",
+      "url: https://advisories.ncsc.nl/advisory?id=NCSC-2024-0273",
+      "cert-bund: WID-SEC-2026-0180",
+      "cert-bund: WID-SEC-2023-1435",
+      "cert-bund: CB-K18/0799",
+      "cert-bund: CB-K16/1289",
+      "cert-bund: CB-K16/1096",
+      "cert-bund: CB-K15/1751",
+      "cert-bund: CB-K15/1266",
+      "cert-bund: CB-K15/0850",
+      "cert-bund: CB-K15/0764",
+      "cert-bund: CB-K15/0720",
+      "cert-bund: CB-K15/0548",
+      "cert-bund: CB-K15/0526",
+      "cert-bund: CB-K15/0509",
+      "cert-bund: CB-K15/0493",
+      "cert-bund: CB-K15/0384",
+      "cert-bund: CB-K15/0365",
+      "cert-bund: CB-K15/0364",
+      "cert-bund: CB-K15/0302",
+      "cert-bund: CB-K15/0192",
+      "cert-bund: CB-K15/0079",
+      "cert-bund: CB-K15/0016",
+      "cert-bund: CB-K14/1342",
+      "cert-bund: CB-K14/0231",
+      "cert-bund: CB-K13/0845",
+      "cert-bund: CB-K13/0796",
+      "cert-bund: CB-K13/0790",
+      "dfn-cert: DFN-CERT-2020-0177",
+      "dfn-cert: DFN-CERT-2020-0111",
+      "dfn-cert: DFN-CERT-2019-0068",
+      "dfn-cert: DFN-CERT-2018-1441",
+      "dfn-cert: DFN-CERT-2018-1408",
+      "dfn-cert: DFN-CERT-2016-1372",
+      "dfn-cert: DFN-CERT-2016-1164",
+      "dfn-cert: DFN-CERT-2016-0388",
+      "dfn-cert: DFN-CERT-2015-1853",
+      "dfn-cert: DFN-CERT-2015-1332",
+      "dfn-cert: DFN-CERT-2015-0884",
+      "dfn-cert: DFN-CERT-2015-0800",
+      "dfn-cert: DFN-CERT-2015-0758",
+      "dfn-cert: DFN-CERT-2015-0567",
+      "dfn-cert: DFN-CERT-2015-0544",
+      "dfn-cert: DFN-CERT-2015-0530",
+      "dfn-cert: DFN-CERT-2015-0396",
+      "dfn-cert: DFN-CERT-2015-0375",
+      "dfn-cert: DFN-CERT-2015-0374",
+      "dfn-cert: DFN-CERT-2015-0305",
+      "dfn-cert: DFN-CERT-2015-0199",
+      "dfn-cert: DFN-CERT-2015-0079",
+      "dfn-cert: DFN-CERT-2015-0021"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "SSL/TLS: Die-Hellman Key Exchange Insucient DH Group Strength Vulnerability",
+    "description": [
+      "The SSL/TLS service uses Die-Hellman groups with insucient strength (key size < 2048)."
+    ],
+    "detection_result": [
+      "Server Temporary Key Size: 1024 bits"
+    ],
+    "detection_method": [
+      "Checks the DHE temporary public key size.",
+      "Details: SSL/TLS: Diffie-Hellman Key Exchange Insufficient DH Group Strength Vulnerabili.",
+      "->..",
+      "OID:1.3.6.1.4.1.25623.1.0.106223",
+      "Version used: 2025-03-27T05:38:50Z"
+    ],
+    "product_detection_result": [],
+    "impact": [
+      "An attacker might be able to decrypt the SSL/TLS communication oine."
+    ],
+    "solution": [
+      "Solution type: Workaround",
+      "- Deploy (Ephemeral) Elliptic-Curve Die-Hellman (ECDHE) or use a 2048-bit or stronger",
+      "Die-Hellman group. Please see the references for more resources supporting you with this task.",
+      "- For Apache Web Servers: Beginning with version 2.4.7, mod_ssl will use DH parameters which",
+      "include primes with lengths of more than 1024 bits."
+    ],
+    "insight": [
+      "The Die-Hellman group are some big numbers that are used as base for the DH computations.",
+      "They can be, and often are, xed. The security of the nal secret depends on the size of these",
+      "parameters. It was found that 512 and 768 bits to be weak, 1024 bits to be breakable by really",
+      "powerful attackers like governments."
+    ],
+    "log_method": [],
+    "cvss": [
+      "0.0"
+    ],
+    "port": 8181,
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [
+      "url: https://weakdh.org",
+      "url: https://weakdh.org/sysadmin.html",
+      "url: https://ssl-config.mozilla.org",
+      "url: https://www.bsi.bund.de/SharedDocs/Downloads/EN/BSI/Publications/TechGuidel",
+      "->ines/TG02102/BSI-TR-02102-1.html",
+      "url: https://www.bsi.bund.de/EN/Themen/Oeffentliche-Verwaltung/Mindeststandards/",
+      "->TLS-Protokoll/TLS-Protokoll_node.html",
+      "url: https://www.bsi.bund.de/SharedDocs/Downloads/DE/BSI/Publikationen/Technisch",
+      "->eRichtlinien/TR03116/BSI-TR-03116-4.html",
+      "url: https://www.bsi.bund.de/SharedDocs/Downloads/DE/BSI/Mindeststandards/Mindes",
+      "->tstandard_BSI_TLS_Version_2_4.html",
+      "url: https://web.archive.org/web/20240113175943/https://www.bettercrypto.org",
+      "url: https://www.enisa.europa.eu/publications/algorithms-key-size-and-parameters",
+      "->-report-2014",
+      "url: https://httpd.apache.org/docs/2.4/mod/mod_ssl.html#sslcertificatefile"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "ICMP Timestamp Reply Information Disclosure",
+    "description": [
+      "The remote host responded to an ICMP timestamp request."
+    ],
+    "detection_result": [
+      "The following response / ICMP packet has been received:",
+      "- ICMP Type: 14",
+      "- ICMP Code: 0"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [
+      "This information could theoretically be used to exploit weak time-based random number generators in other services."
+    ],
+    "solution": [
+      "Solution type: Mitigation",
+      "Various mitigations are possible:",
+      "- Disable the support for ICMP timestamp on the remote host completely",
+      "- Protect the remote host by a firewall, and block ICMP packets passing through the firewall in either direction (either completely or only for untrusted networks)"
+    ],
+    "insight": [],
+    "log_method": [],
+    "cvss": [
+      "2.1"
+    ],
+    "port": 8181,
+    "protocol": "tcp",
+    "severity": "LOW",
+    "references": [],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "ICMP Timestamp Reply Information Disclosure",
+    "description": [
+      "The remote host responded to an ICMP timestamp request.",
+      "Quality of Detection (QoD): 80%"
+    ],
+    "detection_result": [
+      "The following response / ICMP packet has been received:",
+      "- ICMP Type: 14",
+      "- ICMP Code: 0"
+    ],
+    "detection_method": [
+      "Sends an ICMP Timestamp (Type 13) request and checks if a Timestamp Reply (Type 14) is received."
+    ],
+    "product_detection_result": [],
+    "impact": [
+      "This information could theoretically be used to exploit weak time-based random number generators in other services."
+    ],
+    "solution": [
+      "Solution type: Mitigation",
+      "Various mitigations are possible:",
+      "- Disable the support for ICMP timestamp on the remote host completely",
+      "- Protect the remote host by a rewall, and block ICMP packets passing through the rewall in either direction (either completely or only for untrusted networks)"
+    ],
+    "insight": [
+      "The Timestamp Reply is an ICMP message which replies to a Timestamp message. It consists of the originating timestamp sent by the sender of the Timestamp as well as a receive timestamp and a transmit timestamp."
+    ],
+    "log_method": [],
+    "cvss": [
+      "2.1"
+    ],
+    "port": "general",
+    "protocol": "icmp",
+    "severity": "LOW",
+    "references": [
+      "cve: CVE-1999-0524",
+      "url: https://datatracker.ietf.org/doc/html/rfc792",
+      "url: https://datatracker.ietf.org/doc/html/rfc2780",
+      "cert-bund: CB-K15/1514",
+      "cert-bund: CB-K14/0632",
+      "dfn-cert: DFN-CERT-2014-0658"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "TCP Timestamps Information Disclosure",
+    "description": [
+      "The remote host implements TCP timestamps and therefore allows to compute the uptime.",
+      "Quality of Detection (QoD): 80%"
+    ],
+    "detection_result": [
+      "It was detected that the host implements RFC1323/RFC7323.",
+      "The following timestamps were retrieved with a delay of 1 seconds in-between:",
+      "Packet 1: 1701278206",
+      "Packet 2: 1701279302"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [
+      "A side eect of this feature is that the uptime of the remote host can sometimes be computed."
+    ],
+    "solution": [
+      "Solution type: Mitigation",
+      "To disable TCP timestamps on linux add the line 'net.ipv4.tcp_timestamps = 0' to /etc/sysctl.conf. Execute 'sysctl -p' to apply the settings at runtime.",
+      "To disable TCP timestamps on Windows execute 'netsh int tcp set global timestamps=disabled'",
+      "Starting with Windows Server 2008 and Vista, the timestamp can not be completely disabled."
+    ],
+    "insight": [],
+    "log_method": [],
+    "cvss": [
+      "2.6"
+    ],
+    "port": "general",
+    "protocol": "icmp",
+    "severity": "LOW",
+    "references": [],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "TCP Timestamps Information Disclosure",
+    "description": [
+      "The remote host implements TCP timestamps and therefore allows to compute the uptime."
+    ],
+    "detection_result": [
+      "It was detected that the host implements RFC1323/RFC7323.",
+      "The following timestamps were retrieved with a delay of 1 seconds in-between:",
+      "Packet 1: 1701278206",
+      "Packet 2: 1701279302"
+    ],
+    "detection_method": [
+      "Special IP packets are forged and sent with a little delay in between to the target IP. The responses are searched for a timestamps. If found, the timestamps are reported.",
+      "Details: TCP Timestamps Information Disclosure",
+      "OID:1.3.6.1.4.1.25623.1.0.80091",
+      "Version used: 2023-12-15T16:10:08Z"
+    ],
+    "product_detection_result": [],
+    "impact": [
+      "A side eect of this feature is that the uptime of the remote host can sometimes be computed."
+    ],
+    "solution": [
+      "Solution type: Mitigation",
+      "To disable TCP timestamps on linux add the line 'net.ipv4.tcp_timestamps = 0' to /etc/sysctl.conf. Execute 'sysctl -p' to apply the settings at runtime.",
+      "To disable TCP timestamps on Windows execute 'netsh int tcp set global timestamps=disabled'",
+      "Starting with Windows Server 2008 and Vista, the timestamp can not be completely disabled.  The default behavior of the TCP/IP stack on this Systems is to not use the Timestamp options  when initiating TCP connections, but use them if the TCP peer that is initiating communication  includes them in their synchronize (SYN) segment.   See the references for more information.   Aected Software/OS   TCP implementations that implement RFC1323/RFC7323."
+    ],
+    "insight": [
+      "The remote host implements TCP timestamps, as dened by RFC1323/RFC7323."
+    ],
+    "log_method": [],
+    "cvss": [
+      "2.6"
+    ],
+    "port": "general",
+    "protocol": "tcp",
+    "severity": "LOW",
+    "references": [
+      "url: https://datatracker.ietf.org/doc/html/rfc1323",
+      "url: https://datatracker.ietf.org/doc/html/rfc7323",
+      "url: https://web.archive.org/web/20151213072445/http://www.microsoft.com/en-us/d ->ownload/details.aspx?id=9152",
+      "url: https://www.fortiguard.com/psirt/FG-IR-16-090"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "CPE Inventory",
+    "description": [
+      "This routine uses information collected by other routines about CPE identities of operating systems, services and applications detected during the scan.",
+      "Note: Some CPEs for specic products might show up twice or more in the output. Background: After a product got renamed or a specic vendor was acquired by another one it might happen that a product gets a new CPE within the NVD CPE Dictionary but older entries are kept with the older CPE."
+    ],
+    "detection_result": [
+      "172.31.1.24|cpe:/a:eclipse:glassfish:4.1",
+      "172.31.1.24|cpe:/a:ietf:transport_layer_security:1.0"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [],
+    "cvss": [
+      "0.0"
+    ],
+    "port": "general",
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "CPE Inventory",
+    "description": [
+      "This routine uses information collected by other routines about CPE identities of operating systems, services and applications detected during the scan.",
+      "Note: Some CPEs for specic products might show up twice or more in the output. Background: After a product got renamed or a specic vendor was acquired by another one it might happen that a product gets a new CPE within the NVD CPE Dictionary but older entries are kept with the older CPE.",
+      "Quality of Detection (QoD): 80%"
+    ],
+    "detection_result": [
+      "172.31.1.24|cpe:/a:eclipse:glassfish:4.1",
+      "172.31.1.24|cpe:/a:ietf:transport_layer_security:1.0",
+      "172.31.1.24|cpe:/a:ietf:transport_layer_security:1.1",
+      "172.31.1.24|cpe:/a:ietf:transport_layer_security:1.2",
+      "172.31.1.24|cpe:/a:oracle:glassfish_server:4.1",
+      "172.31.1.24|cpe:/o:linux:kernel"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [
+      "Details: CPE Inventory",
+      "OID:1.3.6.1.4.1.25623.1.0.810002",
+      "Version used: 2022-07-27T10:11:28Z"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": "general",
+    "protocol": "CPE-T",
+    "severity": "LOG",
+    "references": [
+      "url: https://nvd.nist.gov/products/cpe"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "HTTP Server type and version",
+    "description": [
+      "This script detects and reports the HTTP Server's banner which might provide the type and version of it.",
+      "Quality of Detection (QoD): 80%"
+    ],
+    "detection_result": [
+      "The remote HTTP Server banner is:",
+      "Server: GlassFish Server Open Source Edition 4.1"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [
+      "Details: HTTP Server type and version",
+      "OID:1.3.6.1.4.1.25623.1.0.10107",
+      "Version used: 2023-08-01T13:29:10Z"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": 8080,
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "HTTP Server Banner Enumeration",
+    "description": [
+      "This script tries to detect / enumerate different HTTP server banner (e.g. from a frontend, backend or proxy server) by sending various different HTTP requests (valid and invalid ones)."
+    ],
+    "detection_result": [
+      "It was possible to enumerate the following HTTP server banner(s):",
+      "Server banner",
+      "-> | Enumeration technique",
+      "--------------------------------------------------------------------------------",
+      "->------------------------------------------------------------------------------",
+      "->---------------",
+      "Server: GlassFish Server Open Source Edition 4.1",
+      "-> | Invalid HTTP 00.5 GET request (non-existent HTTP version) to '/'",
+      "X-Powered-By: Servlet/3.1 JSP/2.3 (GlassFish Server Open Source Edition 4.1 Java/Oracle Corporation/1.8) | Invalid HTTP 00.5 GET request (non-existent HTTP version) to '/'"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [
+      "Details: HTTP Server Banner Enumeration",
+      "OID:1.3.6.1.4.1.25623.1.0.108708",
+      "Version used: 2025-01-31T15:39:24Z"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": 8080,
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Eclipse GlassFish Detection (HTTP)",
+    "description": [
+      "HTTP based detection of Eclipse GlassFish."
+    ],
+    "detection_result": [
+      "Detected Eclipse GlassFish",
+      "Version: 4.1",
+      "Location: /",
+      "CPE: cpe:/a:eclipse:glassfish:4.1",
+      "Concluded from version/product identification result:",
+      "GlassFish Server Open Source Edition 4.1",
+      "Concluded from version/product identification location:",
+      "http://glassfish41.trabalho_vulnnet:8080/index.html"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [
+      "Details: Eclipse GlassFish Detection (HTTP)",
+      "OID:1.3.6.1.4.1.25623.1.0.100190",
+      "Version used: 2025-01-30T05:38:01Z"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": 8080,
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [
+      "url: https://glassfish.org/"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "HTTP Security Headers Detection",
+    "description": [
+      "All known security headers are being checked on the remote web server.",
+      "On completion a report will hand back whether a specic security header has been implemented (including its value and if it is deprecated) or is missing on the target.",
+      "Quality of Detection (QoD): 80%"
+    ],
+    "detection_result": [
+      "Missing Headers | More Information",
+      "--------------------------------------------------------------------------------",
+      "Content-Security-Policy | https://owasp.org/www-project-secure-headers/#content-security-policy",
+      "Cross-Origin-Embedder-Policy | https://scotthelme.co.uk/coop-and-coep/, Note: This is an upcoming header",
+      "Cross-Origin-Opener-Policy | https://scotthelme.co.uk/coop-and-coep/, Note: This is an upcoming header",
+      "Cross-Origin-Resource-Policy | https://scotthelme.co.uk/coop-and-coep/, Note: This is an upcoming header",
+      "Document-Policy | https://w3c.github.io/webappsec-feature-policy/document-policy#document-policy-http-header",
+      "Feature-Policy | https://owasp.org/www-project-secure-headers/#feature-policy, Note: The Feature Policy header has been renamed to Permissions Policy",
+      "Permissions-Policy | https://w3c.github.io/webappsec-feature-policy/#permissions-policy-http-header-field",
+      "Referrer-Policy | https://owasp.org/www-project-secure-headers/#referrer-policy",
+      "Sec-Fetch-Dest | https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers#fetch_metadata_request_headers, Note: This is a new header supported only in newer browsers like e.g. Firefox 90",
+      "Sec-Fetch-Mode | https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers#fetch_metadata_request_headers, Note: This is a new header supported only in newer browsers like e.g. Firefox 90",
+      "Sec-Fetch-Site | https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers#fetch_metadata_request_headers, Note: This is a new header supported only in newer browsers like e.g. Firefox 90",
+      "Sec-Fetch-User | https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers#fetch_metadata_request_headers, Note: This is a new header supported only in newer browsers like e.g. Firefox 90",
+      "X-Content-Type-Options | https://owasp.org/www-project-secure-headers/#x-content-type-options",
+      "X-Frame-Options | https://owasp.org/www-project-secure-headers/#x-frame-options",
+      "X-Permitted-Cross-Domain-Policies | https://owasp.org/www-project-secure-headers/#x-permitted-cross-domain-policies",
+      "X-XSS-Protection | https://owasp.org/www-project-secure-headers/#x-xss-protection, Note: Most major browsers have dropped / deprecated support for this header in 2020."
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [
+      "Details: HTTP Security Headers Detection",
+      "OID:1.3.6.1.4.1.25623.1.0.112081",
+      "Version used: 2025-03-21T15:40:43Z"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": 8080,
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [
+      "url: https://owasp.org/www-project-secure-headers/",
+      "url: https://owasp.org/www-project-secure-headers/#div-headers",
+      "url: https://securityheaders.com/"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Web Application Scanning Consolidation / Info Reporting",
+    "description": [
+      "The script consolidates and reports various information for web application (formerly called 'CGI') scanning.",
+      "This information is based on the following scripts / settings:",
+      "- HTTP-Version Detection (OID: 1.3.6.1.4.1.25623.1.0.100034)",
+      "- No 404 check (OID: 1.3.6.1.4.1.25623.1.0.10386)",
+      "- Web mirroring / webmirror.nasl (OID: 1.3.6.1.4.1.25623.1.0.10662)",
+      "- Directory Scanner / DDI_Directory_Scanner.nasl (OID: 1.3.6.1.4.1.25623.1.0.11032)",
+      "- The congured 'cgi_path' within the 'Scanner Preferences' of the scan cong in use"
+    ],
+    "detection_result": [],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [],
+    "cvss": [
+      "0.0"
+    ],
+    "port": 8080,
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Allowed HTTP Methods Enumeration",
+    "description": [
+      "Enumerates which HTTP methods are allowed."
+    ],
+    "detection_result": [
+      "The following list contains the URLs and corresponding supported HTTP methods.",
+      "URL | HTTP Methods",
+      "--------------------------------------------------------------------------------",
+      "http://glassfish41.trabalho_vulnnet:8080/ | GET, HEAD, POST, PUT, DELETE, TRACE, OPTIONS (obtained via HTTP OPTIONS method)"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [
+      "- Basic HTTP methods: GET, HEAD, POST, PUT, DELETE, CONNECT, OPTIONS, TRACE",
+      "- Extended HTTP methods: ACL, BASELINE-CONTROL, BIND, CHECKIN, CHECK- OUT, COPY, LABEL, LINK, LOCK, MERGE, MKACTIVITY, MKCALENDAR, MKCOL, MKREDIRECTREF, MKWORKSPACE, MOVE, ORDERPATCH, PATCH, PRI, PROPFIND, PROPPATCH, REBIND, REPORT, SEARCH, UNBIND, UNCHECKOUT, UNLINK, UN- LOCK, UPDATE, UPDATEREDIRECTREF, VERSION-CONTROL"
+    ],
+    "log_method": [
+      "Sends multiple HTTP requests and checks the responses.",
+      "Disclaimer:",
+      "- This enumeration script is provided 'as is' (means no support is given) and only providing rudimentary information about the possible enabled methods",
+      "- This script doesn't guarantee completeness or full reliability",
+      "For more reliable determination of the enabled HTTP methods please inspect the conguration of the web server manually and directly on the target host.",
+      "Details: Allowed HTTP Methods Enumeration",
+      "OID:1.3.6.1.4.1.25623.1.0.153974",
+      "Version used: 2025-02-28T05:38:49Z"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": 8080,
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Services",
+    "description": [
+      "This plugin performs service detection."
+    ],
+    "detection_result": [
+      "A web server is running on this port"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [
+      "This plugin attempts to guess which service is running on the remote port(s). For instance, it searches for a web server which could listen on another port than 80 or 443 and makes this information available for other check routines."
+    ],
+    "log_method": [
+      "Details: Services",
+      "OID:1.3.6.1.4.1.25623.1.0.10330",
+      "Version used: 2025-03-05T05:38:53Z"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": 8080,
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Service Detection (3 ASCII digit codes like FTP, SMTP, NNTP...)",
+    "description": [
+      "This plugin performs service detection.",
+      "Quality of Detection (QoD): 80%"
+    ],
+    "detection_result": [
+      "A Message Queue broker is running at this port."
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [
+      "This plugin is a complement of the plugin 'Services' (OID: 1.3.6.1.4.1.25623.1.0.10330). It attempts to identify services that return 3 ASCII digit codes (ie: FTP, SMTP, NNTP, ...)."
+    ],
+    "log_method": [
+      "Details: Service Detection (3 ASCII digit codes like FTP, SMTP, NNTP...)",
+      "OID:1.3.6.1.4.1.25623.1.0.14773",
+      "Version used: 2023-06-14T05:05:19Z"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": 7676,
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [
+      "url: https://forum.greenbone.net/c/vulnerability-tests/7"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "RMI Registry Service Detection",
+    "description": [
+      "Detection of a Remote Method Invocation (RMI) registry service.",
+      "Quality of Detection (QoD): 80%"
+    ],
+    "detection_result": [
+      "A RMI registry service is running at this port.",
+      "The following remote registry objects have been extracted:",
+      "rmi://172.31.1.24:38841/81adbb316eef/7676/jmxrmi",
+      "rmi://172.31.1.24:8686/jmxrmi"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [
+      "Details: RMI Registry Service Detection",
+      "OID:1.3.6.1.4.1.25623.1.0.105839",
+      "Version used: 2025-04-25T15:41:53Z"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": 8686,
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Unknown OS and Service Banner Reporting",
+    "description": [
+      "This VT consolidates and reports the information collected by the following VTs:\n- Collect banner of unknown services (OID: 1.3.6.1.4.1.25623.1.0.11154)\n- Service Detection (unknown) with nmap (OID: 1.3.6.1.4.1.25623.1.0.66286)\n- Service Detection (wrapped) with nmap (OID: 1.3.6.1.4.1.25623.1.0.108525)\n- OS Detection Consolidation and Reporting (OID: 1.3.6.1.4.1.25623.1.0.105937)\nIf you know any of the information reported here, please send the full output to the referenced\ncommunity forum."
+    ],
+    "detection_result": [
+      "Unknown banners have been collected which might help to identify the OS running\non this host. If these banners containing information about the host OS please\n report the following information to https://forum.greenbone.net/c/vulnerabili\nty-tests/7:",
+      "Banner: Server: GlassFish Server Open Source Edition 4.1   Identified from: HTTP Server banner on port 4848/tcp   Banner: X-Powered-By: Servlet/3.1 JSP/2.3 (GlassFish Server Open Source Edition\n 4.1 Java/Oracle Corporation/1.8)   Identified from: X-Powered-By Server banner on port 4848/tcp   Banner: Server: GlassFish Server Open Source Edition 4.1   Identified from: HTTP Server banner on port 8080/tcp   Banner: X-Powered-By: Servlet/3.1 JSP/2.3 (GlassFish Server Open Source Edition\n 4.1 Java/Oracle Corporation/1.8)   Identified from: X-Powered-By Server banner on port 8080/tcp   Banner: Server: GlassFish Server Open Source Edition 4.1   Identified from: HTTP Server banner on port 8181/tcp   Banner: X-Powered-By: Servlet/3.1 JSP/2.3 (GlassFish Server Open Source Edition\n 4.1 Java/Oracle Corporation/1.8)   Identified from: X-Powered-By Server banner on port 8181/tcp"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [
+      "Details: Unknown OS and Service Banner Reporting",
+      "OID:1.3.6.1.4.1.25623.1.0.108441",
+      "Version used: 2023-06-22T10:34:15Z"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": "general",
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [
+      "url: https://forum.greenbone.net/c/vulnerability-tests/7"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Hostname Determination Reporting",
+    "description": [
+      "The script reports information on how the hostname of the target was determined."
+    ],
+    "detection_result": [
+      "Hostname determination for IP 172.31.1.24:",
+      "Hostname|Source",
+      "glassfish41.trabalho_vulnnet|Reverse-DNS"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [
+      "Details: Hostname Determination Reporting",
+      "OID:1.3.6.1.4.1.25623.1.0.108449",
+      "Version used: 2022-07-27T10:11:28Z"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": "general",
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "OS Detection Consolidation and Reporting",
+    "description": [
+      "This script consolidates the OS information detected by several VTs and tries to nd the best\nmatching OS.",
+      "Furthermore it reports all previously collected information leading to this best matching OS. It\nalso reports possible additional information which might help to improve the OS detection.\nIf any of this information is wrong or could be improved please consider to report these to the\nreferenced community forum."
+    ],
+    "detection_result": [
+      "Best matching OS:",
+      "OS: Linux Kernel",
+      "CPE: cpe:/o:linux:kernel",
+      "Found by VT: 1.3.6.1.4.1.25623.1.0.102002 (Operating System (OS) Detection (ICM\nP))",
+      "Concluded from ICMP based OS fingerprint",
+      "Setting key \"Host/runs_unixoide\" based on this information"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [
+      "Details: OS Detection Consolidation and Reporting",
+      "OID:1.3.6.1.4.1.25623.1.0.105937",
+      "Version used: 2026-01-21T05:50:46Z"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": "general",
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [
+      "url: https://forum.greenbone.net/c/vulnerability-tests/7"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "IP Forwarding Enabled - Active Check",
+    "description": [
+      "Checks if the remote host has IP forwarding enabled."
+    ],
+    "detection_result": [
+      "It was possible to route a TCP packet through the target host and received an an\nswer which means IP forwarding is enabled."
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [
+      "Sends a crafted Local Link Layer (LLL) frame and checks the response.",
+      "Details: IP Forwarding Enabled - Active Check",
+      "OID:1.3.6.1.4.1.25623.1.0.147205",
+      "Version used: 2021-12-03T08:27:06Z"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": "general",
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [
+      "cve: CVE-1999-0511"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Traceroute",
+    "description": [
+      "Collect information about the network route and network distance between the scanner host and\nthe target host."
+    ],
+    "detection_result": [
+      "Network route from scanner (172.30.0.2) to target (172.31.1.24):",
+      "172.30.0.2",
+      "172.31.1.24",
+      "Network distance between scanner and target: 2"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [
+      "For internal networks, the distances are usually small, often less than 4 hosts between scanner\nand target. For public targets the distance is greater and might be 10 hosts or more."
+    ],
+    "log_method": [
+      "A combination of the protocols ICMP and TCP is used to determine the route. This method is\napplicable for IPv4 only and it is also known as 'traceroute'.",
+      "Details: Traceroute",
+      "OID:1.3.6.1.4.1.25623.1.0.51662",
+      "Version used: 2022-10-17T11:13:19Z"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": "general",
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "HTTP Server type and version",
+    "description": [
+      "This script detects and reports the HTTP Server's banner which might provide the type and version of it."
+    ],
+    "detection_result": [
+      "The remote HTTP Server banner is:",
+      "Server: GlassFish Server Open Source Edition 4.1"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [
+      "Details: HTTP Server type and version",
+      "OID:1.3.6.1.4.1.25623.1.0.10107",
+      "Version used: 2023-08-01T13:29:10Z"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": 4848,
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "HTTP Server Banner Enumeration",
+    "description": [
+      "This script tries to detect / enumerate different HTTP server banner (e.g. from a frontend, backend or proxy server) by sending various different HTTP requests (valid and invalid ones)."
+    ],
+    "detection_result": [
+      "It was possible to enumerate the following HTTP server banner(s):",
+      "Server banner",
+      "-> | Enumeration technique",
+      "--------------------------------------------------------------------------------",
+      "->------------------------------------------------------------------------------",
+      "->---------------",
+      "Server: GlassFish Server Open Source Edition 4.1",
+      "-> | Invalid HTTP 00.5 GET request (non-existent HTTP version) to '/'",
+      "X-Powered-By: Servlet/3.1 JSP/2.3 (GlassFish Server Open Source Edition 4.1 Java/Oracle Corporation/1.8) | Invalid HTTP 00.5 GET request (non-existent HTTP version) to '/'"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [
+      "Details: HTTP Server Banner Enumeration",
+      "OID:1.3.6.1.4.1.25623.1.0.108708",
+      "Version used: 2025-01-31T15:39:24Z"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": 4848,
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Eclipse GlassFish Detection (HTTP)",
+    "description": [
+      "HTTP based detection of Eclipse GlassFish."
+    ],
+    "detection_result": [
+      "Detected Eclipse GlassFish",
+      "Version: 4.1",
+      "Location: /",
+      "CPE: cpe:/a:eclipse:glassfish:4.1",
+      "Concluded from version/product identification result:",
+      "GlassFish Server Open Source Edition 4.1",
+      "Concluded from version/product identification location:",
+      "http://glassfish41.trabalho_vulnnet:4848/index.html",
+      "Extra information:",
+      "The GlassFish Administration Console is running at this port."
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [
+      "Details: Eclipse GlassFish Detection (HTTP)",
+      "OID:1.3.6.1.4.1.25623.1.0.100190",
+      "Version used: 2025-01-30T05:38:01Z"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": 4848,
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [
+      "url: https://glassfish.org/"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "HTTP Security Headers Detection",
+    "description": [
+      "All known security headers are being checked on the remote web server. On completion a report will hand back whether a specific security header has been implemented (including its value and if it is deprecated) or is missing on the target."
+    ],
+    "detection_result": [],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [],
+    "cvss": [
+      "0.0"
+    ],
+    "port": 4848,
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Web Application Scanning Consolidation / Info Reporting",
+    "description": [
+      "The script consolidates and reports various information for web application (formerly called 'CGI') scanning. This information is based on the following scripts / settings: - HTTP-Version Detection (OID: 1.3.6."
+    ],
+    "detection_result": [],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [],
+    "cvss": [
+      "0.0"
+    ],
+    "port": 4848,
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Allowed HTTP Methods Enumeration",
+    "description": [
+      "Enumerates which HTTP methods are allowed."
+    ],
+    "detection_result": [
+      "The following list contains the URLs and corresponding supported HTTP methods.",
+      "URL | HTTP Methods",
+      "--------------------------------------------------------------------------------",
+      "->----",
+      "http://glassfish41.trabalho_vulnnet:4848/ | GET,HEAD,POST,PUT,DELETE,CONNECT,OPT",
+      "->IONS"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [
+      "- Basic HTTP methods: GET, HEAD, POST, PUT, DELETE, CONNECT, OPTIONS, TRACE",
+      "- Extended HTTP methods: ACL, BASELINE-CONTROL, BIND, CHECKIN, CHECK-",
+      "OUT, COPY, LABEL, LINK, LOCK, MERGE, MKACTIVITY, MKCALENDAR, MKCOL,",
+      "MKREDIRECTREF, MKWORKSPACE, MOVE, ORDERPATCH, PATCH, PRI, PROPFIND,",
+      "PROPPATCH, REBIND, REPORT, SEARCH, UNBIND, UNCHECKOUT, UNLINK, UN-",
+      "LOCK, UPDATE, UPDATEREDIRECTREF, VERSION-CONTROL"
+    ],
+    "log_method": [
+      "Sends multiple HTTP requests and checks the responses."
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": 4848,
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Services",
+    "description": [
+      "This plugin performs service detection."
+    ],
+    "detection_result": [
+      "A web server is running on this port"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [
+      "This plugin attempts to guess which service is running on the remote port(s). For instance, it searches for a web server which could listen on another port than 80 or 443 and makes this information available for other check routines."
+    ],
+    "log_method": [],
+    "cvss": [
+      "0.0"
+    ],
+    "port": 4848,
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Response Time / No 404 Error Code Check",
+    "description": [
+      "This VT tests if the remote web server does not reply with a 404 error code and checks if it is replying to the scanners requests in a reasonable amount of time."
+    ],
+    "detection_result": [
+      "The service is responding with a 200 HTTP status code to non-existent files/urls",
+      "->. The following pattern is used to work around possible false detections:",
+      "-----",
+      "TYPE=\"password\"",
+      "-----"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [
+      "This web server might show the following issues:",
+      "- it is [mis]congured in that it does not return '404 Not Found' error codes when a non-existent le is requested, perhaps returning a site map, search page, authentication page or redirect instead.",
+      "The Scanner might enabled some counter measures for that, however they might be insucient. If a great number of security issues are reported for this port, they might not all be accurate.",
+      "- it doesn't response in a reasonable amount of time to various HTTP requests sent by this VT.",
+      "In order to keep the scan total time to a reasonable amount, the remote web server might not be tested. If the remote server should be tested it has to be xed to have it reply to the scanners requests in a reasonable amount of time.",
+      "Alternatively the 'Maximum response time (in seconds)' preference could be raised to a higher value if longer scan times are accepted."
+    ],
+    "log_method": [],
+    "cvss": [
+      "0.0"
+    ],
+    "port": 4848,
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Web Server Response Code 200 for Non-Existent Files",
+    "description": [
+      "This web server might show the following issues: - it is [mis]configured in that it does not return '404 Not Found' error codes when a non-existent file is requested, perhaps returning a site map, search page, authentication page or redirect instead. The Scanner might enabled some counter measures for that, however they might be insufficient. If a great number of security issues are reported for this port, they might not all be accurate. - it doesn't response in a reasonable amount of time to various HTTP requests sent by this VT. In order to keep the scan total time to a reasonable amount, the remote web server might not be tested. If the remote server should be tested it has to be fixed to have it reply to the scanners requests in a reasonable amount of time. Alternatively the 'Maximum response time (in seconds)' preference could be raised to a higher value if longer scan times are accepted."
+    ],
+    "detection_result": [
+      "The service is responding with a 200 HTTP status code to non-existent files/urls",
+      "->. The following pattern is used to work around possible false detections:",
+      "-----",
+      "TYPE=\"password\"",
+      "-----"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [
+      "This web server might show the following issues:",
+      "- it is [mis]configured in that it does not return '404 Not Found' error codes when a non-existent file is requested, perhaps returning a site map, search page, authentication page or redirect instead.",
+      "The Scanner might enabled some counter measures for that, however they might be insufficient.",
+      "If a great number of security issues are reported for this port, they might not all be accurate.",
+      "- it doesn't response in a reasonable amount of time to various HTTP requests sent by this VT.",
+      "In order to keep the scan total time to a reasonable amount, the remote web server might not be tested. If the remote server should be tested it has to be fixed to have it reply to the scanners requests in a reasonable amount of time.",
+      "Alternatively the 'Maximum response time (in seconds)' preference could be raised to a higher value if longer scan times are accepted."
+    ],
+    "log_method": [
+      "Details: Response Time / No 404 Error Code Check",
+      "OID:1.3.6.1.4.1.25623.1.0.10386",
+      "Version used: 2025-04-11T15:45:04Z"
+    ],
+    "cvss": [
+      "5.0"
+    ],
+    "port": 4848,
+    "protocol": "tcp",
+    "severity": "MEDIUM",
+    "references": [],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "SSL/TLS: Certicate - Subject Common Name Does Not Match Server FQDN",
+    "description": [
+      "The SSL/TLS certicate contains a common name (CN) that does not match the hostname."
+    ],
+    "detection_result": [
+      "The certificate of the remote service contains a common name (CN) that does not match the hostname \"glassfish41.trabalho_vulnnet\".",
+      "Certificate details:",
+      "fingerprint (SHA-1) | 1FF8EFF1B17DC744191E213A31029AA75982A63C",
+      "fingerprint (SHA-256) | 08DEFEE67D8B168E29B80A97E5233C8BE32B316ED389AA CE05BE31DAA702036B",
+      "issued by | CN=localhost,OU=GlassFish,O=Oracle Corporation ,L=Santa Clara,ST=California,C=US",
+      "public key algorithm | RSA",
+      "public key size (bits) | 2048",
+      "serial | 31EB8D9F",
+      "signature algorithm | sha256WithRSAEncryption",
+      "subject | CN=localhost,OU=GlassFish,O=Oracle Corporation ,L=Santa Clara,ST=California,C=US",
+      "subject alternative names (SAN) | None",
+      "valid from | 2014-08-21 13:30:10 UTC",
+      "valid until | 2024-08-18 13:30:10 UTC"
+    ],
+    "detection_method": [],
+    "product_detection_result": [
+      "cpe:/a:ietf:transport_layer_security",
+      "Detected by SSL/TLS: Collect and Report Certificate Details (OID: 1.3.6.1.4.1.25 623.1.0.103692)"
+    ],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [
+      "Details: SSL/TLS: Certificate - Subject Common Name Does Not Match Server FQDN OID:1.3.6.1.4.1.25623.1.0.103141 Version used: 2024-06-14T05:05:48Z"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": 8181,
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "SSL/TLS: Certicate - Self-Signed Certicate Detection",
+    "description": [
+      "The SSL/TLS certicate on this port is self-signed."
+    ],
+    "detection_result": [
+      "The certificate of the remote service is self signed.",
+      "Certificate details:",
+      "fingerprint (SHA-1) | 1FF8EFF1B17DC744191E213A31029AA75982A63C",
+      "fingerprint (SHA-256) | 08DEFEE67D8B168E29B80A97E5233C8BE32B316ED389AA CE05BE31DAA702036B",
+      "issued by | CN=localhost,OU=GlassFish,O=Oracle Corporation ,L=Santa Clara,ST=California,C=US",
+      "public key algorithm | RSA",
+      "public key size (bits) | 2048",
+      "serial | 31EB8D9F",
+      "signature algorithm | sha256WithRSAEncryption",
+      "subject | CN=localhost,OU=GlassFish,O=Oracle Corporation ,L=Santa Clara,ST=California,C=US",
+      "subject alternative names (SAN) | None",
+      "valid from | 2014-08-21 13:30:10 UTC",
+      "valid until | 2024-08-18 13:30:10 UTC"
+    ],
+    "detection_method": [],
+    "product_detection_result": [
+      "cpe:/a:ietf:transport_layer_security",
+      "Detected by SSL/TLS: Collect and Report Certificate Details (OID: 1.3.6.1.4.1.25 623.1.0.103692)"
+    ],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [
+      "Detects and reports if the issuer's distinguished name of the certicate is exactly the same as the subject's distinguished name.",
+      "Details: SSL/TLS: Certificate - Self-Signed Certificate Detection OID:1.3.6.1.4.1.25623.1.0.103140 Version used: 2025-07-15T05:43:27Z"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": 8181,
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [
+      "url: http://en.wikipedia.org/wiki/Self-signed_certificate",
+      "url: https://datatracker.ietf.org/doc/html/rfc5280#appendix-C.1"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "SSL/TLS: Untrusted Certicate Detection",
+    "description": [
+      "Checks and reports if a remote SSL/TLS service is using a certicate which is untrusted / the verication against the system wide trust store has failed."
+    ],
+    "detection_result": [
+      "The remote SSL/TLS server is using the following certificate(s) which failed the verification against the system wide trust store (serial:issuer):",
+      "31EB8D9F:CN=localhost,OU=GlassFish,O=Oracle Corporation,L=Santa Clara,ST=California,C=US (Server certificate)"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [
+      "Details: SSL/TLS: Untrusted Certificate Detection OID:1.3.6.1.4.1.25623.1.0.117764 Version used: 2024-09-27T05:05:23Z"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": 8181,
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "SSL/TLS: HTTP Public Key Pinning (HPKP) Missing",
+    "description": [
+      "The remote web server is not enforcing HTTP Public Key Pinning (HPKP).",
+      "Note: Most major browsers have dropped / deprecated support for this header in 2020."
+    ],
+    "detection_result": [
+      "The remote web server is not enforcing HPKP.",
+      "HTTP-Banner:",
+      "HTTP/1.1 200 OK   Server: GlassFish Server Open Source Edition 4.1   X-Powered-By: Servlet/3.1 JSP/2.3 (GlassFish Server Open Source Edition 4.1 Ja  ->va/Oracle Corporation/1.8)   Accept-Ranges: bytes   ETag: W/\"***replaced***\"   Last-Modified: ***replaced***   Content-Type: text/html   Date: ***replaced***   Connection: close   Content-Length: ***replaced***"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [
+      "Solution type: Workaround",
+      "Enable HPKP or add / congure the required directives correctly following the guides linked in  the references.",
+      "Note: Some web servers are not sending headers on specic status codes by default. Please review  your web server or application conguration to always send these headers on every response  independently from the status code.",
+      "- Apache: Use 'Header always set' instead of 'Header set'.",
+      "- nginx: Append the 'always' keyword to each 'add_header' directive.",
+      "For dierent applications or web severs please refer to the related documentation for a similar  conguration possibility."
+    ],
+    "insight": [],
+    "log_method": [
+      "Details: SSL/TLS: HTTP Public Key Pinning (HPKP) Missing",
+      "OID:1.3.6.1.4.1.25623.1.0.108247",
+      "Version used: 2025-03-21T15:40:43Z"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": 8181,
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [
+      "url: https://owasp.org/www-project-secure-headers/",
+      "url: https://owasp.org/www-project-secure-headers/#public-key-pinning-extension-  ->for-http-hpkp",
+      "url: https://tools.ietf.org/html/rfc7469",
+      "url: https://securityheaders.io/",
+      "url: https://httpd.apache.org/docs/current/mod/mod_headers.html#header",
+      "url: https://nginx.org/en/docs/http/ngx_http_headers_module.html#add_header"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "SSL/TLS: HTTP Strict Transport Security (HSTS) Missing",
+    "description": [
+      "The remote web server is not enforcing HTTP Strict Transport Security (HSTS)."
+    ],
+    "detection_result": [
+      "The remote web server is not enforcing HSTS.",
+      "HTTP-Banner:",
+      "HTTP/1.1 200 OK",
+      "Server: GlassFish Server Open Source Edition 4.1",
+      "X-Powered-By: Servlet/3.1 JSP/2.3 (GlassFish Server Open Source Edition 4.1 Java/Oracle Corporation/1.8)",
+      "Accept-Ranges: bytes",
+      "ETag: W/\"***replaced***\"",
+      "Last-Modified: ***replaced***",
+      "Content-Type: text/html",
+      "Date: ***replaced***",
+      "Connection: close",
+      "Content-Length: ***replaced***"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [
+      "Solution type: Workaround",
+      "Enable HSTS or add / congure the required directives correctly following the guides linked in the references.",
+      "Note: Some web servers are not sending headers on specic status codes by default. Please review your web server or application conguration to always send these headers on every response independently from the status code.",
+      "- Apache: Use 'Header always set' instead of 'Header set'.",
+      "- nginx: Append the 'always' keyword to each 'add_header' directive.",
+      "For dierent applications or web severs please refer to the related documentation for a similar conguration possibility."
+    ],
+    "insight": [],
+    "log_method": [
+      "Details: SSL/TLS: HTTP Strict Transport Security (HSTS) Missing",
+      "OID:1.3.6.1.4.1.25623.1.0.105879",
+      "Version used: 2025-03-21T15:40:43Z"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": 8181,
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [
+      "url: https://owasp.org/www-project-secure-headers/",
+      "url: https://owasp.org/www-project-cheat-sheets/cheatsheets/HTTP_Strict_Transport_Security_Cheat_Sheet.html",
+      "url: https://owasp.org/www-project-secure-headers/#http-strict-transport-security-hsts",
+      "url: https://tools.ietf.org/html/rfc6797",
+      "url: https://securityheaders.io/",
+      "url: https://httpd.apache.org/docs/current/mod/mod_headers.html#header",
+      "url: https://nginx.org/en/docs/http/ngx_http_headers_module.html#add_header"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "SSL/TLS: Report Perfect Forward Secrecy (PFS) Cipher Suites",
+    "description": [
+      "This routine reports all SSL/TLS cipher suites accepted by a service which are supporting Perfect Forward Secrecy (PFS)."
+    ],
+    "detection_result": [
+      "Cipher suites supporting Perfect Forward Secrecy (PFS) are accepted by this service via the TLSv1.0 protocol:",
+      "TLS_DHE_RSA_WITH_3DES_EDE_CBC_SHA",
+      "TLS_DHE_RSA_WITH_AES_128_CBC_SHA",
+      "TLS_DHE_RSA_WITH_AES_256_CBC_SHA",
+      "TLS_ECDHE_RSA_WITH_3DES_EDE_CBC_SHA",
+      "TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA",
+      "TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA",
+      "Cipher suites supporting Perfect Forward Secrecy (PFS) are accepted by this service via the TLSv1.1 protocol:",
+      "TLS_DHE_RSA_WITH_3DES_EDE_CBC_SHA",
+      "TLS_DHE_RSA_WITH_AES_128_CBC_SHA",
+      "TLS_DHE_RSA_WITH_AES_256_CBC_SHA",
+      "TLS_ECDHE_RSA_WITH_3DES_EDE_CBC_SHA",
+      "TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA",
+      "TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA",
+      "Cipher suites supporting Perfect Forward Secrecy (PFS) are accepted by this service via the TLSv1.2 protocol:",
+      "TLS_DHE_RSA_WITH_3DES_EDE_CBC_SHA",
+      "TLS_DHE_RSA_WITH_AES_128_CBC_SHA",
+      "TLS_DHE_RSA_WITH_AES_128_CBC_SHA256",
+      "TLS_DHE_RSA_WITH_AES_128_GCM_SHA256",
+      "TLS_DHE_RSA_WITH_AES_256_CBC_SHA",
+      "TLS_DHE_RSA_WITH_AES_256_CBC_SHA256",
+      "TLS_DHE_RSA_WITH_AES_256_GCM_SHA384",
+      "TLS_ECDHE_RSA_WITH_3DES_EDE_CBC_SHA",
+      "TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA",
+      "TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256",
+      "TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256",
+      "TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA",
+      "TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384",
+      "TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384"
+    ],
+    "detection_method": [],
+    "product_detection_result": [
+      "cpe:/a:ietf:transport_layer_security",
+      "Detected by SSL/TLS: Report Supported Cipher Suites (OID: 1.3.6.1.4.1.25623.1.0.802067)"
+    ],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [
+      "Details: SSL/TLS: Report Perfect Forward Secrecy (PFS) Cipher Suites",
+      "OID:1.3.6.1.4.1.25623.1.0.105018",
+      "Version used: 2024-09-30T08:38:05Z"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": 8181,
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "SSL/TLS: Report Medium Cipher Suites",
+    "description": [
+      "This routine reports all Medium SSL/TLS cipher suites accepted by a service.",
+      "Quality of Detection (QoD): 98%"
+    ],
+    "detection_result": [
+      "'Medium' cipher suites accepted by this service via the TLSv1.0 protocol:",
+      "TLS_DHE_RSA_WITH_3DES_EDE_CBC_SHA",
+      "TLS_DHE_RSA_WITH_AES_128_CBC_SHA",
+      "TLS_ECDHE_RSA_WITH_3DES_EDE_CBC_SHA",
+      "TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA",
+      "TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA",
+      "TLS_RSA_WITH_3DES_EDE_CBC_SHA",
+      "TLS_RSA_WITH_AES_128_CBC_SHA",
+      "TLS_RSA_WITH_AES_256_CBC_SHA",
+      "'Medium' cipher suites accepted by this service via the TLSv1.1 protocol:",
+      "TLS_DHE_RSA_WITH_3DES_EDE_CBC_SHA",
+      "TLS_DHE_RSA_WITH_AES_128_CBC_SHA",
+      "TLS_ECDHE_RSA_WITH_3DES_EDE_CBC_SHA",
+      "TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA",
+      "TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA",
+      "TLS_RSA_WITH_3DES_EDE_CBC_SHA",
+      "TLS_RSA_WITH_AES_128_CBC_SHA",
+      "TLS_RSA_WITH_AES_256_CBC_SHA",
+      "'Medium' cipher suites accepted by this service via the TLSv1.2 protocol:",
+      "TLS_DHE_RSA_WITH_3DES_EDE_CBC_SHA",
+      "TLS_DHE_RSA_WITH_AES_128_CBC_SHA",
+      "TLS_DHE_RSA_WITH_AES_128_CBC_SHA256",
+      "TLS_DHE_RSA_WITH_AES_128_GCM_SHA256",
+      "TLS_DHE_RSA_WITH_AES_256_CBC_SHA256",
+      "TLS_DHE_RSA_WITH_AES_256_GCM_SHA384",
+      "TLS_ECDHE_RSA_WITH_3DES_EDE_CBC_SHA",
+      "TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA",
+      "TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256",
+      "TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256",
+      "TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA",
+      "TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384",
+      "TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384",
+      "TLS_RSA_WITH_3DES_EDE_CBC_SHA",
+      "TLS_RSA_WITH_AES_128_CBC_SHA",
+      "TLS_RSA_WITH_AES_128_CBC_SHA256",
+      "TLS_RSA_WITH_AES_128_GCM_SHA256",
+      "TLS_RSA_WITH_AES_256_CBC_SHA",
+      "TLS_RSA_WITH_AES_256_CBC_SHA256",
+      "TLS_RSA_WITH_AES_256_GCM_SHA384"
+    ],
+    "detection_method": [],
+    "product_detection_result": [
+      "cpe:/a:ietf:transport_layer_security",
+      "Detected by SSL/TLS: Report Supported Cipher Suites (OID: 1.3.6.1.4.1.25623.1.0.802067)"
+    ],
+    "impact": [],
+    "solution": [],
+    "insight": [
+      "Any cipher suite considered to be secure for only the next 10 years is considered as medium."
+    ],
+    "log_method": [
+      "Details: SSL/TLS: Report Medium Cipher Suites",
+      "OID:1.3.6.1.4.1.25623.1.0.902816",
+      "Version used: 2024-09-27T05:05:23Z"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": 8181,
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "SSL/TLS: Report Non Weak Cipher Suites",
+    "description": [
+      "This routine reports all Non Weak SSL/TLS cipher suites accepted by a service.",
+      "Quality of Detection (QoD): 98%"
+    ],
+    "detection_result": [
+      "'Non Weak' cipher suites accepted by this service via the TLSv1.0 protocol:",
+      "TLS_DHE_RSA_WITH_3DES_EDE_CBC_SHA",
+      "TLS_DHE_RSA_WITH_AES_128_CBC_SHA",
+      "TLS_DHE_RSA_WITH_AES_256_CBC_SHA",
+      "TLS_ECDHE_RSA_WITH_3DES_EDE_CBC_SHA",
+      "TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA",
+      "TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA",
+      "TLS_RSA_WITH_3DES_EDE_CBC_SHA",
+      "TLS_RSA_WITH_AES_128_CBC_SHA",
+      "TLS_RSA_WITH_AES_256_CBC_SHA",
+      "'Non Weak' cipher suites accepted by this service via the TLSv1.1 protocol:",
+      "TLS_DHE_RSA_WITH_3DES_EDE_CBC_SHA",
+      "TLS_DHE_RSA_WITH_AES_128_CBC_SHA",
+      "TLS_DHE_RSA_WITH_AES_256_CBC_SHA",
+      "TLS_ECDHE_RSA_WITH_3DES_EDE_CBC_SHA",
+      "TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA",
+      "TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA",
+      "TLS_RSA_WITH_3DES_EDE_CBC_SHA",
+      "TLS_RSA_WITH_AES_128_CBC_SHA",
+      "TLS_RSA_WITH_AES_256_CBC_SHA",
+      "'Non Weak' cipher suites accepted by this service via the TLSv1.2 protocol:",
+      "TLS_DHE_RSA_WITH_3DES_EDE_CBC_SHA",
+      "TLS_DHE_RSA_WITH_AES_128_CBC_SHA",
+      "TLS_DHE_RSA_WITH_AES_128_CBC_SHA256",
+      "TLS_DHE_RSA_WITH_AES_128_GCM_SHA256",
+      "TLS_DHE_RSA_WITH_AES_256_CBC_SHA",
+      "TLS_DHE_RSA_WITH_AES_256_CBC_SHA256",
+      "TLS_DHE_RSA_WITH_AES_256_GCM_SHA384",
+      "TLS_ECDHE_RSA_WITH_3DES_EDE_CBC_SHA",
+      "TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA",
+      "TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256",
+      "TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256",
+      "TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA",
+      "TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384",
+      "TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384",
+      "TLS_RSA_WITH_3DES_EDE_CBC_SHA",
+      "TLS_RSA_WITH_AES_128_CBC_SHA",
+      "TLS_RSA_WITH_AES_128_CBC_SHA256",
+      "TLS_RSA_WITH_AES_128_GCM_SHA256",
+      "TLS_RSA_WITH_AES_256_CBC_SHA",
+      "TLS_RSA_WITH_AES_256_CBC_SHA256",
+      "TLS_RSA_WITH_AES_256_GCM_SHA384"
+    ],
+    "detection_method": [],
+    "product_detection_result": [
+      "cpe:/a:ietf:transport_layer_security",
+      "Detected by SSL/TLS: Report Supported Cipher Suites (OID: 1.3.6.1.4.1.25623.1.0.802067)"
+    ],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [
+      "Details: SSL/TLS: Report Non Weak Cipher Suites",
+      "OID:1.3.6.1.4.1.25623.1.0.103441",
+      "Version used: 2024-09-27T05:05:23Z"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": 8181,
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "SSL/TLS: Report Supported Cipher Suites",
+    "description": [
+      "This routine reports all SSL/TLS cipher suites accepted by a service."
+    ],
+    "detection_result": [
+      "'Strong' cipher suites accepted by this service via the TLSv1.0 protocol:",
+      "TLS_DHE_RSA_WITH_AES_256_CBC_SHA",
+      "'Medium' cipher suites accepted by this service via the TLSv1.0 protocol:",
+      "TLS_DHE_RSA_WITH_3DES_EDE_CBC_SHA",
+      "TLS_DHE_RSA_WITH_AES_128_CBC_SHA",
+      "TLS_ECDHE_RSA_WITH_3DES_EDE_CBC_SHA",
+      "TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA",
+      "TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA",
+      "TLS_RSA_WITH_3DES_EDE_CBC_SHA",
+      "TLS_RSA_WITH_AES_128_CBC_SHA",
+      "TLS_RSA_WITH_AES_256_CBC_SHA",
+      "No 'Weak' cipher suites accepted by this service via the TLSv1.0 protocol.",
+      "No 'Null' cipher suites accepted by this service via the TLSv1.0 protocol.",
+      "No 'Anonymous' cipher suites accepted by this service via the TLSv1.0 protocol.",
+      "'Strong' cipher suites accepted by this service via the TLSv1.1 protocol:",
+      "TLS_DHE_RSA_WITH_AES_256_CBC_SHA",
+      "'Medium' cipher suites accepted by this service via the TLSv1.1 protocol:",
+      "TLS_DHE_RSA_WITH_3DES_EDE_CBC_SHA",
+      "TLS_DHE_RSA_WITH_AES_128_CBC_SHA",
+      "TLS_ECDHE_RSA_WITH_3DES_EDE_CBC_SHA",
+      "TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA",
+      "TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA",
+      "TLS_RSA_WITH_3DES_EDE_CBC_SHA",
+      "TLS_RSA_WITH_AES_128_CBC_SHA",
+      "TLS_RSA_WITH_AES_256_CBC_SHA",
+      "No 'Weak' cipher suites accepted by this service via the TLSv1.1 protocol.",
+      "No 'Null' cipher suites accepted by this service via the TLSv1.1 protocol.",
+      "No 'Anonymous' cipher suites accepted by this service via the TLSv1.1 protocol.",
+      "'Strong' cipher suites accepted by this service via the TLSv1.2 protocol:",
+      "TLS_DHE_RSA_WITH_AES_256_CBC_SHA",
+      "'Medium' cipher suites accepted by this service via the TLSv1.2 protocol:",
+      "TLS_DHE_RSA_WITH_3DES_EDE_CBC_SHA",
+      "TLS_DHE_RSA_WITH_AES_128_CBC_SHA",
+      "TLS_DHE_RSA_WITH_AES_128_CBC_SHA256",
+      "TLS_DHE_RSA_WITH_AES_128_GCM_SHA256",
+      "TLS_DHE_RSA_WITH_AES_256_CBC_SHA256",
+      "TLS_DHE_RSA_WITH_AES_256_GCM_SHA384",
+      "TLS_ECDHE_RSA_WITH_3DES_EDE_CBC_SHA",
+      "TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA",
+      "TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256",
+      "TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256",
+      "TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA",
+      "TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384",
+      "TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384",
+      "TLS_RSA_WITH_3DES_EDE_CBC_SHA",
+      "TLS_RSA_WITH_AES_128_CBC_SHA",
+      "TLS_RSA_WITH_AES_128_CBC_SHA256",
+      "TLS_RSA_WITH_AES_128_GCM_SHA256",
+      "TLS_RSA_WITH_AES_256_CBC_SHA",
+      "TLS_RSA_WITH_AES_256_CBC_SHA256",
+      "TLS_RSA_WITH_AES_256_GCM_SHA384",
+      "No 'Weak' cipher suites accepted by this service via the TLSv1.2 protocol.",
+      "No 'Null' cipher suites accepted by this service via the TLSv1.2 protocol.",
+      "No 'Anonymous' cipher suites accepted by this service via the TLSv1.2 protocol."
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [
+      "Notes:",
+      "- As the VT 'SSL/TLS: Check Supported Cipher Suites' (OID: 1.3.6.1.4.1.25623.1.0.900234) might run into a timeout the actual reporting of all accepted cipher suites takes place in this VT instead.",
+      "- SSLv2 ciphers are not getting reported as the protocol itself is deprecated, needs to be considered as weak and is reported separately as deprecated."
+    ],
+    "log_method": [
+      ". . . continues on next page . . ."
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": 8181,
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "SSL/TLS: Safe/Secure Renegotiation Support Status",
+    "description": [
+      "Checks and reports if a remote SSL/TLS service supports safe/secure renegotiation."
+    ],
+    "detection_result": [
+      "Protocol Version | Safe/Secure Renegotiation Support Status",
+      "--------------------------------------------------------------------------------",
+      "SSLv3 | Unknown, Reason: Scanner failed to negotiate an SSL/TLS connection (Either the scanner or the remote host is probably not supporting / accepting this SSL/TLS protocol version).",
+      "TLSv1.0 | Enabled, Note: While the remote service announces the support of safe/secure renegotiation it still might not support / accept renegotiation at all.",
+      "TLSv1.1 | Enabled, Note: While the remote service announces the support of safe/secure renegotiation it still might not support / accept renegotiation at all.",
+      "TLSv1.2 | Enabled, Note: While the remote service announces the support of safe/secure renegotiation it still might not support / accept renegotiation at all.",
+      "TLSv1.3 | Unknown, Reason: Scanner failed to negotiate an SSL/TLS connection (Either the scanner or the remote host is probably not supporting / accepting this SSL/TLS protocol version)."
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [
+      "Details: SSL/TLS: Safe/Secure Renegotiation Support Status",
+      "OID:1.3.6.1.4.1.25623.1.0.117757",
+      "Version used: 2024-09-27T05:05:23Z"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": 8181,
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [
+      "url: https://www.gnutls.org/manual/html_node/Safe-renegotiation.html",
+      "url: https://wiki.openssl.org/index.php/TLS1.3#Renegotiation",
+      "url: https://datatracker.ietf.org/doc/html/rfc5746"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "HTTP Server type and version",
+    "description": [
+      "This script detects and reports the HTTP Server's banner which might provide the type and version of it."
+    ],
+    "detection_result": [
+      "The remote HTTP Server banner is:",
+      "Server: GlassFish Server Open Source Edition 4.1"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [
+      "Details: HTTP Server type and version",
+      "OID:1.3.6.1.4.1.25623.1.0.10107",
+      "Version used: 2023-08-01T13:29:10Z"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": 8181,
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "HTTP Server Banner Enumeration",
+    "description": [
+      "This script tries to detect / enumerate different HTTP server banner (e.g. from a frontend, backend or proxy server) by sending various different HTTP requests (valid and invalid ones)."
+    ],
+    "detection_result": [
+      "It was possible to enumerate the following HTTP server banner(s):",
+      "Server banner",
+      "-> | Enumeration technique",
+      "--------------------------------------------------------------------------------",
+      "Server: GlassFish Server Open Source Edition 4.1",
+      "-> | Invalid HTTP 00.5 GET request (non-existent HTTP version) to '/'",
+      "X-Powered-By: Servlet/3.1 JSP/2.3 (GlassFish Server Open Source Edition 4.1 Java/Oracle Corporation/1.8) | Invalid HTTP 00.5 GET request (non-existent HTTP version) to '/'"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [
+      "Details: HTTP Server Banner Enumeration",
+      "OID:1.3.6.1.4.1.25623.1.0.108708",
+      "Version used: 2025-01-31T15:39:24Z"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": 8181,
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Eclipse GlassFish Detection (HTTP)",
+    "description": [
+      "HTTP based detection of Eclipse GlassFish."
+    ],
+    "detection_result": [
+      "Detected Eclipse GlassFish",
+      "Version: 4.1",
+      "Location: /",
+      "CPE: cpe:/a:eclipse:glassfish:4.1",
+      "Concluded from version/product identification result:",
+      "GlassFish Server Open Source Edition 4.1",
+      "Concluded from version/product identification location:",
+      "https://glassfish41.trabalho_vulnnet:8181/index.html"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [
+      "Details: Eclipse GlassFish Detection (HTTP)",
+      "OID:1.3.6.1.4.1.25623.1.0.100190",
+      "Version used: 2025-01-30T05:38:01Z"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": 8181,
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [
+      "url: https://glassfish.org/"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "HTTP Security Headers Detection",
+    "description": [
+      "All known security headers are being checked on the remote web server.",
+      "On completion a report will hand back whether a specic security header has been implemented",
+      "(including its value and if it is deprecated) or is missing on the target."
+    ],
+    "detection_result": [
+      "Missing Headers | More Information",
+      "--------------------------------------------------------------------------------",
+      "->------------------------------------------------------------------------------",
+      "->------------------------------------------------------------------------------",
+      "->----------",
+      "Content-Security-Policy | https://owasp.org/www-project-secure-headers",
+      "->/#content-security-policy",
+      "Cross-Origin-Embedder-Policy | https://scotthelme.co.uk/coop-and-coep/, Not",
+      "->e: This is an upcoming header",
+      "Cross-Origin-Opener-Policy | https://scotthelme.co.uk/coop-and-coep/, Not",
+      "->e: This is an upcoming header",
+      "Cross-Origin-Resource-Policy | https://scotthelme.co.uk/coop-and-coep/, Not",
+      "->e: This is an upcoming header",
+      "Document-Policy | https://w3c.github.io/webappsec-feature-poli",
+      "->cy/document-policy#document-policy-http-header",
+      "Expect-CT | https://owasp.org/www-project-secure-headers",
+      "->/#expect-ct, Note: This is an upcoming header",
+      "Feature-Policy | https://owasp.org/www-project-secure-headers",
+      "->/#feature-policy, Note: The Feature Policy header has been renamed to Permissi",
+      "->ons Policy",
+      "Permissions-Policy | https://w3c.github.io/webappsec-feature-poli",
+      "->cy/#permissions-policy-http-header-field",
+      "Public-Key-Pins | Please check the output of the VTs including",
+      "-> 'SSL/TLS:' and 'HPKP' in their name for more information and configuration he",
+      "->lp. Note: Most major browsers have dropped / deprecated support for this heade",
+      "->r in 2020.",
+      "Referrer-Policy | https://owasp.org/www-project-secure-headers",
+      "->/#referrer-policy",
+      "Sec-Fetch-Dest | https://developer.mozilla.org/en-US/docs/Web",
+      "/HTTP/Headers#fetch_metadata_request_headers, Note: This is a new header suppo",
+      "->rted only in newer browsers like e.g. Firefox 90",
+      "Sec-Fetch-Mode | https://developer.mozilla.org/en-US/docs/Web",
+      "/HTTP/Headers#fetch_metadata_request_headers, Note: This is a new header suppo",
+      "->rted only in newer browsers like e.g. Firefox 90",
+      "Sec-Fetch-Site | https://developer.mozilla.org/en-US/docs/Web",
+      "/HTTP/Headers#fetch_metadata_request_headers, Note: This is a new header suppo",
+      "->rted only in newer browsers like e.g. Firefox 90",
+      "Sec-Fetch-User | https://developer.mozilla.org/en-US/docs/Web",
+      "/HTTP/Headers#fetch_metadata_request_headers, Note: This is a new header suppo",
+      "->rted only in newer browsers like"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [],
+    "cvss": [
+      "0.0"
+    ],
+    "port": 8181,
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Allowed HTTP Methods Enumeration",
+    "description": [
+      "Enumerates which HTTP methods are allowed."
+    ],
+    "detection_result": [
+      "The following list contains the URLs and corresponding supported HTTP methods.",
+      "URL | HTTP Methods",
+      "--------------------------------------------------------------------------------",
+      "->--------------------------------------------",
+      "https://glassfish41.trabalho_vulnnet:8181/ | GET, HEAD, POST, PUT, DELETE, TRACE",
+      "->, OPTIONS (obtained via HTTP OPTIONS method)"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [
+      "- Basic HTTP methods: GET, HEAD, POST, PUT, DELETE, CONNECT, OPTIONS, TRACE",
+      "- Extended HTTP methods: ACL, BASELINE-CONTROL, BIND, CHECKIN, CHECK-",
+      "OUT, COPY, LABEL, LINK, LOCK, MERGE, MKACTIVITY, MKCALENDAR, MKCOL,",
+      "MKREDIRECTREF, MKWORKSPACE, MOVE, ORDERPATCH, PATCH, PRI, PROPFIND,",
+      "PROPPATCH, REBIND, REPORT, SEARCH, UNBIND, UNCHECKOUT, UNLINK, UN-",
+      "LOCK, UPDATE, UPDATEREDIRECTREF, VERSION-CONTROL"
+    ],
+    "log_method": [
+      "Sends multiple HTTP requests and checks the responses.",
+      "Disclaimer:",
+      "- This enumeration script is provided 'as is' (means no support is given) and only providing",
+      "rudimentary information about the possible enabled methods",
+      "- This script doesn't guarantee completeness or full reliability",
+      "For more reliable determination of the enabled HTTP methods please inspect the conguration",
+      "of the web server manually and directly on the target host.",
+      "Details: Allowed HTTP Methods Enumeration",
+      "OID:1.3.6.1.4.1.25623.1.0.153974",
+      "Version used: 2025-02-28T05:38:49Z"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": 8181,
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Web Application Scanning Consolidation / Info Reporting",
+    "description": [
+      "The script consolidates and reports various information for web application (formerly called",
+      "'CGI') scanning.",
+      "This information is based on the following scripts / settings:",
+      "- HTTP-Version Detection (OID: 1.3.6.1.4.1.25623.1.0.100034)",
+      "- No 404 check (OID: 1.3.6.1.4.1.25623.1.0.10386)",
+      "- Web mirroring / webmirror.nasl (OID: 1.3.6.1.4.1.25623.1.0.10662)",
+      "- Directory Scanner / DDI_Directory_Scanner.nasl (OID: 1.3.6.1.4.1.25623.1.0.11032)",
+      "- The congured 'cgi_path' within the 'Scanner Preferences' of the scan cong in use",
+      "- The congured 'Enable CGI scanning', 'Enable generic web application scanning' and 'Add",
+      "historic /scripts and /cgi-bin to directories for CGI scanning' within the 'Global variable settings'",
+      "of the scan cong in use",
+      "If you think any of this information is wrong please report it to the referenced community forum."
+    ],
+    "detection_result": [
+      "The Hostname/IP \"glassfish41.trabalho_vulnnet\" was used to access the remote hos",
+      "->t.",
+      "Generic web application scanning is disabled for this host via the \"Enable gener\", \"->ic web application scanning\" option within the \"Global variable settings\" of t\", \"->he scan config in use.",
+      "Requests to this service are done via HTTP/1.1.",
+      "This service seems to be able to host PHP scripts.",
+      "This service seems to be able to host ASP scripts.",
+      "The User-Agent \"Mozilla/5.0 [en] (X11, U; OpenVAS-VT <version replaced>)\" was us\", \"->ed to access the remote host.",
+      "Historic /scripts and /cgi-bin are not added to the directories used for web app\", \"->lication scanning. You can enable this again with the \"Add historic /scripts a\", \"->nd /cgi-bin to directories for CGI scanning\" option within the \"Global variabl\", \"->e settings\" of the scan config in use.",
+      "The following directories were used for web application scanning:",
+      "https://glassfish41.trabalho_vulnnet:8181/",
+      "While this is not, in and of itself, a bug, you should manually inspect these di\", \"->rectories to ensure that they are in compliance with company security standard\", \"->s"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [
+      "Details: Web Application Scanning Consolidation / Info Reporting",
+      "OID:1.3.6.1.4.1.25623.1.0.111038",
+      "Version used: 2026-01-13T05:47:36Z"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": 8181,
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Services",
+    "description": [
+      "This plugin performs service detection."
+    ],
+    "detection_result": [
+      "A TLScustom server answered on this port"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [
+      "This plugin attempts to guess which service is running on the remote port(s). For instance, it searches for a web server which could listen on another port than 80 or 443 and makes this information available for other check routines."
+    ],
+    "log_method": [
+      "Details: Services",
+      "OID:1.3.6.1.4.1.25623.1.0.10330",
+      "Version used: 2025-03-05T05:38:53Z"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": 8181,
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [
+      "url: https://forum.greenbone.net/c/vulnerability-tests/7"
+    ],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Services",
+    "description": [
+      "This plugin performs service detection."
+    ],
+    "detection_result": [
+      "A TLScustom server answered on this port"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [
+      "This plugin attempts to guess which service is running on the remote port(s). For instance, it searches for a web server which could listen on another port than 80 or 443 and makes this information available for other check routines."
+    ],
+    "log_method": [
+      "Details: Services",
+      "OID:1.3.6.1.4.1.25623.1.0.10330",
+      "Version used: 2025-03-05T05:38:53Z"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": 8181,
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Services",
+    "description": [
+      "This plugin performs service detection."
+    ],
+    "detection_result": [
+      "A web server is running on this port through SSL"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [
+      "This plugin attempts to guess which service is running on the remote port(s). For instance, it searches for a web server which could listen on another port than 80 or 443 and makes this information available for other check routines."
+    ],
+    "log_method": [
+      "Details: Services",
+      "OID:1.3.6.1.4.1.25623.1.0.10330",
+      "Version used: 2025-03-05T05:38:53Z"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": 8181,
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "SSL/TLS: Version Detection",
+    "description": [
+      "Enumeration and reporting of SSL/TLS protocol versions supported by a remote service."
+    ],
+    "detection_result": [
+      "The remote SSL/TLS service supports the following SSL/TLS protocol version(s):",
+      "TLSv1.0",
+      "TLSv1.1",
+      "TLSv1.2"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [
+      "Sends multiple connection requests to the remote service and attempts to determine the SSL/TLS protocol versions supported by the service from the replies.",
+      "Note: The supported SSL/TLS protocol versions included in the report of this VT are reported independently from the allowed / supported SSL/TLS ciphers.",
+      "Details: SSL/TLS: Version Detection",
+      "OID:1.3.6.1.4.1.25623.1.0.105782",
+      "Version used: 2024-09-27T05:05:23Z"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": 8181,
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "SSL/TLS: Collect and Report Certicate Details",
+    "description": [
+      "This script collects and reports the details of all SSL/TLS certicates.",
+      "This data will be used by other tests to verify server certicates."
+    ],
+    "detection_result": [
+      "The following certificate details of the remote service were collected.",
+      "Certificate details:",
+      "fingerprint (SHA-1) | 1FF8EFF1B17DC744191E213A31029AA75982A63C",
+      "fingerprint (SHA-256) | 08DEFEE67D8B168E29B80A97E5233C8BE32B316ED389AACE05BE31DAA702036B",
+      "issued by | CN=localhost,OU=GlassFish,O=Oracle Corporation,L=Santa Clara,ST=California,C=US",
+      "public key algorithm | RSA",
+      "public key size (bits) | 2048",
+      "serial | 31EB8D9F",
+      "signature algorithm | sha256WithRSAEncryption",
+      "subject | CN=localhost,OU=GlassFish,O=Oracle Corporation,L=Santa Clara,ST=California,C=US",
+      "subject alternative names (SAN) | None",
+      "valid from | 2014-08-21 13:30:10 UTC",
+      "valid until | 2024-08-18 13:30:10 UTC"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "log_method": [
+      "Details: SSL/TLS: Collect and Report Certificate Details",
+      "OID:1.3.6.1.4.1.25623.1.0.103692",
+      "Version used: 2024-09-27T05:05:23Z"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": 8181,
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Services",
+    "description": [
+      "This plugin performs service detection."
+    ],
+    "detection_result": [
+      "A GIOP-enabled service is running on this port"
+    ],
+    "detection_method": [],
+    "product_detection_result": [],
+    "impact": [],
+    "solution": [],
+    "insight": [
+      "This plugin attempts to guess which service is running on the remote port(s). For instance, it searches for a web server which could listen on another port than 80 or 443 and makes this information available for other check routines."
+    ],
+    "log_method": [
+      "Details: Services",
+      "OID:1.3.6.1.4.1.25623.1.0.10330",
+      "Version used: 2025-03-05T05:38:53Z"
+    ],
+    "cvss": [
+      "0.0"
+    ],
+    "port": 3700,
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [],
+    "plugin": null,
+    "plugin_details": {},
+    "instances": [],
+    "source": "OPENVAS"
+  }
+]

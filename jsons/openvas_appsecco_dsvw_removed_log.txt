@@ -1,0 +1,132 @@
+# LOG DE VULNERABILIDADES REMOVIDAS (sem descrição válida)
+
+Removida 1:
+{
+  "Name": "Python 2.7.x <= 2.7.17, 3.5 <= 3.5.9, 3.6.x <= 3.6.10, 3.7.x <= 3.7.6, 3.8.x <= 3.8.1  Regular Expression Denial of Service (ReDoS) Vulnerability - Linux",
+  "description": [],
+  "detection_result": [],
+  "detection_method": [],
+  "product_detection_result": [
+    "Product: cpe:/a:python:python:2.7.13",
+    "Method: Python Detection Consolidation",
+    "OID: 1.3.6.1.4.1.25623.1.0.112857)"
+  ],
+  "impact": [],
+  "solution": [],
+  "insight": [],
+  "log_method": [],
+  "cvss": [
+    "6.5"
+  ],
+  "port": 8000,
+  "protocol": "tcp",
+  "severity": "MEDIUM",
+  "references": [
+    "cve: CVE-2020-26116",
+    "url: https://python-security.readthedocs.io/vuln/http-header-injection-method.ht",
+    "->ml",
+    "advisory-id: bpo-39603",
+    "cert-bund: WID-SEC-2025-0227",
+    "cert-bund: WID-SEC-2024-0794",
+    "cert-bund: WID-SEC-2022-0492",
+    "dfn-cert: DFN-CERT-2024-1805",
+    "dfn-cert: DFN-CERT-2023-2421",
+    "dfn-cert: DFN-CERT-2023-1200",
+    "dfn-cert: DFN-CERT-2023-0082",
+    "dfn-cert: DFN-CERT-2022-1438",
+    "dfn-cert: DFN-CERT-2021-1825",
+    "dfn-cert: DFN-CERT-2021-1330",
+    "dfn-cert: DFN-CERT-2021-1080",
+    "dfn-cert: DFN-CERT-2021-1079",
+    "dfn-cert: DFN-CERT-2021-1071",
+    "dfn-cert: DFN-CERT-2021-0533",
+    "dfn-cert: DFN-CERT-2021-0002",
+    "dfn-cert: DFN-CERT-2020-2805",
+    "dfn-cert: DFN-CERT-2020-2621",
+    "dfn-cert: DFN-CERT-2020-2543",
+    "dfn-cert: DFN-CERT-2020-2300",
+    "dfn-cert: DFN-CERT-2020-2278",
+    "dfn-cert: DFN-CERT-2020-2207",
+    "dfn-cert: DFN-CERT-2020-1940"
+  ],
+  "plugin": null,
+  "plugin_details": {},
+  "instances": [],
+  "source": "OPENVAS"
+}
+---
+Removida 2:
+{
+  "Name": "Python < 3.6.13, 3.7.x < 3.7.10, 3.8.x < 3.8.7, 3.9.x < 3.9.1 DoS Vulnerability (bpo-42103) - Linux",
+  "description": [],
+  "detection_result": [],
+  "detection_method": [],
+  "product_detection_result": [
+    "cpe:/a:python:python:2.7.13",
+    "Detected by Python Detection Consolidation (OID: 1.3.6.1.4.1.25623.1.0.112857)"
+  ],
+  "impact": [],
+  "solution": [],
+  "insight": [],
+  "log_method": [],
+  "cvss": [
+    "6.5"
+  ],
+  "port": 8000,
+  "protocol": "tcp",
+  "severity": "MEDIUM",
+  "references": [],
+  "plugin": null,
+  "plugin_details": {},
+  "instances": [],
+  "source": "OPENVAS"
+}
+---
+Removida 3:
+{
+  "Name": "Python < 3.5.10, 3.6.x < 3.6.12, 3.7.x < 3.7.9, 3.8.x < 3.8.4 Python Issue (bpo-41004) - Linux",
+  "description": [],
+  "detection_result": [],
+  "detection_method": [],
+  "product_detection_result": [],
+  "impact": [],
+  "solution": [],
+  "insight": [],
+  "log_method": [],
+  "cvss": [
+    "5.9"
+  ],
+  "port": 8000,
+  "protocol": "tcp",
+  "severity": "MEDIUM",
+  "references": [],
+  "plugin": null,
+  "plugin_details": {},
+  "instances": [],
+  "source": "OPENVAS"
+}
+---
+Removida 4:
+{
+  "Name": "ICMP Timestamp Reply Information Disclosure",
+  "description": [],
+  "detection_result": [],
+  "detection_method": [],
+  "product_detection_result": [],
+  "impact": [],
+  "solution": [],
+  "insight": [],
+  "log_method": [],
+  "cvss": [
+    "2.1"
+  ],
+  "port": 8000,
+  "protocol": "tcp",
+  "severity": "LOW",
+  "references": [],
+  "plugin": null,
+  "plugin_details": {},
+  "instances": [],
+  "source": "OPENVAS"
+}
+---

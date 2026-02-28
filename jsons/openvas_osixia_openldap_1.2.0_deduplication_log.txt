@@ -1,0 +1,202 @@
+# LOG DE DEDUPLICAÇÃO DE VULNERABILIDADES
+Este arquivo lista todas as vulnerabilidades consideradas duplicatas e agrupadas durante o processo.
+Cada grupo é identificado por uma chave composta (ex: nome, porta, protocolo).
+Apenas a vulnerabilidade mais completa e com descrição válida foi mantida em cada grupo.
+
+Total de grupos de duplicatas: 32
+Total de vulnerabilidades agrupadas (removidas): 11
+
+Grupo 1: Chave = ('SSL/TLS: Certicate In Chain Expired', 636, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: SSL/TLS: Certicate In Chain Expired
+       Porta: 636 | Protocolo: tcp | Severidade: Medium
+       Descrição: The remote service is using a SSL/TLS certicate chain where one or multiple CA certicates have expired.
+
+Grupo 2: Chave = ('SSL/TLS: Certicate In Chain Expired', 389, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: SSL/TLS: Certicate In Chain Expired
+       Porta: 389 | Protocolo: tcp | Severidade: MEDIUM
+       Descrição: The remote service is using a SSL/TLS certicate chain where one or multiple CA certicates have expired.
+
+Grupo 3: Chave = ('ICMP Timestamp Reply Information Disclosure', 389, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: ICMP Timestamp Reply Information Disclosure
+       Porta: 389 | Protocolo: tcp | Severidade: LOW
+       Descrição: The remote host responded to an ICMP timestamp request.
+
+Grupo 4: Chave = ('ICMP Timestamp Reply Information Disclosure', 'general', 'icmp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: ICMP Timestamp Reply Information Disclosure
+       Porta: general | Protocolo: icmp | Severidade: LOW
+       Descrição: The remote host responded to an ICMP timestamp request. Quality of Detection (QoD): 80%
+
+Grupo 5: Chave = ('TCP Timestamps Information Disclosure', 'general', 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: TCP Timestamps Information Disclosure
+       Porta: general | Protocolo: tcp | Severidade: LOW
+       Descrição: The remote host implements TCP timestamps and therefore allows to compute the uptime. Quality of Detection (QoD): 80%
+
+Grupo 6: Chave = ('SSL/TLS: Collect and Report Certicate Details', 636, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: SSL/TLS: Collect and Report Certicate Details
+       Porta: 636 | Protocolo: tcp | Severidade: LOG
+       Descrição: This script collects and reports the details of all SSL/TLS certicates. This data will be used by other tests to verify server certicates.
+
+Grupo 7: Chave = ('SSL/TLS: Certicate - Subject Common Name Does Not Match Server FQDN', 636, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: SSL/TLS: Certicate - Subject Common Name Does Not Match Server FQDN
+       Porta: 636 | Protocolo: tcp | Severidade: LOG
+       Descrição: The SSL/TLS certicate contains a common name (CN) that does not match the hostname.
+
+Grupo 8: Chave = ('SSL/TLS: Report Perfect Forward Secrecy (PFS) Cipher Suites', 636, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: SSL/TLS: Report Perfect Forward Secrecy (PFS) Cipher Suites
+       Porta: 636 | Protocolo: tcp | Severidade: LOG
+       Descrição: This routine reports all SSL/TLS cipher suites accepted by a service which are supporting Perfect Forward Secrecy (PFS). Quality of Detection (QoD): 98%
+
+Grupo 9: Chave = ('SSL/TLS: Report Medium Cipher Suites', 636, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: SSL/TLS: Report Medium Cipher Suites
+       Porta: 636 | Protocolo: tcp | Severidade: LOG
+       Descrição: This routine reports all Medium SSL/TLS cipher suites accepted by a service. Quality of Detection (QoD): 98%
+
+Grupo 10: Chave = ('SSL/TLS: Report Non Weak Cipher Suites', 636, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: SSL/TLS: Report Non Weak Cipher Suites
+       Porta: 636 | Protocolo: tcp | Severidade: LOG
+       Descrição: This routine reports all Non Weak SSL/TLS cipher suites accepted by a service.
+
+Grupo 11: Chave = ('SSL/TLS: Report Supported Cipher Suites', 636, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: SSL/TLS: Report Supported Cipher Suites
+       Porta: 636 | Protocolo: tcp | Severidade: LOG
+       Descrição: This routine reports all SSL/TLS cipher suites accepted by a service.
+
+Grupo 12: Chave = ('SSL/TLS: Client Certicate Required', 636, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: SSL/TLS: Client Certicate Required
+       Porta: 636 | Protocolo: tcp | Severidade: LOG
+       Descrição: The remote SSL/TLS service requires an SSL/TLS client certicate.
+
+Grupo 13: Chave = ('Unknown OS and Service Banner Reporting', 636, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Unknown OS and Service Banner Reporting
+       Porta: 636 | Protocolo: tcp | Severidade: LOG
+       Descrição: This VT consolidates and reports the information collected by the following VTs: - Collect banner of unknown services (OID: 1.3.6.1.4.1.25623.1.0.11154) - Service Detection (unknown) with nmap (OID: 1...
+
+Grupo 14: Chave = ('SSL/TLS: Safe/Secure Renegotiation Support Status', 636, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: SSL/TLS: Safe/Secure Renegotiation Support Status
+       Porta: 636 | Protocolo: tcp | Severidade: LOG
+       Descrição: Checks and reports if a remote SSL/TLS service supports safe/secure renegotiation. Quality of Detection (QoD): 98%
+
+Grupo 15: Chave = ('SSL/TLS: Version Detection', 636, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: SSL/TLS: Version Detection
+       Porta: 636 | Protocolo: tcp | Severidade: LOG
+       Descrição: Enumeration and reporting of SSL/TLS protocol versions supported by a remote service. Quality of Detection (QoD): 80%
+
+Grupo 16: Chave = ('CPE Inventory', 'general', 'CPE-T')
+  Total de duplicatas neste grupo: 1
+    1. Nome: CPE Inventory
+       Porta: general | Protocolo: CPE-T | Severidade: LOG
+       Descrição: This routine uses information collected by other routines about CPE identities of operating systems, services and applications detected during the scan. Note: Some CPEs for specic products might show ...
+
+Grupo 17: Chave = ('SSL/TLS: Hostname discovery from server certicate', 'general', 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: SSL/TLS: Hostname discovery from server certicate
+       Porta: general | Protocolo: tcp | Severidade: LOG
+       Descrição: It was possible to discover an additional hostname of this server from its certicate Common or Subject Alt Name.
+
+Grupo 18: Chave = ('OS Detection Consolidation and Reporting', 'general', 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: OS Detection Consolidation and Reporting
+       Porta: general | Protocolo: tcp | Severidade: LOG
+       Descrição: This script consolidates the OS information detected by several VTs and tries to nd the best matching OS. Furthermore it reports all previously collected information leading to this best matching OS. ...
+
+Grupo 19: Chave = ('IP Forwarding Enabled - Active Check', 'general', 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: IP Forwarding Enabled - Active Check
+       Porta: general | Protocolo: tcp | Severidade: LOG
+       Descrição: Checks if the remote host has IP forwarding enabled.
+
+Grupo 20: Chave = ('Traceroute', 'general', 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Traceroute
+       Porta: general | Protocolo: tcp | Severidade: LOG
+       Descrição: Collect information about the network route and network distance between the scanner host and the target host.
+
+Grupo 21: Chave = ('Hostname Determination Reporting', 'general', 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Hostname Determination Reporting
+       Porta: general | Protocolo: tcp | Severidade: LOG
+       Descrição: The script reports information on how the hostname of the target was determined.
+
+Grupo 22: Chave = ('SSL/TLS: Collect and Report Certicate Details', 389, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: SSL/TLS: Collect and Report Certicate Details
+       Porta: 389 | Protocolo: tcp | Severidade: LOG
+       Descrição: This script collects and reports the details of all SSL/TLS certicates. This data will be used by other tests to verify server certicates. Quality of Detection (QoD): 98%
+
+Grupo 23: Chave = ('SSL/TLS: Certicate - Subject Common Name Does Not Match Server FQDN', 389, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: SSL/TLS: Certicate - Subject Common Name Does Not Match Server FQDN
+       Porta: 389 | Protocolo: tcp | Severidade: LOG
+       Descrição: The SSL/TLS certicate contains a common name (CN) that does not match the hostname. Quality of Detection (QoD): 98%
+
+Grupo 24: Chave = ('SSL/TLS: Report Perfect Forward Secrecy (PFS) Cipher Suites', 389, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: SSL/TLS: Report Perfect Forward Secrecy (PFS) Cipher Suites
+       Porta: 389 | Protocolo: tcp | Severidade: LOG
+       Descrição: This routine reports all SSL/TLS cipher suites accepted by a service which are supporting Perfect Forward Secrecy (PFS).
+
+Grupo 25: Chave = ('SSL/TLS: Report Medium Cipher Suites', 389, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: SSL/TLS: Report Medium Cipher Suites
+       Porta: 389 | Protocolo: tcp | Severidade: LOG
+       Descrição: This routine reports all Medium SSL/TLS cipher suites accepted by a service. Quality of Detection (QoD): 98%
+
+Grupo 26: Chave = ('SSL/TLS: Report Non Weak Cipher Suites', 389, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: SSL/TLS: Report Non Weak Cipher Suites
+       Porta: 389 | Protocolo: tcp | Severidade: LOG
+       Descrição: This routine reports all Non Weak SSL/TLS cipher suites accepted by a service. Quality of Detection (QoD): 98%
+
+Grupo 27: Chave = ('SSL/TLS: Report Supported Cipher Suites', 389, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: SSL/TLS: Report Supported Cipher Suites
+       Porta: 389 | Protocolo: tcp | Severidade: LOG
+       Descrição: This routine reports all SSL/TLS cipher suites accepted by a service. Quality of Detection (QoD): 98%
+
+Grupo 28: Chave = ('SSL/TLS: Client Certicate Required', 389, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: SSL/TLS: Client Certicate Required
+       Porta: 389 | Protocolo: tcp | Severidade: LOG
+       Descrição: The remote SSL/TLS service requires an SSL/TLS client certicate. Quality of Detection (QoD): 80%
+
+Grupo 29: Chave = ('SSL/TLS: Safe/Secure Renegotiation Support Status', 389, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: SSL/TLS: Safe/Secure Renegotiation Support Status
+       Porta: 389 | Protocolo: tcp | Severidade: LOG
+       Descrição: Checks and reports if a remote SSL/TLS service supports safe/secure renegotiation.
+
+Grupo 30: Chave = ('LDAP Service Detection (TCP)', 389, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: LDAP Service Detection (TCP)
+       Porta: 389 | Protocolo: tcp | Severidade: LOG
+       Descrição: TCP based detection of services supporting the Lightweight Directory Access Protocol (LDAP).
+
+Grupo 31: Chave = ("SSL/TLS: LDAP 'Start TLS OID' Detection", 389, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: SSL/TLS: LDAP 'Start TLS OID' Detection
+       Porta: 389 | Protocolo: tcp | Severidade: LOG
+       Descrição: Checks if the remote LDAP server supports SSL/TLS with the 'Start TLS' OID.
+
+Grupo 32: Chave = ('SSL/TLS: Version Detection', 389, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: SSL/TLS: Version Detection
+       Porta: 389 | Protocolo: tcp | Severidade: LOG
+       Descrição: Enumeration and reporting of SSL/TLS protocol versions supported by a remote service.
+Resumo final:
+Total de grupos de duplicatas: 32
+Total de vulnerabilidades agrupadas (removidas): 11

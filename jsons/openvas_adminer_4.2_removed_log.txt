@@ -1,0 +1,64 @@
+# LOG DE VULNERABILIDADES REMOVIDAS (sem descrição válida)
+
+Removida 1:
+{
+  "Name": "PHP < 5.6.33, 7.x < 7.0.27, 7.1.x < 7.1.13, 7.2.x < 7.2.1 Multiple Vulnerabilities",
+  "description": [],
+  "detection_result": [
+    "Checks if a vulnerable version is present on the target host.",
+    "Details: PHP < 5.6.33, 7.x < 7.0.27, 7.1.x < 7.1.13, 7.2.x < 7.2.1 Multiple Vulnerabilit.",
+    "->..",
+    "OID:1.3.6.1.4.1.25623.1.0.812735",
+    "Version used: 2025-09-24T05:39:03Z"
+  ],
+  "detection_method": [],
+  "product_detection_result": [
+    "Product: cpe:/a:php:php:7.0.17",
+    "Method: PHP Detection Consolidation",
+    "OID: 1.3.6.1.4.1.25623.1.0.171722)"
+  ],
+  "impact": [],
+  "solution": [],
+  "insight": [],
+  "log_method": [],
+  "cvss": [
+    "5.9"
+  ],
+  "port": 8080,
+  "protocol": "tcp",
+  "severity": "MEDIUM",
+  "references": [
+    "cve: CVE-2018-5711",
+    "cve: CVE-2018-5712",
+    "url: http://php.net/ChangeLog-5.php",
+    "url: http://php.net/ChangeLog-7.php",
+    "url: https://bugs.php.net/bug.php?id=74782",
+    "url: https://bugs.php.net/bug.php?id=75571",
+    "cert-bund: WID-SEC-2024-0991",
+    "cert-bund: WID-SEC-2024-0990",
+    "cert-bund: CB-K20/0307",
+    "cert-bund: CB-K18/0498",
+    "cert-bund: CB-K18/0270",
+    "cert-bund: CB-K18/0188",
+    "cert-bund: CB-K18/0174",
+    "dfn-cert: DFN-CERT-2020-0774",
+    "dfn-cert: DFN-CERT-2020-0680",
+    "dfn-cert: DFN-CERT-2019-1737",
+    "dfn-cert: DFN-CERT-2019-0362",
+    "dfn-cert: DFN-CERT-2019-0212",
+    "dfn-cert: DFN-CERT-2019-0204",
+    "dfn-cert: DFN-CERT-2018-1739",
+    "dfn-cert: DFN-CERT-2018-0835",
+    "dfn-cert: DFN-CERT-2018-0733",
+    "dfn-cert: DFN-CERT-2018-0576",
+    "dfn-cert: DFN-CERT-2018-0537",
+    "dfn-cert: DFN-CERT-2018-0290",
+    "dfn-cert: DFN-CERT-2018-0205",
+    "dfn-cert: DFN-CERT-2018-0191"
+  ],
+  "plugin": null,
+  "plugin_details": {},
+  "instances": [],
+  "source": "OPENVAS"
+}
+---

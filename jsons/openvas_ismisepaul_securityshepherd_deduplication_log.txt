@@ -1,0 +1,214 @@
+# LOG DE DEDUPLICAÇÃO DE VULNERABILIDADES
+Este arquivo lista todas as vulnerabilidades consideradas duplicatas e agrupadas durante o processo.
+Cada grupo é identificado por uma chave composta (ex: nome, porta, protocolo).
+Apenas a vulnerabilidade mais completa e com descrição válida foi mantida em cada grupo.
+
+Total de grupos de duplicatas: 34
+Total de vulnerabilidades agrupadas (removidas): 5
+
+Grupo 1: Chave = ('Die-Hellman Ephemeral Key Exchange DoS Vulnerability (SSL/TLS, D(HE)ater)', 8443, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Die-Hellman Ephemeral Key Exchange DoS Vulnerability (SSL/TLS, D(HE)ater)
+       Porta: 8443 | Protocolo: tcp | Severidade: High
+       Descrição: The remote SSL/TLS server is supporting Die-Hellman ephemeral (DHE) Key Exchange algorithms and thus could be prone to a denial of service (DoS) vulnerability. Quality of Detection (QoD): 30%
+
+Grupo 2: Chave = ('SSL/TLS: Certificate Expired', 8443, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: SSL/TLS: Certificate Expired
+       Porta: 8443 | Protocolo: tcp | Severidade: High
+       Descrição: The remote server's SSL/TLS certificate has already expired.
+
+Grupo 3: Chave = ('SSL/TLS: Deprecated TLSv1.0 and TLSv1.1 Protocol Detection', 8443, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: SSL/TLS: Deprecated TLSv1.0 and TLSv1.1 Protocol Detection
+       Porta: 8443 | Protocolo: tcp | Severidade: MEDIUM
+       Descrição: It was possible to detect the usage of the deprecated TLSv1.0 and/or TLSv1.1 protocol on this system.
+
+Grupo 4: Chave = ('TCP Timestamps Information Disclosure', 8443, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: TCP Timestamps Information Disclosure
+       Porta: 8443 | Protocolo: tcp | Severidade: LOW
+       Descrição: The remote host implements TCP timestamps and therefore allows to compute the uptime.
+
+Grupo 5: Chave = ('OpenVAS / Greenbone Vulnerability Manager Detection', 443, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: OpenVAS / Greenbone Vulnerability Manager Detection
+       Porta: 443 | Protocolo: tcp | Severidade: LOG
+       Descrição: The remote host is running an OpenVAS / Greenbone Vulnerability Manager installation.
+
+Grupo 6: Chave = ('SSL/TLS: Certificate Expired', 443, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: SSL/TLS: Certificate Expired
+       Porta: 443 | Protocolo: tcp | Severidade: MEDIUM
+       Descrição: The certificate presented by the remote host has expired.
+
+Grupo 7: Chave = ('SSL/TLS: Certificate Self-Signed', 443, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: SSL/TLS: Certificate Self-Signed
+       Porta: 443 | Protocolo: tcp | Severidade: MEDIUM
+       Descrição: The certificate presented by the remote host is self-signed.
+
+Grupo 8: Chave = ('SSL/TLS: Certificate with Wrong Hostname', 443, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: SSL/TLS: Certificate with Wrong Hostname
+       Porta: 443 | Protocolo: tcp | Severidade: MEDIUM
+       Descrição: The certificate presented by the remote host does not match the hostname.
+
+Grupo 9: Chave = ('SSL/TLS: Weak Cipher Suites', 443, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: SSL/TLS: Weak Cipher Suites
+       Porta: 443 | Protocolo: tcp | Severidade: MEDIUM
+       Descrição: The remote host supports weak cipher suites.
+
+Grupo 10: Chave = ('TCP Timestamps Information Disclosure', 'general', 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: TCP Timestamps Information Disclosure
+       Porta: general | Protocolo: tcp | Severidade: LOW
+       Descrição: The remote host implements TCP timestamps and therefore allows to compute the uptime.
+
+Grupo 11: Chave = ('TCP timestamps', 'general', 'icmp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: TCP timestamps
+       Porta: general | Protocolo: icmp | Severidade: LOW
+       Descrição: It was detected that the host implements RFC1323/RFC7323.
+
+Grupo 12: Chave = ('ICMP Timestamp Reply Information Disclosure', 'general', 'icmp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: ICMP Timestamp Reply Information Disclosure
+       Porta: general | Protocolo: icmp | Severidade: LOW
+       Descrição: The remote host responded to an ICMP timestamp request. Quality of Detection (QoD): 80%
+
+Grupo 13: Chave = ('CPE Inventory', 'general', 'CPE-T')
+  Total de duplicatas neste grupo: 1
+    1. Nome: CPE Inventory
+       Porta: general | Protocolo: CPE-T | Severidade: LOG
+       Descrição: This routine uses information collected by other routines about CPE identities of operating systems, services and applications detected during the scan. Note: Some CPEs for specic products might show ...
+
+Grupo 14: Chave = ('SSL/TLS: Hostname discovery from server certicate', 'general', 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: SSL/TLS: Hostname discovery from server certicate
+       Porta: general | Protocolo: tcp | Severidade: LOG
+       Descrição: It was possible to discover an additional hostname of this server from its certicate Common or Subject Alt Name.
+
+Grupo 15: Chave = ('OS Detection Consolidation and Reporting', 'general', 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: OS Detection Consolidation and Reporting
+       Porta: general | Protocolo: tcp | Severidade: LOG
+       Descrição: This script consolidates the OS information detected by several VTs and tries to nd the best matching OS. Furthermore it reports all previously collected information leading to this best matching OS. ...
+
+Grupo 16: Chave = ('IP Forwarding Enabled - Active Check', 'general', 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: IP Forwarding Enabled - Active Check
+       Porta: general | Protocolo: tcp | Severidade: LOG
+       Descrição: Checks if the remote host has IP forwarding enabled.
+
+Grupo 17: Chave = ('Traceroute', 'general', 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Traceroute
+       Porta: general | Protocolo: tcp | Severidade: LOG
+       Descrição: Collect information about the network route and network distance between the scanner host and the target host.
+
+Grupo 18: Chave = ('Hostname Determination Reporting', 'general', 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Hostname Determination Reporting
+       Porta: general | Protocolo: tcp | Severidade: LOG
+       Descrição: The script reports information on how the hostname of the target was determined.
+
+Grupo 19: Chave = ('HTTP Security Headers Detection', 8080, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: HTTP Security Headers Detection
+       Porta: 8080 | Protocolo: tcp | Severidade: LOG
+       Descrição: All known security headers are being checked on the remote web server. On completion a report will hand back whether a specic security header has been implemented (including its value and if it is dep...
+
+Grupo 20: Chave = ('Web Application Scanning Consolidation / Info Reporting', 8080, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Web Application Scanning Consolidation / Info Reporting
+       Porta: 8080 | Protocolo: tcp | Severidade: LOG
+       Descrição: The script consolidates and reports various information for web application (formerly called 'CGI') scanning. This information is based on the following scripts / settings: - HTTP-Version Detection (O...
+
+Grupo 21: Chave = ('OpenVAS / Greenbone Vulnerability Manager Detection', 8080, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: OpenVAS / Greenbone Vulnerability Manager Detection
+       Porta: 8080 | Protocolo: tcp | Severidade: LOG
+       Descrição: The remote host is running an OpenVAS Manager or Greenbone Vulnerability Manager (GVM).
+
+Grupo 22: Chave = (('Name', 'Services'), ('cvss', ('0.0',)), ('description', ('This plugin performs service detection.',)), ('detection_method', ()), ('detection_result', ('A web server is running on this port',)), ('impact', ()), ('insight', ('This plugin attempts to guess which service is running on the remote port(s). For instance, it searches for a web server which could listen on another port than 80 or 443 and makes this information available for other check routines.',)), ('instances', ()), ('log_method', ('Details: Services', 'OID:1.3.6.1.4.1.25623.1.0.10330', 'Version used: 2025-03-05T05:38:53Z')), ('plugin', None), ('plugin_details', ()), ('port', 8080), ('product_detection_result', ()), ('protocol', 'tcp'), ('references', ()), ('severity', 'LOG'), ('solution', ()), ('source', 'OPENVAS'))
+  Total de duplicatas neste grupo: 1
+    1. Nome: Services
+       Porta: 8080 | Protocolo: tcp | Severidade: LOG
+       Descrição: This plugin performs service detection.
+
+Grupo 23: Chave = (('Name', 'Services'), ('cvss', ('0.0',)), ('description', ('This plugin performs service detection.', 'Quality of Detection (QoD): 80%')), ('detection_method', ()), ('detection_result', ('A web server is running on this port',)), ('impact', ()), ('insight', ('This plugin attempts to guess which service is running on the remote port(s). For instance, it searches for a web server which could listen on another port than 80 or 443 and makes this information available for other check routines.',)), ('instances', ()), ('log_method', ('Details: Services', 'OID:1.3.6.1.4.1.25623.1.0.10330', 'Version used: 2025-03-05T05:38:53Z')), ('plugin', None), ('plugin_details', ()), ('port', 8080), ('product_detection_result', ()), ('protocol', 'tcp'), ('references', ()), ('severity', 'LOG'), ('solution', ()), ('source', 'OPENVAS'))
+  Total de duplicatas neste grupo: 1
+    1. Nome: Services
+       Porta: 8080 | Protocolo: tcp | Severidade: LOG
+       Descrição: This plugin performs service detection. Quality of Detection (QoD): 80%
+
+Grupo 24: Chave = ('SSL/TLS: HTTP Public Key Pinning (HPKP) Missing', 8443, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: SSL/TLS: HTTP Public Key Pinning (HPKP) Missing
+       Porta: 8443 | Protocolo: tcp | Severidade: LOG
+       Descrição: The remote web server is not enforcing HTTP Public Key Pinning (HPKP). Note: Most major browsers have dropped / deprecated support for this header in 2020.
+
+Grupo 25: Chave = ('SSL/TLS: HTTP Strict Transport Security (HSTS) Missing', 8443, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: SSL/TLS: HTTP Strict Transport Security (HSTS) Missing
+       Porta: 8443 | Protocolo: tcp | Severidade: LOG
+       Descrição: The remote web server is not enforcing HTTP Strict Transport Security (HSTS).
+
+Grupo 26: Chave = ('SSL/TLS: Report Perfect Forward Secrecy (PFS) Cipher Suites', 8443, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: SSL/TLS: Report Perfect Forward Secrecy (PFS) Cipher Suites
+       Porta: 8443 | Protocolo: tcp | Severidade: LOG
+       Descrição: This routine reports all SSL/TLS cipher suites accepted by a service which are supporting Perfect Forward Secrecy (PFS).
+
+Grupo 27: Chave = ('SSL/TLS: Report Medium Cipher Suites', 8443, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: SSL/TLS: Report Medium Cipher Suites
+       Porta: 8443 | Protocolo: tcp | Severidade: LOG
+       Descrição: This routine reports all Medium SSL/TLS cipher suites accepted by a service. Quality of Detection (QoD): 98%
+
+Grupo 28: Chave = ('SSL/TLS: Report Supported Cipher Suites', 8443, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: SSL/TLS: Report Supported Cipher Suites
+       Porta: 8443 | Protocolo: tcp | Severidade: LOG
+       Descrição: This routine reports all SSL/TLS cipher suites accepted by a service. Quality of Detection (QoD): 98%
+
+Grupo 29: Chave = ('SSL/TLS: Safe/Secure Renegotiation Support Status', 8443, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: SSL/TLS: Safe/Secure Renegotiation Support Status
+       Porta: 8443 | Protocolo: tcp | Severidade: LOG
+       Descrição: Checks and reports if a remote SSL/TLS service supports safe/secure renegotiation. Quality of Detection (QoD): 98%
+
+Grupo 30: Chave = ('HTTP Security Headers Detection', 8443, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: HTTP Security Headers Detection
+       Porta: 8443 | Protocolo: tcp | Severidade: LOG
+       Descrição: All known security headers are being checked on the remote web server. On completion a report will hand back whether a specic security header has been implemented (including its value and if it is dep...
+
+Grupo 31: Chave = ('Web Application Scanning Consolidation / Info Reporting', 8443, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Web Application Scanning Consolidation / Info Reporting
+       Porta: 8443 | Protocolo: tcp | Severidade: LOG
+       Descrição: The script consolidates and reports various information for web application (formerly called 'CGI') scanning. This information is based on the following scripts / settings: - HTTP-Version Detection (O...
+
+Grupo 32: Chave = (('Name', 'Services'), ('cvss', ('0.0',)), ('description', ('This plugin performs service detection.', 'Quality of Detection (QoD): 80%')), ('detection_method', ()), ('detection_result', ('A TLScustom server answered on this port',)), ('impact', ()), ('insight', ('This plugin attempts to guess which service is running on the remote port(s). For instance, it searches for a web server which could listen on another port than 80 or 443 and makes this information available for other check routines.',)), ('instances', ()), ('log_method', ('Details: Services', 'OID:1.3.6.1.4.1.25623.1.0.10330', 'Version used: 2025-03-05T05:38:53Z')), ('plugin', None), ('plugin_details', ()), ('port', 8443), ('product_detection_result', ()), ('protocol', 'tcp'), ('references', ()), ('severity', 'LOG'), ('solution', ()), ('source', 'OPENVAS'))
+  Total de duplicatas neste grupo: 1
+    1. Nome: Services
+       Porta: 8443 | Protocolo: tcp | Severidade: LOG
+       Descrição: This plugin performs service detection. Quality of Detection (QoD): 80%
+
+Grupo 33: Chave = (('Name', 'Services'), ('cvss', ('0.0',)), ('description', ('This plugin performs service detection.', 'Quality of Detection (QoD): 80%')), ('detection_method', ()), ('detection_result', ('A web server is running on this port through SSL',)), ('impact', ()), ('insight', ('This plugin attempts to guess which service is running on the remote port(s). For instance, it searches for a web server which could listen on another port than 80 or 443 and makes this information available for other check routines.',)), ('instances', ()), ('log_method', ('Details: Services', 'OID:1.3.6.1.4.1.25623.1.0.10330', 'Version used: 2025-03-05T05:38:53Z')), ('plugin', None), ('plugin_details', ()), ('port', 8443), ('product_detection_result', ()), ('protocol', 'tcp'), ('references', ()), ('severity', 'LOG'), ('solution', ()), ('source', 'OPENVAS'))
+  Total de duplicatas neste grupo: 1
+    1. Nome: Services
+       Porta: 8443 | Protocolo: tcp | Severidade: LOG
+       Descrição: This plugin performs service detection. Quality of Detection (QoD): 80%
+
+Grupo 34: Chave = ('SSL/TLS: Version Detection', 8443, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: SSL/TLS: Version Detection
+       Porta: 8443 | Protocolo: tcp | Severidade: LOG
+       Descrição: Enumeration and reporting of SSL/TLS protocol versions supported by a remote service. Quality of Detection
+Resumo final:
+Total de grupos de duplicatas: 34
+Total de vulnerabilidades agrupadas (removidas): 5

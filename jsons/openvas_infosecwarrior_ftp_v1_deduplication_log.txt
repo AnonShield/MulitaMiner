@@ -1,0 +1,334 @@
+# LOG DE DEDUPLICAÇÃO DE VULNERABILIDADES
+Este arquivo lista todas as vulnerabilidades consideradas duplicatas e agrupadas durante o processo.
+Cada grupo é identificado por uma chave composta (ex: nome, porta, protocolo).
+Apenas a vulnerabilidade mais completa e com descrição válida foi mantida em cada grupo.
+
+Total de grupos de duplicatas: 54
+Total de vulnerabilidades agrupadas (removidas): 21
+
+Grupo 1: Chave = ('OpenBSD OpenSSH < 9.3p2 RCE Vulnerability', 22, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: OpenBSD OpenSSH < 9.3p2 RCE Vulnerability
+       Porta: 22 | Protocolo: tcp | Severidade: Critical
+       Descrição: OpenBSD OpenSSH is prone to a remote code execution (RCE) vulnerability in OpenSSH's forwarded ssh-agent.
+
+Grupo 2: Chave = ('Apache HTTP Server < 2.4.60 Multiple Vulnerabilities - Linux', 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Apache HTTP Server < 2.4.60 Multiple Vulnerabilities - Linux
+       Porta: 80 | Protocolo: tcp | Severidade: CRITICAL
+       Descrição: Apache HTTP Server is prone to multiple vulnerabilities. Quality of Detection (QoD): 30%
+
+Grupo 3: Chave = ('Die-Hellman Ephemeral Key Exchange DoS Vulnerability (SSH, D(HE)ater)', 22, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Die-Hellman Ephemeral Key Exchange DoS Vulnerability (SSH, D(HE)ater)
+       Porta: 22 | Protocolo: tcp | Severidade: MEDIUM
+       Descrição: The remote SSH server is supporting Die-Hellman ephemeral (DHE) Key Exchange (KEX) algorithms and thus could be prone to a denial of service (DoS) vulnerability. Quality of Detection (QoD): 30%
+
+Grupo 4: Chave = ('OpenBSD OpenSSH <= 8.6 Command Injection Vulnerability', 22, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: OpenBSD OpenSSH <= 8.6 Command Injection Vulnerability
+       Porta: 22 | Protocolo: tcp | Severidade: HIGH
+       Descrição: OpenBSD OpenSSH is prone to a command injection vulnerability. Quality of Detection (QoD): 30%
+
+Grupo 5: Chave = ('OpenSSH 6.2 <= 8.7 Privilege Escalation Vulnerability', 22, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: OpenSSH 6.2 <= 8.7 Privilege Escalation Vulnerability
+       Porta: 22 | Protocolo: tcp | Severidade: HIGH
+       Descrição: OpenSSH is prone to a privilege scalation vulnerability in certain congurations.
+
+Grupo 6: Chave = ('OpenBSD OpenSSH 6.8p1 - 9.9p1 MitM Vulnerability', 22, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: OpenBSD OpenSSH 6.8p1 - 9.9p1 MitM Vulnerability
+       Porta: 22 | Protocolo: tcp | Severidade: MEDIUM
+       Descrição: OpenBSD OpenSSH is prone to a man-in-the-middle (MitM) vulnerability.
+
+Grupo 7: Chave = ('OpenBSD OpenSSH < 9.6 Multiple Vulnerabilities (Terrapin Attack)', 22, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: OpenBSD OpenSSH < 9.6 Multiple Vulnerabilities (Terrapin Attack)
+       Porta: 22 | Protocolo: tcp | Severidade: HIGH
+       Descrição: OpenBSD OpenSSH is prone to multiple vulnerabilities. Quality of Detection (QoD): 30%
+
+Grupo 8: Chave = ('Prex Truncation Attacks in SSH Specication (Terrapin Attack)', 22, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Prex Truncation Attacks in SSH Specication (Terrapin Attack)
+       Porta: 22 | Protocolo: tcp | Severidade: MEDIUM
+       Descrição: The remote SSH server is supporting an specic encryption algorithm or MAC. Parts of their SSH specication are vulnerable to a novel prex truncation attack (a.k.a. Terrapin attack).
+
+Grupo 9: Chave = ('OpenSSH Information Disclosure Vulnerability (CVE-2016-20012)', 22, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: OpenSSH Information Disclosure Vulnerability (CVE-2016-20012)
+       Porta: 22 | Protocolo: tcp | Severidade: MEDIUM
+       Descrição: OpenBSD OpenSSH is prone to an information disclosure vulnerability.
+
+Grupo 10: Chave = ('OpenBSD OpenSSH < 9.2 Unspecied Vulnerability', 22, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: OpenBSD OpenSSH < 9.2 Unspecied Vulnerability
+       Porta: 22 | Protocolo: tcp | Severidade: MEDIUM
+       Descrição: OpenBSD OpenSSH is prone to an unspecied vulnerability.
+
+Grupo 11: Chave = ('OpenBSD OpenSSH < 9.3 Unspecied Vulnerability', 22, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: OpenBSD OpenSSH < 9.3 Unspecied Vulnerability
+       Porta: 22 | Protocolo: tcp | Severidade: MEDIUM
+       Descrição: OpenBSD OpenSSH is prone to an unspecied vulnerability. Quality of Detection (QoD): 30%
+
+Grupo 12: Chave = ('OpenBSD OpenSSH is prone to multiple vulnerabilities', 22, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: OpenBSD OpenSSH is prone to multiple vulnerabilities
+       Porta: 22 | Protocolo: tcp | Severidade: LOG
+       Descrição: OpenBSD OpenSSH is prone to multiple vulnerabilities.
+
+Grupo 13: Chave = ('Anonymous FTP Login Reporting', 21, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Anonymous FTP Login Reporting
+       Porta: 21 | Protocolo: tcp | Severidade: MEDIUM
+       Descrição: Reports if the remote FTP Server allows anonymous logins.
+
+Grupo 14: Chave = ('FTP Unencrypted Cleartext Login', 21, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: FTP Unencrypted Cleartext Login
+       Porta: 21 | Protocolo: tcp | Severidade: MEDIUM
+       Descrição: The remote host is running a FTP service that allows cleartext logins over unencrypted connec- tions.
+
+Grupo 15: Chave = ('Apache HTTP Server 2.4.7 - 2.4.65 Authentication Bypass Vulnerability - Linux', 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Apache HTTP Server 2.4.7 - 2.4.65 Authentication Bypass Vulnerability - Linux
+       Porta: 80 | Protocolo: tcp | Severidade: MEDIUM
+       Descrição: Apache HTTP Server is prone to an authentication bypass vulnerability. Quality of Detection (QoD): 30%
+
+Grupo 16: Chave = ('Apache HTTP Server < 2.4.64 Multiple Vulnerabilities - Linux', 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Apache HTTP Server < 2.4.64 Multiple Vulnerabilities - Linux
+       Porta: 80 | Protocolo: tcp | Severidade: MEDIUM
+       Descrição: Apache HTTP Server is prone to multiple vulnerabilities. Quality of Detection (QoD): 30%
+
+Grupo 17: Chave = ('Apache HTTP Server 2.4.17 < 2.4.64 DoS Vulnerability - Linux', 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Apache HTTP Server 2.4.17 < 2.4.64 DoS Vulnerability - Linux
+       Porta: 80 | Protocolo: tcp | Severidade: MEDIUM
+       Descrição: Apache HTTP Server is prone to a denial of service (DoS) vulnerability via HTTP/2.
+
+Grupo 18: Chave = ('Apache HTTP Server 2.4.26 < 2.4.64 DoS Vulnerability - Linux', 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Apache HTTP Server 2.4.26 < 2.4.64 DoS Vulnerability - Linux
+       Porta: 80 | Protocolo: tcp | Severidade: MEDIUM
+       Descrição: Apache HTTP Server is prone to a denial of service (DoS) vulnerability in mod_proxy_http2.
+
+Grupo 19: Chave = ('Apache HTTP Server 2.4.35 < 2.4.64 Access Control Bypass Vulnerability - Linux', 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Apache HTTP Server 2.4.35 < 2.4.64 Access Control Bypass Vulnerability - Linux
+       Porta: 80 | Protocolo: tcp | Severidade: MEDIUM
+       Descrição: Apache HTTP Server is prone to an access control bypass vulnerability in mod_ssl.
+
+Grupo 20: Chave = ('Apache HTTP Server < 2.4.66 SSI Vulnerability - Linux', 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Apache HTTP Server < 2.4.66 SSI Vulnerability - Linux
+       Porta: 80 | Protocolo: tcp | Severidade: MEDIUM
+       Descrição: Apache HTTP Server is prone to a Server Side Includes (SSI) vulnerability.
+
+Grupo 21: Chave = ('Apache HTTP Server 2.4.x < 2.4.66 Improper Neutralization Vulnerability - Linux', 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Apache HTTP Server 2.4.x < 2.4.66 Improper Neutralization Vulnerability - Linux
+       Porta: 80 | Protocolo: tcp | Severidade: MEDIUM
+       Descrição: Apache HTTP Server is prone to an improper neutralization vulnerability. Quality of Detection (QoD): 30%
+
+Grupo 22: Chave = ('ICMP Timestamp Reply Information Disclosure', 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: ICMP Timestamp Reply Information Disclosure
+       Porta: 80 | Protocolo: tcp | Severidade: LOW
+       Descrição: The remote host responded to an ICMP timestamp request. Quality of Detection (QoD): 80%
+
+Grupo 23: Chave = ('ICMP Timestamp Reply Information Disclosure', 'general', 'icmp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: ICMP Timestamp Reply Information Disclosure
+       Porta: general | Protocolo: icmp | Severidade: LOW
+       Descrição: The remote host responded to an ICMP timestamp request. Quality of Detection (QoD): 80%
+
+Grupo 24: Chave = ('OpenBSD OpenSSH 7.4 - 9.9 Unspecied Vulnerability', 22, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: OpenBSD OpenSSH 7.4 - 9.9 Unspecied Vulnerability
+       Porta: 22 | Protocolo: tcp | Severidade: LOW
+       Descrição: OpenBSD OpenSSH is prone to an unspecied vulnerability due to a logic error.
+
+Grupo 25: Chave = ('Weak MAC Algorithm(s) Supported (SSH)', 22, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Weak MAC Algorithm(s) Supported (SSH)
+       Porta: 22 | Protocolo: tcp | Severidade: LOW
+       Descrição: The remote SSH server is congured to allow / support weak MAC algorithm(s).
+
+Grupo 26: Chave = ('OpenBSD OpenSSH < 10.1 Multiple Vulnerabilities', 22, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: OpenBSD OpenSSH < 10.1 Multiple Vulnerabilities
+       Porta: 22 | Protocolo: tcp | Severidade: LOW
+       Descrição: OpenBSD OpenSSH is prone to multiple vulnerabilities. Quality of Detection (QoD): 30%
+
+Grupo 27: Chave = ('Apache HTTP Server 2.4.30 - 2.4.65 Integer Overow Vulnerability - Linux', 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Apache HTTP Server 2.4.30 - 2.4.65 Integer Overow Vulnerability - Linux
+       Porta: 80 | Protocolo: tcp | Severidade: LOW
+       Descrição: Apache HTTP Server is prone to an integer overow vulnerability. Quality of Detection (QoD): 30%
+
+Grupo 28: Chave = ('TCP Timestamps Information Disclosure', 'general', 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: TCP Timestamps Information Disclosure
+       Porta: general | Protocolo: tcp | Severidade: LOW
+       Descrição: The remote host implements TCP timestamps and therefore allows to compute the uptime.
+
+Grupo 29: Chave = ('PQC Key Exchange (KEX) Algorithm(s) Missing (SSH)', 22, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: PQC Key Exchange (KEX) Algorithm(s) Missing (SSH)
+       Porta: 22 | Protocolo: tcp | Severidade: LOG
+       Descrição: The remote SSH server is congured to NOT allow / support at least ONE Post-Quantum Cryptography (PQC) key exchange (KEX) algorithm(s). Quality of Detection (QoD): 80%
+
+Grupo 30: Chave = ('SSH Protocol Versions Supported', 22, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: SSH Protocol Versions Supported
+       Porta: 22 | Protocolo: tcp | Severidade: LOG
+       Descrição: Identication of SSH protocol versions supported by the remote SSH Server. Also reads the corresponding ngerprints from the service. Quality of Detection (QoD): 95%
+
+Grupo 31: Chave = ('SSH Protocol Algorithms Supported', 22, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: SSH Protocol Algorithms Supported
+       Porta: 22 | Protocolo: tcp | Severidade: LOG
+       Descrição: This script detects which algorithms are supported by the remote SSH service. Quality of Detection (QoD): 80%
+
+Grupo 32: Chave = ('SSH Server type and version', 22, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: SSH Server type and version
+       Porta: 22 | Protocolo: tcp | Severidade: LOG
+       Descrição: This detects the SSH Server's type and version by connecting to the server and processing the buer received. Quality of Detection (QoD): 80%
+
+Grupo 33: Chave = (('Name', 'Services'), ('cvss', ('0.0',)), ('description', ('This plugin performs service detection.',)), ('detection_method', ()), ('detection_result', ('An ssh server is running on this port',)), ('impact', ()), ('insight', ('This plugin attempts to guess which service is running on the remote port(s). For instance, it searches for a web server which could listen on another port than 80 or 443 and makes this information available for other check routines.',)), ('instances', ()), ('log_method', ()), ('plugin', None), ('plugin_details', ()), ('port', 22), ('product_detection_result', ()), ('protocol', 'tcp'), ('references', ()), ('severity', 'LOG'), ('solution', ()), ('source', 'OPENVAS'))
+  Total de duplicatas neste grupo: 1
+    1. Nome: Services
+       Porta: 22 | Protocolo: tcp | Severidade: LOG
+       Descrição: This plugin performs service detection.
+
+Grupo 34: Chave = ('vsFTPd FTP Server Detection', 21, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: vsFTPd FTP Server Detection
+       Porta: 21 | Protocolo: tcp | Severidade: LOG
+       Descrição: The script is grabbing the banner of a FTP server and attempts to identify a vsFTPd FTP Server and its version from the reply.
+
+Grupo 35: Chave = ('SSL/TLS: FTP Missing Support For AUTH TLS', 22, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: SSL/TLS: FTP Missing Support For AUTH TLS
+       Porta: 22 | Protocolo: tcp | Severidade: LOG
+       Descrição: The remote FTP server does not support the 'AUTH TLS' command.
+
+Grupo 36: Chave = ('SSL/TLS: FTP Missing Support For AUTH TLS', 21, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: SSL/TLS: FTP Missing Support For AUTH TLS
+       Porta: 21 | Protocolo: tcp | Severidade: LOG
+       Descrição: The remote FTP server does not support the 'AUTH TLS' command.
+
+Grupo 37: Chave = ('FTP Banner Detection', 21, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: FTP Banner Detection
+       Porta: 21 | Protocolo: tcp | Severidade: LOG
+       Descrição: This script detects and reports a FTP Server Banner.
+
+Grupo 38: Chave = (('Name', 'Services'), ('cvss', ('0.0',)), ('description', ('This plugin performs service detection.',)), ('detection_method', ()), ('detection_result', ('An FTP server is running on this port.', 'Here is its banner :', '220 (vsFTPd 3.0.3)')), ('impact', ()), ('insight', ('This plugin attempts to guess which service is running on the remote port(s). For instance, it searches for a web server which could listen on another port than 80 or 443 and makes this information available for other check routines.',)), ('instances', ()), ('log_method', ('Details: Services', 'OID:1.3.6.1.4.1.25623.1.0.10330', 'Version used: 2025-03-05T05:38:53Z')), ('plugin', None), ('plugin_details', ()), ('port', 21), ('product_detection_result', ()), ('protocol', 'tcp'), ('references', ()), ('severity', 'LOG'), ('solution', ()), ('source', 'OPENVAS'))
+  Total de duplicatas neste grupo: 1
+    1. Nome: Services
+       Porta: 21 | Protocolo: tcp | Severidade: LOG
+       Descrição: This plugin performs service detection.
+
+Grupo 39: Chave = ('CPE Inventory', 'general', 'CPE-T')
+  Total de duplicatas neste grupo: 1
+    1. Nome: CPE Inventory
+       Porta: general | Protocolo: CPE-T | Severidade: LOG
+       Descrição: This routine uses information collected by other routines about CPE identities of operating systems, services and applications detected during the scan. Note: Some CPEs for specic products might show ...
+
+Grupo 40: Chave = ('HTTP Server type and version', 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: HTTP Server type and version
+       Porta: 80 | Protocolo: tcp | Severidade: LOG
+       Descrição: This script detects and reports the HTTP Server's banner which might provide the type and version of it.
+
+Grupo 41: Chave = ('HTTP Server Banner Enumeration', 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: HTTP Server Banner Enumeration
+       Porta: 80 | Protocolo: tcp | Severidade: LOG
+       Descrição: This script tries to detect / enumerate different HTTP server banner (e.g. from a frontend, backend or proxy server) by sending various different HTTP requests (valid and invalid ones).
+
+Grupo 42: Chave = (('Name', 'Services'), ('cvss', ('0.0',)), ('description', ('This plugin performs service detection.',)), ('detection_method', ()), ('detection_result', ('A web server is running on this port',)), ('impact', ()), ('insight', ('This plugin attempts to guess which service is running on the remote port(s). For instance, it searches for a web server which could listen on another port than 80 or 443 and makes this information available for other check routines.',)), ('instances', ()), ('log_method', ('Details: Services', 'OID:1.3.6.1.4.1.25623.1.0.10330', 'Version used: 2025-03-05T05:38:53Z')), ('plugin', None), ('plugin_details', ()), ('port', 80), ('product_detection_result', ()), ('protocol', 'tcp'), ('references', ()), ('severity', 'LOG'), ('solution', ()), ('source', 'OPENVAS'))
+  Total de duplicatas neste grupo: 1
+    1. Nome: Services
+       Porta: 80 | Protocolo: tcp | Severidade: LOG
+       Descrição: This plugin performs service detection.
+
+Grupo 43: Chave = ('HTTP Security Headers Detection', 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: HTTP Security Headers Detection
+       Porta: 80 | Protocolo: tcp | Severidade: LOG
+       Descrição: All known security headers are being checked on the remote web server. On completion a report will hand back whether a specic security header has been implemented (including its value and if it is dep...
+
+Grupo 44: Chave = ('Web Application Scanning Consolidation / Info Reporting', 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Web Application Scanning Consolidation / Info Reporting
+       Porta: 80 | Protocolo: tcp | Severidade: LOG
+       Descrição: The script consolidates and reports various information for web application (formerly called 'CGI') scanning. This information is based on the following scripts / settings: - HTTP-Version Detection (O...
+
+Grupo 45: Chave = ('robot.txt / robots.txt exists on the Web Server (HTTP)', 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: robot.txt / robots.txt exists on the Web Server (HTTP)
+       Porta: 80 | Protocolo: tcp | Severidade: LOG
+       Descrição: Web Servers can use a le called /robot(s).txt to ask search engines to ignore certain les and directories. By nature this le can not be used to protect private les from public read access.
+
+Grupo 46: Chave = ('Allowed HTTP Methods Enumeration', 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Allowed HTTP Methods Enumeration
+       Porta: 80 | Protocolo: tcp | Severidade: LOG
+       Descrição: Enumerates which HTTP methods are allowed.
+
+Grupo 47: Chave = ('OS Detection Consolidation and Reporting', 80, 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: OS Detection Consolidation and Reporting
+       Porta: 80 | Protocolo: tcp | Severidade: LOG
+       Descrição: This script consolidates the OS information detected by several VTs and tries to nd the best matching OS. Furthermore it reports all previously collected information leading to this best matching OS. ...
+
+Grupo 48: Chave = ('OS Detection Consolidation and Reporting', 'general', 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: OS Detection Consolidation and Reporting
+       Porta: general | Protocolo: tcp | Severidade: LOG
+       Descrição: This script consolidates the OS information detected by several VTs and tries to nd the best matching OS. Furthermore it reports all previously collected information leading to this best matching OS. ...
+
+Grupo 49: Chave = ('Hostname Determination Reporting', 'general', 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Hostname Determination Reporting
+       Porta: general | Protocolo: tcp | Severidade: LOG
+       Descrição: The script reports information on how the hostname of the target was determined.
+
+Grupo 50: Chave = ('Apache HTTP Server Detection Consolidation', 'general', 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Apache HTTP Server Detection Consolidation
+       Porta: general | Protocolo: tcp | Severidade: LOG
+       Descrição: Consolidation of Apache HTTP Server detections.
+
+Grupo 51: Chave = ('OpenSSH Detection Consolidation', 'general', 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: OpenSSH Detection Consolidation
+       Porta: general | Protocolo: tcp | Severidade: LOG
+       Descrição: Consolidation of OpenSSH detections.
+
+Grupo 52: Chave = ('IP Forwarding Enabled - Active Check', 'general', 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: IP Forwarding Enabled - Active Check
+       Porta: general | Protocolo: tcp | Severidade: LOG
+       Descrição: Checks if the remote host has IP forwarding enabled.
+
+Grupo 53: Chave = ('Traceroute', 'general', 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Traceroute
+       Porta: general | Protocolo: tcp | Severidade: LOG
+       Descrição: Collect information about the network route and network distance between the scanner host and the target host.
+
+Grupo 54: Chave = ('Network Distance between Scanner and Target', 'general', 'tcp')
+  Total de duplicatas neste grupo: 1
+    1. Nome: Network Distance between Scanner and Target
+       Porta: general | Protocolo: tcp | Severidade: LOG
+       Descrição: The network distance between the scanner and the target is 2 hops.
+Resumo final:
+Total de grupos de duplicatas: 54
+Total de vulnerabilidades agrupadas (removidas): 21

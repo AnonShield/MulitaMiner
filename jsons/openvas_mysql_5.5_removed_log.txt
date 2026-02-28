@@ -1,0 +1,34 @@
+# LOG DE VULNERABILIDADES REMOVIDAS (sem descrição válida)
+
+Removida 1:
+{
+  "Name": "OpenVAS / Greenbone Vulnerability Manager Detection",
+  "description": [],
+  "detection_result": [],
+  "detection_method": [],
+  "product_detection_result": [],
+  "impact": [],
+  "solution": [],
+  "insight": [],
+  "log_method": [],
+  "cvss": [
+    "0.0"
+  ],
+  "port": 3306,
+  "protocol": "tcp",
+  "severity": "LOG",
+  "references": [
+    "cve: CVE-2018-2513",
+    "dfn-cert: DFN-CERT-2018-2456",
+    "dfn-cert: DFN-CERT-2018-2444",
+    "dfn-cert: DFN-CERT-2018-2396",
+    "dfn-cert: DFN-CERT-2018-2360",
+    "dfn-cert: DFN-CERT-2018-2338",
+    "dfn-cert: DFN-CERT-2018-2214"
+  ],
+  "plugin": null,
+  "plugin_details": {},
+  "instances": [],
+  "source": "OPENVAS"
+}
+---
