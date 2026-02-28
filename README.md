@@ -1,7 +1,10 @@
 <div align="center">
 
-![logo light](assets/MulitaMiner_logo_dark.pg#gh-light-mode-only)
-![logo dark](assets/MulitaMiner_logo_light.png#gh-dark-mode-only)
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="assets/MulitaMiner_logo_light.png">
+    <source media="(prefers-color-scheme: light)" srcset="assets/MulitaMiner_logo_dark.png">
+    <img src="assets/MulitaMiner_logo_light" width="500" alt="MulitaMiner logo">
+  </picture>
 
 **Vulnerability Extraction from Security Reports using LLMs**
 
