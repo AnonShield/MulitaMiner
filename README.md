@@ -1,9 +1,9 @@
 <div align="center">
 
   <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="MulitaMiner_logo_dark.png">
-    <source media="(prefers-color-scheme: light)" srcset="MulitaMiner_logo_light.png">
-    <img src="MulitaMiner_logo_light.png" width="220" alt="MulitaMiner logo">
+    <source media="(prefers-color-scheme: dark)" srcset="assets/2.svg">
+    <source media="(prefers-color-scheme: light)" srcset="assets/1.svg">
+    <img src="assets/1.svg" width="500" alt="MulitaMiner logo">
   </picture>
 
 # MulitaMiner
