@@ -45,7 +45,7 @@ else:
     print('Arquivo ips_extraidos_dos_pdfs.txt já existe, pulando extração dos PDFs.')
 
 # Caminhos dos arquivos
-DATASET_PATH = 'data\dataset_20260228_101711_fd9fd9dc-9df8-4e4d-b1ed-cca66e5c344e.csv'
+DATASET_PATH = 'data\dataset_20260301_113151_1622da90-cb16-49bd-a78d-e498b7b4bbc5.csv'
 VULNNET_PATH = 'vulnnet_openvas_17230143.csv'  # csv "baseline"
 MAPPING_PATH = 'ips_extraidos_dos_pdfs.txt'  # mapeamento report -> IP
 OUTPUT_TXT = 'comparativo_extracao.txt'
@@ -151,14 +151,23 @@ def gerar_relatorio():
     pct_inventadas = (inventadas_count / total_dataset * 100) if total_dataset else 0
     pct_faltantes = (faltantes_count / total_vulnnet * 100) if total_vulnnet else 0
 
-    # 5. Gera o relatório final
+
+    # 5. Calcula métricas de avaliação
+    # -------------------------------
+    precision = (acertos_count / (acertos_count + inventadas_count)) if (acertos_count + inventadas_count) else 0
+    recall = (acertos_count / (acertos_count + faltantes_count)) if (acertos_count + faltantes_count) else 0
+    f1_score = (2 * precision * recall / (precision + recall)) if (precision + recall) else 0
+
+    # 6. Gera o relatório final
     # ------------------------
     with open(OUTPUT_TXT, 'w', encoding='utf-8') as out:
         out.write(f"Total vulnerabilidades no vulnnet: {total_vulnnet}\n")
-        out.write(f"Total vulnerabilidades extraídas: {total_dataset}\n")
-        out.write(f"Acertos: {acertos_count} ({pct_acerto:.2f}%)\n")
+        out.write(f"Total vulnerabilidades extraídas: {total_dataset}\n\n")
+        out.write(f"Recall: {acertos_count} de {total_vulnnet} ({recall:.4f}) (cobertura: dos reais, quantos foram extraídos)\n")
         out.write(f"Inventadas (no dataset mas não no vulnnet): {inventadas_count} ({pct_inventadas:.2f}%)\n")
-        out.write(f"Faltantes (no vulnnet mas não no dataset): {faltantes_count} ({pct_faltantes:.2f}%)\n\n")
+        out.write(f"Faltantes (no vulnnet mas não no dataset): {faltantes_count} ({pct_faltantes:.2f}%)\n")
+        out.write(f"Precision: {precision:.4f} (precisão: do total extraído, quantos são corretos)\n")
+        out.write(f"F1-score: {f1_score:.4f} (média harmônica entre precisão e recall)\n\n")
         out.write("--- Inventadas (exemplos) ---\n")
         for (ip, name), count in dataset_counter.items():
             diff = count - vulnnet_counter.get((ip, name), 0)

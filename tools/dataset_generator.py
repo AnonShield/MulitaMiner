@@ -43,11 +43,14 @@ def load_vulnerabilities(input_folder):
 # Função para gerar a tabela de metadata
 def generate_metadata_xlsx(vulnerabilities, output_folder, timestamp, unique_id, reports_info):
     output_file = os.path.join(output_folder, f"metadata_{timestamp}_{unique_id}.xlsx")
-    # Cria um mapa de contagem por relatório/source
+    # Cria um mapa de contagem por relatório/source/severidade
     metadata = {}
+    severities = set()
     for vuln in vulnerabilities:
         report = vuln.get('report', 'unknown')
         source = vuln.get('source', None)
+        severity = (vuln.get('severity') or '').strip().capitalize() or 'Unknown'
+        severities.add(severity)
         if not source:
             if '_' in report:
                 source = report.split('_')[0]
@@ -55,30 +58,39 @@ def generate_metadata_xlsx(vulnerabilities, output_folder, timestamp, unique_id,
                 source = 'unknown'
         key = (report, source)
         if key not in metadata:
-            metadata[key] = 0
-        metadata[key] += 1
-    # Inclui todos os relatórios processados, mesmo com 0 vulnerabilidades
-    for report_name, info in reports_info.items():
-        # Tenta inferir source
-        source = 'unknown'
-        if '_' in report_name:
-            source = report_name.split('_')[0]
-        rows = [{'report': report_name, 'source': source, 'vulnerability_count': metadata.get((report_name, source), 0)}]
-        # Se já existe, ignora (já foi preenchido acima)
-        if not any(r['report'] == report_name for r in rows):
-            rows.append({'report': report_name, 'source': source, 'vulnerability_count': 0})
-    # Monta DataFrame
-    rows = [{'report': k[0], 'source': k[1], 'vulnerability_count': v} for k, v in metadata.items()]
+            metadata[key] = {'vulnerability_count': 0}
+        metadata[key]['vulnerability_count'] += 1
+        if severity not in metadata[key]:
+            metadata[key][severity] = 0
+        metadata[key][severity] += 1
+
+    # Monta lista de linhas
+    rows = []
+    for (report, source), counts in metadata.items():
+        row = {'report': report, 'source': source, 'vulnerability_count': counts['vulnerability_count']}
+        for sev in severities:
+            row[sev] = counts.get(sev, 0)
+        rows.append(row)
+
     # Adiciona os relatórios com 0 vulnerabilidades
     for report_name, info in reports_info.items():
         source = 'unknown'
         if '_' in report_name:
             source = report_name.split('_')[0]
         if not any(r['report'] == report_name for r in rows):
-            rows.append({'report': report_name, 'source': source, 'vulnerability_count': 0})
+            row = {'report': report_name, 'source': source, 'vulnerability_count': 0}
+            for sev in severities:
+                row[sev] = 0
+            rows.append(row)
+
+    # Ordena colunas: report, vulnerability_count, severities..., source
+    # Ordem desejada para severidades
+    sev_order = ['Critical', 'High', 'Medium', 'Low', 'Log', 'Unknown']
+    sev_sorted = [s for s in sev_order if s in severities] + [s for s in sorted(severities) if s not in sev_order]
+    columns = ['report', 'vulnerability_count'] + sev_sorted + ['source']
     df = pd.DataFrame(rows)
+    df = df[columns]
     df = df.sort_values(by='vulnerability_count', ascending=False)
-    df = df[['report', 'vulnerability_count', 'source']]
     df.to_excel(output_file, index=False, engine='openpyxl')
     print(f"Metadata summary generated successfully: {output_file}")
 
