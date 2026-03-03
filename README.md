@@ -199,69 +199,12 @@ API_KEY_QWEN3=your-groq-api-key
 docker run -v $(pwd):/workspace -v $(pwd)/.env:/app/.env mulitaminer python main.py /workspace/report.pdf
 ```
 
-### Docker Examples - Step-by-Step
+### Docker Example
 
-Here are practical examples tested on Windows PowerShell (adaptable to any system):
-
-#### Step 1: Basic Test
-```powershell
-# Test if main.py responds
-docker run --rm -v "${PWD}:/workspace" mulitaminer python main.py
-```
-**Result:** Expected error (missing arguments) - confirms command works
-
-#### Step 2: Complete OpenVAS Pipeline with DeepSeek
-```powershell
-# Complete extraction with all options
-docker run --rm -e "API_KEY_DEEPSEEK=insert_your_key_here" -v "${PWD}:/workspace" mulitaminer python main.py /workspace/metrics/baselines/openvas/OpenVAS_JuiceShop.pdf --scanner openvas --LLM deepseek --convert xlsx --allow-duplicates --output-dir /workspace/results --evaluate --evaluation-method rouge --baseline /workspace/metrics/baselines/openvas/OpenVAS_JuiceShop.xlsx
-```
-
-#### Parameter Explanation:
-
-| Parameter | Function |
-|-----------|----------|
-| `--rm` | Remove container after execution |
-| `-e "API_KEY_DEEPSEEK=..."` | Set DeepSeek API key |
-| `-v "${PWD}:/workspace"` | Mount current directory in container |
-| `--scanner openvas` | Use OpenVAS-specific strategy |
-| `--LLM deepseek` | Use DeepSeek model |
-| `--convert xlsx` | Convert to Excel format |
-| `--allow-duplicates` | Allow duplicates (recommended for OpenVAS) |
-| `--output-dir /workspace/results` | Define output folder |
-| `--run-experiments` | Execute complete experiments |
-
-
-#### Generated Files:
-```
-results/
-├── vulnerabilities_openvas.json
-├── vulnerabilities_openvas.xlsx
-├── openvas_merge_log.txt
-└── evaluation_results.json
-```
-
-**This sequence works for any OpenVAS PDF report.**
-
-## Tested Docker Examples
-
-Here are **tested and working commands** using Docker for maximum compatibility.
-
-### Example 1: Basic OpenVAS Processing
+Here is a **tested and working command** using Docker:
 
 ```powershell
-docker run --rm -e "API_KEY_DEEPSEEK=insert-your-key-here" -v "${PWD}:/workspace" mulitaminer python main.py /workspace/metrics/baselines/openvas/OpenVAS_JuiceShop.pdf --scanner openvas --LLM deepseek --convert xlsx --allow-duplicates --output-dir /workspace/results
-```
-
-### Example 2: Reusable Template 
-
-```powershell
-docker run --rm -e "API_KEY_DEEPSEEK=insert-your-key-here" -v "${PWD}:/workspace" mulitaminer python main.py /workspace/YOUR_FILE.pdf --scanner openvas --LLM deepseek --convert xlsx --allow-duplicates --output-dir /workspace/results
-```
-
-### Example 3: With Evaluation + BERT
-
-```powershell
-docker run --rm -e "API_KEY_DEEPSEEK=insert-your-key-here" -v "${PWD}:/workspace" mulitaminer python main.py /workspace/metrics/baselines/openvas/OpenVAS_JuiceShop.pdf --scanner openvas --LLM deepseek --convert xlsx --allow-duplicates --output-dir /workspace/results --evaluate --baseline /workspace/metrics/baselines/openvas/OpenVAS_JuiceShop.xlsx --evaluation-method bert
+docker run --rm -v "${PWD}:/workspace" -v "${PWD}/.env:/app/.env" mulitaminer python main.py /workspace/metrics/baselines/openvas/OpenVAS_JuiceShop.pdf --scanner openvas --LLM deepseek --convert xlsx --allow-duplicates --output-dir /workspace/results
 ```
 
 > **💡 Note:** Commands tested on March 3, 2026 with Docker + DeepSeek.
@@ -282,6 +225,12 @@ API_KEY_DEEPSEEK=your-deepseek-api-key
 Pass directly in Docker command (without .env file):
 ```powershell
 -e "API_KEY_DEEPSEEK=insert-your-key-here"
+```
+
+**Option 3: Mount .env File (Recommended)**
+Mount your .env file directly into the container:
+```powershell
+-v "${PWD}/.env:/app/.env"
 ```
 
 > **💡 Important:** `${PWD}` = directory where you execute the Docker command. The `.env` file should be here if using Option 1.
