@@ -210,12 +210,6 @@ docker run --rm -v "${PWD}:/workspace" mulitaminer python main.py
 ```
 **Result:** Expected error (missing arguments) - confirms command works
 
-#### Step 2: Complete OpenVAS Pipeline with DeepSeek
-```powershell
-# Complete extraction with all options
-docker run --rm -e "API_KEY_DEEPSEEK=insert_your_key_here" -v "${PWD}:/workspace" mulitaminer python main.py /workspace/metrics/baselines/openvas/OpenVAS_JuiceShop.pdf --scanner openvas --LLM deepseek --convert xlsx --allow-duplicates --output-dir /workspace/results --evaluate --evaluation-method rouge --baseline /workspace/metrics/baselines/openvas/OpenVAS_JuiceShop.xlsx
-```
-
 #### Parameter Explanation:
 
 | Parameter | Function |
