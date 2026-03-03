@@ -115,7 +115,7 @@ openpyxl>=3.0.0,<4.0.0           # Excel export
 
 ### API Keys Management
 
-- **Environment Variables**: API keys are stored in `.env` file and should never be committed to public repositories
+- **Environment Variables**: API keys are stored in file of LLMs and should never be committed to public repositories
 - **Variable Substitution**: JSON configuration files use `${VARIABLE_NAME}` syntax to reference environment variables
 - **Access Control**: Ensure proper file permissions on `.env` file (readable only by application user)
 
@@ -199,68 +199,92 @@ API_KEY_QWEN3=your-groq-api-key
 docker run -v $(pwd):/workspace -v $(pwd)/.env:/app/.env mulitaminer python main.py /workspace/report.pdf
 ```
 
+### Docker Examples - Step-by-Step
+
+Here are practical examples tested on Windows PowerShell (adaptable to any system):
+
+#### Step 1: Basic Test
+```powershell
+# Test if main.py responds
+docker run --rm -v "${PWD}:/workspace" mulitaminer python main.py
+```
+**Result:** Expected error (missing arguments) - confirms command works
+
+#### Step 2: Complete OpenVAS Pipeline with DeepSeek
+```powershell
+# Complete extraction with all options
+docker run --rm -e "API_KEY_DEEPSEEK=insert_your_key_here" -v "${PWD}:/workspace" mulitaminer python main.py /workspace/metrics/baselines/openvas/OpenVAS_JuiceShop.pdf --scanner openvas --LLM deepseek --convert xlsx --allow-duplicates --output-dir /workspace/results --evaluate --evaluation-method rouge --baseline /workspace/metrics/baselines/openvas/OpenVAS_JuiceShop.xlsx
+```
+
+#### Parameter Explanation:
+
+| Parameter | Function |
+|-----------|----------|
+| `--rm` | Remove container after execution |
+| `-e "API_KEY_DEEPSEEK=..."` | Set DeepSeek API key |
+| `-v "${PWD}:/workspace"` | Mount current directory in container |
+| `--scanner openvas` | Use OpenVAS-specific strategy |
+| `--LLM deepseek` | Use DeepSeek model |
+| `--convert xlsx` | Convert to Excel format |
+| `--allow-duplicates` | Allow duplicates (recommended for OpenVAS) |
+| `--output-dir /workspace/results` | Define output folder |
+| `--run-experiments` | Execute complete experiments |
+
+
+#### Generated Files:
+```
+results/
+├── vulnerabilities_openvas.json
+├── vulnerabilities_openvas.xlsx
+├── openvas_merge_log.txt
+└── evaluation_results.json
+```
+
+**This sequence works for any OpenVAS PDF report.**
+
+## Tested Docker Examples
+
+Here are **tested and working commands** using Docker for maximum compatibility.
+
+### Example 1: Basic OpenVAS Processing
+
+```powershell
+docker run --rm -e "API_KEY_DEEPSEEK=insert-your-key-here" -v "${PWD}:/workspace" mulitaminer python main.py /workspace/metrics/baselines/openvas/OpenVAS_JuiceShop.pdf --scanner openvas --LLM deepseek --convert xlsx --allow-duplicates --output-dir /workspace/results
+```
+
+### Example 2: Reusable Template 
+
+```powershell
+docker run --rm -e "API_KEY_DEEPSEEK=insert-your-key-here" -v "${PWD}:/workspace" mulitaminer python main.py /workspace/YOUR_FILE.pdf --scanner openvas --LLM deepseek --convert xlsx --allow-duplicates --output-dir /workspace/results
+```
+
+### Example 3: With Evaluation + BERT
+
+```powershell
+docker run --rm -e "API_KEY_DEEPSEEK=insert-your-key-here" -v "${PWD}:/workspace" mulitaminer python main.py /workspace/metrics/baselines/openvas/OpenVAS_JuiceShop.pdf --scanner openvas --LLM deepseek --convert xlsx --allow-duplicates --output-dir /workspace/results --evaluate --baseline /workspace/metrics/baselines/openvas/OpenVAS_JuiceShop.xlsx --evaluation-method bert
+```
+
+> **💡 Note:** Commands tested on March 3, 2026 with Docker + DeepSeek.
+
 ## Configuration
 
-### API Key Configuration
+### API Key Setup
 
-API keys are configured via **environment variables** in the `.env` file (root directory). The system supports automatic variable substitution in JSON configuration files located in `src/configs/llms/`.
+To use MulitaMiner, configure your API key in the current directory. The `${PWD}` in Docker commands represents the **directory where you're running** the command - this is exactly where your API key should be configured:
 
-#### 1. Configure the .env file
-
-Create or edit the `.env` file in the **root directory** with your API keys:
-
+**Option 1: .env File**
+Create a `.env` file in the **same directory** where you run Docker:
 ```env
-API_KEY_DEEPSEEK = "your-deepseek-api-key"
-API_KEY_GPT4 = "your-openai-api-key"
-API_KEY_GPT5 = "your-openai-api-key"
-API_KEY_LLAMA3 = "your-groq-api-key"
-API_KEY_LLAMA4 = "your-groq-api-key"
-API_KEY_QWEN3 = "your-groq-api-key"
+API_KEY_DEEPSEEK=your-deepseek-api-key
 ```
 
-#### 2. How substitution works
-
-LLM configuration files in `src/configs/llms/` use the `${VARIABLE_NAME}` syntax to reference variables from `.env`:
-
-**Example: `src/configs/llms/deepseek.json`**
-```json
-{
-  "api_key": "${API_KEY_DEEPSEEK}",
-  "endpoint": "https://api.deepseek.com/v1",
-  "model": "deepseek-coder"
-}
+**Option 2: Environment Variable (Docker)**
+Pass directly in Docker command (without .env file):
+```powershell
+-e "API_KEY_DEEPSEEK=insert-your-key-here"
 ```
 
-The system automatically substitutes `${API_KEY_DEEPSEEK}` with the value from your `.env` file.
-
-**⚠️ Security:** Never commit the `.env` file to public repositories!
-
-### Token Calculation System
-
-```
-max_chunk_size = max_tokens - reserve_for_response - prompt_overhead - system_overhead - safety_buffer
-```
-
-#### Formula Components
-
-| Component              | Description             | Example       |
-| ---------------------- | ----------------------- | ------------- |
-| `max_tokens`           | Model's total limit     | 8192 (Llama4) |
-| `reserve_for_response` | Space for LLM response  | 5000 tokens   |
-| `prompt_overhead`      | Template + instructions | 600 tokens    |
-| `system_overhead`      | Metadata + overhead     | 500 tokens    |
-| `safety_buffer`        | Safety margin           | 600 tokens    |
-
-#### Real Configurations per LLM
-
-| LLM          | Total Limit | Reserve | Final Chunk | Calculated Overhead | Efficiency |
-| ------------ | ----------- | ------- | ----------- | ------------------- | ---------- |
-| **GPT-4**    | 12,000      | 4,000   | **7,300**   | 700 tokens          | 60.8%      |
-| **GPT-5**    | 16,000      | 6,000   | **8,300**   | 1,700 tokens        | 51.9%      |
-| **DeepSeek** | 4,096       | 1,500   | **1,750**   | 846 tokens          | 42.7%      |
-| **Llama3**   | 8,192       | 4,000   | **3,492**   | 700 tokens          | 42.6%      |
-| **Llama4**   | 8,192       | 5,000   | **1,492**   | 1,700 tokens        | 18.2%      |
-| **Qwen3**    | 8,192       | 4,000   | **3,492**   | 700 tokens          | 42.6%      |
+> **💡 Important:** `${PWD}` = directory where you execute the Docker command. The `.env` file should be here if using Option 1.
 
 ## Usage
 
