@@ -1,8 +1,11 @@
 Total vulnerabilidades no vulnnet: 6343
 Total vulnerabilidades extraídas: 6700
-Acertos: 6101 (96.18%)
+
+Recall: 6101 de 6343 (0.9618) (cobertura: dos reais, quantos foram extraídos)
 Inventadas (no dataset mas não no vulnnet): 599 (8.94%)
 Faltantes (no vulnnet mas não no dataset): 242 (3.82%)
+Precision: 0.9106 (precisão: do total extraído, quantos são corretos)
+F1-score: 0.9355 (média harmônica entre precisão e recall)
 
 --- Inventadas (exemplos) ---
 172.30.9.3 | 'favicon.ico' Based Fingerprinting (HTTP) | 1 a mais
