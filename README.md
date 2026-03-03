@@ -201,15 +201,13 @@ docker run -v $(pwd):/workspace -v $(pwd)/.env:/app/.env mulitaminer python main
 
 ## Configuration
 
-## Configuration
-
 ### API Key Configuration
 
-API keys are configured via **environment variables** in the `.env` file. The system supports automatic variable substitution in JSON configuration files.
+API keys are configured via **environment variables** in the `.env` file (root directory). The system supports automatic variable substitution in JSON configuration files located in `src/configs/llms/`.
 
 #### 1. Configure the .env file
 
-Edit the existing `.env` file with your API keys:
+Create or edit the `.env` file in the **root directory** with your API keys:
 
 ```env
 API_KEY_DEEPSEEK = "your-deepseek-api-key"
@@ -222,8 +220,9 @@ API_KEY_QWEN3 = "your-groq-api-key"
 
 #### 2. How substitution works
 
-JSON configuration files use the `${VARIABLE_NAME}` syntax to reference variables from `.env`:
+LLM configuration files in `src/configs/llms/` use the `${VARIABLE_NAME}` syntax to reference variables from `.env`:
 
+**Example: `src/configs/llms/deepseek.json`**
 ```json
 {
   "api_key": "${API_KEY_DEEPSEEK}",
@@ -231,6 +230,8 @@ JSON configuration files use the `${VARIABLE_NAME}` syntax to reference variable
   "model": "deepseek-coder"
 }
 ```
+
+The system automatically substitutes `${API_KEY_DEEPSEEK}` with the value from your `.env` file.
 
 **⚠️ Security:** Never commit the `.env` file to public repositories!
 
