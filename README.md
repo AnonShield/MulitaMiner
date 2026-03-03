@@ -88,8 +88,8 @@ _Automated · Structured · Multi-LLM_
 #### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/AnonShield/MulitaMiner.git
-cd MulitaMiner
+git clone https://github.com/your-repo/vulnerability-extractor.git
+cd Vulnerability_Extractor
 ```
 
 #### 2. Virtual Environment (Highly Recommended)
@@ -152,84 +152,65 @@ pandas>=1.3.0,<3.0.0             # DataFrames and manipulation
 openpyxl>=3.0.0,<4.0.0           # Excel export
 ```
 
-Here are practical examples tested on Windows PowerShell (adaptable to any system):
-
-#### Step 1: Basic Test
-```powershell
-# Test if main.py responds
-docker run --rm -v "${PWD}:/workspace" mulitaminer python main.py
-```
-**Result:** Expected error (missing arguments) - confirms command works
-
-#### Parameter Explanation:
-
-| Parameter | Function |
-|-----------|----------|
-| `--rm` | Remove container after execution |
-| `-e "API_KEY_DEEPSEEK=..."` | Set DeepSeek API key |
-| `-v "${PWD}:/workspace"` | Mount current directory in container |
-| `--scanner openvas` | Use OpenVAS-specific strategy |
-| `--LLM deepseek` | Use DeepSeek model |
-| `--convert xlsx` | Convert to Excel format |
-| `--allow-duplicates` | Allow duplicates (recommended for OpenVAS) |
-| `--output-dir /workspace/results` | Define output folder |
-| `--run-experiments` | Execute complete experiments |
-
-
-#### Generated Files:
-```
-results/
-├── vulnerabilities_openvas.json
-├── vulnerabilities_openvas.xlsx
-├── openvas_merge_log.txt
-└── evaluation_results.json
-```
-
-**This sequence works for any OpenVAS PDF report.**
-
-## Tested Docker Examples
-
-Here are **tested and working commands** using Docker for maximum compatibility.
-
-### Example 1: Basic OpenVAS Processing
-
-```powershell
-docker run --rm -e "API_KEY_DEEPSEEK=insert-your-key-here" -v "${PWD}:/workspace" mulitaminer python main.py /workspace/metrics/baselines/openvas/OpenVAS_JuiceShop.pdf --scanner openvas --LLM deepseek --convert xlsx --allow-duplicates --output-dir /workspace/results
-```
-
-### Example 2: Reusable Template 
-
-```powershell
-docker run --rm -e "API_KEY_DEEPSEEK=insert-your-key-here" -v "${PWD}:/workspace" mulitaminer python main.py /workspace/YOUR_FILE.pdf --scanner openvas --LLM deepseek --convert xlsx --allow-duplicates --output-dir /workspace/results
-```
-
-### Example 3: With Evaluation + BERT
-
-```powershell
-docker run --rm -e "API_KEY_DEEPSEEK=insert-your-key-here" -v "${PWD}:/workspace" mulitaminer python main.py /workspace/metrics/baselines/openvas/OpenVAS_JuiceShop.pdf --scanner openvas --LLM deepseek --convert xlsx --allow-duplicates --output-dir /workspace/results --evaluate --baseline /workspace/metrics/baselines/openvas/OpenVAS_JuiceShop.xlsx --evaluation-method bert
-```
-
-> **💡 Note:** Commands tested on March 3, 2026 with Docker + DeepSeek.
-
 ## Configuration
 
-### API Key Setup
+### API Key Configuration
 
-To use MulitaMiner, configure your API key in the current directory. The `${PWD}` in Docker commands represents the **directory where you're running** the command - this is exactly where your API key should be configured:
+API keys are configured via **environment variables** in the `.env` file. The system supports automatic variable substitution in JSON configuration files.
 
-**Option 1: .env File**
-Create a `.env` file in the **same directory** where you run Docker:
+#### 1. Configure the .env file
+
+Edit the existing `.env` file with your API keys:
+
 ```env
-API_KEY_DEEPSEEK=your-deepseek-api-key
+API_KEY_DEEPSEEK = "your-deepseek-api-key"
+API_KEY_GPT4 = "your-openai-api-key"
+API_KEY_GPT5 = "your-openai-api-key"
+API_KEY_LLAMA3 = "your-groq-api-key"
+API_KEY_LLAMA4 = "your-groq-api-key"
+API_KEY_QWEN3 = "your-groq-api-key"
 ```
 
-**Option 2: Environment Variable (Docker)**
-Pass directly in Docker command (without .env file):
-```powershell
--e "API_KEY_DEEPSEEK=insert-your-key-here"
+#### 2. How substitution works
+
+JSON configuration files use the `${VARIABLE_NAME}` syntax to reference variables from `.env`:
+
+```json
+{
+  "api_key": "${API_KEY_DEEPSEEK}",
+  "endpoint": "https://api.deepseek.com/v1",
+  "model": "deepseek-coder"
+}
 ```
 
-> **💡 Important:** `${PWD}` = directory where you execute the Docker command. The `.env` file should be here if using Option 1.
+**⚠️ Security:** Never commit the `.env` file to public repositories!
+
+### Token Calculation System
+
+```
+max_chunk_size = max_tokens - reserve_for_response - prompt_overhead - system_overhead - safety_buffer
+```
+
+#### Formula Components
+
+| Component              | Description             | Example       |
+| ---------------------- | ----------------------- | ------------- |
+| `max_tokens`           | Model's total limit     | 8192 (Llama4) |
+| `reserve_for_response` | Space for LLM response  | 5000 tokens   |
+| `prompt_overhead`      | Template + instructions | 600 tokens    |
+| `system_overhead`      | Metadata + overhead     | 500 tokens    |
+| `safety_buffer`        | Safety margin           | 600 tokens    |
+
+#### Real Configurations per LLM
+
+| LLM          | Total Limit | Reserve | Final Chunk | Calculated Overhead | Efficiency |
+| ------------ | ----------- | ------- | ----------- | ------------------- | ---------- |
+| **GPT-4**    | 12,000      | 4,000   | **7,300**   | 700 tokens          | 60.8%      |
+| **GPT-5**    | 16,000      | 6,000   | **8,300**   | 1,700 tokens        | 51.9%      |
+| **DeepSeek** | 4,096       | 1,500   | **1,750**   | 846 tokens          | 42.7%      |
+| **Llama3**   | 8,192       | 4,000   | **3,492**   | 700 tokens          | 42.6%      |
+| **Llama4**   | 8,192       | 5,000   | **1,492**   | 1,700 tokens        | 18.2%      |
+| **Qwen3**    | 8,192       | 4,000   | **3,492**   | 700 tokens          | 42.6%      |
 
 **Calculated Overhead** = (Total Limit - Reserve) - Final Chunk
 
@@ -574,7 +555,7 @@ python main.py test_report.pdf --llm deepseek # Technical efficiency (1750 token
 ## Code Structure
 
 ```
-MulitaMiner/
+Vulnerability_Extractor/
 ├── main.py                              # Main CLI script (entry point for extraction)
 ├── requirements.txt                     # Python dependencies
 ├── README.md                            # Documentation
