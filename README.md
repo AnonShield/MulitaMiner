@@ -88,8 +88,8 @@ _Automated · Structured · Multi-LLM_
 #### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/your-repo/vulnerability-extractor.git
-cd Vulnerability_Extractor
+git clone https://github.com/AnonShield/MulitaMiner.git
+cd MulitaMiner
 ```
 
 #### 2. Virtual Environment (Highly Recommended)
@@ -555,7 +555,7 @@ python main.py test_report.pdf --llm deepseek # Technical efficiency (1750 token
 ## Code Structure
 
 ```
-Vulnerability_Extractor/
+MulitaMiner/
 ├── main.py                              # Main CLI script (entry point for extraction)
 ├── requirements.txt                     # Python dependencies
 ├── README.md                            # Documentation
