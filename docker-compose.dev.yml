@@ -1,0 +1,33 @@
+# =================================================================
+# MulitaMiner - Docker Compose Development Override
+# =================================================================
+
+version: '3.8'
+
+services:
+  mulitaminer:
+    # Development-specific settings
+    volumes:
+      # Bind mount source code for live editing
+      - ./src:/app/src
+      - ./main.py:/app/main.py
+      - ./requirements.txt:/app/requirements.txt
+      
+      # Keep data volumes
+      - "./pdfs:/app/pdfs"
+      - "./data:/app/data"
+      - "./results:/app/results"
+      - "./jsons:/app/jsons"
+      - "./metrics:/app/metrics"
+    
+    # Override command for development
+    command: ["bash"]
+    stdin_open: true
+    tty: true
+    
+    # Development environment variables
+    environment:
+      - PYTHONDEBUG=1
+      - PYTHONPATH=/app:/app/src
+      - FLASK_ENV=development
+      - WERKZEUG_RUN_MAIN=true

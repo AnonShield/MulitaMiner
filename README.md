@@ -103,12 +103,20 @@ python -m venv .venv
 python -m venv .venv
 source .venv/bin/activate
 ```
-
 #### 3. Install Dependencies
 
 ```bash
 pip install -r requirements.txt
 ```
+
+#### Install the docker (Highly Recommended)
+
+```bash
+docker compose build
+docker compose run --rm mulitaminer python main.py --help
+
+```
+
 
 ### Main Python Dependencies
 
@@ -223,6 +231,39 @@ max_chunk_size = max_tokens - reserve_for_response - prompt_overhead - system_ov
 > **Note:** The values in the tables are based on practical tests and benchmarks with major LLM providers (OpenAI, Groq, DeepSeek). They reflect real usage scenarios but may vary depending on the model, prompt template, and provider updates. It is recommended to validate limits and reserves directly in the official documentation or your environment's execution logs.
 
 ## Usage
+
+### Docker (Recommended)
+
+```bash
+# Run
+docker-compose up -d
+docker-compose run --rm mulitaminer python main.py /app/pdfs/report.pdf --LLM gpt4 --scanner openvas
+```
+
+**File structure:**
+```
+./pdfs/     -> Input PDFs
+./data/     -> Processed results 
+./results/  -> Analysis output
+./jsons/    -> JSON extractions
+```
+
+**Basic examples:**
+```bash
+# OpenVAS report with GPT-4
+docker-compose run --rm mulitaminer python main.py /app/pdfs/openvas_report.pdf --LLM gpt4 --scanner openvas --convert json
+
+# Tenable report with DeepSeek  
+docker-compose run --rm mulitaminer python main.py /app/pdfs/tenable_report.pdf --LLM deepseek --scanner tenable --convert csv
+
+# Export to Excel
+docker-compose run --rm mulitaminer python main.py /app/pdfs/report.pdf --LLM gpt4 --convert xlsx
+```
+
+**Options:**
+- **LLMs:** `gpt4`, `deepseek`, `llama3`, `qwen3`
+- **Scanners:** `openvas`, `tenable`, `nessus`, `cais`  
+- **Formats:** `json`, `csv`, `xlsx`
 
 ### CLI Interface
 

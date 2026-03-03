@@ -1,0 +1,78 @@
+# =================================================================
+# MulitaMiner - Docker Compose Configuration
+# =================================================================
+
+version: '3.8'
+
+services:
+  mulitaminer:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: mulitaminer:latest
+    container_name: mulitaminer
+    
+    # Environment variables for API keys
+    environment:
+      # OpenAI API Keys
+      - API_KEY_GPT4=${API_KEY_GPT4:-}
+      - API_KEY_OPENAI=${API_KEY_OPENAI:-}
+      
+      # Other LLM providers
+      - API_KEY_DEEPSEEK=${API_KEY_DEEPSEEK:-}
+      - API_KEY_LLAMA3=${API_KEY_LLAMA3:-}
+      - API_KEY_QWEN3=${API_KEY_QWEN3:-}
+      
+      # Application settings
+      - PYTHONPATH=/app
+      - PYTHONUNBUFFERED=1
+      
+    # Volume mounts for data persistence
+    volumes:
+      # Input PDFs
+      - "./pdfs:/app/pdfs:ro"
+      
+      # Output data
+      - "./data:/app/data"
+      - "./results:/app/results"
+      - "./jsons:/app/jsons"
+      - "./metrics:/app/metrics"
+      
+      # Optional: mount custom configs
+      - "./src/configs:/app/src/configs:ro"
+      
+    # Working directory
+    working_dir: /app
+    
+    # Interactive mode enabled
+    stdin_open: true
+    tty: true
+    
+    # Restart policy
+    restart: unless-stopped
+    
+    # Resource limits (adjust as needed)
+    deploy:
+      resources:
+        limits:
+          memory: 4G
+          cpus: '2.0'
+        reservations:
+          memory: 1G
+          cpus: '0.5'
+    
+    # Networks
+    networks:
+      - mulitaminer-network
+
+# Networks
+networks:
+  mulitaminer-network:
+    driver: bridge
+
+# Volumes for persistent data (optional)
+volumes:
+  mulitaminer-data:
+    driver: local
+  mulitaminer-results:
+    driver: local
