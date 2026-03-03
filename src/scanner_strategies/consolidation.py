@@ -1,10 +1,15 @@
+from collections import defaultdict
+import json
+import os
+from .registry import get_strategy
+
+
 def deduplicate_by_name(vulnerabilities: list, field: str = "Name") -> list:
     """
     Remove duplicatas baseando-se no campo especificado, mantendo a vulnerabilidade mais completa (mais campos preenchidos).
     """
     if not vulnerabilities:
         return []
-    from collections import defaultdict
     grouped = defaultdict(list)
     for v in vulnerabilities:
         key = v.get(field, None) if isinstance(v, dict) else None
@@ -29,9 +34,6 @@ def central_custom_allow_duplicates(vulnerabilities: list, profile_config: dict 
     - Se não houver estratégia, usa deduplicate_by_name padrão.
     Gera logs de merge, deduplicação e removed para todos os scanners.
     """
-    from .registry import get_strategy
-    import os
-    import json
     source = None
     if vulnerabilities and isinstance(vulnerabilities[0], dict):
         source = vulnerabilities[0].get('source', None)
@@ -112,7 +114,6 @@ def central_custom_allow_duplicates(vulnerabilities: list, profile_config: dict 
                 linhas.append("")
             return '\n'.join(linhas)
         # Reconstruir agrupamento para log
-        from collections import defaultdict
         grouped = defaultdict(list)
         for v in result:
             name = v.get('Name', '').strip()
@@ -185,7 +186,6 @@ def central_custom_allow_duplicates(vulnerabilities: list, profile_config: dict 
             linhas.append("")
         return '\n'.join(linhas)
     # Reconstruir agrupamento para log
-    from collections import defaultdict
     grouped = defaultdict(list)
     for v in result:
         key = v.get(field, None) if isinstance(v, dict) else None
@@ -212,7 +212,6 @@ def remove_duplicates_by_key(vulnerabilities: list, key: str = "Name", log_path:
         else:
             removed.append(v)
     if log_path and removed:
-        import json
         with open(log_path, 'w', encoding='utf-8') as f:
             f.write(f"# LOG DE DUPLICATAS REMOVIDAS POR CHAVE '{key}'\n\n")
             for idx, v in enumerate(removed, 1):
@@ -221,7 +220,7 @@ def remove_duplicates_by_key(vulnerabilities: list, key: str = "Name", log_path:
                 f.write("\n---\n")
     return unique
 
-def consolidate_duplicates_with_logs(vulnerabilities: List[Dict], profile_config: Dict = None):
+def consolidate_duplicates_with_logs(vulnerabilities: list, profile_config: dict = None):
     """
     Consolida vulnerabilidades removendo duplicatas e mesclando URLs, gerando logs detalhados de removidos e merges.
     Retorna: (final_vulns, removed_vulns, merged_pairs)
@@ -252,7 +251,6 @@ def consolidate_duplicates_with_logs(vulnerabilities: List[Dict], profile_config
     # 3. Gerar pares mesclados para log (grupos de vulnerabilidades que foram consolidados)
     # Para cada grupo consolidado, se houver mais de uma vulnerabilidade original, considera merge
     # (Implementação simples: agrupa por chave de consolidação e compara tamanho do grupo)
-    from collections import defaultdict
     merged_pairs = []
     name_field = None
     if consolidated:
@@ -276,10 +274,8 @@ def consolidate_duplicates_with_logs(vulnerabilities: List[Dict], profile_config
 
     return consolidated, removed, merged_pairs
 
-from typing import List, Dict
-from .registry import get_strategy
 
-def consolidate_vulnerabilities(vulnerabilities: List[Dict], profile_config: Dict = None) -> List[Dict]:
+def consolidate_vulnerabilities(vulnerabilities: list, profile_config: dict = None) -> list:
     """
     Consolida vulnerabilidades usando a estratégia do scanner detectado.
     Modular, extensível e centralizado.
@@ -287,7 +283,7 @@ def consolidate_vulnerabilities(vulnerabilities: List[Dict], profile_config: Dic
     if not vulnerabilities:
         return []
     # Agrupa por source
-    from collections import defaultdict
+
     by_source = defaultdict(list)
     for vuln in vulnerabilities:
         source = vuln.get('source', 'UNKNOWN')

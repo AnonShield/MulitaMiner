@@ -1,0 +1,34 @@
+version: '3.8'
+
+services:
+  mulitaminer:
+    build: .
+    container_name: mulitaminer-app
+    volumes:
+      # Montar código fonte para desenvolvimento (sempre atual)
+      - ./src:/app/src:ro             # Código fonte (somente leitura)
+      - ./main.py:/app/main.py:ro     # Script principal (somente leitura)
+      # Montar diretórios para input/output de dados
+      - ./pdfs:/app/pdfs:ro           # PDFs de entrada (somente leitura)
+      - ./metrics:/app/metrics:ro     # Diretório de métricas e baselines (somente leitura)
+      - ./data:/app/data              # Dados processados de saída
+      - ./jsons:/app/jsons            # JSONs de saída
+      # Opcional: montar arquivo de configuração de ambiente
+      - ./.env:/app/.env:ro           # Arquivo de ambiente (se existir)
+    environment:
+      - PYTHONPATH=/app
+      - PYTHONUNBUFFERED=1
+    # Comando personalizado (sobrescreve o CMD do Dockerfile)
+    # Remova o comentário e ajuste conforme necessário:
+    # command: ["python", "main.py", "/app/pdfs/seu-arquivo.pdf", "--LLM", "gpt-3.5-turbo"]
+    
+  # Serviço opcional para desenvolvimento - shell interativo
+  mulitaminer-dev:
+    build: .
+    container_name: mulitaminer-dev
+    profiles: ["dev"]  # Só executa se especificado: docker-compose --profile dev up
+    volumes:
+      - ./:/app
+    stdin_open: true
+    tty: true
+    command: ["bash"]
