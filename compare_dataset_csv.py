@@ -5,6 +5,7 @@ from glob import glob
 import pdfplumber
 from collections import Counter, defaultdict
 from rapidfuzz import fuzz, process
+import pandas as pd
 
 # --- ETAPA 0: Extração de IPs dos PDFs e debug das primeiras linhas ---
 PDF_DIR = 'pdfs/'
@@ -158,8 +159,8 @@ def gerar_relatorio():
     recall = (acertos_count / (acertos_count + faltantes_count)) if (acertos_count + faltantes_count) else 0
     f1_score = (2 * precision * recall / (precision + recall)) if (precision + recall) else 0
 
-    # 6. Gera o relatório final
-    # ------------------------
+
+    # Geração do relatório TXT (mantido)
     with open(OUTPUT_TXT, 'w', encoding='utf-8') as out:
         out.write(f"Total vulnerabilidades no vulnnet: {total_vulnnet}\n")
         out.write(f"Total vulnerabilidades extraídas: {total_dataset}\n\n")
@@ -182,6 +183,41 @@ def gerar_relatorio():
         for ip, name, best_match, score in acertos:
             out.write(f"{ip} | {name} | {best_match} | {score}\n")
     print(f'Relatório gerado em {OUTPUT_TXT}')
+
+    # Geração do XLSX com abas separadas para faltantes e inventadas
+    xlsx_path = OUTPUT_TXT.replace('.txt', '.xlsx')
+    # Para inventadas: buscar o report correspondente ao ip
+    ip_to_report = {v: k for k, v in report_to_ip.items()}
+    inventadas_rows = []
+    for (ip, name), count in dataset_counter.items():
+        diff = count - vulnnet_counter.get((ip, name), 0)
+        if diff > 0:
+            report = ip_to_report.get(ip, '')
+            inventadas_rows.append({
+                'report': report,
+                'ip': ip,
+                'vulnerability': name,
+                'count': diff
+            })
+    faltantes_rows = []
+    for (ip, nvt), count in vulnnet_counter.items():
+        diff = count - dataset_counter.get((ip, nvt), 0)
+        if diff > 0:
+            report = ip_to_report.get(ip, '')
+            faltantes_rows.append({
+                'report': report,
+                'ip': ip,
+                'vulnerability': nvt,
+                'count': diff
+            })
+    # Cria DataFrames
+    df_inventadas = pd.DataFrame(inventadas_rows)
+    df_faltantes = pd.DataFrame(faltantes_rows)
+    # Salva em abas separadas
+    with pd.ExcelWriter(xlsx_path) as writer:
+        df_inventadas.to_excel(writer, sheet_name='non-existent', index=False)
+        df_faltantes.to_excel(writer, sheet_name='absent', index=False)
+    print(f'Arquivo XLSX gerado em {xlsx_path}')
 
 if __name__ == '__main__':
     gerar_relatorio()
