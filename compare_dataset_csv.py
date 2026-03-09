@@ -49,7 +49,7 @@ else:
 DATASET_PATH = 'data\dataset_20260301_113151_1622da90-cb16-49bd-a78d-e498b7b4bbc5.csv'
 VULNNET_PATH = 'vulnnet_openvas_17230143.csv'  # csv "baseline"
 MAPPING_PATH = 'ips_extraidos_dos_pdfs.txt'  # mapeamento report -> IP
-OUTPUT_TXT = 'comparativo_extracao.txt'
+OUTPUT_TXT = 'extraction_comparison.txt'
 
 # 1. Mapeia o campo 'report' do dataset para o IP real
 # ---------------------------------------------------

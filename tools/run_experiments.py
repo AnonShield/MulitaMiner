@@ -108,7 +108,7 @@ for run_id, baseline_path, extractor_path, scanner, llm, run_num in all_run_ids:
         sys.executable, "main.py",
         extractor_path,
         "--scanner", scanner,
-        "--LLM", llm,
+        "--llm", llm,
         "--convert", "xlsx",
         "--evaluate",
         "--baseline", baseline_path,

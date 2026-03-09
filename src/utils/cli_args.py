@@ -9,7 +9,7 @@ def parse_arguments() -> argparse.Namespace:
     parser.add_argument('pdf_path', help='Caminho para o arquivo PDF')
     parser.add_argument('--scanner', default='default', 
                        help='Scanner de configuração (padrão: default)')
-    parser.add_argument('--LLM', default='gpt4', 
+    parser.add_argument('--llm', default='gpt4', 
                        help='Nome do LLM a usar (padrão: gpt4)')
     
     # Grupo de opções de conversão

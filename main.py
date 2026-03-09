@@ -5,7 +5,7 @@ Extrai vulnerabilidades de relatórios PDF (OpenVAS/Tenable WAS) usando LLM
 e converte para formatos estruturados (JSON/CSV/XLSX).
 
 Usage:
-    python main.py <pdf_path> [--LLM <model>] [--convert <format>] [--scanner <name>]
+    python main.py <pdf_path> [--llm <model>] [--convert <format>] [--scanner <name>]
 """
 import os
 from src.utils.block_creation import create_session_blocks_from_text, extract_vulns_from_blocks, cleanup_temp_blocks
