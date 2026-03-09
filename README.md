@@ -14,6 +14,7 @@ _Automated · Structured · Multi-LLM_
 ![license](https://img.shields.io/badge/license-MIT-green)
 ![status](https://img.shields.io/badge/status-active-orange)
 ![update](https://img.shields.io/badge/last%20update-Feb%202026-lightgrey)
+![update](https://img.shields.io/badge/last%20update-Mar%202026-lightgrey)
 
 </div>
 
@@ -117,9 +118,12 @@ pip install -r requirements.txt
 ```pip-requirements
 langchain>=0.1.0,<0.3.0          # Main framework for LLMs
 langchain-openai>=0.1.0,<0.2.0   # OpenAI integration
+langchain-core>=0.1.0,<0.2.0     # Langchain core
+tiktoken>=0.5.1,<0.7.0           # Tokenization
+python-dotenv>=0.21.0,<2.0.0     # Environment variables
 ```
 
-#### PDF Processing - Optimized Text Extraction
+#### PDF Processing - Optimized Extraction
 
 ```pip-requirements
 pdfplumber>=0.10.0,<0.12.0       # PDF text extraction
@@ -134,15 +138,7 @@ tqdm>=4.0.0,<5.0.0               # Progress bars
 #### Data Processing - Merge and Normalization
 
 ```pip-requirements
-deepmerge>=1.1.0,<2.0.0          # Complex dictionary merge
-```
-
-#### Metrics Evaluation
-
-```pip-requirements
-rapidfuzz>=3.0.0,<4.0.0          # Fuzzy string matching
-bert-score>=0.3.0,<0.4.0         # BERTScore for evaluation
-rouge-score>=0.1.0,<0.2.0        # ROUGE metrics
+deepmerge>=1.1.0,<2.0.0          # Dictionary merge
 ```
 
 #### Export Formats - CSV, XLSX
@@ -151,6 +147,23 @@ rouge-score>=0.1.0,<0.2.0        # ROUGE metrics
 pandas>=1.3.0,<3.0.0             # DataFrames and manipulation
 openpyxl>=3.0.0,<4.0.0           # Excel export
 ```
+
+#### Metrics Evaluation and Visualization
+
+```pip-requirements
+rapidfuzz>=3.0.0,<4.0.0          # Fuzzy matching
+bert-score>=0.3.0,<0.4.0         # BERTScore
+rouge-score>=0.1.0,<0.2.0        # ROUGE
+torch>=1.10.0,<3.0.0             # Required for BERTScore
+numpy>=1.21.0,<2.0.0             # Numeric operations
+matplotlib>=3.4.0,<4.0.0         # Visualization
+seaborn>=0.11.0,<1.0.0           # Visualization
+```
+
+> **Note:** For XLSX/CSV export and metrics evaluation, install all dependencies above.
+> **Note:** The project forces UTF-8 encoding on Windows/Linux to avoid character errors.
+
+- **Python**: 3.8+ (recommended: Python 3.10+). All dependencies work on 3.8 or higher.
 
 ## Configuration
 
@@ -274,7 +287,7 @@ python tools/batch_pdf_extractor.py <pdfs_directory> --convert <format> --llm <m
 All extra arguments are passed to main.py. Example:
 
 ```bash
-python tools/batch_pdf_extractor.py pdfs --scanner openvas --LLM deepseek --allow-duplicates --output-dir jsons
+python tools/batch_pdf_extractor.py pdfs --scanner openvas --llm deepseek --allow-duplicates --output-dir jsons
 ```
 
 ---
@@ -401,7 +414,7 @@ python -m metrics.plot.cli --metric rouge --baseline tenable/TenableWAS_bWAAP.xl
 
 #### JSON Structure
 
-The tool generates a JSON file with the vulnerabilities found. The complete format includes specific fields for different types of reports:
+The tool generates a JSON file with the vulnerabilities found. The complete format includes all fields, in the correct order, as follows:
 
 ```json
 [
@@ -410,50 +423,73 @@ The tool generates a JSON file with the vulnerabilities found. The complete form
     "description": ["Detailed description of the vulnerability"],
     "detection_result": ["Vulnerability detection result (OpenVAS only)"],
     "detection_method": ["Vulnerability detection method (OpenVAS only)"],
+    "product_detection_result": ["Product detection result (OpenVAS only)"],
     "impact": ["Impact description (OpenVAS only)"],
     "solution": ["Recommended solutions"],
     "insight": ["Vulnerability insight (OpenVAS only)"],
-    "product_detection_result": ["Product detection result (OpenVAS only)"],
     "log_method": ["Log method (OpenVAS only)"],
     "cvss": [
-      "CVSSV4 BASE SCORE - number",
-      "CVSSV4 VECTOR - string",
-      "CVSSv3 BASE SCORE - number",
-      "CVSSv3 VECTOR - string",
-      "CVSSv2 BASE SCORE - number",
-      "CVSS BASE SCORE - number",
-      "CVSS VECTOR - string"
+      "CVSSV4 BASE SCORE 7.5",
+      "CVSSV4 VECTOR CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:L/VI:N/VA:N/SC:N/SI:N/SA:N",
+      "CVSSv3 BASE SCORE 6.9",
+      "CVSSv3 VECTOR CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:U/C:L/I:N/A:N",
+      "CVSS BASE SCORE 5.0",
+      "CVSS VECTOR CVSS2#AV:N/AC:L/Au:N/C:P/I:N/A:N"
     ],
-    "port": "80",
+    "port": 80,
     "protocol": "tcp",
     "severity": "HIGH",
-    "references": ["List of references"],
-    "plugin": ["Plugin details (Tenable WAS only)"],
-    "source": "OPENVAS"
+    "references": ["CVE-2024-0001", "https://example.com/reference"],
+    "plugin": 12345,
+    "plugin_details": {
+      "publication_date": "2020-01-15T00:00:00+00:00",
+      "modification_date": "2025-01-07T00:00:00+00:00",
+      "family": "Web Servers",
+      "severity": "High",
+      "plugin_id": 12345
+    },
+    "instances": [
+      {
+        "instance": "https://example.com/vuln1",
+        "input_type": "link",
+        "input_name": "id",
+        "payload": "' OR 1=1 --",
+        "proof": "SQL error triggered",
+        "output": "Database error message",
+        "request_method": "GET",
+        "http_status_code": 200,
+        "http_protocol": "HTTP/2",
+        "response_content_type": "application/json"
+      }
+    ],
+    "source": "TENABLEWAS"
   }
 ]
 ```
 
 #### Field Mapping by Tool
 
-| Field                      | OpenVAS | Tenable WAS | Description                             |
-| -------------------------- | ------- | ----------- | --------------------------------------- |
-| `Name`                     | ✅      | ✅          | Vulnerability name                      |
-| `description`              | ✅      | ✅          | Detailed description                    |
-| `detection_result`         | ✅      | ❌          | Detection result (OpenVAS only)         |
-| `detection_method`         | ✅      | ❌          | Detection method (OpenVAS only)         |
-| `impact`                   | ✅      | ❌          | Impact of vulnerability (OpenVAS only)  |
-| `solution`                 | ✅      | ✅          | Recommended solutions                   |
-| `insight`                  | ✅      | ❌          | Vulnerability insight (OpenVAS only)    |
-| `product_detection_result` | ✅      | ❌          | Product detection result (OpenVAS only) |
-| `log_method`               | ✅      | ❌          | Log method (OpenVAS only)               |
-| `cvss`                     | ✅      | ✅          | CVSS scores (multiple versions)         |
-| `port`                     | ✅      | ✅          | Vulnerability port                      |
-| `protocol`                 | ✅      | ✅          | Protocol (tcp/udp)                      |
-| `severity`                 | ✅      | ✅          | Severity (LOG/LOW/MEDIUM/HIGH/CRITICAL) |
-| `references`               | ✅      | ✅          | References and links                    |
-| `plugin`                   | ❌      | ✅          | Plugin details (Tenable WAS only)       |
-| `source`                   | ✅      | ✅          | Report source (OPENVAS/TENABLEWAS)      |
+| Field                      | OpenVAS | Tenable WAS | Description              |
+| -------------------------- | ------- | ----------- | ------------------------ |
+| `Name`                     | ✅      | ✅          | Vulnerability name       |
+| `description`              | ✅      | ✅          | Detailed description     |
+| `detection_result`         | ✅      | ❌          | Detection result         |
+| `detection_method`         | ✅      | ❌          | Detection method         |
+| `impact`                   | ✅      | ❌          | Impact                   |
+| `solution`                 | ✅      | ✅          | Recommended solution     |
+| `insight`                  | ✅      | ❌          | Vulnerability insight    |
+| `product_detection_result` | ✅      | ❌          | Product detection result |
+| `log_method`               | ✅      | ❌          | Log method               |
+| `cvss`                     | ✅      | ✅          | CVSS scores              |
+| `port`                     | ✅      | ✅          | Vulnerability port       |
+| `protocol`                 | ✅      | ✅          | Protocol                 |
+| `severity`                 | ✅      | ✅          | Severity                 |
+| `references`               | ✅      | ✅          | References and links     |
+| `plugin`                   | ❌      | ✅          | Plugin                   |
+| `plugin_details`           | ✅      | ✅          | Plugin details           |
+| `instances`                | ✅      | ✅          | Instances                |
+| `input_type`               | ❌      | ✅          | Input type               |
+| `source`                   | ✅      | ✅          | Report source            |
 
 ### Troubleshooting
 

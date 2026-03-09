@@ -45,7 +45,7 @@ def batch_extract_vulnerabilities(input_dir, output_dir=None, marker='_batch', s
         if scanner:
             cmd += ['--scanner', scanner]
         if llm:
-            cmd += ['--LLM', llm]
+            cmd += ['--llm', llm]
         if convert:
             cmd += ['--convert', convert]
         if extra_args:
@@ -63,7 +63,7 @@ if __name__ == "__main__":
     parser.add_argument('--marker', default='_batch', help="Marker for the output directory (default: _batch)")
     parser.add_argument('--output-dir', help="Output directory (optional)")
     parser.add_argument('--scanner', help="Name of the scanner (e.g., tenable, openvas, etc)")
-    parser.add_argument('--LLM', help="Name of the LLM to use (e.g., gpt4, deepseek, etc)")
+    parser.add_argument('--llm', help="Name of the LLM to use (e.g., gpt4, deepseek, etc)")
     parser.add_argument('--convert', choices=['csv', 'xlsx', 'tsv', 'all', 'none'], help="Convert output to specific format")
     parser.add_argument('--allow-duplicates', action='store_true', help="Allow duplicate vulnerabilities in the output (default: False)")
     args, extra = parser.parse_known_args()
