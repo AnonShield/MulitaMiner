@@ -271,6 +271,8 @@ docker-compose run --rm mulitaminer python main.py /app/pdfs/report.pdf --LLM gp
 
 ```bash
 python main.py <pdf_path> [options]
+# Docker equivalent:
+docker compose run --rm mulitaminer python main.py <pdf_path> [options]
 ```
 
 ### Main Parameters
@@ -310,12 +312,16 @@ To process all PDFs in a directory in batch:
 
 ```bash
 python tools/batch_pdf_extractor.py <pdfs_directory> --convert <format> --llm <model> --scanner <scanner> [--allow-duplicates] [--output-dir <dir>]
+# Docker equivalent:
+docker compose run --rm mulitaminer python tools/batch_pdf_extractor.py <pdfs_directory> --convert <format> --llm <model> --scanner <scanner> [--allow-duplicates] [--output-dir <dir>]
 ```
 
 All extra arguments are passed to main.py. Example:
 
 ```bash
 python tools/batch_pdf_extractor.py pdfs --scanner openvas --LLM deepseek --allow-duplicates --output-dir jsons
+# Docker equivalent:
+docker compose run --rm mulitaminer python tools/batch_pdf_extractor.py pdfs --scanner openvas --LLM deepseek --allow-duplicates --output-dir jsons
 ```
 
 ---
@@ -327,10 +333,18 @@ python tools/batch_pdf_extractor.py pdfs --scanner openvas --LLM deepseek --allo
 ```bash
 # Standard processing with GPT-4
 python main.py report.pdf
+# Docker equivalent:
+docker compose run --rm mulitaminer python main.py report.pdf
+
 # Specific scanner
 python main.py report_tenable.pdf --scanner tenable
+# Docker equivalent:
+docker compose run --rm mulitaminer python main.py report_tenable.pdf --scanner tenable
+
 # Specific model
 python main.py report.pdf --llm deepseek
+# Docker equivalent:
+docker compose run --rm mulitaminer python main.py report.pdf --llm deepseek
 ```
 
 #### Export Formats
@@ -338,10 +352,18 @@ python main.py report.pdf --llm deepseek
 ```bash
 # CSV with custom configuration
 python main.py report.pdf --convert csv --csv-delimiter ";" --csv-encoding "iso-8859-1" --output-file "vulnerabilities_en.csv"
+# Docker equivalent:
+docker compose run --rm mulitaminer python main.py report.pdf --convert csv --csv-delimiter ";" --csv-encoding "iso-8859-1" --output-file "vulnerabilities_en.csv"
+
 # Full export to Excel
 python main.py large_report.pdf --scanner tenable --llm gpt5 --convert xlsx --output-dir ./results
+# Docker equivalent:
+docker compose run --rm mulitaminer python main.py large_report.pdf --scanner tenable --llm gpt5 --convert xlsx --output-dir ./results
+
 # All formats simultaneously
 python main.py report.pdf --convert all --output-dir ./exports
+# Docker equivalent:
+docker compose run --rm mulitaminer python main.py report.pdf --convert all --output-dir ./exports
 ```
 
 #### Specialized Scenarios
@@ -349,10 +371,18 @@ python main.py report.pdf --convert all --output-dir ./exports
 ```bash
 # Tenable WAS optimized for maximum extraction
 python main.py tenable_report.pdf --scanner tenable --llm gpt4 --convert all
+# Docker equivalent:
+docker compose run --rm mulitaminer python main.py tenable_report.pdf --scanner tenable --llm gpt4 --convert all
+
 # OpenVAS with Groq model
 python main.py openvas_scan.pdf --scanner openvas --llm llama3 --convert csv
+# Docker equivalent:
+docker compose run --rm mulitaminer python main.py openvas_scan.pdf --scanner openvas --llm llama3 --convert csv
+
 # CAIS Tenable for enterprise integration
 python main.py cais_tenable.pdf --scanner cais_tenable --llm gpt5 --convert xlsx
+# Docker equivalent:
+docker compose run --rm mulitaminer python main.py cais_tenable.pdf --scanner cais_tenable --llm gpt5 --convert xlsx
 ```
 
 #### Advanced Usage: Extraction with Metrics Evaluation
@@ -362,8 +392,13 @@ You can perform extraction and, in the same operation, evaluate the quality of t
 ```bash
 # Extract vulnerabilities and evaluate extraction quality using the 'bert' method
 python main.py report_tenable.pdf --scanner tenable --convert all --evaluate --baseline-file metrics/baselines/tenable/TenableWAS_JuiceShop.xlsx --evaluation-method bert
+# Docker equivalent:
+docker compose run --rm mulitaminer python main.py report_tenable.pdf --scanner tenable --convert all --evaluate --baseline-file metrics/baselines/tenable/TenableWAS_JuiceShop.xlsx --evaluation-method bert
+
 # Evaluation with legitimate duplicates allowed (recommended for OpenVAS)
 python main.py report_openvas.pdf --scanner openvas --llm deepseek --convert xlsx --evaluate --baseline-file metrics/baselines/openvas/OpenVAS_JuiceShop.xlsx --allow-duplicates
+# Docker equivalent:
+docker compose run --rm mulitaminer python main.py report_openvas.pdf --scanner openvas --llm deepseek --convert xlsx --evaluate --baseline-file metrics/baselines/openvas/OpenVAS_JuiceShop.xlsx --allow-duplicates
 ```
 
 #### Validation and Debugging
@@ -371,8 +406,13 @@ python main.py report_openvas.pdf --scanner openvas --llm deepseek --convert xls
 ```bash
 # Chunk validation before processing
 python tools/chunk_validator.py report.pdf
+# Docker equivalent:
+docker compose run --rm mulitaminer python tools/chunk_validator.py report.pdf
+
 # Detailed chunk analysis by LLM
 python tools/chunk_validator.py report.pdf --llm gpt4 --scanner tenable
+# Docker equivalent:
+docker compose run --rm mulitaminer python tools/chunk_validator.py report.pdf --llm gpt4 --scanner tenable
 ```
 
 ### Metrics Analysis
@@ -573,9 +613,13 @@ MulitaMiner was validated through practical experiments with different types of 
 ```bash
 # Test with 300-page document
 python main.py large_report.pdf --llm gpt4
+# Docker equivalent:
+docker compose run --rm mulitaminer python main.py large_report.pdf --llm gpt4
 # Result: 42 chunks processed
 
 python chunk_validator.py large_report.pdf --llm gpt4
+# Docker equivalent:
+docker compose run --rm mulitaminer python chunk_validator.py large_report.pdf --llm gpt4
 # Analysis: Uniform distribution, 60.8% efficiency
 ```
 
@@ -584,8 +628,16 @@ python chunk_validator.py large_report.pdf --llm gpt4
 ```bash
 # Comparative test between models
 python main.py test_report.pdf --llm llama4  # Maximum precision (1492 tokens)
+# Docker equivalent:
+docker compose run --rm mulitaminer python main.py test_report.pdf --llm llama4
+
 python main.py test_report.pdf --llm gpt4    # Balanced (7300 tokens)
+# Docker equivalent:
+docker compose run --rm mulitaminer python main.py test_report.pdf --llm gpt4
+
 python main.py test_report.pdf --llm deepseek # Technical efficiency (1750 tokens)
+# Docker equivalent:
+docker compose run --rm mulitaminer python main.py test_report.pdf --llm deepseek
 
 # Results:
 # - Llama4: 83 chunks, slower processing, maximum precision
@@ -708,6 +760,8 @@ Automates large-scale experiments, processing multiple reports, LLMs, and scanne
 
 ```bash
 python tools/run_experiments.py [--checkpoint-file run_checkpoints_YYYY-MM-DDTHH-MM-SS.json]
+# Docker equivalent:
+docker compose run --rm mulitaminer python tools/run_experiments.py [--checkpoint-file run_checkpoints_YYYY-MM-DDTHH-MM-SS.json]
 ```
 
 ### `tools/process_results.py` — Chart and Statistics Generation
@@ -725,6 +779,8 @@ Processes experiment results, generating charts (stacked bar, heatmaps) and stat
 
 ```bash
 python tools/process_results.py
+# Docker equivalent:
+docker compose run --rm mulitaminer python tools/process_results.py
 ```
 
 ### `tools/dataset_generator.py` — Dataset Consolidation
@@ -742,12 +798,16 @@ Generates consolidated datasets (CSV, XLSX, JSON, JSONL) from multiple JSON extr
 
 ```bash
 python tools/dataset_generator.py --input-folder jsons --output-folder data --format xlsx
+# Docker equivalent:
+docker compose run --rm mulitaminer python tools/dataset_generator.py --input-folder jsons --output-folder data --format xlsx
 ```
 
 - **Generate all formats at once:**
 
 ```bash
 python tools/dataset_generator.py --input-folder jsons --output-folder data --format all
+# Docker equivalent:
+docker compose run --rm mulitaminer python tools/dataset_generator.py --input-folder jsons --output-folder data --format all
 ```
 
 This will create CSV, XLSX, JSON, and JSONL files simultaneously in the output folder.
@@ -767,9 +827,13 @@ Standalone tool for chunk analysis and validation:
 ```bash
 # Full chunking analysis
 python chunk_validator.py document.pdf
+# Docker equivalent:
+docker compose run --rm mulitaminer python chunk_validator.py document.pdf
 
 # Validation with specific LLM
 python chunk_validator.py document.pdf --LLM gpt4 --scanner tenable
+# Docker equivalent:
+docker compose run --rm mulitaminer python chunk_validator.py document.pdf --LLM gpt4 --scanner tenable
 ```
 
 ### `tools/sum_tokens_cost_all_llms.py` — Token Sum and Cost Estimation
@@ -791,6 +855,8 @@ Analyzes all generated token files (`*_tokens.json` in `results_tokens/`), summi
 
 ```bash
 python tools/sum_tokens_cost_all_llms.py --tokens-dir results_tokens
+# Docker equivalent:
+docker compose run --rm mulitaminer python tools/sum_tokens_cost_all_llms.py --tokens-dir results_tokens
 ```
 
 #### Optimized Token System
