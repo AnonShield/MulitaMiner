@@ -99,7 +99,7 @@ Below is an example of the extraction comparison table structure:
 | adamdoupe wackopicko | 172.30.39.1  | Apache HTTP Server mod_auth_digest Multiple Vulnerabilities - Linux                                                  | 1     |
 | appsecco dsvw        | 172.30.40.1  | Python DoS Vulnerability (Dec 2025) - Linux                                                                          | 2     |
 
-- **report**: The name or identifier of the scanned report.
+- **report**: The name of the scanned report.
 - **ip**: The IP address of the host where the vulnerability was found.
 - **vulnerability**: The vulnerability name.
 - **count**: The number of times this vulnerability was found for the given report and IP.
