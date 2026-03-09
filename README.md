@@ -406,13 +406,8 @@ docker compose run --rm mulitaminer python main.py report_openvas.pdf --scanner 
 ```bash
 # Chunk validation before processing
 python tools/chunk_validator.py report.pdf
-# Docker equivalent:
-docker compose run --rm mulitaminer python tools/chunk_validator.py report.pdf
-
 # Detailed chunk analysis by LLM
 python tools/chunk_validator.py report.pdf --llm gpt4 --scanner tenable
-# Docker equivalent:
-docker compose run --rm mulitaminer python tools/chunk_validator.py report.pdf --llm gpt4 --scanner tenable
 ```
 
 ### Metrics Analysis
@@ -618,8 +613,6 @@ docker compose run --rm mulitaminer python main.py large_report.pdf --llm gpt4
 # Result: 42 chunks processed
 
 python chunk_validator.py large_report.pdf --llm gpt4
-# Docker equivalent:
-docker compose run --rm mulitaminer python chunk_validator.py large_report.pdf --llm gpt4
 # Analysis: Uniform distribution, 60.8% efficiency
 ```
 
@@ -779,8 +772,6 @@ Processes experiment results, generating charts (stacked bar, heatmaps) and stat
 
 ```bash
 python tools/process_results.py
-# Docker equivalent:
-docker compose run --rm mulitaminer python tools/process_results.py
 ```
 
 ### `tools/dataset_generator.py` — Dataset Consolidation
@@ -827,13 +818,8 @@ Standalone tool for chunk analysis and validation:
 ```bash
 # Full chunking analysis
 python chunk_validator.py document.pdf
-# Docker equivalent:
-docker compose run --rm mulitaminer python chunk_validator.py document.pdf
-
 # Validation with specific LLM
 python chunk_validator.py document.pdf --LLM gpt4 --scanner tenable
-# Docker equivalent:
-docker compose run --rm mulitaminer python chunk_validator.py document.pdf --LLM gpt4 --scanner tenable
 ```
 
 ### `tools/sum_tokens_cost_all_llms.py` — Token Sum and Cost Estimation
