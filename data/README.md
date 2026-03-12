@@ -103,7 +103,3 @@ Below is an example of the extraction comparison table structure:
 - **ip**: The IP address of the host where the vulnerability was found.
 - **vulnerability**: The vulnerability name.
 - **count**: The number of times this vulnerability was found for the given report and IP.
-
-```
-
-```
