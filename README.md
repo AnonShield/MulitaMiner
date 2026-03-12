@@ -31,17 +31,15 @@ For empirical evaluation and reproducibility, a dataset containing approximately
 
 ## README Structure
 
-Detailed documentation is organized in separate files:
-
-| Document                                           | Description                         |
-| -------------------------------------------------- | ----------------------------------- |
-| [docs/INSTALL.md](docs/INSTALL.md)                 | Detailed installation guide         |
-| [docs/USAGE.md](docs/USAGE.md)                     | Complete usage guide with examples  |
-| [docs/CONFIG.md](docs/CONFIG.md)                   | API keys and token configuration    |
-| [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)       | Code structure and components       |
-| [docs/EXTENSIBILITY.md](docs/EXTENSIBILITY.md)     | Adding new scanners and LLMs        |
-| [docs/TROUBLESHOOTING.md](docs/TROUBLESHOOTING.md) | Common errors and optimization tips |
-| [docs/EXPERIMENTS.md](docs/EXPERIMENTS.md)         | Experimental validation details     |
+- [Considered Badges](#considered-badges)
+- [Basic Information](#basic-information)
+- [Dependencies](#dependencies)
+- [Security Concerns](#security-concerns)
+- [Installation](#installation)
+- [Minimum Test](#minimum-test)
+- [Experiments](#experiments)
+- [Documentation](#documentation)
+- [LICENSE](#license)
 
 ## Considered Badges
 
@@ -267,6 +265,20 @@ python tools/process_results.py
 ---
 
 For detailed experiment configurations and paper results, see [docs/EXPERIMENTS.md](docs/EXPERIMENTS.md).
+
+## Documentation
+
+Detailed documentation is organized in separate files:
+
+| Document                                           | Description                         |
+| -------------------------------------------------- | ----------------------------------- |
+| [docs/INSTALL.md](docs/INSTALL.md)                 | Detailed installation guide         |
+| [docs/USAGE.md](docs/USAGE.md)                     | Complete usage guide with examples  |
+| [docs/CONFIG.md](docs/CONFIG.md)                   | API keys and token configuration    |
+| [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)       | Code structure and components       |
+| [docs/EXTENSIBILITY.md](docs/EXTENSIBILITY.md)     | Adding new scanners and LLMs        |
+| [docs/TROUBLESHOOTING.md](docs/TROUBLESHOOTING.md) | Common errors and optimization tips |
+| [docs/EXPERIMENTS.md](docs/EXPERIMENTS.md)         | Experimental validation details     |
 
 ## LICENSE
 
