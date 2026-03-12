@@ -19,9 +19,9 @@ _Automated · Structured · Multi-LLM_
 
 # MulitaMiner
 
-**MulitaMiner** is an automated tool for extracting and normalizing vulnerabilities from heterogeneous security reports (PDF), integrating adaptive chunking, scanner-specific prompt specialization, multi-LLM support, semantic deduplication, and schema validation to ensure structural consistency. Extraction quality is evaluated through automatic comparison with structured baselines using semantic similarity metrics such as ROUGE-L and BERTScore.
+**MulitaMiner** is an automated tool for extracting and structuring vulnerabilities from heterogeneous PDF reports produced by security scanners. Its LLM-based pipeline combines adaptive chunking and scanner-aware prompting to convert unstructured findings into consistent, analysis-ready vulnerability records, with standardized outputs and quality validation.
 
-For empirical evaluation and reproducibility, a dataset containing approximately **6,700 vulnerabilities** extracted from **129 OpenVAS reports** was constructed, achieving **Recall of 96.18%**, **Precision of 91.06%**, and **F1-score of 0.9355**.
+As a key contribution, a dataset of approximately **6,700 vulnerabilities** extracted from **129 OpenVAS reports** is provided, demonstrating the tool's capability and serving as a reference for future research. Extraction quality was validated against structured baselines using BERTScore and ROUGE-L metrics, achieving **Recall of 96.18%**, **Precision of 91.06%**, and **F1-score of 0.9355**.
 
 **Use Cases:**
 
