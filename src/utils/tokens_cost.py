@@ -2,6 +2,7 @@ import os
 import json
 from glob import glob
 import argparse
+import re
 
 LLM_PRICES = {
     "gpt5": {"input": 0.25, "output": 2.0},
@@ -9,6 +10,15 @@ LLM_PRICES = {
     "llama3": {"input": 0.59, "output": 0.79},
     "llama4": {"input": 0.20, "output": 0.60},
     "gpt4": {"input": 0.30, "output": 1.20},
+}
+
+# Map model names to LLM_PRICES keys
+MODEL_NAME_MAPPING = {
+    "llama-3.3-70b-versatile": "llama3",
+    "meta-llama/llama-4-maverick-17b-128e-instruct": "llama4",
+    "gpt-4o-mini-2024-07-18": "gpt4",
+    "gpt-5-mini-2025-08-07": "gpt5",
+    "deepseek-coder": "deepseek",
 }
 
 def calc_tokens_and_cost(tokens_dir):
@@ -19,10 +29,23 @@ def calc_tokens_and_cost(tokens_dir):
         fname = os.path.basename(fpath)
         parts = fname.lower().split('_')
         llm = None
-        for p in parts:
-            if p in LLM_PRICES:
-                llm = p
+        
+        # Try to find full model name first (more specific)
+        # Look for patterns like "llama-3.3-70b-versatile"
+        fname_no_ext = fname.replace('_tokens.json', '')
+        for full_name, key in MODEL_NAME_MAPPING.items():
+            if full_name.lower() in fname_no_ext.lower():
+                llm = key
                 break
+        
+        # If not found, try simple key matching
+        if not llm:
+            for p in parts:
+                if p in LLM_PRICES:
+                    llm = p
+                    break
+        
+        # Try prefix matching
         if not llm:
             for p in parts:
                 for key in LLM_PRICES:
@@ -31,6 +54,8 @@ def calc_tokens_and_cost(tokens_dir):
                         break
                 if llm:
                     break
+        
+        # Try substring matching
         if not llm:
             for p in parts:
                 for key in LLM_PRICES:
@@ -39,8 +64,10 @@ def calc_tokens_and_cost(tokens_dir):
                         break
                 if llm:
                     break
+        
         if not llm:
             llm = 'unknown'
+        
         with open(fpath, encoding='utf-8') as f:
             try:
                 data = json.load(f)
