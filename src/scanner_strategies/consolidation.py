@@ -1,3 +1,6 @@
+from typing import List, Dict
+from .registry import get_strategy
+
 def deduplicate_by_name(vulnerabilities: list, field: str = "Name") -> list:
     """
     Remove duplicatas baseando-se no campo especificado, mantendo a vulnerabilidade mais completa (mais campos preenchidos).
@@ -338,9 +341,6 @@ def consolidate_duplicates_with_logs(vulnerabilities: List[Dict], profile_config
             merged_pairs.append(group)
 
     return consolidated, removed, merged_pairs
-
-from typing import List, Dict
-from .registry import get_strategy
 
 def consolidate_vulnerabilities(vulnerabilities: List[Dict], profile_config: Dict = None) -> List[Dict]:
     """
