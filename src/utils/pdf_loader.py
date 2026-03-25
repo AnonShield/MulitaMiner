@@ -174,11 +174,11 @@ def _makes_sense_as_continuation(prev_line, next_line):
     return False
 
 def extract_visual_layout_from_pdf(pdf_path):
-    print(f"Extraindo layout visual do PDF: {os.path.basename(pdf_path)}")
+    print(f"Extracting visual layout from PDF: {os.path.basename(pdf_path)}")
     try:
         with pdfplumber.open(pdf_path) as pdf:
             documentos = []
-            print(f"Total de páginas encontradas: {len(pdf.pages)}")
+            print(f"Total pages found: {len(pdf.pages)}")
             paginas_texto = []
             for num_pagina, pagina in enumerate(pdf.pages, 1):
                 texto_pagina = pagina.extract_text(
@@ -240,11 +240,11 @@ def extract_visual_layout_from_pdf(pdf_path):
                     start_pos = match_inicio_vuln.start()
                     sumario = texto_completo[:start_pos]
                     texto_extracao = texto_completo[start_pos:]
-                    print(f"[VISUAL] Sumário/índice extraído até {start_pos} caracteres usando marker '{marker_pattern}'.")
+                    print(f"[VISUAL] Table of contents extracted up to {start_pos} characters using marker '{marker_pattern}'.")
                 else:
                     sumario = ''
                     texto_extracao = texto_completo
-                    print(f"[VISUAL] Nenhum marcador '{marker_pattern}' encontrado. Sumário vazio.")
+                    print(f"[VISUAL] No marker '{marker_pattern}' found. Table of contents empty.")
             
             elif scanner == 'tenable':
                 export_marker = 'Web Application Scanning Detailed Scan Export:'
@@ -280,15 +280,15 @@ def extract_visual_layout_from_pdf(pdf_path):
                     sumario = texto_completo[:cut_pos].rstrip()
                     texto_extracao = texto_completo[cut_pos:]
                     texto_extracao = re.sub(r'Web Application Scanning Detailed Scan Export:[^\n]*', '', texto_extracao)
-                    print(f"[VISUAL] Tenable WAS: Sumário extraído até {cut_pos} caracteres.")
+                    print(f"[VISUAL] Tenable WAS: Table of contents extracted up to {cut_pos} characters.")
                 else:
                     sumario = ''
                     texto_extracao = texto_completo
-                    print("[VISUAL] Tenable WAS: Nenhum marcador encontrado. Sumário vazio.")
+                    print("[VISUAL] Tenable WAS: No marker found. Table of contents empty.")
             else:
                 sumario = ''
                 texto_extracao = texto_completo
-                print("[VISUAL] Scanner não identificado ou sem marker. Sumário vazio.")
+                print("[VISUAL] Scanner not identified or without marker. Table of contents empty.")
 
             # Salvar o layout visual (apenas sumário/índice)
             if sumario.strip():
@@ -313,11 +313,11 @@ def extract_visual_layout_from_pdf(pdf_path):
 
             # Retornar documentos (primeiro sumário, depois extração)
             if not documentos or all(not d.page_content.strip() for d in documentos):
-                print("Aviso: Nenhum texto foi extraído do PDF. O arquivo pode estar corrompido ou ser apenas imagens.")
+                print("Warning: No text was extracted from PDF. The file may be corrupted or contain only images.")
                 return None
             return documentos
     except Exception as e:
-        print(f"Erro ao extrair layout visual: {e}")
+        print(f"Error extracting visual layout: {e}")
         return None
     
 def save_visual_layout(content, pdf_path):
@@ -335,7 +335,7 @@ def save_visual_layout(content, pdf_path):
             f.write(content)
         return output_visual_path
     except Exception as e:
-        print(f"Erro ao salvar layout visual: {e}")
+        print(f"Error saving visual layout: {e}")
         return None
 
 def load_pdf_with_pypdf2(pdf_path):

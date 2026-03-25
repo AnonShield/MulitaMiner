@@ -32,14 +32,17 @@ def batch_extract_vulnerabilities(input_dir, output_dir=None, marker='_batch', s
         return
 
     print(f"Processing {len(pdf_files)} PDFs to {output_dir} ...")
+    real_start_time = time.time()
+    metric_duration = 0
     for pdf_file in tqdm(pdf_files, desc="Extracting vulnerabilities"):
         pdf_path = os.path.join(input_dir, pdf_file)
         base_name = os.path.splitext(pdf_file)[0]
         output_json = os.path.join(output_dir, f"{base_name}.json")
 
         cmd = [
-            sys.executable, 'main.py', pdf_path,
-            '--output', output_json,
+            sys.executable, 'main.py',
+            '--input', pdf_path,
+            '--output-file', os.path.splitext(os.path.basename(pdf_file))[0],
             '--output-dir', output_dir
         ]
         if scanner:
@@ -56,10 +59,36 @@ def batch_extract_vulnerabilities(input_dir, output_dir=None, marker='_batch', s
             subprocess.run(cmd, check=True)
         except subprocess.CalledProcessError as e:
             print(f"[ERROR] Failed to process {pdf_file}: {e}")
+    real_end_time = time.time()
+    # Gera relatório final modular
+    from src.utils.reporting import generate_final_report
+    run_stats = {
+        'start_time': real_start_time,
+        'end_time': real_end_time,
+        'duration': real_end_time - real_start_time,
+        'total_pdfs': len(pdf_files),
+        'metric_duration': metric_duration,
+    }
+    timing_report = [
+        {
+            'pdfs': len(pdf_files),
+            'metric_time': metric_duration,
+            'total_time': real_end_time - real_start_time,
+        }
+    ]
+    generate_final_report(
+        start_time=real_start_time,
+        end_time=real_end_time,
+        run_stats=run_stats,
+        tokens_dir='results_tokens',
+        report_dir=output_dir,
+        include_metrics_time=True,
+        timing_report=timing_report
+    )
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Batch PDF Vulnerability Extractor")
-    parser.add_argument('input_dir', help="Directory containing PDF files to process (path to folder with PDFs)")
+    parser.add_argument('--input-dir', required=True, help="Directory containing PDF files to process (path to folder with PDFs)")
     parser.add_argument('--marker', default='_batch', help="Marker for the output directory (default: _batch)")
     parser.add_argument('--output-dir', help="Output directory (optional)")
     parser.add_argument('--scanner', help="Name of the scanner (e.g., tenable, openvas, etc)")
@@ -71,11 +100,11 @@ if __name__ == "__main__":
     if args.allow_duplicates and '--allow-duplicates' not in extra:
         extra.append('--allow-duplicates')
     batch_extract_vulnerabilities(
-        args.input_dir,
+        input_dir=args.input_dir,
         output_dir=args.output_dir,
         marker=args.marker,
         scanner=args.scanner,
-        llm=args.LLM,
+        llm=args.llm,
         convert=args.convert,
         extra_args=extra
     )

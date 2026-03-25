@@ -1,8 +1,8 @@
 <div align="center">
 
   <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="assets/MulitaMiner_logo_light.png">
-    <source media="(prefers-color-scheme: light)" srcset="assets/MulitaMiner_logo_dark.png">
+    <source media="(prefers-color-scheme: dark)" srcset="imgs/MulitaMiner_logo_light.png">
+    <source media="(prefers-color-scheme: light)" srcset="imgs/MulitaMiner_logo_dark.png">
     <img src="assets/MulitaMiner_logo_light" width="500" alt="MulitaMiner logo">
   </picture>
 
@@ -70,6 +70,7 @@ The following badges are considered for evaluation: **Available**, **Functional*
 ### Main Dependencies
 
 ```
+Lista de dependências principais:
 langchain>=0.1.0,<0.3.0          # LLM framework
 langchain-openai>=0.1.0,<0.2.0   # OpenAI integration
 tiktoken>=0.5.1,<0.7.0           # Tokenization
@@ -151,50 +152,36 @@ See [docs/CONFIG.md](docs/CONFIG.md) for all configuration options.
 
 After installation, run this minimal test to verify the setup:
 
-### 1. Verify Dependencies
-
-```bash
-python -c "import langchain; import pdfplumber; import tiktoken; print('Dependencies OK')"
-```
-
-### 2. Run Extraction (with sample PDF)
+### 1. Run Extraction
 
 ```bash
 # Basic extraction using Groq
-python main.py pdfs/sample_report.pdf --scanner openvas --llm llama3
+python main.py --input test\openvas\OpenVAS_JuiceShop.pdf --llm llama3 --scanner openvas --allow-duplicates --output-file openvas_test
 
 # Expected output:
-# - JSON file with extracted vulnerabilities
+# - openvas_test.json with extracted vulnerabilities
 # - Visual layout .txt file
 ```
 
-### 3. Verify Output
+### 2. Verify Output
 
 Check the generated JSON file for extracted vulnerabilities:
 
 ```bash
-# Windows
-type openvas_sample_report.json
-
-# Linux/Mac
-cat openvas_sample_report.json
+python tools/summarize_vulnerabilities.py --input openvas_test.json
 ```
 
-**Expected result**: JSON array with vulnerability objects containing fields like `Name`, `description`, `severity`, `cvss`, etc.
-
-### 4. Test with Metrics (Optional)
-
-```bash
-python main.py pdfs/sample_report.pdf --scanner openvas --llm llama3 --evaluate --baseline-file metrics/baselines/openvas/sample_baseline.xlsx
-```
+**Expected result**: Terminal print with summary of all extracted vulnerabilities in tabular format.
 
 ## Experiments
 
 This section describes how to reproduce the main claims from the paper.
 
+> **Note**: The execution times are based on AMD Ryzen 5 5600G, 32GB RAM, 1TB SSD, Windows 11. Actual times may vary depending on system specifications, network latency, and API response times.
+
 ### Claim #1: Multi-LLM Vulnerability Extraction
 
-**Description**: MulitaMiner extracts vulnerabilities from PDF reports using multiple LLM providers (DeepSeek, GPT-4/5, LLaMa 3/4) with optimized chunking.
+**Description**: MulitaMiner extracts vulnerabilities from PDF reports using multiple LLM providers (DeepSeek, GPT-4, LLaMa 3, etc).
 
 **Configuration**: Edit `.env` with API keys for desired providers.
 
@@ -202,65 +189,57 @@ This section describes how to reproduce the main claims from the paper.
 
 ```bash
 # Extract using DeepSeek (best cost-benefit in the paper)
-python main.py pdfs/OpenVAS_JuiceShop.pdf --scanner openvas --llm deepseek --convert xlsx
+python main.py --input test\openvas\OpenVAS_JuiceShop.pdf --llm deepseek --scanner openvas --allow-duplicates --output-file openvas_test_deepseek
 
 # Extract using other LLMs for comparison
-python main.py pdfs/OpenVAS_JuiceShop.pdf --scanner openvas --llm gpt4 --convert xlsx
-python main.py pdfs/OpenVAS_JuiceShop.pdf --scanner openvas --llm llama3 --convert xlsx
+python main.py --input test\openvas\OpenVAS_JuiceShop.pdf --llm gpt4 --scanner openvas --allow-duplicates --output-file openvas_test_gpt4
+
+python main.py --input test\openvas\OpenVAS_JuiceShop.pdf --llm llama3 --scanner openvas --allow-duplicates --output-file openvas_test_llama3
 ```
 
-**Expected time**: 2-10 minutes per PDF (depends on size and LLM)
+**Expected time**: ~12 minutes for all extractions
 
-**Expected resources**: ~500MB RAM, network bandwidth for API calls
+- Deepseek: ~6 minutes
+- GPT4: ~5 minutes
+- LLAMA3: ~45 seconds
 
-**Expected result**: JSON/XLSX files with extracted vulnerabilities containing fields like `Name`, `description`, `severity`, `cvss`, `port`, `references`, etc.
+**Expected result**: openvas_test<llm_name>.json files with extracted vulnerabilities containing fields like `Name`, `description`, `severity`, `cvss`, `port`, `references`, etc.
 
 ### Claim #2: Quality Evaluation with BERTScore/ROUGE-L
 
 **Description**: The tool evaluates extraction quality against ground truth baselines using BERTScore and ROUGE-L metrics, with similarity scores categorized as: Highly Similar (≥0.7), Moderately Similar (0.6-0.7), Low Similarity (0.4-0.6), and Divergent (<0.4).
 
-**Configuration**: Baseline files are in `metrics/baselines/openvas/`.
-
 **Execution**:
 
 ```bash
 # Extract and evaluate with BERTScore
-python main.py pdfs/OpenVAS_JuiceShop.pdf --scanner openvas --llm deepseek --convert xlsx --evaluate --baseline-file metrics/baselines/openvas/OpenVAS_JuiceShop.xlsx --evaluation-method bert
+python metrics/bert/compare_extractions_bert.py --baseline-file test\openvas\OpenVAS_JuiceShop.xlsx --extraction-file openvas_test_deepseek.json --model deepseek --output-dir results_bert --allow-duplicates
 
 # Or evaluate with ROUGE-L
-python main.py pdfs/OpenVAS_JuiceShop.pdf --scanner openvas --llm deepseek --convert xlsx --evaluate --baseline-file metrics/baselines/openvas/OpenVAS_JuiceShop.xlsx --evaluation-method rouge
+python metrics/rouge/compare_extractions_rouge.py --baseline-file test\openvas\OpenVAS_JuiceShop.xlsx --extraction-file openvas_test_deepseek.json --model deepseek --output-dir results_rouge --allow-duplicates
 ```
 
-**Expected time**: 2-10 minutes for extraction + ~30 seconds for evaluation
+**Expected time**: ~15 seconds for BERT and ~3 seconds for ROUGE
 
-**Expected resources**: ~2GB RAM (for BERTScore model loading)
+**Expected result**: XLSX files with BERTScore and ROUGE-L metrics in ./results_bert and ./results_rouge directories.
 
-**Expected result**: Similarity metrics printed to console showing distribution across categories, with DeepSeek achieving consistently high scores.
-
-### Claim #3: Large-Scale Reproducibility with Checkpointing
+### Claim #3: Large-Scale Reproducibility
 
 **Description**: MulitaMiner supports batch experiments across multiple reports, LLMs, and runs with checkpoint support to resume interrupted executions.
-
-**Configuration**: Edit `tools/run_experiments.py` to configure baselines, LLMs, scanners, and number of runs.
 
 **Execution**:
 
 ```bash
-# Run full experiment suite (creates checkpoint automatically)
-python tools/run_experiments.py
-
-# Resume interrupted execution from checkpoint
-python tools/run_experiments.py --checkpoint-file run_checkpoints_YYYY-MM-DDTHH-MM-SS.json
-
-# Generate similarity distribution charts
-python tools/process_results.py
+# Run full experiment suite
+python tools/run_experiments.py --input-dir test\openvas --llms deepseek --scanners openvas --evaluation-methods bert rouge --runs-per-model 5 --allow-duplicates true
 ```
 
-**Expected time**: Varies by configuration (hours for full paper reproduction)
+**Expected time**: ~40 minutes
 
-**Expected resources**: ~2GB RAM, stable network connection
+**Expected result**: Organized results in `results_runs/` with extracted vulnerabilities (JSON/XLSX per run), BERTScore and ROUGE-L evaluation reports, and a final aggregated report with token usage and cost estimation. Charts and visualizations (heatmaps, stacked similarity plots) are saved in `plot_runs/`.
 
-**Expected result**: Organized results in `results_runs/` and `results_runs_xlsx/`, similarity charts in `plot_runs/`.
+> **Note**:
+> For practical reasons (time, token cost, and infrastructure), this experiment does not use the same set of reports and LLMs as the paper. Here, a simplified version was used: only 1 report and 1 LLM (deepseek), chosen for its cost-effectiveness and performance.
 
 ---
 

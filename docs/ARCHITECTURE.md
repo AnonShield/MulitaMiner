@@ -9,16 +9,13 @@ MulitaMiner/
 ├── main.py                              # Main CLI script (entry point for extraction)
 ├── requirements.txt                     # Python dependencies
 ├── README.md                            # Documentation
-├── chunk_validator.py                   # Chunk validator (standalone tool for chunk analysis)
-├── batch_pdf_extractor.py               # Batch PDF extraction (processes multiple PDFs)
+├── compare_dataset_csv.py               # Dataset comparison utility (CSV analysis)
 ├── tools/
 │   ├── run_experiments.py               # Massive execution and automated evaluation (benchmarks)
 │   ├── process_results.py               # Chart and statistics generation (metrics visualization)
 │   ├── dataset_generator.py             # Dataset consolidation (CSV/XLSX/JSON/JSONL)
-│   ├── sum_tokens_cost_all_llms.py      # Sums tokens and estimates costs per LLM (cost analysis)
-│   ├── calc_tokens_cost.py              # Calculates tokens/cost for a specific LLM (single model)
-│   ├── prepare_metrics_input.py         # Generates combined files for metrics (preprocessing)
-│   └── chunk_validator.py               # (link to root, for compatibility)
+│   ├── batch_pdf_extractor.py           # Batch PDF extraction (processes multiple PDFs)
+│   └── chunk_validator.py               # Chunk analysis and validation tool
 ├── src/
 │   ├── __init__.py
 │   ├── configs/
@@ -48,9 +45,6 @@ MulitaMiner/
 │       └── profile_registry.py          # Profile and scanner registration
 ├── metrics/
 │   ├── __init__.py
-│   ├── baselines/
-│   │   ├── openvas/                     # Baseline files for OpenVAS
-│   │   └── tenable/                     # Baseline files for Tenable WAS
 │   ├── bert/
 │   │   └── compare_extractions_bert.py  # BERTScore evaluation script
 │   ├── rouge/
@@ -65,13 +59,10 @@ MulitaMiner/
 │       ├── __main__.py                  # CLI entry for plotting
 │       ├── charts.py                    # Chart generation logic
 │       └── utils.py                     # Plotting utilities
-├── data/                                # Datasets generated (CSV, XLSX, JSON, JSONL)
+├── dataset/                             # Datasets generated (CSV, XLSX, JSON, JSONL)
 ├── jsons/                               # JSONs used in the dataset generation
 ├── results_tokens/                      # Token files per LLM (token/cost analysis)
-├── results_runs/                        # Experimental run results (run_experiments.py)
-├── results_runs_xlsx/                   # XLSX results (run_experiments.py)
-├── plot_runs/                           # Generated charts (metrics visualization)
-└── temp_blocks/                         # Temporary vulnerability blocks (intermediate parsing)
+└── docs/                                # Documentation files
 ```
 
 ## Main Components
@@ -107,14 +98,24 @@ MulitaMiner/
 
 - **src/converters/base_converter.py**: Base framework for converters
 - **src/converters/csv_converter.py**: CSV/TSV export with customizable settings
-- **src/converters/xlsx_converter.py**: Excel export with advanced formatting
+- **src/converters/xlsx_converter.py**: Excel export with advanced formatting and automatic cache management
+
+**Cache System**: The XLSX converter automatically caches converted files with the same name as the source JSON:
+
+- `report.json` → `report.xlsx` (created once, reused if JSON unchanged)
+- Checks file modification times to determine if reconversion is needed
+- Particularly useful for metrics evaluation where multiple runs compare the same extraction
 
 ### Metrics System
 
-- **metrics/bert/**: BERTScore evaluation
-- **metrics/rouge/**: ROUGE evaluation
-- **metrics/common/**: Shared utilities (normalization, matching)
-- **metrics/plot/**: Chart generation
+- **metrics/bert/**: BERTScore F1 evaluation (semantic similarity via transformer embeddings)
+  - Accepts JSON or XLSX inputs (auto-converts JSON to XLSX if needed)
+  - Outputs standardized comparison sheets with per-vulnerability and aggregate statistics
+- **metrics/rouge/**: ROUGE-L evaluation (longest common subsequence-based metrics)
+  - Accepts JSON or XLSX inputs (auto-converts JSON to XLSX if needed)
+  - Provides token-level similarity assessment
+- **metrics/common/**: Shared utilities (normalization, matching, CLI parsing)
+- **metrics/plot/**: Chart generation with visualization of model comparison
 
 ## Key Features
 

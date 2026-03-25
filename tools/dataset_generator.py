@@ -41,8 +41,8 @@ def load_vulnerabilities(input_folder):
     return vulnerabilities, json_files_used, reports_info
 
 # Função para gerar a tabela de metadata
-def generate_metadata_xlsx(vulnerabilities, output_folder, timestamp, unique_id, reports_info):
-    output_file = os.path.join(output_folder, f"metadata_{timestamp}_{unique_id}.xlsx")
+def generate_metadata_xlsx(vulnerabilities, output_dir, timestamp, unique_id, reports_info):
+    output_file = os.path.join(output_dir, f"metadata_{timestamp}_{unique_id}.xlsx")
     # Cria um mapa de contagem por relatório/source/severidade
     metadata = {}
     severities = set()
@@ -94,8 +94,8 @@ def generate_metadata_xlsx(vulnerabilities, output_folder, timestamp, unique_id,
     df.to_excel(output_file, index=False, engine='openpyxl')
     print(f"Metadata summary generated successfully: {output_file}")
 
-def generate_csv(vulnerabilities, output_folder, timestamp, unique_id):
-    output_file = os.path.join(output_folder, f"dataset_{timestamp}_{unique_id}.csv")
+def generate_csv(vulnerabilities, output_dir, timestamp, unique_id):
+    output_file = os.path.join(output_dir, f"dataset_{timestamp}_{unique_id}.csv")
 
     fields = FIELDS
 
@@ -122,8 +122,8 @@ def generate_csv(vulnerabilities, output_folder, timestamp, unique_id):
 
     print(f"Dataset generated successfully: {output_file}")
 
-def generate_json(vulnerabilities, output_folder, timestamp, unique_id):
-    output_file = os.path.join(output_folder, f"dataset_{timestamp}_{unique_id}.json")
+def generate_json(vulnerabilities, output_dir, timestamp, unique_id):
+    output_file = os.path.join(output_dir, f"dataset_{timestamp}_{unique_id}.json")
 
     fields = FIELDS
     def order_fields(vuln):
@@ -134,8 +134,8 @@ def generate_json(vulnerabilities, output_folder, timestamp, unique_id):
 
     print(f"Dataset generated successfully: {output_file}")
 
-def generate_jsonl(vulnerabilities, output_folder, timestamp, unique_id):
-    output_file = os.path.join(output_folder, f"dataset_{timestamp}_{unique_id}.jsonl")
+def generate_jsonl(vulnerabilities, output_dir, timestamp, unique_id):
+    output_file = os.path.join(output_dir, f"dataset_{timestamp}_{unique_id}.jsonl")
 
     fields = FIELDS
     def order_fields(vuln):
@@ -146,8 +146,8 @@ def generate_jsonl(vulnerabilities, output_folder, timestamp, unique_id):
 
     print(f"Dataset generated successfully: {output_file}")
 
-def generate_xlsx(vulnerabilities, output_folder, timestamp, unique_id):
-    output_file = os.path.join(output_folder, f"dataset_{timestamp}_{unique_id}.xlsx")
+def generate_xlsx(vulnerabilities, output_dir, timestamp, unique_id):
+    output_file = os.path.join(output_dir, f"dataset_{timestamp}_{unique_id}.xlsx")
 
     fields = FIELDS
 
@@ -188,7 +188,7 @@ def main():
         help="Directory containing the input JSON vulnerability files (default: jsons)"
     )
     parser.add_argument(
-        "--output-folder", 
+        "--output-dir", 
         type=str, 
         default="data", 
         help="Directory where the output file will be saved (default: data)"
@@ -206,7 +206,7 @@ def main():
         print(f"Error: The input folder '{args.input_folder}' does not exist.")
         return
 
-    os.makedirs(args.output_folder, exist_ok=True)
+    os.makedirs(args.output_dir, exist_ok=True)
 
     vulnerabilities, json_files_used, reports_info = load_vulnerabilities(args.input_folder)
     print(f"{json_files_used} json files loaded successfully. Total vulnerabilities: {len(vulnerabilities)}")
@@ -216,21 +216,21 @@ def main():
     unique_id = uuid.uuid4()
 
     if args.format == "csv":
-        generate_csv(vulnerabilities, args.output_folder, timestamp, unique_id)
+        generate_csv(vulnerabilities, args.output_dir, timestamp, unique_id)
     elif args.format == "json":
-        generate_json(vulnerabilities, args.output_folder, timestamp, unique_id)
+        generate_json(vulnerabilities, args.output_dir, timestamp, unique_id)
     elif args.format == "jsonl":
-        generate_jsonl(vulnerabilities, args.output_folder, timestamp, unique_id)
+        generate_jsonl(vulnerabilities, args.output_dir, timestamp, unique_id)
     elif args.format == "xlsx":
-        generate_xlsx(vulnerabilities, args.output_folder, timestamp, unique_id)
+        generate_xlsx(vulnerabilities, args.output_dir, timestamp, unique_id)
     elif args.format == "all":
-        generate_csv(vulnerabilities, args.output_folder, timestamp, unique_id)
-        generate_json(vulnerabilities, args.output_folder, timestamp, unique_id)
-        generate_jsonl(vulnerabilities, args.output_folder, timestamp, unique_id)
-        generate_xlsx(vulnerabilities, args.output_folder, timestamp, unique_id)
+        generate_csv(vulnerabilities, args.output_dir, timestamp, unique_id)
+        generate_json(vulnerabilities, args.output_dir, timestamp, unique_id)
+        generate_jsonl(vulnerabilities, args.output_dir, timestamp, unique_id)
+        generate_xlsx(vulnerabilities, args.output_dir, timestamp, unique_id)
 
     # Sempre gera o metadata
-    generate_metadata_xlsx(vulnerabilities, args.output_folder, timestamp, unique_id, reports_info)
+    generate_metadata_xlsx(vulnerabilities, args.output_dir, timestamp, unique_id, reports_info)
 
 if __name__ == "__main__":
     main()

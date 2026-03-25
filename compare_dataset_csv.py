@@ -12,44 +12,141 @@ PDF_DIR = 'pdfs/'
 PDF_REGEX = re.compile(r'^2\.1\s+([\d.]+)', re.MULTILINE)
 pdf_files = glob(os.path.join(PDF_DIR, '*.pdf'))
 
-def extrair_texto_pdf(pdf_path):
-    texto = ''
+def extract_text_from_pdf(pdf_path):
+    text = ''
     try:
         with pdfplumber.open(pdf_path) as pdf:
             for page in pdf.pages:
                 t = page.extract_text()
                 if t:
-                    texto += t + '\n'
+                    text += t + '\n'
     except Exception as e:
-        texto += f'ERRO: {e}'
-    return texto
+        text += f'ERROR: {e}'
+    return text
 
-# Só extrai os IPs dos PDFs se o arquivo de mapeamento ainda não existir
-if not os.path.exists('ips_extraidos_dos_pdfs.txt'):
-    with open('ips_extraidos_dos_pdfs.txt', 'w', encoding='utf-8') as out, \
-         open('debug_primeiras_linhas_pdfs.txt', 'w', encoding='utf-8') as debug:
+# Extrai os IPs dos PDFs apenas se o arquivo de mapeamento ainda não existir
+if not os.path.exists('extracted_ips.txt'):
+    with open('extracted_ips.txt', 'w', encoding='utf-8') as out:
         for pdf_path in pdf_files:
             pdf_name = os.path.basename(pdf_path)
-            content = extrair_texto_pdf(pdf_path)
-            # Salva as 10 primeiras linhas extraídas para debug
-            primeiras_linhas = '\n'.join(content.splitlines()[:10])
-            debug.write(f'--- {pdf_name} ---\n{primeiras_linhas}\n\n')
+            content = extract_text_from_pdf(pdf_path)
             match = PDF_REGEX.search(content)
             if match:
                 ip = match.group(1)
                 out.write(f'{pdf_name}: IP={ip}\n')
             else:
-                out.write(f'{pdf_name}: NÃO ENCONTRADO\n')
-    print('Arquivo ips_extraidos_dos_pdfs.txt gerado!')
-    print('Arquivo debug_primeiras_linhas_pdfs.txt gerado!')
+                out.write(f'{pdf_name}: NOT FOUND\n')
+    print('File extracted_ips.txt generated!')
 else:
-    print('Arquivo ips_extraidos_dos_pdfs.txt já existe, pulando extração dos PDFs.')
+    print('File extracted_ips.txt already exists, skipping PDF extraction.')
 
 # Caminhos dos arquivos
-DATASET_PATH = 'data\dataset_20260301_113151_1622da90-cb16-49bd-a78d-e498b7b4bbc5.csv'
-VULNNET_PATH = 'vulnnet_openvas_17230143.csv'  # csv "baseline"
-MAPPING_PATH = 'ips_extraidos_dos_pdfs.txt'  # mapeamento report -> IP
+DATASET_PATH = r'dataset\dataset_20260301_113151_1622da90-cb16-49bd-a78d-e498b7b4bbc5.csv'
+VULNNET_PATH = 'dataset/vulnnet_scans_openvas.csv'  # csv "baseline"
+MAPPING_PATH = 'extracted_ips.txt'  # mapeamento: report -> IP
 OUTPUT_TXT = 'extraction_comparison.txt'
+
+# Função de validação preventiva de integridade do mapeamento
+# -----------------------------------------------
+def validate_mapping_integrity(mapping_file, dataset_file, vulnnet_file):
+    """
+    Valida se:
+    1. Todos os PDFs na pasta 'pdfs/' estão no arquivo de mapeamento
+    2. Todos os reports no dataset estão mapeados
+    3. Todos os IPs do Vulnnet tem um correspondente no mapeamento
+    """
+    from glob import glob
+    from pathlib import Path
+    
+    print("\n" + "="*80)
+    print("VALIDACAO DE INTEGRIDADE DO MAPEAMENTO")
+    print("="*80)
+
+    # 1. Carrega mapeamento
+    mapping_dict = {}
+    with open(mapping_file, encoding='utf-8') as f:
+        for line in f:
+            if ': IP=' in line:
+                pdf_name, ip = line.strip().split(': IP=')
+                mapping_dict[pdf_name] = ip
+            elif ': NOT FOUND' in line:
+                pdf_name = line.strip().replace(': NOT FOUND', '')
+                mapping_dict[pdf_name] = None
+    
+    # 2. Valida PDFs na pasta
+    pdf_dir = Path('pdfs')
+    all_pdfs = set([f.name for f in pdf_dir.glob('*.pdf')])
+    pdfs_in_mapping = set(mapping_dict.keys())
+    
+    missing_pdfs = all_pdfs - pdfs_in_mapping
+    extra_pdfs = pdfs_in_mapping - all_pdfs
+    pdfs_no_ip = {k: v for k, v in mapping_dict.items() if v is None}
+    
+    print(f"\n1) PDF Files:")
+    print(f"   Total PDFs in folder: {len(all_pdfs)}")
+    print(f"   Total PDFs in mapping: {len(pdfs_in_mapping)}")
+    
+    if missing_pdfs:
+        print(f"\n   WARNING: {len(missing_pdfs)} PDFs in folder but NOT in mapping:")
+        for pdf in sorted(missing_pdfs)[:5]:
+            print(f"     - {pdf}")
+        if len(missing_pdfs) > 5:
+            print(f"     ... and {len(missing_pdfs) - 5} more")
+    else:
+        print(f"   OK: All PDFs from folder are in mapping")
+    
+    if extra_pdfs:
+        print(f"\n   WARNING: {len(extra_pdfs)} PDFs in mapping but NOT in folder:")
+        for pdf in sorted(extra_pdfs)[:5]:
+            print(f"     - {pdf}")
+        if len(extra_pdfs) > 5:
+            print(f"     ... and {len(extra_pdfs) - 5} more")
+    
+    if pdfs_no_ip:
+        print(f"\n   WARNING: {len(pdfs_no_ip)} PDFs with no extracted IP:")
+        for pdf in pdfs_no_ip:
+            print(f"     - {pdf}")
+    
+    # 3. Valida IPs do Vulnnet
+    df_vulnnet = pd.read_csv(vulnnet_file)
+    ips_in_vulnnet = set(df_vulnnet['IP'].unique())
+    ips_in_mapping = set([v for v in mapping_dict.values() if v])
+    
+    missing_ips = ips_in_vulnnet - ips_in_mapping
+    extra_ips = ips_in_mapping - ips_in_vulnnet
+    
+    print(f"\n2) IPs in Vulnnet:")
+    print(f"   Total unique IPs in Vulnnet: {len(ips_in_vulnnet)}")
+    print(f"   Total IPs in mapping: {len(ips_in_mapping)}")
+    
+    if missing_ips:
+        print(f"\n   WARNING: {len(missing_ips)} IPs in Vulnnet but NOT in mapping:")
+        for ip in sorted(missing_ips)[:5]:
+            print(f"     - {ip}")
+        if len(missing_ips) > 5:
+            print(f"     ... and {len(missing_ips) - 5} more")
+    else:
+        print(f"   OK: All IPs from Vulnnet are mapped")
+    
+    if extra_ips:
+        print(f"\n   WARNING: {len(extra_ips)} IPs in mapping but NOT in Vulnnet:")
+        for ip in sorted(extra_ips)[:5]:
+            pdfs = [k for k, v in mapping_dict.items() if v == ip]
+            print(f"     - {ip} ({pdfs})")
+        if len(extra_ips) > 5:
+            print(f"     ... and {len(extra_ips) - 5} more")
+    
+    # Resumo
+    has_issues = bool(missing_pdfs or extra_pdfs or pdfs_no_ip or missing_ips or extra_ips)
+    
+    print(f"\n" + "="*80)
+    if has_issues:
+        print("RESULTADO: Existem problemas de integridade que precisam ser resolvidos!")
+    else:
+        print("RESULTADO: Mapeamento íntegro e consistente. Prosseguindo...")
+    print("="*80 + "\n")
+    
+    return not has_issues
 
 # 1. Mapeia o campo 'report' do dataset para o IP real
 # ---------------------------------------------------
@@ -67,6 +164,8 @@ def map_report_to_ip_from_txt(txt_path=MAPPING_PATH):
 # --------------------------------------------------
 def load_dataset(dataset_path, report_to_ip):
     dataset = []
+    unmapped_reports = []
+    
     with open(dataset_path, newline='', encoding='utf-8') as f:
         reader = csv.DictReader(f)
         for row in reader:
@@ -77,6 +176,24 @@ def load_dataset(dataset_path, report_to_ip):
                 ip = report_to_ip.get(report_alt)
             if ip:
                 dataset.append({'ip': ip, 'name': row['Name'].strip(), 'orig_name': row['Name'], 'report': report})
+            else:
+                unmapped_reports.append(report)
+    
+    # Validação preventiva: detecta reports não mapeados
+    if unmapped_reports:
+        print("\n" + "="*80)
+        print("WARNING: REPORTS WERE NOT MAPPED TO IP!")
+        print("="*80)
+        print(f"Total unmapped records: {len(unmapped_reports)}")
+        print("\nFirst unmapped reports:")
+        for report in unmapped_reports[:10]:
+            count = sum(1 for r in open(dataset_path, encoding='utf-8').readlines())
+            print(f"  - '{report}'")
+        if len(unmapped_reports) > 10:
+            print(f"  ... and {len(unmapped_reports) - 10} more")
+        print("\nThese records will be IGNORED in the report!")
+        print("="*80 + "\n")
+    
     return dataset
 
 # 3. Carrega o vulnnet de referência
@@ -93,7 +210,13 @@ def load_vulnnet(vulnnet_path):
 
 # 4. Pipeline de comparação e geração do relatório
 # ------------------------------------------------
-def gerar_relatorio():
+def generate_report():
+    # Valida integridade do mapeamento ANTES de processar
+    if not validate_mapping_integrity(MAPPING_PATH, DATASET_PATH, VULNNET_PATH):
+        print("\nCANNOT GENERATE REPORT WITH INCONSISTENT MAPPING!")
+        print("Please fix the issues identified above.")
+        return
+    
     # Mapeia report -> IP
     report_to_ip = map_report_to_ip_from_txt()
     # Carrega dataset e vulnnet
@@ -155,69 +278,58 @@ def gerar_relatorio():
 
     # 5. Calcula métricas de avaliação
     # -------------------------------
+    # 5. Calcula métricas de avaliação
+    # -------------------------------
     precision = (acertos_count / (acertos_count + inventadas_count)) if (acertos_count + inventadas_count) else 0
     recall = (acertos_count / (acertos_count + faltantes_count)) if (acertos_count + faltantes_count) else 0
     f1_score = (2 * precision * recall / (precision + recall)) if (precision + recall) else 0
 
 
-    # Geração do relatório TXT (mantido)
+    # Geração do relatório TXT
     with open(OUTPUT_TXT, 'w', encoding='utf-8') as out:
-        out.write(f"Total vulnerabilidades no vulnnet: {total_vulnnet}\n")
-        out.write(f"Total vulnerabilidades extraídas: {total_dataset}\n\n")
-        out.write(f"Recall: {acertos_count} de {total_vulnnet} ({recall:.4f}) (cobertura: dos reais, quantos foram extraídos)\n")
-        out.write(f"Inventadas (no dataset mas não no vulnnet): {inventadas_count} ({pct_inventadas:.2f}%)\n")
-        out.write(f"Faltantes (no vulnnet mas não no dataset): {faltantes_count} ({pct_faltantes:.2f}%)\n")
-        out.write(f"Precision: {precision:.4f} (precisão: do total extraído, quantos são corretos)\n")
-        out.write(f"F1-score: {f1_score:.4f} (média harmônica entre precisão e recall)\n\n")
-        out.write("--- Inventadas (exemplos) ---\n")
-        for (ip, name), count in dataset_counter.items():
-            diff = count - vulnnet_counter.get((ip, name), 0)
-            if diff > 0:
-                out.write(f"{ip} | {name} | {diff} a mais\n")
-        out.write("\n--- Faltantes (exemplos) ---\n")
-        for (ip, nvt), count in vulnnet_counter.items():
-            diff = count - dataset_counter.get((ip, nvt), 0)
-            if diff > 0:
-                out.write(f"{ip} | {nvt} | {diff} faltando\n")
-        out.write("\n--- Acertos (dataset_name | vulnnet_name | score) ---\n")
-        for ip, name, best_match, score in acertos:
-            out.write(f"{ip} | {name} | {best_match} | {score}\n")
-    print(f'Relatório gerado em {OUTPUT_TXT}')
+        out.write(f"Total vulnerabilities: {total_vulnnet}\n")
+        out.write(f"Total extracted vulnerabilities: {total_dataset}\n\n")
+        out.write(f"Recall: {acertos_count} of {total_vulnnet} ({recall:.4f}) (coverage: of the real ones, how many were extracted)\n")
+        out.write(f"Invented (in dataset but not in vulnnet): {inventadas_count} ({pct_inventadas:.2f}%)\n")
+        out.write(f"Missing (in vulnnet but not in dataset): {faltantes_count} ({pct_faltantes:.2f}%)\n")
+        out.write(f"Precision: {precision:.4f} (accuracy: of the total extracted, how many are correct)\n")
+        out.write(f"F1-score: {f1_score:.4f} (harmonic mean of precision and recall)\n\n")
+    print(f'Report generated at {OUTPUT_TXT}')
 
-    # Geração do XLSX com abas separadas para faltantes e inventadas
+    # Geração do XLSX com abas separadas para vulnerabilidades não-existentes e ausentes
     xlsx_path = OUTPUT_TXT.replace('.txt', '.xlsx')
-    # Para inventadas: buscar o report correspondente ao ip
+    # Para inventadas: encontrar o report correspondente ao ip
     ip_to_report = {v: k for k, v in report_to_ip.items()}
-    inventadas_rows = []
+    invented_rows = []
     for (ip, name), count in dataset_counter.items():
         diff = count - vulnnet_counter.get((ip, name), 0)
         if diff > 0:
             report = ip_to_report.get(ip, '')
-            inventadas_rows.append({
+            invented_rows.append({
                 'report': report,
                 'ip': ip,
                 'vulnerability': name,
                 'count': diff
             })
-    faltantes_rows = []
+    missing_rows = []
     for (ip, nvt), count in vulnnet_counter.items():
         diff = count - dataset_counter.get((ip, nvt), 0)
         if diff > 0:
             report = ip_to_report.get(ip, '')
-            faltantes_rows.append({
+            missing_rows.append({
                 'report': report,
                 'ip': ip,
                 'vulnerability': nvt,
                 'count': diff
             })
     # Cria DataFrames
-    df_inventadas = pd.DataFrame(inventadas_rows)
-    df_faltantes = pd.DataFrame(faltantes_rows)
+    df_invented = pd.DataFrame(invented_rows)
+    df_missing = pd.DataFrame(missing_rows)
     # Salva em abas separadas
     with pd.ExcelWriter(xlsx_path) as writer:
-        df_inventadas.to_excel(writer, sheet_name='non-existent', index=False)
-        df_faltantes.to_excel(writer, sheet_name='absent', index=False)
-    print(f'Arquivo XLSX gerado em {xlsx_path}')
+        df_invented.to_excel(writer, sheet_name='non-existent', index=False)
+        df_missing.to_excel(writer, sheet_name='absent', index=False)
+    print(f'XLSX file generated at {xlsx_path}')
 
 if __name__ == '__main__':
-    gerar_relatorio()
+    generate_report()

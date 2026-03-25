@@ -47,42 +47,216 @@ If the scanner needs special rules to group/merge vulnerabilities:
 
 1. Create a class in a new `.py` file inside `src/scanner_strategies/` (e.g., `mycustomscanner.py`)
 2. Inherit from `ScannerStrategy` (see `base.py`)
-3. Implement the method `consolidate_all(self, vulns, allow_duplicates=True, profile_config=None)`
-4. Register your class in `src/scanner_strategies/registry.py`
+3. Implement the method `vulnerability_processing_logic(self, vulns, allow_duplicates=True, profile_config=None)` - this is where your consolidation/deduplication logic goes
+4. (Optional) Override `get_consolidation_report()` to provide structured information about your consolidation process
+5. Register your class in `src/scanner_strategies/registry.py`
 
 The key you use to register must match the scanner name declared in your profile JSON.
 
-**Important:** The custom function name must be strictly `vulnerability_processing_logic`:
+#### Required Method: `vulnerability_processing_logic`
 
 ```python
-def vulnerability_processing_logic(self, vulns, allow_duplicates=True, profile_config=None):
-    # ... your vulnerability processing logic ...
+def vulnerability_processing_logic(self, vulns: List[Dict], allow_duplicates: bool = True, profile_config: Dict = None) -> List[Dict]:
+    """
+    Your consolidation/merge/deduplication logic here.
+
+    Args:
+        vulns: List of vulnerability dictionaries
+        allow_duplicates: Flag indicating deduplication preference (your strategy can ignore this)
+        profile_config: Scanner profile configuration dict
+
+    Returns:
+        List of consolidated vulnerabilities
+    """
+    # Example: group by (Name, port, protocol) and keep most complete
+    if not vulns:
+        return []
+
+    from collections import defaultdict
+    grouped = defaultdict(list)
+    for v in vulns:
+        key = (v.get('Name', ''), v.get('port'), v.get('protocol'))
+        grouped[key].append(v)
+
+    result = []
+    for group in grouped.values():
+        # Keep the most complete (most fields filled)
+        most_complete = max(group, key=lambda v: sum(1 for val in v.values() if val))
+        result.append(most_complete)
+
+    return result
 ```
+
+#### Optional Method: `get_consolidation_report`
+
+Override this method to provide detailed, human-readable information about your consolidation process. This report will be included in the consolidation log file.
+
+```python
+def get_consolidation_report(self, input_count: int, output_count: int, removed: int) -> Dict:
+    """
+    Return structured information about the consolidation process.
+
+    Returns a dict with keys:
+        - strategy_name: Name of your strategy
+        - description: Human-readable description
+        - input_count: Vulnerabilities before consolidation
+        - output_count: Vulnerabilities after consolidation
+        - removed: Number removed during consolidation
+        - reason: Why vulnerabilities were removed (e.g., "duplicate merge", "invalid description")
+        - note: (optional) Additional context
+    """
+    return {
+        'strategy_name': 'MyCustomScanner merge',
+        'description': 'Groups vulnerabilities by (Name, port, protocol), keeps most complete',
+        'input_count': input_count,
+        'output_count': output_count,
+        'removed': removed,
+        'reason': 'duplicate consolidation',
+        'note': 'Custom logic for MyCustomScanner vulnerability format'
+    }
+```
+
+**Example:** See `src/scanner_strategies/openvas.py` for a complete implementation.
+
+### Understanding the Consolidation Pipeline
+
+The consolidation process has **two stages**:
+
+1. **Strategy-Specific Consolidation**: Your custom logic processes vulnerabilities and may remove/merge some
+2. **Description Validation Filtering**: Vulnerabilities with empty/invalid descriptions are removed
+
+Each stage is logged separately and clearly in the consolidation report, so users understand exactly what happened to their data.
+
+### Consolidation Log Output
+
+The system generates a detailed, human-readable consolidation log (e.g., `output_deduplication_log.txt`) showing:
+
+```
+======================================================================
+CONSOLIDATION & DEDUPLICATION REPORT
+======================================================================
+
+Strategy: OpenVAS custom merge
+Description: Groups vulnerabilities by (Name, port, protocol), keeps most complete
+
+INPUT VULNERABILITIES: 46
+
+PROCESSING STAGE 1: Strategy-Specific Consolidation
+  Result: 36 vulnerabilities
+  Removed: 10 (duplicate merge)
+  Note: This is the custom OpenVAS consolidation strategy
+
+PROCESSING STAGE 2: Description Validation Filter
+  Removed: 0 (empty or invalid descriptions)
+  Result: 36 vulnerabilities
+
+OUTPUT FINAL: 36 vulnerabilities (valid & saved)
+```
+
+This modular structure allows your custom strategy to be easily understood by users.
 
 ### Deduplication and Merge Behavior
 
-The `consolidation_field` defines which field will be used to identify duplicates (e.g., "Name", "Name+asset"). If there is custom logic, it always prevails.
+The `consolidation_field` in your scanner profile defines which field will be used for default deduplication (e.g., "Name", "Name+asset"). If you provide a custom strategy, it always takes precedence.
 
-| Scanner Type | `--allow-duplicates` **disabled**          | `--allow-duplicates` **enabled**               |
-| ------------ | ------------------------------------------ | ---------------------------------------------- |
-| **Generic**  | Removes duplicates by consolidation field  | Keeps all duplicates                           |
-| **Custom**   | Advanced merge/grouping (scanner strategy) | Simple deduplication (key defined in strategy) |
+| Scenario                                      | Behavior                                                       |
+| --------------------------------------------- | -------------------------------------------------------------- |
+| Custom strategy + `allow_duplicates=False`    | Your custom logic runs (you can respect the flag or ignore it) |
+| Custom strategy + `allow_duplicates=True`     | Your custom logic runs (you can respect the flag or ignore it) |
+| No custom strategy + `allow_duplicates=False` | Removes duplicates by `consolidation_field`                    |
+| No custom strategy + `allow_duplicates=True`  | Keeps all vulnerabilities unchanged                            |
 
-**How custom strategies are selected:**
+**Important:** Your strategy receives the `allow_duplicates` flag, but is free to interpret it as you wish. For example:
 
-- For OpenVAS, the custom strategy is used only when `allow_duplicates=True` (maximum granularity, recommended)
-- For Tenable WAS, the custom strategy is used only when `allow_duplicates=False` (smart merge, recommended)
-- In all other cases, the default logic using `consolidation_field` is applied
+- OpenVAS ignores it and always performs consolidation (the flag is just informational)
+- A future strategy might use it to switch between aggressive and conservative merging
 
-> **Note:** `--allow-duplicates` preserves occurrences when repetition represents services, ports, or distinct instances.
+> **Note:** `--allow-duplicates` at the CLI level is meant to preserve occurrences when repetition represents services, ports, or distinct instances. Your custom strategy decides how to interpret this for your specific scanner format.
 
 ### 5. Testing and Validation
 
 - Run extractions with `main.py` using the new scanner
+- Check the consolidation log file (`*_deduplication_log.txt`) to verify your strategy's behavior:
+  - Verify input/output counts match your expectations
+  - Check the "PROCESSING STAGE" details
+  - Review "Detail: Vulnerability Groups" to ensure correct grouping
 - Use `chunk_validator.py` to validate chunk division and data integrity
 - Check if the extracted fields are correct and if the JSON follows the expected standard
 
-**Practical summary:** For most cases, just create the template and JSON profile. Optional steps are recommended for scanners with complex reports or specific grouping rules.
+**Practical summary:** For most cases, just create the template and JSON profile. Custom consolidation is recommended for scanners with complex reports or specific grouping/merging rules. Always implement `get_consolidation_report()` if you have custom logic, so users understand what your strategy does.
+
+### Real-World Example: Adding a Custom Strategy
+
+Suppose you want to add support for "MyCorp Scanner" which has a unique format where vulnerabilities can be grouped by asset ID:
+
+**Step 1: Create the strategy** (`src/scanner_strategies/mycorp.py`):
+
+```python
+from typing import List, Dict
+from .base import ScannerStrategy
+from collections import defaultdict
+
+class MyCorporpStrategy(ScannerStrategy):
+    def vulnerability_processing_logic(self, vulns: List[Dict], allow_duplicates: bool = True, profile_config: Dict = None) -> List[Dict]:
+        if not vulns:
+            return []
+
+        # Group by (Name, asset_id) - MyCorp specific format
+        grouped = defaultdict(list)
+        for v in vulns:
+            key = (v.get('Name', ''), v.get('asset_id', 'unknown'))
+            grouped[key].append(v)
+
+        # Merge: keep the one with most information
+        result = []
+        for group in grouped.values():
+            best = max(group, key=lambda v: len([x for x in v.values() if x]))
+            result.append(best)
+
+        return result
+
+    def get_consolidation_report(self, input_count: int, output_count: int, removed: int) -> Dict:
+        return {
+            'strategy_name': 'MyCorp Scanner merge',
+            'description': 'Groups by (Name, asset_id) and keeps most complete',
+            'input_count': input_count,
+            'output_count': output_count,
+            'removed': removed,
+            'reason': 'asset-based deduplication',
+            'note': 'MyCorp uses asset_id for vulnerability tracking'
+        }
+```
+
+**Step 2: Register it** (`src/scanner_strategies/registry.py`):
+
+```python
+from .mycorp import MyCorporpStrategy
+
+SCANNER_STRATEGIES = {
+    'openvas': OpenVASStrategy(),
+    'tenable': TenableWASStrategy(),
+    'mycorp': MyCorporpStrategy(),  # Add this line
+}
+```
+
+**Step 3: Create profile** (`src/configs/scanners/mycorp.json`):
+
+```json
+{
+  "reader": "MyCorp",
+  "template": "mycorp_prompt.txt",
+  "consolidation_field": "Name",
+  "allow_duplicates_default": false
+}
+```
+
+**Step 4: Test:**
+
+```bash
+./main.py --input report.txt --scanner mycorp --llm gpt-4
+```
+
+Check the log file to verify consolidation worked correctly!
 
 ---
 

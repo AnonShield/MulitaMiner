@@ -7,14 +7,14 @@ Complete guide for using MulitaMiner with all available options.
 **Basic syntax:**
 
 ```bash
-python main.py <pdf_path> [options]
+python main.py --input <pdf_path> [options]
 ```
 
 ## Main Parameters
 
 ### Required Input
 
-- `pdf_path`: **Path to the PDF file** of the vulnerability report
+- `--input`: **Path to the PDF file** of the vulnerability report
 
 ### Processing Options
 
@@ -46,50 +46,137 @@ python main.py <pdf_path> [options]
 ### Basic Usage
 
 ```bash
-# Standard processing with GPT-4
-python main.py report.pdf
 
-# Specific scanner
-python main.py report_tenable.pdf --scanner tenable
-
-# Specific model
-python main.py report.pdf --llm deepseek
+# Specific scanner and model
+python main.py --input report_tenable.pdf --scanner tenable --llm deepseek
 ```
 
 ### Export Formats
 
 ```bash
-# CSV with custom configuration
-python main.py report.pdf --convert csv --csv-delimiter ";" --csv-encoding "iso-8859-1" --output-file "vulnerabilities_en.csv"
+# Syntax: CSV with custom configuration
+python main.py --input <pdf_path> --convert csv --csv-delimiter <char> --csv-encoding <encoding> --output-file <filename>
 
-# Full export to Excel
-python main.py large_report.pdf --scanner tenable --llm gpt5 --convert xlsx --output-dir ./results
+# Example: CSV with semicolon separator
+python main.py --input vulnerabilities_report.pdf --convert csv --csv-delimiter ";" --csv-encoding "iso-8859-1" --output-file "vulnerabilities_en"
 
-# All formats simultaneously
-python main.py report.pdf --convert all --output-dir ./exports
+# Syntax: Export to Excel
+python main.py --input <pdf_path> --scanner <scanner> --llm <llm> --convert xlsx --output-dir <output_directory>
+
+# Example: Tenable report to Excel
+python main.py --input large_report.pdf --scanner tenable --llm gpt5 --convert xlsx --output-dir ./results
+
+# Syntax: All formats
+python main.py --input <pdf_path> --scanner <scanner> --llm <llm> --convert all
+
+# Example: Generate all formats
+python main.py --input openvas.pdf --scanner openvas --llm deepseek --convert all
 ```
 
 ### Specialized Scenarios
 
 ```bash
-# Tenable WAS optimized for maximum extraction
-python main.py tenable_report.pdf --scanner tenable --llm gpt4 --convert all
+# Example: Tenable with GPT-4
+python main.py --input tenable_report.pdf --scanner tenable --llm gpt4 --convert all
 
-# OpenVAS with Groq model
-python main.py openvas_scan.pdf --scanner openvas --llm llama3 --convert csv
+# Example: OpenVAS with GPT-4
+python main.py --input openvas_report.pdf --scanner openvas --llm gpt4 --convert all --allow-duplicates
 
-# CAIS Tenable for enterprise integration
-python main.py cais_tenable.pdf --scanner cais_tenable --llm gpt5 --convert xlsx
+# Example: CAIS with GPT-4
+python main.py --input cais_tenable.pdf --scanner cais_tenable --llm gpt4 --convert all
 ```
 
 ### Extraction with Metrics Evaluation
 
 ```bash
-# Extract vulnerabilities and evaluate extraction quality using the 'bert' method
-python main.py report_tenable.pdf --scanner tenable --convert all --evaluate --baseline-file metrics/baselines/tenable/TenableWAS_JuiceShop.xlsx --evaluation-method bert
+# Syntax: Extract and evaluate with BERT
+python main.py --input <pdf_path> --scanner <scanner> --llm <llm> --evaluate --baseline <baseline_file> --evaluation-method bert [--allow-duplicates]
 
-# Evaluation with legitimate duplicates allowed (recommended for OpenVAS)
-python main.py report_openvas.pdf --scanner openvas --llm deepseek --convert xlsx --evaluate --baseline-file metrics/baselines/openvas/OpenVAS_JuiceShop.xlsx --allow-duplicates
+# Example: OpenVAS extraction with BERT evaluation (xlsx)
+python main.py --input openvas_report.pdf --scanner openvas --llm deepseek --evaluate --baseline openvas_report.xlsx --evaluation-method bert --allow_duplicates
+
+# Example: OpenVAS extraction with BERT evaluation (json)
+python main.py --input openvas_report.pdf --scanner openvas --llm deepseek --evaluate --baseline openvas_report.json --evaluation-method bert --allow_duplicates
+
+# Syntax: Extract and evaluate with ROUGE-L
+python main.py --input <pdf_path> --scanner <scanner> --llm <llm> --evaluate --baseline <baseline_file> --evaluation-method bert [--allow-duplicates]
+
+# Example: Tenable extraction with ROUGE-L evaluation (xlsx)
+python main.py --input tenable_report.pdf --scanner tenable --llm deepseek --evaluate --baseline tenable_report.xlsx --evaluation-method bert --allow_duplicates
+
+# Example: Tenable extraction with ROUGE-L evaluation (json)
+python main.py --input tenable_report.pdf --scanner tenable --llm deepseek --evaluate --baseline tenable_report.json --evaluation-method bert --allow_duplicates
+```
+
+## Output Files and Logs
+
+Each extraction generates multiple files in the output directory:
+
+| File Name                        | Description                                                                             |
+| -------------------------------- | --------------------------------------------------------------------------------------- |
+| `*_output.json` (or custom name) | **Main output:** Extracted vulnerabilities in JSON format                               |
+| `*_deduplication_log.txt`        | **Consolidation report:** Details on how vulnerabilities were consolidated/deduplicated |
+| `*_removed_log.txt`              | **Removed items log:** Vulnerabilities that were filtered out (invalid descriptions)    |
+| `*_merge_log.txt`                | **Merge log:** Generated only for strategies with complex merge logic (e.g., Tenable)   |
+| `final_report_*.txt`             | **Execution summary:** Timing, token usage, and overall statistics                      |
+
+### Understanding the Consolidation Log
+
+The `*_deduplication_log.txt` file provides detailed information about vulnerability consolidation:
+
+```
+======================================================================
+CONSOLIDATION & DEDUPLICATION REPORT
+======================================================================
+
+Strategy: OpenVAS custom merge
+Description: Groups vulnerabilities by (Name, port, protocol), keeps most complete
+
+INPUT VULNERABILITIES: 46
+
+PROCESSING STAGE 1: Strategy-Specific Consolidation
+  Result: 36 vulnerabilities
+  Removed: 10 (duplicate merge)
+  Note: This is the custom OpenVAS consolidation strategy
+
+OUTPUT FINAL: 36 vulnerabilities (valid & saved)
+
+======================================================================
+DETAIL: Vulnerability Groups
+----------------------------------------------------------------------
+Group 1: Key = ('SMTP too long line', 25, 'tcp')
+  Total vulnerabilities in group: 1
+    1. Name: SMTP too long line
+       Port: 25 | Protocol: tcp | Severity: High
+       Description: Some antivirus scanners dies when they process...
+...
+```
+
+This log shows:
+
+- **Strategy name and description**: Which consolidation method was used
+- **Input count**: Original number of vulnerabilities from extraction
+- **Output count**: Final number of vulnerabilities after consolidation
+- **Removed count**: How many were removed and why
+- **Group details**: How vulnerabilities were grouped/merged (if applicable)
+
+This allows you to:
+
+- Verify consolidation worked as expected
+- Understand why certain vulnerabilities were removed
+- Debug issues with duplicate handling
+- Evaluate the impact of different `--allow-duplicates` settings
+
+### Example Output Structure
+
+When running with `--output-file openvas_test`, you'll get:
+
+```
+./openvas_test.json                          # Main output
+./openvas_test_deduplication_log.txt         # Consolidation details
+./openvas_test_removed_log.txt               # Filtered vulnerabilities
+./final_report_20260320_210550_*.txt         # Execution summary
+results_tokens/openvas_test_*_tokens.json    # Token usage statistics
 ```
 
 ## Batch Extraction
@@ -97,54 +184,98 @@ python main.py report_openvas.pdf --scanner openvas --llm deepseek --convert xls
 To process all PDFs in a directory in batch:
 
 ```bash
-python tools/batch_pdf_extractor.py <pdfs_directory> --convert <format> --llm <model> --scanner <scanner> [--allow-duplicates] [--output-dir <dir>]
-```
+# Syntax
+python tools/batch_pdf_extractor.py --input-dir <pdfs_directory> --scanner <scanner> --llm <llm> --convert <format> [--allow-duplicates] [--output-dir <output_directory>]
 
-Example:
-
-```bash
-python tools/batch_pdf_extractor.py pdfs --scanner openvas --llm deepseek --allow-duplicates --output-dir jsons
+# Example: Process all PDFs in 'pdfs/' folder
+python tools/batch_pdf_extractor.py --input-dir pdfs --scanner openvas --llm deepseek --convert all --allow-duplicates --output-dir jsons
 ```
 
 ## Validation and Debugging
 
 ```bash
-# Chunk validation before processing
-python tools/chunk_validator.py report.pdf
+# Syntax: Basic chunk validation
+python tools/chunk_validator.py --input <pdf_path>
 
-# Detailed chunk analysis by LLM
-python tools/chunk_validator.py report.pdf --llm gpt4 --scanner tenable
+# Example:
+python tools/chunk_validator.py --input report.pdf
+
+# Syntax: Detailed chunk analysis for specific LLM and scanner
+python tools/chunk_validator.py --input <pdf_path> --llm <llm> --scanner <scanner>
+
+# Example: Tenable with GPT-4
+python tools/chunk_validator.py --input report.pdf --llm gpt4 --scanner tenable
 ```
 
 ## Metrics Analysis
+
+The metrics scripts automatically handle JSON-to-XLSX conversion and cache the converted files for efficiency. You can pass either `.json` or `.xlsx` files directly.
 
 ### Isolated Analyses
 
 #### BERT Analysis
 
 ```bash
-python metrics/bert/compare_extractions_bert.py --baseline-file <relative_path_to_baseline_file> --extraction-file <relative_path_to_extraction_file> --model <llm> --allow-duplicates
+# Syntax: Using JSON extraction (automatic conversion to XLSX)
+python metrics/bert/compare_extractions_bert.py --baseline <baseline_xlsx> --extraction-file <extraction.json> --model <llm> [--allow-duplicates]
+
+# Example:
+python metrics/bert/compare_extractions_bert.py --baseline test/openvas/OpenVAS_JuiceShop.xlsx --extraction-file openvas_test.json --model llama3 --allow-duplicates
+
+# Syntax: Or using pre-converted XLSX
+python metrics/bert/compare_extractions_bert.py --baseline <baseline_xlsx> --extraction-file <extraction.xlsx> --model <llm> [--allow-duplicates]
+
+# Example:
+python metrics/bert/compare_extractions_bert.py --baseline test/openvas/OpenVAS_JuiceShop.xlsx --extraction-file openvas_test.xlsx --model llama3 --allow-duplicates
 ```
 
-#### ROUGE Analysis
+#### ROUGE Analysis (ROUGE-L)
 
 ```bash
-python metrics/rouge/compare_extractions_rouge.py --baseline-file <relative_path_to_baseline_file> --extraction-file <relative_path_to_extraction_file> --model <llm> --allow-duplicates
+# Syntax: Using JSON extraction (automatic conversion to XLSX)
+python metrics/rouge/compare_extractions_rouge.py --baseline <baseline_xlsx> --extraction-file <extraction.json> --model <llm> [--allow-duplicates]
+
+# Example:
+python metrics/rouge/compare_extractions_rouge.py --baseline test/openvas/OpenVAS_JuiceShop.xlsx --extraction-file openvas_test.json --model llama3 --allow-duplicates
+
+# Syntax: Or using pre-converted XLSX
+python metrics/rouge/compare_extractions_rouge.py --baseline <baseline_xlsx> --extraction-file <extraction.xlsx> --model <llm> [--allow-duplicates]
+
+# Example:
+python metrics/rouge/compare_extractions_rouge.py --baseline test/openvas/OpenVAS_JuiceShop.xlsx --extraction-file openvas_test.xlsx --model llama3 --allow-duplicates
 ```
+
+**Note:** The `--model` parameter is optional but recommended for result organization. Both scripts generate four output sheets:
+
+- **Per_Vulnerability**: Detailed scores per vulnerability
+- **Summary**: Aggregate statistics
+- **Categorization**: Similarity categorization (Highly Similar, Moderately Similar, etc.)
+- **Mapping_Debug**: Internal matching details
+
+**Internal Note:** When called from `run_experiments.py`, metrics use `--baseline-file` argument (for internal consistency in checkpoint tracking).
 
 ### Chart Generation
 
-> **Important:** Pass the baseline (ground truth) file in the --baseline parameter. The plotting script uses the baseline as a reference to automatically compare the results of all models/extractions available.
+> **Important:** Pass the baseline (ground truth) file in the `--baseline` parameter. The plotting script uses the baseline as a reference to automatically compare the results of all models/extractions available.
 
 ```bash
-# Simple chart for one model
-python -m metrics.plot.cli --metric rouge --baseline tenable/TenableWAS_bWAAP.xlsx --models deepseek
+# Syntax: Single model comparison
+python -m metrics.plot.cli --metric <metric> --baseline <baseline_xlsx> --models <llm>
 
-# Comparison of three models
-python -m metrics.plot.cli --metric bert --baseline tenable/TenableWAS_bWAAP.xlsx --models deepseek,gpt4,llama3
+# Example: ROUGE chart for DeepSeek
+python -m metrics.plot.cli --metric rouge --baseline test/openvas/OpenVAS_JuiceShop.xlsx --models deepseek
 
-# Chart focused on specific metrics
-python -m metrics.plot.cli --metric rouge --baseline tenable/TenableWAS_bWAAP.xlsx --models deepseek --baseline-sheet Vulnerabilities
+# Syntax: Multiple models comparison
+python -m metrics.plot.cli --metric <metric> --baseline <baseline_xlsx> --models <llm1>,<llm2>,<llm3>
+
+# Example: BERT comparison for three models
+python -m metrics.plot.cli --metric bert --baseline test/openvas/OpenVAS_JuiceShop.xlsx --models deepseek,gpt4,llama3
+
+# Syntax: Chart with specific baseline sheet
+python -m metrics.plot.cli --metric <metric> --baseline <baseline_xlsx> --models <llm> --baseline-sheet <sheet_name>
+
+# Example: ROUGE with specific sheet
+python -m metrics.plot.cli --metric rouge --baseline test/openvas/OpenVAS_JuiceShop.xlsx --models deepseek --baseline-sheet Vulnerabilities
 ```
 
 ## Processing Flow
@@ -237,17 +368,47 @@ python -m metrics.plot.cli --metric rouge --baseline tenable/TenableWAS_bWAAP.xl
 
 ### `tools/run_experiments.py` — Massive Execution and Automated Evaluation
 
-Automates large-scale experiments with checkpoint support, automatic evaluation (BERT/ROUGE), and result organization.
+Automates large-scale experiments with checkpoint support, automatic evaluation (BERT/ROUGE), comprehensive reporting, and result organization. **Automatically calls `process_results.py` at the end to generate charts.**
 
 ```bash
-python tools/run_experiments.py [--checkpoint-file run_checkpoints_YYYY-MM-DDTHH-MM-SS.json]
+# Syntax: Run experiments with specified configurations
+python tools/run_experiments.py --input-dir <input_directory> --llms <llm1> <llm2> ... --scanners <scanner1> <scanner2> ... --evaluation-methods <method1> <method2> ... --runs-per-model <number> --allow-duplicates <true/false> ...
+
+# Example: Run with DeepSeek and GPT-4 on OpenVAS
+python tools/run_experiments.py --input-dir test/openvas --llms deepseek gpt4 --scanners openvas --evaluation-methods bert rouge --runs-per-model 5 --allow-duplicates true
+
+# Syntax: Resume from checkpoint
+python tools/run_experiments.py --input-dir <input_directory> --llms <llm> --scanners <scanner> --checkpoint-file <checkpoint_file.json>
+
+# Example: Resume interrupted run
+python tools/run_experiments.py --input-dir test/openvas --llms deepseek --scanners openvas --checkpoint-file run_checkpoints_2026-03-16T12-28-08.json
 ```
+
+**Key Features:**
+
+- **Checkpoint support**: Resume interrupted experiments from checkpoint files
+- **Timing reports**: Tracks extraction and metrics evaluation times
+- **Token cost analysis**: Integrates with `results_tokens/` directory
+- **Automatic reporting**: Generates comprehensive final report with `reporting.py`
+- **Chart generation**: Automatically calls `process_results.py` at the end
+- **Organized results**: Stores outputs in `results_runs/` → `resultados_bert/` and `resultados_rouge/`
+
+**Parameters:**
+
+- `--input-dir`: Directory with paired .xlsx (baseline) and .pdf (report) files
+- `--llms`: Space-separated list of LLMs (e.g., `deepseek gpt4 llama3`)
+- `--scanners`: Space-separated list of scanners (e.g., `openvas tenable`)
+- `--evaluation-methods`: Evaluation methods (default: `bert`, can add `rouge`)
+- `--runs-per-model`: Number of runs per model combination (default: 10)
+- `--allow-duplicates`: Boolean per scanner (e.g., `true false` for `openvas tenable`)
+- `--checkpoint-file`: Optional checkpoint file to resume execution
 
 ### `tools/process_results.py` — Chart and Statistics Generation
 
-Generates charts (stacked bar, heatmaps) and statistics from experiment results.
+Generates comparison charts (stacked bar, heatmaps) and statistics from experiment results. **Called automatically by `run_experiments.py`.**
 
 ```bash
+# Manual chart generation (automatically called by run_experiments.py)
 python tools/process_results.py
 ```
 
@@ -256,24 +417,27 @@ python tools/process_results.py
 Generates consolidated datasets (CSV, XLSX, JSON, JSONL) from multiple JSON files.
 
 ```bash
-python tools/dataset_generator.py --input-folder jsons --output-folder data --format xlsx
+# Syntax: Generate specific format
+python tools/dataset_generator.py --input-folder <input_folder> --output-folder <output_folder> --format <format>
 
-# Generate all formats at once
-python tools/dataset_generator.py --input-folder jsons --output-folder data --format all
+# Example: Generate XLSX from JSONs
+python tools/dataset_generator.py --input-folder jsons --output-folder dataset --format xlsx
+
+# Syntax: Generate all formats simultaneously
+python tools/dataset_generator.py --input-folder <input_folder> --output-folder <output_folder> --format all
+
+# Example: Generate CSV, XLSX, JSON, and JSONL
+python tools/dataset_generator.py --input-folder jsons --output-folder dataset --format all
 ```
 
-### `tools/sum_tokens_cost_all_llms.py` — Token Sum and Cost Estimation
-
-Sums tokens processed per LLM and estimates costs.
-
-```bash
-python tools/sum_tokens_cost_all_llms.py --tokens-dir results_tokens
-```
-
-### chunk_validator.py
+### `chunk_validator.py`
 
 Token distribution analysis and chunk validation tool.
 
 ```bash
-python chunk_validator.py document.pdf --LLM gpt4 --scanner tenable
+# Syntax
+python tools/chunk_validator.py --input <pdf_path> --llm <llm> --scanner <scanner>
+
+# Example
+python tools/chunk_validator.py --input document.pdf --llm gpt4 --scanner tenable
 ```

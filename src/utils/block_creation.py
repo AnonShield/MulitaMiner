@@ -38,16 +38,17 @@ def extract_visual_layout_context(visual_layout_path):
                 initial_port = m.group(2)
                 initial_protocol = m.group(3)
                 found_idx = idx
-                print(f"[DEBUG] Contexto extraído do visual layout: severity={initial_severity}, port={initial_port}, protocol={initial_protocol}")
+                # print(f"[DEBUG] Context extracted from visual layout: severity={initial_severity}, port={initial_port}, protocol={initial_protocol}")
                 break
         # Define initial_context_lines como as últimas 5 linhas acima do header encontrado (ou todas se não houver)
         if found_idx is not None:
             initial_context_lines = context_search_lines[max(0, found_idx-4):found_idx+1]
         else:
             initial_context_lines = context_search_lines[-5:]
-        print(f"[DEBUG] initial_context_lines (auto): {initial_context_lines}")
+        # print(f"[DEBUG] initial_context_lines (auto): {initial_context_lines}")
     except Exception as e:
-        print(f"[DEBUG] Erro ao ler visual_layout_path: {e}")
+        # print(f"[DEBUG] Error reading visual_layout_path: {e}")
+        pass
     return initial_context_lines, initial_severity, initial_port, initial_protocol
 
 def create_session_blocks_from_text(report_text: str, temp_dir: str = 'temp_blocks', visual_layout_path: str = None, scanner: str = 'openvas') -> list:
@@ -130,7 +131,7 @@ def _create_blocks_openvas(report_text, temp_dir, initial_context_lines, initial
                         f.write("---\n")
                     f.write('\n'.join(current_block))
                 if len(blocks) == 0:
-                    print(f"[DEBUG] Primeiro bloco salvo com contexto: port={bloco_port}, protocol={bloco_protocol}, severity={bloco_severity}")
+                    pass  # First block saved with context
                 blocks.append({
                     'file': block_path,
                     'port': bloco_port,
@@ -159,7 +160,7 @@ def _create_blocks_openvas(report_text, temp_dir, initial_context_lines, initial
         block_path = os.path.join(temp_dir, f"block_{bloco_severity}_{bloco_port}_{bloco_protocol}_{block_idx}.txt")
         with open(block_path, 'w', encoding='utf-8') as f:
             if bloco_is_first and initial_context_lines:
-                print(f"[DEBUG] Escrevendo initial_context_lines no início do bloco: {block_path}")
+                # print(f"[DEBUG] Writing initial_context_lines at the beginning of block: {block_path}")
                 for ctx_line in initial_context_lines:
                     f.write(f"{ctx_line}\n")
                 f.write("---\n")
@@ -213,7 +214,7 @@ def _create_blocks_tenable(report_text, temp_dir, initial_context_lines):
                         break
                 if orphan_severity and pre_header_lines:
                     blocks_por_severidade[orphan_severity].extend(pre_header_lines)
-                    print(f"[DEBUG] Conteúdo órfão ({len(pre_header_lines)} linhas) atribuído ao bloco {orphan_severity}")
+                    # print(f"[DEBUG] Orphan content ({len(pre_header_lines)} lines) assigned to block {orphan_severity}")
                 first_header_found = True
 
             if current_severity and current_block:
@@ -230,11 +231,7 @@ def _create_blocks_tenable(report_text, temp_dir, initial_context_lines):
     if current_severity and current_block:
         blocks_por_severidade[current_severity].extend(current_block)
     
-    print(f"[DEBUG] Headers encontrados: {len(headers_found)}")
-    for h in headers_found[:5]:
-        print(f"  - {h}")
-    if len(headers_found) > 5:
-        print(f"  ... e mais {len(headers_found) - 5} headers")
+    # print(f"[DEBUG] Headers found: {len(headers_found)}")
     
     # Cria arquivos de bloco apenas para severidades com conteúdo
     blocks = []
@@ -250,10 +247,10 @@ def _create_blocks_tenable(report_text, temp_dir, initial_context_lines):
                 'protocol': None,
                 'severity': severidade
             })
-            print(f"[DEBUG] Bloco {severidade}: {len(bloco)} linhas")
+            # print(f"[DEBUG] Block {severidade}: {len(bloco)} lines")
     
-    print(f"[DEBUG] Severities finais: {[b['severity'] for b in blocks]}")
-    print(f"[DEBUG] Total de blocos criados: {len(blocks)}")
+    # print(f"[DEBUG] Final severities: {[b['severity'] for b in blocks]}")
+    # print(f"[DEBUG] Total blocks created: {len(blocks)}")
     return blocks
 
 def extract_vulns_from_blocks(blocks: list, llm, profile_config: dict, chunk_func) -> list:
@@ -289,7 +286,7 @@ def extract_vulns_from_blocks(blocks: list, llm, profile_config: dict, chunk_fun
     from src.utils.llm_utils import validate_json_and_tokens
 
     # Processar com barra de progresso
-    with tqdm(total=total_chunks, desc="Processando blocos", unit="chunk", ncols=80) as pbar:
+    with tqdm(total=total_chunks, desc="Processing blocks", unit="chunk", ncols=80) as pbar:
         for block_idx, (block, chunks) in enumerate(block_chunks_map):
             for chunk in chunks:
                 # Monta prompt
@@ -316,7 +313,7 @@ def extract_vulns_from_blocks(blocks: list, llm, profile_config: dict, chunk_fun
                     if block.get('port') is not None or block.get('protocol') is not None or block.get('severity') is not None:
                         for idx, v in enumerate(vulns):
                             if not isinstance(v, dict):
-                                tqdm.write(f"[WARN] Ignorando item não-dict em vulns: {type(v)} - {repr(v)[:100]}")
+                                tqdm.write(f"[WARN] Ignoring non-dict item in vulns: {type(v)} - {repr(v)[:100]}")
                                 continue
                             port_val = block['port']
                             if port_val is not None:
@@ -347,8 +344,6 @@ def extract_vulns_from_blocks(blocks: list, llm, profile_config: dict, chunk_fun
                             severity_val_vuln = v.get('severity')
                             if is_first_block_first_vuln or is_invalid_str(severity_val_vuln):
                                 v['severity'] = block['severity']
-                            if len(all_vulns) == 0 and idx == 0:
-                                tqdm.write(f"[DEBUG] Primeira vulnerabilidade propagada: port={v['port']}, protocol={v['protocol']}, severity={v['severity']}")
                         all_vulns.extend([v for v in vulns if isinstance(v, dict)])
                     else:
                         all_vulns.extend([v for v in vulns if isinstance(v, dict)])

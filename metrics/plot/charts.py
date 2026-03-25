@@ -15,7 +15,7 @@ PLOT_CATEGORY_ORDER = ["Highly Similar", "Moderately Similar", "Slightly Similar
 
 def create_score_heatmap(df_heatmap, metric_label: str, out_path: Path):
     if df_heatmap is None or df_heatmap.empty:
-        print("❌ Nenhum dado disponível para heatmap!")
+        print("❌ No data available for heatmap!")
         return
 
     fig, ax = plt.subplots(figsize=(14, 6))
@@ -37,7 +37,7 @@ def create_score_heatmap(df_heatmap, metric_label: str, out_path: Path):
 
 def create_errors_comparison_chart(models_list, absent_counts, non_existent_counts, out_path: Path):
     if not models_list:
-        print("❌ Nenhum dado disponível para Error Analysis!")
+        print("❌ No data available for Error Analysis!")
         return
 
     fig, ax = plt.subplots(figsize=(11, 6))

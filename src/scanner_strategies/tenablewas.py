@@ -85,6 +85,20 @@ class TenableWASStrategy(ScannerStrategy):
             consolidated['severity'] = max(severities, key=lambda s: severity_order.get(s, 0))
         return consolidated
     
+    def get_consolidation_report(self, input_count: int, output_count: int, removed: int) -> Dict:
+        """
+        Retorna report específico da estratégia Tenable.
+        """
+        return {
+            'strategy_name': 'Tenable WAS custom merge',
+            'description': 'Groups vulnerabilities by (Name, plugin), merges instances and metadata',
+            'input_count': input_count,
+            'output_count': output_count,
+            'removed': removed,
+            'reason': 'instance consolidation',
+            'note': 'This is the custom Tenable WAS consolidation strategy'
+        }
+    
     def _merge_base_group(self, vulnerabilities, profile_config):
         if not vulnerabilities:
             return None

@@ -32,10 +32,9 @@ class XLSXConverter(BaseConverter):
         super().__init__()
         
         if not PANDAS_AVAILABLE:
-            raise ImportError("pandas é necessário para conversão XLSX. Instale com: pip install pandas")
-        
+            raise ImportError("pandas is required for XLSX conversion. Install with: pip install pandas")
         if not OPENPYXL_AVAILABLE:
-            raise ImportError("openpyxl é necessário para conversão XLSX. Instale com: pip install openpyxl")
+            raise ImportError("openpyxl is required for XLSX conversion. Install with: pip install openpyxl")
     
     def get_format_name(self) -> str:
         return "XLSX"
@@ -171,6 +170,22 @@ class XLSXConverter(BaseConverter):
         Returns:
             Caminho do arquivo XLSX gerado
         """
+        # Definir arquivo de saída
+        if output_file_path is None:
+            output_file_path = self.get_output_filename(json_file_path, "xlsx")
+        
+        # Verificar se o XLSX já existe e é mais recente que o JSON
+        if os.path.exists(output_file_path):
+            json_mtime = os.path.getmtime(json_file_path)
+            xlsx_mtime = os.path.getmtime(output_file_path)
+            
+            # Se o XLSX é mais recente que o JSON, usar o existente
+            if xlsx_mtime >= json_mtime:
+                print(f"Using existing XLSX file (cache): {output_file_path}")
+                return output_file_path
+            else:
+                print(f"JSON file is newer than XLSX, reconverting: {json_file_path}")
+        
         # Carregar dados
         data = self.load_json_data(json_file_path)
         
@@ -178,27 +193,19 @@ class XLSXConverter(BaseConverter):
             raise ValueError("Dados JSON inválidos")
         
         if not data:
-            print("Aviso: Nenhuma vulnerabilidade encontrada no JSON")
+            print("Warning: No vulnerabilities found in JSON")
             data = [{"name": "No vulnerabilities found", "description": "Empty report"}]
         
-        # Definir arquivo de saída
-        if output_file_path is None:
-            output_file_path = self.get_output_filename(json_file_path, "xlsx")
-        
         try:
-            # Criar workbook estilizado
+            # Create styled workbook
             wb = self.create_styled_workbook(data)
-            
-            # Salvar arquivo
+            # Save file
             wb.save(output_file_path)
-            
-            print(f"Arquivo XLSX criado com sucesso: {output_file_path}")
-            print(f"Total de vulnerabilidades: {len(data)}")
-            
+            print(f"XLSX file created successfully: {output_file_path}")
+            print(f"Total vulnerabilities: {len(data)}")
             return output_file_path
-            
         except Exception as e:
-            raise Exception(f"Erro ao criar arquivo XLSX: {e}")
+            raise Exception(f"Error creating XLSX file: {e}")
 
 
 def convert_json_to_xlsx(json_file_path: str, output_file_path: Optional[str] = None) -> str:

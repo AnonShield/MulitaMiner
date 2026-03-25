@@ -85,11 +85,12 @@ class BaseConverter(ABC):
             extension: Extensão do arquivo de saída (sem ponto)
             
         Returns:
-            Nome do arquivo de saída
+            Nome do arquivo de saída (mesmo diretório, mesmo nome, extensão diferente)
         """
+        input_dir = os.path.dirname(input_filename)
         base_name = os.path.splitext(os.path.basename(input_filename))[0]
-        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-        return f"{base_name}_converted_{timestamp}.{extension}"
+        output_filename = f"{base_name}.{extension}"
+        return os.path.join(input_dir, output_filename) if input_dir else output_filename
     
     def normalize_field_value(self, value: Any) -> str:
         """

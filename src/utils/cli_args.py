@@ -6,7 +6,7 @@ def parse_arguments() -> argparse.Namespace:
         description='Extrai vulnerabilidades de relatórios PDF usando LLM'
     )
     # Grupo principal de argumentos
-    parser.add_argument('pdf_path', help='Caminho para o arquivo PDF')
+    parser.add_argument('--input', required=True, help='Caminho para o arquivo PDF')
     parser.add_argument('--scanner', default='default', 
                        help='Scanner de configuração (padrão: default)')
     parser.add_argument('--llm', default='gpt4', 
@@ -17,7 +17,7 @@ def parse_arguments() -> argparse.Namespace:
     conversion_group.add_argument('--convert', choices=['csv', 'xlsx', 'tsv', 'all', 'none'],
                        default='none',
                        help='Converter saída JSON para formato específico. Use "all" ou "xlsx" para avaliação.')
-    conversion_group.add_argument('--output', help='Caminho do arquivo de saída para conversão')
+    conversion_group.add_argument('--output-file', help='Nome do arquivo de saída (sem timestamp/id, sem extensão obrigatória)')
     conversion_group.add_argument('--output-dir', dest='output_dir',
                        help='Diretório de saída para arquivos convertidos')
     conversion_group.add_argument('--csv-delimiter', dest='csv_delimiter', default=',',

@@ -42,26 +42,26 @@ class ChunkValidator:
     
     def load_and_analyze_document(self):
         """Carrega documento e analisa o texto completo"""
-        print("📖 Carregando documento...")
+        print("[LOADING] Loading document...")
         
-        # Verificar se é arquivo .txt ou PDF
+        # Check if it's a .txt file or PDF
         if self.pdf_path.endswith('.txt'):
-            print("📄 Detectado arquivo de texto (.txt)")
+            print("[FILE] Detected text file (.txt)")
             try:
                 with open(self.pdf_path, 'r', encoding='utf-8') as f:
                     text = f.read()
             except Exception as e:
-                print(f"❌ Erro ao ler arquivo texto: {e}")
+                print(f"[ERROR] Error reading text file: {e}")
                 return None
         else:
-            print("📄 Detectado arquivo PDF")
+            print("[FILE] Detected PDF file")
             text = load_pdf_with_pypdf2(self.pdf_path)
         
         if not text:
-            print("❌ Erro: Não foi possível carregar o documento")
+            print("[ERROR] Unable to load document")
             return None
             
-        print(f"✅ Documento carregado: {len(text):,} caracteres")
+        print(f"[SUCCESS] Document loaded: {len(text):,} characters")
         
         # Detectar tipo de scanner
         pattern_info = detect_scanner_pattern(text)

@@ -90,18 +90,45 @@ Comparison against OpenVAS CSV baseline (6,343 vulnerabilities) using fuzzy matc
 ### Full Experiment Suite
 
 ```bash
-# Run all experiments with checkpointing
-python tools/run_experiments.py [--checkpoint-file run_checkpoints_YYYY-MM-DDTHH-MM-SS.json]
+# Run experiments with specified configurations
+python tools/run_experiments.py --input-dir test/openvas --llms deepseek gpt4 --scanners openvas --evaluation-methods bert rouge --runs-per-model 5 --allow-duplicates true
+
+# Resume from checkpoint if interrupted
+python tools/run_experiments.py --input-dir test/openvas --llms deepseek --scanners openvas --checkpoint-file run_checkpoints_2026-03-16T12-28-08.json
 ```
 
-Features:
+**Key Features:**
 
 - Runs extraction, export, and evaluation for all pairs (report, scanner, LLM, run)
-- Checkpoint support: resumes interrupted executions
+- Checkpoint support: resumes interrupted executions via `--checkpoint-file`
 - Generates detailed logs, output files, metrics, and automatic summaries
-- Organizes results in `results_runs/` and `results_runs_xlsx/`
+- **Automatic reporting**: Generates comprehensive final report with timing and token cost analysis
+- **Automatic chart generation**: Calls `process_results.py` automatically at the end
+- Outputs organized in respective evaluation directories based on metrics
 
-### Generate Charts
+**Parameters:**
+
+- `--input-dir`: Directory containing paired .xlsx (baseline) and .pdf (report) files
+- `--llms`: Space-separated LLMs to test (e.g., `deepseek gpt4 llama3`)
+- `--scanners`: Space-separated scanners (e.g., `openvas tenable`)
+- `--evaluation-methods`: Evaluation methods (default: `bert`, can add `rouge`)
+- `--runs-per-model`: Number of runs per combination (default: 10)
+- `--allow-duplicates`: Boolean per scanner in order (e.g., `true false` for `openvas tenable`)
+- `--checkpoint-file`: Checkpoint file to resume from
+
+### Output Structure
+
+Results are automatically organized by:
+
+- `results_runs/` → `<baseline>/<llm>/run<N>/` (extraction and metrics outputs)
+- `resultados_bert/` (when BERT evaluation enabled)
+- `resultados_rouge/` (when ROUGE evaluation enabled)
+- Final report with timing and token cost analysis
+- Checkpoint files for resuming interrupted runs
+
+### Automatic Chart Generation
+
+Charts are automatically generated at the end of `run_experiments.py` execution. To generate charts manually:
 
 ```bash
 python tools/process_results.py
@@ -111,13 +138,7 @@ Generates:
 
 - Similarity category distribution charts (stacked bar)
 - Metric heatmaps (BERT/ROUGE) per LLM and baseline
-- Statistical summaries saved in `plot_runs/`
-
-### Token Cost Analysis
-
-```bash
-python tools/sum_tokens_cost_all_llms.py --tokens-dir results_tokens
-```
+- Statistical summaries and visualizations
 
 ## Deduplication Strategies
 

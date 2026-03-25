@@ -21,6 +21,88 @@ def deduplicate_by_name(vulnerabilities: list, field: str = "Name") -> list:
             result.append(most_complete)
     return result
 
+def generate_consolidation_log(strategy_report: dict = None, description_filtering_removed: int = 0, 
+                              all_groups: dict = None, vulnerabilities_input: int = 0,
+                              vulnerabilities_after_strategy: int = 0, vulnerabilities_final: int = 0) -> str:
+    """
+    Gera um log modular e legível de consolidação.
+    
+    Args:
+        strategy_report: Dict retornado por strategy.get_consolidation_report()
+        description_filtering_removed: Quantas vulns foram removidas pela filtragem de description
+        all_groups: Dict com grupos de vulnerabilidades para detalhes
+        vulnerabilities_input: Total na entrada
+        vulnerabilities_after_strategy: Total após strategy processing
+        vulnerabilities_final: Total final (após filtragem)
+    
+    Returns:
+        String com o log formatado
+    """
+    lines = []
+    lines.append("=" * 70)
+    lines.append("CONSOLIDATION & DEDUPLICATION REPORT")
+    lines.append("=" * 70)
+    lines.append("")
+    
+    if strategy_report:
+        lines.append(f"Strategy: {strategy_report.get('strategy_name', 'Unknown')}")
+        lines.append(f"Description: {strategy_report.get('description', 'N/A')}")
+        lines.append("")
+        
+        lines.append(f"INPUT VULNERABILITIES: {vulnerabilities_input}")
+        lines.append("")
+        
+        lines.append("PROCESSING STAGE 1: Strategy-Specific Consolidation")
+        lines.append(f"  Result: {vulnerabilities_after_strategy} vulnerabilities")
+        lines.append(f"  Removed: {vulnerabilities_input - vulnerabilities_after_strategy} ({strategy_report.get('reason', 'consolidation')})")
+        if strategy_report.get('note'):
+            lines.append(f"  Note: {strategy_report['note']}")
+        lines.append("")
+        
+        if description_filtering_removed > 0:
+            lines.append("PROCESSING STAGE 2: Description Validation Filter")
+            lines.append(f"  Removed: {description_filtering_removed} (empty or invalid descriptions)")
+            lines.append(f"  Result: {vulnerabilities_final} vulnerabilities")
+            lines.append("")
+        
+        lines.append(f"OUTPUT FINAL: {vulnerabilities_final} vulnerabilities (valid & saved)")
+    else:
+        lines.append(f"INPUT: {vulnerabilities_input} vulnerabilities")
+        lines.append(f"OUTPUT: {vulnerabilities_final} vulnerabilities")
+    
+    lines.append("")
+    lines.append("=" * 70)
+    
+    log_text = "\n".join(lines)
+    
+    # Adiciona detalhes dos grupos se fornecidos
+    if all_groups:
+        log_text += "\nDETAIL: Vulnerability Groups\n"
+        log_text += "-" * 70 + "\n"
+        for idx, (key, group) in enumerate(all_groups.items(), 1):
+            log_text += f"Group {idx}: Key = {repr(key)}\n"
+            log_text += f"  Total vulnerabilities in group: {len(group)}\n"
+            for i, v in enumerate(group, 1):
+                nome = v.get('Name', 'NO NAME')
+                porta = v.get('port', '')
+                protocolo = v.get('protocol', '')
+                severidade = v.get('severity', '')
+                desc = v.get('description', '')
+                log_text += f"    {i}. Name: {nome}\n"
+                log_text += f"       Port: {porta} | Protocol: {protocolo} | Severity: {severidade}\n"
+                if desc:
+                    if isinstance(desc, list):
+                        desc = ' '.join([str(d) for d in desc if d])
+                    desc = str(desc).strip().replace('\n', ' ')
+                    log_text += f"       Description: {desc[:150]}{'...' if len(desc)>150 else ''}\n"
+                else:
+                    log_text += f"       Description: (empty)\n"
+            log_text += "\n"
+        log_text += "=" * 70 + "\n"
+    
+    return log_text
+
+
 def central_custom_allow_duplicates(vulnerabilities: list, profile_config: dict = None, allow_duplicates = True, custom_strategy: str = None, output_file: str = None) -> list:
     """
     Pipeline central para deduplicação/consolidação:
@@ -49,9 +131,16 @@ def central_custom_allow_duplicates(vulnerabilities: list, profile_config: dict 
     removed_log_path = os.path.splitext(output_file)[0] + '_removed_log.txt'
     # Deduplicação/consolidação
     if strategy and hasattr(strategy, 'vulnerability_processing_logic'):
-        print(f"🔎 Modo allow_duplicates: {'True' if allow_duplicates else 'False'} (custom: {source})")
+        print(f"[DEDUPLICATION] allow_duplicates mode: {'True' if allow_duplicates else 'False'} (custom: {source})")
+        
+        # Captura estado ANTES
+        input_count = len(vulnerabilities)
+        
+        # Executa strategy
         result = strategy.vulnerability_processing_logic(vulnerabilities, allow_duplicates, profile_config)
-        # Após deduplicação, filtra por descrição válida
+        after_strategy_count = len(result)
+        
+        # After deduplication, filter by valid description
         def has_valid_description(vuln):
             desc = vuln.get("description")
             if not desc:
@@ -66,52 +155,27 @@ def central_custom_allow_duplicates(vulnerabilities: list, profile_config: dict 
                 valid_result.append(v)
             else:
                 removed.append(v)
-        # Salva log de removidos
+        # Save removed items log
         if removed:
             with open(removed_log_path, 'w', encoding='utf-8') as f:
-                f.write(f"# LOG DE VULNERABILIDADES REMOVIDAS (sem descrição válida)\n\n")
+                f.write(f"# LOG OF REMOVED VULNERABILITIES (missing valid description)\n\n")
                 for idx, v in enumerate(removed, 1):
-                    f.write(f"Removida {idx}:\n")
+                    f.write(f"Removed {idx}:\n")
                     f.write(json.dumps(v, ensure_ascii=False, indent=2))
                     f.write("\n---\n")
-            print(f"🗑 Log de vulnerabilidades removidas salvo em: {removed_log_path}")
+            print(f"[DEDUPLICATION] Removed items log: {removed_log_path}")
         result = valid_result
-        # Salva log de merge/deduplicação
-        # Conteúdo explicativo para logs
-
-        def log_intro(tipo, total_in, total_out):
-            return (
-                f"# LOG DE {tipo.upper()} DE VULNERABILIDADES\n"
-                f"Este arquivo lista todas as vulnerabilidades consideradas duplicatas e agrupadas durante o processo.\n"
-                f"Cada grupo é identificado por uma chave composta (ex: nome, porta, protocolo).\n"
-                f"Apenas a vulnerabilidade mais completa e com descrição válida foi mantida em cada grupo.\n\n"
-                f"Total de grupos de duplicatas: {total_out}\n"
-                f"Total de vulnerabilidades agrupadas (removidas): {total_in - total_out}\n\n"
+        
+        # Get strategy report for better logging
+        strategy_report = None
+        if hasattr(strategy, 'get_consolidation_report'):
+            strategy_report = strategy.get_consolidation_report(
+                input_count=input_count,
+                output_count=after_strategy_count,
+                removed=input_count - after_strategy_count
             )
         
-        def log_grupos(result, grouped):
-            linhas = []
-            for idx, (key, group) in enumerate(grouped.items(), 1):
-                linhas.append(f"Grupo {idx}: Chave = {repr(key)}")
-                linhas.append(f"  Total de duplicatas neste grupo: {len(group)}")
-                for i, v in enumerate(group, 1):
-                    nome = v.get('Name', 'SEM NOME')
-                    porta = v.get('port', '')
-                    protocolo = v.get('protocol', '')
-                    severidade = v.get('severity', '')
-                    desc = v.get('description', '')
-                    linhas.append(f"    {i}. Nome: {nome}")
-                    linhas.append(f"       Porta: {porta} | Protocolo: {protocolo} | Severidade: {severidade}")
-                    if desc:
-                        if isinstance(desc, list):
-                            desc = ' '.join([str(d) for d in desc if d])
-                        desc = str(desc).strip().replace('\n', ' ')
-                        linhas.append(f"       Descrição: {desc[:200]}{'...' if len(desc)>200 else ''}")
-                    else:
-                        linhas.append(f"       Descrição: (vazia)")
-                linhas.append("")
-            return '\n'.join(linhas)
-        # Reconstruir agrupamento para log
+        # Reconstruir agrupamento para detalhes do log
         from collections import defaultdict
         grouped = defaultdict(list)
         for v in result:
@@ -130,76 +194,75 @@ def central_custom_allow_duplicates(vulnerabilities: list, profile_config: dict 
             else:
                 key = (name, port, protocol)
             grouped[key].append(v)
-        # Só gera log de merge se a estratégia realmente faz merge (ex: Tenable, mas NÃO OpenVAS)
-        if source and hasattr(strategy, 'has_merge_log') and strategy.has_merge_log:
-            with open(merge_log_path, 'w', encoding='utf-8') as f:
-                f.write(log_intro('merge/consolidação', len(vulnerabilities), len(result)))
-                f.write(log_grupos(result, grouped))
-                f.write(f"Resumo final:\nTotal de grupos de duplicatas: {len(result)}\nTotal de vulnerabilidades agrupadas (removidas): {len(vulnerabilities) - len(result)}\n")
-            print(f"📄 Log de merge salvo em: {merge_log_path}")
+        
+        # Gera log modular usando a nova função
+        log_content = generate_consolidation_log(
+            strategy_report=strategy_report,
+            description_filtering_removed=len(removed),
+            all_groups=grouped,
+            vulnerabilities_input=input_count,
+            vulnerabilities_after_strategy=after_strategy_count,
+            vulnerabilities_final=len(result)
+        )
+        
+        # Salva o log de consolidação
         with open(dedup_log_path, 'w', encoding='utf-8') as f:
-            f.write(log_intro('deduplicação', len(vulnerabilities), len(result)))
-            f.write(log_grupos(result, grouped))
-            f.write(f"Resumo final:\nTotal de grupos de duplicatas: {len(result)}\nTotal de vulnerabilidades agrupadas (removidas): {len(vulnerabilities) - len(result)}\n")
-        print(f"📄 Log de deduplicação salvo em: {dedup_log_path}")
+            f.write(log_content)
+        print(f"[DEDUPLICATION] Consolidation log saved to: {dedup_log_path}")
+        
         return result
-    # fallback: deduplicação simples
-    print(f"🔎 Modo allow_duplicates: {'True' if allow_duplicates else 'False'} (default)")
+    # fallback: simple deduplication
+    print(f"[DEDUPLICATION] allow_duplicates mode: {'True' if allow_duplicates else 'False'} (default)")
     field = 'Name'
     if profile_config and 'consolidation_field' in profile_config:
         field = profile_config['consolidation_field']
+    
+    input_count = len(vulnerabilities)
+    
     if allow_duplicates is True:
         result = vulnerabilities
+        dedup_reason = "allow_duplicates=True (no deduplication)"
     else:
         result = deduplicate_by_name(vulnerabilities, field)
-    # Log explicativo apenas para deduplicação (default)
-    def log_intro(tipo, total_in, total_out):
-        return (
-            f"# LOG DE {tipo.upper()} DE VULNERABILIDADES\n"
-            f"Este arquivo lista todas as vulnerabilidades consideradas duplicatas e agrupadas durante o processo.\n"
-            f"Cada grupo é identificado por uma chave composta (ex: nome, porta, protocolo).\n"
-            f"Apenas a vulnerabilidade mais completa e com descrição válida foi mantida em cada grupo.\n\n"
-            f"Total de grupos de duplicatas: {total_out}\n"
-            f"Total de vulnerabilidades agrupadas (removidas): {total_in - total_out}\n\n"
-        )
-    def log_grupos(result, grouped):
-        linhas = []
-        for idx, (key, group) in enumerate(grouped.items(), 1):
-            linhas.append(f"Grupo {idx}: Chave = {repr(key)}")
-            linhas.append(f"  Total de duplicatas neste grupo: {len(group)}")
-            for i, v in enumerate(group, 1):
-                nome = v.get('Name', 'SEM NOME')
-                porta = v.get('port', '')
-                protocolo = v.get('protocol', '')
-                severidade = v.get('severity', '')
-                desc = v.get('description', '')
-                linhas.append(f"    {i}. Nome: {nome}")
-                linhas.append(f"       Porta: {porta} | Protocolo: {protocolo} | Severidade: {severidade}")
-                if desc:
-                    if isinstance(desc, list):
-                        desc = ' '.join([str(d) for d in desc if d])
-                    desc = str(desc).strip().replace('\n', ' ')
-                    linhas.append(f"       Descrição: {desc[:200]}{'...' if len(desc)>200 else ''}")
-                else:
-                    linhas.append(f"       Descrição: (vazia)")
-            linhas.append("")
-        return '\n'.join(linhas)
-    # Reconstruir agrupamento para log
+        dedup_reason = f"deduplicated by {field}"
+    
+    after_strategy_count = len(result)
+    
+    # Criar report para fallback
+    fallback_report = {
+        'strategy_name': 'Default Deduplication',
+        'description': f'Simple deduplication grouped by {field} field',
+        'input_count': input_count,
+        'output_count': after_strategy_count,
+        'removed': input_count - after_strategy_count,
+        'reason': dedup_reason
+    }
+    
+    # Rebuild grouping for log
     from collections import defaultdict
     grouped = defaultdict(list)
     for v in result:
         key = v.get(field, None) if isinstance(v, dict) else None
         grouped[key].append(v)
+    
+    # Gera log modular também para fallback
+    log_content = generate_consolidation_log(
+        strategy_report=fallback_report,
+        description_filtering_removed=0,
+        all_groups=grouped,
+        vulnerabilities_input=input_count,
+        vulnerabilities_after_strategy=after_strategy_count,
+        vulnerabilities_final=after_strategy_count
+    )
+    
     with open(dedup_log_path, 'w', encoding='utf-8') as f:
-        f.write(log_intro('deduplicação', len(vulnerabilities), len(result)))
-        f.write(log_grupos(result, grouped))
-        f.write(f"Resumo final:\nTotal de grupos de duplicatas: {len(result)}\nTotal de vulnerabilidades agrupadas (removidas): {len(vulnerabilities) - len(result)}\n")
-    print(f"📄 Log de deduplicação salvo em: {dedup_log_path}")
+        f.write(log_content)
+    print(f"[DEDUPLICATION] Deduplication log saved to: {dedup_log_path}")
     return result
 def remove_duplicates_by_key(vulnerabilities: list, key: str = "Name", log_path: str = None) -> list:
     """
-    Remove duplicatas de vulnerabilidades com base em uma chave específica.
-    Se log_path for fornecido, salva um log das duplicatas removidas.
+    Remove vulnerability duplicates based on a specific key.
+    If log_path is provided, saves a log of removed duplicates.
     """
     seen = set()
     unique = []
@@ -214,9 +277,9 @@ def remove_duplicates_by_key(vulnerabilities: list, key: str = "Name", log_path:
     if log_path and removed:
         import json
         with open(log_path, 'w', encoding='utf-8') as f:
-            f.write(f"# LOG DE DUPLICATAS REMOVIDAS POR CHAVE '{key}'\n\n")
+            f.write(f"# LOG OF REMOVED DUPLICATES BY KEY '{key}'\n\n")
             for idx, v in enumerate(removed, 1):
-                f.write(f"Removida {idx}:\n")
+                f.write(f"Removed {idx}:\n")
                 f.write(json.dumps(v, ensure_ascii=False, indent=2))
                 f.write("\n---\n")
     return unique
@@ -281,7 +344,7 @@ from .registry import get_strategy
 
 def consolidate_vulnerabilities(vulnerabilities: List[Dict], profile_config: Dict = None) -> List[Dict]:
     """
-    Consolida vulnerabilidades usando a estratégia do scanner detectado.
+    Consolidates vulnerabilities using the detected scanner strategy.
     Modular, extensível e centralizado.
     """
     if not vulnerabilities:

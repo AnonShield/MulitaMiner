@@ -194,13 +194,13 @@ def get_bertscore_model():
 
     model_try = BERTSCORE_MODEL_CANDIDATES[0]
     try:
-        print(f"Carregando modelo BERTScore: {model_try}...")
+        print(f"Loading BERTScore model: {model_try}...")
         scorer = BERTScorer(model_type=model_try, lang=BERTSCORE_LANG, device=device, rescale_with_baseline=True)
         _bertscore_model_cache = scorer
-        print("Modelo BERTScore carregado com sucesso!")
+        print("BERTScore model loaded successfully!")
         return scorer, None
     except Exception as e:
-        print(f"Erro ao carregar modelo BERTScore {model_try}: {e}")
+        print(f"Error loading BERTScore model {model_try}: {e}")
         return None, None
 
 # =========================
@@ -236,19 +236,19 @@ def bertscore_score(pred: str, ref: str) -> float:
             return 0.0
         return max(0.0, min(1.0, fval))
     except Exception as e:
-        print(f"Erro no cálculo BERTScore: {e}")
+        print(f"Error in BERTScore calculation: {e}")
         return 0.0
 
 
 def process_extraction_comparison_bertscore(baseline_df: pd.DataFrame, extraction_df: pd.DataFrame, extraction_name: str) -> Tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame, pd.DataFrame, int]:
-    print(f"Processando BERTScore {extraction_name}...")
+    print(f"Processing BERTScore {extraction_name}...")
 
     baseline_df["_Name_norm"] = baseline_df["Name"].map(normalize_name)
     extraction_df["_Name_norm"] = extraction_df["Name"].map(normalize_name)
 
     # Detecta tipo de scanner para chaves compostas
     scanner_type = detect_scanner_type(baseline_df)
-    print(f"   🔧 Scanner detectado: {scanner_type}")
+    print(f"   🛠️ Detected scanner: {scanner_type}")
     
     # Gera chaves compostas para matching mais preciso
     baseline_df["_composite_key"] = baseline_df.apply(lambda r: build_composite_key(r, scanner_type), axis=1)
@@ -259,13 +259,13 @@ def process_extraction_comparison_bertscore(baseline_df: pd.DataFrame, extractio
         baseline_dedup = baseline_df.drop_duplicates(subset=["_Name_norm"], keep="first")
         if len(baseline_dedup) < len(baseline_df):
             dup_count = len(baseline_df) - len(baseline_dedup)
-            print(f"   ℹ️ Removidas {dup_count} duplicatas da baseline (modo sem duplicatas legítimas)")
+            print(f"   ℹ️ Removed {dup_count} duplicates from the baseline (no legitimate duplicates mode)")
         # Sempre cria _baseline_row_id, mesmo sem duplicatas legítimas
         baseline_dedup["_baseline_row_id"] = range(len(baseline_dedup))
     else:
         baseline_dedup = baseline_df.copy()
         baseline_dedup["_baseline_row_id"] = range(len(baseline_dedup))
-        print(f"   ℹ️ Mantendo {len(baseline_dedup)} instâncias da baseline (modo com duplicatas legítimas)")
+        print(f"   ℹ️ Keeping {len(baseline_dedup)} instances from the baseline (legitimate duplicates mode)")
     
     # FASE 1: Match por chave composta (suporta wildcards)
     # Para cada chave de extração, encontra todas as chaves da baseline compatíveis
@@ -292,7 +292,7 @@ def process_extraction_comparison_bertscore(baseline_df: pd.DataFrame, extractio
     
     # FASE 3: Fuzzy matching apenas para não pareados
     fuzzy_candidates = [n for n in extraction_df["_Name_norm"] if n not in exact_map and n != ""]
-    print(f"   🔍 Fuzzy matching: {len(fuzzy_candidates)} vulnerabilidades...")
+    print(f"   🔍 Fuzzy matching: {len(fuzzy_candidates)} vulnerabilities...")
     for n in tqdm(fuzzy_candidates, desc="   Fuzzy matching", leave=False, disable=len(fuzzy_candidates) < 10):
         match_norm, score = best_fuzzy_match(n, baseline_norm_list)
         if match_norm and score >= FUZZY_THRESHOLD:
@@ -354,7 +354,7 @@ def process_extraction_comparison_bertscore(baseline_df: pd.DataFrame, extractio
 
     common_cols = [c for c in extraction_df.columns if c not in ["Name", "_Name_norm", "_composite_key"] and c in baseline_dedup.columns]
 
-    print(f"Colunas comparáveis encontradas (BERTScore): {len(common_cols)}")
+    print(f"[BERT] Columns for comparison: {len(common_cols)}")
 
     # Tracking de linhas já usadas da baseline (para matching 1:1)
     used_baseline_rowids = set()  # Usa _baseline_row_id como identificador
@@ -367,7 +367,7 @@ def process_extraction_comparison_bertscore(baseline_df: pd.DataFrame, extractio
         key=lambda x: (0 if final_composite_map.get(x[1]["_composite_key"]) else 1)
     )
 
-    print(f"   📊 Calculando scores BERTScore...")
+    print(f"[BERT] Calculating scores...")
     records = []
     for _, row in tqdm(extraction_rows_sorted, total=len(extraction_rows_sorted), desc="   BERTScore scoring", leave=False):
         name_show = row["Name"]
@@ -533,14 +533,14 @@ def process_extraction_comparison_bertscore(baseline_df: pd.DataFrame, extractio
     print(f"[DEBUG] baseline_dedup shape: {baseline_dedup.shape}")
     print(f"[DEBUG] baseline_dedup _baseline_row_id:")
     print(baseline_dedup["_baseline_row_id"].tolist())
-    print(f"[DEBUG] used_baseline_rowids (pareados):")
+    print(f"[DEBUG] used_baseline_rowids (matched):")
     print(list(used_baseline_rowids))
 
     # Marca como ausente apenas as instâncias da baseline cujo rowid NÃO foi usado
     baseline_rowids = set(baseline_dedup["_baseline_row_id"].tolist())
     used_rowids = set(used_baseline_rowids)
     absent_rowids = baseline_rowids - used_rowids
-    print(f"[DEBUG] absent_rowids (serão marcados como ausentes):")
+    print(f"[DEBUG] absent_rowids (will be marked as absent):")
     print(list(absent_rowids))
     for rowid in absent_rowids:
         base_row = base_idx_rowid.loc[rowid]
@@ -595,52 +595,55 @@ def main():
     args = parse_arguments_common(require_model=False)
     
     baseline_file = args.baseline_file
-
     output_dir = Path(args.output_dir)
-    
     global ALLOW_BASELINE_DUPLICATES
-    
-    print("=== Comparacao de Multiplas Extracoes com Baseline (BERTScore) ===")
-    
+    print("\n=== Comparison of Multiple Extractions with Baseline (BERTScore) ===")
     # Configuração baseada no parâmetro CLI
     ALLOW_BASELINE_DUPLICATES = args.allow_duplicates
     if ALLOW_BASELINE_DUPLICATES:
-        print(f"\n[OK] Modo CLI: duplicatas legítimas permitidas")
+        print(f"\n[OK] CLI Mode: legitimate duplicates allowed")
     else:
-        print(f"\n[OK] Modo CLI: sem duplicatas legítimas")
-    
+        print(f"\n[OK] CLI Mode: no legitimate duplicates allowed")
+
     # Verifica se os arquivos existem
     if not Path(baseline_file).exists():
-        print(f"[ERRO] Arquivo baseline nao encontrado: {baseline_file}")
+        print(f"[ERROR] Baseline file not found: {baseline_file}")
         sys.exit(1)
-    
-    if not Path(args.extraction_file).exists():
-        print(f"[ERRO] Arquivo de extracao nao encontrado: {args.extraction_file}")
+    extraction_file = args.extraction_file
+    if not Path(extraction_file).exists():
+        print(f"[ERROR] Extraction file not found: {extraction_file}")
         sys.exit(1)
-    
+
+    # Automatic conversion from JSON to XLSX
+    if extraction_file.endswith('.json'):
+        try:
+            from src.converters import convert_json_to_xlsx
+            print(f"Converting extraction file from JSON to XLSX: {extraction_file}")
+            extraction_file = convert_json_to_xlsx(extraction_file)
+            print(f"Converted extraction file: {extraction_file}")
+        except Exception as e:
+            print(f"[ERROR] Failed to convert JSON to XLSX: {e}")
+            sys.exit(1)
+
     # Cria diretório de saída se não existir
     args.output_dir = Path(args.output_dir)
     args.output_dir.mkdir(parents=True, exist_ok=True)
-    
-    print(f"\nCarregando arquivo: {baseline_file}")
 
-    excel_data = pd.ExcelFile(baseline_file)
-
-    print(f"Carregando aba baseline: {BASELINE_SHEET}")
-    baseline_df = pd.read_excel(baseline_file, sheet_name=BASELINE_SHEET)
-
-    print(f"Baseline carregado - Shape: {baseline_df.shape}")
-    print(f"Colunas baseline: {list(baseline_df.columns)}")
-
+    print(f"\nLoading baseline file: {baseline_file}")
+    excel_data = pd.ExcelFile(baseline_file, engine="openpyxl")
+    print(f"Loading baseline sheet: {BASELINE_SHEET}")
+    baseline_df = pd.read_excel(baseline_file, sheet_name=BASELINE_SHEET, engine="openpyxl")
+    print(f"Baseline loaded - Shape: {baseline_df.shape}")
+    print(f"Baseline columns: {list(baseline_df.columns)}")
     # Verifica se precisamos carregar do arquivo de extracao para comparacoes
-    extraction_excel_data = pd.ExcelFile(args.extraction_file)
+    extraction_excel_data = pd.ExcelFile(extraction_file, engine="openpyxl")
     
     # Primeiro tenta encontrar abas de extração múltipla
     available_sheets = [sheet for sheet in EXTRACTION_SHEETS if sheet in extraction_excel_data.sheet_names]
     
     # Se não encontrou abas de extração múltipla, verifica se é um arquivo de extração simples
     if not available_sheets and 'Vulnerabilities' in extraction_excel_data.sheet_names:
-        print("Arquivo de extracao simples detectado - usando aba 'Vulnerabilities'")
+        print("Extraction file appears to be a single extraction sheet. Using 'Vulnerabilities' for comparison.")
         available_sheets = ['Vulnerabilities']
         EXTRACTION_SHEETS_TO_USE = ['Vulnerabilities']
     else:
@@ -649,29 +652,25 @@ def main():
     missing_sheets = [sheet for sheet in EXTRACTION_SHEETS_TO_USE if sheet not in extraction_excel_data.sheet_names]
     
     if missing_sheets and available_sheets:
-        print(f"\nAbas nao encontradas: {missing_sheets}")
+        print(f"\nSheets not found: {missing_sheets}")
     
-    print(f"\nAbas de extracao encontradas: {available_sheets}")
+    print(f"\nExtraction sheets found: {available_sheets}")
     
     if not available_sheets:
-        print("Nenhuma aba de extracao encontrada para comparacao!")
+        print("No extraction sheets found for comparison!")
         return
 
     general_summary = []
 
-    # prepara o diretório de saída por baseline
-    baseline_name = Path(baseline_file).stem
-    baseline_name = "_".join(baseline_name.split())
-
 
     for extraction_sheet in available_sheets:
         print(f"\n{'='*60}")
-        print(f"Processando (BERT): {extraction_sheet}")
+        print(f"Processing (BERT): {extraction_sheet}")
         print('='*60)
 
         try:
-            extraction_df = pd.read_excel(args.extraction_file, sheet_name=extraction_sheet)
-            print(f"Shape da extração: {extraction_df.shape}")
+            extraction_df = pd.read_excel(extraction_file, sheet_name=extraction_sheet, engine="openpyxl")
+            print(f"Shape of extraction data: {extraction_df.shape}")
 
             per_vuln_df, summary_df, mapping_debug_df, categorization_df, baseline_instances_matched, total_baseline_instances = process_extraction_comparison_bertscore(
                 baseline_df.copy(),
@@ -685,11 +684,9 @@ def main():
             modelo_nome = args.model if args.model else aba_nome
             if aba_nome == 'vulnerabilities' and not args.model:
                 modelo_nome = Path(args.extraction_file).stem.replace("vulnerabilities_", "").replace("_converted", "").lower()
-            # Cria subpasta do baseline dentro do diretório de resultados
-            baseline_dir = args.output_dir / Path(baseline_file).stem
-            baseline_dir.mkdir(parents=True, exist_ok=True)
+            # Salva diretamente na pasta da run
             output_file = f"bert_comparison_{aba_nome}_{modelo_nome}.xlsx"
-            output_path = baseline_dir / output_file
+            output_path = args.output_dir / output_file
 
             with pd.ExcelWriter(output_path) as writer:
                 per_vuln_df.to_excel(writer, sheet_name="Per_Vulnerability", index=False)
@@ -704,64 +701,48 @@ def main():
 
             cat_counts = categorization_df["Category"].value_counts().to_dict()
 
-            print(f"✅ Comparação BERT concluída!")
-            print(f"   → Arquivo: {output_path}")
-            print(f"\n   📊 Resumo da Comparação:")
-            print(f"      • Instâncias da baseline pareadas: {baseline_instances_matched}/{total_baseline_instances}")
-            print(f"      • Vulnerabilidades não extraídas (Absent): {cat_counts.get('Absent', 0)}")
-            print(f"      • Vulnerabilidades inventadas (Non-existent): {total_nonexistent}")
+            print(f"[BERT] Comparison completed")
+            print(f"       File: {output_path}")
+            print(f"\n[BERT] Summary:")
+            print(f"      • Matched baseline instances: {baseline_instances_matched}/{total_baseline_instances}")
+            print(f"      • Unextracted vulnerabilities (Absent): {cat_counts.get('Absent', 0)}")
+            print(f"      • Invented vulnerabilities (Non-existent): {total_nonexistent}")
             if unmatched_excess_count > 0:
-                print(f"        ↳ Duplicatas excedentes: {unmatched_excess_count}")
-                print(f"        ↳ Invenções sem match: {unmatched_count}")
+                print(f"        ↳ Excess duplicates: {unmatched_excess_count}")
+                print(f"        ↳ Inventions without match: {unmatched_count}")
 
-            print(f"\n   Categorização de Similaridade:")
+            print(f"\n[BERT] Categorization:")
             print(f"      • Highly Similar (>0.7): {cat_counts.get('Highly Similar', 0)}")
             print(f"      • Moderately Similar (0.6-0.7): {cat_counts.get('Moderately Similar', 0)}")
             print(f"      • Slightly Similar (0.4-0.6): {cat_counts.get('Slightly Similar', 0)}")
             print(f"      • Divergent (≤0.4): {cat_counts.get('Divergent', 0)}")
-            print(f"      • Non-existent (inventadas): {cat_counts.get('Non-existent', 0)}")
-            print(f"      • Absent (não extraídas): {cat_counts.get('Absent', 0)}")
+            print(f"      • Non-existent (invented): {cat_counts.get('Non-existent', 0)}")
+            print(f"      • Absent (unextracted): {cat_counts.get('Absent', 0)}")
 
-            # Estatísticas por campo
+            # Show only overall mean and a key field
             bert_columns = [col for col in per_vuln_df.columns if col.endswith('_bertscore_f1')]
-            extraction_stats = {
+            matched_data = per_vuln_df[per_vuln_df["_status"] == "OK"]
+            overall_mean = matched_data[bert_columns].mean().mean() if not matched_data.empty else 0.0
+            desc_mean = matched_data['description_bertscore_f1'].mean() if 'description_bertscore_f1' in matched_data else 0.0
+            print(f"\n[BERT] Quality Metrics:")
+            print(f"      • Overall mean BERTScore F1: {overall_mean:.3f}")
+            print(f"      • Description mean: {desc_mean:.3f}")
+            general_summary.append({
                 'Extraction': extraction_sheet,
                 'Total_Vulnerabilities': len(per_vuln_df),
-                'Matched_Vulnerabilities': matched_count,
-                'Match_Rate': matched_count / total_baseline_instances if total_baseline_instances > 0 else 0,
-                'Absent_Count': cat_counts.get('Absent', 0),
-                'NonExistent_Count': total_nonexistent
-            }
-
-            all_bert_scores = []
-            matched_data = per_vuln_df[per_vuln_df["_status"] == "OK"]
-
-            if len(matched_data) > 0:
-                for bert_col in bert_columns:
-                    field_avg = matched_data[bert_col].mean()
-                    field_name = bert_col.replace('_bertscore_f1', '')
-                    extraction_stats[f'{field_name}_bertscore_f1'] = field_avg
-                    all_bert_scores.append(field_avg)
-
-                extraction_stats['Overall_BERTScore_F1_Mean'] = sum(all_bert_scores) / len(all_bert_scores) if all_bert_scores else 0
-            else:
-                for bert_col in bert_columns:
-                    field_name = bert_col.replace('_bertscore_f1', '')
-                    extraction_stats[f'{field_name}_bertscore_f1'] = 0.0
-                extraction_stats['Overall_BERTScore_F1_Mean'] = 0.0
-
-            print(f"\n   Estatísticas por campo (exemplo):")
-            key_columns = ['description', 'impact', 'solution']
-            for col in key_columns:
-                if f'{col}_bertscore_f1' in extraction_stats:
-                    print(f"   → {col}: BERTScore F1={extraction_stats[f'{col}_bertscore_f1']:.3f}")
-
-            print(f"   → Média geral de todos os {len(bert_columns)} campos: {extraction_stats['Overall_BERTScore_F1_Mean']:.3f}")
-
-            general_summary.append(extraction_stats)
+                'Matched': baseline_instances_matched,
+                'Invented': total_nonexistent,
+                'Absent': cat_counts.get('Absent', 0),
+                'Highly_Similar': cat_counts.get('Highly Similar', 0),
+                'Moderately_Similar': cat_counts.get('Moderately Similar', 0),
+                'Slightly_Similar': cat_counts.get('Slightly Similar', 0),
+                'Divergent': cat_counts.get('Divergent', 0),
+                'Overall_Mean': overall_mean,
+                'Description_Mean': desc_mean
+            })
 
         except Exception as e:
-            print(f"❌ Erro ao processar {extraction_sheet}: {e}")
+            print(f"[ERROR] Failed to process {extraction_sheet}: {e}")
             continue
 
 
@@ -775,19 +756,14 @@ def main():
         summary_name = f"summary_all_extractions_bert_{baseline_name}_{model_name}.xlsx"
         summary_path = args.output_dir / summary_name
         general_df.to_excel(summary_path, index=False)
-        print(f"\n📊 Resumo geral salvo em: {summary_path}")
-
-        print(f"\n{'='*60}")
-        print("✅ Todas as comparações BERT concluídas!")
-        print("\n📊 Arquivos gerados:")
+        print(f"\n[BERT] Summary saved: {summary_path}")
+        print(f"{'='*60}")
+        print("[BERT] All comparisons completed")
+        print(f"[BERT] Output files:")
         for extraction_sheet in available_sheets:
             clean_name = extraction_sheet.replace("Extração ", "").replace(" ", "_").lower()
             print(f"   - {args.output_dir / f'bert_comparison_{clean_name}.xlsx'}")
-            print(f"       • Per_Vulnerability: Scores BERTScore F1 detalhados por campo")
-            print(f"       • Summary: Estatísticas agregadas (média, desvio, min, max, mediana)")
-            print(f"       • Categorization: Classificação completa (Similarity + Absent + Non-existent)")
-            print(f"       • Mapping_Debug: Debug do pareamento de nomes")
-        print(f"   - {args.output_dir / 'summary_all_extractions_bert.xlsx'} (comparação consolidada entre todos os modelos)")
+        print(f"   - {args.output_dir / 'summary_all_extractions_bert.xlsx'} (summary of all models)")
 
 
 if __name__ == "__main__":

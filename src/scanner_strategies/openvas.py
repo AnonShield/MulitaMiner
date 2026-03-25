@@ -41,3 +41,17 @@ class OpenVASStrategy(ScannerStrategy):
                 most_complete = max(group, key=count_filled_fields)
                 merged.append(most_complete)
         return merged
+    
+    def get_consolidation_report(self, input_count: int, output_count: int, removed: int) -> Dict:
+        """
+        Retorna report específico da estratégia OpenVAS.
+        """
+        return {
+            'strategy_name': 'OpenVAS custom merge',
+            'description': 'Groups vulnerabilities by (Name, port, protocol), keeps most complete',
+            'input_count': input_count,
+            'output_count': output_count,
+            'removed': removed,
+            'reason': 'duplicate merge',
+            'note': 'This is the custom OpenVAS consolidation strategy'
+        }

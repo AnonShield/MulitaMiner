@@ -53,7 +53,7 @@ def build_heatmap_df(metric: str, baseline_file: str, models: list) -> pd.DataFr
                 file_path = candidate
                 break
         if not file_path:
-            print(f"⚠️  {model}: Arquivo não encontrado: {file_candidates}")
+            print(f"⚠️  {model}: File not found: {file_candidates}")
             continue
         try:
             df = pd.read_excel(file_path, sheet_name="Summary")
@@ -71,7 +71,7 @@ def build_heatmap_df(metric: str, baseline_file: str, models: list) -> pd.DataFr
                 scores[col_name] = avg_score
             data[model] = scores
         except Exception as e:
-            print(f"❌ Erro ao processar {model}: {e}")
+            print(f"❌ Error processing {model}: {e}")
             continue
 
     if not data:
@@ -108,7 +108,7 @@ def build_errors_data_anymetric(baseline_file: str, models: list) -> tuple:
                 found = c
                 break
         if not found:
-            print(f"⚠️  {model}: nenhum arquivo encontrado entre {file_candidates}")
+            print(f"⚠️  {model}: no file found among {file_candidates}")
             continue
         try:
             df = pd.read_excel(found, sheet_name="Categorization")
@@ -118,7 +118,7 @@ def build_errors_data_anymetric(baseline_file: str, models: list) -> tuple:
             absent_counts.append(absent)
             non_existent_counts.append(non_existent)
         except Exception as e:
-            print(f"❌ Erro ao processar {model}: {e}")
+            print(f"❌ Error processing {model}: {e}")
             continue
 
     return models_list, absent_counts, non_existent_counts
@@ -167,7 +167,7 @@ def load_categorization_data(metric: str, baseline_file: str, models: list) -> d
             print(f"✅ {model}: {total_sim_and_absent} vulnerabilities categorized (Absent={absent_count})")
 
         except Exception as e:
-            print(f"❌ Erro ao processar {model}: {e}")
+            print(f"❌ Error processing {model}: {e}")
             continue
 
     return data

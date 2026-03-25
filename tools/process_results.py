@@ -26,52 +26,50 @@ def plot_similarity_category_stacked_bar():
     metrics = ["bert", "rouge"]
     os.makedirs('plot_runs', exist_ok=True)
 
+    # Novo caminho para resultados: busca recursiva em results_runs
+    results_base = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'results_runs'))
+
     for metric in metrics:
-        print(f"[STACKED] Processando métrica: {metric}")
-
-        # data[scanner][baseline][llm] = lista de dicts com contagens por run
+        print(f"[STACKED] Processing metric: {metric}")
         data = {}
-
-        for root, dirs, files in os.walk(RESULTS_DIR):
+        for root, dirs, files in os.walk(results_base):
             for fname in files:
                 if not (fname.startswith(f"{metric}_comparison_vulnerabilities_") and fname.endswith(".xlsx")):
                     continue
-
                 fpath = os.path.join(root, fname)
+                # Tenta extrair scanner e baseline do caminho
                 parts = fpath.replace('\\', '/').split('/')
-
-                # Estrutura esperada: results_runs_xlsx/Scanner_Baseline/llm/runN/arquivo.xlsx
-                # parts[0] = results_runs_xlsx
-                # parts[1] = Scanner_Baseline (ex: OpenVAS_bBWA)
-                if len(parts) < 2:
-                    continue
-
-                scanner_baseline = parts[1]  # ex: "OpenVAS_bBWA"
-                # Separa scanner e baseline pelo primeiro underscore
-
-                if '_' in scanner_baseline:
-                    scanner, baseline = scanner_baseline.split('_', 1)
-                else:
-                    scanner, baseline = scanner_baseline, scanner_baseline
-                # Normaliza scanner para evitar duplicidade (ex: OpenVAS/openvas)
+                # Exemplo: .../results_runs/openvas_artifactory-oss_5.11.0/deepseek/run1/bert_comparison_vulnerabilities_deepseek.xlsx
+                try:
+                    folder_name = parts[-4]  # "openvas_artifactory-oss_5.11.0" ou "OpenVAS_JuiceShop"
+                    # Separa scanner de baseline
+                    folder_lower = folder_name.lower()
+                    if folder_lower.startswith('openvas'):
+                        scanner = 'openvas'
+                        baseline = folder_name[7:].lstrip('_')  # Remove "openvas_"
+                    elif folder_lower.startswith('tenable'):
+                        scanner = 'tenable'
+                        baseline = folder_name[7:].lstrip('_')  # Remove "tenable_"
+                    else:
+                        scanner = folder_name
+                        baseline = folder_name
+                except Exception:
+                    scanner = 'unknown'
+                    baseline = 'unknown'
                 scanner = scanner.lower()
-
+                baseline = baseline.lower()
                 llm = extract_llm_from_filename(fname)
                 if llm is None:
                     continue
-
                 try:
                     df = pd.read_excel(fpath, sheet_name="Categorization")
                 except Exception as e:
-                    print(f"Erro ao ler {fpath}: {e}")
+                    print(f"Error reading {fpath}: {e}")
                     continue
-
                 if "Category" not in df.columns:
-                    print(f"Coluna 'Category' não encontrada em {fpath}")
+                    print(f"Column 'Category' not found in {fpath}")
                     continue
-
                 cat_counts = df["Category"].value_counts().to_dict()
-
                 data\
                     .setdefault(scanner, {})\
                     .setdefault(baseline, {})\
@@ -97,7 +95,7 @@ def plot_similarity_category_stacked_bar():
             plt.rcParams.update({'font.size': 15})
 
             # Patterns (hatches) para diferenciar as baselines
-            baseline_hatches = ['/', '+', '-', '|', '++', 'X', 'o', 'O', '.', '*', '//', '\\\\', '||', '--', '\\', 'XX', '..', '-\\']
+            baseline_hatches = ['/', '+', '\\', '-', '|', '++', 'X', 'o', 'O', '.', '*', '//', '\\\\', '||', '--', 'XX', '..', '-\\']
             # Se houver mais baselines que patterns, repete os patterns
             while len(baseline_hatches) < len(baselines):
                 baseline_hatches *= 2
@@ -131,13 +129,11 @@ def plot_similarity_category_stacked_bar():
                     bar_x = x[l_idx] + b_idx * bar_width
 
                     for cat_idx, (cat, color) in enumerate(zip(categories, colors)):
-                        label = cat if (b_idx == 0 and l_idx == 0) else None
                         ax.bar(
                             bar_x, pct[cat_idx],
                             bottom=bottom,
                             color=color,
                             width=bar_width,
-                            label=label,
                             edgecolor="#cccccc",
                             linewidth=0.7,
                             hatch=hatch_pattern
@@ -155,33 +151,50 @@ def plot_similarity_category_stacked_bar():
             ax.set_xticks(x + bar_width * (n_baselines - 1) / 2)
             ax.set_xticklabels(llms, fontsize=16)
 
-            # Legenda das categorias
-            handles, labels = ax.get_legend_handles_labels()
-            legend_cats = ax.legend(
-                handles, labels,
-                title="Category",
-                loc="upper right",
-                fontsize=14
-            )
-            ax.add_artist(legend_cats)
-
-            # Legenda das baselines (agora com patterns)
             from matplotlib.patches import Patch
+            
+            # Legenda das categorias
+            category_legend_patches = [
+                Patch(facecolor=color, edgecolor="#cccccc", linewidth=0.7, label=cat)
+                for cat, color in zip(categories, colors)
+            ]
+            
+            # Legenda das baselines
             baseline_legend_patches = [
                 Patch(facecolor='#cccccc', edgecolor='#333', hatch=baseline_hatches[i], label=b)
                 for i, b in enumerate(baselines)
             ]
-            ax.legend(
-                handles=baseline_legend_patches,
-                title="Baseline (pattern)",
+            
+            # Combina ambas as legendas
+            all_handles = category_legend_patches + baseline_legend_patches
+            all_labels = [h.get_label() for h in all_handles]
+            
+            # Cria legenda customizada na figura (não no axes)
+            # Legenda de categorias: 5 colunas
+            legend1 = fig.legend(
+                handles=category_legend_patches,
                 loc="lower center",
-                bbox_to_anchor=(0.5, -0.45),  # Desce mais a legenda
+                bbox_to_anchor=(0.5, 0.02),
+                ncol=5,
+                fontsize=14,
+                frameon=True,
+                title="Category",
+                title_fontsize=15
+            )
+            
+            # Legenda de baselines: embaixo da anterior
+            legend2 = fig.legend(
+                handles=baseline_legend_patches,
+                loc="lower center",
+                bbox_to_anchor=(0.5, -0.08),
                 ncol=min(len(baselines), 4),
                 fontsize=14,
-                frameon=False
+                frameon=True,
+                title="Baseline (pattern)",
+                title_fontsize=15
             )
 
-            plt.tight_layout(rect=[0, 0.13, 1, 1])  # Aumenta espaço inferior
+            plt.tight_layout(rect=[0, 0.12, 1, 1])
             timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
             fname_out = f"plot_runs/stacked_similarity_{scanner}_{metric}_{timestamp}.png"
             plt.savefig(fname_out, dpi=150, bbox_inches='tight')
@@ -195,7 +208,7 @@ def build_heatmap_df_all_llms(metric: str, baseline: str) -> pd.DataFrame:
     import os
     from pathlib import Path
     metric = metric.lower()
-    results_dir = Path('results_runs_xlsx') / str(baseline)
+    results_dir = Path('results_runs') / str(baseline)
     arquivos = []
     for root, dirs, files in os.walk(results_dir):
         for f in files:
@@ -205,7 +218,7 @@ def build_heatmap_df_all_llms(metric: str, baseline: str) -> pd.DataFrame:
             ):
                 arquivos.append(os.path.join(root, f))
     if not arquivos:
-        print(f"⚠️  Nenhum arquivo de comparação encontrado em {results_dir} para heatmap.")
+        print(f"⚠️  No comparison files found in {results_dir} for heatmap.")
         return pd.DataFrame()
     data = {}  
     for arq in arquivos:
@@ -215,7 +228,7 @@ def build_heatmap_df_all_llms(metric: str, baseline: str) -> pd.DataFrame:
         try:
             df = pd.read_excel(arq, sheet_name="Summary")
         except Exception as e:
-            print(f"❌ Erro ao ler {arq}: {e}")
+            print(f"❌ Error reading {arq}: {e}")
             continue
         for _, row in df.iterrows():
             col = row["Column"]
@@ -248,9 +261,10 @@ import seaborn as sns
 import re
 import argparse
 
-RESULTS_DIR = "results_runs_xlsx"
+RESULTS_DIR = "results_runs"
+
 def get_baselines():
-    # Retorna lista de baselines pelas subpastas de results_runs_xlsx
+    # Retorna lista de baselines pelas subpastas de results_runs
     return sorted([d for d in os.listdir(RESULTS_DIR) if os.path.isdir(os.path.join(RESULTS_DIR, d))])
 SUMMARY_PATTERN = re.compile(r"(?P<baseline>.+)_(?P<scanner>.+)\.xlsx")
 LLMS = ["deepseek", "gpt4", "gpt5", "llama3", "llama4"]
@@ -317,9 +331,11 @@ def plot_absent_nonexistent_mean():
             absent_col = None
             nonexistent_col = None
             for c in df.columns:
-                if c.lower() in ["absent_count", "absent"]:
+                # Procura por colunas de absent: "Absent", "absent_count", etc
+                if c.lower() in ["absent", "absent_count"]:
                     absent_col = c
-                if c.lower() in ["nonexistent_count", "non-existent", "non_existent_count"]:
+                # Procura por colunas de non-existent: "Invented", "Non-existent", "nonexistent_count", etc
+                if c.lower() in ["invented", "nonexistent_count", "non-existent", "non_existent_count"]:
                     nonexistent_col = c
             if absent_col is None or nonexistent_col is None:
                 continue
@@ -337,7 +353,7 @@ def plot_absent_nonexistent_mean():
                     "Non-existent": row[nonexistent_col]
                 })
     if not arquivos_encontrados:
-        print(f"[ABSENT/NON-EXISTENT] Nenhum arquivo .xlsx encontrado em {RESULTS_DIR}. Verifique a estrutura de pastas.")
+        print(f"[ABSENT/NON-EXISTENT] No .xlsx files found in {RESULTS_DIR}. Please check the directory structure.")
     if absent_nonexistent_data:
         df = pd.DataFrame(absent_nonexistent_data)
         combos = df.groupby(["scanner", "report"]).size().index
@@ -361,9 +377,9 @@ def plot_absent_nonexistent_mean():
             timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
             plt.savefig(f"plot_runs/absent_nonexistent_std_{scanner}_{report}_{timestamp}.png")
             plt.close()
-        print(f"[ABSENT/NON-EXISTENT] Gráficos salvos em plot_runs/ para cada scanner+report.")
+        print(f"[ABSENT/NON-EXISTENT] Graphs saved in plot_runs/ for each scanner+report.")
     else:
-        print("[ABSENT/NON-EXISTENT] Nenhum dado válido para gerar barplots de Absent/Non-existent.")
+        print("[ABSENT/NON-EXISTENT] No valid data found to generate barplots for Absent/Non-existent.")
 
 def plot_matched_rate_mean_std():
     baselines = get_baselines()
@@ -416,8 +432,9 @@ def plot_matched_rate_mean_std():
                     "Matched_Rate": row[matched_col],
                     "metric": metric
                 })
+    
     if not arquivos_encontrados:
-        print(f"[MATCHED RATE] Nenhum arquivo .xlsx encontrado em {RESULTS_DIR}. Verifique a estrutura de pastas.")
+        print(f"[MATCHED RATE] No .xlsx files found in {RESULTS_DIR}. Please check the directory structure.")
     if matched_data:
         df_matched = pd.DataFrame(matched_data)
         scanners = sorted(df_matched["scanner"].unique())
@@ -438,7 +455,7 @@ def plot_matched_rate_mean_std():
                     continue
                 baselines_present = sorted([normalize_name(b) for b in df_s["report"].unique()])
                 if not baselines_present:
-                    print(f"Nenhum baseline presente para {scanner} | {metric}, pulando plot.")
+                    print(f"No baselines found for {scanner} | {metric}, skipping plot.")
                     continue
                 # Barras lado a lado
                 llms = sorted(df_s["llm"].unique())
@@ -463,9 +480,9 @@ def plot_matched_rate_mean_std():
                 timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
                 plt.savefig(f"plot_runs/matched_rate_mean_std_{scanner}_{metric}_{timestamp}.png")
                 plt.close()
-        print(f"[MATCHED RATE] Gráficos salvos em plot_runs/ para cada scanner+metric.")
+        print(f"[MATCHED RATE] Graphs saved in plot_runs/ for each scanner+metric.")
     else:
-        print("[MATCHED RATE] Nenhum dado válido para gerar barplots de Matched Rate.")
+        print("[MATCHED RATE] No valid data found to generate barplots for Matched Rate.")
 
 # ========== HEATMAPS DE SCORES ==========
 def plot_score_heatmaps():
@@ -498,11 +515,11 @@ def plot_score_heatmaps():
         else:
             scanner, base = baseline, ''
         for metric in metrics:
-            print(f"[HEATMAP] Gerando heatmap para baseline={baseline}, métrica={metric}")
+            print(f"[HEATMAP] Generating heatmap for baseline={baseline}, metric={metric}")
             try:
                 df_heatmap = build_heatmap_df_all_llms(metric, baseline)
                 if df_heatmap is None or df_heatmap.empty:
-                    print(f"[HEATMAP] Nenhum dado disponível para heatmap!")
+                    print(f"[HEATMAP] No data available for heatmap!")
                     continue
                 from pathlib import Path
                 import matplotlib.pyplot as plt
@@ -528,7 +545,7 @@ def plot_score_heatmaps():
                 plt.close()
                 print(f"✅ Heatmap saved: {out_path}")
             except Exception as e:
-                print(f"[HEATMAP] Erro ao gerar heatmap para baseline={baseline}, métrica={metric}: {e}")
+                print(f"[HEATMAP] Error generating heatmap for baseline={baseline}, metric={metric}: {e}")
 
 print('Processing results...')
 if __name__ == "__main__":

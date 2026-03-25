@@ -10,7 +10,7 @@ def main(baseline_file: str, baseline_sheet: str, models: list, metric_pref: str
         # interactive prompt
         while metric not in ("rouge", "bert"):
             try:
-                metric = input("Escolha a métrica para plotagem ('rouge' ou 'bert'): ").strip().lower()
+                metric = input("Choose metric for plotting ('rouge' or 'bert'): ").strip().lower()
             except KeyboardInterrupt:
                 print("\nInterrupted")
                 return
@@ -36,7 +36,7 @@ def main(baseline_file: str, baseline_sheet: str, models: list, metric_pref: str
 
     # Diretório de resultados específico da métrica e baseline
     results_dir = utils.get_results_dir(metric, str(baseline_path))
-    print(f"Usando results dir: {results_dir}")
+    print(f"Using results dir: {results_dir}")
 
     # 1) Heatmap
     print(f"\n📊 1/3: Generating Heatmap by Field ({metric.upper()})...")
@@ -63,10 +63,10 @@ def main(baseline_file: str, baseline_sheet: str, models: list, metric_pref: str
 
 def cli_entry():
     p = argparse.ArgumentParser(prog='plot')
-    p.add_argument('--metric', choices=['rouge', 'bert'], help='Métrica para plotagem (rouge ou bert)')
-    p.add_argument('--baseline', required=False, help='Nome do arquivo baseline dentro da pasta baseline/ (ex: baseline.xlsx)')
-    p.add_argument('--baseline-sheet', default='Vulnerabilities', help='Nome da aba baseline')
-    p.add_argument('--models', help='Lista de modelos separados por vírgula (ex: deepseek,gpt4)')
+    p.add_argument('--metric', choices=['rouge', 'bert'], help='Metric for plotting (rouge or bert)')
+    p.add_argument('--baseline', required=False, help='Baseline file name inside baseline/ folder (e.g.: baseline.xlsx)')
+    p.add_argument('--baseline-sheet', default='Vulnerabilities', help='Baseline sheet name')
+    p.add_argument('--models', help='Comma-separated list of models (e.g.: deepseek,gpt4)')
     args = p.parse_args()
 
 
@@ -94,9 +94,9 @@ def cli_entry():
                     nome = nome.replace("vulnerabilities_", "")
                 models.append(nome)
             if not models:
-                print(f"⚠️  Nenhum resultado encontrado em {results_dir}")
+                print(f"⚠️  No results found in {results_dir}")
         else:
-            print(f"⚠️  Pasta de resultados não encontrada: {results_dir}")
+            print(f"⚠️  Results folder not found: {results_dir}")
             models = []
         if not models:
             # fallback para lista padrão se nada encontrado
@@ -104,7 +104,7 @@ def cli_entry():
 
     baseline = args.baseline
     if not baseline:
-        baseline = input('Nome do arquivo baseline (colocado em ./baselines/) (sem extensão opcional): ').strip()
+        baseline = input('Baseline file name (placed in ./baselines/) (extension optional): ').strip()
     # if user provided no extension, assume .xlsx
     if baseline and not Path(baseline).suffix:
         baseline = f"{baseline}.xlsx"

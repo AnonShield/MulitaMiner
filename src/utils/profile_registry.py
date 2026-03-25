@@ -19,20 +19,20 @@ CONSOLIDATION_STRATEGIES = {}
 def register_validator(profile_name: str, validator_func: Callable) -> None:
     """Register a validator for a specific profile type."""
     PROFILE_VALIDATORS[profile_name.lower()] = validator_func
-    print(f"[REGISTRY] Validator registered for profile: {profile_name}")
+    # print(f"[REGISTRY] Validator registered for profile: {profile_name}")
 
 
 def register_field_handler(profile_name: str, field_name: str, handler_func: Callable) -> None:
     """Register a custom field handler for a profile."""
     key = f"{profile_name.lower()}:{field_name}"
     FIELD_HANDLERS[key] = handler_func
-    print(f"[REGISTRY] Field handler registered: {key}")
+    # print(f"[REGISTRY] Field handler registered: {key}")
 
 
 def register_consolidation_strategy(profile_name: str, strategy_func: Callable) -> None:
     """Register a consolidation strategy for a profile."""
     CONSOLIDATION_STRATEGIES[profile_name.lower()] = strategy_func
-    print(f"[REGISTRY] Consolidation strategy registered for profile: {profile_name}")
+    # print(f"[REGISTRY] Consolidation strategy registered for profile: {profile_name}")
 
 
 def get_validator(profile_name: str) -> Optional[Callable]:
