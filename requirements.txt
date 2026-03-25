@@ -10,7 +10,7 @@ langchain-core>=0.1.0,<0.2.0
 pdfplumber>=0.10.0,<0.12.0
 tqdm>=4.0.0,<5.0.0
 tiktoken>=0.5.1,<0.7.0
-dotenv>=0.21.0,<2.0.0
+python-dotenv>=0.21.0
 
 # Merge and utility dependencies
 deepmerge>=1.1.0,<2.0.0
@@ -26,8 +26,8 @@ numpy>=1.21.0,<2.0.0
 matplotlib>=3.4.0,<4.0.0
 seaborn>=0.11.0,<1.0.0
 bert-score>=0.3.0,<0.4.0
+rouge-score>=0.1.0
 torch>=1.10.0,<3.0.0
-python-dotenv>=0.21.0
 
 # =================================================================
 # Installation Instructions:

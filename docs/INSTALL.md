@@ -21,11 +21,11 @@ cd MulitaMiner
 
 ```bash
 # Windows
-python -m venv .venv
+python3 -m venv .venv
 .venv\Scripts\activate
 
 # Linux/Mac
-python -m venv .venv
+python3 -m venv .venv
 source .venv/bin/activate
 ```
 
@@ -44,7 +44,7 @@ langchain>=0.1.0,<0.3.0          # Main framework for LLMs
 langchain-openai>=0.1.0,<0.2.0   # OpenAI integration
 langchain-core>=0.1.0,<0.2.0     # Langchain core
 tiktoken>=0.5.1,<0.7.0           # Tokenization
-python-dotenv>=0.21.0,<2.0.0     # Environment variables
+python-dotenv>=0.21.0            # Environment variables
 ```
 
 ### PDF Processing - Optimized Extraction
@@ -77,7 +77,7 @@ openpyxl>=3.0.0,<4.0.0           # Excel export
 ```pip-requirements
 rapidfuzz>=3.0.0,<4.0.0          # Fuzzy matching
 bert-score>=0.3.0,<0.4.0         # BERTScore
-rouge-score>=0.1.0,<0.2.0        # ROUGE
+rouge-score>=0.1.0                # ROUGE
 torch>=1.10.0,<3.0.0             # Required for BERTScore
 numpy>=1.21.0,<2.0.0             # Numeric operations
 matplotlib>=3.4.0,<4.0.0         # Visualization
@@ -93,13 +93,13 @@ After installation, verify that everything is correctly installed:
 
 ```bash
 # Check Python version
-python --version
+python3 --version
 
 # Check if main dependencies are installed
-python -c "import langchain; import pdfplumber; import tiktoken; print('Core dependencies OK')"
+python3 -c "import langchain; import pdfplumber; import tiktoken; print('Core dependencies OK')"
 
 # Check if metrics dependencies are installed
-python -c "import bert_score; import rouge_score; print('Metrics dependencies OK')"
+python3 -c "import bert_score; import rouge_score; print('Metrics dependencies OK')"
 ```
 
 ## Next Steps

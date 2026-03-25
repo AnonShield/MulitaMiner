@@ -75,7 +75,7 @@ langchain>=0.1.0,<0.3.0          # LLM framework
 langchain-openai>=0.1.0,<0.2.0   # OpenAI integration
 tiktoken>=0.5.1,<0.7.0           # Tokenization
 pdfplumber>=0.10.0,<0.12.0       # PDF extraction
-python-dotenv>=0.21.0,<2.0.0     # Environment variables
+python-dotenv>=0.21.0            # Environment variables
 tqdm>=4.0.0,<5.0.0               # Progress bars
 pandas>=1.3.0,<3.0.0             # Data manipulation
 openpyxl>=3.0.0,<4.0.0           # Excel export
@@ -85,7 +85,7 @@ openpyxl>=3.0.0,<4.0.0           # Excel export
 
 ```
 bert-score>=0.3.0,<0.4.0         # BERTScore
-rouge-score>=0.1.0,<0.2.0        # ROUGE
+rouge-score>=0.1.0                # ROUGE
 torch>=1.10.0,<3.0.0             # PyTorch (required for BERTScore)
 rapidfuzz>=3.0.0,<4.0.0          # Fuzzy matching
 ```
@@ -122,11 +122,11 @@ cd MulitaMiner
 
 ```bash
 # Windows
-python -m venv .venv
+python3 -m venv .venv
 .venv\Scripts\activate
 
 # Linux/Mac
-python -m venv .venv
+python3 -m venv .venv
 source .venv/bin/activate
 ```
 
