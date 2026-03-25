@@ -1,3 +1,5 @@
+import pandas as pd
+
 # =====================
 # GRÁFICO STACKED BAR 100% CATEGORIAS DE SIMILARIDADE
 # =====================
