@@ -1,13 +1,18 @@
+import os
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+import re
+import argparse
+from datetime import datetime
+from pathlib import Path
+from matplotlib.patches import Patch
+
 # =====================
 # GRÁFICO STACKED BAR 100% CATEGORIAS DE SIMILARIDADE
 # =====================
 def plot_similarity_category_stacked_bar():
-    import pandas as pd
-    import matplotlib.pyplot as plt
-    import os
-    import numpy as np
-    from datetime import datetime
-
     categories = [
         "Highly Similar",
         "Moderately Similar",
@@ -151,8 +156,6 @@ def plot_similarity_category_stacked_bar():
             ax.set_xticks(x + bar_width * (n_baselines - 1) / 2)
             ax.set_xticklabels(llms, fontsize=16)
 
-            from matplotlib.patches import Patch
-            
             # Legenda das categorias
             category_legend_patches = [
                 Patch(facecolor=color, edgecolor="#cccccc", linewidth=0.7, label=cat)
@@ -204,9 +207,6 @@ def plot_similarity_category_stacked_bar():
 # EXECUÇÃO PRINCIPAL
 # =====================
 def build_heatmap_df_all_llms(metric: str, baseline: str) -> pd.DataFrame:
-    import pandas as pd
-    import os
-    from pathlib import Path
     metric = metric.lower()
     results_dir = Path('results_runs') / str(baseline)
     arquivos = []
@@ -253,14 +253,6 @@ print('Processing results...')
 # =====================
 # MÓDULOS E CONFIGS
 # =====================
-import os
-import numpy as np
-import pandas as pd
-import matplotlib.pyplot as plt
-import seaborn as sns
-import re
-import argparse
-
 RESULTS_DIR = "results_runs"
 
 def get_baselines():
