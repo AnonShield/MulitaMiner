@@ -265,15 +265,16 @@ For detailed experiment configurations and paper results, see [docs/EXPERIMENTS.
 
 Detailed documentation is organized in separate files:
 
-| Document                                           | Description                         |
-| -------------------------------------------------- | ----------------------------------- |
-| [docs/INSTALL.md](docs/INSTALL.md)                 | Detailed installation guide         |
-| [docs/USAGE.md](docs/USAGE.md)                     | Complete usage guide with examples  |
-| [docs/CONFIG.md](docs/CONFIG.md)                   | API keys and token configuration    |
-| [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)       | Code structure and components       |
-| [docs/EXTENSIBILITY.md](docs/EXTENSIBILITY.md)     | Adding new scanners and LLMs        |
-| [docs/TROUBLESHOOTING.md](docs/TROUBLESHOOTING.md) | Common errors and optimization tips |
-| [docs/EXPERIMENTS.md](docs/EXPERIMENTS.md)         | Experimental validation details     |
+| Document                                           | Description                          |
+| -------------------------------------------------- | ------------------------------------ |
+| [docs/INSTALL.md](docs/INSTALL.md)                 | Detailed installation guide          |
+| [docs/USAGE.md](docs/USAGE.md)                     | Complete usage guide with examples   |
+| [docs/CONFIG.md](docs/CONFIG.md)                   | API keys and token configuration     |
+| [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)       | Code structure and components        |
+| [docs/EXTENSIBILITY.md](docs/EXTENSIBILITY.md)     | Adding new scanners and LLMs         |
+| [docs/TROUBLESHOOTING.md](docs/TROUBLESHOOTING.md) | Common errors and optimization tips  |
+| [docs/EXPERIMENTS.md](docs/EXPERIMENTS.md)         | Experimental validation details      |
+| [docs/INVENTORY.md](docs/INVENTORY.md)             | Container inventory and distribution |
 
 ## LICENSE
 
