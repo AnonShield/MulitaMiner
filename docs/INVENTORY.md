@@ -4,7 +4,7 @@ Containers used to perform scans with OpenVAS. This table contains information a
 
 ## Container Distribution
 
-![Container Distribution Charts](../../imgs/docs/inventory_distribution.png)
+![Container Distribution Charts](imgs/docs/inventory/inventory_distribution.png)
 
 _Left: Distribution of containers by Category (their primary function/purpose, e.g., databases, web platforms, monitoring tools). Right: Distribution by Risk Profile (containers with real vulnerabilities from outdated/misconfigured versions vs. intentionally vulnerable containers designed for security testing)._
 
