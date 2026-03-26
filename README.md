@@ -21,7 +21,7 @@ _Automated · Structured · Multi-LLM_
 
 **MulitaMiner** is an automated tool for extracting and structuring vulnerabilities from heterogeneous PDF reports produced by security scanners. Its LLM-based pipeline combines adaptive chunking and scanner-aware prompting to convert unstructured findings into consistent, analysis-ready vulnerability records, with standardized outputs and quality validation.
 
-As a key contribution, a dataset of approximately **6,700 vulnerabilities** extracted from **129 OpenVAS reports** is provided, demonstrating the tool's capability and serving as a reference for future research. Extraction quality was validated against structured baselines using BERTScore and ROUGE-L metrics, achieving **Recall of 96.18%**, **Precision of 91.06%**, and **F1-score of 0.9355**.
+As a key contribution, a dataset of **6,700 vulnerabilities** extracted from **129 OpenVAS reports** is provided, serving as a reference for future research. The dataset was evaluated against ground-truth records via host/IP and vulnerability name matching, achieving **Recall of 96.18%**, **Precision of 91.06%**, and **F1-score of 0.9355**. Additionally, the extraction tool was validated against structured baselines from 3 reports using BERTScore and ROUGE-L semantic similarity metrics.
 
 **Use Cases:**
 
@@ -156,7 +156,12 @@ After installation, run this minimal test to verify the setup:
 
 ```bash
 # Basic extraction using Groq
+
+# Windows
 python main.py --input test\openvas\OpenVAS_JuiceShop.pdf --llm llama3 --scanner openvas --allow-duplicates --output-file openvas_test
+
+# Linux/macOS
+python main.py --input test/openvas/OpenVAS_JuiceShop.pdf --llm llama3 --scanner openvas --allow-duplicates --output-file openvas_test
 
 # Expected output:
 # - openvas_test.json with extracted vulnerabilities
@@ -188,13 +193,21 @@ This section describes how to reproduce the main claims from the paper.
 **Execution**:
 
 ```bash
-# Extract using DeepSeek (best cost-benefit in the paper)
+# Extract using DeepSeek (best cost-benefit in the paper) and other LLMs for comparison
+
+# Windows
 python main.py --input test\openvas\OpenVAS_JuiceShop.pdf --llm deepseek --scanner openvas --allow-duplicates --output-file openvas_test_deepseek
 
-# Extract using other LLMs for comparison
 python main.py --input test\openvas\OpenVAS_JuiceShop.pdf --llm gpt4 --scanner openvas --allow-duplicates --output-file openvas_test_gpt4
 
 python main.py --input test\openvas\OpenVAS_JuiceShop.pdf --llm llama3 --scanner openvas --allow-duplicates --output-file openvas_test_llama3
+
+# Linux/macOS
+python main.py --input test/openvas/OpenVAS_JuiceShop.pdf --llm deepseek --scanner openvas --allow-duplicates --output-file openvas_test_deepseek
+
+python main.py --input test/openvas/OpenVAS_JuiceShop.pdf --llm gpt4 --scanner openvas --allow-duplicates --output-file openvas_test_gpt4
+
+python main.py --input test/openvas/OpenVAS_JuiceShop.pdf --llm llama3 --scanner openvas --allow-duplicates --output-file openvas_test_llama3
 ```
 
 **Expected time**: ~12 minutes for all extractions
@@ -212,11 +225,17 @@ python main.py --input test\openvas\OpenVAS_JuiceShop.pdf --llm llama3 --scanner
 **Execution**:
 
 ```bash
-# Extract and evaluate with BERTScore
+# Evaluate with BERTScore and ROUGE-L
+
+# Windows
 python metrics/bert/compare_extractions_bert.py --baseline-file test\openvas\OpenVAS_JuiceShop.xlsx --extraction-file openvas_test_deepseek.json --model deepseek --output-dir results_bert --allow-duplicates
 
-# Or evaluate with ROUGE-L
 python metrics/rouge/compare_extractions_rouge.py --baseline-file test\openvas\OpenVAS_JuiceShop.xlsx --extraction-file openvas_test_deepseek.json --model deepseek --output-dir results_rouge --allow-duplicates
+
+# Linux/macOS
+python metrics/bert/compare_extractions_bert.py --baseline-file test/openvas/OpenVAS_JuiceShop.xlsx --extraction-file openvas_test_deepseek.json --model deepseek --output-dir results_bert --allow-duplicates
+
+python metrics/rouge/compare_extractions_rouge.py --baseline-file test/openvas/OpenVAS_JuiceShop.xlsx --extraction-file openvas_test_deepseek.json --model deepseek --output-dir results_rouge --allow-duplicates
 ```
 
 **Expected time**: ~15 seconds for BERT and ~3 seconds for ROUGE
@@ -231,7 +250,12 @@ python metrics/rouge/compare_extractions_rouge.py --baseline-file test\openvas\O
 
 ```bash
 # Run full experiment suite
+
+# Windows
 python tools/run_experiments.py --input-dir test\openvas --llms deepseek --scanners openvas --evaluation-methods bert rouge --runs-per-model 5 --allow-duplicates true
+
+# Linux/macOS
+python tools/run_experiments.py --input-dir test/openvas --llms deepseek --scanners openvas --evaluation-methods bert rouge --runs-per-model 5 --allow-duplicates true
 ```
 
 **Expected time**: ~40 minutes
