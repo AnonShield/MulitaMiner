@@ -320,12 +320,15 @@ def extract_visual_layout_from_pdf(pdf_path):
         print(f"Error extracting visual layout: {e}")
         return None
     
-def save_visual_layout(content, pdf_path):
+def save_visual_layout(content, pdf_path, process_id=None):
     """
-    Salva o layout visual extraído em arquivo TXT para referência
+    Salva o layout visual extraído em arquivo TXT para referência.
     """
     base_name = os.path.splitext(os.path.basename(pdf_path))[0]
-    output_visual_path = f"visual_layout_extracted_{base_name}.txt"
+    if process_id:
+        output_visual_path = f"visual_layout_extracted_{base_name}_{process_id}.txt"
+    else:
+        output_visual_path = f"visual_layout_extracted_{base_name}.txt"
     try:
         with open(output_visual_path, 'w', encoding='utf-8') as f:
             # Cabeçalho informativo

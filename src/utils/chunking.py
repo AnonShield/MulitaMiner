@@ -45,15 +45,13 @@ def build_prompt(doc_chunk: TokenChunk, profile_config: Dict[str, Any]) -> str:
     if os.path.isfile(prompt_template):
         prompt_template = load_prompt(prompt_template)
     
-    # Sanitiza o conteúdo do chunk para evitar UnicodeEncodeError e normaliza ligaduras
-    # Import tardio para evitar importação circular
     from .processing import sanitize_unicode_text
     sanitized_content = sanitize_unicode_text(doc_chunk.page_content)
     
     if "{context}" in prompt_template:
         return prompt_template.replace("{context}", sanitized_content)
     else:
-        # Compatibilidade: concatena o texto do bloco ao final do template
+        # concatena o texto do bloco ao final do template
         return prompt_template.rstrip() + "\n\n" + sanitized_content
 
 def detect_scanner_pattern(text: str, profile_config: dict = None) -> dict:

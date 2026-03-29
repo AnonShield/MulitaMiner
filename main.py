@@ -337,8 +337,12 @@ def main():
         print("Error: Failed to load PDF")
         return
 
-    # Salvar layout visual da primeira página como referência
-    visual_file = save_visual_layout(documents[0].page_content, args.input)
+    # Gerar identificador único apenas baseado no LLM (reutilizado em todos os runs do mesmo LLM)
+    # Nota: runs do mesmo LLM são seriais, então compartilham temp_dir
+    unique_process_id = args.llm
+    
+    # Salvar layout visual da primeira página como referência (com ID único para evitar race condition)
+    visual_file = save_visual_layout(documents[0].page_content, args.input, unique_process_id)
     print(f"[LAYOUT] Visual layout saved: {visual_file}")
 
 
@@ -349,10 +353,11 @@ def main():
         if doc.metadata.get("extraction_method") == "pdfplumber_visual_EXTRACTION":
             extraction_text += doc.page_content + '\n'
 
-    # Criar blocos de sessão temporários
+    # Criar blocos de sessão temporários (reutilizado em todos os runs do mesmo LLM)
+    temp_dir = f'temp_blocks_{unique_process_id}'
     session_blocks = create_session_blocks_from_text(
         extraction_text,
-        temp_dir='temp_blocks',
+        temp_dir=temp_dir,
         visual_layout_path=visual_file,
         scanner=args.scanner
     )
@@ -365,7 +370,7 @@ def main():
     total_chunks = len(session_blocks)
 
     # Limpeza obrigatória dos temporários
-    cleanup_temp_blocks('temp_blocks')
+    cleanup_temp_blocks(temp_dir)
 
     print(f"\n{'-'*60}")
     print(f"[EXTRACTION] Total blocks processed: {total_chunks}")

@@ -2,6 +2,7 @@ import os
 import shutil
 import re
 from tqdm import tqdm
+import tiktoken
 from .chunking import retry_chunk_with_subdivision
 
 def extract_visual_layout_context(visual_layout_path):
@@ -91,7 +92,6 @@ def create_session_blocks_from_text(report_text: str, temp_dir: str = 'temp_bloc
         }]
 
 def _create_blocks_openvas(report_text, temp_dir, initial_context_lines, initial_severity, initial_port, initial_protocol):
-    # Aceita tanto o formato antigo quanto o novo (ex: '2.1.1 Critical 8019/tcp')
     header_regex = re.compile(r"^(?:\d+\.\d+\.\d+\s+)?(Critical|High|Medium|Low|Log)\s+(\d+|general)/([a-zA-Z0-9_-]+)", re.IGNORECASE)
     lines = report_text.splitlines()
     blocks = []
@@ -256,7 +256,6 @@ def _create_blocks_tenable(report_text, temp_dir, initial_context_lines):
 def extract_vulns_from_blocks(blocks: list, llm, profile_config: dict, chunk_func) -> list:
     """
     Para cada bloco de sessão, aplica chunking e extrai vulnerabilidades, propagando port/protocol.
-    chunk_func: função de chunking (ex: get_token_based_chunks)
     """
     from src.utils.chunking import get_token_based_chunks, split_text_to_subchunks, TokenChunk
     all_vulns = []
@@ -297,16 +296,20 @@ def extract_vulns_from_blocks(blocks: list, llm, profile_config: dict, chunk_fun
                 # Conta tokens
                 max_tokens = getattr(llm, 'max_tokens', 4096) or 4096
                 validation = validate_json_and_tokens(response, chunk.page_content, max_tokens, prompt)
-                tokens_input = len(prompt)  # Aproximação: pode usar tokenizer.encode(prompt) se quiser precisão
-                tokens_output = len(response)  # Aproximação idem
+                # Calcula tokens usando tokenizer
+                try:
+                    tokenizer = tiktoken.encoding_for_model("gpt-3.5-turbo")
+                except:
+                    tokenizer = tiktoken.get_encoding("cl100k_base")
+                tokens_input = len(tokenizer.encode(prompt))
+                tokens_output = len(tokenizer.encode(response))
                 tokens_info.append({
                     'block_idx': block_idx,
-                    'chunk_text': chunk.page_content[:100],
+                    'chunk_text': chunk.page_content,  # Salva o chunk completo para validação retroativa
                     'tokens_input': tokens_input,
                     'tokens_output': tokens_output
                 })
                 vulns = validation['json_data'] if validation['json_valid'] else []
-                # ...existing code for context propagation and all_vulns...
                 if profile_config and profile_config.get('reader', '').lower() == 'tenable':
                     all_vulns.extend([v for v in vulns if isinstance(v, dict)])
                 else:

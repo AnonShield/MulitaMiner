@@ -8,14 +8,14 @@ LLM_PRICES = {
     "gpt5": {"input": 0.25, "output": 2.0},
     "deepseek": {"input": 0.28, "output": 0.42},
     "llama3": {"input": 0.59, "output": 0.79},
-    "llama4": {"input": 0.20, "output": 0.60},
+    "llama4": {"input": 0.11, "output": 0.34},
     "gpt4": {"input": 0.30, "output": 1.20},
 }
 
 # Map model names to LLM_PRICES keys
 MODEL_NAME_MAPPING = {
     "llama-3.3-70b-versatile": "llama3",
-    "meta-llama/llama-4-maverick-17b-128e-instruct": "llama4",
+    "meta-llama/llama-4-scout-17b-16e-instruct": "llama4",
     "gpt-4o-mini-2024-07-18": "gpt4",
     "gpt-5-mini-2025-08-07": "gpt5",
     "deepseek-coder": "deepseek",
@@ -34,7 +34,9 @@ def calc_tokens_and_cost(tokens_dir):
         # Look for patterns like "llama-3.3-70b-versatile"
         fname_no_ext = fname.replace('_tokens.json', '')
         for full_name, key in MODEL_NAME_MAPPING.items():
-            if full_name.lower() in fname_no_ext.lower():
+            # Normalize both strings by replacing / with - for comparison
+            full_name_normalized = full_name.lower().replace('/', '-')
+            if full_name_normalized in fname_no_ext.lower():
                 llm = key
                 break
         
