@@ -86,7 +86,7 @@ def parse_json_response(resposta, chunk_id=""):
     except Exception:
         pass
     
-    print(f"[WARN{chunk_id}] Nenhuma estratégia de parse conseguiu extrair JSON válido")
+    print(f"[WARN{chunk_id}] No parsing strategy could extract valid JSON")
     return []
 
 def validate_json_and_tokens(response: str, chunk_content: str, max_tokens: int, prompt_template: str = "") -> Dict[str, Any]:
@@ -123,20 +123,20 @@ def validate_json_and_tokens(response: str, chunk_content: str, max_tokens: int,
         'needs_redivision': False
     }
     
-    # 1. VALIDAÇÃO DE JSON
+    # 1. JSON VALIDATION
     try:
-        # Tentar extrair JSON da resposta
+        # Try to extract JSON from response
         json_data = parse_json_response(response)
         if json_data and isinstance(json_data, list):
             result['json_valid'] = True
             result['json_data'] = json_data
         else:
-            result['errors'].append("JSON inválido ou não é uma lista")
+            result['errors'].append("Invalid JSON or not a list")
     except Exception as e:
-        result['errors'].append(f"Erro ao fazer parse do JSON: {str(e)}")
+        result['errors'].append(f"Error parsing JSON: {str(e)}")
     
-    # 2. VALIDAÇÃO DE TOKENS
-    # Calcular tokens do prompt completo (template + chunk + overhead)
+    # 2. TOKEN VALIDATION
+    # Calculate tokens of complete prompt (template + chunk + overhead)
     prompt_tokens = len(tokenizer.encode(prompt_template)) if prompt_template else 800
     chunk_tokens = len(tokenizer.encode(chunk_content))
     response_tokens = len(tokenizer.encode(response))
@@ -144,18 +144,18 @@ def validate_json_and_tokens(response: str, chunk_content: str, max_tokens: int,
     
     result['token_count'] = total_tokens
     
-    # Verificar se excede limite (deixar margem de 500 tokens)
+    # Check if exceeds limit (leave margin of 500 tokens)
     if total_tokens > (max_tokens - 500):
         result['token_valid'] = False
-        result['errors'].append(f"Excede limite de tokens: {total_tokens}/{max_tokens}")
+        result['errors'].append(f"Exceeds token limit: {total_tokens}/{max_tokens}")
         result['needs_redivision'] = True
     
-    # 3. DETECTAR NECESSIDADE DE REDIVISÃO
-    # Se JSON inválido OU excede tokens OU chunk muito grande
+    # 3. DETECT REDIVISION NECESSITY
+    # If invalid JSON OR exceeds tokens OR chunk too large
     if not result['json_valid'] or not result['token_valid'] or chunk_tokens > (max_tokens * 0.6):
         result['needs_redivision'] = True
     
-    # 4. ANÁLISE ESPECÍFICA DE ERROS JSON
+    # 4. ANALYZE SPECIFIC JSON ERRORS
     if not result['json_valid']:
         if "..." in response or "truncated" in response.lower():
             result['errors'].append("Resposta truncada detectada")
@@ -276,7 +276,7 @@ def load_llm(llm_name):
     path = f"src/configs/llms/{llm_name}.json"
     with open(path, "r", encoding="utf-8") as f:
         config = json.load(f)
-    # Substitui variáveis de ambiente no formato ${NOME}
+    # Replace environment variables in format ${NAME}
     for k, v in config.items():
         if isinstance(v, str):
             match = re.fullmatch(r"\$\{([A-Z0-9_]+)\}", v)
@@ -288,7 +288,7 @@ def load_llm(llm_name):
 def init_llm(llm_config):
     os.environ["OPENAI_API_KEY"] = llm_config["api_key"]
     
-    # Garantir que temperature não é None
+    # Ensure that temperature is not None
     temperature = llm_config.get("temperature", 1.0)
     if temperature is None:
         temperature = 1.0
@@ -320,8 +320,8 @@ def init_llm(llm_config):
     
     llm = ChatOpenAI(**kwargs)
     
-    # PRESERVAR CONFIGURAÇÕES CUSTOMIZADAS NO OBJETO LLM
-    # Não definir max_tokens diretamente - conflita com max_completion_tokens
+    # PRESERVE CUSTOM CONFIGURATIONS IN LLM OBJECT
+    # Do not set max_tokens directly - conflicts with max_completion_tokens
     # Removido llm.llm_config - causava ValueError com ChatOpenAI
     
     return llm

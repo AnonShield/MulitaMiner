@@ -32,13 +32,13 @@ class BaseConverter(ABC):
     
     def load_json_data(self, json_file_path: str) -> List[Dict[str, Any]]:
         """
-        Carrega dados JSON de um arquivo
+        Load JSON data from file
         
         Args:
-            json_file_path: Caminho para o arquivo JSON
+            json_file_path: Path to JSON file
             
         Returns:
-            Lista de dicionários com os dados das vulnerabilidades
+            List of dictionaries with vulnerability data
         """
         try:
             with open(json_file_path, 'r', encoding='utf-8') as f:
@@ -55,13 +55,13 @@ class BaseConverter(ABC):
     
     def validate_data(self, data: List[Dict[str, Any]]) -> bool:
         """
-        Valida se os dados estão no formato esperado
+        Validate if data is in expected format
         
         Args:
-            data: Lista de dicionários com dados das vulnerabilidades
+            data: List of dictionaries with vulnerability data
             
         Returns:
-            True se os dados são válidos
+            True if data is valid
         """
         if not isinstance(data, list):
             return False
@@ -70,7 +70,7 @@ class BaseConverter(ABC):
             if not isinstance(item, dict):
                 return False
             
-            # Verificar se tem pelo menos o campo 'name' (minúsculo) ou 'Name' (maiúsculo)
+            # Check if has at least 'name' field (lowercase) or 'Name' (uppercase)
             if 'name' not in item and 'Name' not in item:
                 return False
         
@@ -78,14 +78,14 @@ class BaseConverter(ABC):
     
     def get_output_filename(self, input_filename: str, extension: str) -> str:
         """
-        Gera nome do arquivo de saída baseado no arquivo de entrada
+        Generate output filename based on input file
         
         Args:
-            input_filename: Nome do arquivo de entrada
-            extension: Extensão do arquivo de saída (sem ponto)
+            input_filename: Input filename
+            extension: Output file extension (without dot)
             
         Returns:
-            Nome do arquivo de saída (mesmo diretório, mesmo nome, extensão diferente)
+            Output filename (same directory, same name, different extension)
         """
         input_dir = os.path.dirname(input_filename)
         base_name = os.path.splitext(os.path.basename(input_filename))[0]

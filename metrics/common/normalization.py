@@ -17,14 +17,14 @@ def normalize_name(s: str) -> str:
     low = s1.lower()
     for a, b in FIX_COMMON_TYPOS.items():
         low = low.replace(a, b)
-    # remove espaços múltiplos
+    # Remove multiple spaces
     low = re.sub(r"\s+", " ", low)
     return low
 
 
 def normalize_field_data(val) -> str:
-    """Normalização avançada para garantir comparação consistente entre baseline e extração."""
-    # Verificar se é lista/tupla primeiro (antes de pd.isna)
+    """Advanced normalization to ensure consistent comparison between baseline and extraction."""
+    # Check if it's list/tuple first (before pd.isna)
     if isinstance(val, (list, tuple)):
         # Converte lista em texto separado por pontos
         clean_items = []
@@ -57,22 +57,22 @@ def normalize_field_data(val) -> str:
                 text = text.strip('[]()').replace("'", "").replace('"', '')
                 text = text.replace(',', ', ')
     
-    # Normalização de texto padrão
+    # Standard text normalization
     text = text.replace("\r\n", " ").replace("\r", " ").replace("\n", " ")
     text = text.replace("\t", " ")
     
-    # Remove caracteres especiais de formatação
+    # Remove special formatting characters
     text = text.replace("•", " ").replace("\u2022", " ")
     text = text.replace("–", "-").replace("—", "-")
     
-    # Normaliza espaços múltiplos
+    # Normalize multiple spaces
     text = re.sub(r"\s+", " ", text).strip()
     
-    # Remove pontuação redundante
-    text = re.sub(r"[.]{2,}", ".", text)  # múltiplos pontos
-    text = re.sub(r"[,]{2,}", ",", text)  # múltiplas vírgulas
+    # Remove redundant punctuation
+    text = re.sub(r"[.]{2,}", ".", text)  # Multiple dots
+    text = re.sub(r"[,]{2,}", ",", text)  # Multiple commas
     
-    # Remove pontuação no final se redundante
+    # Remove redundant punctuation at end
     text = text.rstrip(' .,;:')
     
     return text

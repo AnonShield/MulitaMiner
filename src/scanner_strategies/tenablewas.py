@@ -6,11 +6,11 @@ class TenableWASStrategy(ScannerStrategy):
     has_merge_log = True
     def vulnerability_processing_logic(self, vulns: List[Dict], allow_duplicates: bool = True, profile_config: Dict = None) -> List[Dict]:
         """
-        Consolida vulnerabilidades Tenable WAS já extraídas em modelo unificado.
+        Consolidate Tenable WAS vulnerabilities already extracted into unified model.
         """
         if not vulns:
             return []
-        # Deduplicação defensiva por Name + plugin
+        # Defensive deduplication by Name + plugin
         seen = {}
         for v in vulns:
             key = (v.get('Name', '').strip(), v.get('plugin'))
@@ -87,7 +87,7 @@ class TenableWASStrategy(ScannerStrategy):
     
     def get_consolidation_report(self, input_count: int, output_count: int, removed: int) -> Dict:
         """
-        Retorna report específico da estratégia Tenable.
+        Return report specific to Tenable strategy.
         """
         return {
             'strategy_name': 'Tenable WAS custom merge',
@@ -160,11 +160,11 @@ def join_tenable_base_and_instances(vulns):
     for idx, v in enumerate(vulns):
         name = v.get('Name', '')
         plugin = v.get('plugin')
-        print(f"[{idx}] Analisando: Name={name} | Plugin={plugin}")
+        print(f"[{idx}] Analyzing: Name={name} | Plugin={plugin}")
         if 'Instances (' in name:
             base_name = re.sub(r'\s+Instances\s*\(\d+\)$', '', name)
             key = (base_name, plugin)
-            print(f"  -> É instance. Key={key}")
+            print(f"  -> Is instance. Key={key}")
             if v.get('instances'):
                 print(f"    -> Adicionando {len(v.get('instances', []))} instances agrupadas ao grupo {key}")
                 instances_dict.setdefault(key, []).extend(v.get('instances', []))
@@ -173,22 +173,22 @@ def join_tenable_base_and_instances(vulns):
                 instances_dict.setdefault(key, []).append(v)
         else:
             key = (name, plugin)
-            print(f"  -> É base. Key={key}")
+            print(f"  -> Is base. Key={key}")
             if key not in base_dict:
                 base_dict[key] = v
                 print(f"    -> Registrando base para {key}")
             else:
-                print(f"    -> Base já registrada para {key}, ignorando.")
+                print(f"    -> Base already registered for {key}, skipping.")
 
     print("\nResumo base_dict:")
     for k, v in base_dict.items():
         print(f"  Base {k}: Name={v.get('Name')} | Desc={' '.join(v.get('description', []))[:60]}")
     print("\nResumo instances_dict:")
     for k, lst in instances_dict.items():
-        print(f"  Instances {k}: {len(lst)} instâncias")
+        print(f"  Instances {k}: {len(lst)} instances")
 
     result = []
-    # Para cada chave, se existe base, associa instâncias; se não existe base, cria base sintética
+    # For each key, if base exists, associate instances; if not exists, create synthetic base
     all_keys = set(base_dict.keys()) | set(instances_dict.keys())
     for key in all_keys:
         if key in base_dict:
@@ -196,7 +196,7 @@ def join_tenable_base_and_instances(vulns):
             base['instances'] = instances_dict.get(key, [])
             result.append(base)
         else:
-            # Cria base sintética a partir da primeira instância
+            # Create synthetic base from first instance
             inst_list = instances_dict.get(key, [])
             if inst_list:
                 first = inst_list[0]

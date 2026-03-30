@@ -21,6 +21,10 @@ MODEL_NAME_MAPPING = {
     "deepseek-coder": "deepseek",
 }
 
+def normalize_model_name(name: str) -> str:
+    """Normalize model names for consistent comparison (/ and : become _)."""
+    return name.lower().replace('/', '_').replace(':', '_').replace('-', '_').replace('.', '_')
+
 def calc_tokens_and_cost(tokens_dir):
     files = glob(os.path.join(tokens_dir, '*_tokens.json'))
     llm_totals = {}
@@ -30,13 +34,13 @@ def calc_tokens_and_cost(tokens_dir):
         parts = fname.lower().split('_')
         llm = None
         
-        # Try to find full model name first (more specific)
-        # Look for patterns like "llama-3.3-70b-versatile"
+        # Extract potential model name from filename
         fname_no_ext = fname.replace('_tokens.json', '')
-        for full_name, key in MODEL_NAME_MAPPING.items():
-            # Normalize both strings by replacing / with - for comparison
-            full_name_normalized = full_name.lower().replace('/', '-')
-            if full_name_normalized in fname_no_ext.lower():
+        fname_normalized = normalize_model_name(fname_no_ext)
+        
+        # Check against all known model names
+        for original_name, key in MODEL_NAME_MAPPING.items():
+            if normalize_model_name(original_name) in fname_normalized:
                 llm = key
                 break
         

@@ -7,11 +7,11 @@ import datetime
 
 def merge_page_continuations(text_pages):
     """
-    Mescla seções cortadas por quebras de página.
+    Merge sections cut by page breaks.
 
-    Estratégias:
-    1. OpenVAS: Detecta marcadores '...continues on next page...'
-    2. Tenable: Detecta quebras de sentença sem pontuação final
+    Strategies:
+    1. OpenVAS: Detects markers '...continues on next page...'
+    2. Tenable: Detects sentence breaks without final punctuation
     """
     if len(text_pages) <= 1:
         return text_pages
@@ -24,7 +24,7 @@ def merge_page_continuations(text_pages):
         skip_until_next_section = False
 
         for j, line in enumerate(lines):
-            # === ESTRATÉGIA 1: Marcadores explícitos ===
+            # === STRATEGY 1: Explicit markers ===
             if '. . . continues on next page' in line.lower() or '...continues on next page' in line.lower() or 'continues on next page' in line.lower():
                 continuation_found = False
                 for next_page_idx in range(i+1, len(text_pages)):
@@ -33,12 +33,12 @@ def merge_page_continuations(text_pages):
 
                     for k, next_line in enumerate(next_lines):
                         if '. . . continued from previous page' in next_line.lower() or '...continued from previous page' in next_line.lower() or 'continued from previous page' in next_line.lower():
-                            # Encontrou continuação - mesclar
+                            # Found continuation - merge
                             continuation_text = []
                             for m in range(k+1, len(next_lines)):
                                 cont_line = next_lines[m]
                                 if cont_line.strip() and not cont_line.startswith(' ') and len(cont_line.strip()) > 3:
-                                    # Verificar se é um header de seção que indica fim da continuação
+                                    # Check if it's a section header indicating end of continuation
                                     header_text = cont_line.strip()
                                     if any(keyword in header_text.lower() for keyword in [
                                         'vulnerability detection result', 'solution', 'vulnerability detection method',
@@ -49,14 +49,14 @@ def merge_page_continuations(text_pages):
                                     continuation_text.append(cont_line)
 
                             if continuation_text:
-                                # Mesclar continuação com a linha anterior
+                                # Merge continuation with previous line
                                 if processed_lines and processed_lines[-1].strip():
                                     processed_lines[-1] += ' ' + ' '.join(continuation_text)
                                 else:
                                     processed_lines.extend(continuation_text)
                                 continuation_found = True
 
-                                # Marcar continuação como processada
+                                # Mark continuation as processed
                                 text_pages[next_page_idx] = (next_page_num,
                                     '\n'.join(next_lines[:k]) + '\n' + '\n'.join(next_lines[k+1:]))
                             break
@@ -64,16 +64,16 @@ def merge_page_continuations(text_pages):
                     if continuation_found:
                         break
 
-                # Não adicionar o marcador
+                # Do not add the marker
                 continue
 
-            # === ESTRATÉGIA 2: Detecção por contexto ===
+            # === STRATEGY 2: Detection by context ===
             elif _is_incomplete_line(line) and i+1 < len(text_pages):
-                # Linha parece incompleta - verificar se próxima página continua
+                # Line seems incomplete - check if next page continues
                 next_page_text = text_pages[i+1][1]
                 next_lines = next_page_text.split('\n')
 
-                # Procurar primeira linha não vazia na próxima página
+                # Look for first non-empty line in next page
                 continuation_start = None
                 for k, next_line in enumerate(next_lines):
                     if next_line.strip():
@@ -81,12 +81,12 @@ def merge_page_continuations(text_pages):
                         break
 
                 if continuation_start is not None:
-                    # Verificar se a continuação faz sentido contextualmente
+                    # Check if continuation makes contextual sense
                     continuation_text = []
                     for m in range(continuation_start, len(next_lines)):
                         cont_line = next_lines[m]
                         if cont_line.strip() and not cont_line.startswith(' ') and len(cont_line.strip()) > 3:
-                            # Verificar se é um header que indica nova seção
+                            # Check if it's a header indicating new section
                             header_text = cont_line.strip()
                             if any(keyword in header_text.lower() for keyword in [
                                 'solution', 'references', 'cvss', 'cve-', 'plugin details',
@@ -97,21 +97,21 @@ def merge_page_continuations(text_pages):
                             continuation_text.append(cont_line)
 
                     if continuation_text and _makes_sense_as_continuation(line, continuation_text[0]):
-                        # Mesclar continuação
+                        # Merge continuation
                         processed_lines[-1] += ' ' + ' '.join(continuation_text)
 
-                        # Marcar continuação como processada
+                        # Mark continuation as processed
                         text_pages[i+1] = (text_pages[i+1][0],
                             '\n'.join(next_lines[:continuation_start]) + '\n' +
                             '\n'.join(next_lines[continuation_start + len(continuation_text):]))
                         continue
 
             elif '. . . continued from previous page' in line.lower() or '...continued from previous page' in line.lower() or 'continued from previous page' in line.lower():
-                # Esta é uma continuação já mesclada - pular
+                # This is an already merged continuation - skip
                 skip_until_next_section = True
                 continue
             elif skip_until_next_section:
-                # Pular linhas até encontrar próxima seção
+                # Skip lines until finding next section
                 if line.strip() and not line.startswith(' ') and len(line.strip()) > 3:
                     header_text = line.strip()
                     if any(keyword in header_text.lower() for keyword in [
@@ -132,21 +132,21 @@ def merge_page_continuations(text_pages):
 
 def _is_incomplete_line(line):
     """
-    Verifica se uma linha parece estar incompleta
+    Check if a line seems to be incomplete
     """
     line = line.strip()
     if not line:
         return False
 
-    # Linha muito curta provavelmente não está incompleta
+    # Short line probably is not incomplete
     if len(line) < 20:
         return False
 
-    # Se termina com pontuação, provavelmente está completa
+    # If ends with punctuation, probably complete
     if line.endswith(('.', '!', '?', ':', ';')):
         return False
 
-    # Se termina com palavra completa seguida de espaço, pode estar incompleta
+    # If ends with complete word followed by space, may be incomplete
     words = line.split()
     if len(words) > 3 and not line.endswith(' '):
         return True
@@ -155,19 +155,19 @@ def _is_incomplete_line(line):
 
 def _makes_sense_as_continuation(prev_line, next_line):
     """
-    Verifica se a próxima linha faz sentido como continuação da anterior.
+    Check if next line makes sense as continuation of previous one.
     """
     prev_line = prev_line.strip().lower()
     next_line = next_line.strip().lower()
 
-    # Se próxima linha começa com palavra comum, provavelmente é continuação
+    # If next line starts with common word, probably is continuation
     common_starts = ['the', 'a', 'an', 'and', 'or', 'but', 'however', 'therefore', 'thus', 'hence']
 
     first_word = next_line.split()[0] if next_line.split() else ""
     if first_word in common_starts:
         return True
 
-    # Se próxima linha começa com minúscula, provavelmente continua
+    # If next line starts with lowercase, probably continues
     if next_line and next_line[0].islower():
         return True
 
@@ -191,15 +191,15 @@ def extract_visual_layout_from_pdf(pdf_path):
                     linhas = texto_pagina.split('\n')
                     texto_processado = ""
                     for linha in linhas:
-                        # Remove rodapés típicos de relatórios (ex: 'Page X of Y')
+                        # Remove typical report footers (ex: 'Page X of Y')
                         if re.search(r'Page \d+ of \d+', linha):
                             continue
-                        # Remove rodapés com nome do relatório e página
+                        # Remove footers with report name and page
                         if re.search(r'Web Application Scanning Detailed Scan Export:.*Page \d+ of \d+', linha):
                             continue
                         linha_preservada = linha.replace('\t', '    ')
                         texto_processado += linha_preservada + '\n'
-                    # Sanitização por página
+                    # Sanitization by page
                     texto_processado = re.sub(r"\(cid:\d+\)", "", texto_processado)
                     texto_processado = texto_processado.replace('→', '->')
                     texto_processado = texto_processado.replace('’', "'")
@@ -212,21 +212,21 @@ def extract_visual_layout_from_pdf(pdf_path):
 
 
 
-            # MESCLAR SEÇÕES CORTADAS POR PAGE BREAKS
+            # MERGE SECTIONS CUT BY PAGE BREAKS
             paginas_texto = merge_page_continuations(paginas_texto)
 
 
             # Extrair o texto completo do PDF
             texto_completo = ''.join([p[1] for p in paginas_texto])
             
-            # Normalizar ligaduras tipográficas (ﬁ → fi, ﬂ → fl, etc.)
-            # Isso é importante pois PDFs frequentemente usam ligaduras que são caracteres únicos
+            # Normalize typographic ligatures (ﬁ → fi, ﬂ → fl, etc.)
+            # This is important because PDFs often use ligatures that are single characters
             texto_completo = unicodedata.normalize('NFKC', texto_completo)
 
-            # Encontrar início da primeira vulnerabilidade
-            # OpenVAS: marcador 'NVT:'
-            # Tenable: tudo até o primeiro 'Web Application Scanning Detailed Scan Export...' após 'Scan Results'
-            # Unifica separação usando os mesmos padrões do chunking
+            # Find start of first vulnerability
+            # OpenVAS: marker 'NVT:'
+            # Tenable: everything until first 'Web Application Scanning Detailed Scan Export...' after 'Scan Results'
+            # Unifies separation using same patterns from chunking
             scanner = None
             if 'openvas' in os.path.basename(pdf_path).lower():
                 scanner = 'openvas'
@@ -249,7 +249,7 @@ def extract_visual_layout_from_pdf(pdf_path):
             elif scanner == 'tenable':
                 export_marker = 'Web Application Scanning Detailed Scan Export:'
 
-                # Procura o primeiro sinal de conteúdo real de vulnerabilidade
+                # Search for first sign of real vulnerability content
                 # Pode ser o header formal OU o bloco BASE sem header (CVSS, Plugin Details)
                 early_patterns = [
                     re.compile(r'VULNERABILITY\s+(CRITICAL|HIGH|MEDIUM|LOW|INFO)\s+PLUGIN\s+ID\s+\d+', re.IGNORECASE),
@@ -264,7 +264,7 @@ def extract_visual_layout_from_pdf(pdf_path):
                         earliest_pos = m.start()
 
                 if earliest_pos < len(texto_completo):
-                    # Busca o último export marker antes do conteúdo de vulnerabilidade
+                    # Search for last export marker before vulnerability content
                     last_export_pos = texto_completo.rfind(export_marker, 0, earliest_pos)
 
                     if last_export_pos != -1:
@@ -290,7 +290,7 @@ def extract_visual_layout_from_pdf(pdf_path):
                 texto_extracao = texto_completo
                 print("[VISUAL] Scanner not identified or without marker. Table of contents empty.")
 
-            # Salvar o layout visual (apenas sumário/índice)
+            # Save visual layout (summary/index only)
             if sumario.strip():
                 documentos.append(Document(
                     page_content=sumario,
@@ -301,7 +301,7 @@ def extract_visual_layout_from_pdf(pdf_path):
                     }
                 ))
 
-            # Documento de extração (apenas conteúdo após sumário)
+            # Extraction document (only content after summary)
             documentos.append(Document(
                 page_content=texto_extracao,
                 metadata={
@@ -311,7 +311,7 @@ def extract_visual_layout_from_pdf(pdf_path):
                 }
             ))
 
-            # Retornar documentos (primeiro sumário, depois extração)
+            # Return documents (first summary, then extraction)
             if not documentos or all(not d.page_content.strip() for d in documentos):
                 print("Warning: No text was extracted from PDF. The file may be corrupted or contain only images.")
                 return None
@@ -331,7 +331,7 @@ def save_visual_layout(content, pdf_path, process_id=None):
         output_visual_path = f"visual_layout_extracted_{base_name}.txt"
     try:
         with open(output_visual_path, 'w', encoding='utf-8') as f:
-            # Cabeçalho informativo
+            # Informative header
             f.write(f"Layout Visual Extraído: {os.path.basename(pdf_path)}\n")
             f.write(f"Extraído em: {datetime.datetime.now().strftime('%d/%m/%Y às %H:%M:%S')}\n")
             f.write("=" * 80 + "\n\n")

@@ -7,12 +7,13 @@ from collections import Counter, defaultdict
 from rapidfuzz import fuzz, process
 import pandas as pd
 
-# --- ETAPA 0: Extração de IPs dos PDFs e debug das primeiras linhas ---
 PDF_DIR = 'pdfs/'
 PDF_REGEX = re.compile(r'^2\.1\s+([\d.]+)', re.MULTILINE)
 pdf_files = glob(os.path.join(PDF_DIR, '*.pdf'))
 
+
 def extract_text_from_pdf(pdf_path):
+    """Extract text content from a PDF file."""
     text = ''
     try:
         with pdfplumber.open(pdf_path) as pdf:
@@ -24,7 +25,7 @@ def extract_text_from_pdf(pdf_path):
         text += f'ERROR: {e}'
     return text
 
-# Extrai os IPs dos PDFs apenas se o arquivo de mapeamento ainda não existir
+
 if not os.path.exists('extracted_ips.txt'):
     with open('extracted_ips.txt', 'w', encoding='utf-8') as out:
         for pdf_path in pdf_files:
@@ -40,29 +41,28 @@ if not os.path.exists('extracted_ips.txt'):
 else:
     print('File extracted_ips.txt already exists, skipping PDF extraction.')
 
-# Caminhos dos arquivos
 DATASET_PATH = r'dataset\dataset_20260301_113151_1622da90-cb16-49bd-a78d-e498b7b4bbc5.csv'
-VULNNET_PATH = 'dataset/vulnnet_scans_openvas.csv'  # csv "baseline"
-MAPPING_PATH = 'extracted_ips.txt'  # mapeamento: report -> IP
+VULNNET_PATH = 'dataset/vulnnet_scans_openvas.csv'
+MAPPING_PATH = 'extracted_ips.txt'
 OUTPUT_TXT = 'extraction_comparison.txt'
 
-# Função de validação preventiva de integridade do mapeamento
-# -----------------------------------------------
+
 def validate_mapping_integrity(mapping_file, dataset_file, vulnnet_file):
     """
-    Valida se:
-    1. Todos os PDFs na pasta 'pdfs/' estão no arquivo de mapeamento
-    2. Todos os reports no dataset estão mapeados
-    3. Todos os IPs do Vulnnet tem um correspondente no mapeamento
+    Validate mapping file integrity.
+    
+    Checks:
+    1. All PDFs in 'pdfs/' folder are in the mapping file
+    2. All reports in dataset are mapped
+    3. All IPs from Vulnnet have a mapping entry
     """
     from glob import glob
     from pathlib import Path
     
     print("\n" + "="*80)
-    print("VALIDACAO DE INTEGRIDADE DO MAPEAMENTO")
+    print("MAPPING INTEGRITY VALIDATION")
     print("="*80)
 
-    # 1. Carrega mapeamento
     mapping_dict = {}
     with open(mapping_file, encoding='utf-8') as f:
         for line in f:
@@ -73,7 +73,6 @@ def validate_mapping_integrity(mapping_file, dataset_file, vulnnet_file):
                 pdf_name = line.strip().replace(': NOT FOUND', '')
                 mapping_dict[pdf_name] = None
     
-    # 2. Valida PDFs na pasta
     pdf_dir = Path('pdfs')
     all_pdfs = set([f.name for f in pdf_dir.glob('*.pdf')])
     pdfs_in_mapping = set(mapping_dict.keys())
@@ -107,7 +106,6 @@ def validate_mapping_integrity(mapping_file, dataset_file, vulnnet_file):
         for pdf in pdfs_no_ip:
             print(f"     - {pdf}")
     
-    # 3. Valida IPs do Vulnnet
     df_vulnnet = pd.read_csv(vulnnet_file)
     ips_in_vulnnet = set(df_vulnnet['IP'].unique())
     ips_in_mapping = set([v for v in mapping_dict.values() if v])
@@ -136,21 +134,20 @@ def validate_mapping_integrity(mapping_file, dataset_file, vulnnet_file):
         if len(extra_ips) > 5:
             print(f"     ... and {len(extra_ips) - 5} more")
     
-    # Resumo
     has_issues = bool(missing_pdfs or extra_pdfs or pdfs_no_ip or missing_ips or extra_ips)
     
     print(f"\n" + "="*80)
     if has_issues:
-        print("RESULTADO: Existem problemas de integridade que precisam ser resolvidos!")
+        print("RESULT: Integrity issues found that need to be resolved!")
     else:
-        print("RESULTADO: Mapeamento íntegro e consistente. Prosseguindo...")
+        print("RESULT: Mapping is consistent and valid. Proceeding...")
     print("="*80 + "\n")
     
     return not has_issues
 
-# 1. Mapeia o campo 'report' do dataset para o IP real
-# ---------------------------------------------------
+
 def map_report_to_ip_from_txt(txt_path=MAPPING_PATH):
+    """Map report names to IP addresses from mapping file."""
     report_to_ip = {}
     with open(txt_path, encoding='utf-8') as f:
         for line in f:
@@ -160,9 +157,18 @@ def map_report_to_ip_from_txt(txt_path=MAPPING_PATH):
                 report_to_ip[report] = ip
     return report_to_ip
 
-# 2. Carrega o dataset extraído, já mapeando para IP
-# --------------------------------------------------
+
 def load_dataset(dataset_path, report_to_ip):
+    """
+    Load dataset from CSV file and map reports to IPs.
+    
+    Args:
+        dataset_path: Path to the dataset CSV file
+        report_to_ip: Dictionary mapping report names to IP addresses
+    
+    Returns:
+        List of dataset records with IP mappings
+    """
     dataset = []
     unmapped_reports = []
     
@@ -179,15 +185,13 @@ def load_dataset(dataset_path, report_to_ip):
             else:
                 unmapped_reports.append(report)
     
-    # Validação preventiva: detecta reports não mapeados
     if unmapped_reports:
         print("\n" + "="*80)
-        print("WARNING: REPORTS WERE NOT MAPPED TO IP!")
+        print("WARNING: REPORTS NOT MAPPED TO IP!")
         print("="*80)
         print(f"Total unmapped records: {len(unmapped_reports)}")
         print("\nFirst unmapped reports:")
         for report in unmapped_reports[:10]:
-            count = sum(1 for r in open(dataset_path, encoding='utf-8').readlines())
             print(f"  - '{report}'")
         if len(unmapped_reports) > 10:
             print(f"  ... and {len(unmapped_reports) - 10} more")
@@ -196,9 +200,17 @@ def load_dataset(dataset_path, report_to_ip):
     
     return dataset
 
-# 3. Carrega o vulnnet de referência
-# ----------------------------------
+
 def load_vulnnet(vulnnet_path):
+    """
+    Load Vulnnet baseline vulnerability data from CSV file.
+    
+    Args:
+        vulnnet_path: Path to the Vulnnet CSV file
+    
+    Returns:
+        Dictionary mapping IPs to lists of vulnerability names
+    """
     vulnnet = defaultdict(list)
     with open(vulnnet_path, newline='', encoding='utf-8') as f:
         reader = csv.DictReader(f)
@@ -208,35 +220,30 @@ def load_vulnnet(vulnnet_path):
             vulnnet[ip].append(nvt_name)
     return vulnnet
 
-# 4. Pipeline de comparação e geração do relatório
-# ------------------------------------------------
+
 def generate_report():
-    # Valida integridade do mapeamento ANTES de processar
+    """Generate comprehensive extraction comparison report."""
     if not validate_mapping_integrity(MAPPING_PATH, DATASET_PATH, VULNNET_PATH):
         print("\nCANNOT GENERATE REPORT WITH INCONSISTENT MAPPING!")
         print("Please fix the issues identified above.")
         return
     
-    # Mapeia report -> IP
     report_to_ip = map_report_to_ip_from_txt()
-    # Carrega dataset e vulnnet
     dataset = load_dataset(DATASET_PATH, report_to_ip)
     vulnnet = load_vulnnet(VULNNET_PATH)
 
-    threshold = 85  # similaridade mínima para considerar match
+    threshold = 85
 
-    # Cria multiconjuntos (Counter) para (ip, nvt_name)
     vulnnet_counter = Counter()
     for ip, nvt_names in vulnnet.items():
         for nvt in nvt_names:
             vulnnet_counter[(ip, nvt)] += 1
 
     dataset_counter = Counter()
-    acertos = []  # (ip, dataset_name, vulnnet_name, score)
-    inventadas = []  # (ip, dataset_name)
-    match_map = {}  # (ip, dataset_name) -> (vulnnet_name, score)
+    acertos = []
+    inventadas = []
+    match_map = {}
 
-    # Fuzzy match para cada item do dataset
     for item in dataset:
         ip = item['ip']
         name = item['name']
@@ -253,7 +260,6 @@ def generate_report():
             dataset_counter[(ip, name)] += 1
             inventadas.append((ip, name))
 
-    # Calcula acertos, inventadas e faltantes considerando as contagens
     acertos_count = 0
     for k in dataset_counter:
         if k in vulnnet_counter:
@@ -275,17 +281,10 @@ def generate_report():
     pct_inventadas = (inventadas_count / total_dataset * 100) if total_dataset else 0
     pct_faltantes = (faltantes_count / total_vulnnet * 100) if total_vulnnet else 0
 
-
-    # 5. Calcula métricas de avaliação
-    # -------------------------------
-    # 5. Calcula métricas de avaliação
-    # -------------------------------
     precision = (acertos_count / (acertos_count + inventadas_count)) if (acertos_count + inventadas_count) else 0
     recall = (acertos_count / (acertos_count + faltantes_count)) if (acertos_count + faltantes_count) else 0
     f1_score = (2 * precision * recall / (precision + recall)) if (precision + recall) else 0
 
-
-    # Geração do relatório TXT
     with open(OUTPUT_TXT, 'w', encoding='utf-8') as out:
         out.write(f"Total vulnerabilities: {total_vulnnet}\n")
         out.write(f"Total extracted vulnerabilities: {total_dataset}\n\n")
@@ -296,9 +295,7 @@ def generate_report():
         out.write(f"F1-score: {f1_score:.4f} (harmonic mean of precision and recall)\n\n")
     print(f'Report generated at {OUTPUT_TXT}')
 
-    # Geração do XLSX com abas separadas para vulnerabilidades não-existentes e ausentes
     xlsx_path = OUTPUT_TXT.replace('.txt', '.xlsx')
-    # Para inventadas: encontrar o report correspondente ao ip
     ip_to_report = {v: k for k, v in report_to_ip.items()}
     invented_rows = []
     for (ip, name), count in dataset_counter.items():
@@ -322,14 +319,13 @@ def generate_report():
                 'vulnerability': nvt,
                 'count': diff
             })
-    # Cria DataFrames
     df_invented = pd.DataFrame(invented_rows)
     df_missing = pd.DataFrame(missing_rows)
-    # Salva em abas separadas
     with pd.ExcelWriter(xlsx_path) as writer:
         df_invented.to_excel(writer, sheet_name='non-existent', index=False)
         df_missing.to_excel(writer, sheet_name='absent', index=False)
     print(f'XLSX file generated at {xlsx_path}')
+
 
 if __name__ == '__main__':
     generate_report()

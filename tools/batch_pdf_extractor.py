@@ -1,6 +1,6 @@
 import os
 import sys
-# Garante que o diretório 'src' esteja no sys.path para imports absolutos
+# Ensures 'src' directory is in sys.path for absolute imports
 project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 src_path = os.path.join(project_root, 'src')
 if src_path not in sys.path:
@@ -12,14 +12,14 @@ from utils.cli_args import parse_arguments
 
 def batch_extract_vulnerabilities(input_dir, output_dir=None, marker='_batch', scanner=None, llm=None, convert=None, extra_args=None):
     """
-    Executa a extração de vulnerabilidades em lote, chamando main.py para cada PDF.
+    Executes the vulnerability extraction for all PDFs in the specified input directory and saves results in an output directory.
     """
     input_dir = os.path.abspath(input_dir)
     if not os.path.isdir(input_dir):
-        print(f"[ERRO] Diretório não encontrado: {input_dir}")
+        print(f"[ERROR] Directory not found: {input_dir}")
         return
 
-    # Define diretório de saída
+    # Define output directory
     if output_dir is None:
         parent = os.path.dirname(input_dir)
         base = os.path.basename(input_dir)
@@ -60,7 +60,7 @@ def batch_extract_vulnerabilities(input_dir, output_dir=None, marker='_batch', s
         except subprocess.CalledProcessError as e:
             print(f"[ERROR] Failed to process {pdf_file}: {e}")
     real_end_time = time.time()
-    # Gera relatório final modular
+    # Generate final modular report
     from src.utils.reporting import generate_final_report
     run_stats = {
         'start_time': real_start_time,
@@ -96,7 +96,7 @@ if __name__ == "__main__":
     parser.add_argument('--convert', choices=['csv', 'xlsx', 'tsv', 'all', 'none'], help="Convert output to specific format")
     parser.add_argument('--allow-duplicates', action='store_true', help="Allow duplicate vulnerabilities in the output (default: False)")
     args, extra = parser.parse_known_args()
-    # Garante que --allow-duplicates seja repassado explicitamente ao main.py
+    
     if args.allow_duplicates and '--allow-duplicates' not in extra:
         extra.append('--allow-duplicates')
     batch_extract_vulnerabilities(

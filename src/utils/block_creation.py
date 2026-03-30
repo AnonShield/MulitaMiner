@@ -7,8 +7,8 @@ from .chunking import retry_chunk_with_subdivision
 
 def extract_visual_layout_context(visual_layout_path):
     """
-    Lê o arquivo de layout visual e extrai contexto inicial (linhas, severity, port, protocol).
-    Retorna: (initial_context_lines, initial_severity, initial_port, initial_protocol)
+    Read visual layout file and extract initial context (lines, severity, port, protocol).
+    Returns: (initial_context_lines, initial_severity, initial_port, initial_protocol)
     """
     initial_context_lines = []
     initial_severity = None
@@ -19,13 +19,13 @@ def extract_visual_layout_context(visual_layout_path):
             layout_lines = [l.strip() for l in f.readlines() if l.strip()]
 
         if 'openvas' in visual_layout_path.lower():
-            # OpenVAS: precisa de contexto visual para extrair severity/port/protocol da primeira vulnerabilidade
+            # OpenVAS: requires visual context to extract severity/port/protocol from first vulnerability
             context_search_lines = layout_lines
         else:
-            # Outros scanners: não precisa de contexto visual
+            # Other scanners: do not require visual context
             return [], None, None, None
 
-        # Busca de baixo para cima pelo primeiro header válido
+        # Search from bottom to top for first valid header
         header_regex = re.compile(r"^(?:\d+\.\d+\.\d+\s+)?(Critical|High|Medium|Low|Log)\s+(\d+|general)/([a-zA-Z0-9_-]+)", re.IGNORECASE)
         alt_header_regex = re.compile(r"^(High|Medium|Low|Log)\s+(\d+|general)/([a-zA-Z0-9_-]+)", re.IGNORECASE)
         found_idx = None
@@ -41,7 +41,7 @@ def extract_visual_layout_context(visual_layout_path):
                 found_idx = idx
                 # print(f"[DEBUG] Context extracted from visual layout: severity={initial_severity}, port={initial_port}, protocol={initial_protocol}")
                 break
-        # Define initial_context_lines como as últimas 5 linhas acima do header encontrado (ou todas se não houver)
+        # Define initial_context_lines as last 5 lines above found header (or all if none)
         if found_idx is not None:
             initial_context_lines = context_search_lines[max(0, found_idx-4):found_idx+1]
         else:
@@ -54,29 +54,29 @@ def extract_visual_layout_context(visual_layout_path):
 
 def create_session_blocks_from_text(report_text: str, temp_dir: str = 'temp_blocks', visual_layout_path: str = None, scanner: str = 'openvas') -> list:
     """
-    Cria arquivos temporários de blocos de sessão (por port/protocol) a partir do texto extraído.
-    Modularizado por scanner.
+    Create temporary session block files from extracted report text.
+    Modularized by scanner type.
     """
     if os.path.exists(temp_dir):
         shutil.rmtree(temp_dir)
     os.makedirs(temp_dir, exist_ok=True)
 
-    # Extrai contexto do visual layout apenas para OpenVAS, com separação explícita
+    # Extract visual layout context only for OpenVAS with explicit separation
     initial_context_lines, initial_severity, initial_port, initial_protocol = ([], None, None, None)
     if scanner.lower() == 'openvas' and visual_layout_path:
         initial_context_lines, initial_severity, initial_port, initial_protocol = extract_visual_layout_context(visual_layout_path)
     elif scanner.lower() == 'tenable':
-        # Para Tenable, nunca usa contexto visual
+        # For Tenable, never use visual context
         initial_context_lines, initial_severity, initial_port, initial_protocol = ([], None, None, None)
 
-    # Modularização por scanner
+    # Modularized by scanner type
     if scanner.lower() == 'openvas':
         return _create_blocks_openvas(report_text, temp_dir, initial_context_lines, initial_severity, initial_port, initial_protocol)
     elif scanner.lower() == 'tenable':
-        # Para Tenable, nunca usa contexto visual
+        # For Tenable, never use visual context
         return _create_blocks_tenable(report_text, temp_dir, [])
     else:
-        # Fallback: bloco único
+        # Fallback: single block
         block_path = os.path.join(temp_dir, f"block_generic.txt")
         with open(block_path, 'w', encoding='utf-8') as f:
             if initial_context_lines:
@@ -175,18 +175,18 @@ def _create_blocks_openvas(report_text, temp_dir, initial_context_lines, initial
 
 def _create_blocks_tenable(report_text, temp_dir, initial_context_lines):
     """
-    Cria blocos por severidade para Tenable WAS.
+    Create blocks by severity for Tenable WAS.
     
-    Estratégia: Uma única passagem pelo texto, detectando cada header 
-    "VULNERABILITY <SEVERITY> PLUGIN ID" e atribuindo todo o conteúdo 
-    subsequente até o próximo header à severidade correspondente.
+    Strategy: A single pass through text, detecting each header 
+    "VULNERABILITY <SEVERITY> PLUGIN ID" and assigning all subsequent content 
+    until the next header to the corresponding severity.
     """
     severidades = ["CRITICAL", "HIGH", "MEDIUM", "LOW", "INFO"]
     blocks_por_severidade = {s: [] for s in severidades}
     
     lines = report_text.splitlines()
     
-    # Padrão para detectar QUALQUER header de vulnerabilidade
+    # Pattern to detect any vulnerability header
     header_pattern = re.compile(
         r'VULNERABILITY\s+(CRITICAL|HIGH|MEDIUM|LOW|INFO)\s+PLUGIN\s+ID\s+\d+',
         re.IGNORECASE
@@ -205,7 +205,7 @@ def _create_blocks_tenable(report_text, temp_dir, initial_context_lines):
 
         if header_match:
             if not first_header_found:
-                # Descobre a severidade do conteúdo órfão (BASE sem header)
+                # Determine severity of orphaned content (BASE without header)
                 orphan_severity = None
                 for orphan_line in pre_header_lines:
                     m = severity_field_pattern.match(orphan_line)
@@ -233,7 +233,7 @@ def _create_blocks_tenable(report_text, temp_dir, initial_context_lines):
     
     # print(f"[DEBUG] Headers found: {len(headers_found)}")
     
-    # Cria arquivos de bloco apenas para severidades com conteúdo
+    # Create block files only for severities with content
     blocks = []
     for severidade in severidades:
         bloco = blocks_por_severidade[severidade]
@@ -255,12 +255,12 @@ def _create_blocks_tenable(report_text, temp_dir, initial_context_lines):
 
 def extract_vulns_from_blocks(blocks: list, llm, profile_config: dict, chunk_func) -> list:
     """
-    Para cada bloco de sessão, aplica chunking e extrai vulnerabilidades, propagando port/protocol.
+    For each session block, apply chunking and extract vulnerabilities, propagating port/protocol.
     """
     from src.utils.chunking import get_token_based_chunks, split_text_to_subchunks, TokenChunk
     all_vulns = []
     tokens_info = []
-    # Contar total de chunks para a barra de progresso
+    # Count total chunks for progress bar
     total_chunks = 0
     block_chunks_map = []
     for block in blocks:
@@ -269,13 +269,13 @@ def extract_vulns_from_blocks(blocks: list, llm, profile_config: dict, chunk_fun
             reader = profile_config.get('reader', '').lower() if profile_config else ''
             chunks = []
             if reader == 'openvas':
-                # Token-first, depois marker 
+                # Token-first, then marker
                 token_chunks = get_token_based_chunks(block_text, max_tokens=4096, profile_config=profile_config)
                 for tc in token_chunks:
                     subs = split_text_to_subchunks(tc.page_content, target_size=8000, profile_config=profile_config)
                     chunks.extend([TokenChunk(s) for s in subs])
             else:
-                # Marker-first, depois token (Tenable e demais scanners)
+                # Marker-first, then token (Tenable and other scanners)
                 subs = split_text_to_subchunks(block_text, target_size=8000, profile_config=profile_config)
                 for s in subs:
                     chunks.extend(get_token_based_chunks(s, max_tokens=4096, profile_config=profile_config))
@@ -284,7 +284,7 @@ def extract_vulns_from_blocks(blocks: list, llm, profile_config: dict, chunk_fun
 
     from src.utils.llm_utils import validate_json_and_tokens
 
-    # Processar com barra de progresso
+    # Process with progress bar
     with tqdm(total=total_chunks, desc="Processing blocks", unit="chunk", ncols=80) as pbar:
         for block_idx, (block, chunks) in enumerate(block_chunks_map):
             for chunk in chunks:
@@ -305,7 +305,7 @@ def extract_vulns_from_blocks(blocks: list, llm, profile_config: dict, chunk_fun
                 tokens_output = len(tokenizer.encode(response))
                 tokens_info.append({
                     'block_idx': block_idx,
-                    'chunk_text': chunk.page_content,  # Salva o chunk completo para validação retroativa
+                    'chunk_text': chunk.page_content,  # Saves complete chunk for retroactive validation
                     'tokens_input': tokens_input,
                     'tokens_output': tokens_output
                 })
@@ -360,6 +360,6 @@ def extract_vulns_from_blocks(blocks: list, llm, profile_config: dict, chunk_fun
     return all_vulns
 
 def cleanup_temp_blocks(temp_dir: str = 'temp_blocks'):
-    """Remove todos os arquivos temporários de blocos de sessão."""
+    """Remove all temporary session block files."""
     if os.path.exists(temp_dir):
         shutil.rmtree(temp_dir)

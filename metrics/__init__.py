@@ -1,3 +1,3 @@
 """
-Metrics - Sistema de avaliação de extrações de vulnerabilidades.
+Metrics - Evaluation system for vulnerability extractions.
 """

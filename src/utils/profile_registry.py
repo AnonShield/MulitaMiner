@@ -91,7 +91,7 @@ def detect_profile_type(profile_config: Dict[str, Any]) -> str:
     # Default
     return 'default'
 
-# Função utilitária para checar se o perfil é CAIS
+
 def is_cais_profile(profile_config: Dict[str, Any]) -> bool:
     """Check if profile is CAIS-based."""
     if not profile_config:

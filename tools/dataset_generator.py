@@ -12,7 +12,7 @@ FIELDS = [
     "plugin", "plugin_details", "instances", "report", "source"
 ]
 
-# Função para carregar vulnerabilidades de arquivos JSON
+# Function to load vulnerabilities from JSON files
 def load_vulnerabilities(input_folder):
     vulnerabilities = []
     json_files_used = 0
@@ -23,9 +23,9 @@ def load_vulnerabilities(input_folder):
             file_path = os.path.join(input_folder, file_name)
             report_name = file_name
             if '_' in report_name:
-                report_name = report_name.split('_', 1)[1]  # Remove o prefixo (ex: openvas_)
-            report_name = report_name.rsplit('.', 1)[0]  # Remove a extensão .json
-            report_name = report_name.replace('_', ' ')   # Substitui underscores por espaço
+                report_name = report_name.split('_', 1)[1]  # Remove prefix (e.g., openvas_)
+            report_name = report_name.rsplit('.', 1)[0]  # Remove .json extension
+            report_name = report_name.replace('_', ' ')   # Replace underscores with space
             vuln_count = 0
             with open(file_path, 'r', encoding='utf-8') as file:
                 try:
@@ -40,10 +40,10 @@ def load_vulnerabilities(input_folder):
             reports_info[report_name] = {'file_name': file_name, 'vuln_count': vuln_count}
     return vulnerabilities, json_files_used, reports_info
 
-# Função para gerar a tabela de metadata
+# Function to generate metadata table
 def generate_metadata_xlsx(vulnerabilities, output_dir, timestamp, unique_id, reports_info):
     output_file = os.path.join(output_dir, f"metadata_{timestamp}_{unique_id}.xlsx")
-    # Cria um mapa de contagem por relatório/source/severidade
+    # Create count map by report/source/severity
     metadata = {}
     severities = set()
     for vuln in vulnerabilities:
@@ -72,7 +72,7 @@ def generate_metadata_xlsx(vulnerabilities, output_dir, timestamp, unique_id, re
             row[sev] = counts.get(sev, 0)
         rows.append(row)
 
-    # Adiciona os relatórios com 0 vulnerabilidades
+    # Add reports with 0 vulnerabilities
     for report_name, info in reports_info.items():
         source = 'unknown'
         if '_' in report_name:
@@ -178,7 +178,7 @@ def generate_xlsx(vulnerabilities, output_dir, timestamp, unique_id):
 
     print(f"Dataset generated successfully: {output_file}")
 
-# Função principal para CLI
+# Main function for CLI
 def main():
     parser = argparse.ArgumentParser(description="Generates a dataset from JSON vulnerability files.")
     parser.add_argument(
@@ -211,7 +211,7 @@ def main():
     vulnerabilities, json_files_used, reports_info = load_vulnerabilities(args.input_folder)
     print(f"{json_files_used} json files loaded successfully. Total vulnerabilities: {len(vulnerabilities)}")
 
-    # Gera um único timestamp e id para todos os formatos
+    # Generate single timestamp and id for all formats
     timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
     unique_id = uuid.uuid4()
 
@@ -229,7 +229,6 @@ def main():
         generate_jsonl(vulnerabilities, args.output_dir, timestamp, unique_id)
         generate_xlsx(vulnerabilities, args.output_dir, timestamp, unique_id)
 
-    # Sempre gera o metadata
     generate_metadata_xlsx(vulnerabilities, args.output_dir, timestamp, unique_id, reports_info)
 
 if __name__ == "__main__":

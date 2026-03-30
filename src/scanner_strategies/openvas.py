@@ -37,7 +37,7 @@ class OpenVASStrategy(ScannerStrategy):
             if len(group) == 1:
                 merged.append(group[0])
             else:
-                # Faz merge: mantém a mais completa
+                # Merge: keep the most complete
                 most_complete = max(group, key=count_filled_fields)
                 merged.append(most_complete)
         return merged

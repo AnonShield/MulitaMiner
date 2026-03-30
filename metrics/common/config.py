@@ -1,24 +1,24 @@
 """
-Configurações compartilhadas entre métricas.
+Configuration shared between metrics.
 """
 from pathlib import Path
 
-# Diretório de baselines (raiz do projeto)
+# Baseline directory (project root)
 BASELINE_DIR = Path(__file__).parents[1] / "baselines"
 
-# Threshold para fuzzy matching
+# Threshold for fuzzy matching
 FUZZY_THRESHOLD = 0.85
 
-# Correções de typos comuns
+# Common typo corrections
 FIX_COMMON_TYPOS = {
     "certicate": "certificate",
     "extaction": "extraction",
 }
 
-# Campos esparsos que não devem contar como match perfeito quando ambos vazios
+# Sparse fields that should not count as perfect match when both empty
 SPARSE_FIELDS = {"plugin"}
 
-# Abas de extração padrão para comparar
+# Default extraction sheets to compare
 DEFAULT_EXTRACTION_SHEETS = [
     "Extração DEEPSEEK",
     "Extração GPT4", 

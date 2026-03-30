@@ -14,14 +14,14 @@ def generate_final_report(
     timing_report=None
 ):
     """
-    Gera relatório final de execução, incluindo tempo, tokens e custo.
-    - start_time: timestamp inicial
-    - end_time: timestamp final
-    - run_stats: dict com estatísticas de execução
-    - tokens_dir: diretório dos arquivos de tokens
-    - report_dir: diretório para salvar o relatório
-    - include_metrics_time: se True, soma tempo das métricas
-    - timing_report: lista de dicts com tempo de cada run (opcional)
+    Generate final execution report, including time, tokens, and cost.
+    - start_time: initial timestamp
+    - end_time: final timestamp
+    - run_stats: dict with execution statistics
+    - tokens_dir: directory of token files
+    - report_dir: directory to save report
+    - include_metrics_time: if True, sum metrics time
+    - timing_report: list of dicts with time for each run (optional)
     """
     start_dt = datetime.fromtimestamp(start_time)
     end_dt = datetime.fromtimestamp(end_time)
@@ -47,7 +47,7 @@ def generate_final_report(
         f.write(f"Report Timestamp: {report_ts}\n")
         f.write(f"Start: {start_dt.strftime('%Y-%m-%d %H:%M:%S')}\n")
         f.write(f"End: {end_dt.strftime('%Y-%m-%d %H:%M:%S')}\n")
-        # Formata hh:mm:ss.sss
+        # Format hh:mm:ss.sss
         total_seconds = total_exec_time
         hours = int(total_seconds // 3600)
         minutes = int((total_seconds % 3600) // 60)

@@ -15,7 +15,7 @@ from rapidfuzz import fuzz
 import warnings
 warnings.filterwarnings("ignore")
 
-# Configuração de encoding UTF-8 para compatibilidade Windows/Linux
+# Configure UTF-8 encoding for Windows/Linux compatibility
 if sys.platform.startswith('win'):
     # Force UTF-8 encoding on Windows
     if sys.stdout.encoding and sys.stdout.encoding.lower() != 'utf-8':
@@ -26,24 +26,24 @@ if sys.platform.startswith('win'):
     # Set environment variable for subprocess
     os.environ['PYTHONIOENCODING'] = 'utf-8'
 
-# Adiciona o diretório raiz ao path para importar o módulo comum
+# Add root directory to path to import common module
 sys.path.insert(0, str(Path(__file__).parents[1]))
 
-# Imports do módulo comum
+# Imports from common module
 from common.config import BASELINE_DIR, FUZZY_THRESHOLD, SPARSE_FIELDS, DEFAULT_EXTRACTION_SHEETS
 from common.normalization import normalize_name, normalize_field_data
 from common.matching import best_fuzzy_match
 
 
 def detect_scanner_type(df: pd.DataFrame) -> str:
-    """Detecta o tipo de scanner baseado nos campos ou coluna source."""
+    """Detects scanner type based on fields or source column."""
     if 'source' in df.columns:
         sources = df['source'].dropna().str.upper().unique()
         if 'OPENVAS' in sources:
             return 'openvas'
         elif 'TENABLE' in sources or 'NESSUS' in sources:
             return 'tenable'
-    # Fallback: verifica campos típicos
+    # Fallback: check for typical fields
     if 'plugin' in df.columns:
         return 'tenable'
     if 'protocol' in df.columns and df['protocol'].notna().any():
@@ -52,11 +52,11 @@ def detect_scanner_type(df: pd.DataFrame) -> str:
 
 
 def normalize_port(port_value) -> str:
-    """Normaliza porta removendo formatação numérica (vírgulas, pontos de milhar)."""
+    """Normalizes port by removing numeric formatting (commas, thousands separators)."""
     port_str = str(port_value).strip()
-    # Remove vírgulas e pontos usados como separadores de milhar
+    # Remove commas and periods used as thousands separators
     port_str = port_str.replace(',', '').replace('.', '')
-    # Se ficou vazio ou não é numérico (exceto 'general'), retorna wildcard
+    # If empty or not numeric (except 'general'), returns wildcard
     if not port_str or (not port_str.isdigit() and port_str.lower() != 'general'):
         return '*'
     return port_str
@@ -64,19 +64,19 @@ def normalize_port(port_value) -> str:
 
 def build_composite_key(row: pd.Series, scanner_type: str) -> str:
     """
-    Gera chave composta para matching baseada no tipo de scanner.
-    - OpenVAS: nome + porta + protocolo
-    - Tenable: nome + severidade + plugin
-    - Generic: apenas nome
+    Generate composite key for matching based on scanner type.
+    - OpenVAS: name + port + protocol
+    - Tenable: name + severity + plugin
+    - Generic: name only
     
-    Elementos null/vazios são representados como '*' (wildcard).
+    Null/empty elements are represented as '*' (wildcard).
     """
     name = normalize_name(str(row.get('Name', '')))
     
     if scanner_type == 'openvas':
         port = normalize_port(row.get('port', ''))
         protocol = str(row.get('protocol', '')).strip().lower() or '*'
-        # Lógica especial para 'Services': usar hash do conteúdo
+        # Special logic for 'Services': use content hash
         if name == 'services':
             import json
             row_dict = {k: v for k, v in row.items() if pd.notnull(v)}
@@ -93,8 +93,8 @@ def build_composite_key(row: pd.Series, scanner_type: str) -> str:
 
 def keys_match(key1: str, key2: str) -> bool:
     """
-    Verifica se duas chaves compostas são compatíveis.
-    Wildcards ('*') são compatíveis com qualquer valor.
+    Check if two composite keys are compatible.
+    Wildcards ('*') are compatible with any value.
     """
     parts1 = key1.split('|')
     parts2 = key2.split('|')
@@ -103,10 +103,10 @@ def keys_match(key1: str, key2: str) -> bool:
         return False
     
     for p1, p2 in zip(parts1, parts2):
-        # Wildcard é compatível com qualquer valor
+        # Wildcard is compatible with any value
         if p1 == '*' or p2 == '*':
             continue
-        # Valores diferentes = não match
+        # Different values = no match
         if p1 != p2:
             return False
     
@@ -115,9 +115,9 @@ def keys_match(key1: str, key2: str) -> bool:
 
 def key_match_score(key1: str, key2: str) -> float:
     """
-    Calcula score de match entre duas chaves (0.0 a 1.0).
-    Quanto mais elementos concretos iguais, maior o score.
-    Wildcards contribuem parcialmente.
+    Calculate match score between two keys (0.0 to 1.0).
+    More concrete equal elements = higher score.
+    Wildcards contribute partially.
     """
     parts1 = key1.split('|')
     parts2 = key2.split('|')
@@ -130,29 +130,29 @@ def key_match_score(key1: str, key2: str) -> float:
     
     for p1, p2 in zip(parts1, parts2):
         if p1 == '*' or p2 == '*':
-            # Wildcard: contribui parcialmente (0.3) - melhor que nada, pior que match exato
+            # Wildcard: contributes partially (0.3) - better than nothing, worse than exact match
             score += 0.3
         elif p1 == p2:
-            # Match exato: contribui totalmente
+            # Exact match: contributes fully
             score += 1.0
-        # Valores diferentes: não contribui (0.0)
+        # Different values: contributes 0.0
     
     return score / total if total > 0 else 0.0
 
 
 # =========================
-# CONFIG (específico para ROUGE)
+# CONFIG (specific to ROUGE)
 # =========================
 BASELINE_SHEET = "Vulnerabilities"
 
-# Abas de extração para comparar
+# Extraction sheets to compare
 EXTRACTION_SHEETS = DEFAULT_EXTRACTION_SHEETS
 
 # Controle de duplicatas na baseline
-# False: sem duplicatas legítimas - dedup baseline antes de parear
-# True: duplicatas legítimas - cada instância da baseline pode ser matched independentemente
+# False: no legitimate duplicates - dedup baseline before pairing
+# True: legitimate duplicates - each baseline instance can be matched independently
 # Controle de duplicatas na baseline
-# O valor é definido via CLI (allow_duplicates) na main()
+# Value is set via CLI (allow_duplicates) in main()
 
 # =========================
 # ROUGE-L METRIC
@@ -179,71 +179,71 @@ def rouge_l_score(pred: str, ref: str) -> float:
     return (2*prec*rec)/(prec+rec) if (prec+rec) > 0 else 0.0
 
 def process_extraction_comparison(baseline_df: pd.DataFrame, extraction_df: pd.DataFrame, extraction_name: str) -> Tuple[pd.DataFrame, pd.DataFrame]:
-    """Processa comparação entre baseline e uma aba de extração."""
+    """Process comparison between baseline and extraction sheet."""
     
-    # Normaliza nomes para pareamento
+    # Normalize names for pairing
     baseline_df["_Name_norm"] = baseline_df["Name"].map(normalize_name)
     extraction_df["_Name_norm"] = extraction_df["Name"].map(normalize_name)
 
-    # Detecta tipo de scanner para chaves compostas
+    # Detect scanner type for composite keys
     scanner_type = detect_scanner_type(baseline_df)
     print(f"   🛠️ Detected scanner: {scanner_type}")
     
-    # Gera chaves compostas para matching mais preciso
+    # Generate composite keys for more accurate matching
     baseline_df["_composite_key"] = baseline_df.apply(lambda r: build_composite_key(r, scanner_type), axis=1)
     extraction_df["_composite_key"] = extraction_df.apply(lambda r: build_composite_key(r, scanner_type), axis=1)
 
-    # Tratamento de duplicatas na baseline
+    # Duplicate handling in baseline
     if not ALLOW_BASELINE_DUPLICATES:
         baseline_dedup = baseline_df.drop_duplicates(subset=["_Name_norm"], keep="first")
         if len(baseline_dedup) < len(baseline_df):
             dup_count = len(baseline_df) - len(baseline_dedup)
-            print(f"   ℹ️ Removidas {dup_count} duplicatas da baseline (sem duplicatas legítimas)")
+            print(f"   ℹ️ Removed {dup_count} duplicates from baseline (no legitimate duplicates)")
         baseline_dedup["_baseline_row_id"] = range(len(baseline_dedup))
     else:
         baseline_dedup = baseline_df.copy()
         baseline_dedup["_baseline_row_id"] = range(len(baseline_dedup))
-        print(f"   ℹ️ Mantendo {len(baseline_dedup)} instâncias da baseline (duplicatas legítimas)")
+        print(f"   ℹ️ Keeping {len(baseline_dedup)} baseline instances (legitimate duplicates)")
     
-    # FASE 1: Match por chave composta (suporta wildcards)
-    # Para cada chave de extração, encontra todas as chaves da baseline compatíveis
+    # PHASE 1: Match by composite key (supports wildcards)
+    # For each extraction key, finds all compatible baseline keys
     baseline_composite_list = baseline_dedup["_composite_key"].tolist()
     composite_map: Dict[str, str] = {}
     
     for ext_key in extraction_df["_composite_key"]:
-        # Encontra matches compatíveis (considerando wildcards)
+        # Find compatible matches (considering wildcards)
         compatible_matches = [(bk, key_match_score(ext_key, bk)) for bk in baseline_composite_list if keys_match(ext_key, bk)]
         if compatible_matches:
-            # Escolhe o match com maior score de chave
+            # Choose match with highest key score
             best_match = max(compatible_matches, key=lambda x: x[1])
             composite_map[ext_key] = best_match[0]
     
-    # FASE 2: Pareamento EXATO por nome
+    # PHASE 2: EXACT name matching
     exact_map: Dict[str, str] = {}
     baseline_set = set(baseline_dedup["_Name_norm"].tolist())
     for n in extraction_df["_Name_norm"]:
         if n in baseline_set:
             exact_map[n] = n
 
-    # FASE 3: Fuzzy para os que faltaram
+    # PHASE 3: Fuzzy for those that didn't match
     baseline_norm_list = baseline_dedup["_Name_norm"].tolist()
     fuzzy_map: Dict[str, str] = {}
     
-    # Filtra os que precisam de fuzzy matching
+    # Filter those needing fuzzy matching
     fuzzy_candidates = [n for n in extraction_df["_Name_norm"] if n not in exact_map and n != ""]
     
-    print(f"   🔍 Fuzzy matching: {len(fuzzy_candidates)} vulnerabilidades...")
+    print(f"   🔍 Fuzzy matching: {len(fuzzy_candidates)} vulnerabilities...")
     for n in tqdm(fuzzy_candidates, desc="   Fuzzy matching", leave=False, disable=len(fuzzy_candidates) < 10):
         match_norm, score = best_fuzzy_match(n, baseline_norm_list)
         if match_norm and score >= FUZZY_THRESHOLD:
             fuzzy_map[n] = match_norm
 
-    # Monta mapa de chave composta da baseline -> nome normalizado da baseline
+    # Build map of composite key from baseline -> normalized name of baseline
     baseline_composite_to_name: Dict[str, str] = {}
     for _, br in baseline_dedup.iterrows():
         baseline_composite_to_name[br["_composite_key"]] = br["_Name_norm"]
 
-    # Monta mapping final: prioridade para chave composta > nome exato > fuzzy
+    # Build final mapping: priority for composite key > exact name > fuzzy
     final_map: Dict[str, Optional[str]] = {}
     final_composite_map: Dict[str, Optional[str]] = {}
     
@@ -251,17 +251,17 @@ def process_extraction_comparison(baseline_df: pd.DataFrame, extraction_df: pd.D
         n_norm = r["_Name_norm"]
         comp_key = r["_composite_key"]
         
-        # Prioridade 1: Match por chave composta
+        # Priority 1: Match by composite key
         if comp_key in composite_map:
             baseline_comp_key = composite_map[comp_key]
             baseline_name_norm = baseline_composite_to_name.get(baseline_comp_key, n_norm)
-            final_map[n_norm] = baseline_name_norm  # Nome normalizado DA BASELINE
+            final_map[n_norm] = baseline_name_norm  # Normalized name FROM BASELINE
             final_composite_map[comp_key] = baseline_comp_key
-        # Prioridade 2: Match exato por nome
+        # Priority 2: Exact match by name
         elif n_norm in exact_map:
             final_map[n_norm] = exact_map[n_norm]
             final_composite_map[comp_key] = None
-        # Prioridade 3: Fuzzy match
+        # Priority 3: Fuzzy match
         elif n_norm in fuzzy_map:
             final_map[n_norm] = fuzzy_map[n_norm]
             final_composite_map[comp_key] = None
@@ -269,7 +269,7 @@ def process_extraction_comparison(baseline_df: pd.DataFrame, extraction_df: pd.D
             final_map[n_norm] = None
             final_composite_map[comp_key] = None
 
-    # Salva debug mapping (será incluído no Excel final)
+    # Save debug mapping (will be included in final Excel)
     debug_rows = []
     for idx, r in extraction_df.iterrows():
         n_show = r["Name"]
@@ -280,7 +280,7 @@ def process_extraction_comparison(baseline_df: pd.DataFrame, extraction_df: pd.D
         if m_norm is None:
             debug_rows.append([n_show, n_norm, comp_key, None, 0.0, "UNMATCHED"])
         else:
-            # Usa RapidFuzz para consistência
+            # Use RapidFuzz for consistency
             score = fuzz.ratio(n_norm, m_norm) / 100.0
             base_name_orig = baseline_dedup.loc[baseline_dedup["_Name_norm"] == m_norm, "Name"]
             base_name_orig = base_name_orig.iloc[0] if len(base_name_orig) else None
@@ -289,29 +289,29 @@ def process_extraction_comparison(baseline_df: pd.DataFrame, extraction_df: pd.D
     
     mapping_debug_df = pd.DataFrame(debug_rows, columns=["Extraction_Name", "Extraction_Name_norm", "Composite_Key", "Baseline_Name_matched", "match_score", "Status"])
 
-    # Índice rápido baseline por chave composta e por nome
+    # Fast baseline index by composite key and by name
     base_idx_composite = baseline_dedup.set_index("_composite_key")
     base_idx = baseline_dedup.set_index("_Name_norm")
 
-    # Colunas comparáveis
+    # Comparable columns
     common_cols = [c for c in extraction_df.columns if c not in ["Name", "_Name_norm", "_composite_key"] and c in baseline_dedup.columns]
     
-    print(f"Colunas comparáveis encontradas: {len(common_cols)}")
-    print(f"Colunas: {common_cols}")
+    print(f"Comparable columns found: {len(common_cols)}")
+    print(f"Columns: {common_cols}")
 
-    # Tracking de linhas já usadas da baseline (usa row_id, igual ao BERTScore)
-    used_baseline_rowids = set()  # Usa _baseline_row_id como identificador
+    # Tracking of already used baseline rows (uses row_id, same as BERTScore)
+    used_baseline_rowids = set()  # Uses _baseline_row_id as identifier
     base_idx_rowid = baseline_dedup.set_index("_baseline_row_id")
 
-    # REORDENA: processa primeiro os que têm match composto (mais precisos)
-    # Isso evita que match por nome "roube" a baseline de um match composto mais preciso
+    # REORDER: process first those with composite match (more accurate)
+    # This prevents name matching from "stealing" baseline from more accurate composite match
     extraction_rows = list(extraction_df.iterrows())
     extraction_rows_sorted = sorted(
         extraction_rows,
         key=lambda x: (0 if final_composite_map.get(x[1]["_composite_key"]) else 1)
     )
 
-    # Comparação ROUGE-L
+    # Comparison ROUGE-L
     print(f"[ROUGE] Calculating scores...")
     records = []
     for _, row in tqdm(extraction_rows_sorted, total=len(extraction_rows_sorted), desc="   ROUGE-L scoring", leave=False):
@@ -321,7 +321,7 @@ def process_extraction_comparison(baseline_df: pd.DataFrame, extraction_df: pd.D
         match_comp = final_composite_map.get(comp_key)
         match_norm = final_map.get(key)
 
-        # Tenta primeiro por chave composta (mais preciso)
+        # Try first by composite key (more accurate)
         if match_comp and match_comp in base_idx_composite.index:
             base_rows = base_idx_composite.loc[[match_comp]]
             if not isinstance(base_rows, pd.DataFrame):
@@ -352,7 +352,7 @@ def process_extraction_comparison(baseline_df: pd.DataFrame, extraction_df: pd.D
                 records.append(out)
             continue
 
-        # Fallback: match por nome normalizado
+        # Fallback: match by normalized name
         if match_norm is None or match_norm not in base_idx.index:
             out = {"Name": name_show, "_status": "UNMATCHED"}
             for col in common_cols:
@@ -360,7 +360,7 @@ def process_extraction_comparison(baseline_df: pd.DataFrame, extraction_df: pd.D
             records.append(out)
             continue
 
-        # Pega candidatos da baseline (fallback por nome)
+        # Get baseline candidates (fallback by name)
         base_match = base_idx.loc[match_norm]
 
         if isinstance(base_match, pd.DataFrame):
@@ -414,7 +414,7 @@ def process_extraction_comparison(baseline_df: pd.DataFrame, extraction_df: pd.D
                 rouge_score = 1.0
             else:
                 rouge_score = 0.0
-            # Garante que o valor é float
+            # Ensure value is float
             try:
                 out[f"{col}_rouge_l"] = float(rouge_score)
             except (ValueError, TypeError):
@@ -423,19 +423,19 @@ def process_extraction_comparison(baseline_df: pd.DataFrame, extraction_df: pd.D
 
     per_vuln_df = pd.DataFrame(records)
     
-    # ==== CATEGORIZAÇÃO ====
+    # ==== CATEGORIZATION ====
     categorization_records = []
     
-    # 1) Vulnerabilidades da extração que foram pareadas
+    # 1) Vulnerabilities from extraction that were matched
     for _, row in per_vuln_df.iterrows():
         if row["_status"] == "OK":
-            # Calcula média dos scores ROUGE-L
+            # Calculate average of ROUGE-L scores
             rouge_cols = [c for c in row.index if c.endswith("_rouge_l")]
-            # Converte todos os valores para float, ignorando strings
+            # Convert all values to float, ignoring strings
             rouge_scores = pd.to_numeric([row[c] for c in rouge_cols], errors='coerce')
             avg_rouge = rouge_scores.mean() if len(rouge_scores) > 0 else 0.0
             
-            # Categoriza baseado na média
+            # Categorize based on average
             if avg_rouge > 0.7:
                 category = "Highly Similar"
             elif avg_rouge > 0.6:
@@ -452,7 +452,7 @@ def process_extraction_comparison(baseline_df: pd.DataFrame, extraction_df: pd.D
                 "Type": "Matched"
             })
         elif row["_status"] == "UNMATCHED_EXCESS":
-            # 2a) Duplicata excedente: extraction tem mais instâncias que baseline
+            # 2a) Excess duplicate: extraction has more instances than baseline
             categorization_records.append({
                 "Vulnerability_Name": row["Name"],
                 "Avg_ROUGE_L": 0.0,
@@ -460,7 +460,7 @@ def process_extraction_comparison(baseline_df: pd.DataFrame, extraction_df: pd.D
                 "Type": "Non-existent (excess duplicate)"
             })
         else:
-            # 2b) Non-existent: da extração sem match na baseline
+            # 2b) Non-existent: from extraction without match in baseline
             categorization_records.append({
                 "Vulnerability_Name": row["Name"],
                 "Avg_ROUGE_L": 0.0,
@@ -468,8 +468,8 @@ def process_extraction_comparison(baseline_df: pd.DataFrame, extraction_df: pd.D
                 "Type": "Non-existent (LLM invention)"
             })
     
-    # 3) Absent: vulnerabilidades da baseline que não foram extraídas
-    # Marca como ausente apenas as instâncias da baseline cujo rowid NÃO foi usado (igual ao BERTScore)
+    # 3) Absent: vulnerabilities from baseline that were not extracted
+    # Mark as absent only baseline instances whose rowid was NOT used (same as BERTScore)
     baseline_rowids = set(baseline_dedup["_baseline_row_id"].tolist())
     used_rowids = set(used_baseline_rowids)
     absent_rowids = baseline_rowids - used_rowids
@@ -484,11 +484,11 @@ def process_extraction_comparison(baseline_df: pd.DataFrame, extraction_df: pd.D
     
     categorization_df = pd.DataFrame(categorization_records)
     
-    # Calcula quantas INSTÂNCIAS da baseline foram pareadas (baseado em used_baseline_rowids)
+    # Calculate how many baseline INSTANCES were paired (based on used_baseline_rowids)
     baseline_instances_matched = len(used_baseline_rowids)
     total_baseline_instances = len(baseline_dedup)
     
-    # Summary estatísticas
+    # Summary statistics
     summary_data = []
     for col in common_cols:
         # Apenas dos que tiveram match
@@ -524,27 +524,30 @@ def process_extraction_comparison(baseline_df: pd.DataFrame, extraction_df: pd.D
 
 
 def main():
-    # Parse argumentos da linha de comando (centralizado)
+    # Parse arguments from command line (centralized)
     args = parse_arguments_common(require_model=False)
     
     baseline_file = args.baseline_file
     extraction_file = args.extraction_file
-    # Padronização: subpasta com nome da baseline e nome do arquivo igual ao BERT
-    # Exemplo: metrics/rouge/results/OpenVAS_bBWA/rouge_comparison_vulnerabilities_deepseek.xlsx
-    # Nome do modelo
+    # Standardization: subfolder with baseline name and filename same as BERT
+    # Example: metrics/rouge/results/OpenVAS_bBWA/rouge_comparison_vulnerabilities_deepseek.xlsx
+    # Model name
     model_name = getattr(args, 'model', None)
     baseline_name = Path(baseline_file).stem
     baseline_name = "_".join(baseline_name.split())
-    output_dir = Path(args.output_dir)  # Salva diretamente na pasta da run
+    output_dir = Path(args.output_dir)  # Save directly in run folder
     print("\n=== Comparison of Multiple Extractions with Baseline (ROUGE-L) ===")
-    # Atualiza a configuração globalmente
+    # Update configuration globally
     global ALLOW_BASELINE_DUPLICATES
     ALLOW_BASELINE_DUPLICATES = args.allow_duplicates
     if not ALLOW_BASELINE_DUPLICATES:
         print(f"\n[OK] No duplicates allowed in baseline - deduplication will be applied.")
 
+    # Initialize summary list
+    general_summary = []
+
     print(f"\nLoading baseline file: {baseline_file}")
-    # Verifica se os arquivos existem
+    # Check if files exist
     if not Path(baseline_file).exists():
         print(f"[ERROR] Baseline file not found: {baseline_file}")
         sys.exit(1)
@@ -563,20 +566,20 @@ def main():
             print(f"[ERROR] Failed to convert JSON to XLSX: {e}")
             sys.exit(1)
 
-    # Carrega arquivo Excel
+    # Load Excel file
     excel_data = pd.ExcelFile(baseline_file, engine="openpyxl")
-    # Carrega baseline
+    # Load baseline
     print(f"Loading baseline sheet: {BASELINE_SHEET}")
     baseline_df = pd.read_excel(baseline_file, sheet_name=BASELINE_SHEET, engine="openpyxl")
     print(f"Baseline loaded - Shape: {baseline_df.shape}")
     print(f"Baseline columns: {list(baseline_df.columns)}")
-    # Verifica se precisamos carregar do arquivo de extracao para comparacoes
+    # Check if we need to load from extraction file for comparisons
     extraction_excel_data = pd.ExcelFile(extraction_file, engine="openpyxl")
 
-    # Primeiro tenta encontrar abas de extração múltipla
+    # First try to find multiple extraction sheets
     available_sheets = [sheet for sheet in EXTRACTION_SHEETS if sheet in extraction_excel_data.sheet_names]
 
-    # Se não encontrou abas de extração múltipla, verifica se é um arquivo de extração simples
+    # If no multiple extraction sheets found, check if it's a simple extraction file
     if not available_sheets and 'Vulnerabilities' in extraction_excel_data.sheet_names:
         print("Simple extraction file detected - using sheet 'Vulnerabilities'")
         available_sheets = ['Vulnerabilities']
@@ -595,53 +598,52 @@ def main():
         print("No extraction sheets found for comparison!")
         return
 
-    # Cria resumo geral das comparações
-    general_summary = []
+    # Create general comparison summary
 
-    # Processa cada aba de extração
+    # Process each extraction sheet
     for extraction_sheet in available_sheets:
         print(f"\n{'='*60}")
         print(f"Processing sheet: {extraction_sheet}")
         print('='*60)
         try:
-            # Carrega aba de extração
+            # Load extraction sheet
             extraction_df = pd.read_excel(extraction_file, sheet_name=extraction_sheet, engine="openpyxl")
             print(f"Shape of extraction sheet '{extraction_sheet}': {extraction_df.shape}")
 
-            # Processa comparação
+            # Process comparison
             per_vuln_df, summary_df, mapping_debug_df, categorization_df, baseline_instances_matched, total_baseline_instances = process_extraction_comparison(
                 baseline_df.copy(), 
                 extraction_df.copy(), 
                 extraction_sheet
             )
 
-            # Nome do arquivo de saída padronizado
+            # Standardized output filename
             if extraction_sheet == 'Vulnerabilities':
                 extraction_name = 'vulnerabilities'
             else:
                 extraction_name = extraction_sheet.replace("Extração ", "").replace(" ", "_").lower()
-            # Usa nome do modelo se disponível
+            # Use model name if available
             model_suffix = f"_{model_name}" if model_name else ""
             output_file = f"rouge_comparison_{extraction_name}{model_suffix}.xlsx"
             output_path = output_dir / output_file
 
-            # Salva tudo em um único arquivo Excel com 4 abas
+            # Save everything in single Excel file with 4 sheets
             with pd.ExcelWriter(output_path) as writer:
                 per_vuln_df.to_excel(writer, sheet_name="Per_Vulnerability", index=False)
                 summary_df.to_excel(writer, sheet_name="Summary", index=False)
                 categorization_df.to_excel(writer, sheet_name="Categorization", index=False)
                 mapping_debug_df.to_excel(writer, sheet_name="Mapping_Debug", index=False)
 
-            # Estatísticas do processamento
+            # Processing statistics
             unmatched_count = (per_vuln_df["_status"] == "UNMATCHED").sum()
             unmatched_excess_count = (per_vuln_df["_status"] == "UNMATCHED_EXCESS").sum()
             total_nonexistent = unmatched_count + unmatched_excess_count
             matched_count = len(per_vuln_df) - total_nonexistent
 
-            # Contagens de categorização
+            # Categorization counts
             cat_counts = categorization_df["Category"].value_counts().to_dict()
 
-            # Relatório de resultados
+            # Results report
             print(f"[ROUGE] Comparison completed")
             print(f"        File: {output_path}")
             print(f"\n[ROUGE] Summary:")
@@ -691,7 +693,7 @@ def main():
             continue
 
 
-    # Salva resumo geral de todas as extrações e imprime mensagens finais apenas se houver resultados
+    # Save general summary of all extractions and print messages only if results exist
     if general_summary:
 
         import datetime

@@ -16,7 +16,7 @@ def deduplicate_by_name(vulnerabilities: list, field: str = "Name") -> list:
         if len(group) == 1:
             result.append(group[0])
         else:
-            # Mantém a mais completa (mais campos não vazios)
+            # Keep the most complete (more non-empty fields)
             def count_filled_fields(vuln):
                 return sum(1 for k, val in vuln.items() if val not in [None, '', [], {}, 0])
             most_complete = max(group, key=count_filled_fields)
@@ -122,16 +122,16 @@ def central_custom_allow_duplicates(vulnerabilities: list, profile_config: dict 
     if not source and profile_config and 'reader' in profile_config:
         source = profile_config['reader']
     strategy = get_strategy(source) if source else None
-    # Usa sempre o output_file explícito
+    # Always use the explicit output_file
     if not output_file and profile_config and 'output_file' in profile_config:
         output_file = profile_config['output_file']
     if not output_file:
         output_file = 'output.json'
-    # Usa o caminho completo do arquivo de saída
+    # Use the full path of output file
     merge_log_path = os.path.splitext(output_file)[0] + '_merge_log.txt'
     dedup_log_path = os.path.splitext(output_file)[0] + '_deduplication_log.txt'
     removed_log_path = os.path.splitext(output_file)[0] + '_removed_log.txt'
-    # Deduplicação/consolidação
+    # Deduplication/consolidation
     if strategy and hasattr(strategy, 'vulnerability_processing_logic'):
         print(f"[DEDUPLICATION] allow_duplicates mode: {'True' if allow_duplicates else 'False'} (custom: {source})")
         
@@ -197,7 +197,7 @@ def central_custom_allow_duplicates(vulnerabilities: list, profile_config: dict 
                 key = (name, port, protocol)
             grouped[key].append(v)
         
-        # Gera log modular usando a nova função
+        # Generate modular log using new function
         log_content = generate_consolidation_log(
             strategy_report=strategy_report,
             description_filtering_removed=len(removed),
@@ -207,7 +207,7 @@ def central_custom_allow_duplicates(vulnerabilities: list, profile_config: dict 
             vulnerabilities_final=len(result)
         )
         
-        # Salva o log de consolidação
+        # Save consolidation log
         with open(dedup_log_path, 'w', encoding='utf-8') as f:
             f.write(log_content)
         print(f"[DEDUPLICATION] Consolidation log saved to: {dedup_log_path}")
@@ -247,7 +247,7 @@ def central_custom_allow_duplicates(vulnerabilities: list, profile_config: dict 
         key = v.get(field, None) if isinstance(v, dict) else None
         grouped[key].append(v)
     
-    # Gera log modular também para fallback
+    # Generate modular log also for fallback
     log_content = generate_consolidation_log(
         strategy_report=fallback_report,
         description_filtering_removed=0,
@@ -294,7 +294,7 @@ def consolidate_duplicates_with_logs(vulnerabilities: List[Dict], profile_config
     if not vulnerabilities:
         return [], [], []
 
-    # 1. Remover vulnerabilidades sem descrição válida
+    # 1. Remove vulnerabilities without valid description
     def has_valid_description(vuln):
         desc = vuln.get("description")
         if not desc:
@@ -311,12 +311,12 @@ def consolidate_duplicates_with_logs(vulnerabilities: List[Dict], profile_config
         else:
             removed.append(v)
 
-    # 2. Consolidar duplicatas usando a lógica centralizada
+    # 2. Consolidate duplicates using centralized logic
     consolidated = consolidate_vulnerabilities(valid_vulns, profile_config)
 
-    # 3. Gerar pares mesclados para log (grupos de vulnerabilidades que foram consolidados)
-    # Para cada grupo consolidado, se houver mais de uma vulnerabilidade original, considera merge
-    # (Implementação simples: agrupa por chave de consolidação e compara tamanho do grupo)
+    # 3. Generate merged pairs for log (groups of vulnerabilities that were consolidated)
+    # For each consolidated group, if there is more than one original vulnerability, consider merge
+    # (Simple implementation: groups by consolidation key and compares group size)
     from collections import defaultdict
     merged_pairs = []
     name_field = None

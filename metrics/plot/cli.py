@@ -34,7 +34,7 @@ def main(baseline_file: str, baseline_sheet: str, models: list, metric_pref: str
 
     baseline_name = utils.sanitize_baseline_name(str(baseline_path))
 
-    # Diretório de resultados específico da métrica e baseline
+    # Metric-specific results directory and baseline
     results_dir = utils.get_results_dir(metric, str(baseline_path))
     print(f"Using results dir: {results_dir}")
 
@@ -44,7 +44,7 @@ def main(baseline_file: str, baseline_sheet: str, models: list, metric_pref: str
     heatmap_out = results_dir / f"heatmap_scores_{metric}.png"
     charts.create_score_heatmap(df_heatmap, metric.upper(), heatmap_out)
 
-    # 2) Error analysis (agnóstico)
+    # 2) Error analysis (agnostic)
     print(f"\n📊 2/3: Generating Error Analysis Chart (Absent vs Non-existent)...")
     models_list, absent_counts, non_existent_counts = utils.build_errors_data_anymetric(str(baseline_path), models)
     errors_out = results_dir / "chart_errors_comparison.png"
@@ -70,7 +70,7 @@ def cli_entry():
     args = p.parse_args()
 
 
-    # Se --models não for passado, lista todos os arquivos de resultado na pasta do baseline
+    # If --models not passed, list all result files in baseline folder
     if args.models:
         models = [m.strip() for m in args.models.split(',') if m.strip()]
     else:
@@ -87,7 +87,7 @@ def cli_entry():
         results_dir = repo_root / metric / "results" / baseline_path.stem
         if results_dir.exists():
             models = []
-            # Pega modelos dos dois padrões de arquivo
+            # Get models from two file patterns
             for f in results_dir.glob(f"{metric}_comparison_*.xlsx"):
                 nome = f.stem.replace(f"{metric}_comparison_", "")
                 if nome.startswith("vulnerabilities_"):
@@ -99,7 +99,7 @@ def cli_entry():
             print(f"⚠️  Results folder not found: {results_dir}")
             models = []
         if not models:
-            # fallback para lista padrão se nada encontrado
+            # Fallback to standard list if nothing found
             models = ['deepseek', 'gpt4', 'gpt4.1', 'llama3', 'llama4']
 
     baseline = args.baseline

@@ -7,7 +7,7 @@ import os
 from tqdm import tqdm
 
 class TokenChunk:
-    """Wrapper simples para chunk de texto com conteúdo."""
+    """Simple wrapper for text chunk with content."""
     def __init__(self, page_content: str):
         self.page_content = page_content
 
@@ -41,7 +41,7 @@ def validate_base_instances_pairs(vulnerabilities: List[Dict]) -> List[Dict]:
 
 def build_prompt(doc_chunk: TokenChunk, profile_config: Dict[str, Any]) -> str:
     prompt_template = profile_config.get('prompt_template', '') if profile_config else ''
-    # Se for um caminho de arquivo, carrega o conteúdo
+    # If it's a file path, load content
     if os.path.isfile(prompt_template):
         prompt_template = load_prompt(prompt_template)
     
@@ -56,10 +56,10 @@ def build_prompt(doc_chunk: TokenChunk, profile_config: Dict[str, Any]) -> str:
 
 def detect_scanner_pattern(text: str, profile_config: dict = None) -> dict:
     """
-    Detecta padrão de scanner baseado em markers no texto e configurações do perfil.
-    Retorna configurações de chunking específicas do scanner detectado.
+    Detect scanner pattern based on markers in text and profile settings.
+    Return chunking configurations specific to detected scanner.
     """
-    # Se perfil tem configurações de chunking, usar diretamente
+    # If profile has chunking configurations, use directly
     if profile_config and 'chunking' in profile_config:
         chunking_config = profile_config['chunking'].copy()
         if chunking_config.get('marker_pattern'):
@@ -68,11 +68,11 @@ def detect_scanner_pattern(text: str, profile_config: dict = None) -> dict:
             if matches:
                 return chunking_config
 
-    # Fallback: Detectar automaticamente
-    # Detectar OpenVAS: começa com "NVT: "
+    # Fallback: Auto-detect
+    # Detect OpenVAS: starts with "NVT: "
     nvt_matches = re.findall(r'^\s*NVT:\s', text, re.MULTILINE)
 
-    # Detectar Tenable WAS: padrão "VULNERABILITY CRITICAL/HIGH/MEDIUM/LOW PLUGIN ID XXXX"
+    # Detect Tenable WAS: pattern "VULNERABILITY CRITICAL/HIGH/MEDIUM/LOW PLUGIN ID XXXX"
     vuln_matches = re.findall(r'^\s*VULNERABILITY\s+(CRITICAL|HIGH|MEDIUM|LOW)\s+PLUGIN\s+ID\s+\d+', text, re.MULTILINE)
 
     if nvt_matches:
@@ -105,12 +105,12 @@ def detect_scanner_pattern(text: str, profile_config: dict = None) -> dict:
         }
 
 def register_scanner_pattern(scanner_name: str, marker_pattern: str, has_pairs: bool = False):
-    # Stub para registro de padrões de scanner
+    # Stub for scanner pattern registry
     pass
 
 def split_text_to_subchunks(text: str, target_size: int, profile_config: dict = None) -> List[str]:
     """
-    Divide texto grande em subchunks menores - VERSÃO QUE RESPEITA MARCADORES.
+    Divide text into smaller subchunks - VERSION THAT RESPECTS MARKERS.
     """
     if len(text) <= target_size:
         return [text]
@@ -119,28 +119,28 @@ def split_text_to_subchunks(text: str, target_size: int, profile_config: dict = 
     if not lines:
         return [text]
 
-    # OTIMIZAÇÃO: Usar configurações do scanner se disponível
-    optimized_target = min(target_size, 8000)  # Máximo 8K chars por chunk
+    # OPTIMIZATION: Use scanner configurations if available
+    optimized_target = min(target_size, 8000)  # Maximum 8K chars per chunk
 
-    # Detectar padrão com configurações customizáveis
+    # Detect pattern with customizable configurations
     pattern_info = detect_scanner_pattern(text, profile_config)
 
-    # Se não encontrou padrão, fazer divisão simples otimizada
+    # If pattern not found, do simple optimized division
     if pattern_info.get('marker_pattern') is None:
         return _simple_split_by_size(text, optimized_target)
 
-    # Encontrar índices de linhas com marcador detectado
+    # Find indices of lines with detected marker
     marker_lines = []
     for i, line in enumerate(lines):
         if re.search(pattern_info['marker_pattern'], line):
             marker_lines.append(i)
 
-    # Se não encontrou marcadores mesmo após detecção, fallback
+    # If no markers found even after detection, fallback
     if not marker_lines:
         return _simple_split_by_size(text, optimized_target)
 
     subchunks = []
-    # ESTRATÉGIA CUSTOMIZÁVEL: Usar configurações do scanner
+    # CUSTOMIZABLE STRATEGY: Use scanner configurations
     vulns_per_chunk = pattern_info.get('max_vulnerabilities_per_chunk', 3)
     if pattern_info.get('has_pairs'):
         vulns_per_chunk = max(2, vulns_per_chunk // 2)  # Reduzir para pares
@@ -153,7 +153,7 @@ def split_text_to_subchunks(text: str, target_size: int, profile_config: dict = 
         chunk_size = 0
 
         while i < len(marker_lines) and vulns_in_chunk < vulns_per_chunk:
-            # Determinar fim do bloco atual
+            # Determine end of current block
             block_start = marker_lines[i]
             block_end = marker_lines[i + 1] if i + 1 < len(marker_lines) else len(lines)
 
@@ -161,21 +161,21 @@ def split_text_to_subchunks(text: str, target_size: int, profile_config: dict = 
             block_text = ''.join(block_lines)
             block_size = len(block_text)
 
-            # Se adicionar este bloco excede target otimizado E já temos pelo menos 1 vuln
+            # If adding this block exceeds optimized target AND we have at least 1 vuln
             if vulns_in_chunk > 0 and (chunk_size + block_size > optimized_target):
                 break
 
-            # Se bloco sozinho é maior que target, dividir internamente
+            # If block alone is larger than target, divide internally
             if block_size > optimized_target:
-                # Salvar chunk atual se não vazio
+                # Save current chunk if not empty
                 if chunk_lines:
                     subchunks.append(''.join(chunk_lines))
 
-                # Dividir o bloco grande
+                # Divide large block
                 sub_blocks = _split_block_by_size(block_text, optimized_target)
                 subchunks.extend(sub_blocks)
 
-                # Resetar para próximo chunk
+                # Reset for next chunk
                 chunk_lines = []
                 chunk_size = 0
                 vulns_in_chunk = 0
@@ -187,7 +187,7 @@ def split_text_to_subchunks(text: str, target_size: int, profile_config: dict = 
 
             i += 1
 
-        # Salvar chunk se não vazio
+        # Save chunk if not empty
         if chunk_lines:
             subchunks.append(''.join(chunk_lines))
 
@@ -195,14 +195,14 @@ def split_text_to_subchunks(text: str, target_size: int, profile_config: dict = 
 
 def _split_block_by_size(text: str, target_size: int) -> List[str]:
     """
-    Divide um bloco de texto em subchunks por linhas.
-    Evita recursão infinita com limite de profundidade.
+    Divide a text block into subchunks by lines.
+    Avoids infinite recursion with depth limit.
     """
     if len(text) <= target_size:
         return [text]
 
-    # Proteção contra recursão infinita
-    if target_size < 1000:  # Mínimo absoluto
+    # Guard against infinite recursion
+    if target_size < 1000:  # Absolute minimum
         chunks = []
         for i in range(0, len(text), 1000):
             chunks.append(text[i:i+1000])
@@ -228,7 +228,7 @@ def _split_block_by_size(text: str, target_size: int) -> List[str]:
     if current:
         subchunks.append(''.join(current))
 
-    # EVITAR RECURSÃO - se resultado ainda tem chunks grandes, aceitar como está
+    # AVOID RECURSION - if result still has large chunks, accept as is
     return subchunks if subchunks else [text]
 
 def _simple_split_by_size(text: str, target_size: int) -> List[str]:
@@ -278,7 +278,7 @@ def validate_json_and_tokens(response: str, chunk_content: str, max_tokens: int,
             result['json_valid'] = True
             result['json_data'] = json_data
         else:
-            result['errors'].append("JSON inválido ou não é uma lista")
+            result['errors'].append("Invalid JSON or not a list")
     except Exception as e:
         result['errors'].append(f"Erro ao fazer parse do JSON: {str(e)}")
     prompt_tokens = len(tokenizer.encode(prompt_template)) if prompt_template else 800

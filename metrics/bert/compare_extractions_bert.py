@@ -16,7 +16,7 @@ import pandas as pd
 
 warnings.filterwarnings("ignore")
 
-# Configuração de encoding UTF-8 para compatibilidade Windows/Linux
+# Configure UTF-8 encoding for Windows/Linux compatibility
 if sys.platform.startswith('win'):
     # Force UTF-8 encoding on Windows
     if sys.stdout.encoding and sys.stdout.encoding.lower() != 'utf-8':
@@ -27,24 +27,24 @@ if sys.platform.startswith('win'):
     # Set environment variable for subprocess
     os.environ['PYTHONIOENCODING'] = 'utf-8'
 
-# Adiciona o diretório raiz ao path para importar o módulo comum
+# Add root directory to path to import common module
 sys.path.insert(0, str(Path(__file__).parents[1]))
 
-# Imports do módulo comum
+# Imports from common module
 from common.config import BASELINE_DIR, FUZZY_THRESHOLD, SPARSE_FIELDS, DEFAULT_EXTRACTION_SHEETS
 from common.normalization import normalize_name, normalize_field_data
 from common.matching import best_fuzzy_match
 
 
 def detect_scanner_type(df: pd.DataFrame) -> str:
-    """Detecta o tipo de scanner baseado nos campos ou coluna source."""
+    """Detects scanner type based on fields or source column."""
     if 'source' in df.columns:
         sources = df['source'].dropna().str.upper().unique()
         if 'OPENVAS' in sources:
             return 'openvas'
         elif 'TENABLE' in sources or 'NESSUS' in sources:
             return 'tenable'
-    # Fallback: verifica campos típicos
+    # Fallback: check for typical fields
     if 'plugin' in df.columns:
         return 'tenable'
     if 'protocol' in df.columns and df['protocol'].notna().any():
@@ -53,11 +53,11 @@ def detect_scanner_type(df: pd.DataFrame) -> str:
 
 
 def normalize_port(port_value) -> str:
-    """Normaliza porta removendo formatação numérica (vírgulas, pontos de milhar)."""
+    """Normalizes port by removing numeric formatting (commas, thousands separators)."""
     port_str = str(port_value).strip()
-    # Remove vírgulas e pontos usados como separadores de milhar
+    # Remove commas and periods used as thousands separators
     port_str = port_str.replace(',', '').replace('.', '')
-    # Se ficou vazio ou não é numérico (exceto 'general'), retorna wildcard
+    # If empty or not numeric (except 'general'), return wildcard
     if not port_str or (not port_str.isdigit() and port_str.lower() != 'general'):
         return '*'
     return port_str
@@ -65,20 +65,20 @@ def normalize_port(port_value) -> str:
 
 def build_composite_key(row: pd.Series, scanner_type: str) -> str:
     """
-    Gera chave composta para matching baseada no tipo de scanner.
-    - OpenVAS: nome + porta + protocolo
-    - Tenable: nome + severidade + plugin
-    - Generic: apenas nome
+    Generate composite key for matching based on scanner type.
+    - OpenVAS: name + port + protocol
+    - Tenable: name + severity + plugin
+    - Generic: name only
     
-    Elementos null/vazios são representados como '*' (wildcard).
+    Null/empty elements are represented as '*' (wildcard).
     """
     name = normalize_name(str(row.get('Name', '')))
     
     if scanner_type == 'openvas':
-        # Força port como string, protocol como lower, remove espaços
+        # Force port as string, protocol as lower, remove spaces
         port = str(row.get('port', '')).strip()
         protocol = str(row.get('protocol', '')).strip().lower() or '*'
-        # Lógica especial para 'Services': usar hash do conteúdo
+        # Special logic for 'Services': use content hash
         if name == 'services':
             import json
             row_dict = {k: v for k, v in row.items() if pd.notnull(v)}
@@ -86,7 +86,7 @@ def build_composite_key(row: pd.Series, scanner_type: str) -> str:
             return f"services_exact|{hash(vuln_serialized)}"
         return f"{name}|{port}|{protocol}"
     elif scanner_type == 'tenable':
-        # Força severity e plugin como string/lower
+        # Force severity and plugin as string/lower
         severity = str(row.get('severity', '')).strip().lower() or '*'
         plugin = str(row.get('plugin', '')).strip() or '*'
         return f"{name}|{severity}|{plugin}"
@@ -96,8 +96,8 @@ def build_composite_key(row: pd.Series, scanner_type: str) -> str:
 
 def keys_match(key1: str, key2: str) -> bool:
     """
-    Verifica se duas chaves compostas são compatíveis.
-    Wildcards ('*') são compatíveis com qualquer valor.
+    Check if two composite keys are compatible.
+    Wildcards ('*') are compatible with any value.
     """
     parts1 = key1.split('|')
     parts2 = key2.split('|')
@@ -106,10 +106,10 @@ def keys_match(key1: str, key2: str) -> bool:
         return False
     
     for p1, p2 in zip(parts1, parts2):
-        # Wildcard é compatível com qualquer valor
+        # Wildcard is compatible with any value
         if p1 == '*' or p2 == '*':
             continue
-        # Valores diferentes = não match
+        # Different values = no match
         if p1 != p2:
             return False
     
@@ -118,9 +118,9 @@ def keys_match(key1: str, key2: str) -> bool:
 
 def key_match_score(key1: str, key2: str) -> float:
     """
-    Calcula score de match entre duas chaves (0.0 a 1.0).
-    Quanto mais elementos concretos iguais, maior o score.
-    Wildcards contribuem parcialmente.
+    Calculate match score between two keys (0.0 to 1.0).
+    More concrete equal elements = higher score.
+    Wildcards contribute partially.
     """
     parts1 = key1.split('|')
     parts2 = key2.split('|')
@@ -133,27 +133,27 @@ def key_match_score(key1: str, key2: str) -> float:
     
     for p1, p2 in zip(parts1, parts2):
         if p1 == '*' or p2 == '*':
-            # Wildcard: contribui parcialmente (0.3) - melhor que nada, pior que match exato
+            # Wildcard: contributes partially (0.3) - better than nothing, worse than exact match
             score += 0.3
         elif p1 == p2:
-            # Match exato: contribui totalmente
+            # Exact match: contributes fully
             score += 1.0
-        # Valores diferentes: não contribui (0.0)
+        # Different values: contributes 0.0
     
     return score / total if total > 0 else 0.0
 
 # =========================
-# CONFIG (específico para BERTScore)
+# CONFIG (specific to BERTScore)
 # =========================
 BASELINE_SHEET = "Vulnerabilities"
 
-# Abas de extração para comparar
+# Extraction sheets to compare
 EXTRACTION_SHEETS = DEFAULT_EXTRACTION_SHEETS
 
-# Controle de duplicatas na baseline
-# O valor é definido via CLI (args.allow_duplicates) na main()
+# Baseline duplicate control
+# Value is defined via CLI (args.allow_duplicates) in main()
 
-# ---- BERTScore import (opcional)
+# ---- BERTScore import (optional)
 try:
     from bert_score import BERTScorer
     BERTSCORE_AVAILABLE = True
@@ -161,9 +161,9 @@ except Exception:
     BERTScorer = None
     BERTSCORE_AVAILABLE = False
 
-# Configuração do BERTScore
+# BERTScore configuration
 BERTSCORE_MODEL_CANDIDATES = [
-    "distilbert-base-uncased",  # Modelo que funciona - prioridade máxima
+    "distilbert-base-uncased",  
     "all-mpnet-base-v2",
     "sentence-transformers/all-mpnet-base-v2",
     "roberta-large",
@@ -171,12 +171,12 @@ BERTSCORE_MODEL_CANDIDATES = [
 ]
 BERTSCORE_LANG = "en"
 
-# Cache global para modelo BERTScore
+# Global cache for BERTScore model
 _bertscore_model_cache = None
 _bertscore_tokenizer_cache = None
 
 def get_bertscore_model():
-    """Carrega e retorna o modelo BERTScore uma vez, reutilizando em cache."""
+    """Loads and returns BERTScore model once, reusing from cache."""
     global _bertscore_model_cache, _bertscore_tokenizer_cache
 
     if _bertscore_model_cache is not None:
@@ -185,7 +185,7 @@ def get_bertscore_model():
     if not BERTSCORE_AVAILABLE or BERTScorer is None:
         return None, None
 
-    # Detecta dispositivo disponível
+    # Detects available device
     try:
         import torch
         device = 'cuda' if torch.cuda.is_available() else 'cpu'
@@ -207,7 +207,7 @@ def get_bertscore_model():
 # BERTSCORE METRIC
 # =========================
 def bertscore_score(pred: str, ref: str) -> float:
-    # Se a biblioteca não estiver disponível, retorna 0.0 (fallback seguro)
+    # If library is not available, return 0.0 (safe fallback)
     if not BERTSCORE_AVAILABLE or BERTScorer is None:
         return 0.0
 
@@ -219,13 +219,13 @@ def bertscore_score(pred: str, ref: str) -> float:
     if not pred_s or not ref_s:
         return 0.0
 
-    # Obtém o modelo do cache (carrega uma vez)
+    # Gets model from cache (loads once)
     scorer, _ = get_bertscore_model()
     if scorer is None:
         return 0.0
 
     try:
-        # Usa o scorer pré-carregado
+        # Use pre-loaded scorer
         P, R, F = scorer.score([pred_s], [ref_s])
         f0 = F[0]
         try:
@@ -246,41 +246,41 @@ def process_extraction_comparison_bertscore(baseline_df: pd.DataFrame, extractio
     baseline_df["_Name_norm"] = baseline_df["Name"].map(normalize_name)
     extraction_df["_Name_norm"] = extraction_df["Name"].map(normalize_name)
 
-    # Detecta tipo de scanner para chaves compostas
+    # Detect scanner type for composite keys
     scanner_type = detect_scanner_type(baseline_df)
     print(f"   🛠️ Detected scanner: {scanner_type}")
     
-    # Gera chaves compostas para matching mais preciso
+    # Generate composite keys for more accurate matching
     baseline_df["_composite_key"] = baseline_df.apply(lambda r: build_composite_key(r, scanner_type), axis=1)
     extraction_df["_composite_key"] = extraction_df.apply(lambda r: build_composite_key(r, scanner_type), axis=1)
 
-    # Tratamento de duplicatas na baseline
+    # Duplicate handling in baseline
     if not ALLOW_BASELINE_DUPLICATES:
         baseline_dedup = baseline_df.drop_duplicates(subset=["_Name_norm"], keep="first")
         if len(baseline_dedup) < len(baseline_df):
             dup_count = len(baseline_df) - len(baseline_dedup)
             print(f"   ℹ️ Removed {dup_count} duplicates from the baseline (no legitimate duplicates mode)")
-        # Sempre cria _baseline_row_id, mesmo sem duplicatas legítimas
+        # Always create _baseline_row_id, even without legitimate duplicates
         baseline_dedup["_baseline_row_id"] = range(len(baseline_dedup))
     else:
         baseline_dedup = baseline_df.copy()
         baseline_dedup["_baseline_row_id"] = range(len(baseline_dedup))
         print(f"   ℹ️ Keeping {len(baseline_dedup)} instances from the baseline (legitimate duplicates mode)")
     
-    # FASE 1: Match por chave composta (suporta wildcards)
-    # Para cada chave de extração, encontra todas as chaves da baseline compatíveis
+    # PHASE 1: Match by composite key (supports wildcards)
+    # For each extraction key, finds all compatible baseline keys
     baseline_composite_list = baseline_dedup["_composite_key"].tolist()
     composite_map: Dict[str, str] = {}
     
     for ext_key in extraction_df["_composite_key"]:
-        # Encontra matches compatíveis (considerando wildcards)
+        # Find compatible matches (considering wildcards)
         compatible_matches = [(bk, key_match_score(ext_key, bk)) for bk in baseline_composite_list if keys_match(ext_key, bk)]
         if compatible_matches:
-            # Escolhe o match com maior score de chave
+            # Choose match with highest key score
             best_match = max(compatible_matches, key=lambda x: x[1])
             composite_map[ext_key] = best_match[0]
     
-    # FASE 2: Match exato por nome (fallback para casos sem chave composta completa)
+    # PHASE 2: Exact match by name (fallback for cases without complete composite key)
     exact_map: Dict[str, str] = {}
     baseline_set = set(baseline_dedup["_Name_norm"].tolist())
     for n in extraction_df["_Name_norm"]:
@@ -290,7 +290,7 @@ def process_extraction_comparison_bertscore(baseline_df: pd.DataFrame, extractio
     baseline_norm_list = baseline_dedup["_Name_norm"].tolist()
     fuzzy_map: Dict[str, str] = {}
     
-    # FASE 3: Fuzzy matching apenas para não pareados
+    # PHASE 3: Fuzzy matching only for unmatched
     fuzzy_candidates = [n for n in extraction_df["_Name_norm"] if n not in exact_map and n != ""]
     print(f"   🔍 Fuzzy matching: {len(fuzzy_candidates)} vulnerabilities...")
     for n in tqdm(fuzzy_candidates, desc="   Fuzzy matching", leave=False, disable=len(fuzzy_candidates) < 10):
@@ -298,30 +298,30 @@ def process_extraction_comparison_bertscore(baseline_df: pd.DataFrame, extractio
         if match_norm and score >= FUZZY_THRESHOLD:
             fuzzy_map[n] = match_norm
 
-    # Monta mapa de chave composta da baseline -> nome normalizado da baseline
+    # Build map of composite key from baseline -> normalized name of baseline
     baseline_composite_to_name: Dict[str, str] = {}
     for _, br in baseline_dedup.iterrows():
         baseline_composite_to_name[br["_composite_key"]] = br["_Name_norm"]
     
-    # Monta mapa final: prioridade para chave composta > nome exato > fuzzy
+    # Build final mapping: priority for composite key > exact name > fuzzy
     final_map: Dict[str, Optional[str]] = {}
-    final_composite_map: Dict[str, Optional[str]] = {}  # Mapeia chave composta da extração -> chave composta da baseline
+    final_composite_map: Dict[str, Optional[str]] = {}  # Maps extraction composite key -> baseline composite key
     
     for idx, r in extraction_df.iterrows():
         n_norm = r["_Name_norm"]
         comp_key = r["_composite_key"]
         
-        # Prioridade 1: Match por chave composta
+        # Priority 1: Match by composite key
         if comp_key in composite_map:
             baseline_comp_key = composite_map[comp_key]
             baseline_name_norm = baseline_composite_to_name.get(baseline_comp_key, n_norm)
-            final_map[n_norm] = baseline_name_norm  # Nome normalizado DA BASELINE
+            final_map[n_norm] = baseline_name_norm  # Normalized name FROM BASELINE
             final_composite_map[comp_key] = baseline_comp_key
-        # Prioridade 2: Match exato por nome
+        # Priority 2: Exact match by name
         elif n_norm in exact_map:
             final_map[n_norm] = exact_map[n_norm]
-            final_composite_map[comp_key] = None  # Sem match composto
-        # Prioridade 3: Fuzzy match
+            final_composite_map[comp_key] = None  # No composite match
+        # Priority 3: Fuzzy match
         elif n_norm in fuzzy_map:
             final_map[n_norm] = fuzzy_map[n_norm]
             final_composite_map[comp_key] = None
@@ -347,7 +347,7 @@ def process_extraction_comparison_bertscore(baseline_df: pd.DataFrame, extractio
 
     mapping_debug_df = pd.DataFrame(debug_rows, columns=["Extraction_Name", "Extraction_Name_norm", "Composite_Key", "Baseline_Name_matched", "match_score", "Status"])
 
-    # Index por chave composta e por row_id para matching preciso
+    # Index by composite key and by row_id for precise matching
     base_idx_composite = baseline_dedup.set_index("_composite_key")
     base_idx = baseline_dedup.set_index("_Name_norm")
     base_idx_rowid = baseline_dedup.set_index("_baseline_row_id")
@@ -356,11 +356,11 @@ def process_extraction_comparison_bertscore(baseline_df: pd.DataFrame, extractio
 
     print(f"[BERT] Columns for comparison: {len(common_cols)}")
 
-    # Tracking de linhas já usadas da baseline (para matching 1:1)
-    used_baseline_rowids = set()  # Usa _baseline_row_id como identificador
+    # Tracking of already used baseline rows (for 1:1 matching)
+    used_baseline_rowids = set()  # Uses _baseline_row_id as identifier
 
-    # REORDENA: processa primeiro os que têm match composto (mais precisos)
-    # Isso evita que match por nome "roube" a baseline de um match composto mais preciso
+    # REORDER: process first those with composite match (more accurate)
+    # This prevents name matching from "stealing" baseline from more accurate composite match
     extraction_rows = list(extraction_df.iterrows())
     extraction_rows_sorted = sorted(
         extraction_rows,
@@ -376,13 +376,13 @@ def process_extraction_comparison_bertscore(baseline_df: pd.DataFrame, extractio
         match_comp = final_composite_map.get(comp_key)
         match_norm = final_map.get(key)
 
-        # Tenta primeiro por chave composta (mais preciso)
+        # Try first by composite key (more accurate)
         if match_comp and match_comp in base_idx_composite.index:
             base_rows = base_idx_composite.loc[[match_comp]]
-            # Se só uma linha, transforma em DataFrame
+            # If only one line, transform to DataFrame
             if not isinstance(base_rows, pd.DataFrame):
                 base_rows = base_rows.to_frame().T
-            # Procura a primeira linha ainda não usada
+            # Find first unused line
             found = False
             for _, base_row in base_rows.iterrows():
                 rowid = base_row["_baseline_row_id"]
@@ -403,14 +403,14 @@ def process_extraction_comparison_bertscore(baseline_df: pd.DataFrame, extractio
                     found = True
                     break
             if not found:
-                # Todas as instâncias já usadas - duplicata excedente
+                # All instances already used - excess duplicate
                 out = {"Name": name_show, "_status": "UNMATCHED_EXCESS"}
                 for col in common_cols:
                     out[f"{col}_bertscore_f1"] = 0.0
                 records.append(out)
             continue
 
-        # Fallback: match por nome normalizado
+        # Fallback: match by normalized name
         if match_norm is None or match_norm not in base_idx.index:
             out = {"Name": name_show, "_status": "UNMATCHED"}
             for col in common_cols:
@@ -418,12 +418,12 @@ def process_extraction_comparison_bertscore(baseline_df: pd.DataFrame, extractio
             records.append(out)
             continue
 
-        # Pega candidatos da baseline (fallback por nome - quando chave composta não bateu)
+        # Get baseline candidates (fallback by name - when composite key didn't match)
         base_match = base_idx.loc[match_norm]
         
         if isinstance(base_match, pd.DataFrame):
-            # Múltiplas linhas com mesmo nome (modo com duplicatas legítimas)
-            # Filtra apenas as que ainda não foram usadas (verifica por row_id)
+            # Multiple lines with same name (mode with legitimate duplicates)
+            # Filter only those not yet used (check by row_id)
             available_candidates = []
             for i in range(len(base_match)):
                 candidate = base_match.iloc[i]
@@ -431,13 +431,13 @@ def process_extraction_comparison_bertscore(baseline_df: pd.DataFrame, extractio
                 if cand_rowid not in used_baseline_rowids:
                     available_candidates.append((i, candidate, cand_rowid))
             if not available_candidates:
-                # Todas as instâncias já foram usadas - extraction tem mais que baseline
+                # All instances already used - extraction has more than baseline
                 out = {"Name": name_show, "_status": "UNMATCHED_EXCESS"}
                 for col in common_cols:
                     out[f"{col}_bertscore_f1"] = 0.0
                 records.append(out)
                 continue
-            # Escolhe a candidata com maior similaridade (preferencialmente pela porta/protocolo)
+            # Choose candidate with highest similarity (preferably by port/protocol)
             best_idx = 0
             best_candidate_idx = available_candidates[0][0]
             best_rowid = available_candidates[0][2]
@@ -463,10 +463,10 @@ def process_extraction_comparison_bertscore(baseline_df: pd.DataFrame, extractio
             base_row = base_match.iloc[best_candidate_idx]
             used_baseline_rowids.add(best_rowid)
         else:
-            # Única linha
+            # Single line
             base_rowid = base_match["_baseline_row_id"]
             if base_rowid in used_baseline_rowids:
-                # Já foi usada
+                # Already used
                 out = {"Name": name_show, "_status": "UNMATCHED_EXCESS"}
                 for col in common_cols:
                     out[f"{col}_bertscore_f1"] = 0.0
@@ -496,7 +496,7 @@ def process_extraction_comparison_bertscore(baseline_df: pd.DataFrame, extractio
 
     categorization_records = []
 
-    # Só considera como "Matched" e "Highly Similar" os que realmente foram pareados (status OK)
+    # Only consider as "Matched" and "Highly Similar" those really paired (status OK)
     for _, row in per_vuln_df.iterrows():
         if row["_status"] == "OK":
             bcols = [c for c in row.index if c.endswith("_bertscore_f1")]
@@ -525,23 +525,14 @@ def process_extraction_comparison_bertscore(baseline_df: pd.DataFrame, extractio
                 "Category": "Non-existent",
                 "Type": "Non-existent (excess duplicate)"
             })
-        # UNMATCHED não marca absent, só baseline não pareada entra como absent
+        # UNMATCHED does not mark absent, only unpaired baseline enters as absent
 
-    # Calcula matched_counts baseado nos matches REAIS (status OK), não em final_map
-    # Precisa rastrear qual baseline foi usada para cada extração OK
-    # DEBUG: Mostra os rowids da baseline e os usados
-    print(f"[DEBUG] baseline_dedup shape: {baseline_dedup.shape}")
-    print(f"[DEBUG] baseline_dedup _baseline_row_id:")
-    print(baseline_dedup["_baseline_row_id"].tolist())
-    print(f"[DEBUG] used_baseline_rowids (matched):")
-    print(list(used_baseline_rowids))
-
-    # Marca como ausente apenas as instâncias da baseline cujo rowid NÃO foi usado
+    # Calculate matched_counts based on REAL matches (status OK), not final_map
+    # Need to track which baseline was used for each extraction OK
+    # Mark as absent only the baseline instances whose rowid was NOT used
     baseline_rowids = set(baseline_dedup["_baseline_row_id"].tolist())
     used_rowids = set(used_baseline_rowids)
     absent_rowids = baseline_rowids - used_rowids
-    print(f"[DEBUG] absent_rowids (will be marked as absent):")
-    print(list(absent_rowids))
     for rowid in absent_rowids:
         base_row = base_idx_rowid.loc[rowid]
         categorization_records.append({
@@ -553,7 +544,7 @@ def process_extraction_comparison_bertscore(baseline_df: pd.DataFrame, extractio
 
     categorization_df = pd.DataFrame(categorization_records)
 
-    # Calcula quantas INSTÂNCIAS da baseline foram pareadas (baseado em used_baseline_rows)
+    # Calculates how many INSTANCES of baseline were paired (based on used_baseline_rows)
     baseline_instances_matched = len(used_baseline_rowids)
     total_baseline_instances = len(baseline_dedup)
 
@@ -591,21 +582,21 @@ def process_extraction_comparison_bertscore(baseline_df: pd.DataFrame, extractio
 
 
 def main():
-    # Parse argumentos da linha de comando (centralizado)
+    # Parse arguments from command line (centralized)
     args = parse_arguments_common(require_model=False)
     
     baseline_file = args.baseline_file
     output_dir = Path(args.output_dir)
     global ALLOW_BASELINE_DUPLICATES
     print("\n=== Comparison of Multiple Extractions with Baseline (BERTScore) ===")
-    # Configuração baseada no parâmetro CLI
+    # Configuration based on CLI parameter
     ALLOW_BASELINE_DUPLICATES = args.allow_duplicates
     if ALLOW_BASELINE_DUPLICATES:
         print(f"\n[OK] CLI Mode: legitimate duplicates allowed")
     else:
         print(f"\n[OK] CLI Mode: no legitimate duplicates allowed")
 
-    # Verifica se os arquivos existem
+    # Check if files exist
     if not Path(baseline_file).exists():
         print(f"[ERROR] Baseline file not found: {baseline_file}")
         sys.exit(1)
@@ -625,7 +616,7 @@ def main():
             print(f"[ERROR] Failed to convert JSON to XLSX: {e}")
             sys.exit(1)
 
-    # Cria diretório de saída se não existir
+    # Create output directory if it doesn't exist
     args.output_dir = Path(args.output_dir)
     args.output_dir.mkdir(parents=True, exist_ok=True)
 
@@ -635,13 +626,13 @@ def main():
     baseline_df = pd.read_excel(baseline_file, sheet_name=BASELINE_SHEET, engine="openpyxl")
     print(f"Baseline loaded - Shape: {baseline_df.shape}")
     print(f"Baseline columns: {list(baseline_df.columns)}")
-    # Verifica se precisamos carregar do arquivo de extracao para comparacoes
+    # Check if we need to load from extraction file for comparisons
     extraction_excel_data = pd.ExcelFile(extraction_file, engine="openpyxl")
     
-    # Primeiro tenta encontrar abas de extração múltipla
+    # First try to find multiple extraction sheets
     available_sheets = [sheet for sheet in EXTRACTION_SHEETS if sheet in extraction_excel_data.sheet_names]
     
-    # Se não encontrou abas de extração múltipla, verifica se é um arquivo de extração simples
+    # If no multiple extraction sheets found, check if it's a simple extraction file
     if not available_sheets and 'Vulnerabilities' in extraction_excel_data.sheet_names:
         print("Extraction file appears to be a single extraction sheet. Using 'Vulnerabilities' for comparison.")
         available_sheets = ['Vulnerabilities']
@@ -678,7 +669,7 @@ def main():
                 extraction_sheet,
             )
 
-            # Nome do relatório (baseline), aba e modelo
+            # Report name (baseline), sheet, and model
             relatorio_nome = Path(baseline_file).stem.replace(" ", "_").lower()
             aba_nome = extraction_sheet.replace("Extração ", "").replace(" ", "_").lower()
             modelo_nome = args.model if args.model else aba_nome
@@ -752,7 +743,7 @@ def main():
         general_df = pd.DataFrame(general_summary)
         baseline_name = Path(args.baseline_file).stem.replace(" ", "_").lower() if hasattr(args, 'baseline_file') else "baseline"
         model_name = args.model if hasattr(args, 'model') and args.model else "model"
-        # Sempre sobrescreve o summary principal para garantir só 1 por run
+        # Always overwrites main summary to ensure only 1 per run
         summary_name = f"summary_all_extractions_bert_{baseline_name}_{model_name}.xlsx"
         summary_path = args.output_dir / summary_name
         general_df.to_excel(summary_path, index=False)

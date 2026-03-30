@@ -70,7 +70,6 @@ The following badges are considered for evaluation: **Available**, **Functional*
 ### Main Dependencies
 
 ```
-Lista de dependências principais:
 langchain>=0.1.0,<0.3.0          # LLM framework
 langchain-openai>=0.1.0,<0.2.0   # OpenAI integration
 tiktoken>=0.5.1,<0.7.0           # Tokenization
@@ -85,7 +84,7 @@ openpyxl>=3.0.0,<4.0.0           # Excel export
 
 ```
 bert-score>=0.3.0,<0.4.0         # BERTScore
-rouge-score>=0.1.0                # ROUGE
+rouge-score>=0.1.0               # ROUGE
 torch>=1.10.0,<3.0.0             # PyTorch (required for BERTScore)
 rapidfuzz>=3.0.0,<4.0.0          # Fuzzy matching
 ```

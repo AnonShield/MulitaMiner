@@ -3,8 +3,8 @@ from typing import List, Dict
 
 class ScannerStrategy(ABC):
     """
-    Estratégia abstrata para cada tipo de scanner.
-    Cada scanner implementa sua própria lógica.
+    Abstract strategy for each scanner type.
+    Each scanner implements its own logic.
     """
     @abstractmethod
     def vulnerability_processing_logic(self, vulns: List[Dict], allow_duplicates: bool = True, profile_config: Dict = None) -> List[Dict]:

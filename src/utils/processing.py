@@ -1,6 +1,6 @@
 """
-Processamento de chunks e vulnerabilidades.
-Contém lógica de tokenização, splitting, retry e consolidação.
+Processing of chunks and vulnerabilities.
+Contains tokenization, splitting, retry and consolidation logic.
 """
 
 import unicodedata
@@ -10,10 +10,10 @@ from .chunking import validate_base_instances_pairs
 
 def normalize_ligatures(text: str) -> str:
     """
-    Normaliza ligaduras tipográficas em caracteres separados.
+    Normalize typographic ligatures into separate characters.
     
-    PDFs frequentemente usam ligaduras (ﬁ, ﬂ, etc.) que são caracteres únicos.
-    NFKC decompõe essas ligaduras em caracteres separados:
+    PDFs often use ligatures (ﬁ, ﬂ, etc.) which are single characters.
+    NFKC decomposes these ligatures into separate characters:
     - ﬁ (U+FB01) → fi
     - ﬂ (U+FB02) → fl
     - ﬀ (U+FB00) → ff
@@ -27,9 +27,9 @@ def normalize_ligatures(text: str) -> str:
 
 def sanitize_unicode_text(text: str) -> str:
     """
-    Remove/substitui caracteres Unicode problemáticos que não podem ser codificados no Windows.
+    Remove/replace problematic Unicode characters that cannot be encoded on Windows.
     
-    Mantém texto legível mas remove símbolos especiais que causam UnicodeEncodeError.
+    Keeps text readable but removes special symbols that cause UnicodeEncodeError.
     """
     if not text:
         return text
@@ -37,7 +37,7 @@ def sanitize_unicode_text(text: str) -> str:
     # PRIMEIRO: Normaliza ligaduras (ﬁ → fi, ﬂ → fl, etc.)
     result = normalize_ligatures(text)
     
-    # Substituições comuns de caracteres problemáticos
+    # Common character replacements for problematic characters
     replacements = {
         '\u2717': '[X]',          # ✗ (checkmark)
         '\u2713': '[V]',          # ✓ (checkmark)
@@ -59,20 +59,20 @@ def sanitize_unicode_text(text: str) -> str:
     for problematic, replacement in replacements.items():
         result = result.replace(problematic, replacement)
     
-    # Remove caracteres de controle e outros problemáticos
-    # Mantém letras, números, pontuação básica e espaços
+    # Remove control characters and other problematic ones
+    # Keep letters, numbers, basic punctuation and spaces
     clean_chars = []
     for char in result:
         try:
-            # Tenta encodar em UTF-8 e depois em ASCII
+            # Try to encode in UTF-8 and then ASCII
             char.encode('ascii', 'strict')
             clean_chars.append(char)
         except (UnicodeEncodeError, UnicodeDecodeError):
-            # Se não consegue ASCII, tenta uma abordagem mais suave
+            # If unable to get ASCII, try gentler approach
             category = unicodedata.category(char)
-            # Mantém letras (L*), números (N*), espaço (Zs)
+            # Keep letters (L*), numbers (N*), space (Zs)
             if category[0] in ['L', 'N'] or char.isspace() or char in ',.!?;:-':
                 clean_chars.append(char)
-            # Caso contrário, ignora
+            # Otherwise, ignore
     
     return ''.join(clean_chars)

@@ -2,27 +2,31 @@ import argparse
 import subprocess
 import os
 import sys
-import os
-
-# Garante que o diretório raiz esteja no sys.path para importar src.utils.reporting
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 import time
 import json
 import shutil
 from datetime import datetime, timedelta
 from pathlib import Path
+
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
 from src.utils.reporting import generate_final_report
+
 
 def str_to_bool(val):
     return val.lower() in ['true', '1', 'yes', 'sim']
 
+
 def get_base(filename):
     return os.path.splitext(os.path.basename(filename))[0]
+
 
 def make_checkpoint_path(ts):
     return f"run_checkpoints_{ts}.json"
 
+
 def main():
+    """Execute extraction and evaluation experiments in batch mode."""
     parser = argparse.ArgumentParser(description="Run extraction and evaluation experiments.")
     parser.add_argument('--input-dir', type=str, required=True, help='Directory containing .xlsx (baseline) and .pdf (report) files. Both must have the same name, except for the extension.')
     parser.add_argument('--llms', type=str, nargs='+', required=True, help='List of LLMs to test.')
@@ -79,7 +83,6 @@ def main():
 
     print("[INFO] Starting experiment runs...")
 
-    # Inicia a contagem de tempo antes de tudo
     start_time = time.time()
     run_stats = {
         'baseline_counts': {},
@@ -111,7 +114,6 @@ def main():
         checkpoint_id = datetime.now().strftime("%Y-%m-%dT%H-%M-%S")
         checkpoint_path = f"run_checkpoints_{checkpoint_id}.json"
         checkpoints = {}
-        # Initialize checkpoint with all runs as "pending"
         for run_id, baseline_path, extractor_path, scanner, llm, run_num in all_run_ids:
             checkpoints[run_id] = {
                 "status": "pending",
@@ -125,17 +127,14 @@ def main():
                 "output_file": None,
                 "timestamp": None
             }
-        # Create initial checkpoint file immediately
         checkpoint_data = {"runs": checkpoints, "checkpoint_id": checkpoint_id}
         with open(checkpoint_path, "w", encoding="utf-8") as f:
             json.dump(checkpoint_data, f, indent=2, ensure_ascii=False)
         print(f"[INFO] Created initial checkpoint with {len(all_run_ids)} pending runs: {checkpoint_path}")
 
-    # Execute runs - OUTSIDE the if/else block so it works for both new and resumed checkpoints
     for run_id, baseline_path, extractor_path, scanner, llm, run_num in all_run_ids:
-        cmd = None  # Initialize cmd to avoid undefined variable errors
+        cmd = None
         try:
-            # Skip if already completed
             if checkpoints.get(run_id, {}).get("status") == "ok":
                 print(f"[SKIP] Run already completed: {run_id}")
                 continue
@@ -148,6 +147,7 @@ def main():
             timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
             allow_duplicates = allow_duplicates_map.get(scanner, False)
 
+
             cmd = [
                 sys.executable, "main.py",
                 "--input", extractor_path,
@@ -158,7 +158,7 @@ def main():
                 "--baseline", baseline_path,
                 "--output-dir", subdir,
                 "--run-experiments"
-                    ]
+            ]
             if allow_duplicates:
                 cmd.append("--allow-duplicates")
             extraction_start = time.time()
@@ -176,19 +176,18 @@ def main():
             pdf_base = os.path.splitext(os.path.basename(extractor_path))[0]
             llm_name = llm.replace('/', '_').replace(':', '_')
 
-            # Metrics
             xlsx_candidates = [f for f in os.listdir(subdir) if f.endswith(".xlsx")]
             if not xlsx_candidates:
                 print(f"[ERROR DEBUG] No .xlsx file found in {subdir}")
                 raise Exception(f"[ERROR] Extraction .xlsx file not found for {pdf_base} {llm_name}")
             if len(xlsx_candidates) > 1:
-                print(f"[WARN] Mais de um arquivo .xlsx encontrado em {subdir}, usando o primeiro: {xlsx_candidates[0]}")
+                print(f"[WARN] Multiple .xlsx files found in {subdir}, using the first: {xlsx_candidates[0]}")
             extraction_xlsx = os.path.join(subdir, xlsx_candidates[0])
 
             for method in evaluation_methods:
                 metric_method_start = time.time()
                 if method == "bert":
-                    bert_output_dir = subdir  # Salva na pasta da run
+                    bert_output_dir = subdir
                     os.makedirs(bert_output_dir, exist_ok=True)
                     bert_cmd = [
                         sys.executable, "metrics/bert/compare_extractions_bert.py",
@@ -208,7 +207,7 @@ def main():
                     if result_bert.stderr and result_bert.stderr.strip():
                         print(f"[STDERR-BERT] {result_bert.stderr}")
                 elif method == "rouge":
-                    rouge_output_dir = subdir  # Salva na pasta da run
+                    rouge_output_dir = subdir
                     os.makedirs(rouge_output_dir, exist_ok=True)
                     rouge_cmd = [
                         sys.executable, "metrics/rouge/compare_extractions_rouge.py",
@@ -243,7 +242,6 @@ def main():
                 'total_time': total_duration
             })
 
-            # Update checkpoints
             checkpoints[run_id] = {
                 "status": "ok",
                 "erro": None,
@@ -272,7 +270,6 @@ def main():
                 "output_file": output_file if 'output_file' in locals() else "Not created",
                 "timestamp": timestamp if 'timestamp' in locals() else datetime.now().strftime('%Y%m%d_%H%M%S')
             }
-        # Save checkpoints after each run
         checkpoint_data = {"runs": checkpoints, "checkpoint_id": checkpoint_id}
         with open(checkpoint_path, "w", encoding="utf-8") as f:
             json.dump(checkpoint_data, f, indent=2, ensure_ascii=False)
@@ -285,7 +282,6 @@ def main():
     run_stats['end_time'] = end_time
     run_stats['duration'] = end_time - start_time
 
-    # Gera relatório final ao final de todo o script
     print("[INFO] Execution finished. Generating final report...")
     report_dir = os.path.abspath('results_runs')
     generate_final_report(
@@ -299,7 +295,6 @@ def main():
     )
     print("[INFO] Final report generated.")
 
-    # Chama process_results.py para gerar os charts automaticamente
     print("[INFO] Generating charts with process_results.py...")
     try:
         subprocess.run([
@@ -310,8 +305,6 @@ def main():
     except Exception as e:
         print(f"[ERROR] Failed to generate charts: {e}")
 
+
 if __name__ == "__main__":
     main()
-
-
-

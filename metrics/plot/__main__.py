@@ -10,10 +10,10 @@ from pathlib import Path
 
 def _import_and_run():
     try:
-        # Importa normalmente (quando pacote é executado com -m)
+        # Import normally (when package is executed with -m)
         from plot.cli import cli_entry
     except Exception:
-        # Se falhar (execução direta do arquivo), adiciona o root do repo ao sys.path
+        # If it fails (direct file execution), add repo root to sys.path
         repo_root = Path(__file__).parents[1]
         if str(repo_root) not in sys.path:
             sys.path.insert(0, str(repo_root))

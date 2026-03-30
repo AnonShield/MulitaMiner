@@ -9,10 +9,8 @@ from datetime import datetime
 from pathlib import Path
 from matplotlib.patches import Patch
 
-# =====================
-# GRÁFICO STACKED BAR 100% CATEGORIAS DE SIMILARIDADE
-# =====================
 def plot_similarity_category_stacked_bar():
+    """Generate stacked bar chart for similarity categories across metrics and scanners."""
     categories = [
         "Highly Similar",
         "Moderately Similar",
@@ -21,17 +19,16 @@ def plot_similarity_category_stacked_bar():
         "Absent"
     ]
     colors = [
-        "#185542",  # Highly Similar (verde escuro)
-        "#1543a5",  # Moderately Similar (azul)
-        "#e6a70a",  # Slightly Similar (amarelo)
-        "#a81e1e",  # Divergent (vermelho)
-        "#d3d5d8"   # Absent (cinza) - sempre no topo
+        "#185542",  # Highly Similar 
+        "#1543a5",  # Moderately Similar 
+        "#e6a70a",  # Slightly Similar 
+        "#a81e1e",  # Divergent 
+        "#d3d5d8"   # Absent 
     ]
 
     metrics = ["bert", "rouge"]
     os.makedirs('plot_runs', exist_ok=True)
 
-    # Novo caminho para resultados: busca recursiva em results_runs
     results_base = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'results_runs'))
 
     for metric in metrics:
@@ -42,19 +39,16 @@ def plot_similarity_category_stacked_bar():
                 if not (fname.startswith(f"{metric}_comparison_vulnerabilities_") and fname.endswith(".xlsx")):
                     continue
                 fpath = os.path.join(root, fname)
-                # Tenta extrair scanner e baseline do caminho
                 parts = fpath.replace('\\', '/').split('/')
-                # Exemplo: .../results_runs/openvas_artifactory-oss_5.11.0/deepseek/run1/bert_comparison_vulnerabilities_deepseek.xlsx
                 try:
-                    folder_name = parts[-4]  # "openvas_artifactory-oss_5.11.0" ou "OpenVAS_JuiceShop"
-                    # Separa scanner de baseline
+                    folder_name = parts[-4]  
                     folder_lower = folder_name.lower()
                     if folder_lower.startswith('openvas'):
                         scanner = 'openvas'
-                        baseline = folder_name[7:].lstrip('_')  # Remove "openvas_"
+                        baseline = folder_name[7:].lstrip('_')  
                     elif folder_lower.startswith('tenable'):
                         scanner = 'tenable'
-                        baseline = folder_name[7:].lstrip('_')  # Remove "tenable_"
+                        baseline = folder_name[7:].lstrip('_')  
                     else:
                         scanner = folder_name
                         baseline = folder_name
@@ -81,7 +75,6 @@ def plot_similarity_category_stacked_bar():
                     .setdefault(llm, [])\
                     .append(cat_counts)
 
-        # Para cada scanner, gera 1 gráfico por métrica
         for scanner, baselines_dict in data.items():
             baselines = sorted(baselines_dict.keys())
             llms = sorted(set(
@@ -99,9 +92,7 @@ def plot_similarity_category_stacked_bar():
             fig, ax = plt.subplots(figsize=(18, 8))
             plt.rcParams.update({'font.size': 15})
 
-            # Patterns (hatches) para diferenciar as baselines
             baseline_hatches = ['/', '+', '\\', '-', '|', '++', 'X', 'o', 'O', '.', '*', '//', '\\\\', '||', '--', 'XX', '..', '-\\']
-            # Se houver mais baselines que patterns, repete os patterns
             while len(baseline_hatches) < len(baselines):
                 baseline_hatches *= 2
 
@@ -115,21 +106,17 @@ def plot_similarity_category_stacked_bar():
                     if not runs:
                         pct = [0.0] * len(categories)
                     else:
-                        # Média das runs
                         avg_counts = {}
                         for run in runs:
                             for cat in categories + ["Non-existent"]:
                                 avg_counts[cat] = avg_counts.get(cat, 0) + run.get(cat, 0)
                         avg_counts = {k: v / len(runs) for k, v in avg_counts.items()}
-
-                        # Denominador exclui Non-existent
                         total = sum(avg_counts.get(cat, 0) for cat in categories)
                         if total == 0:
                             pct = [0.0] * len(categories)
                         else:
                             pct = [avg_counts.get(cat, 0) / total * 100 for cat in categories]
 
-                    # Empilha as categorias
                     bottom = 0.0
                     bar_x = x[l_idx] + b_idx * bar_width
 
@@ -145,7 +132,6 @@ def plot_similarity_category_stacked_bar():
                         )
                         bottom += pct[cat_idx]
 
-            # Eixos e títulos
             ax.set_ylabel("Distribution (%)", fontsize=18)
             ax.set_xlabel("LLM", fontsize=18)
             ax.set_ylim(0, 100)
@@ -156,24 +142,19 @@ def plot_similarity_category_stacked_bar():
             ax.set_xticks(x + bar_width * (n_baselines - 1) / 2)
             ax.set_xticklabels(llms, fontsize=16)
 
-            # Legenda das categorias
             category_legend_patches = [
                 Patch(facecolor=color, edgecolor="#cccccc", linewidth=0.7, label=cat)
                 for cat, color in zip(categories, colors)
             ]
             
-            # Legenda das baselines
             baseline_legend_patches = [
                 Patch(facecolor='#cccccc', edgecolor='#333', hatch=baseline_hatches[i], label=b)
                 for i, b in enumerate(baselines)
             ]
             
-            # Combina ambas as legendas
             all_handles = category_legend_patches + baseline_legend_patches
             all_labels = [h.get_label() for h in all_handles]
             
-            # Cria legenda customizada na figura (não no axes)
-            # Legenda de categorias: 5 colunas
             legend1 = fig.legend(
                 handles=category_legend_patches,
                 loc="lower center",
@@ -185,7 +166,6 @@ def plot_similarity_category_stacked_bar():
                 title_fontsize=15
             )
             
-            # Legenda de baselines: embaixo da anterior
             legend2 = fig.legend(
                 handles=baseline_legend_patches,
                 loc="lower center",
@@ -202,11 +182,11 @@ def plot_similarity_category_stacked_bar():
             fname_out = f"plot_runs/stacked_similarity_{scanner}_{metric}_{timestamp}.png"
             plt.savefig(fname_out, dpi=150, bbox_inches='tight')
             plt.close()
-            print(f"✅ Salvo: {fname_out}")
-# =====================
-# EXECUÇÃO PRINCIPAL
-# =====================
+            print(f"Saved: {fname_out}")
+
+
 def build_heatmap_df_all_llms(metric: str, baseline: str) -> pd.DataFrame:
+    """Build heatmap dataframe aggregating scores across all LLMs for a metric and baseline."""
     metric = metric.lower()
     results_dir = Path('results_runs') / str(baseline)
     arquivos = []
@@ -241,41 +221,35 @@ def build_heatmap_df_all_llms(metric: str, baseline: str) -> pd.DataFrame:
             except Exception:
                 score = 0.0
             data.setdefault(llm, {}).setdefault(col, []).append(score)
-    # Média por campo por run, depois média entre runs
     df_final = {}
     for llm, campos in data.items():
         df_final[llm] = {campo: (sum(scores)/len(scores) if scores else 0.0) for campo, scores in campos.items()}
     if not df_final:
         return pd.DataFrame()
     return pd.DataFrame(df_final).T
-print('Processing results...')
 
-# =====================
-# MÓDULOS E CONFIGS
-# =====================
+
 RESULTS_DIR = "results_runs"
 
 def get_baselines():
-    # Retorna lista de baselines pelas subpastas de results_runs
+    """Get list of baselines from results_runs directory."""
     return sorted([d for d in os.listdir(RESULTS_DIR) if os.path.isdir(os.path.join(RESULTS_DIR, d))])
+
+
 SUMMARY_PATTERN = re.compile(r"(?P<baseline>.+)_(?P<scanner>.+)\.xlsx")
 LLMS = ["deepseek", "gpt4", "gpt5", "llama3", "llama4"]
 SCORE_FIELDS = ["score", "rouge", "bert", "bleu", "f1", "precision", "recall"]
 
-# =====================
-# UTILITÁRIOS
-# =====================
+
 def extract_scanner_and_report(filename):
+    """Extract scanner and baseline report name from filename."""
     base = os.path.splitext(filename)[0]
     parts = base.split('_')
     scanner = None
     report = None
-    # Procura scanner
     for i, part in enumerate(parts):
         if part.lower() in ["openvas", "tenable"]:
             scanner = part
-            # Procura baseline (report) logo após scanner, ignorando métricas e llm
-            # Exemplo: summary_all_extractions_bert_OpenVAS_bBWA_gpt4.xlsx
             for j in range(i+1, len(parts)):
                 candidate = parts[j]
                 if candidate.lower() not in ["bert", "rouge"] and candidate.lower() not in LLMS:
@@ -285,6 +259,7 @@ def extract_scanner_and_report(filename):
     return scanner, report
 
 def extract_llm_from_filename(filename):
+    """Extract LLM name from filename."""
     base = os.path.splitext(filename)[0]
     parts = base.split('_')
     for part in reversed(parts):
@@ -292,7 +267,9 @@ def extract_llm_from_filename(filename):
             return part.lower()
     return None
 
+
 def extract_run_from_path(path):
+    """Extract run number from file path."""
     m = re.search(r"run(\d+)", path)
     if m:
         return int(m.group(1))
@@ -302,6 +279,7 @@ def extract_run_from_path(path):
 # PLOTS PRINCIPAIS
 # =====================
 def plot_absent_nonexistent_mean():
+    """Generate plots for absent and non-existent vulnerability counts."""
     absent_nonexistent_data = []
     file_count = 0
     row_count = 0
@@ -323,10 +301,8 @@ def plot_absent_nonexistent_mean():
             absent_col = None
             nonexistent_col = None
             for c in df.columns:
-                # Procura por colunas de absent: "Absent", "absent_count", etc
                 if c.lower() in ["absent", "absent_count"]:
                     absent_col = c
-                # Procura por colunas de non-existent: "Invented", "Non-existent", "nonexistent_count", etc
                 if c.lower() in ["invented", "nonexistent_count", "non-existent", "non_existent_count"]:
                     nonexistent_col = c
             if absent_col is None or nonexistent_col is None:
@@ -373,15 +349,17 @@ def plot_absent_nonexistent_mean():
     else:
         print("[ABSENT/NON-EXISTENT] No valid data found to generate barplots for Absent/Non-existent.")
 
+
 def plot_matched_rate_mean_std():
+    """Generate plots for matched rate mean and standard deviation across runs."""
     baselines = get_baselines()
     arquivos_processados = []
     matched_data = []
     arquivos_encontrados = False
     os.makedirs('plot_runs', exist_ok=True)
     def normalize_name(name):
+        """Normalize names for comparison."""
         return str(name).strip().lower().replace(' ', '').replace('_', '').replace('-', '')
-    # Coleta todos os dados de todos os baselines de uma vez
     for root, dirs, files in os.walk(RESULTS_DIR):
         for fname in files:
             if not fname.endswith(".xlsx"):
@@ -449,7 +427,7 @@ def plot_matched_rate_mean_std():
                 if not baselines_present:
                     print(f"No baselines found for {scanner} | {metric}, skipping plot.")
                     continue
-                # Barras lado a lado
+
                 llms = sorted(df_s["llm"].unique())
                 x = np.arange(len(llms))
                 width = 0.8 / max(1, len(baselines_present))
@@ -478,6 +456,7 @@ def plot_matched_rate_mean_std():
 
 # ========== HEATMAPS DE SCORES ==========
 def plot_score_heatmaps():
+    """Generate heatmaps of evaluation scores for different baselines and metrics."""
     import importlib.util
     import sys
     import os
@@ -501,7 +480,6 @@ def plot_score_heatmaps():
     os.makedirs('plot_runs', exist_ok=True)
     timestamp = datetime.datetime.now().strftime('%Y%m%d_%H%M%S')
     for baseline in baselines:
-        # Separar scanner e baseline
         if '_' in baseline:
             scanner, base = baseline.split('_', 1)
         else:
@@ -516,7 +494,6 @@ def plot_score_heatmaps():
                 from pathlib import Path
                 import matplotlib.pyplot as plt
                 out_path = Path('plot_runs') / f"heatmap_scores_{baseline}_{metric}_{timestamp}.png"
-                # Cria heatmap manualmente para customizar o título
                 plt.figure(figsize=(18, 8))
                 plt.rcParams.update({'font.size': 15})
                 import seaborn as sns
@@ -535,11 +512,11 @@ def plot_score_heatmaps():
                 plt.tight_layout(rect=[0, 0, 1, 0.97])
                 plt.savefig(out_path, dpi=300, bbox_inches='tight')
                 plt.close()
-                print(f"✅ Heatmap saved: {out_path}")
+                print(f"Heatmap saved: {out_path}")
             except Exception as e:
                 print(f"[HEATMAP] Error generating heatmap for baseline={baseline}, metric={metric}: {e}")
 
-print('Processing results...')
+
 if __name__ == "__main__":
     plot_absent_nonexistent_mean()
     plot_matched_rate_mean_std()

@@ -1,1 +1,1 @@
-# Estratégias de scanner - pacote
+# Scanner strategies - package

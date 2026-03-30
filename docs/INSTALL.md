@@ -107,5 +107,5 @@ python3 -c "import bert_score; import rouge_score; print('Metrics dependencies O
 After installation:
 
 1. Configure your API keys (see [CONFIG.md](CONFIG.md))
-2. Run the minimum test (see [README.md](../README.md#teste-mínimo))
+2. Run the minimum test (see [README.md](../README.md#minimum-test))
 3. Explore usage examples (see [USAGE.md](USAGE.md))

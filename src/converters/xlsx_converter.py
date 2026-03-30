@@ -72,7 +72,7 @@ class XLSXConverter(BaseConverter):
             if field in df.columns:
                 column_order.append(field)
         
-        # Adicionar colunas que não estão na ordem padrão
+        # Add columns not in standard order
         for col in df.columns:
             if col not in column_order:
                 column_order.append(col)
@@ -98,7 +98,7 @@ class XLSXConverter(BaseConverter):
         for r in dataframe_to_rows(df, index=False, header=True):
             ws.append(r)
         
-        # Formatar cabeçalhos
+        # Format headers
         for cell in ws[1]:
             cell.font = header_font
             cell.fill = header_fill
@@ -123,11 +123,11 @@ class XLSXConverter(BaseConverter):
                 except:
                     pass
             
-            # Limitar largura máxima
+            # Limit maximum width
             adjusted_width = min(max_length + 2, 50)
             ws.column_dimensions[column_letter].width = adjusted_width
         
-        # Adicionar informações de metadados
+        # Add metadata information
         metadata_ws = wb.create_sheet("Metadata")
         metadata_ws['A1'] = "Report Generation Info"
         metadata_ws['A1'].font = Font(bold=True, size=14)
@@ -161,36 +161,36 @@ class XLSXConverter(BaseConverter):
     
     def convert(self, json_file_path: str, output_file_path: Optional[str] = None) -> str:
         """
-        Converte arquivo JSON para XLSX
+        Convert JSON file to XLSX
         
         Args:
-            json_file_path: Caminho para o arquivo JSON
-            output_file_path: Caminho opcional para o arquivo de saída
+            json_file_path: Path to JSON file
+            output_file_path: Optional path to output file
             
         Returns:
-            Caminho do arquivo XLSX gerado
+            Path of generated XLSX file
         """
-        # Definir arquivo de saída
+        # Set output file
         if output_file_path is None:
             output_file_path = self.get_output_filename(json_file_path, "xlsx")
         
-        # Verificar se o XLSX já existe e é mais recente que o JSON
+        # Check if XLSX already exists and is newer than JSON
         if os.path.exists(output_file_path):
             json_mtime = os.path.getmtime(json_file_path)
             xlsx_mtime = os.path.getmtime(output_file_path)
             
-            # Se o XLSX é mais recente que o JSON, usar o existente
+            # If XLSX is newer than JSON, use existing one
             if xlsx_mtime >= json_mtime:
                 print(f"Using existing XLSX file (cache): {output_file_path}")
                 return output_file_path
             else:
                 print(f"JSON file is newer than XLSX, reconverting: {json_file_path}")
         
-        # Carregar dados
+        # Load data
         data = self.load_json_data(json_file_path)
         
         if not self.validate_data(data):
-            raise ValueError("Dados JSON inválidos")
+            raise ValueError("Invalid JSON data")
         
         if not data:
             print("Warning: No vulnerabilities found in JSON")
@@ -210,14 +210,14 @@ class XLSXConverter(BaseConverter):
 
 def convert_json_to_xlsx(json_file_path: str, output_file_path: Optional[str] = None) -> str:
     """
-    Função utilitária para conversão direta
+    Utility function for direct conversion
     
     Args:
-        json_file_path: Caminho para o arquivo JSON
-        output_file_path: Caminho opcional para o arquivo de saída
+        json_file_path: Path to JSON file
+        output_file_path: Optional path to output file
         
     Returns:
-        Caminho do arquivo XLSX gerado
+        Path of generated XLSX file
     """
     converter = XLSXConverter()
     return converter.convert(json_file_path, output_file_path)

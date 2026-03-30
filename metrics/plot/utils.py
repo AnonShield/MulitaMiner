@@ -150,7 +150,7 @@ def load_categorization_data(metric: str, baseline_file: str, models: list) -> d
 
             rank = {"Highly Similar": 4, "Moderately Similar": 3, "Slightly Similar": 2, "Divergent": 1}
             
-            # Conta TODAS as instâncias matched, não apenas baseline únicas
+            # Counts ALL matched instances, not just unique baseline
             category_counts = {cat: 0 for cat in ["Highly Similar", "Moderately Similar", "Slightly Similar", "Divergent"]}
             
             matched_rows = df[df["Type"].str.contains("Matched", na=False)]

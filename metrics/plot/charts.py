@@ -111,11 +111,11 @@ def create_stacked_bar_chart(data, baseline_total, metric_label: str, out_path: 
 
     ax.legend(loc='center left', bbox_to_anchor=(1.02, 0.5), fontsize=10, framealpha=0.9)
 
-    # Mostra número de pareadas (excluindo Absent) no topo da última categoria antes de Absent
+    # Show number of paired (excluding Absent) at top of last category before Absent
     for i, model in enumerate(models):
         # Soma apenas as categorias de similaridade (exclui Absent)
         paired_count = sum(category_data[cat][i] for cat in PLOT_CATEGORY_ORDER if cat != "Absent")
-        # Posição Y é no topo das pareadas (antes dos Absent)
+        # Y position is at top of paired (before Absent)
         y_position = paired_count
         ax.text(i, y_position + baseline_total * 0.01, f'{paired_count}', 
                 ha='center', va='bottom', fontsize=10, fontweight='bold')

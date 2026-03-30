@@ -12,17 +12,17 @@ from .base_converter import BaseConverter
 
 class CSVConverter(BaseConverter):
     """
-    Conversor para formato CSV
+    CSV Converter
     """
     
     def __init__(self, delimiter: str = ',', encoding: str = 'utf-8-sig', include_metadata: bool = False):
         """
-        Inicializa o conversor CSV
+        Initialize CSV converter
         
         Args:
-            delimiter: Delimitador para CSV (padrão: vírgula)
-            encoding: Codificação do arquivo (padrão: utf-8-sig para Excel)
-            include_metadata: Se True, inclui metadados no mesmo arquivo (padrão: False)
+            delimiter: CSV delimiter (default: comma)
+            encoding: File encoding (default: utf-8-sig for Excel)
+            include_metadata: If True, includes metadata in same file (default: False)
         """
         super().__init__()
         self.delimiter = delimiter
@@ -34,18 +34,12 @@ class CSVConverter(BaseConverter):
     
     def prepare_data_for_csv(self, data: List[Dict[str, Any]]) -> tuple[List[str], List[List[str]]]:
         """
-        Prepara dados para escrita em CSV
-        
-        Args:
-            data: Lista de vulnerabilidades
-            
-        Returns:
-            Tupla com (headers, rows)
+        Prepare data for csv output, normalizing values and determining headers
         """
         if not data:
             return ['name', 'description'], [['No vulnerabilities found', 'Empty report']]
         
-        # Coletar todos os campos únicos
+        # Collect all unique fields
         all_fields = set()
         for item in data:
             all_fields.update(item.keys())
@@ -57,7 +51,7 @@ class CSVConverter(BaseConverter):
                 headers.append(field)
                 all_fields.remove(field)
         
-        # Adicionar campos restantes em ordem alfabética
+        # Add remaining fields in alphabetical order
         headers.extend(sorted(all_fields))
         
         # Preparar linhas de dados
@@ -77,21 +71,21 @@ class CSVConverter(BaseConverter):
     
     def write_metadata_to_csv(self, writer, data: List[Dict[str, Any]]):
         """
-        Escreve metadados no mesmo arquivo CSV
+        Write metadata to same CSV file
         
         Args:
-            writer: Objeto csv.writer
-            data: Lista de vulnerabilidades
+            writer: csv.writer object
+            data: List of vulnerabilities
         """
         try:
-            # Separação visual
+            # Visual separation
             writer.writerow([])
             writer.writerow(['=== METADADOS ==='])
             writer.writerow([])
             
             writer.writerow(['Propriedade', 'Valor'])
-            writer.writerow(['Data de geração', datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")])
-            writer.writerow(['Total de vulnerabilidades', len(data)])
+            writer.writerow(['Generated date', datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")])
+            writer.writerow(['Total vulnerabilities', len(data)])
             writer.writerow(['Conversor', f"{self.get_format_name()} Converter"])
             
             # Contar por severidade (usando campo 'Risk' do nosso formato)
@@ -102,25 +96,25 @@ class CSVConverter(BaseConverter):
                     severity_counts[severity] = severity_counts.get(severity, 0) + 1
                 
                 writer.writerow([])
-                writer.writerow(['Distribuição por Severidade', ''])
+                writer.writerow(['Severity Distribution', ''])
                 
                 for severity, count in severity_counts.items():
-                    writer.writerow([f"Severidade {severity}", count])
+                    writer.writerow([f"Severity {severity}", count])
         
         except Exception as e:
-            print(f"Aviso: Erro ao escrever metadados no CSV: {e}")
+            print(f"Warning: Error writing metadata to CSV: {e}")
 
     def create_metadata_csv(self, data: List[Dict[str, Any]], output_dir: str, base_name: str) -> str:
         """
-        Cria arquivo CSV com metadados
+        Create CSV file with metadata
         
         Args:
-            data: Lista de vulnerabilidades
-            output_dir: Diretório de saída
-            base_name: Nome base do arquivo
+            data: List of vulnerabilities
+            output_dir: Output directory
+            base_name: Base filename
             
         Returns:
-            Caminho do arquivo de metadados
+            Path to metadata file
         """
         metadata_file = os.path.join(output_dir, f"{base_name}_metadata.csv")
         
@@ -148,27 +142,27 @@ class CSVConverter(BaseConverter):
             
             return metadata_file
         except Exception as e:
-            print(f"Aviso: Não foi possível criar arquivo de metadados: {e}")
+            print(f"Warning: Could not create metadata file: {e}")
             return ""
     
     def convert(self, json_file_path: str, output_file_path: Optional[str] = None) -> str:
         """
-        Converte arquivo JSON para CSV
+        Convert JSON file to CSV
         
         Args:
-            json_file_path: Caminho para o arquivo JSON
-            output_file_path: Caminho opcional para o arquivo de saída
+            json_file_path: Path to JSON file
+            output_file_path: Optional path to output file
             
         Returns:
-            Caminho do arquivo CSV gerado
+            Path of generated CSV file
         """
-        # Carregar dados
+        # Load data
         data = self.load_json_data(json_file_path)
         
         if not self.validate_data(data):
-            raise ValueError("Dados JSON inválidos")
+            raise ValueError("Invalid JSON data")
         
-        # Definir arquivo de saída
+        # Set output file
         if output_file_path is None:
             output_file_path = self.get_output_filename(json_file_path, "csv")
         
@@ -180,7 +174,7 @@ class CSVConverter(BaseConverter):
             with open(output_file_path, 'w', newline='', encoding=self.encoding) as f:
                 writer = csv.writer(f, delimiter=self.delimiter)
                 
-                # Escrever cabeçalho
+                # Write header
                 writer.writerow(headers)
                 
                 # Escrever dados
@@ -202,7 +196,7 @@ class CSVConverter(BaseConverter):
             if metadata_file:
                 print(f"Metadados salvos em: {metadata_file}")
             elif self.include_metadata:
-                print("Metadados incluídos no arquivo CSV principal")
+                print("Metadata included in main CSV file")
             
             return output_file_path
             
