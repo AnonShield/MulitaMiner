@@ -160,7 +160,7 @@ After installation, run this minimal test to verify the setup:
 python main.py --input test\openvas\OpenVAS_JuiceShop.pdf --llm llama3 --scanner openvas --allow-duplicates --output-file openvas_test
 
 # Linux/macOS
-python main.py --input test/openvas/OpenVAS_JuiceShop.pdf --llm llama3 --scanner openvas --allow-duplicates --output-file openvas_test
+python3 main.py --input test/openvas/OpenVAS_JuiceShop.pdf --llm llama3 --scanner openvas --allow-duplicates --output-file openvas_test
 ```
 
 **Expected result**: openvas_test.json with extracted vulnerabilities and visual_layout.txt file
@@ -170,7 +170,11 @@ python main.py --input test/openvas/OpenVAS_JuiceShop.pdf --llm llama3 --scanner
 Check the generated JSON file for extracted vulnerabilities:
 
 ```bash
+# Windows
 python tools/summarize_vulnerabilities.py --input openvas_test.json
+
+# Linux/macOS
+python3 tools/summarize_vulnerabilities.py --input openvas_test.json
 ```
 
 **Expected result**: Terminal print with summary of all extracted vulnerabilities in tabular format.
@@ -198,9 +202,9 @@ python main.py --input test\openvas\OpenVAS_JuiceShop.pdf --llm gpt4 --scanner o
 python main.py --input test\openvas\OpenVAS_JuiceShop.pdf --llm llama3 --scanner openvas --allow-duplicates --output-file openvas_test_llama3
 
 # Linux/macOS
-python main.py --input test/openvas/OpenVAS_JuiceShop.pdf --llm deepseek --scanner openvas --allow-duplicates --output-file openvas_test_deepseek
-python main.py --input test/openvas/OpenVAS_JuiceShop.pdf --llm gpt4 --scanner openvas --allow-duplicates --output-file openvas_test_gpt4
-python main.py --input test/openvas/OpenVAS_JuiceShop.pdf --llm llama3 --scanner openvas --allow-duplicates --output-file openvas_test_llama3
+python3 main.py --input test/openvas/OpenVAS_JuiceShop.pdf --llm deepseek --scanner openvas --allow-duplicates --output-file openvas_test_deepseek
+python3 main.py --input test/openvas/OpenVAS_JuiceShop.pdf --llm gpt4 --scanner openvas --allow-duplicates --output-file openvas_test_gpt4
+python3 main.py --input test/openvas/OpenVAS_JuiceShop.pdf --llm llama3 --scanner openvas --allow-duplicates --output-file openvas_test_llama3
 ```
 
 **Expected time**: ~12 minutes for all extractions
@@ -225,8 +229,8 @@ python metrics/bert/compare_extractions_bert.py --baseline-file test\openvas\Ope
 python metrics/rouge/compare_extractions_rouge.py --baseline-file test\openvas\OpenVAS_JuiceShop.xlsx --extraction-file openvas_test_deepseek.json --model deepseek --output-dir results_rouge --allow-duplicates
 
 # Linux/macOS
-python metrics/bert/compare_extractions_bert.py --baseline-file test/openvas/OpenVAS_JuiceShop.xlsx --extraction-file openvas_test_deepseek.json --model deepseek --output-dir results_bert --allow-duplicates
-python metrics/rouge/compare_extractions_rouge.py --baseline-file test/openvas/OpenVAS_JuiceShop.xlsx --extraction-file openvas_test_deepseek.json --model deepseek --output-dir results_rouge --allow-duplicates
+python3 metrics/bert/compare_extractions_bert.py --baseline-file test/openvas/OpenVAS_JuiceShop.xlsx --extraction-file openvas_test_deepseek.json --model deepseek --output-dir results_bert --allow-duplicates
+python3 metrics/rouge/compare_extractions_rouge.py --baseline-file test/openvas/OpenVAS_JuiceShop.xlsx --extraction-file openvas_test_deepseek.json --model deepseek --output-dir results_rouge --allow-duplicates
 ```
 
 **Expected time**: ~15 seconds for BERT and ~3 seconds for ROUGE
@@ -246,7 +250,7 @@ python metrics/rouge/compare_extractions_rouge.py --baseline-file test/openvas/O
 python tools/run_experiments.py --input-dir test\openvas --llms deepseek --scanners openvas --evaluation-methods bert rouge --runs-per-model 5 --allow-duplicates true
 
 # Linux/macOS
-python tools/run_experiments.py --input-dir test/openvas --llms deepseek --scanners openvas --evaluation-methods bert rouge --runs-per-model 5 --allow-duplicates true
+python3 tools/run_experiments.py --input-dir test/openvas --llms deepseek --scanners openvas --evaluation-methods bert rouge --runs-per-model 5 --allow-duplicates true
 ```
 
 **Expected time**: ~40 minutes

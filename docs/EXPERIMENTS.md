@@ -91,10 +91,20 @@ Comparison against OpenVAS CSV baseline (6,343 vulnerabilities) using fuzzy matc
 
 ```bash
 # Run experiments with specified configurations
-python tools/run_experiments.py --input-dir test/openvas --llms deepseek gpt4 --scanners openvas --evaluation-methods bert rouge --runs-per-model 5 --allow-duplicates true
+
+# Windows
+python tools/run_experiments.py --input-dir test\openvas --llms deepseek gpt4 --scanners openvas --evaluation-methods bert rouge --runs-per-model 5 --allow-duplicates true
+
+# Linux/macOS
+python3 tools/run_experiments.py --input-dir test/openvas --llms deepseek gpt4 --scanners openvas --evaluation-methods bert rouge --runs-per-model 5 --allow-duplicates true
 
 # Resume from checkpoint if interrupted
-python tools/run_experiments.py --input-dir test/openvas --llms deepseek --scanners openvas --checkpoint-file run_checkpoints_2026-03-16T12-28-08.json
+
+# Windows
+python tools/run_experiments.py --input-dir test\openvas --llms deepseek --scanners openvas --checkpoint-file run_checkpoints_2026-03-16T12-28-08.json
+
+# Linux/macOS
+python3 tools/run_experiments.py --input-dir test/openvas --llms deepseek --scanners openvas --checkpoint-file run_checkpoints_2026-03-16T12-28-08.json
 ```
 
 **Key Features:**
@@ -131,7 +141,11 @@ Results are automatically organized by:
 Charts are automatically generated at the end of `run_experiments.py` execution. To generate charts manually:
 
 ```bash
+# Windows
 python tools/process_results.py
+
+# Linux/macOS
+python3 tools/process_results.py
 ```
 
 Generates:

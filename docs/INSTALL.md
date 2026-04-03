@@ -21,7 +21,7 @@ cd MulitaMiner
 
 ```bash
 # Windows
-python3 -m venv .venv
+python -m venv .venv
 .venv\Scripts\activate
 
 # Linux/Mac
@@ -93,12 +93,31 @@ After installation, verify that everything is correctly installed:
 
 ```bash
 # Check Python version
+
+# Windows
+python --version
+
+# Linux/macOS
 python3 --version
+```
 
+```bash
 # Check if main dependencies are installed
-python3 -c "import langchain; import pdfplumber; import tiktoken; print('Core dependencies OK')"
 
+# Windows
+python -c "import langchain; import pdfplumber; import tiktoken; print('Core dependencies OK')"
+
+# Linux/macOS
+python3 -c "import langchain; import pdfplumber; import tiktoken; print('Core dependencies OK')"
+```
+
+```bash
 # Check if metrics dependencies are installed
+
+# Windows
+python -c "import bert_score; import rouge_score; print('Metrics dependencies OK')"
+
+# Linux/macOS
 python3 -c "import bert_score; import rouge_score; print('Metrics dependencies OK')"
 ```
 

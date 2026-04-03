@@ -57,7 +57,11 @@ This document covers common errors and optimization tips for MulitaMiner.
 Validate chunk division before processing:
 
 ```bash
+# Windows
 python tools/chunk_validator.py report.pdf --llm gpt4 --scanner tenable
+
+# Linux/macOS
+python3 tools/chunk_validator.py report.pdf --llm gpt4 --scanner tenable
 ```
 
 This provides:

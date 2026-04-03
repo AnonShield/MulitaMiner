@@ -34,10 +34,15 @@ Define: scanner name, template path, consolidation fields (`consolidation_field`
 
 ### 3. (Optional) Custom Block Logic
 
-If the report has no clear separators, or requires special grouping (e.g., by asset, plugin, section):
+MulitaMiner segments reports into **blocks** (preserving report structure) before dividing into **chunks** (respecting token limits). This ensures the LLM processes related vulnerabilities together.
 
-- Implement a function in `src/utils/block_creation.py`
-- Integrate in the `create_session_blocks_from_text` method
+- **OpenVAS** example: Blocks group by `(severity, port, protocol)` — naturally preserving report sessions
+- **Tenable** example: Blocks group by severity — logically grouping related vulnerabilities
+
+**If your scanner has a unique report structure** (e.g., grouped by asset, plugin family, or custom sections), implement custom block logic:
+
+- Create a function in `src/utils/block_creation.py` (e.g., `_create_blocks_mynewscanner()`)
+- Integrate in `create_session_blocks_from_text()` by adding a new branch
 
 **If not implemented:** The system divides the text into sequential chunks based on the LLM's token limit. This works well for structured reports, but may mix vulnerabilities in more complex ones.
 
@@ -253,7 +258,11 @@ SCANNER_STRATEGIES = {
 **Step 4: Test:**
 
 ```bash
-./main.py --input report.txt --scanner mycorp --llm gpt-4
+# Windows
+python main.py --input report.txt --scanner mycorp --llm gpt-4
+
+# Linux/macOS
+python3 main.py --input report.txt --scanner mycorp --llm gpt-4
 ```
 
 Check the log file to verify consolidation worked correctly!
