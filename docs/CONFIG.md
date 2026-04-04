@@ -71,24 +71,6 @@ validation_limit = max_tokens - 500  # 500-token safety buffer
 | `max_tokens`    | LLM config file                  | 4096-16000       |
 | `safety_buffer` | Hardcoded                        | 500 tokens       |
 
-### Current LLM Configurations vs Implementation
-
-**⚠️ IMPORTANT:** Chunking uses FIXED 4096-token limit regardless of LLM config!
-
-| LLM          | Config max_tokens | Config Reserve | **Actual Chunking** | Validation Limit | Efficiency |
-| ------------ | ----------------- | -------------- | ------------------- | ---------------- | ---------- |
-| **GPT-4**    | 12,000            | 4,000          | **~3,096**          | 11,500           | ~26%       |
-| **GPT-5**    | 16,000            | 7,000          | **~3,096**          | 15,500           | ~19%       |
-| **DeepSeek** | 4,096             | 1,500          | **~3,096**          | 3,596            | ~75%       |
-| **Llama3**   | 8,192             | 4,000          | **~3,096**          | 7,692            | ~38%       |
-| **Llama4**   | 8,192             | 5,000          | **~3,096**          | 7,692            | ~38%       |
-| **Qwen3**    | 5,000             | 3,000          | **~3,096**          | 4,500            | ~62%       |
-
-**Key Findings:**
-- All models use the **same chunking size** (~3,096 tokens)
-- LLM-specific configs are **only used for validation**
-- High-capacity models (GPT-4/5) are **severely underutilized**
-- Only DeepSeek and Qwen3 achieve reasonable efficiency
 
 ### Implementation Reality
 
@@ -113,8 +95,6 @@ if total_tokens > (llm_config.max_tokens - 500):
     flag_for_redivision = True
 ```
 
-> **🔍 Discovery**: The `max_chunk_size` values in LLM config files are **unused**! The system ignores model-specific chunking limits and uses a one-size-fits-all approach.
-
 ## LLM Configuration Files
 
 LLM configurations are stored in `src/configs/llms/`. Each JSON file defines:
@@ -127,11 +107,7 @@ LLM configurations are stored in `src/configs/llms/`. Each JSON file defines:
   "temperature": 0,
   "max_tokens": 4096,
   "timeout": 60,
-  "reserve_for_response": 3000,
-  "max_chunk_size": 2396,
-  "note": "max_chunk_size is IGNORED by implementation",
-  "actual_chunking": "Fixed 4096-token limit, chunk_size = 4096 - reserve (default: 1000)",
-  "validation_only": "max_tokens used only for runtime validation <= (max_tokens - 500)"
+  "reserve_for_response": 3000
 }
 ```
 
