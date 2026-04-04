@@ -35,42 +35,85 @@ JSON configuration files use the `${VARIABLE_NAME}` syntax to reference variable
 
 ## Token Calculation System
 
-The system uses precise mathematical calculations to determine optimal chunk sizes for each LLM:
+The MulitaMiner system uses a **two-phase approach** for token management:
 
+### Phase 1: Chunking Strategy (Fixed Values)
+
+The system uses **hardcoded values** in `extract_vulns_from_blocks()`:
+
+```python
+# Chunking phase uses fixed limits regardless of LLM config
+token_chunks = get_token_based_chunks(block_text, max_tokens=4096, profile_config=profile_config)
+split_text_to_subchunks(tc.page_content, target_size=8000, profile_config=profile_config)
 ```
-max_chunk_size = max_tokens - reserve_for_response - prompt_overhead - system_overhead - safety_buffer
+
+**Actual chunking formula:**
+```
+chunk_size = 4096 - reserve_for_response (default: 1000) = ~3096 tokens per chunk
 ```
 
-### Formula Components
+### Phase 2: Runtime Validation (Dynamic)
 
-| Component              | Description             | Example       |
-| ---------------------- | ----------------------- | ------------- |
-| `max_tokens`           | Model's total limit     | 8192 (Llama4) |
-| `reserve_for_response` | Space for LLM response  | 5000 tokens   |
-| `prompt_overhead`      | Template + instructions | 600 tokens    |
-| `system_overhead`      | Metadata + overhead     | 500 tokens    |
-| `safety_buffer`        | Safety margin           | 600 tokens    |
+Each chunk is validated using **actual LLM limits** from config files:
 
-### Real Configurations per LLM
+```python
+total_tokens = prompt_tokens + chunk_tokens + response_tokens
+validation_limit = max_tokens - 500  # 500-token safety buffer
+```
 
-| LLM          | Total Limit | Reserve | Final Chunk | Calculated Overhead | Efficiency |
-| ------------ | ----------- | ------- | ----------- | ------------------- | ---------- |
-| **GPT-4**    | 12,000      | 4,000   | **7,300**   | 700 tokens          | 60.8%      |
-| **GPT-5**    | 16,000      | 6,000   | **8,300**   | 1,700 tokens        | 51.9%      |
-| **DeepSeek** | 4,096       | 1,500   | **1,750**   | 846 tokens          | 42.7%      |
-| **Llama3**   | 8,192       | 4,000   | **3,492**   | 700 tokens          | 42.6%      |
-| **Llama4**   | 8,192       | 5,000   | **1,492**   | 1,700 tokens        | 18.2%      |
-| **Qwen3**    | 8,192       | 4,000   | **3,492**   | 700 tokens          | 42.6%      |
+**Validation components:**
 
-**Calculated Overhead** = (Total Limit - Reserve) - Final Chunk
+| Component       | Source                           | Default/Example  |
+| --------------- | -------------------------------- | ---------------- |
+| `prompt_tokens` | Dynamic (calculated from template) | 800 tokens       |
+| `chunk_tokens`  | Dynamic (actual content)         | Varies           |
+| `response_tokens` | Dynamic (LLM response)          | Varies           |
+| `max_tokens`    | LLM config file                  | 4096-16000       |
+| `safety_buffer` | Hardcoded                        | 500 tokens       |
 
-### Value Interpretation
+### Current LLM Configurations vs Implementation
 
-- **Overhead varies by LLM**: More complex templates require more space
-- **Reserve for response**: Based on real tests of model verbosity
-- **Efficiency**: Percentage of the total limit used for chunk processing
+**⚠️ IMPORTANT:** Chunking uses FIXED 4096-token limit regardless of LLM config!
 
-> **Note:** The values in the tables are based on practical tests and benchmarks with major LLM providers (OpenAI, Groq, DeepSeek). They reflect real usage scenarios but may vary depending on the model, prompt template, and provider updates.
+| LLM          | Config max_tokens | Config Reserve | **Actual Chunking** | Validation Limit | Efficiency |
+| ------------ | ----------------- | -------------- | ------------------- | ---------------- | ---------- |
+| **GPT-4**    | 12,000            | 4,000          | **~3,096**          | 11,500           | ~26%       |
+| **GPT-5**    | 16,000            | 7,000          | **~3,096**          | 15,500           | ~19%       |
+| **DeepSeek** | 4,096             | 1,500          | **~3,096**          | 3,596            | ~75%       |
+| **Llama3**   | 8,192             | 4,000          | **~3,096**          | 7,692            | ~38%       |
+| **Llama4**   | 8,192             | 5,000          | **~3,096**          | 7,692            | ~38%       |
+| **Qwen3**    | 5,000             | 3,000          | **~3,096**          | 4,500            | ~62%       |
+
+**Key Findings:**
+- All models use the **same chunking size** (~3,096 tokens)
+- LLM-specific configs are **only used for validation**
+- High-capacity models (GPT-4/5) are **severely underutilized**
+- Only DeepSeek and Qwen3 achieve reasonable efficiency
+
+### Implementation Reality
+
+**Chunking Phase (block_creation.py):**
+```python
+# FIXED VALUES - ignores LLM configs completely
+max_tokens = 4096  # hardcoded
+reserve = 1000     # default if not specified in get_token_based_chunks
+chunk_size = 4096 - 1000 = 3096 tokens
+```
+
+**Validation Phase (validate_json_and_tokens):**
+```python
+# Uses ACTUAL LLM config values
+prompt_tokens = len(tokenize(prompt_template)) or 800  # dynamic
+chunk_tokens = len(tokenize(chunk_content))           # actual content
+response_tokens = len(tokenize(llm_response))         # actual response
+total_tokens = prompt_tokens + chunk_tokens + response_tokens
+
+# Validation against LLM-specific limit
+if total_tokens > (llm_config.max_tokens - 500):
+    flag_for_redivision = True
+```
+
+> **🔍 Discovery**: The `max_chunk_size` values in LLM config files are **unused**! The system ignores model-specific chunking limits and uses a one-size-fits-all approach.
 
 ## LLM Configuration Files
 
@@ -85,11 +128,10 @@ LLM configurations are stored in `src/configs/llms/`. Each JSON file defines:
   "max_tokens": 4096,
   "timeout": 60,
   "reserve_for_response": 3000,
-  "prompt_overhead": 300,
-  "system_overhead": 200,
-  "safety_buffer": 200,
   "max_chunk_size": 2396,
-  "calculation_formula": "max_chunk_size = max_tokens - reserve_for_response - prompt_overhead - system_overhead - safety_buffer"
+  "note": "max_chunk_size is IGNORED by implementation",
+  "actual_chunking": "Fixed 4096-token limit, chunk_size = 4096 - reserve (default: 1000)",
+  "validation_only": "max_tokens used only for runtime validation <= (max_tokens - 500)"
 }
 ```
 
@@ -99,9 +141,14 @@ LLM configurations are stored in `src/configs/llms/`. Each JSON file defines:
 - `endpoint`: Endpoint URL
 - `model`: Model name
 - `temperature`: Creativity level (0 = deterministic)
-- `max_tokens`: Maximum tokens for the model
-- `reserve_for_response`: Space reserved for LLM output
-- `max_chunk_size`: Calculated optimal chunk size
+- `max_tokens`: **Used ONLY for validation** (runtime limit checking)
+- `reserve_for_response`: **Used for chunking calculation** (4096 - this value)
+- `max_chunk_size`: **⚠️ IGNORED by implementation** (documentation artifact)
+
+**Reality Check:**
+- **Chunking**: Uses hardcoded 4096-token base regardless of `max_tokens`
+- **Validation**: Uses `max_tokens` from config to check final token count
+- **Efficiency**: High-capacity models are underutilized due to fixed chunking
 
 ## Scanner Configuration Files
 
