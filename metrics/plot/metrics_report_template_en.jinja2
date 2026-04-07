@@ -1,0 +1,808 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MulitaMiner — Metrics Dashboard</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500;600&display=swap');
+:root{
+  --bg:#0a0e1a;--surface:#111827;--surface2:#1a2235;--surface3:#0d1526;
+  --border:#1e2d45;--border2:#263352;
+  --accent:#FF6B35;--accent2:#7c3aed;--accent3:#10b981;--accent4:#f59e0b;--accent5:#f43f5e;
+  --text:#e2e8f0;--muted:#64748b;--muted2:#94a3b8;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min-height:100vh;padding:2rem;}
+
+header{margin-bottom:2rem;border-bottom:1px solid var(--border);padding-bottom:1.5rem;
+  display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:1rem;}
+.logo{font-family:'Space Mono',monospace;font-size:1.5rem;font-weight:700;letter-spacing:-0.02em;}
+.logo span{color:var(--accent);}
+.subtitle{color:var(--muted);font-size:0.8rem;margin-top:0.2rem;font-family:'Space Mono',monospace;}
+.badge-row{display:flex;gap:0.5rem;flex-wrap:wrap;}
+.badge{font-family:'Space Mono',monospace;font-size:0.68rem;padding:0.2rem 0.55rem;border-radius:2px;border:1px solid;}
+.badge-bert{border-color:var(--accent);color:var(--accent);}
+.badge-rouge{border-color:var(--accent3);color:var(--accent3);}
+.badge-det{border-color:var(--accent4);color:var(--accent4);}
+.badge-std{border-color:var(--accent2);color:var(--accent2);}
+
+.tabs{display:flex;gap:0.2rem;margin-bottom:1.5rem;border-bottom:1px solid var(--border);flex-wrap:wrap;}
+.tab{font-family:'Space Mono',monospace;font-size:0.72rem;padding:0.55rem 1rem;cursor:pointer;
+  border:none;background:transparent;color:var(--muted);border-bottom:2px solid transparent;
+  transition:all 0.18s;letter-spacing:0.04em;}
+.tab:hover{color:var(--text);}
+.tab.active{color:var(--accent);border-bottom-color:var(--accent);}
+.panel{display:none;}.panel.active{display:block;}
+
+.controls{display:flex;gap:0.75rem;margin-bottom:1.25rem;flex-wrap:wrap;align-items:center;}
+.ctrl-label{font-family:'Space Mono',monospace;font-size:0.68rem;color:var(--muted);}
+select{background:var(--surface2);color:var(--text);border:1px solid var(--border2);
+  border-radius:4px;padding:0.3rem 0.6rem;font-family:'Space Mono',monospace;font-size:0.7rem;cursor:pointer;outline:none;}
+select:focus{border-color:var(--accent);}
+.btn-group{display:flex;gap:0;}
+.btn-toggle{font-family:'Space Mono',monospace;font-size:0.68rem;padding:0.3rem 0.75rem;
+  border:1px solid var(--border2);background:var(--surface2);color:var(--muted);cursor:pointer;transition:all 0.15s;}
+.btn-toggle:first-child{border-radius:4px 0 0 4px;}
+.btn-toggle:last-child{border-radius:0 4px 4px 0;}
+.btn-toggle.on{background:var(--accent);color:var(--bg);border-color:var(--accent);}
+
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;margin-bottom:1.25rem;}
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:0.85rem;margin-bottom:1.25rem;}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:1.25rem;}
+.card-full{background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:1.25rem;margin-bottom:1.25rem;}
+.card-title{font-family:'Space Mono',monospace;font-size:0.68rem;color:var(--muted);
+  letter-spacing:0.1em;text-transform:uppercase;margin-bottom:1rem;
+  display:flex;align-items:center;gap:0.5rem;flex-wrap:wrap;}
+.card-title::before{content:'';display:inline-block;width:5px;height:5px;border-radius:50%;background:var(--accent);}
+.card-title.rouge::before{background:var(--accent3);}
+.card-title.det::before{background:var(--accent4);}
+.card-title.radar::before{background:var(--accent2);}
+.card-title.stacked::before{background:var(--accent5);}
+
+.chart-description{font-family:'DM Sans',sans-serif;font-size:0.75rem;color:var(--muted2);
+  margin-bottom:0.85rem;padding-top:0.6rem;padding-bottom:0.6rem;
+  border-top:1px solid var(--border);border-bottom:1px solid var(--border);line-height:1.4;}
+
+.stat-card{background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:1rem;text-align:center;}
+.stat-baseline{font-family:'Space Mono',monospace;font-size:0.58rem;color:var(--muted);
+  margin-bottom:0.3rem;letter-spacing:0.06em;text-transform:uppercase;}
+.stat-value{font-family:'Space Mono',monospace;font-size:1.3rem;font-weight:700;}
+.stat-std{font-family:'Space Mono',monospace;font-size:0.62rem;color:var(--muted);margin-top:0.1rem;}
+
+.rank-table{width:100%;border-collapse:collapse;}
+.rank-table th{font-family:'Space Mono',monospace;font-size:0.62rem;color:var(--muted);
+  padding:0.45rem 0.7rem;border-bottom:1px solid var(--border);font-weight:400;white-space:nowrap;}
+.rank-table td{padding:0.38rem 0.7rem;border-bottom:1px solid var(--surface3);
+  font-family:'Space Mono',monospace;font-size:0.68rem;white-space:nowrap;}
+.rank-table tr:hover td{background:var(--surface2);}
+.rank-1{color:var(--accent4);font-weight:700;}
+.rank-2{color:var(--muted2);}
+.rank-3{color:#cd7f32;}
+.std-inline{color:var(--muted);font-size:0.58rem;}
+
+.heatmap-wrap{overflow-x:auto;}
+.heatmap{width:100%;border-collapse:collapse;}
+.heatmap th{font-family:'Space Mono',monospace;font-size:0.62rem;color:var(--muted);
+  padding:0.45rem 0.6rem;text-align:center;white-space:nowrap;border-bottom:1px solid var(--border);font-weight:400;}
+.heatmap th:first-child{text-align:left;}
+.heatmap td{padding:0.4rem 0.6rem;text-align:center;border-bottom:1px solid var(--surface3);
+  font-family:'Space Mono',monospace;font-size:0.68rem;transition:opacity 0.15s;white-space:nowrap;}
+.heatmap td:first-child{text-align:left;color:var(--text);padding-left:0;}
+.heatmap tr:hover td{opacity:0.82;}
+.cell-std{font-size:0.56rem;opacity:0.6;display:block;}
+
+.legend{display:flex;gap:0.85rem;margin-top:0.85rem;flex-wrap:wrap;}
+.legend-item{display:flex;align-items:center;gap:0.35rem;font-size:0.68rem;color:var(--muted);font-family:'Space Mono',monospace;}
+.legend-box{width:11px;height:11px;border-radius:2px;flex-shrink:0;}
+
+canvas{width:100%!important;}
+footer{margin-top:3rem;padding-top:1.5rem;border-top:1px solid var(--border);color:var(--muted);font-size:0.75rem;text-align:center;font-family:'Space Mono',monospace;}
+@media(max-width:900px){.grid-2,.grid-3{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+
+<header>
+  <div>
+    <div class="logo">Mulita<span>Miner</span></div>
+    <div class="subtitle">// Metrics Evaluation Dashboard — {{ report_date }}</div>
+  </div>
+  <div class="badge-row">
+    {% if has_bert %}<span class="badge badge-bert">BERTScore</span>{% endif %}
+    {% if has_rouge %}<span class="badge badge-rouge">ROUGE-L</span>{% endif %}
+    {% if has_det %}<span class="badge badge-det">Deterministic</span>{% endif %}
+    {% if has_stacked %}<span class="badge badge-std">Similarity</span>{% endif %}
+  </div>
+</header>
+
+<div class="tabs">
+  {% if has_bert %}
+  <button class="tab active" onclick="showTab('overview',this)">Overview</button>
+  <button class="tab" onclick="showTab('baseline',this)">Baseline Comparison</button>
+  <button class="tab" onclick="showTab('semantic',this)">Semantic Fields</button>
+  {% endif %}
+  {% if has_det %}
+  <button class="tab {% if not has_bert %}active{% endif %}" onclick="showTab('deterministic',this)">Deterministic Fields</button>
+  {% endif %}
+  {% if has_bert %}
+  <button class="tab" onclick="showTab('radar',this)">Model Comparison</button>
+  {% endif %}
+  {% if has_matched or has_absent_nonexist %}
+  <button class="tab" onclick="showTab('png-charts',this)">Additional Metrics</button>
+  {% endif %}
+</div>
+
+<!-- ══ TAB 1: OVERVIEW ══ -->
+{% if has_bert %}
+<div class="panel active" id="tab-overview">
+  <div class="grid-3" id="statCards"></div>
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-title">Average BERTScore per Model — Grouped by Baseline (±Std)</div>
+      <div class="chart-description">Mean BERT semantic similarity across all extracted fields, organized by baseline scan. Error bars show standard deviation across runs.</div>
+      <canvas id="ovBertBar" height="270"></canvas>
+    </div>
+    <div class="card">
+      <div class="card-title">Rankings — Average BERTScore across Baselines</div>
+      <div class="chart-description">Ranked models by overall performance. Higher scores indicate better semantic alignment with baseline vulnerabilities.</div>
+      <table class="rank-table" id="rankTable"></table>
+    </div>
+  </div>
+</div>
+{% endif %}
+
+<!-- ══ TAB 2: BASELINE COMPARISON ══ -->
+{% if has_bert or has_rouge %}
+<div class="panel {% if not has_bert %}active{% endif %}" id="tab-baseline">
+  {% if has_bert and has_rouge %}
+  <div class="controls">
+    <span class="ctrl-label">Metric:</span>
+    <div class="btn-group">
+      <button class="btn-toggle on" id="blMetricBert"  onclick="setBlMetric('bert')">BERT</button>
+      <button class="btn-toggle"   id="blMetricRouge" onclick="setBlMetric('rouge')">ROUGE-L</button>
+    </div>
+  </div>
+  {% endif %}
+  <div class="card-full">
+    <div class="card-title compare" id="blLineTitle">Average {% if has_bert %}BERTScore{% else %}ROUGE-L{% endif %} across Baselines — per Model (±Std)</div>
+    <div class="chart-description">(BERT/ROUGE-L) semantic similarity trend per model, averaged across all baselines. Shaded regions represent ±1 standard deviation.</div>
+    <canvas id="blLineChart" height="200"></canvas>
+  </div>
+  {% if has_stacked %}
+  <div class="card-full">
+    <div class="card-title stacked">
+      Similarity Category Distribution (%)
+      <span style="margin-left:auto;display:flex;gap:1rem;align-items:center;">
+        <span style="display:flex;gap:0.5rem;align-items:center;">
+          <span class="ctrl-label">Metric:</span>
+          <select id="stackedMetric" onchange="rebuildStacked()">
+            <option value="bert">BERT</option>
+            <option value="rouge">ROUGE</option>
+          </select>
+        </span>
+        <span style="display:flex;gap:0.5rem;align-items:center;">
+          <span class="ctrl-label">Baseline:</span>
+          <select id="stackedBaseline" onchange="rebuildStacked()">
+            <option value="all">All (average)</option>
+            {% for bl in baselines %}<option value="{{ bl }}">{{ bl }}</option>{% endfor %}
+          </select>
+        </span>
+      </span>
+    </div>
+    <div class="chart-description">Distribution of extracted vulnerabilities across 5 similarity categories. Values are percentages aggregated and averaged across all model runs, excluding non-existent items.</div>
+    <canvas id="stackedBar" height="160"></canvas>
+    <div class="legend" id="stackedLegend"></div>
+  </div>
+  {% endif %}
+</div>
+{% endif %}
+
+<!-- ══ TAB 3: SEMANTIC FIELDS ══ -->
+{% if has_bert or has_rouge %}
+<div class="panel" id="tab-semantic">
+  {% if has_bert and has_rouge %}
+  <div class="controls">
+    <span class="ctrl-label">Metric:</span>
+    <div class="btn-group">
+      <button class="btn-toggle on" id="semBert"  onclick="setSemMetric('bert')">BERT</button>
+      <button class="btn-toggle"   id="semRouge" onclick="setSemMetric('rouge')">ROUGE-L</button>
+    </div>
+    <span class="ctrl-label">Baseline:</span>
+    <select id="semBaseline" onchange="rebuildSemantic()">
+      {% for bl in baselines %}<option value="{{ bl }}">{{ bl }}</option>{% endfor %}
+    </select>
+  </div>
+  {% else %}
+  <div class="controls">
+    <span class="ctrl-label">Baseline:</span>
+    <select id="semBaseline" onchange="rebuildSemantic()">
+      {% for bl in baselines %}<option value="{{ bl }}">{{ bl }}</option>{% endfor %}
+    </select>
+  </div>
+  {% endif %}
+  <div class="card-full">
+    <div class="card-title" id="semHeatTitle">{% if has_bert %}BERTScore{% else %}ROUGE-L{% endif %} Heatmap — Semantic Fields × Models</div>
+    <div class="chart-description">(BERT/ROUGE-L) field-level performance heatmap. Darker cells indicate higher similarity scores. Each cell shows mean ± std for that field and model pair.</div>
+    <div class="heatmap-wrap"><table class="heatmap" id="semHeatmap"></table></div>
+    <div class="legend" id="semLegend"></div>
+  </div>
+  <div class="card-full">
+    <div class="card-title" id="semBarTitle">{% if has_bert %}BERTScore{% else %}ROUGE-L{% endif %} per Field — per Model (±Std)</div>
+    <div class="chart-description">(BERT/ROUGE-L) performance per semantic field. Compare how different models perform on each category (detection method, impact, references, etc.).</div>
+    <canvas id="semBar" height="200"></canvas>
+  </div>
+</div>
+{% endif %}
+
+<!-- ══ TAB 4: DETERMINISTIC FIELDS ══ -->
+{% if has_det %}
+<div class="panel" id="tab-deterministic">
+  <div class="controls">
+    <span class="ctrl-label">Metric:</span>
+    <div class="btn-group">
+      <button class="btn-toggle on" id="detF1"   onclick="setDetMetric('f1')">F1</button>
+      <button class="btn-toggle"   id="detPrec" onclick="setDetMetric('prec')">Precision</button>
+      <button class="btn-toggle"   id="detRec"  onclick="setDetMetric('rec')">Recall</button>
+    </div>
+    <span class="ctrl-label">Baseline:</span>
+    <select id="detBaseline" onchange="rebuildDet()">
+      {% for bl in baselines %}<option value="{{ bl }}">{{ bl }}</option>{% endfor %}
+    </select>
+  </div>
+  <div class="card-full">
+    <div class="card-title det" id="detHeatTitle">F1-Score Heatmap — Deterministic Fields × Models</div>
+    <div class="chart-description">Structured field extraction accuracy (severity, CVSS, plugin id, port, protocol). Darker cells = higher F1-scores. Mean ± std shown per field-model pair.</div>
+    <div class="heatmap-wrap"><table class="heatmap" id="detHeatmap"></table></div>
+    <div class="legend" id="detLegend"></div>
+  </div>
+  <div class="card-full">
+    <div class="card-title det">Precision vs Recall — per Model (average across fields, ±Std)</div>
+    <div class="chart-description">Trade-off between precision (accuracy of extracted items) and recall (completeness of extractions). Models closer to top-right corner are most effective.</div>
+    <canvas id="detPrecRec" height="180"></canvas>
+  </div>
+</div>
+{% endif %}
+
+<!-- ══ TAB 5: MODEL COMPARISON ══ -->
+{% if has_bert %}
+<div class="panel" id="tab-radar">
+  <div class="controls">
+    <span class="ctrl-label">Baseline:</span>
+    <select id="radarBaseline" onchange="rebuildRadar()">
+      <option value="all">All (average)</option>
+      {% for bl in baselines %}<option value="{{ bl }}">{{ bl }}</option>{% endfor %}
+    </select>
+  </div>
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-title radar">Multidimensional Radar</div>
+      <div class="chart-description">Comparative radar chart across all 12 semantic fields (BERT) and deterministic fields (F1). Larger areas indicate more consistent, higher-quality extractions.</div>
+      <canvas id="radarChart" height="320"></canvas>
+    </div>
+    <div class="card">
+      <div class="card-title">BERT · ROUGE-L · F1-Det — Overview (±Std)</div>
+      <div class="chart-description">Overall performance summary comparing semantic (BERT/ROUGE) and structured (F1-Det) metrics. Quick reference for model quality across all dimensions.</div>
+      <canvas id="radarGrouped" height="320"></canvas>
+    </div>
+  </div>
+</div>
+{% endif %}
+
+<!-- ══ TAB 6: ADDITIONAL METRICS (PNG CHARTS) ══ -->
+{% if has_matched or has_absent_nonexist %}
+<div class="panel" id="tab-png-charts">
+  {% if has_matched %}
+  <div class="card-full">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+      <div class="card-title" style="margin-bottom: 0;">Precision & Recall — Mean ± Standard Deviation</div>
+      <div style="display: flex; gap: 0.5rem; align-items: center;">
+        <span style="font-family: 'Space Mono', monospace; font-size: 0.68rem; color: var(--muted);">Baseline:</span>
+        <select id="matchedBaseline" onchange="rebuildMatched()" style="background: var(--surface2); color: var(--text); border: 1px solid var(--border2); border-radius: 4px; padding: 0.3rem 0.6rem; font-family: 'Space Mono', monospace; font-size: 0.7rem; cursor: pointer;">
+          {% for bl in baselines %}<option value="{{ bl }}">{{ bl }}</option>{% endfor %}
+        </select>
+      </div>
+    </div>
+    <div class="chart-description"><strong>Matched Rate (Precision):</strong> Percentage of extracted vulnerabilities that were correctly matched with the baseline. <strong>Recall:</strong> Percentage of baseline vulnerabilities that were successfully extracted. Error bars represent standard deviation across runs.</div>
+    <canvas id="matchedRateChart" height="200"></canvas>
+  </div>
+  {% endif %}
+  
+  {% if has_absent_nonexist %}
+  <div class="card-full">
+    <div class="card-title">Absent & Non-existent Vulnerabilities — Standard Deviation</div>
+    <div class="chart-description">Shows the standard deviation of 'Absent' (vulnerabilities in baseline but not extracted) and 'Non-existent' (vulnerabilities extracted but not in baseline) across models, aggregated across all baselines. Lower values indicate more consistent extraction behavior.</div>
+    <canvas id="absentChart" height="200"></canvas>
+  </div>
+  {% endif %}
+</div>
+{% endif %}
+
+<footer>
+  <div style="display:inline-block;margin:0 1rem;">📊 MulitaMiner Metrics Dashboard</div>
+  <div style="display:inline-block;margin:0 1rem;">📈 Interactive Dashboard (Chart.js)</div>
+  <div style="display:inline-block;margin:0 1rem;">Generated: {{ report_date }}</div>
+</footer>
+
+<script>
+const BASELINES = {{ baselines | tojson }};
+const MODELS = {{ models | tojson }};
+const bert = {{ bert_data | safe }};
+const rouge = {{ rouge_data | safe }};
+const det = {{ det_data | safe }};
+const stacked = {{ stacked_data | safe }};
+const matched_rate = {{ matched_rate | safe }};
+const recall = {{ recall | safe }};
+const absent_nonexist = {{ absent_nonexist | safe }};
+const HAS_BERT = {{ 'true' if has_bert else 'false' }};
+const HAS_ROUGE = {{ 'true' if has_rouge else 'false' }};
+const HAS_DET = {{ 'true' if has_det else 'false' }};
+const HAS_STACKED = {{ 'true' if has_stacked else 'false' }};
+const HAS_RECALL = {{ 'true' if has_recall else 'false' }};
+
+// Load PNG images
+function loadPNGImages() {
+  {% if has_matched %}
+  const matchedImg = document.getElementById('matchedRateImg');
+  const matchedLoading = document.getElementById('matchedRateLoading');
+  if (matchedImg && matchedLoading) {
+    matchedImg.src = './matched_rate_chart.png';
+    matchedImg.onload = function() {
+      matchedImg.style.display = 'block';
+      matchedLoading.style.display = 'none';
+    };
+    matchedImg.onerror = function() {
+      matchedLoading.textContent = 'Chart not available';
+    };
+  }
+  {% endif %}
+  
+  {% if has_absent_nonexist %}
+  const absentImg = document.getElementById('absentNonexistImg');
+  const absentLoading = document.getElementById('absentNonexistLoading');
+  if (absentImg && absentLoading) {
+    absentImg.src = './absent_nonexistent_chart.png';
+    absentImg.onload = function() {
+      absentImg.style.display = 'block';
+      absentLoading.style.display = 'none';
+    };
+    absentImg.onerror = function() {
+      absentLoading.textContent = 'Chart not available';
+    };
+  }
+  {% endif %}
+}
+
+// Call on page load
+window.addEventListener('DOMContentLoaded', loadPNGImages);
+
+const MODEL_NAMES = {deepseek:'DeepSeek','gpt4':'GPT-4','gpt5':'GPT-5','llama3':'LLaMA 3','llama4':'LLaMA 4'};
+const MC = {deepseek:'#00e5ff',gpt4:'#7c3aed',gpt5:'#10b981',llama3:'#f59e0b',llama4:'#f43f5e'};
+const BASELINE_COLORS = ['#1f7067','#00a8cc','#006494','#cd5c5c','#f18f01','#c73e1d'];
+const SEMANTIC_FIELDS = ['description','detection_result','detection_method','product_detection_result','impact','solution','insight','log_method','references','plugin_details','instances','source'];
+const DET_FIELDS = ['severity','cvss','plugin','port','protocol'];
+
+const avg = a => a.reduce((s,v)=>s+v,0)/a.length || 0;
+const mBert = (bl,m) => avg(bert[bl]?.[m]?.m ?? [0.5]);
+const sBert = (bl,m) => avg(bert[bl]?.[m]?.s ?? [0.05]);
+const mRouge = (bl,m) => avg(rouge[bl]?.[m]?.m ?? [0.5]);
+const sRouge = (bl,m) => avg(rouge[bl]?.[m]?.s ?? [0.05]);
+const mAvgBl = (m,fn) => avg(BASELINES.map(bl=>fn(bl,m)));
+
+function heatColor(v, type='sem'){
+  if(type==='det'){
+    if(v>=0.95) return{bg:'rgba(16,185,129,0.18)',tx:'#10b981'};
+    if(v>=0.90) return{bg:'rgba(0,229,255,0.22)',tx:'#00e5ff'};
+    if(v>=0.85) return{bg:'rgba(245,158,11,0.16)',tx:'#f59e0b'};
+    return{bg:'rgba(244,63,94,0.16)',tx:'#f43f5e'};
+  }
+  if(v>=0.90) return{bg:'rgba(16,185,129,0.18)',tx:'#10b981'};
+  if(v>=0.80) return{bg:'rgba(0,229,255,0.22)',tx:'#00e5ff'};
+  if(v>=0.70) return{bg:'rgba(245,158,11,0.16)',tx:'#f59e0b'};
+  return{bg:'rgba(244,63,94,0.16)',tx:'#f43f5e'};
+}
+
+function buildLegend(id, type='sem'){
+  const el=document.getElementById(id); if(!el)return;
+  const items = type==='det'
+    ? [['≥0.95','rgba(16,185,129,0.18)','#10b981'],['≥0.90','rgba(0,229,255,0.22)','#00e5ff'],
+       ['≥0.85','rgba(245,158,11,0.16)','#f59e0b'],['<0.85','rgba(244,63,94,0.16)','#f43f5e']]
+    : [['≥0.90','rgba(16,185,129,0.18)','#10b981'],['≥0.80','rgba(0,229,255,0.22)','#00e5ff'],
+       ['≥0.70','rgba(245,158,11,0.16)','#f59e0b'],['<0.70','rgba(244,63,94,0.16)','#f43f5e']];
+  el.innerHTML = items.map(([l,bg,c])=>
+    `<div class="legend-item"><div class="legend-box" style="background:${bg};border:1px solid ${c}"></div>${l}</div>`
+  ).join('');
+}
+
+function buildHeatmap(tableId, fields, dataObj, type='sem'){
+  const table = document.getElementById(tableId);
+  table.innerHTML='';
+  const thead = table.createTHead();
+  thead.insertRow().innerHTML = `<th>Field</th>` +
+    MODELS.map(m=>`<th><span style="width:8px;height:8px;border-radius:50%;background:${MC[m]};display:inline-block;margin-right:4px"></span>${MODEL_NAMES[m]||m}</th>`).join('') + `<th>Avg</th>`;
+  const tbody = table.createTBody();
+  fields.forEach((f,fi)=>{
+    const tr = tbody.insertRow();
+    let html = `<td>${f}</td>`;
+    const rowMeans=[];
+    MODELS.forEach(m=>{
+      const v=dataObj[m]?.means?.[fi] ?? 0.5, s=dataObj[m]?.stds?.[fi] ?? 0.05;
+      rowMeans.push(v);
+      const c=heatColor(v,type);
+      html+=`<td style="background:${c.bg};color:${c.tx}">${v.toFixed(2)}<span class="cell-std">±${s.toFixed(2)}</span></td>`;
+    });
+    const a=avg(rowMeans), ac=heatColor(a,type);
+    html+=`<td style="background:${ac.bg};color:${ac.tx};font-weight:700">${a.toFixed(2)}</td>`;
+    tr.innerHTML=html;
+  });
+}
+
+const CHARTS={};
+function mkChart(id,cfg){
+  if(CHARTS[id]){CHARTS[id].destroy();delete CHARTS[id];}
+  const el=document.getElementById(id); if(!el)return;
+  CHARTS[id]=new Chart(el,cfg);
+  return CHARTS[id];
+}
+
+const FONT={family:'Space Mono',size:10}, FONT_SM={family:'Space Mono',size:9};
+const GRID='#1e2d45', TICKS='#64748b';
+const LEG={labels:{color:TICKS,font:FONT_SM}};
+const ttStd=ctx=>{const ds=ctx.dataset;const s=ds.errorBars?.[ctx.dataIndex]??0;return ` ${ds.label}: ${ctx.parsed.y.toFixed(3)} ±${s.toFixed(3)}`;};
+const ttVal=ctx=>{const ds=ctx.dataset;return ` ${ds.label}: ${ctx.parsed.y.toFixed(3)}`;};
+function scaleY(min=0.6,max=1.0){
+  return{y:{min,max,ticks:{color:TICKS,font:FONT},grid:{color:GRID}},x:{ticks:{color:TICKS,font:FONT},grid:{color:GRID}}};
+}
+
+const errPlugin={id:'errBars',afterDatasetsDraw(chart){
+  const ctx=chart.ctx, yS=chart.scales.y; if(!yS)return;
+  const ERR_SCALE=0.4; // Scale factor for error bar size
+  chart.data.datasets.forEach((ds,di)=>{
+    if(!ds.errorBars)return;
+    const meta=chart.getDatasetMeta(di); if(!meta.visible)return;
+    meta.data.forEach((bar,i)=>{
+      const s=ds.errorBars[i]*ERR_SCALE; if(s==null || s<0.001)return;
+      const mean=ds.data[i], x=bar.x;
+      const yT=yS.getPixelForValue(mean+s), yB=yS.getPixelForValue(mean-s);
+      ctx.save();
+      ctx.strokeStyle=ds.errorBarColor||'rgba(255,255,255,0.5)';
+      ctx.lineWidth=1.5;
+      ctx.beginPath(); ctx.moveTo(x,yT); ctx.lineTo(x,yB); ctx.stroke();
+      for(const [xa,ya] of [[x-4,yT],[x+4,yT],[x-4,yB],[x+4,yB]].reduce((a,v,i,ar)=>i%2?[...a,[ar[i-1],v]]:a,[])){
+        ctx.beginPath(); ctx.moveTo(xa[0],xa[1]); ctx.lineTo(ya[0],ya[1]); ctx.stroke();
+      }
+      ctx.restore();
+    });
+  });
+}};
+function buildOverview(){
+  const sc=document.getElementById('statCards'); sc.innerHTML='';
+  
+  // Helpers para calcular médias entre todas as baselines
+  const avgBertScore = (m) => avg(BASELINES.map(bl=>mBert(bl,m)));
+  const avgBertStd = (m) => avg(BASELINES.map(bl=>sBert(bl,m)));
+  const avgRougeScore = (m) => avg(BASELINES.map(bl=>mRouge(bl,m)));
+  const avgRougeStd = (m) => avg(BASELINES.map(bl=>sRouge(bl,m)));
+  
+  // Mostrar card para BERTScore se tiver dados
+  if(HAS_BERT){
+    const bestBert = MODELS.reduce((a,b)=>avgBertScore(a) > avgBertScore(b) ? a : b);
+    const bertVal = avgBertScore(bestBert);
+    const bertStd = avgBertStd(bestBert);
+    const bertColor = MC[bestBert];
+    
+    sc.innerHTML+=`<div class="stat-card" style="border-color:${bertColor}44">
+      <div class="stat-baseline">OVERALL</div>
+      <div style="font-size:0.8rem;text-align:center;"><span style="width:7px;height:7px;border-radius:50%;background:${bertColor};display:inline-block;margin-right:4px"></span>${MODEL_NAMES[bestBert]||bestBert}</div>
+      <div class="stat-value" style="color:${bertColor}">${bertVal.toFixed(3)}</div>
+      <div class="stat-std">±${bertStd.toFixed(3)}</div>
+      <div style="font-size:0.6rem;color:var(--muted);margin-top:0.15rem">best BERTScore</div>
+    </div>`;
+  }
+  
+  // Mostrar card para ROUGE-L se tiver dados
+  if(HAS_ROUGE){
+    const bestRouge = MODELS.reduce((a,b)=>avgRougeScore(a) > avgRougeScore(b) ? a : b);
+    const rougeVal = avgRougeScore(bestRouge);
+    const rougeStd = avgRougeStd(bestRouge);
+    const rougeColor = MC[bestRouge];
+    
+    sc.innerHTML+=`<div class="stat-card" style="border-color:${rougeColor}44">
+      <div class="stat-baseline">OVERALL</div>
+      <div style="font-size:0.8rem;text-align:center;"><span style="width:7px;height:7px;border-radius:50%;background:${rougeColor};display:inline-block;margin-right:4px"></span>${MODEL_NAMES[bestRouge]||bestRouge}</div>
+      <div class="stat-value" style="color:${rougeColor}">${rougeVal.toFixed(3)}</div>
+      <div class="stat-std">±${rougeStd.toFixed(3)}</div>
+      <div style="font-size:0.6rem;color:var(--muted);margin-top:0.15rem">best ROUGE-L</div>
+    </div>`;
+  }
+
+  const BL_COLORS=['#00e5ff','#10b981','#f59e0b'];
+  if(HAS_BERT){
+    mkChart('ovBertBar',{
+      type:'bar',
+      data:{
+        labels:MODELS.map(m=>MODEL_NAMES[m]||m),
+        datasets:BASELINES.map((bl,bi)=>({
+          label:bl,
+          data:MODELS.map(m=>mBert(bl,m)),
+          errorBars:MODELS.map(m=>sBert(bl,m)),
+          backgroundColor:BL_COLORS[bi]+'55',
+          borderColor:BL_COLORS[bi],borderWidth:1,
+        }))
+      },
+      options:{responsive:true,plugins:{legend:LEG,tooltip:{callbacks:{label:ttStd}}},scales:scaleY(0.7,1.0)}
+    });
+  }
+
+  const table=document.getElementById('rankTable');
+  table.innerHTML='';
+  const thead=table.createTHead();
+  thead.insertRow().innerHTML=`<th>Model</th>`+BASELINES.map(b=>`<th>${b}</th>`).join('')+`<th>Overall</th>`;
+  const tbody=table.createTBody();
+  
+  // Ordenar modelos pela média geral (BERTScore)
+  const sortedModels = [...MODELS].sort((a,b)=>avg(BASELINES.map(bl=>mBert(bl,b))) - avg(BASELINES.map(bl=>mBert(bl,a))));
+  
+  sortedModels.forEach((m,ri)=>{
+    const tr=tbody.insertRow();
+    const cls=ri===0?'rank-1':ri===1?'rank-2':ri===2?'rank-3':'';
+    const med=ri===0?'🥇 ':ri===1?'🥈 ':ri===2?'🥉 ':'';
+    let html=`<td class="${cls}"><span style="width:7px;height:7px;border-radius:50%;background:${MC[m]};display:inline-block;margin-right:5px"></span>${med}${MODEL_NAMES[m]||m}</td>`;
+    BASELINES.forEach(bl=>{
+      const v=mBert(bl,m),s=sBert(bl,m);
+      html+=`<td>${v.toFixed(3)} <span class="std-inline">±${s.toFixed(3)}</span></td>`;
+    });
+    html+=`<td class="${cls}" style="font-weight:700">${avg(BASELINES.map(bl=>mBert(bl,m))).toFixed(3)}</td>`;
+    tr.innerHTML=html;
+  });
+}
+
+let blMetric = HAS_BERT ? 'bert' : 'rouge';
+function setBlMetric(m){
+  blMetric=m;
+  document.getElementById('blMetricBert').classList.toggle('on',m==='bert');
+  document.getElementById('blMetricRouge').classList.toggle('on',m==='rouge');
+  rebuildBaseline();
+}
+function rebuildBaseline(){
+  const isBert=blMetric==='bert';
+  const getFn=isBert?mBert:mRouge, getStd=isBert?sBert:sRouge;
+  const label=isBert?'Average BERTScore':'Average ROUGE-L';
+  document.getElementById('blLineTitle').textContent=`${label} across Baselines — per Model (±Std)`;
+  const datasets=MODELS.flatMap(m=>{
+    const c=MC[m];
+    const means=BASELINES.map(bl=>getFn(bl,m));
+    const stds=BASELINES.map(bl=>getStd(bl,m));
+    return[
+      {label:'',data:means.map((v,i)=>v-stds[i]),fill:'+1',backgroundColor:c+'18',borderWidth:0,pointRadius:0,tension:0.35,borderColor:'transparent'},
+      {label:'',data:means.map((v,i)=>v+stds[i]),fill:false,backgroundColor:'transparent',borderWidth:0,pointRadius:0,tension:0.35,borderColor:'transparent'},
+      {label:MODEL_NAMES[m]||m,data:means,fill:false,borderColor:c,borderWidth:2,pointBackgroundColor:c,pointRadius:4,tension:0.35},
+    ];
+  });
+  mkChart('blLineChart',{
+    type:'line',
+    data:{labels:BASELINES,datasets},
+    options:{responsive:true,plugins:{legend:{labels:{color:TICKS,font:FONT_SM,filter:i=>i.text!==''}},tooltip:{filter:i=>i.dataset.label!==''}},scales:scaleY(isBert?0.75:0.65,1.0)}
+  });
+}
+function rebuildStacked(){
+  const metric=document.getElementById('stackedMetric').value;
+  const sel=document.getElementById('stackedBaseline').value;
+  const stackedMetric=stacked[metric]||{};
+  const bls=sel==='all'?Object.keys(stackedMetric):[sel];
+  const CAT=['Highly Similar','Moderately Similar','Slightly Similar','Divergent','Absent'];
+  const CAT_COLORS=['#10b981','#00e5ff','#f59e0b','#f43f5e','#64748b'];
+  mkChart('stackedBar',{
+    type:'bar',
+    data:{
+      labels:MODELS.map(m=>MODEL_NAMES[m]||m),
+      datasets:CAT.map((cat,ci)=>({
+        label:cat,
+        data:MODELS.map(m=>avg(bls.map(bl=>stackedMetric[bl]?.[m]?.[ci]??25))),
+        backgroundColor:CAT_COLORS[ci]+'99',
+        borderColor:CAT_COLORS[ci],borderWidth:1,
+        stack:'s',
+      }))
+    },
+    options:{responsive:true,plugins:{legend:{labels:{color:TICKS,font:FONT_SM}}},scales:{x:{stacked:true,ticks:{color:TICKS,font:FONT},grid:{color:GRID}},y:{stacked:true,min:0,max:100,ticks:{color:TICKS,font:FONT},grid:{color:GRID}}}}
+  });
+  const lgEl=document.getElementById('stackedLegend');
+  lgEl.innerHTML=CAT.map((l,i)=>`<div class="legend-item"><div class="legend-box" style="background:${CAT_COLORS[i]}99;border:1px solid ${CAT_COLORS[i]}"></div>${l}</div>`).join('');
+}
+
+let semMetric = HAS_BERT ? 'bert' : 'rouge';
+function setSemMetric(m){
+  semMetric=m;
+  document.getElementById('semBert').classList.toggle('on',m==='bert');
+  document.getElementById('semRouge').classList.toggle('on',m==='rouge');
+  rebuildSemantic();
+}
+function rebuildSemantic(){
+  const bl=document.getElementById('semBaseline').value;
+  const src=semMetric==='bert'?bert:rouge;
+  const label=semMetric==='bert'?'BERTScore':'ROUGE-L';
+  document.getElementById('semHeatTitle').textContent=`${label} Heatmap — Semantic Fields × Models`;
+  document.getElementById('semBarTitle').textContent=`${label} per Field — per Model (±Std)`;
+  const dataObj={};
+  MODELS.forEach(m=>{dataObj[m]={means:src[bl]?.[m]?.m??[0.5]*SEMANTIC_FIELDS.length,stds:src[bl]?.[m]?.s??[0.05]*SEMANTIC_FIELDS.length};});
+  buildHeatmap('semHeatmap',SEMANTIC_FIELDS,dataObj,'sem');
+  buildLegend('semLegend','sem');
+  mkChart('semBar',{
+    type:'bar',
+    data:{
+      labels:SEMANTIC_FIELDS,
+      datasets:MODELS.map(m=>({
+        label:MODEL_NAMES[m]||m,
+        data:dataObj[m].means,
+        errorBars:dataObj[m].stds,
+        backgroundColor:MC[m]+'88',
+        borderColor:MC[m],borderWidth:1,
+      }))
+    },
+    options:{responsive:true,plugins:{legend:LEG,tooltip:{callbacks:{label:ttStd}}},scales:scaleY(0.6,1.0)}
+  });
+}
+
+let detMetric='f1';
+function setDetMetric(m){
+  detMetric=m;
+  ['f1','prec','rec'].forEach(k=>document.getElementById('det'+k.charAt(0).toUpperCase()+k.slice(1)).classList.toggle('on',k===m));
+  rebuildDet();
+}
+function rebuildDet(){
+  const bl=document.getElementById('detBaseline').value;
+  const mk=detMetric;
+  const label=mk==='f1'?'F1-Score':mk==='prec'?'Precision':'Recall';
+  document.getElementById('detHeatTitle').textContent=`${label} Heatmap — Deterministic Fields × Models`;
+  const dataObj={};
+  MODELS.forEach(m=>{
+    dataObj[m]={means:DET_FIELDS.map(f=>det[bl]?.[m]?.[f]?.[mk]?.m??0.5),stds:DET_FIELDS.map(f=>det[bl]?.[m]?.[f]?.[mk]?.s??0.05)};
+  });
+  buildHeatmap('detHeatmap',DET_FIELDS,dataObj,'det');
+  buildLegend('detLegend','det');
+  mkChart('detPrecRec',{
+    type:'bar',
+    data:{
+      labels:MODELS.map(m=>MODEL_NAMES[m]||m),
+      datasets:[
+        {label:'Precision',data:MODELS.map(m=>avg(DET_FIELDS.map(f=>det[bl]?.[m]?.[f]?.prec?.m??0.5))),errorBars:MODELS.map(m=>avg(DET_FIELDS.map(f=>det[bl]?.[m]?.[f]?.prec?.s??0.05))),backgroundColor:MODELS.map(m=>MC[m]+'99'),borderColor:MODELS.map(m=>MC[m]),borderWidth:1},
+        {label:'Recall',data:MODELS.map(m=>avg(DET_FIELDS.map(f=>det[bl]?.[m]?.[f]?.rec?.m??0.5))),errorBars:MODELS.map(m=>avg(DET_FIELDS.map(f=>det[bl]?.[m]?.[f]?.rec?.s??0.05))),backgroundColor:MODELS.map(m=>MC[m]+'44'),borderColor:MODELS.map(m=>MC[m]),borderWidth:1},
+      ]
+    },
+    options:{responsive:true,plugins:{legend:LEG,tooltip:{callbacks:{label:ttStd}}},scales:scaleY(0.78,1.02)}
+  });
+}
+
+function rebuildRadar(){
+  const sel=document.getElementById('radarBaseline').value;
+  const bls=sel==='all'?BASELINES:[sel];
+  const axes=['Avg BERTScore','Avg ROUGE-L','F1 severity','F1 cvss','F1 plugin','Avg Precision','Avg Recall'];
+  mkChart('radarChart',{
+    type:'radar',
+    data:{
+      labels:axes,
+      datasets:MODELS.map(m=>{
+        const c=MC[m];
+        const ba=avg(bls.map(bl=>mBert(bl,m)));
+        const ra=avg(bls.map(bl=>mRouge(bl,m)));
+        const df=f=>avg(bls.map(bl=>det[bl]?.[m]?.[f]?.f1?.m??0.5));
+        const pa=avg(bls.flatMap(bl=>DET_FIELDS.map(f=>det[bl]?.[m]?.[f]?.prec?.m??0.5)));
+        const rca=avg(bls.flatMap(bl=>DET_FIELDS.map(f=>det[bl]?.[m]?.[f]?.rec?.m??0.5)));
+        return{label:MODEL_NAMES[m]||m,data:[ba,ra,df('severity'),df('cvss'),df('plugin'),pa,rca],borderColor:c,backgroundColor:c+'15',pointBackgroundColor:c,borderWidth:1.5,pointRadius:3};
+      })
+    },
+    options:{responsive:true,plugins:{legend:LEG},scales:{r:{min:0.6,max:1.0,ticks:{color:TICKS,font:{family:'Space Mono',size:8},backdropColor:'transparent'},grid:{color:GRID},pointLabels:{color:'#94a3b8',font:{family:'Space Mono',size:9}}}}}
+  });
+
+  mkChart('radarGrouped',{
+    type:'bar',
+    data:{
+      labels:MODELS.map(m=>MODEL_NAMES[m]||m),
+      datasets:[
+        {label:'BERT',data:MODELS.map(m=>avg(bls.map(bl=>mBert(bl,m)))),errorBars:MODELS.map(m=>avg(bls.map(bl=>sBert(bl,m)))),backgroundColor:'rgba(0,229,255,0.55)',borderColor:'#00e5ff',borderWidth:1},
+        {label:'ROUGE-L',data:MODELS.map(m=>avg(bls.map(bl=>mRouge(bl,m)))),errorBars:MODELS.map(m=>avg(bls.map(bl=>sRouge(bl,m)))),backgroundColor:'rgba(16,185,129,0.55)',borderColor:'#10b981',borderWidth:1},
+        {label:'F1-Det',data:MODELS.map(m=>avg(bls.flatMap(bl=>DET_FIELDS.map(f=>det[bl]?.[m]?.[f]?.f1?.m??0.5)))),errorBars:MODELS.map(m=>avg(bls.flatMap(bl=>DET_FIELDS.map(f=>det[bl]?.[m]?.[f]?.f1?.s??0.05)))),backgroundColor:'rgba(245,158,11,0.55)',borderColor:'#f59e0b',borderWidth:1},
+      ]
+    },
+    options:{responsive:true,plugins:{legend:LEG,tooltip:{callbacks:{label:ttStd}}},scales:scaleY(0.6,1.0)}
+  });
+}
+
+function rebuildMatched(){
+  const selectedBaseline = document.getElementById('matchedBaseline')?.value || BASELINES[0];
+  
+  // Cores: Amarelo e roxo
+  const COLOR_PRECISION = 'rgba(245, 158, 11, 0.7)';   // Amarelo
+  const COLOR_RECALL = 'rgba(124, 58, 237, 0.7)';      // Roxo
+  
+  const datasets = [
+    {
+      label:'Precision',
+      data:MODELS.map(m=>matched_rate[selectedBaseline]?.[m]?.m??0),
+      errorBars:MODELS.map(m=>matched_rate[selectedBaseline]?.[m]?.s??0),
+      backgroundColor:COLOR_PRECISION,
+      borderColor:'#d97706',
+      borderWidth:0
+    },
+    {
+      label:'Recall',
+      data:MODELS.map(m=>recall[selectedBaseline]?.[m]?.m??0),
+      errorBars:MODELS.map(m=>recall[selectedBaseline]?.[m]?.s??0),
+      backgroundColor:COLOR_RECALL,
+      borderColor:'#6d28d9',
+      borderWidth:0
+    }
+  ];
+  
+  mkChart('matchedRateChart',{
+    type:'bar',
+    data:{
+      labels:MODELS.map(m=>MODEL_NAMES[m]||m),
+      datasets:datasets
+    },
+    options:{responsive:true,plugins:{legend:LEG,tooltip:{callbacks:{label:ttStd}}},scales:{x:{stacked:false,ticks:{color:TICKS,font:FONT},grid:{color:GRID}},y:{min:0,max:105,ticks:{color:TICKS,font:FONT},grid:{color:GRID}}}}
+  });
+}
+
+function rebuildAbsent(){
+  mkChart('absentChart',{
+    type:'bar',
+    data:{
+      labels:MODELS.map(m=>MODEL_NAMES[m]||m),
+      datasets:[
+        {label:'Absent',data:MODELS.map(m=>absent_nonexist[m]?.Absent??0),backgroundColor:'#d8523199',borderColor:'#a83f23',borderWidth:1},
+        {label:'Non-existent',data:MODELS.map(m=>absent_nonexist[m]?.['Non-existent']??0),backgroundColor:'#0066CC99',borderColor:'#0052A3',borderWidth:1}
+      ]
+    },
+    options:{responsive:true,plugins:{legend:LEG,tooltip:{callbacks:{label:ttVal}}},scales:{x:{stacked:false,ticks:{color:TICKS,font:FONT}},y:{stacked:false,ticks:{color:TICKS,font:FONT},grid:{color:GRID}}}}
+  });
+}
+
+const built={};
+function showTab(name,btn){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.getElementById('tab-'+name).classList.add('active');
+  btn.classList.add('active');
+  if(!built[name]){
+    built[name]=true;
+    if(name==='overview')buildOverview();
+    if(name==='baseline'){rebuildBaseline();if(HAS_STACKED)rebuildStacked();}
+    if(name==='semantic')rebuildSemantic();
+    if(name==='deterministic')rebuildDet();
+    if(name==='radar')rebuildRadar();
+    if(name==='png-charts'){
+      if(Object.keys(matched_rate).length>0)rebuildMatched();
+      if(Object.keys(absent_nonexist).length>0)rebuildAbsent();
+    }
+  }else if(name==='png-charts'){
+    // Rebuild charts even if tab was already visited
+    if(Object.keys(matched_rate).length>0)rebuildMatched();
+    if(Object.keys(absent_nonexist).length>0)rebuildAbsent();
+  }
+}
+
+// Initialize first available tab
+if(HAS_BERT){
+  built['overview']=true;
+  buildOverview();
+}else if(HAS_DET){
+  document.getElementById('tab-deterministic').classList.add('active');
+  document.querySelector('.tab').classList.add('active');
+  built['deterministic']=true;
+  rebuildDet();
+}else if(Object.keys(matched_rate).length>0||Object.keys(absent_nonexist).length>0){
+  const tab=document.getElementById('tab-png-charts');
+  const btn=Array.from(document.querySelectorAll('.tab')).find(b=>b.onclick && b.onclick.toString().includes('png-charts'));
+  if(tab&&btn){
+    tab.classList.add('active');
+    btn.classList.add('active');
+    built['png-charts']=true;
+    if(Object.keys(matched_rate).length>0)rebuildMatched();
+    if(Object.keys(absent_nonexist).length>0)rebuildAbsent();
+  }
+}
+</script>
+</body>
+</html>

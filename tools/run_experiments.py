@@ -230,6 +230,32 @@ def main():
     except Exception as e:
         print(f"[ERROR] Failed to generate charts: {e}")
 
+    # ─────────────────────────────────────────────────────────────
+    # NEW: Generate interactive metrics report with selective PNG export
+    # ─────────────────────────────────────────────────────────────
+    print("\n[INFO] Generating interactive Plotly metrics report...")
+    try:
+        subprocess.run([
+            sys.executable,
+            os.path.join(os.path.dirname(__file__), "../metrics/plot/metrics.py"),
+            "--export-png", "heatmap", "stacked_similarity", "matched_rate"
+        ], check=True)
+        
+        # Find and display the generated report
+        plot_dir = os.path.abspath('plot_runs')
+        if os.path.exists(plot_dir):
+            reports = sorted([f for f in os.listdir(plot_dir) 
+                            if f.startswith('metrics_report_') and f.endswith('.html')])
+            if reports:
+                latest_report = os.path.join(plot_dir, reports[-1])
+                print(f"\n[SUCCESS] ✨ Interactive report generated!")
+                print(f"[SUCCESS] 📊 Open in browser: {latest_report}")
+                print(f"[SUCCESS] ⏱️  Total experiment time: {int(duration // 60)}m {int(duration % 60)}s")
+        
+    except Exception as e:
+        print(f"[WARNING] Failed to generate Plotly report: {e}")
+        print("[WARNING] Continuing... (legacy charts still generated)")
+
 
 if __name__ == "__main__":
     main()
