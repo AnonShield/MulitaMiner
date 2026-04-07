@@ -21,15 +21,19 @@ from tqdm import tqdm
 
 from src.utils.block_creation import create_session_blocks_from_text, extract_vulns_from_blocks, cleanup_temp_blocks
 from src.utils.cli_args import parse_arguments
+from src.utils.pdf_loader import load_pdf_with_pypdf2, save_visual_layout
+from src.utils import pdf_loader, block_creation
 from src.utils.llm_utils import (
     load_profile, load_llm, init_llm, validate_and_normalize_vulnerability
 )
 from src.converters import execute_conversions
 from src.utils.cais_validator import validate_cais_vulnerability
-from src.utils.pdf_loader import load_pdf_with_pypdf2, save_visual_layout
+
 from src.utils.chunking import get_token_based_chunks, retry_chunk_with_subdivision
 from src.scanner_strategies.consolidation import central_custom_allow_duplicates
 from src.utils.profile_registry import is_cais_profile
+from langchain_core.prompts import ChatPromptTemplate
+from langchain_core.output_parsers import StrOutputParser
 
 project_root = os.path.abspath(os.path.dirname(__file__))
 src_path = os.path.join(project_root, 'src')
@@ -39,18 +43,6 @@ if src_path not in sys.path:
 if sys.stdout.encoding and sys.stdout.encoding.lower() != 'utf-8':
     sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
     sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding='utf-8')
-
-
-
-from src.utils.llm_utils import (
-    load_profile, load_llm, init_llm, validate_and_normalize_vulnerability
-)
-from src.converters import execute_conversions
-from src.utils.cais_validator import validate_cais_vulnerability
-from src.utils.pdf_loader import load_pdf_with_pypdf2, save_visual_layout
-from src.utils.chunking import get_token_based_chunks, retry_chunk_with_subdivision
-from src.scanner_strategies.consolidation import central_custom_allow_duplicates
-from src.utils.profile_registry import is_cais_profile
 
 
 def get_validator(profile_config: dict):
@@ -65,16 +57,14 @@ def validate_inputs(args: argparse.Namespace) -> bool:
     if not os.path.isfile(args.input):
         print(f"Error: PDF file not found: {args.input}")
         return False
-    if args.evaluate:
-        if not args.baseline:
-            print("Error: The --baseline argument is required when --evaluate is used.")
+    # If evaluation methods are specified, baseline is required
+    if args.evaluation_methods:
+        if not args.baseline_path:
+            print("Error: The --baseline-path argument is required when --evaluation-methods is used.")
             return False
-        if not os.path.isfile(args.baseline):
-            print(f"Error: Baseline file not found: {args.baseline}")
+        if not os.path.isfile(args.baseline_path):
+            print(f"Error: Baseline file not found: {args.baseline_path}")
             return False
-        if args.convert not in ['xlsx', 'all']:
-            print("Warning: For evaluation, conversion to '.xlsx' is required. Enabling conversion to 'all'.")
-            args.convert = 'all'
     return True
 
 
@@ -82,12 +72,14 @@ def load_configs(args: argparse.Namespace) -> tuple:
     """Load profile and LLM configuration from files."""
     profile_config = load_profile(args.scanner)
     if not profile_config:
-        print(f"Error loading profile: {args.scanner}")
+        print(f"Error: Could not load profile configuration for '{args.scanner}'.")
         return None, None
+
     llm_config = load_llm(args.llm)
     if not llm_config:
-        print(f"Error loading LLM: {args.llm}")
+        print(f"Error: Could not load LLM configuration for '{args.llm}'.")
         return None, None
+        
     return profile_config, llm_config
 
 
@@ -232,44 +224,50 @@ def save_results(vulnerabilities: list, output_file: str, profile_config: dict =
         }
 
 
-def run_evaluation(args: argparse.Namespace, extraction_output_path: str):
+def run_evaluation_method(args: argparse.Namespace, extraction_output_path: str, method: str):
     """
     Run metrics evaluation script as separate process.
     
     Args:
-        args: Command line arguments containing --baseline and --evaluation-method
+        args: Command line arguments containing --baseline_path and --llm
         extraction_output_path: Path to generated .xlsx extraction file
+        method: Evaluation method to run (bert, rouge, entity)
     """
     print(f"\n{'='*60}")
-    print(f"[METRICS] Evaluating with: {args.evaluation_method.upper()}")
+    print(f"[METRICS] Evaluating with: {method.upper()}")
     print(f"{'='*60}")
 
-    method = args.evaluation_method
     script_path = os.path.join('metrics', method, f'compare_extractions_{method}.py')
 
     if not os.path.isfile(script_path):
         print(f"Error: Evaluation script not found at '{script_path}'")
         return
 
-    output_dir = os.path.join('metrics', method, 'results')
+    # Save metrics in the same folder as the extraction results
+    output_dir = os.path.dirname(extraction_output_path)
 
     command = [
         sys.executable,
         script_path,
-        '--baseline-file', args.baseline,
+        '--baseline-file', args.baseline_path,
         '--extraction-file', extraction_output_path,
         '--output-dir', output_dir
     ]
     
+    # Pass LLM model name to metrics script
     if hasattr(args, 'llm') and args.llm:
-        command += ['--model', args.llm]
+        command += ['--llm', args.llm]
+    elif hasattr(args, 'llm_config_path') and args.llm_config_path:
+        with open(args.llm_config_path, 'r') as f:
+            llm_config = json.load(f)
+        command += ['--llm', llm_config.get('model', 'unknown')]
 
     if hasattr(args, 'allow_duplicates') and args.allow_duplicates:
         command += ['--allow-duplicates']
 
     try:
         subprocess.run(command, check=True)
-        print(f"[METRICS] Evaluation completed successfully")
+        print(f"[METRICS] {method.upper()} evaluation completed")
         print(f"[METRICS] Results: {output_dir}")
     except FileNotFoundError:
         print(f"[ERROR] Python or script not found: {script_path}")
@@ -317,22 +315,23 @@ def main():
     print(f"[CONFIG] Max tokens: {max_tokens}")
     print(f"[CONFIG] Reserve for response: {reserve_response}")
     print(f"{'='*60}\n")
-    
+
+    # Extração do PDF com layout visual
     documents = load_pdf_with_pypdf2(args.input)
-    if not documents:
-        print("Error: Failed to load PDF")
+    if not documents or len(documents) < 2:
+        print("[ERROR] No text could be extracted from the PDF.")
         return
 
-    unique_process_id = args.llm
-    
-    visual_file = save_visual_layout(documents[0].page_content, args.input, unique_process_id)
+    # Salvar layout visual a partir do primeiro documento (sumário)
+    # Visual layout é independente do LLM - reutilizável para todos
+    visual_file = save_visual_layout(documents[0].page_content, args.input)
     print(f"[LAYOUT] Visual layout saved: {visual_file}")
 
-    extraction_text = ''
-    for doc in documents:
-        if doc.metadata.get("extraction_method") == "pdfplumber_visual_EXTRACTION":
-            extraction_text += doc.page_content + '\n'
+    # Extração do texto
+    extraction_text = documents[1].page_content
 
+    # Criação de blocos de sessão com nome único para paralelismo (PRECISA do LLM)
+    unique_process_id = args.llm
     temp_dir = f'temp_blocks_{unique_process_id}'
     session_blocks = create_session_blocks_from_text(
         extraction_text,
@@ -342,12 +341,18 @@ def main():
     )
     print(f"[BLOCKS] {len(session_blocks)} session blocks created")
 
+    # Se nenhum bloco for criado, interrompe a execução para evitar erros
+    if not session_blocks:
+        print("[ERROR] No session blocks were created. Aborting.")
+        return
+
+    # Processamento dos blocos
     all_vulnerabilities = extract_vulns_from_blocks(
-        session_blocks, llm, profile_config, get_token_based_chunks
+        session_blocks, llm, profile_config, get_token_based_chunks, llm_config=llm_config
     )
     total_chunks = len(session_blocks)
 
-    cleanup_temp_blocks(temp_dir)
+    cleanup_temp_blocks(temp_dir=temp_dir)
 
     print(f"\n{'-'*60}")
     print(f"[EXTRACTION] Total blocks processed: {total_chunks}")
@@ -355,35 +360,23 @@ def main():
     print(f"{'-'*60}")
 
     run_prefix = os.environ.get("RUN_PREFIX")
+    
+    # Determine output directory and file
+    output_dir = args.output_dir if args.output_dir else '.'
+    os.makedirs(output_dir, exist_ok=True)
+    
+    # Determine output filename
     if args.output_file:
-        output_dir = getattr(args, 'output_dir', None) or '.'
-        base_name = args.output_file
-        if not base_name.endswith('.json'):
-            base_name += '.json'
-        output_file = os.path.join(output_dir, base_name)
-        merge_log_file = output_file.replace('.json', '_merge_log.txt')
-        removed_log_file = output_file.replace('.json', '_removed_log.txt')
-        xlsx_file = output_file.replace('.json', '.xlsx')
+        output_base = args.output_file
     else:
+        # Fallback: use PDF name + LLM name + timestamp
         pdf_base = os.path.splitext(os.path.basename(args.input))[0]
-        llm_name = getattr(args, 'LLM', None) or llm_config.get('model', 'unknown')
-        llm_name = str(llm_name).replace('/', '_').replace(':', '_')
+        llm_name = llm_config.get('model', 'unknown').replace('/', '_').replace(':', '_')
         timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-        if getattr(args, 'run_experiments', False) or run_prefix:
-            output_dir = getattr(args, 'output_dir', None) or 'results_runs'
-            if not os.path.exists(output_dir):
-                os.makedirs(output_dir, exist_ok=True)
-            prefix = run_prefix if run_prefix else f"{pdf_base}_{llm_name}_{timestamp}"
-            output_file = os.path.join(output_dir, f"{prefix}.json")
-            merge_log_file = os.path.join(output_dir, f"{prefix}_merge_log.txt")
-            removed_log_file = os.path.join(output_dir, f"{prefix}_removed_log.txt")
-            xlsx_file = os.path.join(output_dir, f"{prefix}.xlsx")
-        else:
-            output_dir = '.'
-            output_file = f"{pdf_base}_{llm_name}_{timestamp}.json"
-            merge_log_file = f"{pdf_base}_{llm_name}_{timestamp}_merge_log.txt"
-            removed_log_file = f"{pdf_base}_{llm_name}_{timestamp}_removed_log.txt"
-            xlsx_file = f"{pdf_base}_{llm_name}_{timestamp}.xlsx"
+        output_base = f"{pdf_base}_{llm_name}_{timestamp}"
+    
+    # Build full output path for JSON
+    output_file = os.path.join(output_dir, f"{output_base}.json")
 
     save_result = save_results(all_vulnerabilities, output_file, profile_config, getattr(args, 'allow_duplicates', False))
     extracted_count = save_result['extracted']
@@ -393,19 +386,24 @@ def main():
     xlsx_output_path = None
     
     if save_result['success']:
-        os.makedirs('results_tokens', exist_ok=True)
+        # Handle token log file renaming
         pid = os.getpid()
         tokens_candidates = glob.glob(f'results_tokens/tokens_info_{pid}.json')
         if tokens_candidates:
-            llm_name = getattr(args, 'LLM', None) or llm_config.get('model', 'unknown')
-            llm_name = str(llm_name).replace('/', '_').replace(':', '_')
-            tokens_final = os.path.join(
-                'results_tokens',
-                os.path.splitext(os.path.basename(output_file))[0] + f'_{llm_name}_tokens.json'
-            )
-            shutil.move(tokens_candidates[0], tokens_final)
-            print(f"[TOKENS] Token file saved at: {tokens_final}")
+            llm_name = llm_config.get('model', 'unknown').replace('/', '_').replace(':', '_')
+            tokens_final_name = f"{output_base}_{llm_name}_tokens.json"
+            tokens_final_path = os.path.join('results_tokens', tokens_final_name)
+            
+            # Ensure the directory exists
+            os.makedirs('results_tokens', exist_ok=True)
+            
+            shutil.move(tokens_candidates[0], tokens_final_path)
+            print(f"[TOKENS] Token file saved at: {tokens_final_path}")
+
+        # Handle conversions (always convert to xlsx for evaluation)
         try:
+            # Force xlsx conversion for evaluation capability
+            args.convert = 'all' if args.convert in ['all', 'none'] else args.convert
             converted_files = execute_conversions(output_file, args)
             if converted_files:
                 print(f"\n[CONVERSIONS] Generated {len(converted_files)} format(s):")
@@ -415,12 +413,22 @@ def main():
                         xlsx_output_path = c
         except Exception as e:
             print(f"[ERROR] Conversion failed: {e}")
+
+        # Handle evaluation(s) - Entity metrics are automatically included
         metric_start = time.time()
         metric_duration = 0
-        if args.evaluate:
+        if args.evaluation_methods and args.baseline_path:
             if xlsx_output_path and os.path.isfile(xlsx_output_path):
-                run_evaluation(args, xlsx_output_path)
+                # Run each evaluation method
+                for method in args.evaluation_methods:
+                    run_evaluation_method(args, xlsx_output_path, method)
+                # Always run entity metrics if any evaluation methods are specified
+                run_evaluation_method(args, xlsx_output_path, 'entity')
                 metric_duration = time.time() - metric_start
+            else:
+                print("[ERROR] Evaluation requested, but no .xlsx file was generated for evaluation.")
+
+
         real_end_time = time.time()
         run_stats = {
             'start_time': real_start_time,
@@ -455,7 +463,6 @@ def main():
         print("[PERFORMANCE] EXECUTION SUMMARY")
         print("="*60)
         print(f"Total execution time: {total_time:.2f}s")
-        print(f"Scanner: {args.scanner.upper()}")
         print(f"LLM: {llm_config.get('model')}")
         print(f"Chunks processed: {total_chunks}")
         print(f"Vulnerability pipeline:")

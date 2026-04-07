@@ -41,8 +41,12 @@ def convert_single_format(json_file_path: str, format_type: str, args) -> Option
             if hasattr(args, 'output_dir') and args.output_dir:
                 output_file = os.path.join(args.output_dir, f"{base_name}.{format_type}")
             else:
-                # Uses the same base name as the JSON (already has model + timestamp)
-                output_file = f"{base_name}.{format_type}"
+                # Use the same directory as the JSON file
+                json_dir = os.path.dirname(json_file_path)
+                if json_dir:
+                    output_file = os.path.join(json_dir, f"{base_name}.{format_type}")
+                else:
+                    output_file = f"{base_name}.{format_type}"
         
         # Create output directory if needed
         output_dir = os.path.dirname(output_file)

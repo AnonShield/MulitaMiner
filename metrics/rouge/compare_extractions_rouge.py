@@ -33,6 +33,7 @@ sys.path.insert(0, str(Path(__file__).parents[1]))
 from common.config import BASELINE_DIR, FUZZY_THRESHOLD, SPARSE_FIELDS, DEFAULT_EXTRACTION_SHEETS
 from common.normalization import normalize_name, normalize_field_data
 from common.matching import best_fuzzy_match
+from common.field_mapper import get_semantic_fields, get_excluded_fields
 
 
 def detect_scanner_type(df: pd.DataFrame) -> str:
@@ -293,8 +294,12 @@ def process_extraction_comparison(baseline_df: pd.DataFrame, extraction_df: pd.D
     base_idx_composite = baseline_dedup.set_index("_composite_key")
     base_idx = baseline_dedup.set_index("_Name_norm")
 
-    # Comparable columns
-    common_cols = [c for c in extraction_df.columns if c not in ["Name", "_Name_norm", "_composite_key"] and c in baseline_dedup.columns]
+    # Comparable columns (use field_mapper configuration)
+    # Exclude: deterministic fields (handled by entity metrics) + excluded fields
+    excluded_set = get_excluded_fields()
+    semantic_fields = get_semantic_fields(baseline_dedup.columns)
+    
+    common_cols = [c for c in extraction_df.columns if c.lower() in semantic_fields and c in baseline_dedup.columns]
     
     print(f"Comparable columns found: {len(common_cols)}")
     print(f"Columns: {common_cols}")
@@ -532,7 +537,7 @@ def main():
     # Standardization: subfolder with baseline name and filename same as BERT
     # Example: metrics/rouge/results/OpenVAS_bBWA/rouge_comparison_vulnerabilities_deepseek.xlsx
     # Model name
-    model_name = getattr(args, 'model', None)
+    model_name = getattr(args, 'llm', None)
     baseline_name = Path(baseline_file).stem
     baseline_name = "_".join(baseline_name.split())
     output_dir = Path(args.output_dir)  # Save directly in run folder
@@ -699,7 +704,7 @@ def main():
         import datetime
         general_df = pd.DataFrame(general_summary)
         baseline_name = Path(args.baseline_file).stem.replace(" ", "_").lower() if hasattr(args, 'baseline_file') else "baseline"
-        model_name = getattr(args, 'model', None) or "model"
+        model_name = getattr(args, 'llm', None) or "model"
         # Agora salva com prefixo 'rouge' para evitar ambiguidade
         summary_name = f"summary_all_extractions_rouge_{baseline_name}_{model_name}.xlsx"
         summary_path = output_dir / summary_name

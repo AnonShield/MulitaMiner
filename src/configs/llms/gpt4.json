@@ -4,6 +4,10 @@
   "model": "gpt-4o-mini-2024-07-18",
   "temperature": 0.0,
   "max_completion_tokens": 12000,
-  "max_chunk_size": 7300,
-  "reserve_for_response": 4000
+  "max_chunk_size": 10000,
+  "reserve_for_response": 2000,
+  "tokenizer": {
+    "type": "tiktoken",
+    "model": "cl100k_base"
+  }
 }

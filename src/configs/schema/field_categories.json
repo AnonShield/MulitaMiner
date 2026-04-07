@@ -1,0 +1,18 @@
+{
+  "deterministic": ["cvss", "port", "protocol", "severity", "plugin"],
+  "semantic": [
+    "description",
+    "solution",
+    "impact",
+    "detection_result",
+    "detection_method",
+    "product_detection_result",
+    "insight",
+    "log_method",
+    "references",
+    "plugin_details",
+    "instances",
+    "source"
+  ],
+  "excluded": ["Name", "_Name_norm", "_composite_key"]
+}

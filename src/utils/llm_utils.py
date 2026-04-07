@@ -265,17 +265,34 @@ def validate_and_normalize_vulnerability(vuln):
     return vuln
 
 def load_profile(profile_name):
+    """Loads a scanner profile configuration by its short name."""
+    # Convert to lowercase to handle case-insensitive names
+    profile_name = profile_name.lower()
     path = f"src/configs/scanners/{profile_name}.json"
-    with open(path, "r", encoding="utf-8") as f:
-        return json.load(f)
+    try:
+        with open(path, "r", encoding="utf-8") as f:
+            return json.load(f)
+    except FileNotFoundError:
+        print(f"[ERROR] Profile configuration file not found for '{profile_name}' at '{path}'.")
+        return None
 
 def load_llm(llm_name):
+    """Loads an LLM configuration by its short name."""
     import re
     from dotenv import load_dotenv
     load_dotenv()
+    
+    # Convert to lowercase to handle case-insensitive names
+    llm_name = llm_name.lower()
     path = f"src/configs/llms/{llm_name}.json"
-    with open(path, "r", encoding="utf-8") as f:
-        config = json.load(f)
+    
+    try:
+        with open(path, "r", encoding="utf-8") as f:
+            config = json.load(f)
+    except FileNotFoundError:
+        print(f"[ERROR] LLM configuration file not found for '{llm_name}' at '{path}'.")
+        return None
+
     # Replace environment variables in format ${NAME}
     for k, v in config.items():
         if isinstance(v, str):

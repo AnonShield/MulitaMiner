@@ -4,6 +4,10 @@
   "model": "gpt-5-mini-2025-08-07",
   "temperature": 0.0,
   "max_completion_tokens": 16000,
-  "max_chunk_size": 4096,
-  "reserve_for_response": 7000
+  "max_chunk_size": 10000,
+  "reserve_for_response": 2000,
+  "tokenizer": {
+    "type": "tiktoken",
+    "model": "o200k_base"
+  }
 }

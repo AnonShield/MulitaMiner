@@ -19,7 +19,7 @@ def parse_arguments_common(require_model: bool = False):
                        help='Path to Excel file with extractions')
     parser.add_argument('--output-dir', dest='output_dir', type=str, required=False,
                        help='Directory to save results (optional, default: metrics/<metric>/results/)')
-    parser.add_argument('--model', type=str, required=require_model, default=None,
+    parser.add_argument('--llm', type=str, required=require_model, default=None,
                        help='LLM model name used (optional, but recommended for naming output file)')
     parser.add_argument('--allow-duplicates', dest='allow_duplicates', action='store_true',
                        help='Allow legitimate duplicates in baseline during evaluation')

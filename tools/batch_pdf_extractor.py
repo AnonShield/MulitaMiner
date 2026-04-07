@@ -1,5 +1,6 @@
 import os
 import sys
+import time
 # Ensures 'src' directory is in sys.path for absolute imports
 project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 src_path = os.path.join(project_root, 'src')
@@ -21,9 +22,9 @@ def batch_extract_vulnerabilities(input_dir, output_dir=None, marker='_batch', s
 
     # Define output directory
     if output_dir is None:
-        parent = os.path.dirname(input_dir)
-        base = os.path.basename(input_dir)
-        output_dir = os.path.join(parent, f"{base}{marker}")
+        # Output to current directory with marker suffix
+        base = os.path.basename(input_dir.rstrip('/\\'))
+        output_dir = f"{base}{marker}"
     os.makedirs(output_dir, exist_ok=True)
 
     pdf_files = [f for f in os.listdir(input_dir) if f.lower().endswith('.pdf')]
@@ -61,6 +62,9 @@ def batch_extract_vulnerabilities(input_dir, output_dir=None, marker='_batch', s
             print(f"[ERROR] Failed to process {pdf_file}: {e}")
     real_end_time = time.time()
     # Generate final modular report
+    # Add project root to path for imports
+    if project_root not in sys.path:
+        sys.path.insert(0, project_root)
     from src.utils.reporting import generate_final_report
     run_stats = {
         'start_time': real_start_time,

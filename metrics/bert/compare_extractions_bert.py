@@ -34,6 +34,7 @@ sys.path.insert(0, str(Path(__file__).parents[1]))
 from common.config import BASELINE_DIR, FUZZY_THRESHOLD, SPARSE_FIELDS, DEFAULT_EXTRACTION_SHEETS
 from common.normalization import normalize_name, normalize_field_data
 from common.matching import best_fuzzy_match
+from common.field_mapper import get_semantic_fields, get_excluded_fields
 
 
 def detect_scanner_type(df: pd.DataFrame) -> str:
@@ -352,7 +353,12 @@ def process_extraction_comparison_bertscore(baseline_df: pd.DataFrame, extractio
     base_idx = baseline_dedup.set_index("_Name_norm")
     base_idx_rowid = baseline_dedup.set_index("_baseline_row_id")
 
-    common_cols = [c for c in extraction_df.columns if c not in ["Name", "_Name_norm", "_composite_key"] and c in baseline_dedup.columns]
+    # Columns for comparison (use field_mapper configuration)
+    # Exclude: deterministic fields (handled by entity metrics) + excluded fields
+    excluded_set = get_excluded_fields()
+    semantic_fields = get_semantic_fields(baseline_dedup.columns)
+    
+    common_cols = [c for c in extraction_df.columns if c.lower() in semantic_fields and c in baseline_dedup.columns]
 
     print(f"[BERT] Columns for comparison: {len(common_cols)}")
 
@@ -672,8 +678,8 @@ def main():
             # Report name (baseline), sheet, and model
             relatorio_nome = Path(baseline_file).stem.replace(" ", "_").lower()
             aba_nome = extraction_sheet.replace("Extração ", "").replace(" ", "_").lower()
-            modelo_nome = args.model if args.model else aba_nome
-            if aba_nome == 'vulnerabilities' and not args.model:
+            modelo_nome = args.llm if args.llm else aba_nome
+            if aba_nome == 'vulnerabilities' and not args.llm:
                 modelo_nome = Path(args.extraction_file).stem.replace("vulnerabilities_", "").replace("_converted", "").lower()
             # Salva diretamente na pasta da run
             output_file = f"bert_comparison_{aba_nome}_{modelo_nome}.xlsx"
@@ -742,7 +748,7 @@ def main():
         import datetime
         general_df = pd.DataFrame(general_summary)
         baseline_name = Path(args.baseline_file).stem.replace(" ", "_").lower() if hasattr(args, 'baseline_file') else "baseline"
-        model_name = args.model if hasattr(args, 'model') and args.model else "model"
+        model_name = args.llm if hasattr(args, 'llm') and args.llm else "model"
         # Always overwrites main summary to ensure only 1 per run
         summary_name = f"summary_all_extractions_bert_{baseline_name}_{model_name}.xlsx"
         summary_path = args.output_dir / summary_name

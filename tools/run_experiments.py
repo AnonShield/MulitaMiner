@@ -76,7 +76,8 @@ def main():
     extractors = [pair[1] for pair in matched_pairs]
     llms = args.llms
     scanners = args.scanners
-    evaluation_methods = args.evaluation_methods
+    evaluation_methods = list(args.evaluation_methods)
+    # Note: Entity metrics are automatically added by main.py when --evaluation-methods is used
     runs_per_model = args.runs_per_model
 
     os.makedirs("results_runs", exist_ok=True)
@@ -132,155 +133,79 @@ def main():
             json.dump(checkpoint_data, f, indent=2, ensure_ascii=False)
         print(f"[INFO] Created initial checkpoint with {len(all_run_ids)} pending runs: {checkpoint_path}")
 
-    for run_id, baseline_path, extractor_path, scanner, llm, run_num in all_run_ids:
+    for run_id, run_info in checkpoints.items():
+        if run_info.get("status") == "ok":
+            print(f"[SKIP] Run already completed: {run_id}")
+            continue
+
         cmd = None
         try:
-            if checkpoints.get(run_id, {}).get("status") == "ok":
-                print(f"[SKIP] Run already completed: {run_id}")
-                continue
+            baseline_path = run_info['baseline']
+            extractor_path = run_info['extractor']
+            scanner = run_info['scanner']
+            llm = run_info['llm']
+            run_num = run_info['run_num']
             
             subdir = os.path.join("results_runs", os.path.splitext(os.path.basename(baseline_path))[0], llm, f"run{run_num}")
             os.makedirs(subdir, exist_ok=True)
 
-            run_prefix = f"{os.path.splitext(os.path.basename(baseline_path))[0]}_{llm}_run{run_num}_"
+            run_prefix = f"{os.path.splitext(os.path.basename(baseline_path))[0]}_{llm}_run{run_num}"
+            output_path = os.path.join(subdir, f"{run_prefix}.json")
             output_file = os.path.join(subdir, f"{run_prefix}.txt")
             timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
             allow_duplicates = allow_duplicates_map.get(scanner, False)
 
-
+            # --- Extraction + Evaluation in main.py ---
             cmd = [
-                sys.executable, "main.py",
-                "--input", extractor_path,
-                "--scanner", scanner,
-                "--llm", llm,
-                "--convert", "xlsx",
-                "--evaluate",
-                "--baseline", baseline_path,
-                "--output-dir", subdir,
-                "--run-experiments"
+                sys.executable, 'main.py',
+                '--input', extractor_path,
+                '--scanner', scanner,
+                '--llm', llm,
+                '--output-file', run_prefix,
+                '--output-dir', subdir,
+                '--convert', 'all',
+                '--baseline-path', baseline_path,
             ]
+            
+            # Add evaluation methods (entity is automatically added by main.py)
+            if evaluation_methods:
+                cmd += ['--evaluation-methods'] + evaluation_methods
+            
             if allow_duplicates:
-                cmd.append("--allow-duplicates")
-            extraction_start = time.time()
-            print(f"Running extraction: {' '.join(cmd)}")
+                cmd.append('--allow-duplicates')
+            
+            print(f"Running extraction + evaluation: {' '.join(cmd)}")
             with subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True, encoding="utf-8", errors="replace") as proc:
                 with open(output_file, "w", encoding="utf-8") as f:
                     for line in proc.stdout:
                         print(line, end="")
                         f.write(line)
                 proc.wait()
-            extraction_end = time.time()
-            extraction_duration = extraction_end - extraction_start
+            
+            if proc.returncode != 0:
+                raise subprocess.CalledProcessError(proc.returncode, cmd)
+            
+            checkpoints[run_id]["status"] = "ok"
+            checkpoints[run_id]["output_file"] = output_file
+            checkpoints[run_id]["timestamp"] = timestamp
+            checkpoints[run_id]["cmd"] = " ".join(cmd) if cmd else None
+            
+            with open(checkpoint_path, "w", encoding="utf-8") as f:
+                json.dump(checkpoint_data, f, indent=2, ensure_ascii=False)
+            print(f"[CHECKPOINT] Saved to {checkpoint_path} after run {run_id}")
 
-            metric_duration = 0
-            pdf_base = os.path.splitext(os.path.basename(extractor_path))[0]
-            llm_name = llm.replace('/', '_').replace(':', '_')
-
-            xlsx_candidates = [f for f in os.listdir(subdir) if f.endswith(".xlsx")]
-            if not xlsx_candidates:
-                print(f"[ERROR DEBUG] No .xlsx file found in {subdir}")
-                raise Exception(f"[ERROR] Extraction .xlsx file not found for {pdf_base} {llm_name}")
-            if len(xlsx_candidates) > 1:
-                print(f"[WARN] Multiple .xlsx files found in {subdir}, using the first: {xlsx_candidates[0]}")
-            extraction_xlsx = os.path.join(subdir, xlsx_candidates[0])
-
-            for method in evaluation_methods:
-                metric_method_start = time.time()
-                if method == "bert":
-                    bert_output_dir = subdir
-                    os.makedirs(bert_output_dir, exist_ok=True)
-                    bert_cmd = [
-                        sys.executable, "metrics/bert/compare_extractions_bert.py",
-                        "--baseline-file", baseline_path,
-                        "--extraction-file", extraction_xlsx,
-                        "--model", llm,
-                        "--output-dir", bert_output_dir
-                    ]
-                    if allow_duplicates:
-                        bert_cmd.append("--allow-duplicates")
-                    print(f"Running BERT analysis: {' '.join(bert_cmd)}")
-                    result_bert = subprocess.run(bert_cmd, capture_output=True, text=True, encoding="utf-8", errors="replace")
-                    bert_log = output_file.replace('.txt', '_bert.txt')
-                    if result_bert.stdout and result_bert.stdout.strip():
-                        with open(bert_log, "w", encoding="utf-8") as f:
-                            f.write(result_bert.stdout)
-                    if result_bert.stderr and result_bert.stderr.strip():
-                        print(f"[STDERR-BERT] {result_bert.stderr}")
-                elif method == "rouge":
-                    rouge_output_dir = subdir
-                    os.makedirs(rouge_output_dir, exist_ok=True)
-                    rouge_cmd = [
-                        sys.executable, "metrics/rouge/compare_extractions_rouge.py",
-                        "--baseline-file", baseline_path,
-                        "--extraction-file", extraction_xlsx,
-                        "--model", llm,
-                        "--output-dir", rouge_output_dir
-                    ]
-                    if allow_duplicates:
-                        rouge_cmd.append("--allow-duplicates")
-                    print(f"Running ROUGE analysis: {' '.join(rouge_cmd)}")
-                    result_rouge = subprocess.run(rouge_cmd, capture_output=True, text=True, encoding="utf-8", errors="replace")
-                    rouge_log = output_file.replace('.txt', '_rouge.txt')
-                    if result_rouge.stdout and result_rouge.stdout.strip():
-                        with open(rouge_log, "w", encoding="utf-8") as f:
-                            f.write(result_rouge.stdout)
-                    if result_rouge.stderr and result_rouge.stderr.strip():
-                        print(f"[STDERR-ROUGE] {result_rouge.stderr}")
-                metric_method_end = time.time()
-                metric_duration += (metric_method_end - metric_method_start)
-
-            total_duration = extraction_duration + metric_duration
-            run_stats['timing_report'].append({
-                'run_id': run_id,
-                'baseline': baseline_path,
-                'extractor': extractor_path,
-                'scanner': scanner,
-                'llm': llm,
-                'run_num': run_num,
-                'extraction_time': extraction_duration,
-                'metric_time': metric_duration,
-                'total_time': total_duration
-            })
-
-            checkpoints[run_id] = {
-                "status": "ok",
-                "erro": None,
-                "baseline": baseline_path,
-                "extractor": extractor_path,
-                "scanner": scanner,
-                "llm": llm,
-                "run_num": run_num,
-                "cmd": cmd,
-                "output_file": output_file,
-                "timestamp": timestamp
-            }
         except Exception as e:
             print(f"[CHECKPOINT] Error in run {run_id}: {e}")
-            import traceback
-            traceback.print_exc()
-            checkpoints[run_id] = {
-                "status": "erro",
-                "erro": str(e),
-                "baseline": baseline_path,
-                "extractor": extractor_path,
-                "scanner": scanner,
-                "llm": llm,
-                "run_num": run_num,
-                "cmd": cmd or "Command not initialized",
-                "output_file": output_file if 'output_file' in locals() else "Not created",
-                "timestamp": timestamp if 'timestamp' in locals() else datetime.now().strftime('%Y%m%d_%H%M%S')
-            }
-        checkpoint_data = {"runs": checkpoints, "checkpoint_id": checkpoint_id}
-        with open(checkpoint_path, "w", encoding="utf-8") as f:
-            json.dump(checkpoint_data, f, indent=2, ensure_ascii=False)
-        print(f"[CHECKPOINT] Saved to {checkpoint_path} after run {run_id}")
-        baseline_key = os.path.basename(baseline_path)
-        run_stats['baseline_counts'][baseline_key] = run_stats['baseline_counts'].get(baseline_key, 0) + 1
-        run_stats['total_runs'] += 1
+            checkpoints[run_id]["status"] = "error"
+            checkpoints[run_id]["erro"] = str(e)
+            checkpoints[run_id]["cmd"] = " ".join(cmd) if cmd else None
+            with open(checkpoint_path, "w", encoding="utf-8") as f:
+                json.dump(checkpoint_data, f, indent=2, ensure_ascii=False)
+            print(f"[CHECKPOINT] Saved to {checkpoint_path} after run {run_id}")
+            continue
 
     end_time = time.time()
-    run_stats['end_time'] = end_time
-    run_stats['duration'] = end_time - start_time
+    duration = end_time - start_time
 
     print("[INFO] Execution finished. Generating final report...")
     report_dir = os.path.abspath('results_runs')

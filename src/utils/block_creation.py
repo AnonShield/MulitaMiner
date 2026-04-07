@@ -4,6 +4,7 @@ import re
 from tqdm import tqdm
 import tiktoken
 from .chunking import retry_chunk_with_subdivision
+from .tokenizer_utils import get_tokenizer, count_tokens
 
 def extract_visual_layout_context(visual_layout_path):
     """
@@ -92,6 +93,7 @@ def create_session_blocks_from_text(report_text: str, temp_dir: str = 'temp_bloc
         }]
 
 def _create_blocks_openvas(report_text, temp_dir, initial_context_lines, initial_severity, initial_port, initial_protocol):
+    """Parse OpenVAS report and create blocks for each vulnerability."""
     header_regex = re.compile(r"^(?:\d+\.\d+\.\d+\s+)?(Critical|High|Medium|Low|Log)\s+(\d+|general)/([a-zA-Z0-9_-]+)", re.IGNORECASE)
     lines = report_text.splitlines()
     blocks = []
@@ -160,7 +162,6 @@ def _create_blocks_openvas(report_text, temp_dir, initial_context_lines, initial
         block_path = os.path.join(temp_dir, f"block_{bloco_severity}_{bloco_port}_{bloco_protocol}_{block_idx}.txt")
         with open(block_path, 'w', encoding='utf-8') as f:
             if bloco_is_first and initial_context_lines:
-                # print(f"[DEBUG] Writing initial_context_lines at the beginning of block: {block_path}")
                 for ctx_line in initial_context_lines:
                     f.write(f"{ctx_line}\n")
                 f.write("---\n")
@@ -253,32 +254,68 @@ def _create_blocks_tenable(report_text, temp_dir, initial_context_lines):
     # print(f"[DEBUG] Total blocks created: {len(blocks)}")
     return blocks
 
-def extract_vulns_from_blocks(blocks: list, llm, profile_config: dict, chunk_func) -> list:
+def extract_vulns_from_blocks(blocks: list, llm, profile_config: dict,
+                               chunk_func, llm_config: dict = None) -> list:
     """
     For each session block, apply chunking and extract vulnerabilities, propagating port/protocol.
+    
+    Args:
+        blocks: List of block dictionaries with file paths
+        llm: Initialized LLM instance
+        profile_config: Profile configuration
+        chunk_func: Chunking function reference (legacy parameter, not used)
+        llm_config: LLM configuration from JSON (REQUIRED)
+    
+    Raises:
+        ValueError: If llm_config is None or missing required fields
     """
     from src.utils.chunking import get_token_based_chunks, split_text_to_subchunks, TokenChunk
+    from src.utils.tokenizer_utils import get_tokenizer, count_tokens
+
+    if not llm_config:
+        raise ValueError(
+            "[ERROR] llm_config is required in extract_vulns_from_blocks. "
+            "This config must contain 'max_chunk_size' and 'reserve_for_response' values. "
+            "Please ensure llm_config is passed from main.py."
+        )
+
+    max_chunk_size = llm_config.get('max_chunk_size')
+    reserve_for_response = llm_config.get('reserve_for_response')
+    
+    if max_chunk_size is None:
+        raise ValueError(
+            "[ERROR] 'max_chunk_size' not found in llm_config. "
+            "Check your LLM JSON configuration file."
+        )
+    if reserve_for_response is None:
+        raise ValueError(
+            "[ERROR] 'reserve_for_response' not found in llm_config. "
+            "Check your LLM JSON configuration file."
+        )
+
+    tokenizer = get_tokenizer(llm_config)
+
     all_vulns = []
     tokens_info = []
     # Count total chunks for progress bar
     total_chunks = 0
     block_chunks_map = []
-    for block in blocks:
+    for block_idx, block in enumerate(blocks):
         with open(block['file'], 'r', encoding='utf-8') as f:
             block_text = f.read()
-            reader = profile_config.get('reader', '').lower() if profile_config else ''
             chunks = []
-            if reader == 'openvas':
-                # Token-first, then marker
-                token_chunks = get_token_based_chunks(block_text, max_tokens=4096, profile_config=profile_config)
-                for tc in token_chunks:
-                    subs = split_text_to_subchunks(tc.page_content, target_size=8000, profile_config=profile_config)
-                    chunks.extend([TokenChunk(s) for s in subs])
-            else:
-                # Marker-first, then token (Tenable and other scanners)
-                subs = split_text_to_subchunks(block_text, target_size=8000, profile_config=profile_config)
-                for s in subs:
-                    chunks.extend(get_token_based_chunks(s, max_tokens=4096, profile_config=profile_config))
+            
+            # MARKER-first for all scanners (respects vulnerability boundaries)
+            # Then refine with tokenizer to respect max_chunk_size
+            subs = split_text_to_subchunks(block_text, target_size=8000,
+                                            profile_config=profile_config)
+            for s in subs:
+                chunks.extend(get_token_based_chunks(
+                    s,
+                    max_tokens=max_chunk_size,
+                    reserve_for_response=reserve_for_response,
+                    tokenizer=tokenizer
+                ))
         block_chunks_map.append((block, chunks))
         total_chunks += len(chunks)
 
@@ -291,25 +328,25 @@ def extract_vulns_from_blocks(blocks: list, llm, profile_config: dict, chunk_fun
                 # Monta prompt
                 from src.utils.chunking import build_prompt
                 prompt = build_prompt(chunk, profile_config)
-                # Chama LLM
-                response = llm.invoke(prompt).content
-                # Conta tokens
-                max_tokens = getattr(llm, 'max_tokens', 4096) or 4096
-                validation = validate_json_and_tokens(response, chunk.page_content, max_tokens, prompt)
-                # Calcula tokens usando tokenizer
-                try:
-                    tokenizer = tiktoken.encoding_for_model("gpt-3.5-turbo")
-                except:
-                    tokenizer = tiktoken.get_encoding("cl100k_base")
-                tokens_input = len(tokenizer.encode(prompt))
-                tokens_output = len(tokenizer.encode(response))
+
+                # A lógica de invocação e retry foi movida para retry_chunk_with_subdivision
+                # para centralizar o tratamento de erros e redivisão.
+                max_retries = 3 # Default
+                vulns = retry_chunk_with_subdivision(
+                    chunk, llm, profile_config, max_retries,
+                    tokenizer=tokenizer,
+                    max_chunk_size=max_chunk_size
+                )
+
+                # Contagem de tokens apenas do input (output é contabilizado internamente no retry)
+                tokens_input = count_tokens(prompt, tokenizer)
+
                 tokens_info.append({
                     'block_idx': block_idx,
-                    'chunk_text': chunk.page_content,  # Saves complete chunk for retroactive validation
-                    'tokens_input': tokens_input,
-                    'tokens_output': tokens_output
+                    'chunk_text': chunk.page_content,
+                    'tokens_input': tokens_input
                 })
-                vulns = validation['json_data'] if validation['json_valid'] else []
+
                 if profile_config and profile_config.get('reader', '').lower() == 'tenable':
                     all_vulns.extend([v for v in vulns if isinstance(v, dict)])
                 else:

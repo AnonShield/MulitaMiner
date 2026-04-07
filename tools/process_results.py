@@ -517,8 +517,143 @@ def plot_score_heatmaps():
                 print(f"[HEATMAP] Error generating heatmap for baseline={baseline}, metric={metric}: {e}")
 
 
+def plot_entity_metrics():
+    """Generate plots for entity metrics (F1, precision, recall) across LLMs and fields."""
+    os.makedirs('plot_runs', exist_ok=True)
+    entity_data = []
+    
+    print("[ENTITY] Searching for entity metrics files...")
+    
+    for root, dirs, files in os.walk(RESULTS_DIR):
+        for fname in files:
+            if not (fname.startswith("entity_metrics_") and fname.endswith(".xlsx")):
+                continue
+            
+            path = os.path.join(root, fname)
+            try:
+                df = pd.read_excel(path, sheet_name="Summary", engine="openpyxl")
+            except Exception as e:
+                print(f"[ENTITY] Error reading {path}: {e}")
+                continue
+            
+            # Extract baseline and LLM from filename
+            # Format: entity_metrics_{baseline}_{llm}.xlsx
+            base = os.path.splitext(fname)[0]
+            parts = base.split('_')
+            
+            llm = None
+            if len(parts) >= 3:
+                llm = parts[-1].lower()  # Last part is LLM
+            
+            if llm is None or llm not in LLMS:
+                continue
+            
+            # Extract scanner and baseline from path
+            scanner, baseline = extract_scanner_and_report(fname)
+            if scanner is None:
+                scanner = "unknown"
+            if baseline is None:
+                baseline = "unknown"
+            
+            # Process summary data
+            for _, row in df.iterrows():
+                if 'Field' not in row.index:
+                    continue
+                
+                entity_data.append({
+                    'scanner': scanner.lower(),
+                    'baseline': baseline.lower(),
+                    'llm': llm,
+                    'field': row['Field'],
+                    'precision': float(row['Precision']) if pd.notna(row['Precision']) else 0.0,
+                    'recall': float(row['Recall']) if pd.notna(row['Recall']) else 0.0,
+                    'f1': float(row['F1_Score']) if pd.notna(row['F1_Score']) else 0.0
+                })
+    
+    if not entity_data:
+        print("[ENTITY] No entity metrics found. Skipping entity plots.")
+        return
+    
+    print(f"[ENTITY] Found {len(entity_data)} entity metric records")
+    
+    df_entity = pd.DataFrame(entity_data)
+    
+    # Group by scanner and baseline
+    for (scanner, baseline), group in df_entity.groupby(['scanner', 'baseline']):
+        print(f"[ENTITY] Generating plots for {scanner} | {baseline}...")
+        
+        # Aggregate by LLM and Field
+        agg_data = group.groupby(['llm', 'field'])[['precision', 'recall', 'f1']].mean().reset_index()
+        
+        fields = sorted(agg_data['field'].unique())
+        llms = sorted(agg_data['llm'].unique())
+        
+        # Plot 1: F1-Score by Field across LLMs
+        fig, ax = plt.subplots(figsize=(14, 8))
+        plt.rcParams.update({'font.size': 12})
+        
+        x = np.arange(len(fields))
+        width = 0.15
+        colors = plt.cm.Set3(np.linspace(0, 1, len(llms)))
+        
+        for idx, llm in enumerate(llms):
+            llm_data = agg_data[agg_data['llm'] == llm]
+            f1_scores = [llm_data[llm_data['field'] == f]['f1'].values[0] if f in llm_data['field'].values else 0.0 for f in fields]
+            ax.bar(x + idx * width, f1_scores, width, label=llm, color=colors[idx])
+        
+        ax.set_xlabel("Field", fontsize=14)
+        ax.set_ylabel("F1-Score", fontsize=14)
+        ax.set_title(f"Entity Metrics - F1-Score Comparison\n{scanner} | {baseline}", fontsize=16)
+        ax.set_xticks(x + width * (len(llms) - 1) / 2)
+        ax.set_xticklabels(fields, fontsize=12)
+        ax.legend(fontsize=11, loc='best')
+        ax.set_ylim(0, 1.05)
+        ax.grid(axis='y', alpha=0.3)
+        
+        plt.tight_layout()
+        timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+        fname_out = f"plot_runs/entity_f1_scores_{scanner}_{baseline}_{timestamp}.png"
+        plt.savefig(fname_out, dpi=150, bbox_inches='tight')
+        plt.close()
+        print(f"[ENTITY] Saved: {fname_out}")
+        
+        # Plot 2: Precision vs Recall scatter for each field
+        fig, axes = plt.subplots(len(fields), 1, figsize=(10, 4 * len(fields)))
+        if len(fields) == 1:
+            axes = [axes]
+        
+        for f_idx, field in enumerate(fields):
+            ax = axes[f_idx]
+            field_data = agg_data[agg_data['field'] == field]
+            
+            for llm in llms:
+                llm_field = field_data[field_data['llm'] == llm]
+                if not llm_field.empty:
+                    precision = llm_field['precision'].values[0]
+                    recall = llm_field['recall'].values[0]
+                    ax.scatter(precision, recall, s=200, label=llm, alpha=0.7)
+            
+            ax.set_xlabel("Precision", fontsize=12)
+            ax.set_ylabel("Recall", fontsize=12)
+            ax.set_title(f"{field} - Precision vs Recall", fontsize=13)
+            ax.set_xlim(0, 1.05)
+            ax.set_ylim(0, 1.05)
+            ax.legend(fontsize=10)
+            ax.grid(alpha=0.3)
+        
+        plt.suptitle(f"Entity Metrics - Precision vs Recall\n{scanner} | {baseline}", fontsize=16, y=1.00)
+        plt.tight_layout()
+        fname_out = f"plot_runs/entity_precision_recall_{scanner}_{baseline}_{timestamp}.png"
+        plt.savefig(fname_out, dpi=150, bbox_inches='tight')
+        plt.close()
+        print(f"[ENTITY] Saved: {fname_out}")
+    
+    print("[ENTITY] Entity metrics plots generated successfully")
+
+
 if __name__ == "__main__":
     plot_absent_nonexistent_mean()
     plot_matched_rate_mean_std()
     plot_score_heatmaps()
     plot_similarity_category_stacked_bar()
+    plot_entity_metrics()
