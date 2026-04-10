@@ -462,17 +462,23 @@ def plot_score_heatmaps():
     import os
     import re
    
-    charts_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '../metrics/plot/charts.py'))
-    utils_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '../metrics/plot/utils.py'))
+    # Try to load optional chart modules, but don't fail if they don't exist
+    try:
+        charts_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '../metrics/plot/charts.py'))
+        utils_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '../metrics/plot/utils.py'))
 
-    spec_charts = importlib.util.spec_from_file_location("charts", charts_path)
-    charts = importlib.util.module_from_spec(spec_charts)
-    sys.modules["charts"] = charts
-    spec_charts.loader.exec_module(charts)
-    spec_utils = importlib.util.spec_from_file_location("utils", utils_path)
-    utils = importlib.util.module_from_spec(spec_utils)
-    sys.modules["utils"] = utils
-    spec_utils.loader.exec_module(utils)
+        if os.path.exists(charts_path) and os.path.exists(utils_path):
+            spec_charts = importlib.util.spec_from_file_location("charts", charts_path)
+            charts = importlib.util.module_from_spec(spec_charts)
+            sys.modules["charts"] = charts
+            spec_charts.loader.exec_module(charts)
+            spec_utils = importlib.util.spec_from_file_location("utils", utils_path)
+            utils = importlib.util.module_from_spec(spec_utils)
+            sys.modules["utils"] = utils
+            spec_utils.loader.exec_module(utils)
+    except (FileNotFoundError, ModuleNotFoundError) as e:
+        print(f"[INFO] Optional chart modules not found, using fallback plotting: {type(e).__name__}")
+    
     
     baselines = get_baselines()
     metrics = ["bert", "rouge"]

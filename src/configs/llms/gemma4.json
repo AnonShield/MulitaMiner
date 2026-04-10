@@ -1,0 +1,14 @@
+{
+  "provider": "ollama",
+  "model": "gemma4",
+  "endpoint": "http://localhost:11434",
+  "temperature": 0.0,
+  "max_tokens": 4096,
+  "max_chunk_size": 4000,
+  "reserve_for_response": 1000,
+  "timeout": 300,
+  "tokenizer": {
+    "type": "huggingface",
+    "model": "google/gemma-2-4b"
+  }
+}

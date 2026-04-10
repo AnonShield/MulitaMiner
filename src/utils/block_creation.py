@@ -4,255 +4,44 @@ import re
 from tqdm import tqdm
 import tiktoken
 from .chunking import retry_chunk_with_subdivision
-from .tokenizer_utils import get_tokenizer, count_tokens
+from src.model_management import get_tokenizer, count_tokens
 
-def extract_visual_layout_context(visual_layout_path):
-    """
-    Read visual layout file and extract initial context (lines, severity, port, protocol).
-    Returns: (initial_context_lines, initial_severity, initial_port, initial_protocol)
-    """
-    initial_context_lines = []
-    initial_severity = None
-    initial_port = None
-    initial_protocol = None
-    try:
-        with open(visual_layout_path, encoding="utf-8") as f:
-            layout_lines = [l.strip() for l in f.readlines() if l.strip()]
-
-        if 'openvas' in visual_layout_path.lower():
-            # OpenVAS: requires visual context to extract severity/port/protocol from first vulnerability
-            context_search_lines = layout_lines
-        else:
-            # Other scanners: do not require visual context
-            return [], None, None, None
-
-        # Search from bottom to top for first valid header
-        header_regex = re.compile(r"^(?:\d+\.\d+\.\d+\s+)?(Critical|High|Medium|Low|Log)\s+(\d+|general)/([a-zA-Z0-9_-]+)", re.IGNORECASE)
-        alt_header_regex = re.compile(r"^(High|Medium|Low|Log)\s+(\d+|general)/([a-zA-Z0-9_-]+)", re.IGNORECASE)
-        found_idx = None
-        for idx in range(len(context_search_lines)-1, -1, -1):
-            line = context_search_lines[idx]
-            m = header_regex.match(line)
-            if not m:
-                m = alt_header_regex.match(line)
-            if m:
-                initial_severity = m.group(1)
-                initial_port = m.group(2)
-                initial_protocol = m.group(3)
-                found_idx = idx
-                # print(f"[DEBUG] Context extracted from visual layout: severity={initial_severity}, port={initial_port}, protocol={initial_protocol}")
-                break
-        # Define initial_context_lines as last 5 lines above found header (or all if none)
-        if found_idx is not None:
-            initial_context_lines = context_search_lines[max(0, found_idx-4):found_idx+1]
-        else:
-            initial_context_lines = context_search_lines[-5:]
-        # print(f"[DEBUG] initial_context_lines (auto): {initial_context_lines}")
-    except Exception as e:
-        # print(f"[DEBUG] Error reading visual_layout_path: {e}")
-        pass
-    return initial_context_lines, initial_severity, initial_port, initial_protocol
-
-def create_session_blocks_from_text(report_text: str, temp_dir: str = 'temp_blocks', visual_layout_path: str = None, scanner: str = 'openvas') -> list:
+def create_session_blocks_from_text(report_text: str, temp_dir: str = 'temp_blocks', 
+                                    visual_layout_path: str = None, scanner: str = 'openvas') -> list:
     """
     Create temporary session block files from extracted report text.
-    Modularized by scanner type.
+    Uses scanner-specific strategies for block creation.
+    
+    Fallback: If scanner has no custom strategy, creates a single block with all text.
     """
+    from src.scanner_strategies.registry import get_strategy
+    
     if os.path.exists(temp_dir):
         shutil.rmtree(temp_dir)
     os.makedirs(temp_dir, exist_ok=True)
-
-    # Extract visual layout context only for OpenVAS with explicit separation
-    initial_context_lines, initial_severity, initial_port, initial_protocol = ([], None, None, None)
-    if scanner.lower() == 'openvas' and visual_layout_path:
-        initial_context_lines, initial_severity, initial_port, initial_protocol = extract_visual_layout_context(visual_layout_path)
-    elif scanner.lower() == 'tenable':
-        # For Tenable, never use visual context
-        initial_context_lines, initial_severity, initial_port, initial_protocol = ([], None, None, None)
-
-    # Modularized by scanner type
-    if scanner.lower() == 'openvas':
-        return _create_blocks_openvas(report_text, temp_dir, initial_context_lines, initial_severity, initial_port, initial_protocol)
-    elif scanner.lower() == 'tenable':
-        # For Tenable, never use visual context
-        return _create_blocks_tenable(report_text, temp_dir, [])
-    else:
-        # Fallback: single block
+    
+    # Get scanner strategy
+    strategy = get_strategy(scanner)
+    
+    if strategy is None:
+        # Fallback for unknown scanner: create single block
         block_path = os.path.join(temp_dir, f"block_generic.txt")
         with open(block_path, 'w', encoding='utf-8') as f:
-            if initial_context_lines:
-                for ctx_line in initial_context_lines:
-                    f.write(f"{ctx_line}\n")
-                f.write("---\n")
             f.write(report_text)
         return [{
             'file': block_path,
-            'port': initial_port,
-            'protocol': initial_protocol,
-            'severity': initial_severity
+            'port': None,
+            'protocol': None,
+            'severity': None
         }]
-
-def _create_blocks_openvas(report_text, temp_dir, initial_context_lines, initial_severity, initial_port, initial_protocol):
-    """Parse OpenVAS report and create blocks for each vulnerability."""
-    header_regex = re.compile(r"^(?:\d+\.\d+\.\d+\s+)?(Critical|High|Medium|Low|Log)\s+(\d+|general)/([a-zA-Z0-9_-]+)", re.IGNORECASE)
-    lines = report_text.splitlines()
-    blocks = []
-    current_block = []
-    current_port = initial_port
-    current_protocol = initial_protocol
-    current_severity = initial_severity
-    block_idx = 0
-
-    first_nvt_idx = next((i for i, l in enumerate(lines) if l.strip().startswith('NVT:')), None)
-    if first_nvt_idx is not None and first_nvt_idx >= 2:
-        port_line = lines[first_nvt_idx - 2].strip()
-        port_match = header_regex.match(port_line)
-        if port_match:
-            current_severity = port_match.group(1)
-            current_port = port_match.group(2)
-            current_protocol = port_match.group(3)
-        else:
-            alt_match = re.match(r"^(\d+|general)/([a-zA-Z0-9_-]+)", port_line, re.IGNORECASE)
-            if alt_match:
-                current_port = alt_match.group(1)
-                current_protocol = alt_match.group(2)
-
-    for line in lines:
-        header_match = header_regex.match(line.strip())
-        if header_match:
-            if current_block:
-                bloco_severity = current_severity
-                bloco_port = current_port
-                bloco_protocol = current_protocol
-                block_idx += 1
-                block_path = os.path.join(temp_dir, f"block_{bloco_severity}_{bloco_port}_{bloco_protocol}_{block_idx}.txt")
-                with open(block_path, 'w', encoding='utf-8') as f:
-                    if len(blocks) == 0 and initial_context_lines:
-                        for ctx_line in initial_context_lines:
-                            f.write(f"{ctx_line}\n")
-                        f.write("---\n")
-                    f.write('\n'.join(current_block))
-                if len(blocks) == 0:
-                    pass  # First block saved with context
-                blocks.append({
-                    'file': block_path,
-                    'port': bloco_port,
-                    'protocol': bloco_protocol,
-                    'severity': bloco_severity
-                })
-                current_block = []
-            current_severity = header_match.group(1)
-            current_port = header_match.group(2)
-            current_protocol = header_match.group(3)
-        current_block.append(line)
-
-    if current_block:
-        block_idx += 1
-        bloco_is_first = (len(blocks) == 0)
-        bloco_port = current_port
-        bloco_protocol = current_protocol
-        bloco_severity = current_severity
-        if bloco_is_first:
-            if bloco_port is None and initial_port is not None:
-                bloco_port = initial_port
-            if bloco_protocol is None and initial_protocol is not None:
-                bloco_protocol = initial_protocol
-            if bloco_severity is None and initial_severity is not None:
-                bloco_severity = initial_severity
-        block_path = os.path.join(temp_dir, f"block_{bloco_severity}_{bloco_port}_{bloco_protocol}_{block_idx}.txt")
-        with open(block_path, 'w', encoding='utf-8') as f:
-            if bloco_is_first and initial_context_lines:
-                for ctx_line in initial_context_lines:
-                    f.write(f"{ctx_line}\n")
-                f.write("---\n")
-            f.write('\n'.join(current_block))
-        blocks.append({
-            'file': block_path,
-            'port': bloco_port,
-            'protocol': bloco_protocol,
-            'severity': bloco_severity
-        })
-    return blocks
-
-def _create_blocks_tenable(report_text, temp_dir, initial_context_lines):
-    """
-    Create blocks by severity for Tenable WAS.
     
-    Strategy: A single pass through text, detecting each header 
-    "VULNERABILITY <SEVERITY> PLUGIN ID" and assigning all subsequent content 
-    until the next header to the corresponding severity.
-    """
-    severidades = ["CRITICAL", "HIGH", "MEDIUM", "LOW", "INFO"]
-    blocks_por_severidade = {s: [] for s in severidades}
+    # Extract visual context if scanner requires it
+    context = ([], None, None, None)
+    if strategy.requires_visual_layout and visual_layout_path:
+        context = strategy.extract_visual_context(visual_layout_path)
     
-    lines = report_text.splitlines()
-    
-    # Pattern to detect any vulnerability header
-    header_pattern = re.compile(
-        r'VULNERABILITY\s+(CRITICAL|HIGH|MEDIUM|LOW|INFO)\s+PLUGIN\s+ID\s+\d+',
-        re.IGNORECASE
-    )
-    
-    current_severity = None
-    current_block = []
-    pre_header_lines = []
-    first_header_found = False
-    headers_found = []
-
-    severity_field_pattern = re.compile(r'^\s*SEVERITY\s+(CRITICAL|HIGH|MEDIUM|LOW|INFO)\s*$', re.IGNORECASE)
-
-    for line in lines:
-        header_match = header_pattern.search(line)
-
-        if header_match:
-            if not first_header_found:
-                # Determine severity of orphaned content (BASE without header)
-                orphan_severity = None
-                for orphan_line in pre_header_lines:
-                    m = severity_field_pattern.match(orphan_line)
-                    if m:
-                        orphan_severity = m.group(1).upper()
-                        break
-                if orphan_severity and pre_header_lines:
-                    blocks_por_severidade[orphan_severity].extend(pre_header_lines)
-                    # print(f"[DEBUG] Orphan content ({len(pre_header_lines)} lines) assigned to block {orphan_severity}")
-                first_header_found = True
-
-            if current_severity and current_block:
-                blocks_por_severidade[current_severity].extend(current_block)
-
-            current_severity = header_match.group(1).upper()
-            current_block = [line]
-            headers_found.append(f"{current_severity}: {line.strip()[:80]}")
-        elif not first_header_found:
-            pre_header_lines.append(line)
-        elif current_severity:
-            current_block.append(line)
-
-    if current_severity and current_block:
-        blocks_por_severidade[current_severity].extend(current_block)
-    
-    # print(f"[DEBUG] Headers found: {len(headers_found)}")
-    
-    # Create block files only for severities with content
-    blocks = []
-    for severidade in severidades:
-        bloco = blocks_por_severidade[severidade]
-        if bloco:
-            block_path = os.path.join(temp_dir, f"block_tenable_{severidade}.txt")
-            with open(block_path, 'w', encoding='utf-8') as f:
-                f.write('\n'.join(bloco))
-            blocks.append({
-                'file': block_path,
-                'port': None,
-                'protocol': None,
-                'severity': severidade
-            })
-            # print(f"[DEBUG] Block {severidade}: {len(bloco)} lines")
-    
-    # print(f"[DEBUG] Final severities: {[b['severity'] for b in blocks]}")
-    # print(f"[DEBUG] Total blocks created: {len(blocks)}")
-    return blocks
+    # Delegate block creation to strategy
+    return strategy.create_blocks(report_text, temp_dir, context)
 
 def extract_vulns_from_blocks(blocks: list, llm, profile_config: dict,
                                chunk_func, llm_config: dict = None) -> list:
@@ -270,7 +59,7 @@ def extract_vulns_from_blocks(blocks: list, llm, profile_config: dict,
         ValueError: If llm_config is None or missing required fields
     """
     from src.utils.chunking import get_token_based_chunks, split_text_to_subchunks, TokenChunk
-    from src.utils.tokenizer_utils import get_tokenizer, count_tokens
+    from src.model_management import get_tokenizer, count_tokens
 
     if not llm_config:
         raise ValueError(
@@ -318,8 +107,6 @@ def extract_vulns_from_blocks(blocks: list, llm, profile_config: dict,
                 ))
         block_chunks_map.append((block, chunks))
         total_chunks += len(chunks)
-
-    from src.utils.llm_utils import validate_json_and_tokens
 
     # Process with progress bar
     with tqdm(total=total_chunks, desc="Processing blocks", unit="chunk", ncols=80) as pbar:

@@ -1,12 +1,31 @@
+"""
+Tokenizer management and utilities.
+
+Abstracts different tokenizer types (tiktoken, HuggingFace) and provides
+a unified interface for token counting and model configuration.
+"""
+
 import tiktoken
 import subprocess
 import sys
 import warnings
 
+
 def get_tokenizer(llm_config: dict = None):
     """
-    Retorna um tokenizador adequado para o modelo, priorizando a configuração explícita.
-    A função agora é mais robusta e garante o uso de cache para tokenizadores Hugging Face.
+    Get an appropriate tokenizer for the model, prioritizing explicit configuration.
+    
+    Supports multiple tokenizer types defined in llm_config:
+    - tiktoken: Models from OpenAI
+    - huggingface: Models from Hugging Face
+    
+    Falls back to cl100k_base if no config provided.
+    
+    Args:
+        llm_config: LLM configuration dict with tokenizer settings
+    
+    Returns:
+        Tokenizer object (tiktoken encoding or HF AutoTokenizer)
     """
     if llm_config:
         tokenizer_config = llm_config.get('tokenizer')
@@ -24,7 +43,18 @@ def get_tokenizer(llm_config: dict = None):
 
 
 def _load_tokenizer(tokenizer_config: dict):
-    """Carrega um tokenizador com base na configuração fornecida."""
+    """
+    Load a tokenizer based on provided configuration.
+    
+    Args:
+        tokenizer_config: Dict with 'type' and 'model' keys
+    
+    Returns:
+        Tokenizer object
+    
+    Raises:
+        ValueError: If configuration is invalid or tokenizer type is unsupported
+    """
     tokenizer_type = tokenizer_config.get('type', 'tiktoken')
     model_name = tokenizer_config.get('model')
 
@@ -58,7 +88,14 @@ def _load_tokenizer(tokenizer_config: dict):
 
 def count_tokens(text: str, tokenizer=None) -> int:
     """
-    Conta tokens de forma agnóstica ao tipo de tokenizador.
+    Count tokens in text, agnostic to tokenizer type.
+    
+    Args:
+        text: Text to count tokens for
+        tokenizer: Tokenizer object (tiktoken or HF AutoTokenizer)
+    
+    Returns:
+        int: Number of tokens
     """
     if tokenizer is None:
         warnings.warn(
@@ -68,4 +105,3 @@ def count_tokens(text: str, tokenizer=None) -> int:
         tokenizer = tiktoken.get_encoding("cl100k_base")
     
     return len(tokenizer.encode(text))
-

@@ -1,7 +1,7 @@
 import tiktoken
 import re
 from typing import List, Dict, Any
-from .llm_utils import parse_json_response, load_prompt
+from src.model_management import parse_json_response, load_prompt, validate_json_and_tokens, get_tokenizer
 import unicodedata
 import os
 from tqdm import tqdm
@@ -153,6 +153,9 @@ def split_text_to_subchunks(text: str, target_size: int, profile_config: dict = 
     if not marker_lines:
         return _simple_split_by_size(text, optimized_target)
 
+    # CORRECTION: Capture pre-marker context (contains CVSS, severity, port, protocol)
+    pre_marker_text = ''.join(lines[:marker_lines[0]]) if marker_lines[0] > 0 else ''
+
     subchunks = []
     # CUSTOMIZABLE STRATEGY: Use scanner configurations
     vulns_per_chunk = pattern_info.get('max_vulnerabilities_per_chunk', 3)
@@ -160,6 +163,7 @@ def split_text_to_subchunks(text: str, target_size: int, profile_config: dict = 
         vulns_per_chunk = max(2, vulns_per_chunk // 2)  # Reduce for pairs
 
     i = 0
+    first_chunk = True  # Flag to prefix pre_marker_text only in first chunk
     while i < len(marker_lines):
         # Determine how many vulns to include in this chunk
         vulns_in_chunk = 0
@@ -183,10 +187,16 @@ def split_text_to_subchunks(text: str, target_size: int, profile_config: dict = 
             if block_size > optimized_target:
                 # Save current chunk if not empty
                 if chunk_lines:
-                    subchunks.append(''.join(chunk_lines))
+                    prefix = pre_marker_text if first_chunk else ''
+                    subchunks.append(prefix + ''.join(chunk_lines))
+                    first_chunk = False
 
                 # Divide large block
                 sub_blocks = _split_block_by_size(block_text, optimized_target)
+                # Prefix pre_marker_text to first sub-block if this is first chunk overall
+                if first_chunk and sub_blocks:
+                    sub_blocks[0] = pre_marker_text + sub_blocks[0]
+                    first_chunk = False
                 subchunks.extend(sub_blocks)
 
                 # Reset for next chunk
@@ -203,7 +213,9 @@ def split_text_to_subchunks(text: str, target_size: int, profile_config: dict = 
 
         # Save chunk if not empty
         if chunk_lines:
-            subchunks.append(''.join(chunk_lines))
+            prefix = pre_marker_text if first_chunk else ''
+            subchunks.append(prefix + ''.join(chunk_lines))
+            first_chunk = False
 
     return subchunks if subchunks else [text]
 
@@ -273,48 +285,6 @@ def _simple_split_by_size(text: str, target_size: int) -> List[str]:
 
     return subchunks if subchunks else [text]
 
-def validate_json_and_tokens(response: str, chunk_content: str, max_tokens: int, prompt_template: str = "") -> Dict[str, Any]:
-    try:
-        tokenizer = tiktoken.encoding_for_model("gpt-3.5-turbo")
-    except:
-        tokenizer = tiktoken.get_encoding("cl100k_base")
-    result = {
-        'json_valid': False,
-        'json_data': None,
-        'token_valid': True,
-        'token_count': 0,
-        'errors': [],
-        'needs_redivision': False
-    }
-    try:
-        json_data = parse_json_response(response)
-        if json_data and isinstance(json_data, list):
-            result['json_valid'] = True
-            result['json_data'] = json_data
-        else:
-            result['errors'].append("Invalid JSON or not a list")
-    except Exception as e:
-        result['errors'].append(f"Error parsing JSON: {str(e)}")
-    prompt_tokens = len(tokenizer.encode(prompt_template)) if prompt_template else 800
-    chunk_tokens = len(tokenizer.encode(chunk_content))
-    response_tokens = len(tokenizer.encode(response))
-    total_tokens = prompt_tokens + chunk_tokens + response_tokens
-    result['token_count'] = total_tokens
-    if total_tokens > (max_tokens - 500):
-        result['token_valid'] = False
-        result['errors'].append(f"Token limit exceeded: {total_tokens}/{max_tokens}")
-        result['needs_redivision'] = True
-    if not result['json_valid'] or not result['token_valid'] or chunk_tokens > (max_tokens * 0.6):
-        result['needs_redivision'] = True
-    if not result['json_valid']:
-        if "..." in response or "truncated" in response.lower():
-            result['errors'].append("Truncated response detected")
-        if response.count('[') != response.count(']'):
-            result['errors'].append("Malformed JSON - unbalanced brackets")
-        if response.count('{') != response.count('}'):
-            result['errors'].append("Malformed JSON - unbalanced braces")
-    return result
-
 def intelligent_chunk_redivision(chunk_content: str, max_tokens: int,
                                   error_context: Dict[str, Any],
                                   tokenizer=None) -> List[str]:
@@ -324,7 +294,7 @@ def intelligent_chunk_redivision(chunk_content: str, max_tokens: int,
         except:
             tokenizer = tiktoken.get_encoding("cl100k_base")
 
-    from src.utils.tokenizer_utils import count_tokens
+    from src.model_management import count_tokens
 
     base_target = max_tokens - 2000
     token_count = max(count_tokens(chunk_content, tokenizer), 1)
@@ -358,21 +328,21 @@ def robust_chunk_processing(doc_chunk: TokenChunk, llm, profile_config: Dict[str
     try:
         attempt_counter = 1
         prompt = build_prompt(doc_chunk, profile_config)
-        response = llm.invoke(prompt).content
+        response = llm.invoke(prompt)
         validation = validate_json_and_tokens(response, doc_chunk.page_content,
-                                              max_tokens, prompt)
+                                              max_tokens, prompt, tokenizer=tokenizer)
         if validation['json_valid'] and validation['token_valid']:
             tqdm.write(f"✅ [CHUNK] Attempt {attempt_counter}: JSON is valid!")
             return validation['json_data']
         if not validation['needs_redivision']:
             for retry in range(2):
                 attempt_counter += 1
-                response = llm.invoke(prompt).content
+                response = llm.invoke(prompt)
                 validation = validate_json_and_tokens(response, doc_chunk.page_content,
-                                                      max_tokens, prompt)
+                                                      max_tokens, prompt, tokenizer=tokenizer)
                 if validation['json_valid']:
                     return validation['json_data']
-        tqdm.write(f"🟨 [CHUNK] Performing intelligent redivision...")
+        tqdm.write(f"[CHUNK] Performing intelligent redivision...")
         new_chunks = intelligent_chunk_redivision(
             doc_chunk.page_content, max_tokens, validation,
             tokenizer=tokenizer
@@ -382,19 +352,19 @@ def robust_chunk_processing(doc_chunk: TokenChunk, llm, profile_config: Dict[str
             sub_chunk = TokenChunk(chunk_content)
             sub_prompt = build_prompt(sub_chunk, profile_config)
             try:
-                sub_response = llm.invoke(sub_prompt).content
+                sub_response = llm.invoke(sub_prompt)
                 sub_validation = validate_json_and_tokens(sub_response, chunk_content,
-                                                          max_tokens, sub_prompt)
+                                                          max_tokens, sub_prompt, tokenizer=tokenizer)
                 if sub_validation['json_valid']:
                     all_vulnerabilities.extend(sub_validation['json_data'])
                 else:
-                    tqdm.write(f"❌ [CHUNK] Subchunk {idx+1} did not return a valid JSON.")
+                    tqdm.write(f"[CHUNK] Subchunk {idx+1} did not return valid JSON.")
             except Exception as e:
-                tqdm.write(f"⚠️ [CHUNK] Error in subchunk {idx+1}: {e}")
+                tqdm.write(f"[CHUNK] Error in subchunk {idx+1}: {e}")
                 continue
         return all_vulnerabilities
     except Exception as e:
-        tqdm.write(f"🛑 [CHUNK] Unexpected error: {e}")
+        tqdm.write(f"[CHUNK] Unexpected error: {e}")
         return []
 
 def retry_chunk_with_subdivision(doc_chunk: TokenChunk, llm,

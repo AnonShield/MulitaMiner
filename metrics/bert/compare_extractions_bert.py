@@ -632,6 +632,10 @@ def main():
     baseline_df = pd.read_excel(baseline_file, sheet_name=BASELINE_SHEET, engine="openpyxl")
     print(f"Baseline loaded - Shape: {baseline_df.shape}")
     print(f"Baseline columns: {list(baseline_df.columns)}")
+    
+    # Count total baseline vulnerabilities (non-null rows)
+    baseline_total_vulns = len(baseline_df.dropna(how='all'))
+    print(f"Total baseline vulnerabilities: {baseline_total_vulns}")
     # Check if we need to load from extraction file for comparisons
     extraction_excel_data = pd.ExcelFile(extraction_file, engine="openpyxl")
     
@@ -726,6 +730,7 @@ def main():
             print(f"      • Description mean: {desc_mean:.3f}")
             general_summary.append({
                 'Extraction': extraction_sheet,
+                'Baseline_Total_Vulnerabilities': baseline_total_vulns,
                 'Total_Vulnerabilities': len(per_vuln_df),
                 'Matched': baseline_instances_matched,
                 'Invented': total_nonexistent,

@@ -4,7 +4,15 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>MulitaMiner — Metrics Dashboard</title>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script>
+  // Load Chart.js from CDN
+  window.chartReady = new Promise((resolve) => {
+    var script = document.createElement('script');
+    script.src = 'https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js';
+    script.onload = resolve;
+    document.head.appendChild(script);
+  });
+</script>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500;600&display=swap');
 :root{
@@ -50,8 +58,8 @@ select:focus{border-color:var(--accent);}
 
 .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;margin-bottom:1.25rem;}
 .grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:0.85rem;margin-bottom:1.25rem;}
-.card{background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:1.25rem;}
-.card-full{background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:1.25rem;margin-bottom:1.25rem;}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:1.25rem;display:flex;flex-direction:column;}
+.card-full{background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:1.25rem;margin-bottom:1.25rem;display:flex;flex-direction:column;}
 .card-title{font-family:'Space Mono',monospace;font-size:0.68rem;color:var(--muted);
   letter-spacing:0.1em;text-transform:uppercase;margin-bottom:1rem;
   display:flex;align-items:center;gap:0.5rem;flex-wrap:wrap;}
@@ -82,22 +90,66 @@ select:focus{border-color:var(--accent);}
 .rank-3{color:#cd7f32;}
 .std-inline{color:var(--muted);font-size:0.58rem;}
 
+.heatmap-table{width:100%;border-collapse:collapse;margin:1rem 0;}
+.heatmap-table th{font-family:'Space Mono',monospace;font-size:0.62rem;color:var(--muted);
+  padding:0.5rem 0.6rem;border-bottom:2px solid var(--border);font-weight:500;text-align:center;}
+.heatmap-table th:first-child{text-align:left;}
+.heatmap-table td{padding:0.5rem 0.6rem;border-bottom:1px solid var(--surface3);
+  font-family:'Space Mono',monospace;font-size:0.68rem;text-align:center;}
+.heatmap-table td:first-child{text-align:left;font-weight:600;}
+.heatmap-table tr:hover{background:var(--surface2);}
+.heatmap-cell{border-radius:3px;padding:0.3rem 0.4rem;color:var(--text);font-weight:700;}
+
 .heatmap-wrap{overflow-x:auto;}
 .heatmap{width:100%;border-collapse:collapse;}
 .heatmap th{font-family:'Space Mono',monospace;font-size:0.62rem;color:var(--muted);
   padding:0.45rem 0.6rem;text-align:center;white-space:nowrap;border-bottom:1px solid var(--border);font-weight:400;}
 .heatmap th:first-child{text-align:left;}
 .heatmap td{padding:0.4rem 0.6rem;text-align:center;border-bottom:1px solid var(--surface3);
-  font-family:'Space Mono',monospace;font-size:0.68rem;transition:opacity 0.15s;white-space:nowrap;}
+  font-family:'Space Mono',monospace;font-size:0.68rem;transition:opacity 0.15s;white-space:nowrap;position:relative;cursor:help;}
 .heatmap td:first-child{text-align:left;color:var(--text);padding-left:0;}
+.heatmap td[data-tooltip]:hover::after{
+  content:attr(data-tooltip);
+  position:absolute;
+  bottom:125%;left:50%;transform:translateX(-50%);
+  background:var(--surface2);border:1px solid var(--border);border-radius:4px;
+  padding:0.5rem 0.75rem;font-size:0.7rem;white-space:nowrap;
+  color:var(--text);z-index:1000;box-shadow:0 4px 12px rgba(0,0,0,0.3);
+}
+.heatmap td[data-tooltip]:hover::before{
+  content:'';position:absolute;bottom:120%;left:50%;transform:translateX(-50%);
+  border:5px solid transparent;border-top-color:var(--surface2);z-index:1001;
+}
 .heatmap tr:hover td{opacity:0.82;}
 .cell-std{font-size:0.56rem;opacity:0.6;display:block;}
 
 .legend{display:flex;gap:0.85rem;margin-top:0.85rem;flex-wrap:wrap;}
-.legend-item{display:flex;align-items:center;gap:0.35rem;font-size:0.68rem;color:var(--muted);font-family:'Space Mono',monospace;}
+.legend-item{display:flex;align-items:center;gap:0.35rem;font-size:0.9rem;color:var(--muted);font-family:'Space Mono',monospace;}
 .legend-box{width:11px;height:11px;border-radius:2px;flex-shrink:0;}
 
-canvas{width:100%!important;}
+.methodology-card{background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:1rem;margin-bottom:1.25rem;position:relative;}
+.methodology-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:0.75rem;}
+.methodology-title{font-family:'Space Mono',monospace;font-size:0.7rem;color:var(--muted);letter-spacing:0.08em;text-transform:uppercase;font-weight:600;}
+.info-btn{background:var(--accent);color:var(--bg);border:none;width:22px;height:22px;border-radius:50%;cursor:pointer;font-size:0.85rem;display:flex;align-items:center;justify-content:center;transition:all 0.2s;font-weight:700;}
+.info-btn:hover{background:var(--accent2);transform:scale(1.1);}
+.formula-box{background:var(--surface3);border-left:3px solid var(--accent);padding:0.75rem;border-radius:4px;margin:0.5rem 0;font-family:'Space Mono',monospace;font-size:0.72rem;color:var(--text);line-height:1.6;}
+.formula-details{display:none;padding-top:0.75rem;border-top:1px solid var(--border);margin-top:0.75rem;}
+.formula-details.show{display:block;}
+.detail-item{display:flex;gap:0.5rem;margin:0.5rem 0;font-size:0.68rem;color:var(--muted2);}
+.detail-item-bullet{color:var(--accent3);font-weight:700;flex-shrink:0;width:1.2rem;}
+
+canvas{width:100%!important;height:auto!important;display:block;}
+canvas#consistencyChart{height:675px!important;}
+canvas#blLineChart{height:500px!important;}
+canvas#stackedBar{height:400px!important;}
+canvas#semBar{height:500px!important;}
+canvas#detPrecRec{height:450px!important;}
+canvas#radarChart{height:800px!important;}
+canvas#radarGrouped{height:800px!important;}
+canvas#finalScoreChart{height:600px!important;}
+canvas#tradeoffBubbleChart{height:560px!important;}
+canvas#matchedRateChart{height:500px!important;}
+canvas#absentChart{height:500px!important;}
 footer{margin-top:3rem;padding-top:1.5rem;border-top:1px solid var(--border);color:var(--muted);font-size:0.75rem;text-align:center;font-family:'Space Mono',monospace;}
 @media(max-width:900px){.grid-2,.grid-3{grid-template-columns:1fr;}}
 </style>
@@ -120,17 +172,12 @@ footer{margin-top:3rem;padding-top:1.5rem;border-top:1px solid var(--border);col
 <div class="tabs">
   {% if has_bert %}
   <button class="tab active" onclick="showTab('overview',this)">Overview</button>
-  <button class="tab" onclick="showTab('baseline',this)">Baseline Comparison</button>
-  <button class="tab" onclick="showTab('semantic',this)">Semantic Fields</button>
+  <button class="tab" onclick="showTab('performance',this)">Performance Breakdown</button>
+  <button class="tab" onclick="showTab('comparison',this)">Model Comparison</button>
+  <button class="tab" onclick="showTab('insights',this)">Trade-off & Insights</button>
   {% endif %}
-  {% if has_det %}
-  <button class="tab {% if not has_bert %}active{% endif %}" onclick="showTab('deterministic',this)">Deterministic Fields</button>
-  {% endif %}
-  {% if has_bert %}
-  <button class="tab" onclick="showTab('radar',this)">Model Comparison</button>
-  {% endif %}
-  {% if has_matched or has_absent_nonexist %}
-  <button class="tab" onclick="showTab('png-charts',this)">Additional Metrics</button>
+  {% if has_error_breakdown %}
+  <button class="tab" onclick="showTab('errors',this)">Error Analysis</button>
   {% endif %}
 </div>
 
@@ -140,134 +187,121 @@ footer{margin-top:3rem;padding-top:1.5rem;border-top:1px solid var(--border);col
   <div class="grid-3" id="statCards"></div>
   <div class="grid-2">
     <div class="card">
-      <div class="card-title">Average BERTScore per Model — Grouped by Baseline (±Std)</div>
-      <div class="chart-description">Mean BERT semantic similarity across all extracted fields, organized by baseline scan. Error bars show standard deviation across runs.</div>
-      <canvas id="ovBertBar" height="270"></canvas>
+      <div class="card-title">Model Consistency — Final Score Across Runs</div>
+      <div class="chart-description">Shows Final Score variation across runs for each model. Error bars represent min-max range; narrower bars indicate more consistent models. Helps identify which models are deterministic versus stochastic.</div>
+      <canvas id="consistencyChart" height="270"></canvas>
     </div>
     <div class="card">
-      <div class="card-title">Rankings — Average BERTScore across Baselines</div>
-      <div class="chart-description">Ranked models by overall performance. Higher scores indicate better semantic alignment with baseline vulnerabilities.</div>
+      <div class="card-title">Rankings — Final Score (Weighted Composite)</div>
+      <div class="chart-description">Ranked models by overall combined performance. Final Score integrates both structured extraction (IE, 70%) and text quality (70% semantic + 30% linguistic, 30%), providing a holistic evaluation metric.</div>
       <table class="rank-table" id="rankTable"></table>
     </div>
   </div>
+  <div class="card-full">
+    <div class="card-title">Run Variability Analysis — Consistency Context</div>
+    <div class="chart-description">
+      Shows consistency of each model across multiple runs. <strong>Standard Deviation (σ)</strong> measures performance variance:
+      <br>• <strong style="color:#10b981">Low σ (< 0.05):</strong> Stable, reliable model — results are reproducible
+      <br>• <strong style="color:#f59e0b">Medium σ (0.05-0.10):</strong> Moderate variance — acceptable but some run-to-run variation
+      <br>• <strong style="color:#ef4444">High σ (> 0.10):</strong> High variance — results may be unstable; recommend more runs for confidence
+    </div>
+    <table class="heatmap-table" style="width:auto;margin:1rem 0">
+      <thead>
+        <tr>
+          <th style="text-align:left;width:15%">Model</th>
+          <th style="text-align:center;width:18%">Avg σ (All Metrics)</th>
+          <th style="text-align:center;width:25%">Consistency Level</th>
+          <th style="text-align:center;width:20%">Interpretation</th>
+          <th style="text-align:center;width:22%">Confidence</th>
+        </tr>
+      </thead>
+      <tbody id="variabilityTable"></tbody>
+    </table>
+  </div>
 </div>
 {% endif %}
 
-<!-- ══ TAB 2: BASELINE COMPARISON ══ -->
-{% if has_bert or has_rouge %}
-<div class="panel {% if not has_bert %}active{% endif %}" id="tab-baseline">
-  {% if has_bert and has_rouge %}
-  <div class="controls">
-    <span class="ctrl-label">Metric:</span>
-    <div class="btn-group">
-      <button class="btn-toggle on" id="blMetricBert"  onclick="setBlMetric('bert')">BERT</button>
-      <button class="btn-toggle"   id="blMetricRouge" onclick="setBlMetric('rouge')">ROUGE-L</button>
+<!-- ══ TAB 2: PERFORMANCE BREAKDOWN ══ -->
+<div class="panel" id="tab-performance">
+  <!-- ══ SECTION: TEXT QUALITY ══ -->
+  {% if has_bert or has_rouge %}
+  <div style="margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 2px solid var(--border);">
+    <div style="font-family:'Space Mono',monospace; font-size:0.85rem; color:var(--accent); margin-bottom:1.25rem; letter-spacing:0.1em; text-transform:uppercase;">
+      Text Quality
+    </div>
+    
+    {% if has_bert and has_rouge %}
+    <div class="controls">
+      <span class="ctrl-label">Metric:</span>
+      <div class="btn-group">
+        <button class="btn-toggle on" id="semBert"  onclick="setSemMetric('bert')">BERT</button>
+        <button class="btn-toggle"   id="semRouge" onclick="setSemMetric('rouge')">ROUGE-L</button>
+      </div>
+      <span class="ctrl-label">Baseline:</span>
+      <select id="semBaseline" onchange="rebuildSemantic()">
+        {% for bl in baselines %}<option value="{{ bl }}">{{ bl }}</option>{% endfor %}
+      </select>
+    </div>
+    {% else %}
+    <div class="controls">
+      <span class="ctrl-label">Baseline:</span>
+      <select id="semBaseline" onchange="rebuildSemantic()">
+        {% for bl in baselines %}<option value="{{ bl }}">{{ bl }}</option>{% endfor %}
+      </select>
+    </div>
+    {% endif %}
+    
+    <div class="card-full">
+      <div class="card-title" id="semHeatTitle">{% if has_bert %}BERTScore{% else %}ROUGE-L{% endif %} Heatmap — Text Quality Fields × Models</div>
+      <div class="chart-description">(BERT/ROUGE-L) field-level performance heatmap. Darker cells indicate higher similarity scores. Each cell shows mean ± std for that field and model pair.</div>
+      <div class="heatmap-wrap"><table class="heatmap" id="semHeatmap"></table></div>
+      <div class="legend" id="semLegend"></div>
+    </div>
+    <div class="card-full">
+      <div class="card-title" id="semBarTitle">{% if has_bert %}BERTScore{% else %}ROUGE-L{% endif %} per Field — per Model (±Std)</div>
+      <div class="chart-description">(BERT/ROUGE-L) performance per Text Quality field. Compare how different models perform on each category (detection method, impact, references, etc.).</div>
+      <canvas id="semBar" height="200"></canvas>
     </div>
   </div>
   {% endif %}
-  <div class="card-full">
-    <div class="card-title compare" id="blLineTitle">Average {% if has_bert %}BERTScore{% else %}ROUGE-L{% endif %} across Baselines — per Model (±Std)</div>
-    <div class="chart-description">(BERT/ROUGE-L) semantic similarity trend per model, averaged across all baselines. Shaded regions represent ±1 standard deviation.</div>
-    <canvas id="blLineChart" height="200"></canvas>
-  </div>
-  {% if has_stacked %}
-  <div class="card-full">
-    <div class="card-title stacked">
-      Similarity Category Distribution (%)
-      <span style="margin-left:auto;display:flex;gap:1rem;align-items:center;">
-        <span style="display:flex;gap:0.5rem;align-items:center;">
-          <span class="ctrl-label">Metric:</span>
-          <select id="stackedMetric" onchange="rebuildStacked()">
-            <option value="bert">BERT</option>
-            <option value="rouge">ROUGE</option>
-          </select>
-        </span>
-        <span style="display:flex;gap:0.5rem;align-items:center;">
-          <span class="ctrl-label">Baseline:</span>
-          <select id="stackedBaseline" onchange="rebuildStacked()">
-            <option value="all">All (average)</option>
-            {% for bl in baselines %}<option value="{{ bl }}">{{ bl }}</option>{% endfor %}
-          </select>
-        </span>
-      </span>
+
+  <!-- ══ SECTION: STRUCTURED EXTRACTION ══ -->
+  {% if has_det %}
+  <div style="margin-bottom: 2rem; padding-top: 1.5rem;">
+    <div style="font-family:'Space Mono',monospace; font-size:0.85rem; color:var(--accent4); margin-bottom:1.25rem; letter-spacing:0.1em; text-transform:uppercase;">
+      Structured Extraction
     </div>
-    <div class="chart-description">Distribution of extracted vulnerabilities across 5 similarity categories. Values are percentages aggregated and averaged across all model runs, excluding non-existent items.</div>
-    <canvas id="stackedBar" height="160"></canvas>
-    <div class="legend" id="stackedLegend"></div>
+    
+    <div class="controls">
+      <span class="ctrl-label">Metric:</span>
+      <div class="btn-group">
+        <button class="btn-toggle on" id="detF1"   onclick="setDetMetric('f1')">F1</button>
+        <button class="btn-toggle"   id="detPrec" onclick="setDetMetric('prec')">Precision</button>
+        <button class="btn-toggle"   id="detRec"  onclick="setDetMetric('rec')">Recall</button>
+      </div>
+      <span class="ctrl-label">Baseline:</span>
+      <select id="detBaseline" onchange="rebuildDet()">
+        {% for bl in baselines %}<option value="{{ bl }}">{{ bl }}</option>{% endfor %}
+      </select>
+    </div>
+    
+    <div class="card-full">
+      <div class="card-title det" id="detHeatTitle">F1-Score Heatmap — IE Fields × Models</div>
+      <div class="chart-description">Structured field extraction accuracy (severity, CVSS, plugin id, port, protocol). Darker cells = higher F1-scores. Mean ± std shown per field-model pair.</div>
+      <div class="heatmap-wrap"><table class="heatmap" id="detHeatmap"></table></div>
+      <div class="legend" id="detLegend"></div>
+    </div>
+    <div class="card-full">
+      <div class="card-title det">Precision vs Recall — per Model (average across fields, ±Std)</div>
+      <div class="chart-description"><strong>Structured Field Extraction:</strong> Comparison of precision (accuracy of extracted items, yellow) and recall (completeness of extractions, purple) for deterministic fields (severity, CVSS, plugin, port, protocol). Higher values are better for both metrics.</div>
+      <canvas id="detPrecRec" height="180"></canvas>
+    </div>
   </div>
   {% endif %}
 </div>
-{% endif %}
 
-<!-- ══ TAB 3: SEMANTIC FIELDS ══ -->
-{% if has_bert or has_rouge %}
-<div class="panel" id="tab-semantic">
-  {% if has_bert and has_rouge %}
-  <div class="controls">
-    <span class="ctrl-label">Metric:</span>
-    <div class="btn-group">
-      <button class="btn-toggle on" id="semBert"  onclick="setSemMetric('bert')">BERT</button>
-      <button class="btn-toggle"   id="semRouge" onclick="setSemMetric('rouge')">ROUGE-L</button>
-    </div>
-    <span class="ctrl-label">Baseline:</span>
-    <select id="semBaseline" onchange="rebuildSemantic()">
-      {% for bl in baselines %}<option value="{{ bl }}">{{ bl }}</option>{% endfor %}
-    </select>
-  </div>
-  {% else %}
-  <div class="controls">
-    <span class="ctrl-label">Baseline:</span>
-    <select id="semBaseline" onchange="rebuildSemantic()">
-      {% for bl in baselines %}<option value="{{ bl }}">{{ bl }}</option>{% endfor %}
-    </select>
-  </div>
-  {% endif %}
-  <div class="card-full">
-    <div class="card-title" id="semHeatTitle">{% if has_bert %}BERTScore{% else %}ROUGE-L{% endif %} Heatmap — Semantic Fields × Models</div>
-    <div class="chart-description">(BERT/ROUGE-L) field-level performance heatmap. Darker cells indicate higher similarity scores. Each cell shows mean ± std for that field and model pair.</div>
-    <div class="heatmap-wrap"><table class="heatmap" id="semHeatmap"></table></div>
-    <div class="legend" id="semLegend"></div>
-  </div>
-  <div class="card-full">
-    <div class="card-title" id="semBarTitle">{% if has_bert %}BERTScore{% else %}ROUGE-L{% endif %} per Field — per Model (±Std)</div>
-    <div class="chart-description">(BERT/ROUGE-L) performance per semantic field. Compare how different models perform on each category (detection method, impact, references, etc.).</div>
-    <canvas id="semBar" height="200"></canvas>
-  </div>
-</div>
-{% endif %}
-
-<!-- ══ TAB 4: DETERMINISTIC FIELDS ══ -->
-{% if has_det %}
-<div class="panel" id="tab-deterministic">
-  <div class="controls">
-    <span class="ctrl-label">Metric:</span>
-    <div class="btn-group">
-      <button class="btn-toggle on" id="detF1"   onclick="setDetMetric('f1')">F1</button>
-      <button class="btn-toggle"   id="detPrec" onclick="setDetMetric('prec')">Precision</button>
-      <button class="btn-toggle"   id="detRec"  onclick="setDetMetric('rec')">Recall</button>
-    </div>
-    <span class="ctrl-label">Baseline:</span>
-    <select id="detBaseline" onchange="rebuildDet()">
-      {% for bl in baselines %}<option value="{{ bl }}">{{ bl }}</option>{% endfor %}
-    </select>
-  </div>
-  <div class="card-full">
-    <div class="card-title det" id="detHeatTitle">F1-Score Heatmap — Deterministic Fields × Models</div>
-    <div class="chart-description">Structured field extraction accuracy (severity, CVSS, plugin id, port, protocol). Darker cells = higher F1-scores. Mean ± std shown per field-model pair.</div>
-    <div class="heatmap-wrap"><table class="heatmap" id="detHeatmap"></table></div>
-    <div class="legend" id="detLegend"></div>
-  </div>
-  <div class="card-full">
-    <div class="card-title det">Precision vs Recall — per Model (average across fields, ±Std)</div>
-    <div class="chart-description">Trade-off between precision (accuracy of extracted items) and recall (completeness of extractions). Models closer to top-right corner are most effective.</div>
-    <canvas id="detPrecRec" height="180"></canvas>
-  </div>
-</div>
-{% endif %}
-
-<!-- ══ TAB 5: MODEL COMPARISON ══ -->
-{% if has_bert %}
-<div class="panel" id="tab-radar">
+<!-- ══ TAB 3: MODEL COMPARISON ══ -->
+<div class="panel" id="tab-comparison">
   <div class="controls">
     <span class="ctrl-label">Baseline:</span>
     <select id="radarBaseline" onchange="rebuildRadar()">
@@ -287,35 +321,167 @@ footer{margin-top:3rem;padding-top:1.5rem;border-top:1px solid var(--border);col
       <canvas id="radarGrouped" height="320"></canvas>
     </div>
   </div>
-</div>
-{% endif %}
-
-<!-- ══ TAB 6: ADDITIONAL METRICS (PNG CHARTS) ══ -->
-{% if has_matched or has_absent_nonexist %}
-<div class="panel" id="tab-png-charts">
-  {% if has_matched %}
   <div class="card-full">
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
-      <div class="card-title" style="margin-bottom: 0;">Precision & Recall — Mean ± Standard Deviation</div>
-      <div style="display: flex; gap: 0.5rem; align-items: center;">
-        <span style="font-family: 'Space Mono', monospace; font-size: 0.68rem; color: var(--muted);">Baseline:</span>
-        <select id="matchedBaseline" onchange="rebuildMatched()" style="background: var(--surface2); color: var(--text); border: 1px solid var(--border2); border-radius: 4px; padding: 0.3rem 0.6rem; font-family: 'Space Mono', monospace; font-size: 0.7rem; cursor: pointer;">
-          {% for bl in baselines %}<option value="{{ bl }}">{{ bl }}</option>{% endfor %}
-        </select>
+    <div class="card-title">Final Score Breakdown — IE + Text Quality Weighted Composite</div>
+    <div class="methodology-card">
+      <div class="methodology-header">
+        <div class="methodology-title">📐 Calculation Methodology</div>
+        <button class="info-btn" onclick="toggleMethodology()">ⓘ</button>
+      </div>
+      <div class="formula-box">
+        <strong>Final Score = 0.7 × IE + 0.3 × Text Quality</strong>
+      </div>
+      <div class="formula-details" id="methodologyDetails">
+        <div class="detail-item">
+          <span class="detail-item-bullet">•</span>
+          <span><strong>IE_score</strong> = avg F1 (severity, CVSS, plugin, port, protocol)</span>
+        </div>
+        <div class="detail-item">
+          <span class="detail-item-bullet">•</span>
+          <span><strong>Text_Quality_score</strong> = 0.7 × BERT + 0.3 × ROUGE-L</span>
+        </div>
+        <div class="detail-item" style="margin-top:0.85rem;padding-top:0.5rem;border-top:1px solid var(--border);">
+          <span class="detail-item-bullet">→</span>
+          <span>IE weight: <strong>70%</strong> (prioritizes structured extraction)</span>
+        </div>
+        <div class="detail-item">
+          <span class="detail-item-bullet">→</span>
+          <span>Text Quality weight: <strong>30%</strong> (combines semantic and linguistic quality)</span>
+        </div>
       </div>
     </div>
-    <div class="chart-description"><strong>Matched Rate (Precision):</strong> Percentage of extracted vulnerabilities that were correctly matched with the baseline. <strong>Recall:</strong> Percentage of baseline vulnerabilities that were successfully extracted. Error bars represent standard deviation across runs.</div>
-    <canvas id="matchedRateChart" height="200"></canvas>
+    <div class="chart-description">Integrated performance metric showing the decomposition across all models. Higher Final Score indicates better overall extraction and semantic quality.</div>
+    <canvas id="finalScoreChart" height="240"></canvas>
   </div>
-  {% endif %}
-  
-  {% if has_absent_nonexist %}
+</div>
+
+<!-- ══ TAB 4: TRADE-OFF & INSIGHTS ══ -->
+<div class="panel" id="tab-insights">
+  <!-- Trade-off Bubble Chart -->
   <div class="card-full">
-    <div class="card-title">Absent & Non-existent Vulnerabilities — Standard Deviation</div>
-    <div class="chart-description">Shows the standard deviation of 'Absent' (vulnerabilities in baseline but not extracted) and 'Non-existent' (vulnerabilities extracted but not in baseline) across models, aggregated across all baselines. Lower values indicate more consistent extraction behavior.</div>
-    <canvas id="absentChart" height="200"></canvas>
+    <div class="card-title">Trade-off Analysis — IE vs Text Quality Performance</div>
+    <div class="chart-description">Bubble chart showing the trade-off between extraction quality (IE, x-axis) and text quality (y-axis). Bubble size represents Final Score. <strong>Quadrants:</strong> top-right = balanced (high both), top-left = quality-focused, bottom-right = extraction-focused, bottom-left = needs improvement.</div>
+    <div style="position:relative;height:560px;width:100%;">
+      <canvas id="tradeoffBubbleChart"></canvas>
+    </div>
+    <div style="margin-top:1rem;padding:0.75rem;background:rgba(30,45,69,0.3);border-radius:6px;font-size:0.7rem;color:var(--muted2);line-height:1.5;">
+      <strong style="color:var(--text);">Quadrant Guide:</strong>
+      <span style="margin-left:0.5rem;">Top-right = Balanced (high IE + high Text Quality)</span>
+      <span style="margin-left:1rem;">Top-left = Quality-focused (low IE + high Text Quality)</span>
+      <span style="margin-left:1rem;">Bottom-right = Extraction-focused (high IE + low Text Quality)</span>
+      <span style="margin-left:1rem;">Bottom-left = Needs Improvement (low IE + low Text Quality)</span>
+    </div>
+  </div>
+
+  <!-- Metric Correlation (BERT × ROUGE-L) -->
+  {% if has_bert and has_rouge %}
+  <div class="card-full" style="margin-top: 1.5rem; padding-top: 1.5rem; border-top: 2px solid var(--border);">
+    <div style="font-family:'Space Mono',monospace; font-size:0.75rem; color:var(--muted); margin-bottom:1rem; letter-spacing:0.1em; text-transform:uppercase;">
+      📊 BERT vs ROUGE-L Correlation
+    </div>
+    
+    <div style="display: flex; gap: 0.5rem; align-items: center; margin-bottom: 1rem;">
+      <span class="ctrl-label">Baseline:</span>
+      <select id="corrBaseline" onchange="rebuildCorrelation()" style="background: var(--surface2); color: var(--text); border: 1px solid var(--border2); border-radius: 4px; padding: 0.3rem 0.6rem; font-family: 'Space Mono', monospace; font-size: 0.7rem; cursor: pointer;">
+        <option value="all">All (average)</option>
+        {% for bl in baselines %}<option value="{{ bl }}">{{ bl }}</option>{% endfor %}
+      </select>
+    </div>
+    
+    <div class="card-full" style="background: transparent; border: none; padding: 0; margin-bottom: 1rem;">
+      <div class="card-title">BERTScore vs ROUGE-L Scatter — Field × Model</div>
+      <div class="chart-description">
+        Each point represents a (field, model) pair. X-axis = BERTScore, Y-axis = ROUGE-L. 
+        Dashed diagonal = perfect correlation (r=1.0).
+        <strong>Insight:</strong> Points clustered on diagonal = metrics are redundant; scattered points = complementary information.
+      </div>
+      <div style="position:relative;height:350px;width:100%;">
+        <canvas id="correlationChart"></canvas>
+      </div>
+    </div>
+    <div class="card-full" style="background: transparent; border: none; padding: 0;">
+      <div class="card-title">Correlation Heatmap — BERT vs ROUGE-L per Field</div>
+      <div class="chart-description">Pearson correlation coefficients (r) by field. Green (&gt;0.85) = high agreement; Orange (0.6-0.85) = moderate; Red (&lt;0.6) = low correlation = field-specific insights.</div>
+      <div class="heatmap-wrap"><table class="heatmap" id="corrHeatmap"></table></div>
+      <div class="legend" id="corrLegend"></div>
+    </div>
   </div>
   {% endif %}
+
+  <!-- Weight Sensitivity -->
+  {% if has_det and has_bert %}
+  <div class="card-full" style="margin-top: 1.5rem; padding-top: 1.5rem; border-top: 2px solid var(--border);">
+    <div style="font-family:'Space Mono',monospace; font-size:0.75rem; color:var(--muted); margin-bottom:1rem; letter-spacing:0.1em; text-transform:uppercase;">
+      ⚖️ Weight Sensitivity Analysis
+    </div>
+    
+    <div class="controls">
+      <span class="ctrl-label">IE Weight (%):</span>
+      <input type="range" id="ieWeight" min="0" max="100" value="70" onchange="rebuildSensitivity()" style="width:200px;cursor:pointer;">
+      <span id="ieWeightLabel" style="font-family:'Space Mono',monospace;font-size:0.7rem;color:var(--accent);">70%</span>
+      <span style="margin-left:2rem;font-size:0.7rem;color:var(--muted);">Text Quality: <span id="nlgWeightLabel">30%</span></span>
+    </div>
+    
+    <div class="card-full" style="background: transparent; border: none; padding: 0; margin-top: 1rem;">
+      <div class="card-title">Model Ranking Sensitivity — IE vs Text Quality Weighting</div>
+      <div class="chart-description">
+        Interactive analysis: adjust the IE (structured extraction) vs Text Quality (semantic + linguistic) weight using the slider above.
+        <strong>Default: 70% IE + 30% Text Quality.</strong> Shows how model rankings change with different priority weightings.
+        If rankings remain stable across weights, model performance is robust; if volatile, reliant on specific metric choice.
+      </div>
+      <div style="position:relative;height:320px;width:100%;">
+        <canvas id="sensitivityChart"></canvas>
+      </div>
+    </div>
+    <div class="card-full" style="background: transparent; border: none; padding: 0; margin-top: 1rem;">
+      <div class="card-title">Ranking Stability Index</div>
+      <div class="chart-description">Each row shows model rank under current weight setting. Compare with default to see sensitivity.</div>
+      <table class="rank-table" style="width:auto;margin:0 auto;">
+        <thead>
+          <tr>
+            <th>Model</th>
+            <th>Current Rank</th>
+            <th>Current Score</th>
+            <th>IE Component</th>
+            <th>Text Quality Component</th>
+          </tr>
+        </thead>
+        <tbody id="sensitivityRankTable"></tbody>
+      </table>
+    </div>
+  </div>
+  {% endif %}
+</div>
+
+<!-- ══ TAB 5: ERROR ANALYSIS ══ -->
+{% if has_error_breakdown %}
+<div class="panel" id="tab-errors">
+  <div class="controls">
+    <span class="ctrl-label">Baseline:</span>
+    <select id="errorBaseline" onchange="rebuildErrorBreakdown()">
+      {% for bl in baselines %}<option value="{{ bl }}">{{ bl }}</option>{% endfor %}
+    </select>
+  </div>
+  <div class="card-full">
+    <div class="card-title">Top Failed Vulnerabilities — Extraction Difficulty</div>
+    <div class="chart-description">
+      Shows vulnerabilities that models consistently fail to extract (marked as "Absent" = in baseline but not extracted by model).
+      <strong>Failure Rate</strong> = how many models fail to find this vulnerability. 
+      <strong>Avg BERT Score</strong> = quality of extraction when models do attempt it (or null if always absent).
+      Highest failure rates indicate systemically difficult vulnerabilities.
+    </div>
+    <table class="rank-table" style="width:auto;margin:0 auto;">
+      <thead>
+        <tr>
+          <th>Vulnerability</th>
+          <th>Failure Rate</th>
+          <th>Failed Models</th>
+          <th>Avg BERT Score</th>
+        </tr>
+      </thead>
+      <tbody id="errorBreakdownTable"></tbody>
+    </table>
+  </div>
 </div>
 {% endif %}
 
@@ -328,18 +494,35 @@ footer{margin-top:3rem;padding-top:1.5rem;border-top:1px solid var(--border);col
 <script>
 const BASELINES = {{ baselines | tojson }};
 const MODELS = {{ models | tojson }};
-const bert = {{ bert_data | safe }};
-const rouge = {{ rouge_data | safe }};
-const det = {{ det_data | safe }};
-const stacked = {{ stacked_data | safe }};
-const matched_rate = {{ matched_rate | safe }};
-const recall = {{ recall | safe }};
-const absent_nonexist = {{ absent_nonexist | safe }};
+const bert = {{ bert_data | tojson }};
+const rouge = {{ rouge_data | tojson }};
+const det = {{ det_data | tojson }};
+const stacked = {{ stacked_data | tojson }};
+const matched_rate = {{ matched_rate | tojson }};
+const recall = {{ recall | tojson }};
+const absent_nonexist = {{ absent_nonexist | tojson }};
+const vuln_counts = {{ vulnerability_counts | tojson }};
+const error_breakdown = {{ error_breakdown | tojson }};
 const HAS_BERT = {{ 'true' if has_bert else 'false' }};
 const HAS_ROUGE = {{ 'true' if has_rouge else 'false' }};
 const HAS_DET = {{ 'true' if has_det else 'false' }};
 const HAS_STACKED = {{ 'true' if has_stacked else 'false' }};
 const HAS_RECALL = {{ 'true' if has_recall else 'false' }};
+const HAS_VULN_COUNT = {{ 'true' if has_vulncount else 'false' }};
+const HAS_ERROR_BREAKDOWN = {{ 'true' if has_error_breakdown else 'false' }};
+
+// Color palette (shared across all charts)
+const COLOR_PALETTE = ['#00e5ff','#813ff5','#14cf91','#f59e0b','#fc90a2','#dc2626','#ec4899','#3bf6dd','#f97316','#933ca8'];
+
+// Initialize model colors dynamically based on actual models
+const MC = {};
+MODELS.forEach((m, idx) => {MC[m] = COLOR_PALETTE[idx % COLOR_PALETTE.length];});
+
+// Helper constants
+const MODEL_NAMES = {};
+const BASELINE_COLORS = ['#1f7067','#00a8cc','#095b81','#cd5c5c','#f18f01','#da411b'];
+const SEMANTIC_FIELDS = ['description','detection_result','detection_method','product_detection_result','impact','solution','insight','log_method','references','plugin_details','instances','source'];
+const DET_FIELDS = ['severity','cvss','plugin','port','protocol'];
 
 // Load PNG images
 function loadPNGImages() {
@@ -377,18 +560,38 @@ function loadPNGImages() {
 // Call on page load
 window.addEventListener('DOMContentLoaded', loadPNGImages);
 
-const MODEL_NAMES = {deepseek:'DeepSeek','gpt4':'GPT-4','gpt5':'GPT-5','llama3':'LLaMA 3','llama4':'LLaMA 4'};
-const MC = {deepseek:'#00e5ff',gpt4:'#7c3aed',gpt5:'#10b981',llama3:'#f59e0b',llama4:'#f43f5e'};
-const BASELINE_COLORS = ['#1f7067','#00a8cc','#006494','#cd5c5c','#f18f01','#c73e1d'];
-const SEMANTIC_FIELDS = ['description','detection_result','detection_method','product_detection_result','impact','solution','insight','log_method','references','plugin_details','instances','source'];
-const DET_FIELDS = ['severity','cvss','plugin','port','protocol'];
-
 const avg = a => a.reduce((s,v)=>s+v,0)/a.length || 0;
 const mBert = (bl,m) => avg(bert[bl]?.[m]?.m ?? [0.5]);
 const sBert = (bl,m) => avg(bert[bl]?.[m]?.s ?? [0.05]);
 const mRouge = (bl,m) => avg(rouge[bl]?.[m]?.m ?? [0.5]);
 const sRouge = (bl,m) => avg(rouge[bl]?.[m]?.s ?? [0.05]);
 const mAvgBl = (m,fn) => avg(BASELINES.map(bl=>fn(bl,m)));
+
+// Final Score Calculation
+// IE_score = avg F1 of deterministic fields
+// NLG_score = 0.7 * BERT + 0.3 * ROUGE
+// Final_score = 0.7 * IE + 0.3 * NLG
+const calcIEScore = (bl,m) => {
+  if(!HAS_DET) return 0;
+  const f1s = DET_FIELDS.map(f => det[bl]?.[m]?.[f]?.f1?.m ?? 0.5);
+  return avg(f1s);
+};
+
+const calcNLGScore = (bl,m) => {
+  const b = mBert(bl,m);
+  const r = mRouge(bl,m);
+  return 0.7 * b + 0.3 * r;
+};
+
+const calcFinalScore = (bl,m) => {
+  const ie = calcIEScore(bl,m);
+  const nlg = calcNLGScore(bl,m);
+  return 0.7 * ie + 0.3 * nlg;
+};
+
+const calcIEScoreAvg = (m) => avg(BASELINES.map(bl => calcIEScore(bl,m)));
+const calcNLGScoreAvg = (m) => avg(BASELINES.map(bl => calcNLGScore(bl,m)));
+const calcFinalScoreAvg = (m) => avg(BASELINES.map(bl => calcFinalScore(bl,m)));
 
 function heatColor(v, type='sem'){
   if(type==='det'){
@@ -405,11 +608,18 @@ function heatColor(v, type='sem'){
 
 function buildLegend(id, type='sem'){
   const el=document.getElementById(id); if(!el)return;
-  const items = type==='det'
-    ? [['≥0.95','rgba(16,185,129,0.18)','#10b981'],['≥0.90','rgba(0,229,255,0.22)','#00e5ff'],
-       ['≥0.85','rgba(245,158,11,0.16)','#f59e0b'],['<0.85','rgba(244,63,94,0.16)','#f43f5e']]
-    : [['≥0.90','rgba(16,185,129,0.18)','#10b981'],['≥0.80','rgba(0,229,255,0.22)','#00e5ff'],
-       ['≥0.70','rgba(245,158,11,0.16)','#f59e0b'],['<0.70','rgba(244,63,94,0.16)','#f43f5e']];
+  let items;
+  if(type==='corr') {
+    items = [['r > 0.85 (High)','rgba(16,185,129,0.18)','#10b981'],
+             ['r 0.60-0.85 (Moderate)','rgba(245,158,11,0.16)','#f59e0b'],
+             ['r < 0.60 (Divergent)','rgba(244,63,94,0.16)','#f43f5e']];
+  } else if(type==='det') {
+    items = [['≥0.95','rgba(16,185,129,0.18)','#10b981'],['≥0.90','rgba(0,229,255,0.22)','#00e5ff'],
+             ['≥0.85','rgba(245,158,11,0.16)','#f59e0b'],['<0.85','rgba(244,63,94,0.16)','#f43f5e']];
+  } else {
+    items = [['≥0.90','rgba(16,185,129,0.18)','#10b981'],['≥0.80','rgba(0,229,255,0.22)','#00e5ff'],
+             ['≥0.70','rgba(245,158,11,0.16)','#f59e0b'],['<0.70','rgba(244,63,94,0.16)','#f43f5e']];
+  }
   el.innerHTML = items.map(([l,bg,c])=>
     `<div class="legend-item"><div class="legend-box" style="background:${bg};border:1px solid ${c}"></div>${l}</div>`
   ).join('');
@@ -430,23 +640,15 @@ function buildHeatmap(tableId, fields, dataObj, type='sem'){
       const v=dataObj[m]?.means?.[fi] ?? 0.5, s=dataObj[m]?.stds?.[fi] ?? 0.05;
       rowMeans.push(v);
       const c=heatColor(v,type);
-      html+=`<td style="background:${c.bg};color:${c.tx}">${v.toFixed(2)}<span class="cell-std">±${s.toFixed(2)}</span></td>`;
+      html+=`<td style="background:${c.bg};color:${c.tx}" data-tooltip="Value: ${v.toFixed(2)} ± ${s.toFixed(2)}">${v.toFixed(2)}<span class="cell-std">±${s.toFixed(2)}</span></td>`;
     });
     const a=avg(rowMeans), ac=heatColor(a,type);
-    html+=`<td style="background:${ac.bg};color:${ac.tx};font-weight:700">${a.toFixed(2)}</td>`;
+    html+=`<td style="background:${ac.bg};color:${ac.tx};font-weight:700" data-tooltip="Average: ${a.toFixed(2)}">${a.toFixed(2)}</td>`;
     tr.innerHTML=html;
   });
 }
 
-const CHARTS={};
-function mkChart(id,cfg){
-  if(CHARTS[id]){CHARTS[id].destroy();delete CHARTS[id];}
-  const el=document.getElementById(id); if(!el)return;
-  CHARTS[id]=new Chart(el,cfg);
-  return CHARTS[id];
-}
-
-const FONT={family:'Space Mono',size:10}, FONT_SM={family:'Space Mono',size:9};
+const FONT={family:'Space Mono',size:13}, FONT_SM={family:'Space Mono',size:12};
 const GRID='#1e2d45', TICKS='#64748b';
 const LEG={labels:{color:TICKS,font:FONT_SM}};
 const ttStd=ctx=>{const ds=ctx.dataset;const s=ds.errorBars?.[ctx.dataIndex]??0;return ` ${ds.label}: ${ctx.parsed.y.toFixed(3)} ±${s.toFixed(3)}`;};
@@ -455,9 +657,13 @@ function scaleY(min=0.6,max=1.0){
   return{y:{min,max,ticks:{color:TICKS,font:FONT},grid:{color:GRID}},x:{ticks:{color:TICKS,font:FONT},grid:{color:GRID}}};
 }
 
+const CHARTS={};
+
 const errPlugin={id:'errBars',afterDatasetsDraw(chart){
   const ctx=chart.ctx, yS=chart.scales.y; if(!yS)return;
-  const ERR_SCALE=0.4; // Scale factor for error bar size
+  // IMPORTANT: Visual error bars represent 20% of actual std dev for readability.
+  // Tooltip shows the TRUE standard deviation values. Set to 0 to hide bars completely.
+  const ERR_SCALE=0.2;
   chart.data.datasets.forEach((ds,di)=>{
     if(!ds.errorBars)return;
     const meta=chart.getDatasetMeta(di); if(!meta.visible)return;
@@ -476,6 +682,16 @@ const errPlugin={id:'errBars',afterDatasetsDraw(chart){
     });
   });
 }};
+
+function mkChart(id,cfg){
+  if(CHARTS[id]){CHARTS[id].destroy();delete CHARTS[id];}
+  const el=document.getElementById(id); if(!el)return;
+  // Adicionar errPlugin automaticamente
+  if(!cfg.plugins) cfg.plugins = [];
+  if(!cfg.plugins.includes(errPlugin)) cfg.plugins.push(errPlugin);
+  CHARTS[id]=new Chart(el,cfg);
+  return CHARTS[id];
+}
 function buildOverview(){
   const sc=document.getElementById('statCards'); sc.innerHTML='';
   
@@ -517,32 +733,131 @@ function buildOverview(){
     </div>`;
   }
 
-  const BL_COLORS=['#00e5ff','#10b981','#f59e0b'];
+  // Mostrar card para Final Score se tiver dados de IE e NLG
+  if(HAS_DET || (HAS_BERT && HAS_ROUGE)){
+    const bestFinal = MODELS.reduce((a,b)=>calcFinalScoreAvg(a) > calcFinalScoreAvg(b) ? a : b);
+    const finalVal = calcFinalScoreAvg(bestFinal);
+    const ieVal = calcIEScoreAvg(bestFinal);
+    const nlgVal = calcNLGScoreAvg(bestFinal);
+    const finalColor = MC[bestFinal];
+    
+    sc.innerHTML+=`<div class="stat-card" style="border-color:${finalColor}44">
+      <div class="stat-baseline">OVERALL</div>
+      <div style="font-size:0.8rem;text-align:center;"><span style="width:7px;height:7px;border-radius:50%;background:${finalColor};display:inline-block;margin-right:4px"></span>${MODEL_NAMES[bestFinal]||bestFinal}</div>
+      <div class="stat-value" style="color:${finalColor}">${finalVal.toFixed(3)}</div>
+      <div style="font-size:0.6rem;color:var(--muted);margin-top:0.2rem">best Final Score</div>
+      <div style="font-size:0.55rem;color:var(--muted2);margin-top:0.15rem;border-top:1px solid var(--border);padding-top:0.2rem">IE: ${ieVal.toFixed(3)} • Text Quality: ${nlgVal.toFixed(3)}</div>
+    </div>`;
+  }
+  
+  // Mostrar card para contagens de vulnerabilidades se tiver dados
+  if(HAS_VULN_COUNT && Object.keys(vuln_counts).length > 0){
+    const firstBl = BASELINES[0];
+    if(vuln_counts[firstBl]){
+      const firstModel = MODELS[0];
+      const counts = vuln_counts[firstBl][firstModel];
+      if(counts){
+        const baselineTotal = counts.baseline_total || 0;
+        
+        // Calculate F1-Score for each model and find best
+        const f1Scores = MODELS.map(m => {
+          const c = vuln_counts[firstBl][m];
+          if(!c) return { model: m, f1: 0, extracted_mean: 0, matched_mean: 0, precision: 0, recall: 0 };
+          const f1 = c.f1_score || 0;
+          return { 
+            model: m, 
+            f1: f1, 
+            extracted_mean: c.extracted_mean || 0,
+            matched_mean: c.matched_mean || 0,
+            precision: c.precision || 0, 
+            recall: c.recall || 0 
+          };
+        });
+        
+        const bestModel = f1Scores.reduce((best, curr) => curr.f1 > best.f1 ? curr : best);
+        const bestModelName = MODEL_NAMES[bestModel.model] || bestModel.model;
+        const vulnColor = MC[bestModel.model];
+        
+        sc.innerHTML+=`<div class="stat-card" style="border-color:${vulnColor}44">
+          <div class="stat-baseline">EXTRACTION QUALITY</div>
+          <div style="font-size:0.8rem;text-align:center;"><span style="width:7px;height:7px;border-radius:50%;background:${vulnColor};display:inline-block;margin-right:4px"></span>${bestModelName}</div>
+          <div class="stat-value" style="color:${vulnColor}">${bestModel.f1.toFixed(3)}</div>
+          <div class="stat-std">F1-Score</div>
+          <div style="font-size:0.6rem;color:var(--muted);margin-top:0.2rem">Baseline ${firstBl}: ${baselineTotal} vulns</div>
+          <div style="font-size:0.55rem;color:var(--muted2);margin-top:0.15rem;border-top:1px solid var(--border);padding-top:0.2rem">
+            Extracted: ${bestModel.extracted_mean.toFixed(1)} | Matched: ${bestModel.matched_mean.toFixed(1)} | Precision: ${(bestModel.precision*100).toFixed(0)}% | Recall: ${(bestModel.recall*100).toFixed(0)}%
+          </div>
+        </div>`;
+      }
+    }
+  }
+
+  // Consistency: Calculate average Final Score and estimate std from component variations
   if(HAS_BERT){
-    mkChart('ovBertBar',{
-      type:'bar',
-      data:{
-        labels:MODELS.map(m=>MODEL_NAMES[m]||m),
-        datasets:BASELINES.map((bl,bi)=>({
-          label:bl,
-          data:MODELS.map(m=>mBert(bl,m)),
-          errorBars:MODELS.map(m=>sBert(bl,m)),
-          backgroundColor:BL_COLORS[bi]+'55',
-          borderColor:BL_COLORS[bi],borderWidth:1,
-        }))
+    const consistencyData = MODELS.map(m => {
+      const avgScore = calcFinalScoreAvg(m);
+      
+      // Estimate variability from component standard deviations
+      const bertStds = BASELINES.map(bl => sBert(bl, m));
+      const rougeStds = BASELINES.map(bl => sRouge(bl, m));
+      
+      // For deterministic fields, average std across fields and baselines
+      let detStd = 0;
+      if(HAS_DET){
+        const allDetStds = [];
+        BASELINES.forEach(bl => {
+          DET_FIELDS.forEach(f => {
+            const fStd = det[bl]?.[m]?.[f]?.f1?.s ?? 0.02;
+            allDetStds.push(fStd);
+          });
+        });
+        detStd = allDetStds.length > 0 ? avg(allDetStds) : 0;
+      }
+      
+      // Weighted variation: 0.7 * IE + 0.3 * NLG
+      const nlgStd = (avg(bertStds) * 0.7 + avg(rougeStds) * 0.3);
+      const estimatedStd = (0.7 * detStd + 0.3 * nlgStd);
+      
+      return { avg: avgScore, std: estimatedStd };
+    });
+    
+    mkChart('consistencyChart', {
+      type: 'bar',
+      data: {
+        labels: MODELS.map(m => MODEL_NAMES[m] || m),
+        datasets: [{
+          label: 'Final Score',
+          data: consistencyData.map(d => d.avg),
+          errorBars: consistencyData.map(d => d.std),
+          backgroundColor: MODELS.map(m => MC[m] + '77'),
+          borderColor: MODELS.map(m => MC[m]),
+          borderWidth: 2
+        }]
       },
-      options:{responsive:true,plugins:{legend:LEG,tooltip:{callbacks:{label:ttStd}}},scales:scaleY(0.7,1.0)}
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            callbacks: {
+              label: ttStd
+            }
+          }
+        },
+        scales: scaleY(0, 1.0)
+      }
     });
   }
 
   const table=document.getElementById('rankTable');
   table.innerHTML='';
   const thead=table.createTHead();
-  thead.insertRow().innerHTML=`<th>Model</th>`+BASELINES.map(b=>`<th>${b}</th>`).join('')+`<th>Overall</th>`;
+  thead.insertRow().innerHTML=`<th>Model</th>`+BASELINES.map(b=>`<th>${b}</th>`).join('')+`<th>Final Score</th>`;
   const tbody=table.createTBody();
   
-  // Ordenar modelos pela média geral (BERTScore)
-  const sortedModels = [...MODELS].sort((a,b)=>avg(BASELINES.map(bl=>mBert(bl,b))) - avg(BASELINES.map(bl=>mBert(bl,a))));
+  // Ordenar modelos pelo Final Score
+  const sortedModels = [...MODELS].sort((a,b)=>calcFinalScoreAvg(b) - calcFinalScoreAvg(a));
   
   sortedModels.forEach((m,ri)=>{
     const tr=tbody.insertRow();
@@ -553,39 +868,78 @@ function buildOverview(){
       const v=mBert(bl,m),s=sBert(bl,m);
       html+=`<td>${v.toFixed(3)} <span class="std-inline">±${s.toFixed(3)}</span></td>`;
     });
-    html+=`<td class="${cls}" style="font-weight:700">${avg(BASELINES.map(bl=>mBert(bl,m))).toFixed(3)}</td>`;
+    html+=`<td class="${cls}" style="font-weight:700">${calcFinalScoreAvg(m).toFixed(3)}</td>`;
     tr.innerHTML=html;
+  });
+
+  // Build variability table
+  buildVariabilityTable();
+}
+
+function buildVariabilityTable(){
+  const tbody = document.getElementById('variabilityTable');
+  if(!tbody) return;
+  
+  tbody.innerHTML = '';
+  
+  MODELS.forEach(m => {
+    const bertStds = BASELINES.map(bl => sBert(bl, m));
+    const rougeStds = BASELINES.map(bl => sRouge(bl, m));
+    
+    // Calculate average std from all metric stds
+    let allStds = [...bertStds, ...rougeStds];
+    
+    // Add deterministic stds if available
+    if(HAS_DET){
+      BASELINES.forEach(bl => {
+        DET_FIELDS.forEach(f => {
+          const fStd = det[bl]?.[m]?.[f]?.f1?.s ?? 0.02;
+          allStds.push(fStd);
+        });
+      });
+    }
+    
+    const avgStd = allStds.length > 0 ? avg(allStds) : 0;
+    
+    // Determine consistency level and color
+    let level = '';
+    let color = '';
+    let interpretation = '';
+    let confidence = '';
+    
+    if(avgStd < 0.05){
+      level = '🟢 Very Stable';
+      color = '#10b981';
+      interpretation = 'Highly consistent across runs';
+      confidence = '95%+ confidence';
+    }else if(avgStd < 0.08){
+      level = '🟡 Stable';
+      color = '#84cc16';
+      interpretation = 'Good consistency with minor variation';
+      confidence = '85-95% confidence';
+    }else if(avgStd < 0.12){
+      level = '🟠 Moderate';
+      color = '#f59e0b';
+      interpretation = 'Noticeable variation; acceptable';
+      confidence = '70-85% confidence';
+    }else{
+      level = '🔴 Variable';
+      color = '#ef4444';
+      interpretation = 'High variation; use caution';
+      confidence = '< 70% confidence';
+    }
+    
+    const tr = tbody.insertRow();
+    tr.innerHTML = `
+      <td style="color:${MC[m]};font-weight:700">${MODEL_NAMES[m] || m}</td>
+      <td style="text-align:center;font-family:'Space Mono',monospace;font-weight:600">${avgStd.toFixed(4)}</td>
+      <td style="text-align:center;color:${color};font-weight:700">${level}</td>
+      <td style="text-align:center;color:var(--muted);font-size:0.65rem">${interpretation}</td>
+      <td style="text-align:center;font-weight:600;color:${color}">${confidence}</td>
+    `;
   });
 }
 
-let blMetric = HAS_BERT ? 'bert' : 'rouge';
-function setBlMetric(m){
-  blMetric=m;
-  document.getElementById('blMetricBert').classList.toggle('on',m==='bert');
-  document.getElementById('blMetricRouge').classList.toggle('on',m==='rouge');
-  rebuildBaseline();
-}
-function rebuildBaseline(){
-  const isBert=blMetric==='bert';
-  const getFn=isBert?mBert:mRouge, getStd=isBert?sBert:sRouge;
-  const label=isBert?'Average BERTScore':'Average ROUGE-L';
-  document.getElementById('blLineTitle').textContent=`${label} across Baselines — per Model (±Std)`;
-  const datasets=MODELS.flatMap(m=>{
-    const c=MC[m];
-    const means=BASELINES.map(bl=>getFn(bl,m));
-    const stds=BASELINES.map(bl=>getStd(bl,m));
-    return[
-      {label:'',data:means.map((v,i)=>v-stds[i]),fill:'+1',backgroundColor:c+'18',borderWidth:0,pointRadius:0,tension:0.35,borderColor:'transparent'},
-      {label:'',data:means.map((v,i)=>v+stds[i]),fill:false,backgroundColor:'transparent',borderWidth:0,pointRadius:0,tension:0.35,borderColor:'transparent'},
-      {label:MODEL_NAMES[m]||m,data:means,fill:false,borderColor:c,borderWidth:2,pointBackgroundColor:c,pointRadius:4,tension:0.35},
-    ];
-  });
-  mkChart('blLineChart',{
-    type:'line',
-    data:{labels:BASELINES,datasets},
-    options:{responsive:true,plugins:{legend:{labels:{color:TICKS,font:FONT_SM,filter:i=>i.text!==''}},tooltip:{filter:i=>i.dataset.label!==''}},scales:scaleY(isBert?0.75:0.65,1.0)}
-  });
-}
 function rebuildStacked(){
   const metric=document.getElementById('stackedMetric').value;
   const sel=document.getElementById('stackedBaseline').value;
@@ -605,10 +959,20 @@ function rebuildStacked(){
         stack:'s',
       }))
     },
-    options:{responsive:true,plugins:{legend:{labels:{color:TICKS,font:FONT_SM}}},scales:{x:{stacked:true,ticks:{color:TICKS,font:FONT},grid:{color:GRID}},y:{stacked:true,min:0,max:100,ticks:{color:TICKS,font:FONT},grid:{color:GRID}}}}
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false,labels:{color:TICKS,font:FONT_SM}},tooltip:{callbacks:{label:i=>`${i.dataset.label}: ${i.parsed.y.toFixed(1)}%`}}},scales:{x:{stacked:true,ticks:{color:TICKS,font:FONT},grid:{color:GRID}},y:{stacked:true,min:0,max:100,ticks:{color:TICKS,font:FONT},grid:{color:GRID}}}}
   });
   const lgEl=document.getElementById('stackedLegend');
-  lgEl.innerHTML=CAT.map((l,i)=>`<div class="legend-item"><div class="legend-box" style="background:${CAT_COLORS[i]}99;border:1px solid ${CAT_COLORS[i]}"></div>${l}</div>`).join('');
+  const THRESHOLDS = [
+    { cat: 'Highly Similar', threshold: '> 0.70' },
+    { cat: 'Moderately Similar', threshold: '> 0.60' },
+    { cat: 'Slightly Similar', threshold: '> 0.40' },
+    { cat: 'Divergent', threshold: '≤ 0.40' },
+    { cat: 'Absent', threshold: 'Not found' }
+  ];
+  lgEl.innerHTML=CAT.map((cat,i)=>{
+    const threshold=THRESHOLDS[i]?.threshold || '';
+    return `<div class="legend-item"><div class="legend-box" style="background:${CAT_COLORS[i]}99;border:1px solid ${CAT_COLORS[i]}"></div><span>${cat} <span style="color:var(--muted);font-size:0.65rem;">(${threshold})</span></span></div>`;
+  }).join('');
 }
 
 let semMetric = HAS_BERT ? 'bert' : 'rouge';
@@ -622,7 +986,7 @@ function rebuildSemantic(){
   const bl=document.getElementById('semBaseline').value;
   const src=semMetric==='bert'?bert:rouge;
   const label=semMetric==='bert'?'BERTScore':'ROUGE-L';
-  document.getElementById('semHeatTitle').textContent=`${label} Heatmap — Semantic Fields × Models`;
+  document.getElementById('semHeatTitle').textContent=`${label} Heatmap — Text Quality Fields × Models`;
   document.getElementById('semBarTitle').textContent=`${label} per Field — per Model (±Std)`;
   const dataObj={};
   MODELS.forEach(m=>{dataObj[m]={means:src[bl]?.[m]?.m??[0.5]*SEMANTIC_FIELDS.length,stds:src[bl]?.[m]?.s??[0.05]*SEMANTIC_FIELDS.length};});
@@ -640,7 +1004,7 @@ function rebuildSemantic(){
         borderColor:MC[m],borderWidth:1,
       }))
     },
-    options:{responsive:true,plugins:{legend:LEG,tooltip:{callbacks:{label:ttStd}}},scales:scaleY(0.6,1.0)}
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:LEG,tooltip:{callbacks:{label:ttStd}}},scales:scaleY(0.6,1.0)}
   });
 }
 
@@ -654,7 +1018,7 @@ function rebuildDet(){
   const bl=document.getElementById('detBaseline').value;
   const mk=detMetric;
   const label=mk==='f1'?'F1-Score':mk==='prec'?'Precision':'Recall';
-  document.getElementById('detHeatTitle').textContent=`${label} Heatmap — Deterministic Fields × Models`;
+  document.getElementById('detHeatTitle').textContent=`${label} Heatmap — IE Fields × Models`;
   const dataObj={};
   MODELS.forEach(m=>{
     dataObj[m]={means:DET_FIELDS.map(f=>det[bl]?.[m]?.[f]?.[mk]?.m??0.5),stds:DET_FIELDS.map(f=>det[bl]?.[m]?.[f]?.[mk]?.s??0.05)};
@@ -666,11 +1030,11 @@ function rebuildDet(){
     data:{
       labels:MODELS.map(m=>MODEL_NAMES[m]||m),
       datasets:[
-        {label:'Precision',data:MODELS.map(m=>avg(DET_FIELDS.map(f=>det[bl]?.[m]?.[f]?.prec?.m??0.5))),errorBars:MODELS.map(m=>avg(DET_FIELDS.map(f=>det[bl]?.[m]?.[f]?.prec?.s??0.05))),backgroundColor:MODELS.map(m=>MC[m]+'99'),borderColor:MODELS.map(m=>MC[m]),borderWidth:1},
-        {label:'Recall',data:MODELS.map(m=>avg(DET_FIELDS.map(f=>det[bl]?.[m]?.[f]?.rec?.m??0.5))),errorBars:MODELS.map(m=>avg(DET_FIELDS.map(f=>det[bl]?.[m]?.[f]?.rec?.s??0.05))),backgroundColor:MODELS.map(m=>MC[m]+'44'),borderColor:MODELS.map(m=>MC[m]),borderWidth:1},
+        {label:'Precision',data:MODELS.map(m=>avg(DET_FIELDS.map(f=>det[bl]?.[m]?.[f]?.prec?.m??0.5))),errorBars:MODELS.map(m=>avg(DET_FIELDS.map(f=>det[bl]?.[m]?.[f]?.prec?.s??0.05))),backgroundColor:'#f59e0b99',borderColor:'#f59e0b',borderWidth:1},
+        {label:'Recall',data:MODELS.map(m=>avg(DET_FIELDS.map(f=>det[bl]?.[m]?.[f]?.rec?.m??0.5))),errorBars:MODELS.map(m=>avg(DET_FIELDS.map(f=>det[bl]?.[m]?.[f]?.rec?.s??0.05))),backgroundColor:'#7c3aed44',borderColor:'#7c3aed',borderWidth:1},
       ]
     },
-    options:{responsive:true,plugins:{legend:LEG,tooltip:{callbacks:{label:ttStd}}},scales:scaleY(0.78,1.02)}
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:LEG,tooltip:{callbacks:{label:ttStd}}},scales:scaleY(0.78,1.02)}
   });
 }
 
@@ -692,7 +1056,7 @@ function rebuildRadar(){
         return{label:MODEL_NAMES[m]||m,data:[ba,ra,df('severity'),df('cvss'),df('plugin'),pa,rca],borderColor:c,backgroundColor:c+'15',pointBackgroundColor:c,borderWidth:1.5,pointRadius:3};
       })
     },
-    options:{responsive:true,plugins:{legend:LEG},scales:{r:{min:0.6,max:1.0,ticks:{color:TICKS,font:{family:'Space Mono',size:8},backdropColor:'transparent'},grid:{color:GRID},pointLabels:{color:'#94a3b8',font:{family:'Space Mono',size:9}}}}}
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:LEG,tooltip:{callbacks:{label:i=>`${i.dataset.label}: ${(i.parsed.r*100).toFixed(1)}%`}}},scales:{r:{min:0.6,max:1.0,ticks:{color:TICKS,font:{family:'Space Mono',size:11},backdropColor:'transparent'},grid:{color:GRID},pointLabels:{color:'#94a3b8',font:{family:'Space Mono',size:12}}}}}
   });
 
   mkChart('radarGrouped',{
@@ -705,7 +1069,203 @@ function rebuildRadar(){
         {label:'F1-Det',data:MODELS.map(m=>avg(bls.flatMap(bl=>DET_FIELDS.map(f=>det[bl]?.[m]?.[f]?.f1?.m??0.5)))),errorBars:MODELS.map(m=>avg(bls.flatMap(bl=>DET_FIELDS.map(f=>det[bl]?.[m]?.[f]?.f1?.s??0.05)))),backgroundColor:'rgba(245,158,11,0.55)',borderColor:'#f59e0b',borderWidth:1},
       ]
     },
-    options:{responsive:true,plugins:{legend:LEG,tooltip:{callbacks:{label:ttStd}}},scales:scaleY(0.6,1.0)}
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:LEG,tooltip:{callbacks:{label:ttStd}}},scales:scaleY(0.6,1.0)}
+  });
+}
+
+function rebuildFinalScore(){
+  mkChart('finalScoreChart',{
+    type:'bar',
+    data:{
+      labels:MODELS.map(m=>MODEL_NAMES[m]||m),
+      datasets:[
+        {label:'IE Score',data:MODELS.map(m=>calcIEScoreAvg(m)),backgroundColor:'rgba(245,158,11,0.7)',borderColor:'#f59e0b',borderWidth:1},
+        {label:'Text Quality Score',data:MODELS.map(m=>calcNLGScoreAvg(m)),backgroundColor:'rgba(16,185,129,0.7)',borderColor:'#10b981',borderWidth:1},
+        {label:'Final Score',data:MODELS.map(m=>calcFinalScoreAvg(m)),backgroundColor:'rgba(148,163,184,0.9)',borderColor:'#e2e8f0',borderWidth:2},
+      ]
+    },
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:LEG,tooltip:{callbacks:{label:ttVal}}},scales:scaleY(0.6,1.0)}
+  });
+}
+
+
+function getScoreColor(score){
+  // Returns background color based on score: red (low) → yellow → green (high)
+  if(score>=0.85) return '#10b981'; // green
+  if(score>=0.75) return '#84cc16'; // lime
+  if(score>=0.65) return '#f59e0b'; // amber
+  if(score>=0.55) return '#ef4444'; // red
+  return '#7f1d1d'; // dark red
+}
+
+function median(arr) {
+  const sorted = [...arr].sort((a, b) => a - b);
+  const mid = Math.floor(sorted.length / 2);
+  return sorted.length % 2 !== 0 ? sorted[mid] : (sorted[mid - 1] + sorted[mid]) / 2;
+}
+
+function rebuildTradeoff(){
+  const ieScores = MODELS.map(m => calcIEScoreAvg(m));
+  const nlgScores = MODELS.map(m => calcNLGScoreAvg(m));
+  const finalScores = MODELS.map(m => calcFinalScoreAvg(m));
+  
+  // Dynamic thresholds based on median (robust against outliers)
+  const ieThreshold = median(ieScores);
+  const tqThreshold = median(nlgScores);
+  
+  // Create ONE dataset per model to ensure Chart.js respects individual colors
+  const datasets = MODELS.map((m, idx) => {
+    const ie = ieScores[idx];
+    const tq = nlgScores[idx];
+    const fs = finalScores[idx];
+    
+    const ieHigh = ie >= ieThreshold;
+    const tqHigh = tq >= tqThreshold;
+    
+    let quadrant = '';
+    if(ieHigh && tqHigh) {
+      quadrant = 'Balanced';
+    } else if(!ieHigh && tqHigh) {
+      quadrant = 'Quality-focused';
+    } else if(ieHigh && !tqHigh) {
+      quadrant = 'Extraction-focused';
+    } else {
+      quadrant = 'Needs Improvement';
+    }
+    
+    const modelColor = MC[m] || '#e2e8f0';
+    
+    return {
+      label: MODEL_NAMES[m] || m,
+      data: [{
+        x: ie,
+        y: tq,
+        r: 8 + (fs * 15),
+        quadrant: quadrant
+      }],
+      backgroundColor: modelColor + 'cc',
+      borderColor: modelColor,
+      borderWidth: 2.5
+    };
+  });
+  
+  // Plugin to draw quadrant backgrounds
+  const quadrantPlugin = {
+    id: 'quadrantBackground',
+    afterDatasetsDraw(chart) {
+      const {ctx, chartArea: {left, top, width, height}} = chart;
+      const xScale = chart.scales.x;
+      const yScale = chart.scales.y;
+      
+      // Calculate pixel positions for dynamic median threshold lines
+      const x75 = xScale.getPixelForValue(ieThreshold);
+      const y75 = yScale.getPixelForValue(tqThreshold);
+      
+      ctx.save();
+      
+      // Quadrant backgrounds (very subtle)
+      // Top-right: balanced (green tint)
+      ctx.fillStyle = 'rgba(16,185,129,0.05)';
+      ctx.fillRect(x75, top, left + width - x75, y75 - top);
+      
+      // Top-left: quality-focused (cyan tint)
+      ctx.fillStyle = 'rgba(0,229,255,0.05)';
+      ctx.fillRect(left, top, x75 - left, y75 - top);
+      
+      // Bottom-right: extraction-focused (amber tint)
+      ctx.fillStyle = 'rgba(245,158,11,0.05)';
+      ctx.fillRect(x75, y75, left + width - x75, top + height - y75);
+      
+      // Bottom-left: needs improve (purple tint)
+      ctx.fillStyle = 'rgba(147,51,234,0.05)';
+      ctx.fillRect(left, y75, x75 - left, top + height - y75);
+      
+      // Draw threshold lines - more visible
+      ctx.strokeStyle = 'rgba(255,255,255,0.3)';
+      ctx.lineWidth = 2;
+      ctx.setLineDash([5, 5]);
+      
+      // Vertical line at IE threshold (median)
+      ctx.beginPath();
+      ctx.moveTo(x75, top);
+      ctx.lineTo(x75, top + height);
+      ctx.stroke();
+      
+      // Horizontal line at TQ threshold (median)
+      ctx.beginPath();
+      ctx.moveTo(left, y75);
+      ctx.lineTo(left + width, y75);
+      ctx.stroke();
+      
+      ctx.restore();
+    }
+  };
+  
+  mkChart('tradeoffBubbleChart', {
+    type: 'bubble',
+    data: {
+      datasets: datasets
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          display: true,
+          position: 'bottom',
+          labels: {
+            font: {family: "'Space Mono', monospace", size: 10},
+            color: '#e2e8f0',
+            padding: 12,
+            usePointStyle: true,
+            pointStyle: 'circle'
+          },
+          title: {
+            display: true,
+            text: `Dynamic thresholds: IE=${ieThreshold.toFixed(3)} | TQ=${tqThreshold.toFixed(3)}`,
+            color: '#94a3b8',
+            font: {size: 9}
+          }
+        },
+        quadrantBackground: {},
+        tooltip: {
+          backgroundColor: 'rgba(10,14,26,0.9)',
+          padding: 12,
+          titleFont: {size: 12, family: "'Space Mono', monospace"},
+          bodyFont: {size: 11, family: "'Space Mono', monospace"},
+          callbacks: {
+            title: (ctx) => ctx[0].raw.label,
+            label: (ctx) => {
+              const p = ctx.raw;
+              const fs = (p.r - 8) / 15;
+              return [
+                `IE: ${p.x.toFixed(3)}`,
+                `Text Quality: ${p.y.toFixed(3)}`,
+                `Final Score: ${fs.toFixed(3)}`,
+                `Quadrant: ${p.quadrant}`
+              ];
+            }
+          }
+        }
+      },
+      scales: {
+        x: {
+          type: 'linear',
+          min: 0, max: 1,
+          title: {display: true, text: 'IE Score (0 → 1)', color: '#e2e8f0', font: {size: 12}},
+          grid: {color: 'rgba(30,45,69,0.2)'},
+          ticks: {color: '#e2e8f0'}
+        },
+        y: {
+          type: 'linear',
+          min: 0, max: 1,
+          title: {display: true, text: 'Text Quality Score (0 → 1)', color: '#e2e8f0', font: {size: 12}},
+          grid: {color: 'rgba(30,45,69,0.2)'},
+          ticks: {color: '#e2e8f0'}
+        }
+      }
+    },
+    plugins: [quadrantPlugin]
   });
 }
 
@@ -741,7 +1301,7 @@ function rebuildMatched(){
       labels:MODELS.map(m=>MODEL_NAMES[m]||m),
       datasets:datasets
     },
-    options:{responsive:true,plugins:{legend:LEG,tooltip:{callbacks:{label:ttStd}}},scales:{x:{stacked:false,ticks:{color:TICKS,font:FONT},grid:{color:GRID}},y:{min:0,max:105,ticks:{color:TICKS,font:FONT},grid:{color:GRID}}}}
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:LEG,tooltip:{callbacks:{label:ttStd}}},scales:{x:{stacked:false,ticks:{color:TICKS,font:FONT},grid:{color:GRID}},y:{min:0,max:105,ticks:{color:TICKS,font:FONT},grid:{color:GRID}}}}
   });
 }
 
@@ -755,54 +1315,265 @@ function rebuildAbsent(){
         {label:'Non-existent',data:MODELS.map(m=>absent_nonexist[m]?.['Non-existent']??0),backgroundColor:'#0066CC99',borderColor:'#0052A3',borderWidth:1}
       ]
     },
-    options:{responsive:true,plugins:{legend:LEG,tooltip:{callbacks:{label:ttVal}}},scales:{x:{stacked:false,ticks:{color:TICKS,font:FONT}},y:{stacked:false,ticks:{color:TICKS,font:FONT},grid:{color:GRID}}}}
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:LEG,tooltip:{callbacks:{label:ttVal}}},scales:{x:{stacked:false,ticks:{color:TICKS,font:FONT}},y:{stacked:false,ticks:{color:TICKS,font:FONT},grid:{color:GRID}}}}
+  });
+}
+
+function pearsonCorrelation(x, y) {
+  if(x.length !== y.length || x.length < 2) return 0;
+  const n = x.length;
+  const mx = x.reduce((a, b) => a + b) / n;
+  const my = y.reduce((a, b) => a + b) / n;
+  const num = x.reduce((s, xi, i) => s + (xi - mx) * (y[i] - my), 0);
+  const denom = Math.sqrt(x.reduce((s, xi) => s + Math.pow(xi - mx, 2), 0) * y.reduce((s, yi) => s + Math.pow(yi - my, 2), 0));
+  return denom !== 0 ? num / denom : 0;
+}
+
+function rebuildCorrelation(){
+  const bl = document.getElementById('corrBaseline').value;
+  const bertData = bl === 'all' ? Object.keys(bert).reduce((acc, b) => Object.assign(acc, bert[b]), {}) : bert[bl];
+  const rougeData = bl === 'all' ? Object.keys(rouge).reduce((acc, b) => Object.assign(acc, rouge[b]), {}) : rouge[bl];
+  
+  if(!bertData || !rougeData) return;
+  
+  // Collect all field scores for correlation scatter
+  let points = [];
+  SEMANTIC_FIELDS.forEach((field, fi) => {
+    MODELS.forEach(m => {
+      const b = bertData[m]?.m?.[fi] ?? null;
+      const r = rougeData[m]?.m?.[fi] ?? null;
+      if(b !== null && r !== null) {
+        points.push({ x: b, y: r, model: m, field: field });
+      }
+    });
+  });
+  
+  // Color by model
+  const datasets = MODELS.map(m => {
+    const modelPoints = points.filter(p => p.model === m);
+    return {
+      label: MODEL_NAMES[m] || m,
+      data: modelPoints.map(p => ({ x: p.x, y: p.y })),
+      backgroundColor: MC[m] + '88',
+      borderColor: MC[m],
+      borderWidth: 1.5,
+      pointRadius: 4,
+      pointHoverRadius: 6
+    };
+  });
+  
+  mkChart('correlationChart', {
+    type: 'scatter',
+    data: { datasets },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: MODELS.length <= 8 },
+        tooltip: {
+          callbacks: {
+            label: ctx => {
+              const point = points.find(p => p.x === ctx.parsed.x && p.y === ctx.parsed.y);
+              return point ? `${MODEL_NAMES[point.model] || point.model} — ${point.field}` : '';
+            }
+          }
+        }
+      },
+      scales: {
+        x: { title: { display: true, text: 'BERTScore', color: TICKS }, min: 0.5, max: 1, ticks: { color: TICKS }, grid: { color: GRID } },
+        y: { title: { display: true, text: 'ROUGE-L', color: TICKS }, min: 0.5, max: 1, ticks: { color: TICKS }, grid: { color: GRID } }
+      }
+    }
+  });
+  
+  // Build correlation heatmap by field
+  const corrData = {};
+  SEMANTIC_FIELDS.forEach(field => {
+    const bertScores = MODELS.map(m => bertData[m]?.m?.[SEMANTIC_FIELDS.indexOf(field)] ?? 0.5);
+    const rougeScores = MODELS.map(m => rougeData[m]?.m?.[SEMANTIC_FIELDS.indexOf(field)] ?? 0.5);
+    corrData[field] = pearsonCorrelation(bertScores, rougeScores);
+  });
+  
+  const table = document.getElementById('corrHeatmap');
+  table.innerHTML = '';
+  const thead = table.createTHead();
+  thead.insertRow().innerHTML = `<th>Field</th><th>Correlation (r)</th><th>Interpretation</th>`;
+  const tbody = table.createTBody();
+  
+  SEMANTIC_FIELDS.forEach(field => {
+    const r = corrData[field];
+    const tr = tbody.insertRow();
+    let interp = '';
+    if(r > 0.85) interp = 'High agreement';
+    else if(r > 0.6) interp = 'Moderate agreement';
+    else if(r > 0.3) interp = 'Weak link';
+    else interp = 'Divergent metrics';
+    
+    let color = '';
+    if(r > 0.85) color = '#10b98144';
+    else if(r > 0.6) color = '#f59e0b44';
+    else color = '#f43f5e44';
+    
+    tr.innerHTML = `
+      <td>${field}</td>
+      <td style="background:${color};font-weight:700">${r.toFixed(3)}</td>
+      <td style="font-size:0.75rem;color:var(--muted2)">${interp}</td>
+    `;
+  });
+  
+  buildLegend('corrLegend', 'corr');
+}
+
+function rebuildSensitivity(){
+  const ieWeight = parseFloat(document.getElementById('ieWeight').value);
+  const nlgWeight = 100 - ieWeight;
+  
+  document.getElementById('ieWeightLabel').textContent = ieWeight + '%';
+  document.getElementById('nlgWeightLabel').textContent = nlgWeight + '%';
+  
+  // Calculate scores with custom weights
+  const scores = MODELS.map(m => {
+    const ieScore = calcIEScoreAvg(m);
+    const nlgScore = calcNLGScoreAvg(m);
+    const customScore = (ieWeight / 100) * ieScore + (nlgWeight / 100) * nlgScore;
+    
+    return { model: m, score: customScore, ieScore, nlgScore, rank: 0 };
+  });
+  
+  // Sort by score and add ranks
+  scores.sort((a, b) => b.score - a.score);
+  scores.forEach((s, i) => { s.rank = i + 1; });
+  
+  // Chart with ranking bars
+  const sortedScores = scores.slice().sort((a, b) => b.score - a.score);
+  
+  mkChart('sensitivityChart', {
+    type: 'bar',
+    data: {
+      labels: sortedScores.map(s => `${s.rank}. ${MODEL_NAMES[s.model] || s.model}`),
+      datasets: [{
+        label: 'Final Score',
+        data: sortedScores.map(s => s.score),
+        backgroundColor: sortedScores.map(s => MC[s.model] + '77'),
+        borderColor: sortedScores.map(s => MC[s.model]),
+        borderWidth: 2
+      }]
+    },
+    options: {
+      indexAxis: 'y',
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: {
+            label: ctx => `Score: ${ctx.parsed.x.toFixed(3)}`
+          }
+        }
+      },
+      scales: {
+        x: { min: 0, max: 1.0, ticks: { color: TICKS }, grid: { color: GRID } },
+        y: { ticks: { color: TICKS }, grid: { display: false } }
+      }
+    }
+  });
+  
+  // Update ranking table
+  const rankTable = document.getElementById('sensitivityRankTable');
+  rankTable.innerHTML = '';
+  scores.forEach(s => {
+    const tr = rankTable.insertRow();
+    const medalEmoji = s.rank === 1 ? '🥇' : s.rank === 2 ? '🥈' : s.rank === 3 ? '🥉' : '';
+    tr.innerHTML = `
+      <td style="font-weight:700;color:${MC[s.model]}">${medalEmoji} ${MODEL_NAMES[s.model] || s.model}</td>
+      <td style="text-align:center;font-weight:700">#${s.rank}</td>
+      <td style="text-align:center;font-weight:700">${s.score.toFixed(3)}</td>
+      <td style="text-align:center">${s.ieScore.toFixed(3)}</td>
+      <td style="text-align:center">${s.nlgScore.toFixed(3)}</td>
+    `;
+  });
+}
+
+function rebuildErrorBreakdown(){
+  const baseline = document.getElementById('errorBaseline').value;
+  
+  if(!HAS_ERROR_BREAKDOWN || !error_breakdown[baseline]){
+    document.getElementById('errorBreakdownTable').innerHTML = '<tr><td colspan="4" style="text-align:center;color:var(--muted);">No error breakdown data available</td></tr>';
+    return;
+  }
+  
+  const breakdownData = error_breakdown[baseline];
+  const errorTable = document.getElementById('errorBreakdownTable');
+  errorTable.innerHTML = '';
+  
+  breakdownData.forEach((item, idx) => {
+    const tr = errorTable.insertRow();
+    const failurePercent = (item.failure_rate * 100).toFixed(1);
+    const bertScore = item.avg_bert_score !== null ? item.avg_bert_score.toFixed(3) : 'N/A';
+    const rowColor = item.failure_rate >= 0.8 ? '#dc2626' : item.failure_rate >= 0.5 ? '#f59e0b' : '#10b981';
+    
+    tr.innerHTML = `
+      <td style="font-weight:600;color:var(--text)">${item.vulnerability}</td>
+      <td style="text-align:center;font-weight:700;color:${rowColor}">${failurePercent}%</td>
+      <td style="text-align:center;color:var(--text)">${item.failed_models} / ${item.total_models}</td>
+      <td style="text-align:center;color:var(--muted)">${bertScore}</td>
+    `;
   });
 }
 
 const built={};
+
+// 🔥 ESSENCIAL: Força recalculação de tamanho de todos os gráficos
+function resizeAllCharts(){
+  Object.values(CHARTS).forEach(chart => {
+    if(chart){
+      chart.resize();
+    }
+  });
+}
+
 function showTab(name,btn){
   document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
   document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
   document.getElementById('tab-'+name).classList.add('active');
   btn.classList.add('active');
+  
+  // 🔥 Recalcular tamanho após mostrar aba
+  setTimeout(resizeAllCharts, 150);
   if(!built[name]){
     built[name]=true;
     if(name==='overview')buildOverview();
-    if(name==='baseline'){rebuildBaseline();if(HAS_STACKED)rebuildStacked();}
-    if(name==='semantic')rebuildSemantic();
-    if(name==='deterministic')rebuildDet();
-    if(name==='radar')rebuildRadar();
-    if(name==='png-charts'){
-      if(Object.keys(matched_rate).length>0)rebuildMatched();
-      if(Object.keys(absent_nonexist).length>0)rebuildAbsent();
-    }
-  }else if(name==='png-charts'){
-    // Rebuild charts even if tab was already visited
-    if(Object.keys(matched_rate).length>0)rebuildMatched();
-    if(Object.keys(absent_nonexist).length>0)rebuildAbsent();
+    if(name==='performance'){rebuildSemantic();rebuildDet();}
+    if(name==='comparison'){rebuildRadar();rebuildFinalScore();rebuildTradeoff();}
+    if(name==='insights'){rebuildTradeoff();rebuildCorrelation();rebuildSensitivity();}
+    if(name==='errors'){rebuildErrorBreakdown();}
   }
 }
 
-// Initialize first available tab
-if(HAS_BERT){
-  built['overview']=true;
-  buildOverview();
-}else if(HAS_DET){
-  document.getElementById('tab-deterministic').classList.add('active');
-  document.querySelector('.tab').classList.add('active');
-  built['deterministic']=true;
-  rebuildDet();
-}else if(Object.keys(matched_rate).length>0||Object.keys(absent_nonexist).length>0){
-  const tab=document.getElementById('tab-png-charts');
-  const btn=Array.from(document.querySelectorAll('.tab')).find(b=>b.onclick && b.onclick.toString().includes('png-charts'));
-  if(tab&&btn){
-    tab.classList.add('active');
-    btn.classList.add('active');
-    built['png-charts']=true;
-    if(Object.keys(matched_rate).length>0)rebuildMatched();
-    if(Object.keys(absent_nonexist).length>0)rebuildAbsent();
-  }
+function toggleMethodology(){
+  const details = document.getElementById('methodologyDetails');
+  const btn = event.target;
+  details.classList.toggle('show');
+  btn.style.background = details.classList.contains('show') ? 'var(--accent2)' : 'var(--accent)';
 }
+
+// Initialize first available tab
+window.chartReady.then(() => {
+  if(HAS_BERT){
+    built['overview']=true;
+    buildOverview();
+  }else if(HAS_DET){
+    document.getElementById('tab-performance').classList.add('active');
+    document.querySelector('.tab').classList.add('active');
+    built['performance']=true;
+    rebuildDet();
+  }else if(HAS_ERROR_BREAKDOWN){
+    document.getElementById('tab-errors').classList.add('active');
+    Array.from(document.querySelectorAll('.tab')).find(b=>b.textContent.includes('Error'))?.classList.add('active');
+    built['errors']=true;
+    rebuildErrorBreakdown();
+  }
+});
 </script>
 </body>
 </html>

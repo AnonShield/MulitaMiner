@@ -31,6 +31,8 @@ from metrics.plot.data_collector import (
     collect_matched_rate_data,
     collect_recall_data,
     collect_absent_nonexistent_data,
+    collect_vulnerability_counts,
+    collect_error_breakdown,
 )
 from metrics.plot.png_generator import (
     generate_similarity_pngs,
@@ -92,6 +94,8 @@ def main():
     matched_rate_data = collect_matched_rate_data(available_models)
     recall_data = collect_recall_data(available_models)
     absent_nonexistent_data = collect_absent_nonexistent_data(available_models)
+    vulnerability_counts = collect_vulnerability_counts(available_models)
+    error_breakdown = collect_error_breakdown(available_models)
     
     # Detect available data types
     has_bert = any(baseline_data for baseline_data in bert_data.values())
@@ -101,6 +105,8 @@ def main():
     has_matched = any(baseline_data for baseline_data in matched_rate_data.values())
     has_recall = any(baseline_data for baseline_data in recall_data.values())
     has_absent_nonexist = any(baseline_data for baseline_data in absent_nonexistent_data.values())
+    has_vulncount = any(baseline_data for baseline_data in vulnerability_counts.values())
+    has_error_breakdown = any(baseline_data for baseline_data in error_breakdown.values())
     
     print(f"  • BERT data: {'Yes' if has_bert else 'No'}")
     print(f"  • ROUGE data: {'Yes' if has_rouge else 'No'}")
@@ -109,19 +115,23 @@ def main():
     print(f"  • Matched rate data: {'Yes' if has_matched else 'No'}")
     print(f"  • Recall data: {'Yes' if has_recall else 'No'}")
     print(f"  • Absent/Non-existent data: {'Yes' if has_absent_nonexist else 'No'}")
+    print(f"  • Vulnerability counts: {'Yes' if has_vulncount else 'No'}")
+    print(f"  • Error breakdown: {'Yes' if has_error_breakdown else 'No'}")
     
     # Prepare template context
     context = {
         'report_date': datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
         'baselines': baselines,
         'models': available_models,  # Use dynamically discovered models
-        'bert': json.dumps(bert_data),
-        'rouge': json.dumps(rouge_data),
-        'det': json.dumps(det_data),
-        'stacked': json.dumps(stacked_data),
-        'matched_rate': json.dumps(matched_rate_data),
-        'recall': json.dumps(recall_data),
-        'absent_nonexist': json.dumps(absent_nonexistent_data),
+        'bert': bert_data,
+        'rouge': rouge_data,
+        'det': det_data,
+        'stacked': stacked_data,
+        'matched_rate': matched_rate_data,
+        'recall': recall_data,
+        'absent_nonexist': absent_nonexistent_data,
+        'vulnerability_counts': vulnerability_counts,
+        'error_breakdown': error_breakdown,
         'results_dir': os.path.abspath(RESULTS_DIR),
         # Data availability flags
         'has_bert': has_bert,
@@ -131,6 +141,8 @@ def main():
         'has_matched': has_matched,
         'has_recall': has_recall,
         'has_absent_nonexist': has_absent_nonexist,
+        'has_vulncount': has_vulncount,
+        'has_error_breakdown': has_error_breakdown,
     }
     
     # Generate HTML report

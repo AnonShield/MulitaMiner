@@ -231,14 +231,13 @@ def main():
         print(f"[ERROR] Failed to generate charts: {e}")
 
     # ─────────────────────────────────────────────────────────────
-    # NEW: Generate interactive metrics report with selective PNG export
+    # NEW: Generate interactive metrics report with PNG export
     # ─────────────────────────────────────────────────────────────
-    print("\n[INFO] Generating interactive Plotly metrics report...")
+    print("\n[INFO] Generating interactive metrics dashboard and PNG charts...")
     try:
         subprocess.run([
             sys.executable,
-            os.path.join(os.path.dirname(__file__), "../metrics/plot/metrics.py"),
-            "--export-png", "heatmap", "stacked_similarity", "matched_rate"
+            os.path.join(os.path.dirname(__file__), "../metrics/plot/metrics.py")
         ], check=True)
         
         # Find and display the generated report

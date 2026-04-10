@@ -1,15 +1,15 @@
 import os
 import sys
 import time
-# Ensures 'src' directory is in sys.path for absolute imports
+# Ensures project root is in sys.path for absolute imports
 project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
-src_path = os.path.join(project_root, 'src')
-if src_path not in sys.path:
-    sys.path.insert(0, src_path)
+if project_root not in sys.path:
+    sys.path.insert(0, project_root)
+
 import argparse
 import subprocess
 from tqdm import tqdm
-from utils.cli_args import parse_arguments
+from src.utils.cli_args import parse_arguments
 
 def batch_extract_vulnerabilities(input_dir, output_dir=None, marker='_batch', scanner=None, llm=None, convert=None, extra_args=None):
     """

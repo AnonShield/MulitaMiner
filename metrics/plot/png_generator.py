@@ -11,6 +11,9 @@ from matplotlib.container import BarContainer
 from datetime import datetime
 from typing import Dict
 
+# Shared baseline patterns — used consistently across all PNG charts
+BASELINE_PATTERNS = ['/', '+', '\\', '-', '|', '++', 'X', 'o', 'O', '.', '*', '//', '\\\\', '||', '--', 'XX', '..', '-\\']
+
 
 def generate_similarity_pngs(stacked_data: Dict, output_dir: str = 'plot_runs') -> None:
     """
@@ -51,15 +54,10 @@ def generate_similarity_pngs(stacked_data: Dict, output_dir: str = 'plot_runs') 
         bar_width = 0.75 / n_baselines
         x = np.arange(n_models)
         
-        # Baseline patterns
-        baseline_hatches = ['/', '+', '\\', '-', '|', '++', 'X', 'o', 'O', '.', '*', '//', '\\\\', '||', '--', 'XX', '..', '-\\']
-        while len(baseline_hatches) < n_baselines:
-            baseline_hatches *= 2
-        
         # Draw bars for each baseline
         for b_idx, baseline in enumerate(baselines):
             models_dict = baseline_data[baseline]
-            hatch_pattern = baseline_hatches[b_idx]
+            hatch_pattern = BASELINE_PATTERNS[b_idx % len(BASELINE_PATTERNS)]
             
             for m_idx, model in enumerate(models):
                 # Get percentages for this model, or zeros if not present
@@ -89,7 +87,7 @@ def generate_similarity_pngs(stacked_data: Dict, output_dir: str = 'plot_runs') 
         # Create legends
         category_patches = [Patch(facecolor=color, edgecolor='#cccccc', linewidth=0.7, label=cat)
                            for cat, color in zip(categories, colors)]
-        baseline_patches = [Patch(facecolor='#cccccc', edgecolor='#333', hatch=baseline_hatches[i], label=b)
+        baseline_patches = [Patch(facecolor='#cccccc', edgecolor='#333', hatch=BASELINE_PATTERNS[i % len(BASELINE_PATTERNS)], label=b)
                            for i, b in enumerate(baselines)]
         
         # Add legends
@@ -150,9 +148,6 @@ def generate_matched_rate_png(matched_rate_data: Dict, recall_data: Dict = None,
     fig, ax = plt.subplots(figsize=(14, 8))
     plt.rcParams.update({'font.size': 12})
     
-    # Hatch patterns for baselines (matplotlib valid patterns)
-    hatch_patterns = ['///', '\\\\\\\\', '|||', '---', '+++', 'xxx']
-    
     # Colors: Amarelo (precision) e Roxo (recall)
     COLOR_PRECISION = '#f59e0b'  # Amarelo
     COLOR_RECALL = '#7c3aed'     # Roxo
@@ -171,7 +166,7 @@ def generate_matched_rate_png(matched_rate_data: Dict, recall_data: Dict = None,
             # Precision bar (Matched Rate)
             matched_val = matched_rate_data[baseline].get(model, {}).get('m', 0)
             matched_std = matched_rate_data[baseline].get(model, {}).get('s', 0)
-            hatch = hatch_patterns[b_idx % len(hatch_patterns)]
+            hatch = BASELINE_PATTERNS[b_idx % len(BASELINE_PATTERNS)]
             
             ax.bar(x_pos, matched_val, bar_width, yerr=matched_std,
                    color=COLOR_PRECISION, hatch=hatch, edgecolor='#333', linewidth=1.2,
@@ -203,26 +198,35 @@ def generate_matched_rate_png(matched_rate_data: Dict, recall_data: Dict = None,
     ax.set_xticklabels(x_labels, fontsize=12)
     ax.grid(axis='y', alpha=0.3, linestyle='--')
     
-    # Create custom legend
+    # Create separate legends for colors (precision/recall) and patterns (baselines)
     from matplotlib.patches import Patch
     from matplotlib.lines import Line2D
     
-    legend_elements = [
+    # Legend 1: Colors (Precision & Recall)
+    color_elements = [
         Line2D([0], [0], color=COLOR_PRECISION, lw=8, label='Precision'),
         Line2D([0], [0], color=COLOR_RECALL, lw=8, label='Recall'),
     ]
     
-    # Add baseline patterns
-    for b_idx, baseline in enumerate(baselines):
-        hatch = hatch_patterns[b_idx % len(hatch_patterns)]
-        legend_elements.append(
-            Patch(facecolor='gray', hatch=hatch, edgecolor='#333', label=baseline)
-        )
+    # Legend 2: Baseline patterns
+    pattern_elements = [
+        Patch(facecolor='gray', hatch=BASELINE_PATTERNS[b_idx % len(BASELINE_PATTERNS)], 
+              edgecolor='#333', label=baseline)
+        for b_idx, baseline in enumerate(baselines)
+    ]
     
-    ax.legend(handles=legend_elements, fontsize=11, loc='lower center', 
-              bbox_to_anchor=(0.5, -0.15), ncol=3)
+    # Add first legend (colors) at top
+    legend1 = fig.legend(color_elements, ['Precision', 'Recall'],
+                        loc='lower center', bbox_to_anchor=(0.5, 0.98), ncol=2,
+                        fontsize=12, frameon=True, title='Metric', title_fontsize=13)
     
-    plt.tight_layout()
+    # Add second legend (patterns) below the first
+    legend2 = fig.legend(pattern_elements, baselines,
+                        loc='lower center', bbox_to_anchor=(0.5, 0.92), 
+                        ncol=min(len(baselines), 4), fontsize=11, frameon=True,
+                        title='Baseline (pattern)', title_fontsize=12)
+    
+    plt.tight_layout(rect=[0, 0, 1, 0.96])
     
     timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
     fname_out = os.path.join(output_dir, f'matched_rate_{timestamp}.png')
@@ -258,8 +262,8 @@ def generate_absent_nonexistent_png(absent_nonexistent_data: Dict, output_dir: s
     x = np.arange(len(models))
     
     # Colors for categories
-    absent_color = '#d85231'  # Red
-    nonexistent_color = '#0066CC'  # Blue (good contrast on both light and dark backgrounds)
+    absent_color = "#b43a1b"  # Red
+    nonexistent_color = "#044C94"  # Blue (good contrast on both light and dark backgrounds)
     
     absent_vals = []
     nonexistent_vals = []

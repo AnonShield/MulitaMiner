@@ -4,7 +4,7 @@
   "model": "llama-3.3-70b-versatile",
   "temperature": 0.0,
   "max_tokens": 8192,
-  "max_chunk_size": 6000,
+  "max_chunk_size": 4500,
   "reserve_for_response": 1000,
   "tokenizer": {
     "type": "huggingface",

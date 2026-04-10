@@ -18,7 +18,8 @@ from metrics.common.field_mapper import load_field_categories
 def discover_available_models(results_dir: str = "results_runs") -> List[str]:
     """
     Discover available models dynamically from directory structure.
-    Returns sorted list of unique model names found in results_dir.
+    Only includes models that have actual data files (not empty directories).
+    Returns sorted list of unique model names with valid data.
     """
     models = set()
     results_path = Path(results_dir)
@@ -33,7 +34,23 @@ def discover_available_models(results_dir: str = "results_runs") -> List[str]:
         
         # Each subdirectory under baseline is a model name
         for model_dir in baseline_dir.iterdir():
-            if model_dir.is_dir():
+            if not model_dir.is_dir():
+                continue
+            
+            # Check if this model directory has any actual data files
+            has_data = False
+            for root, dirs, files in os.walk(model_dir):
+                for fname in files:
+                    # Look for any meaningful data files (comparison files or JSON results)
+                    if (fname.endswith(('.xlsx', '.json')) and 
+                        any(x in fname.lower() for x in ['comparison', 'metrics', 'results'])):
+                        has_data = True
+                        break
+                if has_data:
+                    break
+            
+            # Only add model if it has data
+            if has_data:
                 models.add(model_dir.name)
     
     return sorted(list(models))
@@ -555,3 +572,228 @@ def collect_absent_nonexistent_data(available_models: List[str], results_dir: st
         absent_nonexistent_data[llm] = result
     
     return absent_nonexistent_data
+
+
+def collect_vulnerability_counts(available_models: List[str], results_dir: str = "results_runs") -> Dict:
+    """
+    Collect absolute vulnerability counts from summary files.
+    For each baseline/model pair, gets:
+    - total_baseline: Total vulnerabilities in baseline (from summary)
+    - extracted_per_model: Count of vulnerabilities extracted by each model
+    - matched_per_model: Count of matched vulnerabilities
+    
+    Returns: { baseline: { model: {baseline_total, extracted_mean, matched_mean, ...} } }
+    """
+    counts_data = {}
+    results_path = Path(results_dir)
+    
+    if not results_path.exists():
+        return counts_data
+    
+    # Collect baseline totals per baseline from summary files
+    baseline_totals = {}  # baseline -> total_count
+    
+    # Aggregate extracted/matched per baseline/model from summary files
+    model_counts = {}  # (baseline, model) -> {baseline_total, extracted: [...], matched: [...]}
+    
+    for baseline_dir in results_path.iterdir():
+        if not baseline_dir.is_dir():
+            continue
+        
+        baseline = baseline_dir.name
+        
+        for root, dirs, files in os.walk(baseline_dir):
+            for fname in files:
+                # Look for summary files, priority to BERT then ROUGE
+                if not fname.endswith('.xlsx') or 'summary_all_extractions' not in fname.lower():
+                    continue
+                
+                llm = extract_llm_from_filename(fname, available_models)
+                if not llm:
+                    continue
+                
+                try:
+                    excel_file = os.path.join(root, fname)
+                    df = pd.read_excel(excel_file)
+                    
+                    # Read Baseline_Total_Vulnerabilities from first row
+                    if 'Baseline_Total_Vulnerabilities' in df.columns:
+                        baseline_total = int(df['Baseline_Total_Vulnerabilities'].iloc[0])
+                    else:
+                        baseline_total = 0
+                    
+                    # Read Matched and other metrics from first row
+                    matched = int(df['Matched'].iloc[0]) if 'Matched' in df.columns else 0
+                    
+                    # Store for this model
+                    key = (baseline, llm)
+                    if key not in model_counts:
+                        model_counts[key] = {
+                            'baseline_total': baseline_total, 
+                            'extracted': [], 
+                            'matched': [],
+                            'invented': []
+                        }
+                    
+                    # Append total vulnerabilities and matched count
+                    total_extracted = int(df['Total_Vulnerabilities'].iloc[0]) if 'Total_Vulnerabilities' in df.columns else 0
+                    invented = int(df['Invented'].iloc[0]) if 'Invented' in df.columns else 0
+                    model_counts[key]['extracted'].append(total_extracted)
+                    model_counts[key]['matched'].append(matched)
+                    model_counts[key]['invented'].append(invented)
+                    
+                    # Update baseline totals (should be same across all models)
+                    if baseline not in baseline_totals:
+                        baseline_totals[baseline] = baseline_total
+                
+                except Exception as e:
+                    continue
+    
+    
+    # Aggregate and build final structure
+    for (baseline, llm), counts in model_counts.items():
+        if baseline not in counts_data:
+            counts_data[baseline] = {}
+        
+        if counts['extracted']:
+            extracted_mean = float(np.mean(counts['extracted']))
+            matched_mean = float(np.mean(counts['matched']))
+            baseline_total = counts['baseline_total']
+            
+            # Calculate precision and recall
+            precision = matched_mean / extracted_mean if extracted_mean > 0 else 0
+            recall = matched_mean / baseline_total if baseline_total > 0 else 0
+            
+            # Calculate F1-Score
+            f1_score = 0
+            if precision + recall > 0:
+                f1_score = 2 * (precision * recall) / (precision + recall)
+            
+            counts_data[baseline][llm] = {
+                'baseline_total': baseline_total,
+                'extracted_mean': extracted_mean,
+                'extracted_std': float(np.std(counts['extracted'])),
+                'matched_mean': matched_mean,
+                'matched_std': float(np.std(counts['matched'])),
+                'precision': float(precision),
+                'recall': float(recall),
+                'f1_score': float(f1_score)
+            }
+    
+    return counts_data
+
+
+def collect_error_breakdown(available_models: List[str], results_dir: str = "results_runs", top_n: int = 15) -> Dict:
+    """
+    Collect error breakdown analysis: which vulnerabilities do models consistently fail to extract?
+    
+    Identifies "Absent" vulnerabilities (in baseline but not extracted by model) and aggregates
+    across all models/runs to find which vulnerabilities are hardest to extract.
+    
+    Returns: { baseline: [
+        {
+            'vulnerability': name,
+            'failed_models': count_of_models_that_failed,
+            'total_models': total_models,
+            'failure_rate': failed_models / total_models,
+            'avg_bert_score': average_bert_score_when_attempted (or null if always absent)
+        },
+        ...
+    ] } (sorted by failure_rate descending, top N only)
+    """
+    error_breakdown = {}
+    results_path = Path(results_dir)
+    
+    if not results_path.exists():
+        return error_breakdown
+    
+    # Collect per baseline: vulnerability -> {failed_count: N, total_count: M, bert_scores: []}
+    baseline_vuln_data = {}  # baseline -> { vulnerability: {failed: int, total: int, scores: []} }
+    
+    for baseline_dir in results_path.iterdir():
+        if not baseline_dir.is_dir():
+            continue
+        
+        baseline = baseline_dir.name
+        baseline_vuln_data[baseline] = {}
+        
+        for root, dirs, files in os.walk(baseline_dir):
+            for fname in files:
+                # Look for BERT comparison files (they have the best categorization data)
+                if not fname.endswith('.xlsx') or 'bert_comparison_vulnerabilities' not in fname.lower():
+                    continue
+                
+                llm = extract_llm_from_filename(fname, available_models)
+                if not llm:
+                    continue
+                
+                try:
+                    excel_file = os.path.join(root, fname)
+                    # Read Categorization sheet which has Category and BERTScore columns
+                    df = pd.read_excel(excel_file, sheet_name='Categorization')
+                    
+                    if 'Category' not in df.columns or 'Vulnerability_Name' not in df.columns:
+                        continue
+                    
+                    # Look for BERT score column (may be named differently)
+                    score_col = None
+                    for col in df.columns:
+                        if 'bert' in col.lower() and ('score' in col.lower() or 'f1' in col.lower()):
+                            score_col = col
+                            break
+                    
+                    # Process each vulnerability
+                    for idx, row in df.iterrows():
+                        vuln_name = row['Vulnerability_Name']
+                        category = row['Category']
+                        
+                        if pd.isna(vuln_name):
+                            continue
+                        
+                        # Initialize if first time seeing this vulnerability
+                        if vuln_name not in baseline_vuln_data[baseline]:
+                            baseline_vuln_data[baseline][vuln_name] = {
+                                'failed': 0,
+                                'total': 0,
+                                'scores': []
+                            }
+                        
+                        baseline_vuln_data[baseline][vuln_name]['total'] += 1
+                        
+                        # Count as failed if "Absent" or "Non-existent"
+                        if category in ['Absent', 'Non-existent']:
+                            baseline_vuln_data[baseline][vuln_name]['failed'] += 1
+                        else:
+                            # Record BERT score for "succeeded" cases
+                            if score_col and not pd.isna(row[score_col]):
+                                baseline_vuln_data[baseline][vuln_name]['scores'].append(float(row[score_col]))
+                
+                except Exception as e:
+                    continue
+    
+    # Build output: aggregate and compute statistics
+    for baseline, vuln_dict in baseline_vuln_data.items():
+        results_list = []
+        
+        for vuln_name, data in vuln_dict.items():
+            if data['total'] == 0:
+                continue
+            
+            failure_rate = data['failed'] / data['total']
+            avg_score = float(np.mean(data['scores'])) if data['scores'] else None
+            
+            results_list.append({
+                'vulnerability': vuln_name,
+                'failed_models': data['failed'],
+                'total_models': data['total'],
+                'failure_rate': float(failure_rate),
+                'avg_bert_score': avg_score
+            })
+        
+        # Sort by failure_rate descending, then by failed_models descending
+        results_list.sort(key=lambda x: (-x['failure_rate'], -x['failed_models']))
+        
+        # Keep only top N
+        error_breakdown[baseline] = results_list[:top_n]
+    
+    return error_breakdown

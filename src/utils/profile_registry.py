@@ -112,7 +112,7 @@ def get_profile_validator(profile_config: Dict[str, Any]) -> Callable:
         return validator
     
     # Return default validator
-    from .llm_utils import validate_and_normalize_vulnerability
+    from src.model_management import validate_and_normalize_vulnerability
     return validate_and_normalize_vulnerability
 
 
@@ -126,7 +126,7 @@ def validate_vulnerability(vuln: Dict[str, Any], profile_config: Dict[str, Any])
 
 def register_default_validators():
     """Register validators for built-in profile types."""
-    from .llm_utils import validate_and_normalize_vulnerability
+    from src.model_management import validate_and_normalize_vulnerability
     from .cais_validator import validate_cais_vulnerability
     
     # Default validator (system fields: Name, description, etc)

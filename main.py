@@ -23,9 +23,7 @@ from src.utils.block_creation import create_session_blocks_from_text, extract_vu
 from src.utils.cli_args import parse_arguments
 from src.utils.pdf_loader import load_pdf_with_pypdf2, save_visual_layout
 from src.utils import pdf_loader, block_creation
-from src.utils.llm_utils import (
-    load_profile, load_llm, init_llm, validate_and_normalize_vulnerability
-)
+from src.model_management import load_profile, load_llm, init_llm, validate_and_normalize_vulnerability
 from src.converters import execute_conversions
 from src.utils.cais_validator import validate_cais_vulnerability
 

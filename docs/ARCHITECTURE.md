@@ -26,13 +26,31 @@ MulitaMiner/
 │   │   ├── base_converter.py            # Base converter class
 │   │   ├── csv_converter.py             # CSV/TSV export logic
 │   │   └── xlsx_converter.py            # Excel export logic
-│   ├── scanner_strategies/              # Modular scanner strategies
+│   ├── scanner_strategies/              # Modular scanner strategies (Strategy Pattern)
 │   │   ├── __init__.py
-│   │   ├── base.py                      # Base class for scanner strategies
+│   │   ├── base.py                      # Base class for all scanner strategies
+│   │   │                                 # - extract_visual_context() [optional]
+│   │   │                                 # - create_blocks() [optional, defaults to single block]
+│   │   │                                 # - vulnerability_processing_logic() [abstract]
 │   │   ├── consolidation.py             # Central consolidation logic
-│   │   ├── openvas.py                   # OpenVAS custom strategy
-│   │   ├── registry.py                  # Strategy registry (maps scanner to logic)
-│   │   └── tenablewas.py                # Tenable WAS custom strategy
+│   │   ├── openvas.py                   # OpenVAS: custom visual context + blocks by port/protocol
+│   │   ├── tenablewas.py                # Tenable: custom blocks by severity
+│   │   └── registry.py                  # Strategy registry (auto-instantiates scanner-specific logic)
+│   │
+│   ├── model_management/                # LLM provider abstraction (for local & remote LLMs)
+│   │   ├── __init__.py
+│   │   ├── config_loader.py             # Loads LLM configs with auto-detection of provider
+│   │   ├── llm_factory.py               # Factory: routes to correct provider
+│   │   ├── validation.py                # Validates LLM responses with abstract tokenizers
+│   │   ├── tokenizer_utils.py           # Shared tokenizer utilities
+│   │   ├── llm_processing.py            # LLM inference pipeline
+│   │   ├── prompts.py                   # Prompt templates (injection/consolidation)
+│   │   └── providers/
+│   │       ├── base_provider.py         # Interface for all providers
+│   │       ├── openai_provider.py       # ChatOpenAI (remote - api.openai.com)
+│   │       ├── ollama_provider.py       # ChatOllama (local - localhost:11434)
+│   │       ├── llm_studio_provider.py   # LLM Studio (local - localhost:1234, Granite models)
+│   │       └── huggingface_provider.py  # HuggingFace (remote or local)
 │   └── utils/
 │       ├── block_creation.py            # Block creation and parsing logic
 │       ├── cais_validator.py            # CAIS format validation
