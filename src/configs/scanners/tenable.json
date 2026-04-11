@@ -9,8 +9,6 @@
   "chunking": {
     "scanner_type": "tenable_was",
     "marker_pattern": "VULNERABILITY\\s+(CRITICAL|HIGH|MEDIUM|LOW|INFO)\\s+PLUGIN\\s+ID\\s+\\d+",
-    "has_pairs": true,
-    "min_chunk_tokens": 1000,
     "force_break_at_markers": true,
     "preserve_vulnerability_blocks": true,
     "max_vulnerabilities_per_chunk": 3,

@@ -8,11 +8,9 @@
   "chunking": {
     "scanner_type": "openvas",
     "marker_pattern": "^\\s*NVT:",
-    "has_pairs": false,
-    "min_chunk_tokens": 800,
     "force_break_at_markers": true,
     "preserve_vulnerability_blocks": true,
     "max_vulnerabilities_per_chunk": 5,
-    "description": "OpenVAS usa marcadores NVT: (severity ja capturado em initial_context_lines)"
+    "description": "OpenVAS usa marcadores NVT:, sem pares, permite mais vulnerabilidades por chunk"
   }
 }

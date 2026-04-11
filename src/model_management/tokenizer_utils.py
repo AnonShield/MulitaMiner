@@ -31,12 +31,12 @@ def get_tokenizer(llm_config: dict = None):
         tokenizer_config = llm_config.get('tokenizer')
         if tokenizer_config and isinstance(tokenizer_config, dict):
             try:
-                print(f"🔧 DEBUG: Attempting to load tokenizer with config: {tokenizer_config}")
+                print(f"[DEBUG] Attempting to load tokenizer with config: {tokenizer_config}")
                 tokenizer = _load_tokenizer(tokenizer_config)
-                print(f"✅ DEBUG: Successfully loaded tokenizer object: {type(tokenizer)}")
+                print(f"[DEBUG] Successfully loaded tokenizer object: {type(tokenizer)}")
                 return tokenizer
             except Exception as e:
-                print(f"🛑 Failed to load tokenizer from config. Error: {e}. Falling back.")
+                print(f"[ERROR] Failed to load tokenizer from config. Error: {e}. Falling back.")
 
     # Fallback universal para garantir que sempre haja um tokenizador.
     return tiktoken.get_encoding("cl100k_base")
@@ -65,21 +65,21 @@ def _load_tokenizer(tokenizer_config: dict):
         try:
             from transformers import AutoTokenizer
         except ImportError:
-            print("📦 Installing 'transformers' library for Hugging Face tokenizer...")
+            print("[INFO] Installing 'transformers' library for Hugging Face tokenizer...")
             try:
                 subprocess.check_call([sys.executable, "-m", "pip", "install", "transformers"])
                 from transformers import AutoTokenizer
-                print("✅ 'transformers' installed successfully.")
+                print("[INFO] 'transformers' installed successfully.")
             except subprocess.CalledProcessError as e:
-                print(f"🛑 Failed to install 'transformers'. Please install it manually: pip install transformers. Error: {e}")
+                print(f"[ERROR] Failed to install 'transformers'. Please install it manually: pip install transformers. Error: {e}")
                 raise ImportError("transformers library is required but installation failed.")
         
-        print(f"🔧 DEBUG: Loading Hugging Face tokenizer: {model_name}")
+        print(f"[DEBUG] Loading Hugging Face tokenizer: {model_name}")
         # from_pretrained lida com o cache automaticamente.
         return AutoTokenizer.from_pretrained(model_name)
     
     elif tokenizer_type == 'tiktoken':
-        print(f"🔧 DEBUG: Loading tiktoken with encoding: {model_name}")
+        print(f"[DEBUG] Loading tiktoken with encoding: {model_name}")
         return tiktoken.get_encoding(model_name)
         
     else:

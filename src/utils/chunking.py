@@ -2,9 +2,12 @@ import tiktoken
 import re
 from typing import List, Dict, Any
 from src.model_management import parse_json_response, load_prompt, validate_json_and_tokens, get_tokenizer
+from src.utils.llm_debug import save_llm_response_debug
+from src.utils.processing import extract_response_content, sanitize_unicode_text
 import unicodedata
 import os
 from tqdm import tqdm
+
 
 class TokenChunk:
     """Simple wrapper for text chunk with content."""
@@ -43,23 +46,12 @@ def get_token_based_chunks(text: str, max_tokens: int,
         start = end
     return chunks
 
-def validate_base_instances_pairs(vulnerabilities: List[Dict]) -> List[Dict]:
-    valid_pairs = []
-    for vuln in vulnerabilities:
-        if isinstance(vuln, dict):
-            base = vuln.get('Name')
-            instances = vuln.get('identification')
-            if base and instances:
-                valid_pairs.append(vuln)
-    return valid_pairs
-
 def build_prompt(doc_chunk: TokenChunk, profile_config: Dict[str, Any]) -> str:
     prompt_template = profile_config.get('prompt_template', '') if profile_config else ''
     # If it's a file path, load content
     if os.path.isfile(prompt_template):
         prompt_template = load_prompt(prompt_template)
     
-    from .processing import sanitize_unicode_text
     sanitized_content = sanitize_unicode_text(doc_chunk.page_content)
     
     if "{context}" in prompt_template:
@@ -93,9 +85,7 @@ def detect_scanner_pattern(text: str, profile_config: dict = None) -> dict:
         return {
             'scanner_type': 'openvas',
             'marker_pattern': r'^\s*NVT:\s',
-            'has_pairs': False,
             'markers_found': len(nvt_matches),
-            'min_chunk_tokens': 800,
             'force_break_at_markers': True,
             'max_vulnerabilities_per_chunk': 5
         }
@@ -103,9 +93,7 @@ def detect_scanner_pattern(text: str, profile_config: dict = None) -> dict:
         return {
             'scanner_type': 'tenable_was',
             'marker_pattern': r'^\s*VULNERABILITY\s+(CRITICAL|HIGH|MEDIUM|LOW)\s+PLUGIN\s+ID\s+\d+',
-            'has_pairs': True,
             'markers_found': len(vuln_matches),
-            'min_chunk_tokens': 1000,
             'force_break_at_markers': True,
             'max_vulnerabilities_per_chunk': 3
         }
@@ -113,12 +101,11 @@ def detect_scanner_pattern(text: str, profile_config: dict = None) -> dict:
         return {
             'scanner_type': 'unknown',
             'marker_pattern': None,
-            'has_pairs': False,
             'markers_found': 0,
             'max_vulnerabilities_per_chunk': 3
         }
 
-def register_scanner_pattern(scanner_name: str, marker_pattern: str, has_pairs: bool = False):
+def register_scanner_pattern(scanner_name: str, marker_pattern: str):
     # Stub for scanner pattern registry
     pass
 
@@ -159,8 +146,6 @@ def split_text_to_subchunks(text: str, target_size: int, profile_config: dict = 
     subchunks = []
     # CUSTOMIZABLE STRATEGY: Use scanner configurations
     vulns_per_chunk = pattern_info.get('max_vulnerabilities_per_chunk', 3)
-    if pattern_info.get('has_pairs'):
-        vulns_per_chunk = max(2, vulns_per_chunk // 2)  # Reduce for pairs
 
     i = 0
     first_chunk = True  # Flag to prefix pre_marker_text only in first chunk
@@ -285,6 +270,149 @@ def _simple_split_by_size(text: str, target_size: int) -> List[str]:
 
     return subchunks if subchunks else [text]
 
+def smart_chunk_vulnerabilities(
+    text: str,
+    marker_pattern: str,
+    max_tokens: int,
+    reserve_for_response: int,
+    max_vulnerabilities_per_chunk: int,
+    tokenizer=None,
+    profile_config: dict = None,
+    scanner_type: str = None
+) -> List[TokenChunk]:
+    """
+    Intelligent chunking that respects ALL constraints simultaneously:
+    - Vulnerability boundaries (marker_pattern)
+    - Token limits (max_tokens - reserve_for_response)
+    - Character size limits (~8000 chars)
+    - Vulnerability count limits (max_vulnerabilities_per_chunk)
+    
+    For Tenable scanners with pairs (vulnerability + instances),
+    automatically reduces max_vulns by half to respect pair boundaries.
+    
+    Args:
+        text: Full block text to chunk
+        marker_pattern: Regex pattern to detect vulnerability start (e.g., "^\\s*NVT:")
+        max_tokens: Maximum tokens per chunk (from LLM config)
+        reserve_for_response: Token reserve for LLM response
+        max_vulnerabilities_per_chunk: Max vulns to group
+        tokenizer: tiktoken tokenizer (or will initialize)
+        profile_config: Profile configuration (optional)
+        scanner_type: Scanner type (e.g., 'tenable' or 'openvas') for pair handling
+    
+    Returns:
+        List[TokenChunk]: Chunks that respect all constraints
+    """
+    from src.model_management import count_tokens
+    
+    # Initialize tokenizer if needed
+    if tokenizer is None:
+        try:
+            tokenizer = tiktoken.encoding_for_model("gpt-3.5-turbo")
+        except:
+            tokenizer = tiktoken.get_encoding("cl100k_base")
+    
+    # Adjust for Tenable pairs (vulnerability + instances)
+    max_vulns_adjusted = max_vulnerabilities_per_chunk
+    if scanner_type and scanner_type.lower() == 'tenable':
+        max_vulns_adjusted = max(2, max_vulnerabilities_per_chunk // 2)
+    elif profile_config and profile_config.get('reader', '').lower() == 'tenable':
+        max_vulns_adjusted = max(2, max_vulnerabilities_per_chunk // 2)
+    
+    # If no marker pattern, fallback to simple token-based chunking
+    if not marker_pattern:
+        return get_token_based_chunks(
+            text,
+            max_tokens=max_tokens,
+            reserve_for_response=reserve_for_response,
+            tokenizer=tokenizer,
+            profile_config=profile_config
+        )
+    
+    # Parse text into lines
+    lines = text.splitlines(keepends=True)
+    if not lines:
+        return [TokenChunk(text)]
+    
+    # Find vulnerability boundaries via marker
+    marker_indices = []
+    for i, line in enumerate(lines):
+        if re.search(marker_pattern, line, re.MULTILINE):
+            marker_indices.append(i)
+    
+    # If no markers found, fallback
+    if not marker_indices:
+        return get_token_based_chunks(
+            text,
+            max_tokens=max_tokens,
+            reserve_for_response=reserve_for_response,
+            tokenizer=tokenizer,
+            profile_config=profile_config
+        )
+    
+    # Calculate effective chunk size
+    chunk_size_tokens = max_tokens - reserve_for_response
+    optimized_target_chars = 8000
+    
+    # Build chunks respecting ALL constraints simultaneously
+    chunks = []
+    i = 0
+    
+    while i < len(marker_indices):
+        current_chunk_lines = []
+        current_chunk_tokens = 0
+        vulns_in_chunk = 0
+        
+        # Progressively add vulnerabilities while all constraints are respected
+        while i < len(marker_indices) and vulns_in_chunk < max_vulns_adjusted:
+            # Determine vulnerability boundaries
+            vuln_start = marker_indices[i]
+            vuln_end = marker_indices[i + 1] if i + 1 < len(marker_indices) else len(lines)
+            
+            vuln_lines = lines[vuln_start:vuln_end]
+            vuln_text = ''.join(vuln_lines)
+            vuln_tokens = count_tokens(vuln_text, tokenizer)
+            
+            # Check if adding this vuln would exceed ANY constraint
+            would_exceed_tokens = (current_chunk_tokens + vuln_tokens) > chunk_size_tokens
+            would_exceed_chars = (len(''.join(current_chunk_lines)) + len(vuln_text)) > optimized_target_chars
+            would_exceed_vulns = vulns_in_chunk >= max_vulns_adjusted
+            
+            # If we have at least 1 vuln and would exceed limit, stop and save chunk
+            if vulns_in_chunk > 0 and (would_exceed_tokens or would_exceed_chars or would_exceed_vulns):
+                break
+            
+            # If this single vuln exceeds token limit, force-include it anyway 
+            # (better to have large vuln intact than break it)
+            if vuln_tokens > chunk_size_tokens and vulns_in_chunk == 0:
+                current_chunk_lines.extend(vuln_lines)
+                current_chunk_tokens += vuln_tokens
+                vulns_in_chunk += 1
+                i += 1
+                # Break here since this alone exceeds limit
+                break
+            
+            # Add vuln to current chunk
+            if not (would_exceed_tokens or would_exceed_chars or would_exceed_vulns):
+                current_chunk_lines.extend(vuln_lines)
+                current_chunk_tokens += vuln_tokens
+                vulns_in_chunk += 1
+                i += 1
+            else:
+                break
+        
+        # Save chunk if not empty
+        if current_chunk_lines:
+            chunk_text = ''.join(current_chunk_lines)
+            chunks.append(TokenChunk(chunk_text))
+    
+    # Fallback if no chunks were created
+    if not chunks:
+        chunks.append(TokenChunk(text))
+    
+    return chunks
+
+
 def intelligent_chunk_redivision(chunk_content: str, max_tokens: int,
                                   error_context: Dict[str, Any],
                                   tokenizer=None) -> List[str]:
@@ -321,27 +449,83 @@ def intelligent_chunk_redivision(chunk_content: str, max_tokens: int,
 
 def robust_chunk_processing(doc_chunk: TokenChunk, llm, profile_config: Dict[str, Any],
                              max_retries: int = 3, tokenizer=None,
-                             max_chunk_size: int = 4096) -> List[Dict]:
+                             max_chunk_size: int = 4096, pdf_name: str = "unknown",
+                             llm_name: str = "unknown", debug_mode: bool = False) -> Dict[str, Any]:
     # Use max_chunk_size instead of getattr(llm, 'max_tokens', 4096)
     max_tokens = max_chunk_size
     all_vulnerabilities = []
+    total_tokens_output = 0
+    
+    # Ensure tokenizer is initialized from LLM config if not provided
+    if tokenizer is None:
+        from src.model_management import get_tokenizer
+        if profile_config and 'llm_config' in profile_config:
+            tokenizer = get_tokenizer(profile_config['llm_config'])
+        else:
+            try:
+                tokenizer = tiktoken.encoding_for_model("gpt-3.5-turbo")
+            except:
+                tokenizer = tiktoken.get_encoding("cl100k_base")
+    
     try:
         attempt_counter = 1
         prompt = build_prompt(doc_chunk, profile_config)
         response = llm.invoke(prompt)
-        validation = validate_json_and_tokens(response, doc_chunk.page_content,
+        response_content = extract_response_content(response)
+        response_tokens = len(tokenizer.encode(response_content)) if response_content else 0
+        total_tokens_output += response_tokens
+        
+        # Validate first before logging
+        validation = validate_json_and_tokens(response_content, doc_chunk.page_content,
                                               max_tokens, prompt, tokenizer=tokenizer)
+        
+        # Debug logging
+        if debug_mode and response_content:
+            prompt_tokens = len(tokenizer.encode(prompt))
+            save_llm_response_debug(
+                pdf_name=pdf_name,
+                llm_name=llm_name,
+                chunk_idx=0,
+                response_content=response_content,
+                retry_count=0,
+                was_redivided=False,
+                parsing_success=validation.get('json_valid', False),
+                validation_success=validation.get('json_valid', False),
+                prompt_tokens=prompt_tokens,
+                response_tokens=response_tokens
+            )
+        
         if validation['json_valid'] and validation['token_valid']:
             tqdm.write(f"✅ [CHUNK] Attempt {attempt_counter}: JSON is valid!")
-            return validation['json_data']
+            return {'vulnerabilities': validation['json_data'], 'tokens_output': total_tokens_output}
         if not validation['needs_redivision']:
             for retry in range(2):
                 attempt_counter += 1
                 response = llm.invoke(prompt)
-                validation = validate_json_and_tokens(response, doc_chunk.page_content,
+                response_content = extract_response_content(response)
+                response_tokens = len(tokenizer.encode(response_content)) if tokenizer else 0
+                total_tokens_output += response_tokens
+                
+                # Debug logging for retry
+                if debug_mode and response_content:
+                    prompt_tokens = len(tokenizer.encode(prompt))
+                    save_llm_response_debug(
+                        pdf_name=pdf_name,
+                        llm_name=llm_name,
+                        chunk_idx=0,
+                        response_content=response_content,
+                        retry_count=retry + 1,
+                        was_redivided=False,
+                        parsing_success=True,
+                        validation_success=True,
+                        prompt_tokens=prompt_tokens,
+                        response_tokens=response_tokens
+                    )
+                
+                validation = validate_json_and_tokens(response_content, doc_chunk.page_content,
                                                       max_tokens, prompt, tokenizer=tokenizer)
                 if validation['json_valid']:
-                    return validation['json_data']
+                    return {'vulnerabilities': validation['json_data'], 'tokens_output': total_tokens_output}
         tqdm.write(f"[CHUNK] Performing intelligent redivision...")
         new_chunks = intelligent_chunk_redivision(
             doc_chunk.page_content, max_tokens, validation,
@@ -353,7 +537,27 @@ def robust_chunk_processing(doc_chunk: TokenChunk, llm, profile_config: Dict[str
             sub_prompt = build_prompt(sub_chunk, profile_config)
             try:
                 sub_response = llm.invoke(sub_prompt)
-                sub_validation = validate_json_and_tokens(sub_response, chunk_content,
+                sub_response_content = extract_response_content(sub_response)
+                response_tokens = len(tokenizer.encode(sub_response_content)) if tokenizer else 0
+                total_tokens_output += response_tokens
+                
+                # Debug logging for subdivided chunks
+                if debug_mode and sub_response_content:
+                    prompt_tokens = len(tokenizer.encode(sub_prompt))
+                    save_llm_response_debug(
+                        pdf_name=pdf_name,
+                        llm_name=llm_name,
+                        chunk_idx=idx,
+                        response_content=sub_response_content,
+                        retry_count=0,
+                        was_redivided=True,
+                        parsing_success=True,
+                        validation_success=True,  # Will be validated right after
+                        prompt_tokens=prompt_tokens,
+                        response_tokens=response_tokens
+                    )
+                
+                sub_validation = validate_json_and_tokens(sub_response_content, chunk_content,
                                                           max_tokens, sub_prompt, tokenizer=tokenizer)
                 if sub_validation['json_valid']:
                     all_vulnerabilities.extend(sub_validation['json_data'])
@@ -362,23 +566,28 @@ def robust_chunk_processing(doc_chunk: TokenChunk, llm, profile_config: Dict[str
             except Exception as e:
                 tqdm.write(f"[CHUNK] Error in subchunk {idx+1}: {e}")
                 continue
-        return all_vulnerabilities
+        return {'vulnerabilities': all_vulnerabilities, 'tokens_output': total_tokens_output}
     except Exception as e:
         tqdm.write(f"[CHUNK] Unexpected error: {e}")
-        return []
+        return {'vulnerabilities': [], 'tokens_output': 0}
 
 def retry_chunk_with_subdivision(doc_chunk: TokenChunk, llm,
                                   profile_config: Dict[str, Any],
                                   max_retries: int = 3, tokenizer=None,
-                                  max_chunk_size: int = 4096) -> List[Dict]:
-    pattern_info = detect_scanner_pattern(doc_chunk.page_content)
-    vulnerabilities = robust_chunk_processing(
+                                  max_chunk_size: int = 4096,
+                                  scanner_type: str = None, pdf_name: str = "unknown",
+                                  llm_name: str = "unknown", debug_mode: bool = False) -> Dict[str, Any]:
+    result = robust_chunk_processing(
         doc_chunk, llm, profile_config, max_retries,
         tokenizer=tokenizer,
-        max_chunk_size=max_chunk_size
+        max_chunk_size=max_chunk_size,
+        pdf_name=pdf_name,
+        llm_name=llm_name,
+        debug_mode=debug_mode
     )
+    vulnerabilities = result.get('vulnerabilities', [])
+    tokens_output = result.get('tokens_output', 0)
+    
     if vulnerabilities:
-        if pattern_info['has_pairs']:
-            return validate_base_instances_pairs(vulnerabilities)
-        return vulnerabilities
-    return []
+        return {'vulnerabilities': vulnerabilities, 'tokens_output': tokens_output}
+    return {'vulnerabilities': [], 'tokens_output': tokens_output}

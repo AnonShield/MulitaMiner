@@ -99,10 +99,16 @@ if __name__ == "__main__":
     parser.add_argument('--llm', help="Name of the LLM to use (e.g., gpt4, deepseek, etc)")
     parser.add_argument('--convert', choices=['csv', 'xlsx', 'tsv', 'all', 'none'], help="Convert output to specific format")
     parser.add_argument('--allow-duplicates', action='store_true', help="Allow duplicate vulnerabilities in the output (default: False)")
+    parser.add_argument('--debug', action='store_true', help="Enable debug logging of raw LLM responses.")
+    parser.add_argument('--debug-dir', type=str, default='llm_debug_responses', help="Directory for debug logs.")
     args, extra = parser.parse_known_args()
     
     if args.allow_duplicates and '--allow-duplicates' not in extra:
         extra.append('--allow-duplicates')
+    if args.debug and '--debug' not in extra:
+        extra.append('--debug')
+    if args.debug_dir != 'llm_debug_responses' and '--debug-dir' not in extra:
+        extra.extend(['--debug-dir', args.debug_dir])
     batch_extract_vulnerabilities(
         input_dir=args.input_dir,
         output_dir=args.output_dir,

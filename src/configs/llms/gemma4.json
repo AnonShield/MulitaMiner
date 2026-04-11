@@ -9,6 +9,6 @@
   "timeout": 300,
   "tokenizer": {
     "type": "huggingface",
-    "model": "google/gemma-2-4b"
+    "model": "google/gemma-4-E4B"
   }
 }

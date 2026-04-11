@@ -5,8 +5,6 @@ Contains tokenization, splitting, retry and consolidation logic.
 
 import unicodedata
 from typing import List, Dict, Any
-from .chunking import validate_base_instances_pairs
-
 
 def normalize_ligatures(text: str) -> str:
     """
@@ -76,3 +74,24 @@ def sanitize_unicode_text(text: str) -> str:
             # Otherwise, ignore
     
     return ''.join(clean_chars)
+
+
+def extract_response_content(response) -> str:
+    """
+    Extract response content from LLM response object.
+    
+    Handles both string responses and LangChain response objects.
+    
+    Args:
+        response: Response from llm.invoke() - can be str or object with .content
+    
+    Returns:
+        Response content as string
+    """
+    if response is None:
+        return ""
+    if isinstance(response, str):
+        return response
+    if hasattr(response, 'content'):
+        return response.content
+    return str(response)

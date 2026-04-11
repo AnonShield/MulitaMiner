@@ -8,6 +8,10 @@ class TenableWASStrategy(ScannerStrategy):
     requires_visual_layout = False
     has_merge_log = True
     
+    def get_custom_activation_value(self) -> bool:
+        """Custom consolidation activates when allow_duplicates=False"""
+        return False
+    
     # Constantes para Tenable
     HEADER_PATTERN = re.compile(
         r'VULNERABILITY\s+(CRITICAL|HIGH|MEDIUM|LOW|INFO)\s+PLUGIN\s+ID\s+\d+',
@@ -175,6 +179,7 @@ class TenableWASStrategy(ScannerStrategy):
         }
     
     def _merge_base_group(self, vulnerabilities, profile_config):
+        """Merge base vulnerabilities with their instances based on Name and plugin."""
         if not vulnerabilities:
             return None
         if len(vulnerabilities) == 1:

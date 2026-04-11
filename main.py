@@ -345,8 +345,15 @@ def main():
         return
 
     # Processamento dos blocos
+    pdf_filename = os.path.basename(args.input)
+    pdf_name = os.path.splitext(pdf_filename)[0]  # Remove extension
+    llm_name = args.llm
+    debug_mode = getattr(args, 'debug', False)
+    debug_dir = getattr(args, 'debug_dir', 'llm_debug_responses')
+    
     all_vulnerabilities = extract_vulns_from_blocks(
-        session_blocks, llm, profile_config, get_token_based_chunks, llm_config=llm_config
+        session_blocks, llm, profile_config, get_token_based_chunks, llm_config=llm_config,
+        pdf_name=pdf_name, llm_name=llm_name, debug_mode=debug_mode
     )
     total_chunks = len(session_blocks)
 

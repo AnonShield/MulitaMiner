@@ -8,13 +8,17 @@ class OpenVASStrategy(ScannerStrategy):
     requires_visual_layout = True
     has_merge_log = False
     
+    def get_custom_activation_value(self) -> bool:
+        """Custom consolidation activates when allow_duplicates=True"""
+        return True
+    
     # Constantes para headers
     HEADER_REGEX = re.compile(
         r"^(?:\d+\.\d+\.\d+\s+)?(Critical|High|Medium|Low|Log)\s+(\d+|general)/([a-zA-Z0-9_-]+)",
         re.IGNORECASE
     )
     HEADER_REGEX_ALT = re.compile(
-        r"^(High|Medium|Low|Log)\s+(\d+|general)/([a-zA-Z0-9_-]+)",
+        r"^(Critical|High|Medium|Low|Log)\s+(\d+|general)/([a-zA-Z0-9_-]+)",
         re.IGNORECASE
     )
     

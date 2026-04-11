@@ -1,9 +1,0 @@
-Total vulnerabilities: 6343
-Total extracted vulnerabilities: 6700
-
-Recall: 6101 of 6343 (0.9618) (coverage: of the real ones, how many were extracted)
-Invented (in dataset but not in vulnnet): 599 (8.94%)
-Missing (in vulnnet but not in dataset): 242 (3.82%)
-Precision: 0.9106 (accuracy: of the total extracted, how many are correct)
-F1-score: 0.9355 (harmonic mean of precision and recall)
-

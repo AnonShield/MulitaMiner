@@ -35,6 +35,8 @@ def main():
     parser.add_argument('--runs-per-model', type=int, default=10, help='Number of runs per model.')
     parser.add_argument('--allow-duplicates', type=str, nargs='+', default=[], help='List of true/false values corresponding to the order of scanners. Example: --scanners openvas tenable --allow-duplicates true false (openvas=True, tenable=False).')
     parser.add_argument('--checkpoint-file', type=str, default=None, help='Checkpoint file to use.')
+    parser.add_argument('--debug', action='store_true', help='Enable debug logging of raw LLM responses.')
+    parser.add_argument('--debug-dir', type=str, default='llm_debug_responses', help='Directory for debug logs.')
     args, unknown = parser.parse_known_args()
 
     if unknown:
@@ -173,6 +175,12 @@ def main():
             
             if allow_duplicates:
                 cmd.append('--allow-duplicates')
+            
+            if args.debug:
+                cmd.append('--debug')
+            
+            if args.debug_dir != 'llm_debug_responses':
+                cmd += ['--debug-dir', args.debug_dir]
             
             print(f"Running extraction + evaluation: {' '.join(cmd)}")
             with subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True, encoding="utf-8", errors="replace") as proc:

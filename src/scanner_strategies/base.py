@@ -9,8 +9,30 @@ class ScannerStrategy(ABC):
     scanner_name: str = 'base'
     requires_visual_layout: bool = False
     
+    def get_custom_activation_value(self) -> bool | set | list | tuple | None:
+        """
+        Define em qual valor de allow_duplicates este custom deve ativar.
+        
+        Retorna:
+            True: custom ativa quando allow_duplicates=True
+            False: custom ativa quando allow_duplicates=False
+            {True, False} ou [True, False]: custom ativa em AMBOS os casos
+            None: sem custom (usa default sempre)
+        
+        Exemplos:
+            return True                    # Custom só para True
+            return False                   # Custom só para False
+            return {True, False}           # Custom para ambos
+            return None                    # Sem custom (default)
+        """
+        return None  # Default: sem custom
+    
     @abstractmethod
     def vulnerability_processing_logic(self, vulns: List[Dict], allow_duplicates: bool = True, profile_config: Dict = None) -> List[Dict]:
+        """Process extracted vulnerabilities with scanner-specific logic.
+        Override for custom processing (e.g., deduplication, severity normalization).
+        Default: default allow-duplicates behavior.
+        """
         pass
     
     def extract_visual_context(self, visual_layout_path: str) -> Tuple[List, None, None, None]:

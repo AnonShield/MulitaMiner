@@ -34,6 +34,13 @@ def parse_arguments() -> argparse.Namespace:
     evaluation_group.add_argument('--allow-duplicates', dest='allow_duplicates', action='store_true',
                                  help='Allow legitimate duplicates in baseline during evaluation (default: False)')
     
+    # Debug options group
+    debug_group = parser.add_argument_group('Debug Options')
+    debug_group.add_argument('--debug', dest='debug', action='store_true',
+                           help='Enable debug logging of raw LLM responses (saves to llm_debug_responses/). Note: increases disk I/O (default: False)')
+    debug_group.add_argument('--debug-dir', dest='debug_dir', default='llm_debug_responses',
+                           help='Directory for debug logs (default: llm_debug_responses)')
+    
     # Internal flag for experiment script
     parser.add_argument('--run-experiments', action='store_true', help=argparse.SUPPRESS) # Hide from help
     

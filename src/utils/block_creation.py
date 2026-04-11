@@ -44,7 +44,8 @@ def create_session_blocks_from_text(report_text: str, temp_dir: str = 'temp_bloc
     return strategy.create_blocks(report_text, temp_dir, context)
 
 def extract_vulns_from_blocks(blocks: list, llm, profile_config: dict,
-                               chunk_func, llm_config: dict = None) -> list:
+                               chunk_func, llm_config: dict = None, pdf_name: str = "unknown",
+                               llm_name: str = "unknown", debug_mode: bool = False) -> list:
     """
     For each session block, apply chunking and extract vulnerabilities, propagating port/protocol.
     
@@ -89,22 +90,29 @@ def extract_vulns_from_blocks(blocks: list, llm, profile_config: dict,
     # Count total chunks for progress bar
     total_chunks = 0
     block_chunks_map = []
+    
+    # Get scanner type and chunking config from profile
+    scanner_type = profile_config.get('reader', '').lower() if profile_config else 'unknown'
+    chunking_config = profile_config.get('chunking', {}) if profile_config else {}
+    marker_pattern = chunking_config.get('marker_pattern', None)
+    max_vulnerabilities_per_chunk = chunking_config.get('max_vulnerabilities_per_chunk', 3)
+    
     for block_idx, block in enumerate(blocks):
         with open(block['file'], 'r', encoding='utf-8') as f:
             block_text = f.read()
-            chunks = []
             
-            # MARKER-first for all scanners (respects vulnerability boundaries)
-            # Then refine with tokenizer to respect max_chunk_size
-            subs = split_text_to_subchunks(block_text, target_size=8000,
-                                            profile_config=profile_config)
-            for s in subs:
-                chunks.extend(get_token_based_chunks(
-                    s,
-                    max_tokens=max_chunk_size,
-                    reserve_for_response=reserve_for_response,
-                    tokenizer=tokenizer
-                ))
+            # Smart chunking: respects markers, tokens, vuln count, size simultaneously
+            from src.utils.chunking import smart_chunk_vulnerabilities
+            chunks = smart_chunk_vulnerabilities(
+                text=block_text,
+                marker_pattern=marker_pattern,
+                max_tokens=max_chunk_size,
+                reserve_for_response=reserve_for_response,
+                max_vulnerabilities_per_chunk=max_vulnerabilities_per_chunk,
+                tokenizer=tokenizer,
+                profile_config=profile_config,
+                scanner_type=scanner_type
+            )
         block_chunks_map.append((block, chunks))
         total_chunks += len(chunks)
 
@@ -112,26 +120,34 @@ def extract_vulns_from_blocks(blocks: list, llm, profile_config: dict,
     with tqdm(total=total_chunks, desc="Processing blocks", unit="chunk", ncols=80) as pbar:
         for block_idx, (block, chunks) in enumerate(block_chunks_map):
             for chunk in chunks:
-                # Monta prompt
+                # Build prompt once to count input tokens correctly
+                # (includes template + Unicode sanitization)
                 from src.utils.chunking import build_prompt
                 prompt = build_prompt(chunk, profile_config)
+                
+                # Count input tokens from the actual prompt that will be sent
+                tokens_input = count_tokens(prompt, tokenizer)
 
                 # A lógica de invocação e retry foi movida para retry_chunk_with_subdivision
                 # para centralizar o tratamento de erros e redivisão.
                 max_retries = 3 # Default
-                vulns = retry_chunk_with_subdivision(
+                chunk_result = retry_chunk_with_subdivision(
                     chunk, llm, profile_config, max_retries,
                     tokenizer=tokenizer,
-                    max_chunk_size=max_chunk_size
+                    max_chunk_size=max_chunk_size,
+                    scanner_type=scanner_type,
+                    pdf_name=pdf_name,
+                    llm_name=llm_name,
+                    debug_mode=debug_mode
                 )
-
-                # Contagem de tokens apenas do input (output é contabilizado internamente no retry)
-                tokens_input = count_tokens(prompt, tokenizer)
+                vulns = chunk_result.get('vulnerabilities', [])
+                tokens_output = chunk_result.get('tokens_output', 0)
 
                 tokens_info.append({
                     'block_idx': block_idx,
                     'chunk_text': chunk.page_content,
-                    'tokens_input': tokens_input
+                    'tokens_input': tokens_input,
+                    'tokens_output': tokens_output
                 })
 
                 if profile_config and profile_config.get('reader', '').lower() == 'tenable':

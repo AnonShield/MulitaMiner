@@ -1,0 +1,2 @@
+FROM mistral
+PARAMETER num_ctx 8192

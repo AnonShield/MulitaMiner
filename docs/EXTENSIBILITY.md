@@ -80,17 +80,53 @@ SCANNER_STRATEGIES = {
 
 ### 4. (Optional) Custom Consolidation Logic
 
-If the scanner needs special rules to group/merge vulnerabilities:
+If your scanner needs special rules to group/merge vulnerabilities, implement a **modular activation system** that gives users control over when custom consolidation activates:
+
+#### Step 1: Create Your Strategy Class
 
 1. Create a class in a new `.py` file inside `src/scanner_strategies/` (e.g., `mycustomscanner.py`)
 2. Inherit from `ScannerStrategy` (see `base.py`)
-3. Implement the method `vulnerability_processing_logic(self, vulns, allow_duplicates=True, profile_config=None)` - this is where your consolidation/deduplication logic goes
-4. (Optional) Override `get_consolidation_report()` to provide structured information about your consolidation process
-5. Register your class in `src/scanner_strategies/registry.py`
+3. Register your class in `src/scanner_strategies/registry.py`
 
 The key you use to register must match the scanner name declared in your profile JSON.
 
-#### Required Method: `vulnerability_processing_logic`
+#### Step 2: Implement `get_custom_activation_value()` (REQUIRED)
+
+This method defines **WHEN** your custom consolidation activates:
+
+```python
+def get_custom_activation_value(self) -> bool | set | list | tuple | None:
+    """
+    Define when custom consolidation activates based on --allow-duplicates flag.
+    
+    Returns:
+        bool:              Activates when flag matches (True or False)
+        set/list/tuple:    Activates for multiple flag values (e.g., {True, False})
+        None:              No custom consolidation (always use default)
+    
+    Examples:
+        return True           # Custom runs when --allow-duplicates is provided
+        return False          # Custom runs when --allow-duplicates is NOT provided
+        return {True, False}  # Custom runs in BOTH cases (but with different logic)
+        return None           # No custom (always use default deduplication)
+    """
+    # Example: activate custom when user wants NO duplicates
+    return False
+```
+
+**Behavior Matrix:**
+
+| Your Custom Activation | CLI Flag | Result |
+|------------------------|----------|--------|
+| `True` | `--allow-duplicates` | ✅ Runs CUSTOM |
+| `True` | (no flag) | Runs DEFAULT |
+| `False` | `--allow-duplicates` | Runs DEFAULT |
+| `False` | (no flag) | ✅ Runs CUSTOM |
+| `{True, False}` | `--allow-duplicates` | ✅ Runs CUSTOM (True logic) |
+| `{True, False}` | (no flag) | ✅ Runs CUSTOM (False logic) |
+| `None` | Any | Always DEFAULT |
+
+#### Step 3: Implement `vulnerability_processing_logic()` (REQUIRED)
 
 ```python
 def vulnerability_processing_logic(self, vulns: List[Dict], allow_duplicates: bool = True, profile_config: Dict = None) -> List[Dict]:
@@ -99,7 +135,7 @@ def vulnerability_processing_logic(self, vulns: List[Dict], allow_duplicates: bo
 
     Args:
         vulns: List of vulnerability dictionaries
-        allow_duplicates: Flag indicating deduplication preference (your strategy can ignore this)
+        allow_duplicates: Current flag value (for reference in dual-custom scenarios)
         profile_config: Scanner profile configuration dict
 
     Returns:
@@ -124,9 +160,9 @@ def vulnerability_processing_logic(self, vulns: List[Dict], allow_duplicates: bo
     return result
 ```
 
-#### Optional Method: `get_consolidation_report`
+#### Step 4: Implement `get_consolidation_report()` (OPTIONAL)
 
-Override this method to provide detailed, human-readable information about your consolidation process. This report will be included in the consolidation log file.
+Override this method to provide detailed information about your consolidation process:
 
 ```python
 def get_consolidation_report(self, input_count: int, output_count: int, removed: int) -> Dict:
@@ -153,7 +189,32 @@ def get_consolidation_report(self, input_count: int, output_count: int, removed:
     }
 ```
 
-**Example:** See `src/scanner_strategies/openvas.py` for a complete implementation.
+#### Advanced Example: Dual Custom (Different Logic per Flag)
+
+If you need DIFFERENT logic depending on the flag value:
+
+```python
+def get_custom_activation_value(self) -> bool | set | list | tuple | None:
+    return {True, False}  # Activate in BOTH cases
+
+def vulnerability_processing_logic(self, vulns: List[Dict], allow_duplicates: bool = True, profile_config: Dict = None) -> List[Dict]:
+    if allow_duplicates is True:
+        # Logic A: Keep all distinct names, merge by port
+        return self._merge_by_port(vulns)
+    else:
+        # Logic B: Keep all distinct names+plugin, strong consolidation
+        return self._consolidate_by_plugin(vulns)
+
+def _merge_by_port(self, vulns):
+    # Your Port-based merge logic
+    pass
+
+def _consolidate_by_plugin(self, vulns):
+    # Your plugin-based consolidation logic
+    pass
+```
+
+**Examples:** See `src/scanner_strategies/openvas.py` and `src/scanner_strategies/tenablewas.py` for complete implementations.
 
 ### Understanding the Consolidation Pipeline
 
