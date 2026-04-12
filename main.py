@@ -296,6 +296,8 @@ def main():
     
     if 'max_completion_tokens' in llm_config:
         max_tokens = llm_config.get('max_completion_tokens', 4096)
+    elif llm_config.get('provider') == 'ollama' and 'options' in llm_config:
+        max_tokens = llm_config['options'].get('num_ctx', 4096)
     else:
         max_tokens = llm_config.get('max_tokens', 4096)
     

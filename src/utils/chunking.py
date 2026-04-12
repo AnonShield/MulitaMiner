@@ -123,8 +123,9 @@ def split_text_to_subchunks(text: str, target_size: int, profile_config: dict = 
     if not lines:
         return [text]
 
-    # Apply hard limit: never exceed 8K chars to prevent cascading redivisions
-    optimized_target = min(target_size, 8000)
+    # Use target_size directly without overly aggressive hard limit
+    # Allow up to 50K chars for better context preservation
+    optimized_target = min(target_size, 50000)
 
     # Detect pattern with customizable configurations
     pattern_info = detect_scanner_pattern(text, profile_config)
@@ -361,10 +362,10 @@ def smart_chunk_vulnerabilities(
     # Use full text for exact proportion (no approximation error from sampling)
     token_count = count_tokens(text, tokenizer)
     chars_per_token = len(text) / max(token_count, 1)
-    # Apply 70% safety margin to account for local variation in token density
-    optimized_target_chars = int(chunk_size_tokens * chars_per_token * 0.7)
-    # Hard limit: never exceed 8K chars to prevent cascading redivisions
-    optimized_target_chars = min(optimized_target_chars, 8000)
+    # Apply 85% safety margin to balance safety and chunk size
+    optimized_target_chars = int(chunk_size_tokens * chars_per_token * 0.85)
+    # Relaxed limit: respect LLM config capacity instead of hardcoding 8K
+    optimized_target_chars = min(optimized_target_chars, max(30000, chunk_size_tokens * 2))
     
     # Build chunks respecting ALL constraints simultaneously
     chunks = []
@@ -453,14 +454,14 @@ def intelligent_chunk_redivision(chunk_content: str, max_tokens: int,
     base_target = max_tokens - reserve_for_response
     token_count = max(count_tokens(chunk_content, tokenizer), 1)
     chars_per_token = len(chunk_content) / token_count
-    target_chars = int(base_target * chars_per_token * 0.7)
+    target_chars = int(base_target * chars_per_token * 0.85)
 
     if not error_context.get('token_valid', True):
-        target_chars = min(target_chars, len(chunk_content) // 3)
+        target_chars = min(target_chars, len(chunk_content) // 2)
     if "JSON mal formado" in str(error_context.get('errors', [])):
-        target_chars = min(target_chars, len(chunk_content) // 4)
+        target_chars = min(target_chars, len(chunk_content) // 3)
     if "truncada" in str(error_context.get('errors', [])):
-        target_chars = min(target_chars, len(chunk_content) // 5)
+        target_chars = min(target_chars, len(chunk_content) // 3)
 
     new_chunks = split_text_to_subchunks(chunk_content, target_chars)
     validated_chunks = []
