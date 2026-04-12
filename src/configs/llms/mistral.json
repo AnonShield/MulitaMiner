@@ -1,11 +1,11 @@
 {
   "provider": "ollama",
-  "model": "mistral",
+  "model": "mistral-custom",
   "endpoint": "http://localhost:11434",
   "temperature": 0.0,
-  "max_tokens": 5000,
-  "max_chunk_size": 4500,
-  "reserve_for_response": 1000,
+  "max_tokens": 1500,
+  "max_chunk_size": 5500,
+  "reserve_for_response": 1500,
   "timeout": 300,
   "tokenizer": {
     "type": "huggingface",

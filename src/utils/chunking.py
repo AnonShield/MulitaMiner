@@ -112,6 +112,9 @@ def register_scanner_pattern(scanner_name: str, marker_pattern: str):
 def split_text_to_subchunks(text: str, target_size: int, profile_config: dict = None) -> List[str]:
     """
     Divide text into smaller subchunks - VERSION THAT RESPECTS MARKERS.
+    
+    The target_size parameter is expected to already be optimized by the caller
+    (typically intelligent_chunk_redivision which calculates it dynamically).
     """
     if len(text) <= target_size:
         return [text]
@@ -120,8 +123,8 @@ def split_text_to_subchunks(text: str, target_size: int, profile_config: dict = 
     if not lines:
         return [text]
 
-    # OPTIMIZATION: Use scanner configurations if available
-    optimized_target = min(target_size, 8000)  # Maximum 8K chars per chunk
+    # Apply hard limit: never exceed 8K chars to prevent cascading redivisions
+    optimized_target = min(target_size, 8000)
 
     # Detect pattern with customizable configurations
     pattern_info = detect_scanner_pattern(text, profile_config)
@@ -284,11 +287,8 @@ def smart_chunk_vulnerabilities(
     Intelligent chunking that respects ALL constraints simultaneously:
     - Vulnerability boundaries (marker_pattern)
     - Token limits (max_tokens - reserve_for_response)
-    - Character size limits (~8000 chars)
+    - Character size limits (dynamically calculated from tokenizer)
     - Vulnerability count limits (max_vulnerabilities_per_chunk)
-    
-    For Tenable scanners with pairs (vulnerability + instances),
-    automatically reduces max_vulns by half to respect pair boundaries.
     
     Args:
         text: Full block text to chunk
@@ -296,28 +296,32 @@ def smart_chunk_vulnerabilities(
         max_tokens: Maximum tokens per chunk (from LLM config)
         reserve_for_response: Token reserve for LLM response
         max_vulnerabilities_per_chunk: Max vulns to group
-        tokenizer: tiktoken tokenizer (or will initialize)
-        profile_config: Profile configuration (optional)
-        scanner_type: Scanner type (e.g., 'tenable' or 'openvas') for pair handling
+        tokenizer: tiktoken tokenizer (or will initialize from config)
+        profile_config: Profile configuration (optional, used to extract llm_config)
+        scanner_type: Scanner type (e.g., 'tenable' or 'openvas')
     
     Returns:
         List[TokenChunk]: Chunks that respect all constraints
     """
-    from src.model_management import count_tokens
+    from src.model_management import count_tokens, get_tokenizer
     
-    # Initialize tokenizer if needed
+    # Initialize tokenizer if needed - prioritize config-based tokenizer
     if tokenizer is None:
-        try:
-            tokenizer = tiktoken.encoding_for_model("gpt-3.5-turbo")
-        except:
-            tokenizer = tiktoken.get_encoding("cl100k_base")
+        llm_config = None
+        if profile_config and 'llm_config' in profile_config:
+            llm_config = profile_config['llm_config']
+        
+        if llm_config:
+            tokenizer = get_tokenizer(llm_config)
+        else:
+            # Fallback only if no config available
+            try:
+                tokenizer = tiktoken.encoding_for_model("gpt-3.5-turbo")
+            except:
+                tokenizer = tiktoken.get_encoding("cl100k_base")
     
-    # Adjust for Tenable pairs (vulnerability + instances)
+    # No pair-handling adjustment - Tenable always has instances field
     max_vulns_adjusted = max_vulnerabilities_per_chunk
-    if scanner_type and scanner_type.lower() == 'tenable':
-        max_vulns_adjusted = max(2, max_vulnerabilities_per_chunk // 2)
-    elif profile_config and profile_config.get('reader', '').lower() == 'tenable':
-        max_vulns_adjusted = max(2, max_vulnerabilities_per_chunk // 2)
     
     # If no marker pattern, fallback to simple token-based chunking
     if not marker_pattern:
@@ -352,7 +356,15 @@ def smart_chunk_vulnerabilities(
     
     # Calculate effective chunk size
     chunk_size_tokens = max_tokens - reserve_for_response
-    optimized_target_chars = 8000
+    
+    # Calculate optimized_target_chars dynamically based on actual text characteristics
+    # Use full text for exact proportion (no approximation error from sampling)
+    token_count = count_tokens(text, tokenizer)
+    chars_per_token = len(text) / max(token_count, 1)
+    # Apply 70% safety margin to account for local variation in token density
+    optimized_target_chars = int(chunk_size_tokens * chars_per_token * 0.7)
+    # Hard limit: never exceed 8K chars to prevent cascading redivisions
+    optimized_target_chars = min(optimized_target_chars, 8000)
     
     # Build chunks respecting ALL constraints simultaneously
     chunks = []
@@ -382,17 +394,18 @@ def smart_chunk_vulnerabilities(
             if vulns_in_chunk > 0 and (would_exceed_tokens or would_exceed_chars or would_exceed_vulns):
                 break
             
-            # If this single vuln exceeds token limit, force-include it anyway 
-            # (better to have large vuln intact than break it)
+            # If this single vuln exceeds token limit on its own, include it anyway
+            # but save the chunk immediately - let intelligent_chunk_redivision handle subdivision if needed
             if vuln_tokens > chunk_size_tokens and vulns_in_chunk == 0:
+                tqdm.write(f"[CHUNK] Warning: Vulnerability spans {vuln_tokens} tokens (limit: {chunk_size_tokens}). "
+                           "Sending anyway for redivision if needed.")
                 current_chunk_lines.extend(vuln_lines)
                 current_chunk_tokens += vuln_tokens
                 vulns_in_chunk += 1
                 i += 1
-                # Break here since this alone exceeds limit
-                break
+                break  # Save chunk and let redivision handle it
             
-            # Add vuln to current chunk
+            # Add vuln to current chunk if within all constraints
             if not (would_exceed_tokens or would_exceed_chars or would_exceed_vulns):
                 current_chunk_lines.extend(vuln_lines)
                 current_chunk_tokens += vuln_tokens
@@ -415,7 +428,20 @@ def smart_chunk_vulnerabilities(
 
 def intelligent_chunk_redivision(chunk_content: str, max_tokens: int,
                                   error_context: Dict[str, Any],
-                                  tokenizer=None) -> List[str]:
+                                  tokenizer=None, reserve_for_response: int = 1000) -> List[str]:
+    """
+    Intelligently redivide a failed chunk based on error context.
+    
+    Args:
+        chunk_content: Content that failed validation
+        max_tokens: Maximum tokens per chunk (from LLM config)
+        error_context: Error details that triggered redivision (token_valid, errors, etc.)
+        tokenizer: Tokenizer to use for token counting
+        reserve_for_response: Token reserve for LLM response (default: 1000, consistent with chunking)
+    
+    Returns:
+        List of smaller chunks
+    """
     if tokenizer is None:
         try:
             tokenizer = tiktoken.encoding_for_model("gpt-3.5-turbo")
@@ -424,7 +450,7 @@ def intelligent_chunk_redivision(chunk_content: str, max_tokens: int,
 
     from src.model_management import count_tokens
 
-    base_target = max_tokens - 2000
+    base_target = max_tokens - reserve_for_response
     token_count = max(count_tokens(chunk_content, tokenizer), 1)
     chars_per_token = len(chunk_content) / token_count
     target_chars = int(base_target * chars_per_token * 0.7)
@@ -506,7 +532,11 @@ def robust_chunk_processing(doc_chunk: TokenChunk, llm, profile_config: Dict[str
                 response_tokens = len(tokenizer.encode(response_content)) if tokenizer else 0
                 total_tokens_output += response_tokens
                 
-                # Debug logging for retry
+                # Validate first to get real success flags
+                validation = validate_json_and_tokens(response_content, doc_chunk.page_content,
+                                                      max_tokens, prompt, tokenizer=tokenizer)
+                
+                # Debug logging with actual validation results
                 if debug_mode and response_content:
                     prompt_tokens = len(tokenizer.encode(prompt))
                     save_llm_response_debug(
@@ -516,14 +546,12 @@ def robust_chunk_processing(doc_chunk: TokenChunk, llm, profile_config: Dict[str
                         response_content=response_content,
                         retry_count=retry + 1,
                         was_redivided=False,
-                        parsing_success=True,
-                        validation_success=True,
+                        parsing_success=validation.get('json_valid', False),
+                        validation_success=validation.get('json_valid', False) and validation.get('token_valid', False),
                         prompt_tokens=prompt_tokens,
                         response_tokens=response_tokens
                     )
                 
-                validation = validate_json_and_tokens(response_content, doc_chunk.page_content,
-                                                      max_tokens, prompt, tokenizer=tokenizer)
                 if validation['json_valid']:
                     return {'vulnerabilities': validation['json_data'], 'tokens_output': total_tokens_output}
         tqdm.write(f"[CHUNK] Performing intelligent redivision...")
@@ -541,7 +569,11 @@ def robust_chunk_processing(doc_chunk: TokenChunk, llm, profile_config: Dict[str
                 response_tokens = len(tokenizer.encode(sub_response_content)) if tokenizer else 0
                 total_tokens_output += response_tokens
                 
-                # Debug logging for subdivided chunks
+                # Validate first to get real success flags
+                sub_validation = validate_json_and_tokens(sub_response_content, chunk_content,
+                                                          max_tokens, sub_prompt, tokenizer=tokenizer)
+                
+                # Debug logging with actual validation results
                 if debug_mode and sub_response_content:
                     prompt_tokens = len(tokenizer.encode(sub_prompt))
                     save_llm_response_debug(
@@ -551,14 +583,12 @@ def robust_chunk_processing(doc_chunk: TokenChunk, llm, profile_config: Dict[str
                         response_content=sub_response_content,
                         retry_count=0,
                         was_redivided=True,
-                        parsing_success=True,
-                        validation_success=True,  # Will be validated right after
+                        parsing_success=sub_validation.get('json_valid', False),
+                        validation_success=sub_validation.get('json_valid', False) and sub_validation.get('token_valid', False),
                         prompt_tokens=prompt_tokens,
                         response_tokens=response_tokens
                     )
                 
-                sub_validation = validate_json_and_tokens(sub_response_content, chunk_content,
-                                                          max_tokens, sub_prompt, tokenizer=tokenizer)
                 if sub_validation['json_valid']:
                     all_vulnerabilities.extend(sub_validation['json_data'])
                 else:

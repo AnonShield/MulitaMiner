@@ -7,7 +7,7 @@
   "max_chunk_size": 6500,
   "reserve_for_response": 1200,
   "tokenizer": {
-    "type": "tiktoken",
-    "model": "cl100k_base"
+    "type": "huggingface",
+    "model": "meta-llama/llama-4-scout-17b-16e-instruct"
   }
 }

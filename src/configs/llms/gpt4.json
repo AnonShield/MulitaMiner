@@ -3,9 +3,9 @@
   "endpoint": "https://api.openai.com/v1",
   "model": "gpt-4o-mini-2024-07-18",
   "temperature": 0.0,
-  "max_completion_tokens": 12000,
-  "max_chunk_size": 10000,
-  "reserve_for_response": 2000,
+  "max_completion_tokens": 14500,
+  "max_chunk_size": 14000,
+  "reserve_for_response": 3500,
   "tokenizer": {
     "type": "tiktoken",
     "model": "cl100k_base"

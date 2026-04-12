@@ -531,7 +531,14 @@ def process_extraction_comparison_bertscore(baseline_df: pd.DataFrame, extractio
                 "Category": "Non-existent",
                 "Type": "Non-existent (excess duplicate)"
             })
-        # UNMATCHED does not mark absent, only unpaired baseline enters as absent
+        elif row["_status"] == "UNMATCHED":
+            # Pure LLM invention: no match in baseline
+            categorization_records.append({
+                "Vulnerability_Name": row["Name"],
+                "Avg_BERTScore_F1": 0.0,
+                "Category": "Non-existent",
+                "Type": "Non-existent (LLM invention)"
+            })
 
     # Calculate matched_counts based on REAL matches (status OK), not final_map
     # Need to track which baseline was used for each extraction OK

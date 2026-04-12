@@ -464,7 +464,7 @@ def process_extraction_comparison(baseline_df: pd.DataFrame, extraction_df: pd.D
                 "Category": "Non-existent",
                 "Type": "Non-existent (excess duplicate)"
             })
-        else:
+        elif row["_status"] == "UNMATCHED":
             # 2b) Non-existent: from extraction without match in baseline
             categorization_records.append({
                 "Vulnerability_Name": row["Name"],

@@ -9,7 +9,7 @@ LLM_PRICES = {
     "deepseek": {"input": 0.28, "output": 0.42},
     "llama3": {"input": 0.59, "output": 0.79},
     "llama4": {"input": 0.11, "output": 0.34},
-    "gpt4": {"input": 0.30, "output": 1.20},
+    "gpt4": {"input": 0.15, "output": 0.6},
 }
 
 # Map model names to LLM_PRICES keys

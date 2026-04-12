@@ -16,9 +16,13 @@ import os
 from pathlib import Path
 from datetime import datetime
 from typing import Optional, Dict, Any
+import uuid
 
 
 DEFAULT_DEBUG_DIR = "llm_debug_responses"
+
+# Cache for session-specific filenames (stores one per pdf/llm/scenario combination)
+_session_files = {}
 
 
 def ensure_debug_directory(pdf_name: str, llm_name: str, scenario: str = "default", 
@@ -41,6 +45,24 @@ def ensure_debug_directory(pdf_name: str, llm_name: str, scenario: str = "defaul
     debug_path = Path(debug_dir) / scenario / pdf_name / llm_name
     debug_path.mkdir(parents=True, exist_ok=True)
     return debug_path
+
+
+def _get_session_filename(pdf_name: str, llm_name: str, scenario: str, debug_dir: str) -> Path:
+    """
+    Get or create a unique session filename (timestamp + UUID).
+    Generated once per pdf/llm/scenario combination and reused for all responses.
+    """
+    session_key = (pdf_name, llm_name, scenario, debug_dir)
+    
+    if session_key not in _session_files:
+        debug_path = ensure_debug_directory(pdf_name, llm_name, scenario, debug_dir)
+        # Generate session file ONCE with timestamp + UUID
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        unique_id = str(uuid.uuid4())[:8]
+        filename = f"responses_{timestamp}_{unique_id}.jsonl"
+        _session_files[session_key] = debug_path / filename
+    
+    return _session_files[session_key]
 
 
 def save_llm_response_debug(
@@ -97,12 +119,11 @@ def save_llm_response_debug(
         )
     """
     try:
-        debug_path = ensure_debug_directory(pdf_name, llm_name, scenario, debug_dir)
-        responses_file = debug_path / "responses.jsonl"
+        # Use session-specific filename (generated once, reused for all responses)
+        responses_file = _get_session_filename(pdf_name, llm_name, scenario, debug_dir)
         
         # Build response entry
         entry = {
-            "timestamp": datetime.now().isoformat(),
             "chunk_idx": chunk_idx,
             "retry_count": retry_count,
             "was_redivided": was_redivided,
@@ -128,7 +149,8 @@ def save_llm_response_debug(
 def get_debug_response_path(pdf_name: str, llm_name: str, scenario: str = "default",
                            debug_dir: str = DEFAULT_DEBUG_DIR) -> Path:
     """
-    Get the path to JSONL debug responses file.
+    Get the path to debug responses files (returns directory containing matching files).
+    Note: Multiple timestamped files may exist in the directory.
     
     Args:
         pdf_name: PDF file name
@@ -137,16 +159,17 @@ def get_debug_response_path(pdf_name: str, llm_name: str, scenario: str = "defau
         debug_dir: Root debug directory name
     
     Returns:
-        Path to responses.jsonl file
+        Path to debug directory (contains responses_*.jsonl files)
     """
     debug_path = ensure_debug_directory(pdf_name, llm_name, scenario, debug_dir)
-    return debug_path / "responses.jsonl"
+    return debug_path
 
 
 def load_debug_responses(pdf_name: str, llm_name: str, scenario: str = "default",
                         debug_dir: str = DEFAULT_DEBUG_DIR) -> list:
     """
     Load all debug responses for a specific PDF/LLM combination.
+    Reads all responses_*.jsonl files in the debug directory.
     
     Args:
         pdf_name: PDF file name
@@ -155,22 +178,24 @@ def load_debug_responses(pdf_name: str, llm_name: str, scenario: str = "default"
         debug_dir: Root debug directory name
     
     Returns:
-        List of response dictionaries (empty list if file doesn't exist)
+        List of response dictionaries (empty list if directory doesn't exist)
     """
-    responses_file = get_debug_response_path(pdf_name, llm_name, scenario, debug_dir)
+    debug_path = get_debug_response_path(pdf_name, llm_name, scenario, debug_dir)
     
-    if not responses_file.exists():
+    if not debug_path.exists():
         return []
     
     responses = []
     try:
-        with open(responses_file, 'r', encoding='utf-8') as f:
-            for line in f:
-                if line.strip():
-                    try:
-                        responses.append(json.loads(line))
-                    except json.JSONDecodeError:
-                        pass
+        # Read all responses_*.jsonl files in the directory
+        for responses_file in sorted(debug_path.glob("responses_*.jsonl")):
+            with open(responses_file, 'r', encoding='utf-8') as f:
+                for line in f:
+                    if line.strip():
+                        try:
+                            responses.append(json.loads(line))
+                        except json.JSONDecodeError:
+                            pass
     except Exception as e:
         pass
     
