@@ -1,2 +1,2 @@
 FROM gemma4:e4b
-PARAMETER num_ctx 8192
+PARAMETER num_ctx 20000
