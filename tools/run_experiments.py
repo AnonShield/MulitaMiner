@@ -228,18 +228,8 @@ def main():
     )
     print("[INFO] Final report generated.")
 
-    print("[INFO] Generating charts with process_results.py...")
-    try:
-        subprocess.run([
-            sys.executable,
-            os.path.join(os.path.dirname(__file__), "process_results.py")
-        ], check=True)
-        print("[INFO] Charts generated successfully.")
-    except Exception as e:
-        print(f"[ERROR] Failed to generate charts: {e}")
-
     # ─────────────────────────────────────────────────────────────
-    # NEW: Generate interactive metrics report with PNG export
+    # Generate interactive metrics report with PNG export
     # ─────────────────────────────────────────────────────────────
     print("\n[INFO] Generating interactive metrics dashboard and PNG charts...")
     try:
@@ -255,9 +245,9 @@ def main():
                             if f.startswith('metrics_report_') and f.endswith('.html')])
             if reports:
                 latest_report = os.path.join(plot_dir, reports[-1])
-                print(f"\n[SUCCESS] ✨ Interactive report generated!")
-                print(f"[SUCCESS] 📊 Open in browser: {latest_report}")
-                print(f"[SUCCESS] ⏱️  Total experiment time: {int(duration // 60)}m {int(duration % 60)}s")
+                print(f"\n[SUCCESS] Interactive report generated!")
+                print(f"[SUCCESS] Open in browser: {latest_report}")
+                print(f"[SUCCESS] Total experiment time: {int(duration // 60)}m {int(duration % 60)}s")
         
     except Exception as e:
         print(f"[WARNING] Failed to generate Plotly report: {e}")

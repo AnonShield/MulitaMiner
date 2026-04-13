@@ -201,37 +201,3 @@ All these models have been tested and verified working in real scenarios:
 | Model                | Provider   | Inference Speed | Memory Req | Quality   | Status    |
 | -------------------- | ---------- | --------------- | ---------- | --------- | --------- |
 | ibm/granite-4-h-tiny | LLM Studio | ⚡ Moderate     | ~4GB       | Excellent | ✅ Tested |
-
-## Local LLMs Setup
-
-### Option 1: Ollama
-
-Lightweight containerized inference. Supports hundreds of models.
-
-**Installation:**
-
-```bash
-# Download from https://ollama.ai
-ollama serve
-```
-
-Service runs at `http://localhost:11434`
-
-**Pull a model:**
-
-```bash
-ollama pull mistral
-```
-
-### Option 2: LLM Studio
-
-GUI-based model management, optimized for local inference. Excellent for Granite models.
-
-**Installation:**
-
-```bash
-# Download from https://github.com/mlc-ai/llm-studio/releases
-# Extract and run LM Studio
-```
-
-Service runs at `http://localhost:1234`

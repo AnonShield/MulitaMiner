@@ -574,6 +574,34 @@ def collect_absent_nonexistent_data(available_models: List[str], results_dir: st
     return absent_nonexistent_data
 
 
+def collect_fdr_fnr_data(vulnerability_counts: Dict) -> Dict:
+    """
+    Derive FDR and FNR per (model, baseline) from already-collected vulnerability_counts.
+    FDR = 1 - precision  (Invented / (Invented + Matched))
+    FNR = 1 - recall     (Absent   / (Absent + Matched))
+
+    Returns:
+      { model: { baseline: {'FDR': float, 'FNR': float},
+                 'mean':    {'FDR': float, 'FNR': float} } }
+    """
+    result = {}
+    for baseline, models_dict in vulnerability_counts.items():
+        for model, stats in models_dict.items():
+            fdr = round(1.0 - stats.get('precision', 0.0), 4)
+            fnr = round(1.0 - stats.get('recall', 0.0), 4)
+            result.setdefault(model, {})[baseline] = {'FDR': fdr, 'FNR': fnr}
+
+    for model, baselines_dict in result.items():
+        pts = [v for k, v in baselines_dict.items() if k != 'mean']
+        if pts:
+            result[model]['mean'] = {
+                'FDR': round(float(np.mean([p['FDR'] for p in pts])), 4),
+                'FNR': round(float(np.mean([p['FNR'] for p in pts])), 4),
+            }
+
+    return result
+
+
 def collect_vulnerability_counts(available_models: List[str], results_dir: str = "results_runs") -> Dict:
     """
     Collect absolute vulnerability counts from summary files.

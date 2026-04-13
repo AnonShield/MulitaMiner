@@ -98,12 +98,12 @@ This method defines **WHEN** your custom consolidation activates:
 def get_custom_activation_value(self) -> bool | set | list | tuple | None:
     """
     Define when custom consolidation activates based on --allow-duplicates flag.
-    
+
     Returns:
         bool:              Activates when flag matches (True or False)
         set/list/tuple:    Activates for multiple flag values (e.g., {True, False})
         None:              No custom consolidation (always use default)
-    
+
     Examples:
         return True           # Custom runs when --allow-duplicates is provided
         return False          # Custom runs when --allow-duplicates is NOT provided
@@ -116,15 +116,15 @@ def get_custom_activation_value(self) -> bool | set | list | tuple | None:
 
 **Behavior Matrix:**
 
-| Your Custom Activation | CLI Flag | Result |
-|------------------------|----------|--------|
-| `True` | `--allow-duplicates` | ✅ Runs CUSTOM |
-| `True` | (no flag) | Runs DEFAULT |
-| `False` | `--allow-duplicates` | Runs DEFAULT |
-| `False` | (no flag) | ✅ Runs CUSTOM |
-| `{True, False}` | `--allow-duplicates` | ✅ Runs CUSTOM (True logic) |
-| `{True, False}` | (no flag) | ✅ Runs CUSTOM (False logic) |
-| `None` | Any | Always DEFAULT |
+| Your Custom Activation | CLI Flag             | Result                       |
+| ---------------------- | -------------------- | ---------------------------- |
+| `True`                 | `--allow-duplicates` | ✅ Runs CUSTOM               |
+| `True`                 | (no flag)            | Runs DEFAULT                 |
+| `False`                | `--allow-duplicates` | Runs DEFAULT                 |
+| `False`                | (no flag)            | ✅ Runs CUSTOM               |
+| `{True, False}`        | `--allow-duplicates` | ✅ Runs CUSTOM (True logic)  |
+| `{True, False}`        | (no flag)            | ✅ Runs CUSTOM (False logic) |
+| `None`                 | Any                  | Always DEFAULT               |
 
 #### Step 3: Implement `vulnerability_processing_logic()` (REQUIRED)
 

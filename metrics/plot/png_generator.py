@@ -8,6 +8,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.patches import Patch
 from matplotlib.container import BarContainer
+from matplotlib.lines import Line2D
 from datetime import datetime
 from typing import Dict
 
@@ -239,46 +240,46 @@ def generate_absent_nonexistent_png(absent_nonexistent_data: Dict, output_dir: s
     """
     Generate PNG chart for absent and non-existent vulnerability counts (STD).
     Shows standard deviation for both categories by model (aggregated across all baselines).
-    
+
     Args:
         absent_nonexistent_data: Dict from collect_absent_nonexistent_data() -> { model: {'Absent': std, 'Non-existent': std} }
         output_dir: Directory to save PNG files
     """
     os.makedirs(output_dir, exist_ok=True)
-    
+
     if not absent_nonexistent_data:
         return
-    
+
     models = sorted(absent_nonexistent_data.keys())
-    
+
     if len(models) == 0:
         return
-    
+
     # Setup figure
     fig, ax = plt.subplots(figsize=(14, 8))
     plt.rcParams.update({'font.size': 15})
-    
+
     bar_width = 0.35
     x = np.arange(len(models))
-    
+
     # Colors for categories
-    absent_color = "#b43a1b"  # Red
-    nonexistent_color = "#044C94"  # Blue (good contrast on both light and dark backgrounds)
-    
+    absent_color = '#d85231'      # Red
+    nonexistent_color = '#0066CC'  # Blue
+
     absent_vals = []
     nonexistent_vals = []
-    
+
     for model in models:
         absent_vals.append(absent_nonexistent_data[model].get('Absent', 0.0))
         nonexistent_vals.append(absent_nonexistent_data[model].get('Non-existent', 0.0))
-    
+
     # Draw bars
     ax.bar(x - bar_width/2, absent_vals, bar_width,
            label='Absent', color=absent_color, edgecolor='#333', linewidth=1.2, alpha=0.85)
-    
+
     ax.bar(x + bar_width/2, nonexistent_vals, bar_width,
            label='Non-existent', color=nonexistent_color, edgecolor='#333', linewidth=1.2, alpha=0.85)
-    
+
     # Configure axes
     ax.set_ylabel('Standard Deviation', fontsize=18, fontweight='bold')
     ax.set_xlabel('LLM', fontsize=18, fontweight='bold')
@@ -287,9 +288,9 @@ def generate_absent_nonexistent_png(absent_nonexistent_data: Dict, output_dir: s
     ax.set_xticklabels([m.capitalize() for m in models], fontsize=16)
     ax.legend(fontsize=14, loc='upper right')
     ax.grid(axis='y', alpha=0.3, linestyle='--')
-    
+
     plt.tight_layout()
-    
+
     timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
     fname_out = os.path.join(output_dir, f'absent_nonexistent_std_{timestamp}.png')
     plt.savefig(fname_out, dpi=150, bbox_inches='tight')

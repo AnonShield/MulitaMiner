@@ -33,6 +33,7 @@ from metrics.plot.data_collector import (
     collect_absent_nonexistent_data,
     collect_vulnerability_counts,
     collect_error_breakdown,
+    collect_fdr_fnr_data,
 )
 from metrics.plot.png_generator import (
     generate_similarity_pngs,
@@ -96,7 +97,8 @@ def main():
     absent_nonexistent_data = collect_absent_nonexistent_data(available_models)
     vulnerability_counts = collect_vulnerability_counts(available_models)
     error_breakdown = collect_error_breakdown(available_models)
-    
+    fdr_fnr_data = collect_fdr_fnr_data(vulnerability_counts)
+
     # Detect available data types
     has_bert = any(baseline_data for baseline_data in bert_data.values())
     has_rouge = any(baseline_data for baseline_data in rouge_data.values())
@@ -107,7 +109,8 @@ def main():
     has_absent_nonexist = any(baseline_data for baseline_data in absent_nonexistent_data.values())
     has_vulncount = any(baseline_data for baseline_data in vulnerability_counts.values())
     has_error_breakdown = any(baseline_data for baseline_data in error_breakdown.values())
-    
+    has_fdr_fnr = bool(fdr_fnr_data)
+
     print(f"  • BERT data: {'Yes' if has_bert else 'No'}")
     print(f"  • ROUGE data: {'Yes' if has_rouge else 'No'}")
     print(f"  • Deterministic data: {'Yes' if has_det else 'No'}")
@@ -117,7 +120,8 @@ def main():
     print(f"  • Absent/Non-existent data: {'Yes' if has_absent_nonexist else 'No'}")
     print(f"  • Vulnerability counts: {'Yes' if has_vulncount else 'No'}")
     print(f"  • Error breakdown: {'Yes' if has_error_breakdown else 'No'}")
-    
+    print(f"  • FDR/FNR data: {'Yes' if has_fdr_fnr else 'No'}")
+
     # Prepare template context
     context = {
         'report_date': datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
@@ -132,6 +136,7 @@ def main():
         'absent_nonexist': absent_nonexistent_data,
         'vulnerability_counts': vulnerability_counts,
         'error_breakdown': error_breakdown,
+        'fdr_fnr': fdr_fnr_data,
         'results_dir': os.path.abspath(RESULTS_DIR),
         # Data availability flags
         'has_bert': has_bert,
@@ -143,6 +148,7 @@ def main():
         'has_absent_nonexist': has_absent_nonexist,
         'has_vulncount': has_vulncount,
         'has_error_breakdown': has_error_breakdown,
+        'has_fdr_fnr': has_fdr_fnr,
     }
     
     # Generate HTML report

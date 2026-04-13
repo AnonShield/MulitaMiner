@@ -429,7 +429,8 @@ def smart_chunk_vulnerabilities(
 
 def intelligent_chunk_redivision(chunk_content: str, max_tokens: int,
                                   error_context: Dict[str, Any],
-                                  tokenizer=None, reserve_for_response: int = 1000) -> List[str]:
+                                  tokenizer=None, reserve_for_response: int = 1000,
+                                  profile_config: dict = None) -> List[str]:
     """
     Intelligently redivide a failed chunk based on error context.
     
@@ -439,6 +440,7 @@ def intelligent_chunk_redivision(chunk_content: str, max_tokens: int,
         error_context: Error details that triggered redivision (token_valid, errors, etc.)
         tokenizer: Tokenizer to use for token counting
         reserve_for_response: Token reserve for LLM response (default: 1000, consistent with chunking)
+        profile_config: Profile configuration (optional, used to detect vulnerability markers for respecting boundaries)
     
     Returns:
         List of smaller chunks
@@ -463,7 +465,7 @@ def intelligent_chunk_redivision(chunk_content: str, max_tokens: int,
     if "truncada" in str(error_context.get('errors', [])):
         target_chars = min(target_chars, len(chunk_content) // 3)
 
-    new_chunks = split_text_to_subchunks(chunk_content, target_chars)
+    new_chunks = split_text_to_subchunks(chunk_content, target_chars, profile_config=profile_config)
     validated_chunks = []
     for chunk in new_chunks:
         chunk_tokens = count_tokens(chunk, tokenizer)
@@ -522,6 +524,41 @@ def robust_chunk_processing(doc_chunk: TokenChunk, llm, profile_config: Dict[str
                 response_tokens=response_tokens
             )
         
+        # CRITICAL FIX: Detect empty response and retry before redivision
+        # GPT-5 mini can be non-deterministic at temperature=0 (o-series architecture)
+        # If response is empty, simple retry with same prompt may succeed
+        if response_content and response_content.strip() in ('[]', '[ ]', ''):
+            tqdm.write(f"[CHUNK] Empty response [] detected. Attempting {2} simple retries...")
+            for retry_attempt in range(2):
+                attempt_counter += 1
+                retry_response = llm.invoke(prompt)
+                retry_response_content = extract_response_content(retry_response)
+                retry_response_tokens = len(tokenizer.encode(retry_response_content)) if retry_response_content else 0
+                total_tokens_output += retry_response_tokens
+                
+                if retry_response_content and retry_response_content.strip() not in ('[]', '[ ]', ''):
+                    # Got non-empty response, validate and return if valid
+                    tqdm.write(f"[CHUNK] Retry {retry_attempt + 1} succeeded with non-empty content.")
+                    retry_validation = validate_json_and_tokens(retry_response_content, doc_chunk.page_content,
+                                                               max_tokens, prompt, tokenizer=tokenizer)
+                    if debug_mode and retry_response_content:
+                        prompt_tokens = len(tokenizer.encode(prompt))
+                        save_llm_response_debug(
+                            pdf_name=pdf_name,
+                            llm_name=llm_name,
+                            chunk_idx=0,
+                            response_content=retry_response_content,
+                            retry_count=retry_attempt + 1,
+                            was_redivided=False,
+                            parsing_success=retry_validation.get('json_valid', False),
+                            validation_success=retry_validation.get('json_valid', False) and retry_validation.get('token_valid', False),
+                            prompt_tokens=prompt_tokens,
+                            response_tokens=retry_response_tokens
+                        )
+                    if retry_validation['json_valid']:
+                        tqdm.write(f"✅ [CHUNK] Retry {retry_attempt + 1}: JSON is valid!")
+                        return {'vulnerabilities': retry_validation['json_data'], 'tokens_output': total_tokens_output}
+        
         if validation['json_valid'] and validation['token_valid']:
             tqdm.write(f"✅ [CHUNK] Attempt {attempt_counter}: JSON is valid!")
             return {'vulnerabilities': validation['json_data'], 'tokens_output': total_tokens_output}
@@ -558,7 +595,8 @@ def robust_chunk_processing(doc_chunk: TokenChunk, llm, profile_config: Dict[str
         tqdm.write(f"[CHUNK] Performing intelligent redivision...")
         new_chunks = intelligent_chunk_redivision(
             doc_chunk.page_content, max_tokens, validation,
-            tokenizer=tokenizer
+            tokenizer=tokenizer,
+            profile_config=profile_config
         )
         for idx, chunk_content in enumerate(new_chunks):
             attempt_counter += 1

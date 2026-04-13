@@ -148,6 +148,7 @@ canvas#radarChart{height:800px!important;}
 canvas#radarGrouped{height:800px!important;}
 canvas#finalScoreChart{height:600px!important;}
 canvas#tradeoffBubbleChart{height:560px!important;}
+canvas#fdrFnrChart{height:450px!important;}
 canvas#matchedRateChart{height:500px!important;}
 canvas#absentChart{height:500px!important;}
 footer{margin-top:3rem;padding-top:1.5rem;border-top:1px solid var(--border);color:var(--muted);font-size:0.75rem;text-align:center;font-family:'Space Mono',monospace;}
@@ -373,6 +374,48 @@ footer{margin-top:3rem;padding-top:1.5rem;border-top:1px solid var(--border);col
     </div>
   </div>
 
+  <!-- FDR vs FNR Scatter -->
+  {% if has_fdr_fnr %}
+  <div class="card-full" style="margin-top:1.5rem;">
+    <div class="card-title">FDR vs FNR — Trade-off: Invented × Absent Vulnerabilities</div>
+    <div class="chart-description">
+      Each shape = one <strong>(LLM, baseline)</strong> pair · color = LLM · shape = baseline · large circle = LLM mean.
+      <strong>FNR</strong> (X) = % real vulnerabilities missed = 1 − Recall.
+      <strong>FDR</strong> (Y) = % detections that are false positives = 1 − Precision.
+      Dashed lines connect each baseline point to the LLM mean — a wider "star" means more variance across ground-truth datasets.
+      Adjust the sliders to set your tolerance thresholds — the <span style="color:#10b981;font-weight:600;">green zone</span> updates live.
+    </div>
+
+    <div style="display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:0.6rem;margin-top:0.5rem;">
+      <span class="ctrl-label">Baseline:</span>
+      <div id="fdrBaselineBtns" style="display:flex;flex-wrap:wrap;gap:0;">
+        <button class="btn-toggle on" data-bl="all" onclick="setFdrBaseline(this)">All</button>
+        {% for bl in baselines %}<button class="btn-toggle" data-bl="{{ bl }}" onclick="setFdrBaseline(this)">{{ bl }}</button>{% endfor %}
+      </div>
+    </div>
+
+    <div class="controls" style="margin-bottom:0.6rem;">
+      <span class="ctrl-label">FNR threshold (X — % missed):</span>
+      <input type="range" id="fnrThreshold" min="0" max="50" value="15" step="1"
+             oninput="rebuildFdrFnr()" style="width:150px;cursor:pointer;">
+      <span id="fnrThresholdLabel" style="font-family:'Space Mono',monospace;font-size:0.7rem;color:var(--accent);">15%</span>
+      <span style="margin-left:1.5rem;" class="ctrl-label">FDR threshold (Y — % invented):</span>
+      <input type="range" id="fdrThreshold" min="0" max="50" value="15" step="1"
+             oninput="rebuildFdrFnr()" style="width:150px;cursor:pointer;">
+      <span id="fdrThresholdLabel" style="font-family:'Space Mono',monospace;font-size:0.7rem;color:var(--accent);">15%</span>
+    </div>
+
+    <div id="fdrFnrLegend" style="margin-bottom:0.6rem;padding:0.45rem 0.6rem;background:rgba(255,255,255,0.03);border-radius:4px;border:1px solid var(--border);"></div>
+
+    <div style="position:relative;height:450px;width:100%;">
+      <canvas id="fdrFnrChart"></canvas>
+    </div>
+    <p style="font-size:0.65rem;color:var(--muted);margin-top:0.5rem;text-align:center;font-family:'Space Mono',monospace;">
+      Large circle = LLM mean &nbsp;·&nbsp; Smaller shapes = individual baselines &nbsp;·&nbsp; Green zone = below both thresholds
+    </p>
+  </div>
+  {% endif %}
+
   <!-- Metric Correlation (BERT × ROUGE-L) -->
   {% if has_bert and has_rouge %}
   <div class="card-full" style="margin-top: 1.5rem; padding-top: 1.5rem; border-top: 2px solid var(--border);">
@@ -503,6 +546,9 @@ const recall = {{ recall | tojson }};
 const absent_nonexist = {{ absent_nonexist | tojson }};
 const vuln_counts = {{ vulnerability_counts | tojson }};
 const error_breakdown = {{ error_breakdown | tojson }};
+const fdr_fnr = {{ fdr_fnr | tojson }};
+const BASELINE_SHAPES_CJS = ['triangle', 'rectRot', 'cross', 'rect', 'star', 'crossRot'];
+const HAS_FDR_FNR = {{ 'true' if has_fdr_fnr else 'false' }};
 const HAS_BERT = {{ 'true' if has_bert else 'false' }};
 const HAS_ROUGE = {{ 'true' if has_rouge else 'false' }};
 const HAS_DET = {{ 'true' if has_det else 'false' }};
@@ -908,22 +954,22 @@ function buildVariabilityTable(){
     let confidence = '';
     
     if(avgStd < 0.05){
-      level = '🟢 Very Stable';
+      level = 'Very Stable';
       color = '#10b981';
       interpretation = 'Highly consistent across runs';
       confidence = '95%+ confidence';
     }else if(avgStd < 0.08){
-      level = '🟡 Stable';
+      level = 'Stable';
       color = '#84cc16';
       interpretation = 'Good consistency with minor variation';
       confidence = '85-95% confidence';
     }else if(avgStd < 0.12){
-      level = '🟠 Moderate';
+      level = 'Moderate';
       color = '#f59e0b';
       interpretation = 'Noticeable variation; acceptable';
       confidence = '70-85% confidence';
     }else{
-      level = '🔴 Variable';
+      level = 'Variable';
       color = '#ef4444';
       interpretation = 'High variation; use caution';
       confidence = '< 70% confidence';
@@ -1424,6 +1470,202 @@ function rebuildCorrelation(){
   buildLegend('corrLegend', 'corr');
 }
 
+function setFdrBaseline(btn) {
+  document.querySelectorAll('#fdrBaselineBtns .btn-toggle').forEach(b => b.classList.remove('on'));
+  btn.classList.add('on');
+  rebuildFdrFnr();
+}
+
+function rebuildFdrFnr() {
+  if (!HAS_FDR_FNR || !fdr_fnr) return;
+
+  // ── Threshold sliders ────────────────────────────────────────────────────
+  const fnrThreshold = parseFloat((document.getElementById('fnrThreshold') || {value: '15'}).value);
+  const fdrThreshold = parseFloat((document.getElementById('fdrThreshold') || {value: '15'}).value);
+  const fnrLbl = document.getElementById('fnrThresholdLabel');
+  const fdrLbl = document.getElementById('fdrThresholdLabel');
+  if (fnrLbl) fnrLbl.textContent = fnrThreshold.toFixed(0) + '%';
+  if (fdrLbl) fdrLbl.textContent = fdrThreshold.toFixed(0) + '%';
+
+  // ── Active baseline filter ───────────────────────────────────────────────
+  const activeBtn = document.querySelector('#fdrBaselineBtns .btn-toggle.on');
+  const activeBl  = activeBtn ? activeBtn.dataset.bl : 'all';
+  const showAll   = activeBl === 'all';
+  const activeBls = showAll ? BASELINES : (BASELINES.includes(activeBl) ? [activeBl] : BASELINES);
+
+  // ── Palette / shapes ─────────────────────────────────────────────────────
+  const FDR_PALETTE   = ['#5B9BD5','#00D4AA','#9B72CF','#FF7F50','#F4C542','#E06C75'];
+  const SHAPE_UNICODE = ['▲','◆','✚','■','★','✕'];
+
+  // ── Custom HTML legend (two sections: LLMs + Baselines) ─────────────────
+  const legendEl = document.getElementById('fdrFnrLegend');
+  if (legendEl) {
+    const rowStyle = 'display:flex;flex-wrap:wrap;align-items:center;font-family:\'Space Mono\',monospace;font-size:0.66rem;color:#94a3b8;';
+    const lblStyle = 'color:#64748b;font-size:0.6rem;min-width:58px;flex-shrink:0;';
+
+    const llmItems = MODELS.map((m, i) => {
+      const color = MC[m] || FDR_PALETTE[i % FDR_PALETTE.length];
+      const name  = MODEL_NAMES[m] || m.toUpperCase();
+      return `<span style="display:inline-flex;align-items:center;gap:5px;margin-right:14px;white-space:nowrap;">
+        <svg width="11" height="11" viewBox="0 0 11 11"><circle cx="5.5" cy="5.5" r="5" fill="${color}"/></svg>
+        <span>${name}</span></span>`;
+    }).join('');
+
+    const blItems = activeBls.map(bl => {
+      const origIdx = BASELINES.indexOf(bl);
+      const icon = SHAPE_UNICODE[origIdx >= 0 ? origIdx % SHAPE_UNICODE.length : 0];
+      return `<span style="display:inline-flex;align-items:center;gap:5px;margin-right:14px;white-space:nowrap;">
+        <span style="font-size:12px;line-height:1;">${icon}</span>
+        <span>${bl}</span></span>`;
+    }).join('');
+
+    const meanItem = showAll
+      ? `<span style="display:inline-flex;align-items:center;gap:5px;margin-right:14px;white-space:nowrap;">
+          <svg width="14" height="14" viewBox="0 0 14 14"><circle cx="7" cy="7" r="5.5" fill="none" stroke="#94a3b8" stroke-width="2"/></svg>
+          <span>Mean</span></span>`
+      : '';
+
+    legendEl.innerHTML =
+      `<div style="${rowStyle}margin-bottom:4px;"><span style="${lblStyle}">LLMs</span>${llmItems}</div>` +
+      `<div style="${rowStyle}"><span style="${lblStyle}">Baselines</span>${blItems}${meanItem}</div>`;
+  }
+
+  // ── Datasets (one per LLM) ───────────────────────────────────────────────
+  const datasets = MODELS.map((m, mIdx) => {
+    const color     = MC[m] || FDR_PALETTE[mIdx % FDR_PALETTE.length];
+    const modelData = fdr_fnr[m] || {};
+    const points = [], styles = [], radii = [], bgColors = [], borderWidths = [], tooltipLabels = [];
+
+    activeBls.forEach(bl => {
+      const blIdx = BASELINES.indexOf(bl);
+      if (!modelData[bl]) return;
+      points.push({ x: +(modelData[bl].FNR * 100).toFixed(1), y: +(modelData[bl].FDR * 100).toFixed(1) });
+      styles.push(BASELINE_SHAPES_CJS[blIdx >= 0 ? blIdx % BASELINE_SHAPES_CJS.length : 0]);
+      radii.push(7);
+      bgColors.push(color + 'CC');
+      borderWidths.push(2);
+      tooltipLabels.push(bl);
+    });
+
+    // Mean: large hollow circle (border only, no fill)
+    if (showAll && modelData['mean']) {
+      points.push({ x: +(modelData['mean'].FNR * 100).toFixed(1), y: +(modelData['mean'].FDR * 100).toFixed(1) });
+      styles.push('circle');
+      radii.push(13);
+      bgColors.push('transparent');
+      borderWidths.push(2.5);
+      tooltipLabels.push('Mean');
+    }
+
+    return {
+      label: MODEL_NAMES[m] || m,
+      data: points,
+      _tooltipLabels: tooltipLabels,
+      backgroundColor: bgColors,
+      borderColor: color,
+      borderWidth: borderWidths,
+      pointStyle: styles,
+      pointRadius: radii,
+      pointHoverRadius: radii.map(r => r + 2),
+    };
+  });
+
+  // ── Plugin: ideal zone + threshold guide lines ───────────────────────────
+  const idealZonePlugin = {
+    id: 'fdrIdealZone',
+    beforeDraw(chart) {
+      const { ctx, scales } = chart;
+      if (!scales.x || !scales.y) return;
+      const x0   = scales.x.getPixelForValue(0);
+      const x1   = scales.x.getPixelForValue(fnrThreshold);
+      const yTop = scales.y.getPixelForValue(fdrThreshold);
+      const yBot = scales.y.getPixelForValue(0);
+      ctx.save();
+      // Green fill
+      ctx.fillStyle = 'rgba(16,185,129,0.10)';
+      ctx.fillRect(x0, yTop, x1 - x0, yBot - yTop);
+      // Guide lines extending across the chart
+      ctx.strokeStyle = 'rgba(16,185,129,0.30)';
+      ctx.lineWidth = 1;
+      ctx.setLineDash([3, 4]);
+      ctx.beginPath(); ctx.moveTo(x1, scales.y.getPixelForValue(scales.y.max)); ctx.lineTo(x1, yBot); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(x0, yTop); ctx.lineTo(scales.x.getPixelForValue(scales.x.max), yTop); ctx.stroke();
+      ctx.setLineDash([]);
+      // Label
+      ctx.fillStyle = 'rgba(16,185,129,0.55)';
+      ctx.font = '10px Space Mono, monospace';
+      ctx.fillText(`ideal zone  ≤${fnrThreshold}% FNR · ≤${fdrThreshold}% FDR`, x0 + 4, yBot - 6);
+      ctx.restore();
+    }
+  };
+
+  // ── Plugin: dashed lines from each baseline point → LLM mean ────────────
+  const connectionLinesPlugin = {
+    id: 'fdrConnectionLines',
+    afterDraw(chart) {
+      if (!showAll) return;                    // only meaningful when all baselines visible
+      const { ctx, scales } = chart;
+      if (!scales.x || !scales.y) return;
+      MODELS.forEach((m, mIdx) => {
+        const color     = MC[m] || FDR_PALETTE[mIdx % FDR_PALETTE.length];
+        const modelData = fdr_fnr[m] || {};
+        if (!modelData['mean']) return;
+        const mx = scales.x.getPixelForValue(+(modelData['mean'].FNR * 100).toFixed(1));
+        const my = scales.y.getPixelForValue(+(modelData['mean'].FDR * 100).toFixed(1));
+        BASELINES.forEach(bl => {
+          if (!modelData[bl]) return;
+          const bx = scales.x.getPixelForValue(+(modelData[bl].FNR * 100).toFixed(1));
+          const by = scales.y.getPixelForValue(+(modelData[bl].FDR * 100).toFixed(1));
+          ctx.save();
+          ctx.setLineDash([4, 4]);
+          ctx.strokeStyle = color + '80';
+          ctx.lineWidth = 1.2;
+          ctx.beginPath(); ctx.moveTo(bx, by); ctx.lineTo(mx, my); ctx.stroke();
+          ctx.restore();
+        });
+      });
+    }
+  };
+
+  // ── Chart ────────────────────────────────────────────────────────────────
+  mkChart('fdrFnrChart', {
+    type: 'scatter',
+    data: { datasets },
+    plugins: [idealZonePlugin, connectionLinesPlugin],
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      scales: {
+        x: {
+          title: { display: true, text: 'FNR — % missed  =  FN / (FN + TP)', color: '#94a3b8', font: {size: 11} },
+          min: 0,
+          grid: { color: 'rgba(30,45,69,0.6)' },
+          ticks: { callback: v => v + '%', color: '#64748b' },
+        },
+        y: {
+          title: { display: true, text: 'FDR — % invented  =  FP / (FP + TP)', color: '#94a3b8', font: {size: 11} },
+          min: 0,
+          grid: { color: 'rgba(30,45,69,0.6)' },
+          ticks: { callback: v => v + '%', color: '#64748b' },
+        },
+      },
+      plugins: {
+        legend: { display: false },            // replaced by custom HTML legend above
+        tooltip: {
+          callbacks: {
+            title: ctx => {
+              const ds = ctx[0].dataset;
+              const bl = ds._tooltipLabels ? ds._tooltipLabels[ctx[0].dataIndex] : '';
+              return `${ds.label} — ${bl}`;
+            },
+            label: ctx => [`FNR: ${ctx.parsed.x.toFixed(1)}%`, `FDR: ${ctx.parsed.y.toFixed(1)}%`],
+          }
+        }
+      }
+    }
+  });
+}
+
 function rebuildSensitivity(){
   const ieWeight = parseFloat(document.getElementById('ieWeight').value);
   const nlgWeight = 100 - ieWeight;
@@ -1523,7 +1765,7 @@ function rebuildErrorBreakdown(){
 
 const built={};
 
-// 🔥 ESSENCIAL: Força recalculação de tamanho de todos os gráficos
+// Força recalculação de tamanho de todos os gráficos
 function resizeAllCharts(){
   Object.values(CHARTS).forEach(chart => {
     if(chart){
@@ -1538,14 +1780,14 @@ function showTab(name,btn){
   document.getElementById('tab-'+name).classList.add('active');
   btn.classList.add('active');
   
-  // 🔥 Recalcular tamanho após mostrar aba
+  // Recalcular tamanho após mostrar aba
   setTimeout(resizeAllCharts, 150);
   if(!built[name]){
     built[name]=true;
     if(name==='overview')buildOverview();
     if(name==='performance'){rebuildSemantic();rebuildDet();}
     if(name==='comparison'){rebuildRadar();rebuildFinalScore();rebuildTradeoff();}
-    if(name==='insights'){rebuildTradeoff();rebuildCorrelation();rebuildSensitivity();}
+    if(name==='insights'){rebuildTradeoff();rebuildCorrelation();rebuildSensitivity();if(HAS_FDR_FNR)rebuildFdrFnr();}
     if(name==='errors'){rebuildErrorBreakdown();}
   }
 }

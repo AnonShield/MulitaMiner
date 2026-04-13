@@ -46,11 +46,13 @@ class ReportGenerator:
         absent_nonexist: dict = None,
         vulnerability_counts: dict = None,
         error_breakdown: dict = None,
+        fdr_fnr: dict = None,
         has_matched: bool = False,
         has_recall: bool = False,
         has_absent_nonexist: bool = False,
         has_vulncount: bool = False,
         has_error_breakdown: bool = False,
+        has_fdr_fnr: bool = False,
         **kwargs
     ):
         """
@@ -90,6 +92,8 @@ class ReportGenerator:
             vulnerability_counts = {}
         if error_breakdown is None:
             error_breakdown = {}
+        if fdr_fnr is None:
+            fdr_fnr = {}
         
         template = self.env.get_template('metrics_report_template_en.jinja2')
         
@@ -106,6 +110,7 @@ class ReportGenerator:
             absent_nonexist=absent_nonexist,
             vulnerability_counts=vulnerability_counts,
             error_breakdown=error_breakdown,
+            fdr_fnr=fdr_fnr,
             results_dir=results_dir,
             has_bert=has_bert,
             has_rouge=has_rouge,
@@ -116,6 +121,7 @@ class ReportGenerator:
             has_absent_nonexist=has_absent_nonexist,
             has_vulncount=has_vulncount,
             has_error_breakdown=has_error_breakdown,
+            has_fdr_fnr=has_fdr_fnr,
         )
         
         os.makedirs(os.path.dirname(output_file) or '.', exist_ok=True)
