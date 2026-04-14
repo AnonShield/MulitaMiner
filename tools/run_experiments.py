@@ -52,6 +52,8 @@ def execute_run(run_id, run_info, group_key, checkpoints, checkpoint_path,
         scanner = run_info['scanner']
         llm = run_info['llm']
         run_num = run_info['run_num']
+        baseline_name = get_base(baseline_path)
+        run_label = f"{llm} run{run_num} | {baseline_name}"
 
         subdir = os.path.join("results_runs", get_base(baseline_path), llm, f"run{run_num}")
         os.makedirs(subdir, exist_ok=True)
@@ -89,10 +91,17 @@ def execute_run(run_id, run_info, group_key, checkpoints, checkpoint_path,
         if parallel:
             llm_config = load_llm(llm) or {}
             model_name = llm_config.get("model", llm)
+            model_short = model_name.split('/')[-1] if '/' in model_name else model_name
             tok = llm_config.get("tokenizer", {})
-            tokenizer_info = f"{tok.get('type', '?')}/{tok.get('model', '?')}" if tok else "?"
+            tok_type = tok.get('type', '?') if tok else '?'
+            sep = f"[{group_key}] {'─'*52}"
             with print_lock:
-                print(f"[{group_key}] -> Starting: {llm} run{run_num} | model: {model_name} | tokenizer: {tokenizer_info}")
+                print(
+                    f"\n{sep}\n"
+                    f"[{group_key}] ▶  {llm} run{run_num}  |  baseline: {baseline_name}\n"
+                    f"[{group_key}]    model: {model_short}  |  tokenizer: {tok_type}\n"
+                    f"{sep}"
+                )
         else:
             print(f"Running extraction + evaluation: {' '.join(cmd)}")
 
@@ -106,7 +115,7 @@ def execute_run(run_id, run_info, group_key, checkpoints, checkpoint_path,
                         stripped = line.strip()
                         if any(stripped.startswith(tag) for tag in _PARALLEL_FORWARD):
                             with print_lock:
-                                print(f"[{group_key}] {stripped}")
+                                print(f"[{group_key} | {llm}·r{run_num}·{baseline_name}] {stripped}")
                     f.write(line)
             proc.wait()
 
@@ -126,8 +135,12 @@ def execute_run(run_id, run_info, group_key, checkpoints, checkpoint_path,
                 json.dump(checkpoint_data, f, indent=2, ensure_ascii=False)
 
         if parallel:
+            sep = f"[{group_key}] {'─'*52}"
             with print_lock:
-                print(f"[{group_key}] -> Done: {llm} run{run_num} ({elapsed:.1f}s)")
+                print(
+                    f"[{group_key}] ✓  {run_label}  ({elapsed:.1f}s)\n"
+                    f"{sep}\n"
+                )
         else:
             print(f"[CHECKPOINT] Saved to {checkpoint_path} after run {run_id}")
 
