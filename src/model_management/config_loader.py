@@ -8,6 +8,7 @@ including environment variable substitution.
 import os
 import json
 import re
+from urllib.parse import urlparse
 from dotenv import load_dotenv
 
 
@@ -77,3 +78,15 @@ def load_llm(llm_name):
             config["provider"] = "openai"
     
     return config
+
+
+def get_provider_key(llm_name):
+    """Return a grouping key for parallelism: endpoint domain, or 'local' for local providers."""
+    config = load_llm(llm_name)
+    if config is None:
+        return "unknown"
+    if config.get("provider") in ("ollama", "llm_studio"):
+        return "local"
+    endpoint = config.get("endpoint", "")
+    netloc = urlparse(endpoint).netloc
+    return netloc if netloc else "unknown"

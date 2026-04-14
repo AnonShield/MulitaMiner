@@ -4,13 +4,21 @@ import os
 import sys
 import time
 import json
+import threading
 import shutil
-from datetime import datetime, timedelta
-from pathlib import Path
+from datetime import datetime
+from concurrent.futures import ThreadPoolExecutor, as_completed
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 from src.utils.reporting import generate_final_report
+from src.model_management.config_loader import get_provider_key, load_llm
+
+# Lines from subprocess stdout that are forwarded to the terminal in parallel mode
+_PARALLEL_FORWARD = ("[BLOCKS]", "[EXTRACTION]", "[PERFORMANCE]")
+
+# Windows exit code when a process is terminated by Ctrl+C
+_CTRL_C_EXIT = 3221225786
 
 
 def str_to_bool(val):
@@ -25,18 +33,160 @@ def make_checkpoint_path(ts):
     return f"run_checkpoints_{ts}.json"
 
 
+def execute_run(run_id, run_info, group_key, checkpoints, checkpoint_path,
+                checkpoint_data, checkpoint_lock, print_lock, args,
+                evaluation_methods, allow_duplicates_map, parallel, stop_event):
+    """Execute a single experiment run as a subprocess."""
+    if stop_event.is_set():
+        return
+
+    if run_info.get("status") == "ok":
+        with print_lock:
+            print(f"[SKIP] Run already completed: {run_id}")
+        return
+
+    cmd = None
+    try:
+        baseline_path = run_info['baseline']
+        extractor_path = run_info['extractor']
+        scanner = run_info['scanner']
+        llm = run_info['llm']
+        run_num = run_info['run_num']
+
+        subdir = os.path.join("results_runs", get_base(baseline_path), llm, f"run{run_num}")
+        os.makedirs(subdir, exist_ok=True)
+
+        run_prefix = f"{get_base(baseline_path)}_{llm}_run{run_num}"
+        output_file = os.path.join(subdir, f"{run_prefix}.txt")
+        timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+        allow_duplicates = allow_duplicates_map.get(scanner, False)
+
+        cmd = [
+            sys.executable, 'main.py',
+            '--input', extractor_path,
+            '--scanner', scanner,
+            '--llm', llm,
+            '--output-file', run_prefix,
+            '--output-dir', subdir,
+            '--convert', 'all',
+            '--baseline-path', baseline_path,
+        ]
+
+        if evaluation_methods:
+            cmd += ['--evaluation-methods'] + evaluation_methods
+
+        if allow_duplicates:
+            cmd.append('--allow-duplicates')
+
+        if args.debug:
+            cmd.append('--debug')
+
+        if args.debug_dir != 'llm_debug_responses':
+            cmd += ['--debug-dir', args.debug_dir]
+
+        run_start = time.time()
+
+        if parallel:
+            llm_config = load_llm(llm) or {}
+            model_name = llm_config.get("model", llm)
+            tok = llm_config.get("tokenizer", {})
+            tokenizer_info = f"{tok.get('type', '?')}/{tok.get('model', '?')}" if tok else "?"
+            with print_lock:
+                print(f"[{group_key}] -> Starting: {llm} run{run_num} | model: {model_name} | tokenizer: {tokenizer_info}")
+        else:
+            print(f"Running extraction + evaluation: {' '.join(cmd)}")
+
+        with subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
+                              text=True, encoding="utf-8", errors="replace") as proc:
+            with open(output_file, "w", encoding="utf-8") as f:
+                for line in proc.stdout:
+                    if not parallel:
+                        print(line, end="")
+                    else:
+                        stripped = line.strip()
+                        if any(stripped.startswith(tag) for tag in _PARALLEL_FORWARD):
+                            with print_lock:
+                                print(f"[{group_key}] {stripped}")
+                    f.write(line)
+            proc.wait()
+
+        if proc.returncode != 0:
+            if proc.returncode == _CTRL_C_EXIT:
+                stop_event.set()
+            raise subprocess.CalledProcessError(proc.returncode, cmd)
+
+        elapsed = time.time() - run_start
+
+        with checkpoint_lock:
+            checkpoints[run_id]["status"] = "ok"
+            checkpoints[run_id]["output_file"] = output_file
+            checkpoints[run_id]["timestamp"] = timestamp
+            checkpoints[run_id]["cmd"] = " ".join(cmd)
+            with open(checkpoint_path, "w", encoding="utf-8") as f:
+                json.dump(checkpoint_data, f, indent=2, ensure_ascii=False)
+
+        if parallel:
+            with print_lock:
+                print(f"[{group_key}] -> Done: {llm} run{run_num} ({elapsed:.1f}s)")
+        else:
+            print(f"[CHECKPOINT] Saved to {checkpoint_path} after run {run_id}")
+
+    except Exception as e:
+        with print_lock:
+            if parallel:
+                print(f"[{group_key}] -> ERROR: {run_id} -- {e}")
+            else:
+                print(f"[CHECKPOINT] Error in run {run_id}: {e}")
+
+        with checkpoint_lock:
+            checkpoints[run_id]["status"] = "error"
+            checkpoints[run_id]["erro"] = str(e)
+            checkpoints[run_id]["cmd"] = " ".join(cmd) if cmd else None
+            with open(checkpoint_path, "w", encoding="utf-8") as f:
+                json.dump(checkpoint_data, f, indent=2, ensure_ascii=False)
+
+        if not parallel:
+            print(f"[CHECKPOINT] Saved to {checkpoint_path} after run {run_id}")
+
+
+def run_group_sequential(group_key, group_run_ids, checkpoints, checkpoint_path,
+                         checkpoint_data, checkpoint_lock, print_lock, args,
+                         evaluation_methods, allow_duplicates_map, parallel, stop_event):
+    """Run all experiments in a provider group sequentially."""
+    for run_id in group_run_ids:
+        if stop_event.is_set():
+            with print_lock:
+                print(f"[{group_key}] -> Stopped (interrupted)")
+            break
+        run_info = checkpoints[run_id]
+        execute_run(
+            run_id, run_info, group_key, checkpoints, checkpoint_path,
+            checkpoint_data, checkpoint_lock, print_lock, args,
+            evaluation_methods, allow_duplicates_map, parallel, stop_event
+        )
+
+
 def main():
     """Execute extraction and evaluation experiments in batch mode."""
     parser = argparse.ArgumentParser(description="Run extraction and evaluation experiments.")
-    parser.add_argument('--input-dir', type=str, required=True, help='Directory containing .xlsx (baseline) and .pdf (report) files. Both must have the same name, except for the extension.')
-    parser.add_argument('--llms', type=str, nargs='+', required=True, help='List of LLMs to test.')
-    parser.add_argument('--scanners', type=str, nargs='+', required=True, help='List of scanners to test.')
-    parser.add_argument('--evaluation-methods', type=str, nargs='+', default=['bert'], help='List of evaluation methods (e.g., bert, rouge).')
-    parser.add_argument('--runs-per-model', type=int, default=10, help='Number of runs per model.')
-    parser.add_argument('--allow-duplicates', type=str, nargs='+', default=[], help='List of true/false values corresponding to the order of scanners. Example: --scanners openvas tenable --allow-duplicates true false (openvas=True, tenable=False).')
-    parser.add_argument('--checkpoint-file', type=str, default=None, help='Checkpoint file to use.')
-    parser.add_argument('--debug', action='store_true', help='Enable debug logging of raw LLM responses.')
-    parser.add_argument('--debug-dir', type=str, default='llm_debug_responses', help='Directory for debug logs.')
+    parser.add_argument('--input-dir', type=str, default=None,
+                        help='Directory containing .xlsx (baseline) and .pdf (report) files. Both must have the same name, except for the extension.')
+    parser.add_argument('--llms', type=str, nargs='+', default=None,
+                        help='List of LLMs to test.')
+    parser.add_argument('--scanners', type=str, nargs='+', default=None,
+                        help='List of scanners to test.')
+    parser.add_argument('--evaluation-methods', type=str, nargs='+', default=None,
+                        help='List of evaluation methods (e.g., bert, rouge).')
+    parser.add_argument('--runs-per-model', type=int, default=None,
+                        help='Number of runs per model.')
+    parser.add_argument('--allow-duplicates', type=str, nargs='+', default=None,
+                        help='List of true/false values corresponding to the order of scanners. Example: --scanners openvas tenable --allow-duplicates true false (openvas=True, tenable=False).')
+    parser.add_argument('--checkpoint-file', type=str, default=None,
+                        help='Checkpoint file to resume from. When provided, all other arguments become optional.')
+    parser.add_argument('--debug', action='store_true',
+                        help='Enable debug logging of raw LLM responses.')
+    parser.add_argument('--debug-dir', type=str, default='llm_debug_responses',
+                        help='Directory for debug logs.')
     args, unknown = parser.parse_known_args()
 
     if unknown:
@@ -44,47 +194,10 @@ def main():
         print("Check for typos in the arguments.")
         sys.exit(1)
 
-    if len(args.allow_duplicates) != len(args.scanners):
-        print(f"[ERROR] The number of values in --allow-duplicates must match the number of scanners.")
-        sys.exit(1)
-    allow_duplicates_map = {scanner: str_to_bool(allow) for scanner, allow in zip(args.scanners, args.allow_duplicates)}
+    if not args.checkpoint_file and not args.input_dir:
+        parser.error("--input-dir is required when not using --checkpoint-file")
 
     print("[INFO] Starting run_experiments.py...")
-
-    input_dir = args.input_dir
-    xlsx_files = sorted([f for f in os.listdir(input_dir) if f.endswith('.xlsx')])
-    pdf_files = sorted([f for f in os.listdir(input_dir) if f.endswith('.pdf')])
-    xlsx_map = {get_base(f): os.path.join(input_dir, f) for f in xlsx_files}
-    pdf_map = {get_base(f): os.path.join(input_dir, f) for f in pdf_files}
-
-    matched_pairs = []
-    for base in xlsx_map:
-        if base in pdf_map:
-            matched_pairs.append((xlsx_map[base], pdf_map[base]))
-            print(f"[PAIR] Found pair: {base}.xlsx <-> {base}.pdf")
-        else:
-            print(f"[IGNORED] Baseline '{xlsx_map[base]}' ignored: no matching PDF found.")
-    for base in pdf_map:
-        if base not in xlsx_map:
-            print(f"[IGNORED] Report '{pdf_map[base]}' ignored: no matching .xlsx baseline found.")
-
-    if not matched_pairs:
-        print("No matching .xlsx/.pdf pairs found in the provided directory.")
-        sys.exit(1)
-
-    print(f"[INFO] Total pairs found: {len(matched_pairs)}")
-
-    baselines = [pair[0] for pair in matched_pairs]
-    extractors = [pair[1] for pair in matched_pairs]
-    llms = args.llms
-    scanners = args.scanners
-    evaluation_methods = list(args.evaluation_methods)
-    # Note: Entity metrics are automatically added by main.py when --evaluation-methods is used
-    runs_per_model = args.runs_per_model
-
-    os.makedirs("results_runs", exist_ok=True)
-
-    print("[INFO] Starting experiment runs...")
 
     start_time = time.time()
     run_stats = {
@@ -93,29 +206,80 @@ def main():
         'timing_report': []
     }
 
-    checkpoint_id = datetime.now().strftime("%Y-%m-%dT%H-%M-%S")
-    checkpoint_path = make_checkpoint_path(checkpoint_id)
-    print(f"[INFO] Checkpoint file: {checkpoint_path}")
-
-    all_run_ids = []
-    for baseline_path, extractor_path in zip(baselines, extractors):
-        for scanner in scanners:
-            for llm in llms:
-                for run_num in range(1, runs_per_model + 1):
-                    baseline_folder = os.path.splitext(os.path.basename(baseline_path))[0]
-                    run_id = f"{baseline_folder}_{llm}_run{run_num}"
-                    all_run_ids.append((run_id, baseline_path, extractor_path, scanner, llm, run_num))
-
     if args.checkpoint_file:
+        # Resume from checkpoint — all run info is self-contained
         checkpoint_path = args.checkpoint_file
         with open(checkpoint_path, "r", encoding="utf-8") as f:
             checkpoint_data = json.load(f)
         checkpoints = checkpoint_data["runs"]
         checkpoint_id = checkpoint_data.get("checkpoint_id", datetime.now().strftime("%Y-%m-%dT%H-%M-%S"))
+        meta = checkpoint_data.get("meta", {})
+        evaluation_methods = args.evaluation_methods or meta.get("evaluation_methods", ["bert"])
+        allow_duplicates_map = meta.get("allow_duplicates_map", {})
+        pending = sum(1 for r in checkpoints.values() if r.get("status") != "ok")
         print(f"[INFO] Resuming from checkpoint: {checkpoint_path}")
+        print(f"[INFO] Pending runs: {pending} / {len(checkpoints)}")
+
     else:
+        # Fresh run — build everything from args
+        if not args.llms:
+            parser.error("--llms is required when not using --checkpoint-file")
+        if not args.scanners:
+            parser.error("--scanners is required when not using --checkpoint-file")
+
+        runs_per_model = args.runs_per_model or 10
+        allow_duplicates_list = args.allow_duplicates or ['false'] * len(args.scanners)
+
+        if len(allow_duplicates_list) != len(args.scanners):
+            print(f"[ERROR] The number of values in --allow-duplicates must match the number of scanners.")
+            sys.exit(1)
+
+        allow_duplicates_map = {
+            scanner: str_to_bool(allow)
+            for scanner, allow in zip(args.scanners, allow_duplicates_list)
+        }
+        evaluation_methods = args.evaluation_methods or ["bert"]
+
+        input_dir = args.input_dir
+        xlsx_files = sorted([f for f in os.listdir(input_dir) if f.endswith('.xlsx')])
+        pdf_files = sorted([f for f in os.listdir(input_dir) if f.endswith('.pdf')])
+        xlsx_map = {get_base(f): os.path.join(input_dir, f) for f in xlsx_files}
+        pdf_map = {get_base(f): os.path.join(input_dir, f) for f in pdf_files}
+
+        matched_pairs = []
+        for base in xlsx_map:
+            if base in pdf_map:
+                matched_pairs.append((xlsx_map[base], pdf_map[base]))
+                print(f"[PAIR] Found pair: {base}.xlsx <-> {base}.pdf")
+            else:
+                print(f"[IGNORED] Baseline '{xlsx_map[base]}' ignored: no matching PDF found.")
+        for base in pdf_map:
+            if base not in xlsx_map:
+                print(f"[IGNORED] Report '{pdf_map[base]}' ignored: no matching .xlsx baseline found.")
+
+        if not matched_pairs:
+            print("No matching .xlsx/.pdf pairs found in the provided directory.")
+            sys.exit(1)
+
+        print(f"[INFO] Total pairs found: {len(matched_pairs)}")
+
+        baselines = [pair[0] for pair in matched_pairs]
+        extractors = [pair[1] for pair in matched_pairs]
+
+        os.makedirs("results_runs", exist_ok=True)
+
+        # Build run list
+        all_run_ids = []
+        for baseline_path, extractor_path in zip(baselines, extractors):
+            for scanner in args.scanners:
+                for llm in args.llms:
+                    for run_num in range(1, runs_per_model + 1):
+                        run_id = f"{get_base(baseline_path)}_{llm}_run{run_num}"
+                        all_run_ids.append((run_id, baseline_path, extractor_path, scanner, llm, run_num))
+
+        # Create checkpoint
         checkpoint_id = datetime.now().strftime("%Y-%m-%dT%H-%M-%S")
-        checkpoint_path = f"run_checkpoints_{checkpoint_id}.json"
+        checkpoint_path = make_checkpoint_path(checkpoint_id)
         checkpoints = {}
         for run_id, baseline_path, extractor_path, scanner, llm, run_num in all_run_ids:
             checkpoints[run_id] = {
@@ -130,87 +294,59 @@ def main():
                 "output_file": None,
                 "timestamp": None
             }
-        checkpoint_data = {"runs": checkpoints, "checkpoint_id": checkpoint_id}
+        checkpoint_data = {
+            "runs": checkpoints,
+            "checkpoint_id": checkpoint_id,
+            "meta": {
+                "evaluation_methods": evaluation_methods,
+                "allow_duplicates_map": allow_duplicates_map,
+                "input_dir": input_dir,
+            }
+        }
         with open(checkpoint_path, "w", encoding="utf-8") as f:
             json.dump(checkpoint_data, f, indent=2, ensure_ascii=False)
-        print(f"[INFO] Created initial checkpoint with {len(all_run_ids)} pending runs: {checkpoint_path}")
+        print(f"[INFO] Created checkpoint with {len(all_run_ids)} pending runs: {checkpoint_path}")
 
+    print("[INFO] Starting experiment runs...")
+
+    # Group runs by provider for parallelism
+    provider_groups = {}
     for run_id, run_info in checkpoints.items():
-        if run_info.get("status") == "ok":
-            print(f"[SKIP] Run already completed: {run_id}")
-            continue
+        key = get_provider_key(run_info['llm'])
+        provider_groups.setdefault(key, []).append(run_id)
 
-        cmd = None
-        try:
-            baseline_path = run_info['baseline']
-            extractor_path = run_info['extractor']
-            scanner = run_info['scanner']
-            llm = run_info['llm']
-            run_num = run_info['run_num']
-            
-            subdir = os.path.join("results_runs", os.path.splitext(os.path.basename(baseline_path))[0], llm, f"run{run_num}")
-            os.makedirs(subdir, exist_ok=True)
+    parallel = len(provider_groups) > 1
+    checkpoint_lock = threading.Lock()
+    print_lock = threading.Lock()
+    stop_event = threading.Event()
 
-            run_prefix = f"{os.path.splitext(os.path.basename(baseline_path))[0]}_{llm}_run{run_num}"
-            output_path = os.path.join(subdir, f"{run_prefix}.json")
-            output_file = os.path.join(subdir, f"{run_prefix}.txt")
-            timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
-            allow_duplicates = allow_duplicates_map.get(scanner, False)
+    if parallel:
+        print(f"[INFO] Parallel mode: {len(provider_groups)} provider groups -> {list(provider_groups.keys())}")
+    else:
+        print(f"[INFO] Sequential mode: 1 provider group")
 
-            # --- Extraction + Evaluation in main.py ---
-            cmd = [
-                sys.executable, 'main.py',
-                '--input', extractor_path,
-                '--scanner', scanner,
-                '--llm', llm,
-                '--output-file', run_prefix,
-                '--output-dir', subdir,
-                '--convert', 'all',
-                '--baseline-path', baseline_path,
-            ]
-            
-            # Add evaluation methods (entity is automatically added by main.py)
-            if evaluation_methods:
-                cmd += ['--evaluation-methods'] + evaluation_methods
-            
-            if allow_duplicates:
-                cmd.append('--allow-duplicates')
-            
-            if args.debug:
-                cmd.append('--debug')
-            
-            if args.debug_dir != 'llm_debug_responses':
-                cmd += ['--debug-dir', args.debug_dir]
-            
-            print(f"Running extraction + evaluation: {' '.join(cmd)}")
-            with subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True, encoding="utf-8", errors="replace") as proc:
-                with open(output_file, "w", encoding="utf-8") as f:
-                    for line in proc.stdout:
-                        print(line, end="")
-                        f.write(line)
-                proc.wait()
-            
-            if proc.returncode != 0:
-                raise subprocess.CalledProcessError(proc.returncode, cmd)
-            
-            checkpoints[run_id]["status"] = "ok"
-            checkpoints[run_id]["output_file"] = output_file
-            checkpoints[run_id]["timestamp"] = timestamp
-            checkpoints[run_id]["cmd"] = " ".join(cmd) if cmd else None
-            
-            with open(checkpoint_path, "w", encoding="utf-8") as f:
-                json.dump(checkpoint_data, f, indent=2, ensure_ascii=False)
-            print(f"[CHECKPOINT] Saved to {checkpoint_path} after run {run_id}")
-
-        except Exception as e:
-            print(f"[CHECKPOINT] Error in run {run_id}: {e}")
-            checkpoints[run_id]["status"] = "error"
-            checkpoints[run_id]["erro"] = str(e)
-            checkpoints[run_id]["cmd"] = " ".join(cmd) if cmd else None
-            with open(checkpoint_path, "w", encoding="utf-8") as f:
-                json.dump(checkpoint_data, f, indent=2, ensure_ascii=False)
-            print(f"[CHECKPOINT] Saved to {checkpoint_path} after run {run_id}")
-            continue
+    try:
+        with ThreadPoolExecutor(max_workers=len(provider_groups)) as executor:
+            futures = {
+                executor.submit(
+                    run_group_sequential,
+                    group_key, group_run_ids, checkpoints,
+                    checkpoint_path, checkpoint_data,
+                    checkpoint_lock, print_lock, args,
+                    evaluation_methods, allow_duplicates_map, parallel, stop_event
+                ): group_key
+                for group_key, group_run_ids in provider_groups.items()
+            }
+            for future in as_completed(futures):
+                group_key = futures[future]
+                try:
+                    future.result()
+                except Exception as e:
+                    print(f"[ERROR] Group {group_key} raised an unexpected exception: {e}")
+    except KeyboardInterrupt:
+        stop_event.set()
+        print("\n[INFO] Interrupted by user. Waiting for active runs to finish...")
+        sys.exit(0)
 
     end_time = time.time()
     duration = end_time - start_time
@@ -237,18 +373,17 @@ def main():
             sys.executable,
             os.path.join(os.path.dirname(__file__), "../metrics/plot/metrics.py")
         ], check=True)
-        
-        # Find and display the generated report
+
         plot_dir = os.path.abspath('plot_runs')
         if os.path.exists(plot_dir):
-            reports = sorted([f for f in os.listdir(plot_dir) 
-                            if f.startswith('metrics_report_') and f.endswith('.html')])
+            reports = sorted([f for f in os.listdir(plot_dir)
+                              if f.startswith('metrics_report_') and f.endswith('.html')])
             if reports:
                 latest_report = os.path.join(plot_dir, reports[-1])
                 print(f"\n[SUCCESS] Interactive report generated!")
                 print(f"[SUCCESS] Open in browser: {latest_report}")
                 print(f"[SUCCESS] Total experiment time: {int(duration // 60)}m {int(duration % 60)}s")
-        
+
     except Exception as e:
         print(f"[WARNING] Failed to generate Plotly report: {e}")
         print("[WARNING] Continuing... (legacy charts still generated)")
