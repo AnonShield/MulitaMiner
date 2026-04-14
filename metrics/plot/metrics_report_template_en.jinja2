@@ -14,145 +14,327 @@
   });
 </script>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500;600&display=swap');
-:root{
-  --bg:#0a0e1a;--surface:#111827;--surface2:#1a2235;--surface3:#0d1526;
-  --border:#1e2d45;--border2:#263352;
-  --accent:#FF6B35;--accent2:#7c3aed;--accent3:#10b981;--accent4:#f59e0b;--accent5:#f43f5e;
-  --text:#e2e8f0;--muted:#64748b;--muted2:#94a3b8;
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap');
+
+:root {
+  /* Surfaces */
+  --bg:       #0B0B0E;
+  --surface:  #111116;
+  --surface2: #18181F;
+  --surface3: #1D1D26;
+  --surface4: #23232E;
+  /* Borders */
+  --border:  #1F1F28;
+  --border2: #2C2C3A;
+  --border3: #3A3A4E;
+  /* Primary — orange */
+  --accent:  #F97316;
+  --accent2: #8B5CF6;
+  --accent3: #10B981;
+  --accent4: #F59E0B;
+  --accent5: #EF4444;
+  /* Text */
+  --text:   #EEEEF2;
+  --text2:  #B4B4C8;
+  --muted:  #52526A;
+  --muted2: #8A8AA0;
+  /* Typography */
+  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+  /* Radius */
+  --r-xs: 4px;
+  --r-sm: 6px;
+  --r-md: 10px;
+  --r-lg: 16px;
+  /* Aliases for legacy inline styles */
+  --radius-sm: var(--r-sm);
+  --radius-md: var(--r-md);
+  /* Shadows */
+  --shadow-sm: 0 1px 3px rgba(0,0,0,.5);
+  --shadow-md: 0 4px 16px rgba(0,0,0,.55), 0 1px 4px rgba(0,0,0,.3);
+  /* Transition */
+  --t: 140ms ease;
 }
-*{margin:0;padding:0;box-sizing:border-box;}
-body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min-height:100vh;padding:2rem;}
 
-header{margin-bottom:2rem;border-bottom:1px solid var(--border);padding-bottom:1.5rem;
-  display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:1rem;}
-.logo{font-family:'Space Mono',monospace;font-size:1.5rem;font-weight:700;letter-spacing:-0.02em;}
-.logo span{color:var(--accent);}
-.subtitle{color:var(--muted);font-size:0.8rem;margin-top:0.2rem;font-family:'Space Mono',monospace;}
-.badge-row{display:flex;gap:0.5rem;flex-wrap:wrap;}
-.badge{font-family:'Space Mono',monospace;font-size:0.68rem;padding:0.2rem 0.55rem;border-radius:2px;border:1px solid;}
-.badge-bert{border-color:var(--accent);color:var(--accent);}
-.badge-rouge{border-color:var(--accent3);color:var(--accent3);}
-.badge-det{border-color:var(--accent4);color:var(--accent4);}
-.badge-std{border-color:var(--accent2);color:var(--accent2);}
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
-.tabs{display:flex;gap:0.2rem;margin-bottom:1.5rem;border-bottom:1px solid var(--border);flex-wrap:wrap;}
-.tab{font-family:'Space Mono',monospace;font-size:0.72rem;padding:0.55rem 1rem;cursor:pointer;
-  border:none;background:transparent;color:var(--muted);border-bottom:2px solid transparent;
-  transition:all 0.18s;letter-spacing:0.04em;}
-.tab:hover{color:var(--text);}
-.tab.active{color:var(--accent);border-bottom-color:var(--accent);}
-.panel{display:none;}.panel.active{display:block;}
-
-.controls{display:flex;gap:0.75rem;margin-bottom:1.25rem;flex-wrap:wrap;align-items:center;}
-.ctrl-label{font-family:'Space Mono',monospace;font-size:0.68rem;color:var(--muted);}
-select{background:var(--surface2);color:var(--text);border:1px solid var(--border2);
-  border-radius:4px;padding:0.3rem 0.6rem;font-family:'Space Mono',monospace;font-size:0.7rem;cursor:pointer;outline:none;}
-select:focus{border-color:var(--accent);}
-.btn-group{display:flex;gap:0;}
-.btn-toggle{font-family:'Space Mono',monospace;font-size:0.68rem;padding:0.3rem 0.75rem;
-  border:1px solid var(--border2);background:var(--surface2);color:var(--muted);cursor:pointer;transition:all 0.15s;}
-.btn-toggle:first-child{border-radius:4px 0 0 4px;}
-.btn-toggle:last-child{border-radius:0 4px 4px 0;}
-.btn-toggle.on{background:var(--accent);color:var(--bg);border-color:var(--accent);}
-
-.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;margin-bottom:1.25rem;}
-.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:0.85rem;margin-bottom:1.25rem;}
-.card{background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:1.25rem;display:flex;flex-direction:column;}
-.card-full{background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:1.25rem;margin-bottom:1.25rem;display:flex;flex-direction:column;}
-.card-title{font-family:'Space Mono',monospace;font-size:0.68rem;color:var(--muted);
-  letter-spacing:0.1em;text-transform:uppercase;margin-bottom:1rem;
-  display:flex;align-items:center;gap:0.5rem;flex-wrap:wrap;}
-.card-title::before{content:'';display:inline-block;width:5px;height:5px;border-radius:50%;background:var(--accent);}
-.card-title.rouge::before{background:var(--accent3);}
-.card-title.det::before{background:var(--accent4);}
-.card-title.radar::before{background:var(--accent2);}
-.card-title.stacked::before{background:var(--accent5);}
-
-.chart-description{font-family:'DM Sans',sans-serif;font-size:0.75rem;color:var(--muted2);
-  margin-bottom:0.85rem;padding-top:0.6rem;padding-bottom:0.6rem;
-  border-top:1px solid var(--border);border-bottom:1px solid var(--border);line-height:1.4;}
-
-.stat-card{background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:1rem;text-align:center;}
-.stat-baseline{font-family:'Space Mono',monospace;font-size:0.58rem;color:var(--muted);
-  margin-bottom:0.3rem;letter-spacing:0.06em;text-transform:uppercase;}
-.stat-value{font-family:'Space Mono',monospace;font-size:1.3rem;font-weight:700;}
-.stat-std{font-family:'Space Mono',monospace;font-size:0.62rem;color:var(--muted);margin-top:0.1rem;}
-
-.rank-table{width:100%;border-collapse:collapse;}
-.rank-table th{font-family:'Space Mono',monospace;font-size:0.62rem;color:var(--muted);
-  padding:0.45rem 0.7rem;border-bottom:1px solid var(--border);font-weight:400;white-space:nowrap;}
-.rank-table td{padding:0.38rem 0.7rem;border-bottom:1px solid var(--surface3);
-  font-family:'Space Mono',monospace;font-size:0.68rem;white-space:nowrap;}
-.rank-table tr:hover td{background:var(--surface2);}
-.rank-1{color:var(--accent4);font-weight:700;}
-.rank-2{color:var(--muted2);}
-.rank-3{color:#cd7f32;}
-.std-inline{color:var(--muted);font-size:0.58rem;}
-
-.heatmap-table{width:100%;border-collapse:collapse;margin:1rem 0;}
-.heatmap-table th{font-family:'Space Mono',monospace;font-size:0.62rem;color:var(--muted);
-  padding:0.5rem 0.6rem;border-bottom:2px solid var(--border);font-weight:500;text-align:center;}
-.heatmap-table th:first-child{text-align:left;}
-.heatmap-table td{padding:0.5rem 0.6rem;border-bottom:1px solid var(--surface3);
-  font-family:'Space Mono',monospace;font-size:0.68rem;text-align:center;}
-.heatmap-table td:first-child{text-align:left;font-weight:600;}
-.heatmap-table tr:hover{background:var(--surface2);}
-.heatmap-cell{border-radius:3px;padding:0.3rem 0.4rem;color:var(--text);font-weight:700;}
-
-.heatmap-wrap{overflow-x:auto;}
-.heatmap{width:100%;border-collapse:collapse;}
-.heatmap th{font-family:'Space Mono',monospace;font-size:0.62rem;color:var(--muted);
-  padding:0.45rem 0.6rem;text-align:center;white-space:nowrap;border-bottom:1px solid var(--border);font-weight:400;}
-.heatmap th:first-child{text-align:left;}
-.heatmap td{padding:0.4rem 0.6rem;text-align:center;border-bottom:1px solid var(--surface3);
-  font-family:'Space Mono',monospace;font-size:0.68rem;transition:opacity 0.15s;white-space:nowrap;position:relative;cursor:help;}
-.heatmap td:first-child{text-align:left;color:var(--text);padding-left:0;}
-.heatmap td[data-tooltip]:hover::after{
-  content:attr(data-tooltip);
-  position:absolute;
-  bottom:125%;left:50%;transform:translateX(-50%);
-  background:var(--surface2);border:1px solid var(--border);border-radius:4px;
-  padding:0.5rem 0.75rem;font-size:0.7rem;white-space:nowrap;
-  color:var(--text);z-index:1000;box-shadow:0 4px 12px rgba(0,0,0,0.3);
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-sans);
+  font-size: 14px;
+  line-height: 1.55;
+  min-height: 100vh;
+  padding: 32px 28px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
-.heatmap td[data-tooltip]:hover::before{
-  content:'';position:absolute;bottom:120%;left:50%;transform:translateX(-50%);
-  border:5px solid transparent;border-top-color:var(--surface2);z-index:1001;
+
+/* ── Header ─────────────────────────────────── */
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  padding-bottom: 20px;
+  margin-bottom: 28px;
+  border-bottom: 1px solid var(--border);
 }
-.heatmap tr:hover td{opacity:0.82;}
-.cell-std{font-size:0.56rem;opacity:0.6;display:block;}
+.logo { font-size: 18px; font-weight: 600; letter-spacing: -0.03em; }
+.logo span { color: var(--accent); }
+.subtitle { font-size: 11px; font-family: var(--font-mono); color: var(--muted); margin-top: 3px; }
 
-.legend{display:flex;gap:0.85rem;margin-top:0.85rem;flex-wrap:wrap;}
-.legend-item{display:flex;align-items:center;gap:0.35rem;font-size:0.9rem;color:var(--muted);font-family:'Space Mono',monospace;}
-.legend-box{width:11px;height:11px;border-radius:2px;flex-shrink:0;}
+/* ── Badges ─────────────────────────────────── */
+.badge-row { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
+.badge {
+  display: inline-flex; align-items: center; gap: 5px;
+  font-size: 11px; font-weight: 500; padding: 2px 9px;
+  border-radius: 20px; border: 1px solid;
+}
+.badge::before {
+  content: ''; width: 4px; height: 4px; border-radius: 50%;
+  background: currentColor; opacity: .65; flex-shrink: 0;
+}
+.badge-bert  { border-color: rgba(249,115,22,.4);  color: var(--accent);  background: rgba(249,115,22,.07); }
+.badge-rouge { border-color: rgba(16,185,129,.4);  color: var(--accent3); background: rgba(16,185,129,.07); }
+.badge-det   { border-color: rgba(245,158,11,.4);  color: var(--accent4); background: rgba(245,158,11,.07); }
+.badge-std   { border-color: rgba(139,92,246,.4);  color: var(--accent2); background: rgba(139,92,246,.07); }
 
-.methodology-card{background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:1rem;margin-bottom:1.25rem;position:relative;}
-.methodology-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:0.75rem;}
-.methodology-title{font-family:'Space Mono',monospace;font-size:0.7rem;color:var(--muted);letter-spacing:0.08em;text-transform:uppercase;font-weight:600;}
-.info-btn{background:var(--accent);color:var(--bg);border:none;width:22px;height:22px;border-radius:50%;cursor:pointer;font-size:0.85rem;display:flex;align-items:center;justify-content:center;transition:all 0.2s;font-weight:700;}
-.info-btn:hover{background:var(--accent2);transform:scale(1.1);}
-.formula-box{background:var(--surface3);border-left:3px solid var(--accent);padding:0.75rem;border-radius:4px;margin:0.5rem 0;font-family:'Space Mono',monospace;font-size:0.72rem;color:var(--text);line-height:1.6;}
-.formula-details{display:none;padding-top:0.75rem;border-top:1px solid var(--border);margin-top:0.75rem;}
-.formula-details.show{display:block;}
-.detail-item{display:flex;gap:0.5rem;margin:0.5rem 0;font-size:0.68rem;color:var(--muted2);}
-.detail-item-bullet{color:var(--accent3);font-weight:700;flex-shrink:0;width:1.2rem;}
+/* ── Tabs — segment control ─────────────────── */
+.tabs {
+  display: inline-flex; gap: 1px;
+  background: var(--surface2); padding: 3px;
+  border-radius: var(--r-md); border: 1px solid var(--border);
+  margin-bottom: 24px; flex-wrap: wrap;
+}
+.tab {
+  font-size: 13px; font-weight: 500; padding: 5px 14px;
+  border-radius: 7px; border: none; background: transparent;
+  color: var(--muted2); cursor: pointer;
+  transition: all var(--t); white-space: nowrap; letter-spacing: -.01em;
+}
+.tab:hover  { color: var(--text2); background: var(--surface3); }
+.tab.active { color: var(--text); background: var(--surface4); box-shadow: var(--shadow-sm); }
+.panel { display: none; }
+.panel.active { display: block; }
 
-canvas{width:100%!important;height:auto!important;display:block;}
-canvas#consistencyChart{height:675px!important;}
-canvas#blLineChart{height:500px!important;}
-canvas#stackedBar{height:400px!important;}
-canvas#semBar{height:500px!important;}
-canvas#detPrecRec{height:450px!important;}
-canvas#radarChart{height:800px!important;}
-canvas#radarGrouped{height:800px!important;}
-canvas#finalScoreChart{height:600px!important;}
-canvas#tradeoffBubbleChart{height:560px!important;}
-canvas#fdrFnrChart{height:450px!important;}
-canvas#matchedRateChart{height:500px!important;}
-canvas#absentChart{height:500px!important;}
-footer{margin-top:3rem;padding-top:1.5rem;border-top:1px solid var(--border);color:var(--muted);font-size:0.75rem;text-align:center;font-family:'Space Mono',monospace;}
-@media(max-width:900px){.grid-2,.grid-3{grid-template-columns:1fr;}}
+/* ── Controls ───────────────────────────────── */
+.controls { display: flex; align-items: center; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
+.ctrl-label { font-size: 12px; font-weight: 500; color: var(--muted); }
+select {
+  background: var(--surface2); border: 1px solid var(--border2);
+  border-radius: var(--r-sm); color: var(--text2);
+  font-family: var(--font-sans); font-size: 12px; padding: 4px 10px;
+  cursor: pointer; outline: none; -webkit-appearance: none; appearance: none;
+  transition: border-color var(--t);
+}
+select:hover { border-color: var(--border3); }
+select:focus { border-color: var(--accent); }
+.btn-group { display: flex; }
+.btn-toggle {
+  font-size: 12px; font-weight: 500; padding: 4px 12px;
+  background: var(--surface2); border: 1px solid var(--border2);
+  color: var(--muted2); cursor: pointer; transition: all var(--t); white-space: nowrap;
+}
+.btn-toggle:first-child { border-radius: var(--r-sm) 0 0 var(--r-sm); }
+.btn-toggle:last-child  { border-radius: 0 var(--r-sm) var(--r-sm) 0; }
+.btn-toggle:only-child  { border-radius: var(--r-sm); }
+.btn-toggle:hover:not(.on) { color: var(--text2); background: var(--surface3); }
+.btn-toggle.on { background: var(--accent); color: #fff; border-color: var(--accent); }
+
+/* Range inputs */
+input[type="range"] {
+  -webkit-appearance: none; appearance: none;
+  height: 4px; background: var(--border3);
+  border-radius: 2px; cursor: pointer; outline: none;
+}
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none; width: 14px; height: 14px;
+  background: var(--accent); border-radius: 50%; cursor: pointer;
+  box-shadow: 0 0 0 3px rgba(249,115,22,.2);
+}
+input[type="range"]::-moz-range-thumb {
+  width: 14px; height: 14px; background: var(--accent);
+  border-radius: 50%; cursor: pointer; border: none;
+}
+
+/* ── Grid & Cards ───────────────────────────── */
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+.grid-3 { display: grid; grid-template-columns: repeat(3,1fr); gap: 12px; margin-bottom: 16px; }
+
+.card, .card-full {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  padding: 20px;
+  box-shadow: var(--shadow-sm);
+  transition: border-color var(--t);
+}
+.card { display: flex; flex-direction: column; }
+.card-full { display: flex; flex-direction: column; margin-bottom: 16px; }
+.card:hover, .card-full:hover { border-color: var(--border2); }
+
+/* ── Card Title ─────────────────────────────── */
+.card-title {
+  font-size: 11px; font-weight: 600; color: var(--muted2);
+  text-transform: uppercase; letter-spacing: .07em;
+  margin-bottom: 16px;
+  display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+}
+.card-title::before {
+  content: ''; width: 5px; height: 5px; border-radius: 50%;
+  background: var(--accent); flex-shrink: 0;
+}
+.card-title.rouge::before   { background: var(--accent3); }
+.card-title.det::before     { background: var(--accent4); }
+.card-title.radar::before   { background: var(--accent2); }
+.card-title.stacked::before { background: var(--accent5); }
+
+/* ── Chart Description ──────────────────────── */
+.chart-description {
+  font-size: 12px; color: var(--muted2); line-height: 1.6;
+  margin-bottom: 16px; padding: 10px 12px;
+  background: var(--surface2);
+  border-left: 2px solid var(--border3);
+  border-radius: 0 var(--r-sm) var(--r-sm) 0;
+}
+
+/* ── Stat Cards ─────────────────────────────── */
+.stat-card {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  padding: 16px 20px; text-align: center;
+  position: relative; overflow: hidden;
+  transition: all var(--t);
+}
+.stat-card::after {
+  content: ''; position: absolute;
+  top: 0; left: 15%; right: 15%; height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(249,115,22,.55), transparent);
+}
+.stat-card:hover { border-color: var(--border2); transform: translateY(-1px); box-shadow: var(--shadow-md); }
+.stat-baseline { font-size: 10px; font-weight: 600; letter-spacing: .09em; text-transform: uppercase; color: var(--muted); margin-bottom: 6px; }
+.stat-value    { font-family: var(--font-mono); font-size: 28px; font-weight: 700; letter-spacing: -.03em; line-height: 1.1; }
+.stat-std      { font-family: var(--font-mono); font-size: 11px; color: var(--muted); margin-top: 3px; }
+
+/* ── Tables ─────────────────────────────────── */
+.rank-table { width: 100%; border-collapse: collapse; }
+.rank-table th {
+  font-size: 11px; font-weight: 600; color: var(--muted);
+  padding: 8px 12px; border-bottom: 1px solid var(--border2);
+  text-align: left; letter-spacing: .05em; text-transform: uppercase;
+  white-space: nowrap; background: var(--surface2);
+}
+.rank-table td {
+  padding: 8px 12px; border-bottom: 1px solid var(--border);
+  font-family: var(--font-mono); font-size: 12px; color: var(--text2); white-space: nowrap;
+}
+.rank-table tr:last-child td { border-bottom: none; }
+.rank-table tr:hover td { background: var(--surface2); color: var(--text); }
+.rank-1 { color: var(--accent4) !important; font-weight: 700; }
+.rank-2 { color: var(--muted2) !important; }
+.rank-3 { color: #cd7f32 !important; }
+.std-inline { color: var(--muted); font-size: 10px; }
+
+/* ── Heatmap Table ───────────────────────────── */
+.heatmap-table { width: 100%; border-collapse: collapse; margin: 12px 0; }
+.heatmap-table th {
+  font-size: 11px; font-weight: 600; color: var(--muted);
+  padding: 8px 10px; border-bottom: 1px solid var(--border2);
+  text-align: center; letter-spacing: .05em; text-transform: uppercase;
+  background: var(--surface2);
+}
+.heatmap-table th:first-child { text-align: left; }
+.heatmap-table td { padding: 8px 10px; border-bottom: 1px solid var(--border); font-family: var(--font-mono); font-size: 12px; text-align: center; color: var(--text2); }
+.heatmap-table td:first-child { text-align: left; font-weight: 600; color: var(--text); }
+.heatmap-table tr:hover { background: var(--surface3); }
+.heatmap-cell { border-radius: var(--r-xs); padding: 4px 8px; color: var(--text); font-weight: 700; }
+
+/* ── Dynamic Heatmap ────────────────────────── */
+.heatmap-wrap { overflow-x: auto; }
+.heatmap { width: 100%; border-collapse: collapse; }
+.heatmap th {
+  font-size: 11px; font-weight: 600; color: var(--muted);
+  padding: 8px 10px; text-align: center; white-space: nowrap;
+  border-bottom: 1px solid var(--border2); letter-spacing: .05em;
+  text-transform: uppercase; background: var(--surface2);
+}
+.heatmap th:first-child { text-align: left; }
+.heatmap td {
+  padding: 7px 10px; text-align: center;
+  border-bottom: 1px solid var(--border);
+  font-family: var(--font-mono); font-size: 12px;
+  white-space: nowrap; position: relative; cursor: help;
+  transition: background var(--t); color: var(--text2);
+}
+.heatmap td:first-child { text-align: left; color: var(--text); padding-left: 4px; font-weight: 500; }
+.heatmap tr:hover td { background: var(--surface2); }
+.heatmap td[data-tooltip]:hover::after {
+  content: attr(data-tooltip);
+  position: absolute; bottom: calc(100% + 6px); left: 50%; transform: translateX(-50%);
+  background: var(--surface3); border: 1px solid var(--border2);
+  border-radius: var(--r-sm); padding: 6px 10px; font-size: 11px;
+  font-family: var(--font-sans); white-space: nowrap; color: var(--text2);
+  z-index: 100; box-shadow: var(--shadow-md); pointer-events: none;
+}
+.heatmap td[data-tooltip]:hover::before {
+  content: ''; position: absolute;
+  bottom: calc(100% + 1px); left: 50%; transform: translateX(-50%);
+  border: 4px solid transparent; border-top-color: var(--surface3); z-index: 101;
+}
+.cell-std { font-size: 10px; opacity: .5; display: block; margin-top: 1px; }
+
+/* ── Legend ─────────────────────────────────── */
+.legend { display: flex; gap: 10px; margin-top: 12px; flex-wrap: wrap; }
+.legend-item { display: flex; align-items: center; gap: 6px; font-size: 11px; color: var(--muted2); font-weight: 500; }
+.legend-box { width: 10px; height: 10px; border-radius: 3px; flex-shrink: 0; }
+
+/* ── Methodology ────────────────────────────── */
+.methodology-card { background: var(--surface2); border: 1px solid var(--border); border-radius: var(--r-sm); padding: 16px; margin-bottom: 16px; }
+.methodology-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+.methodology-title { font-size: 11px; font-weight: 600; color: var(--muted2); letter-spacing: .06em; text-transform: uppercase; }
+.info-btn { background: var(--accent); color: #fff; border: none; width: 20px; height: 20px; border-radius: 50%; cursor: pointer; font-size: 11px; display: flex; align-items: center; justify-content: center; transition: all var(--t); font-weight: 700; flex-shrink: 0; }
+.info-btn:hover { background: var(--accent2); transform: scale(1.1); }
+.formula-box { background: var(--bg); border: 1px solid var(--border2); border-left: 2px solid var(--accent); padding: 10px 14px; border-radius: 0 var(--r-sm) var(--r-sm) 0; font-family: var(--font-mono); font-size: 13px; color: var(--text); line-height: 1.6; margin: 8px 0; }
+.formula-details { display: none; padding-top: 12px; border-top: 1px solid var(--border); margin-top: 12px; }
+.formula-details.show { display: block; }
+.detail-item { display: flex; gap: 8px; margin: 6px 0; font-size: 12px; color: var(--muted2); }
+.detail-item-bullet { color: var(--accent3); font-weight: 700; flex-shrink: 0; width: 1.2rem; }
+
+/* ── Canvas ─────────────────────────────────── */
+canvas { width: 100% !important; height: auto !important; display: block; }
+canvas#consistencyChart    { height: 675px !important; }
+canvas#blLineChart         { height: 500px !important; }
+canvas#stackedBar          { height: 400px !important; }
+canvas#semBar              { height: 500px !important; }
+canvas#detPrecRec          { height: 450px !important; }
+canvas#radarChart          { height: 800px !important; }
+canvas#radarGrouped        { height: 800px !important; }
+canvas#finalScoreChart     { height: 600px !important; }
+canvas#tradeoffBubbleChart { height: 560px !important; }
+canvas#fdrFnrChart         { height: 450px !important; }
+canvas#matchedRateChart    { height: 500px !important; }
+canvas#absentChart         { height: 500px !important; }
+
+/* ── Footer ─────────────────────────────────── */
+footer {
+  margin-top: 48px; padding: 18px 0;
+  border-top: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  gap: 8px; flex-wrap: wrap;
+  font-size: 12px; color: var(--muted);
+}
+footer span + span::before { content: '·'; margin-right: 8px; color: var(--border3); }
+
+/* ── Responsive ─────────────────────────────── */
+@media (max-width: 900px) {
+  .grid-2, .grid-3 { grid-template-columns: 1fr; }
+  body { padding: 16px; }
+  .tabs { display: flex; width: 100%; }
+  .tab { flex: 1; text-align: center; font-size: 12px; }
+}
 </style>
 </head>
 <body>
@@ -226,10 +408,8 @@ footer{margin-top:3rem;padding-top:1.5rem;border-top:1px solid var(--border);col
 <div class="panel" id="tab-performance">
   <!-- ══ SECTION: TEXT QUALITY ══ -->
   {% if has_bert or has_rouge %}
-  <div style="margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 2px solid var(--border);">
-    <div style="font-family:'Space Mono',monospace; font-size:0.85rem; color:var(--accent); margin-bottom:1.25rem; letter-spacing:0.1em; text-transform:uppercase;">
-      Text Quality
-    </div>
+  <div style="margin-bottom:32px;padding-bottom:24px;border-bottom:1px solid var(--border2);">
+    <div style="font-family:var(--font-sans); font-size:11px; font-weight:600; color:var(--accent); margin-bottom:20px; letter-spacing:.08em; text-transform:uppercase; display:flex; align-items:center; gap:8px;"><span style="display:inline-block;width:3px;height:14px;border-radius:2px;background:var(--accent);"></span>Text Quality</div>
     
     {% if has_bert and has_rouge %}
     <div class="controls">
@@ -268,10 +448,8 @@ footer{margin-top:3rem;padding-top:1.5rem;border-top:1px solid var(--border);col
 
   <!-- ══ SECTION: STRUCTURED EXTRACTION ══ -->
   {% if has_det %}
-  <div style="margin-bottom: 2rem; padding-top: 1.5rem;">
-    <div style="font-family:'Space Mono',monospace; font-size:0.85rem; color:var(--accent4); margin-bottom:1.25rem; letter-spacing:0.1em; text-transform:uppercase;">
-      Structured Extraction
-    </div>
+  <div style="margin-bottom:32px;">
+    <div style="font-family:var(--font-sans); font-size:11px; font-weight:600; color:var(--accent4); margin-bottom:20px; letter-spacing:.08em; text-transform:uppercase; display:flex; align-items:center; gap:8px;"><span style="display:inline-block;width:3px;height:14px;border-radius:2px;background:var(--accent4);"></span>Structured Extraction</div>
     
     <div class="controls">
       <span class="ctrl-label">Metric:</span>
@@ -341,7 +519,7 @@ footer{margin-top:3rem;padding-top:1.5rem;border-top:1px solid var(--border);col
           <span class="detail-item-bullet">•</span>
           <span><strong>Text_Quality_score</strong> = 0.7 × BERT + 0.3 × ROUGE-L</span>
         </div>
-        <div class="detail-item" style="margin-top:0.85rem;padding-top:0.5rem;border-top:1px solid var(--border);">
+        <div class="detail-item" style="margin-top:12px;padding-top:8px;border-top:1px solid var(--border);">
           <span class="detail-item-bullet">→</span>
           <span>IE weight: <strong>70%</strong> (prioritizes structured extraction)</span>
         </div>
@@ -365,18 +543,18 @@ footer{margin-top:3rem;padding-top:1.5rem;border-top:1px solid var(--border);col
     <div style="position:relative;height:560px;width:100%;">
       <canvas id="tradeoffBubbleChart"></canvas>
     </div>
-    <div style="margin-top:1rem;padding:0.75rem;background:rgba(30,45,69,0.3);border-radius:6px;font-size:0.7rem;color:var(--muted2);line-height:1.5;">
-      <strong style="color:var(--text);">Quadrant Guide:</strong>
-      <span style="margin-left:0.5rem;">Top-right = Balanced (high IE + high Text Quality)</span>
-      <span style="margin-left:1rem;">Top-left = Quality-focused (low IE + high Text Quality)</span>
-      <span style="margin-left:1rem;">Bottom-right = Extraction-focused (high IE + low Text Quality)</span>
-      <span style="margin-left:1rem;">Bottom-left = Needs Improvement (low IE + low Text Quality)</span>
+    <div style="margin-top:12px;padding:10px 14px;background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius-sm);font-family:var(--font-sans);font-size:12px;color:var(--muted2);line-height:1.6;display:flex;flex-wrap:wrap;gap:12px;">
+      <span><strong style="color:var(--text);">Quadrant Guide</strong></span>
+      <span style="color:var(--accent3);">↗ Top-right = Balanced</span>
+      <span style="color:var(--accent2);">↖ Top-left = Quality-focused</span>
+      <span style="color:var(--accent4);">↘ Bottom-right = Extraction-focused</span>
+      <span style="color:var(--accent5);">↙ Bottom-left = Needs Improvement</span>
     </div>
   </div>
 
   <!-- FDR vs FNR Scatter -->
   {% if has_fdr_fnr %}
-  <div class="card-full" style="margin-top:1.5rem;">
+  <div class="card-full" style="margin-top:16px;">
     <div class="card-title">FDR vs FNR — Trade-off: Invented × Absent Vulnerabilities</div>
     <div class="chart-description">
       Each shape = one <strong>(LLM, baseline)</strong> pair · color = LLM · shape = baseline · large circle = LLM mean.
@@ -398,19 +576,19 @@ footer{margin-top:3rem;padding-top:1.5rem;border-top:1px solid var(--border);col
       <span class="ctrl-label">FNR threshold (X — % missed):</span>
       <input type="range" id="fnrThreshold" min="0" max="50" value="15" step="1"
              oninput="rebuildFdrFnr()" style="width:150px;cursor:pointer;">
-      <span id="fnrThresholdLabel" style="font-family:'Space Mono',monospace;font-size:0.7rem;color:var(--accent);">15%</span>
+      <span id="fnrThresholdLabel" style="font-family:var(--font-mono);font-size:12px;font-weight:600;color:var(--accent);">15%</span>
       <span style="margin-left:1.5rem;" class="ctrl-label">FDR threshold (Y — % invented):</span>
       <input type="range" id="fdrThreshold" min="0" max="50" value="15" step="1"
              oninput="rebuildFdrFnr()" style="width:150px;cursor:pointer;">
-      <span id="fdrThresholdLabel" style="font-family:'Space Mono',monospace;font-size:0.7rem;color:var(--accent);">15%</span>
+      <span id="fdrThresholdLabel" style="font-family:var(--font-mono);font-size:12px;font-weight:600;color:var(--accent);">15%</span>
     </div>
 
-    <div id="fdrFnrLegend" style="margin-bottom:0.6rem;padding:0.45rem 0.6rem;background:rgba(255,255,255,0.03);border-radius:4px;border:1px solid var(--border);"></div>
+    <div id="fdrFnrLegend" style="margin-bottom:8px;padding:8px 12px;background:var(--surface2);border-radius:var(--r-sm);border:1px solid var(--border);"></div>
 
     <div style="position:relative;height:450px;width:100%;">
       <canvas id="fdrFnrChart"></canvas>
     </div>
-    <p style="font-size:0.65rem;color:var(--muted);margin-top:0.5rem;text-align:center;font-family:'Space Mono',monospace;">
+    <p style="font-size:11px;color:var(--muted);margin-top:8px;text-align:center;">
       Large circle = LLM mean &nbsp;·&nbsp; Smaller shapes = individual baselines &nbsp;·&nbsp; Green zone = below both thresholds
     </p>
   </div>
@@ -418,14 +596,12 @@ footer{margin-top:3rem;padding-top:1.5rem;border-top:1px solid var(--border);col
 
   <!-- Metric Correlation (BERT × ROUGE-L) -->
   {% if has_bert and has_rouge %}
-  <div class="card-full" style="margin-top: 1.5rem; padding-top: 1.5rem; border-top: 2px solid var(--border);">
-    <div style="font-family:'Space Mono',monospace; font-size:0.75rem; color:var(--muted); margin-bottom:1rem; letter-spacing:0.1em; text-transform:uppercase;">
-      📊 BERT vs ROUGE-L Correlation
-    </div>
+  <div class="card-full" style="margin-top:16px;padding-top:20px;border-top:1px solid var(--border);">
+    <div style="font-family:var(--font-sans); font-size:11px; font-weight:600; color:var(--muted2); margin-bottom:16px; letter-spacing:.08em; text-transform:uppercase; display:flex; align-items:center; gap:8px;"><span style="display:inline-block;width:3px;height:14px;border-radius:2px;background:var(--accent2);"></span>BERT vs ROUGE-L Correlation</div>
     
     <div style="display: flex; gap: 0.5rem; align-items: center; margin-bottom: 1rem;">
       <span class="ctrl-label">Baseline:</span>
-      <select id="corrBaseline" onchange="rebuildCorrelation()" style="background: var(--surface2); color: var(--text); border: 1px solid var(--border2); border-radius: 4px; padding: 0.3rem 0.6rem; font-family: 'Space Mono', monospace; font-size: 0.7rem; cursor: pointer;">
+      <select id="corrBaseline" onchange="rebuildCorrelation()">
         <option value="all">All (average)</option>
         {% for bl in baselines %}<option value="{{ bl }}">{{ bl }}</option>{% endfor %}
       </select>
@@ -453,16 +629,14 @@ footer{margin-top:3rem;padding-top:1.5rem;border-top:1px solid var(--border);col
 
   <!-- Weight Sensitivity -->
   {% if has_det and has_bert %}
-  <div class="card-full" style="margin-top: 1.5rem; padding-top: 1.5rem; border-top: 2px solid var(--border);">
-    <div style="font-family:'Space Mono',monospace; font-size:0.75rem; color:var(--muted); margin-bottom:1rem; letter-spacing:0.1em; text-transform:uppercase;">
-      ⚖️ Weight Sensitivity Analysis
-    </div>
+  <div class="card-full" style="margin-top:16px;padding-top:20px;border-top:1px solid var(--border);">
+    <div style="font-family:var(--font-sans); font-size:11px; font-weight:600; color:var(--muted2); margin-bottom:16px; letter-spacing:.08em; text-transform:uppercase; display:flex; align-items:center; gap:8px;"><span style="display:inline-block;width:3px;height:14px;border-radius:2px;background:var(--accent3);"></span>Weight Sensitivity Analysis</div>
     
     <div class="controls">
       <span class="ctrl-label">IE Weight (%):</span>
       <input type="range" id="ieWeight" min="0" max="100" value="70" onchange="rebuildSensitivity()" style="width:200px;cursor:pointer;">
-      <span id="ieWeightLabel" style="font-family:'Space Mono',monospace;font-size:0.7rem;color:var(--accent);">70%</span>
-      <span style="margin-left:2rem;font-size:0.7rem;color:var(--muted);">Text Quality: <span id="nlgWeightLabel">30%</span></span>
+      <span id="ieWeightLabel" style="font-family:var(--font-mono);font-size:12px;font-weight:600;color:var(--accent);">70%</span>
+      <span style="font-size:12px;color:var(--muted);">Text Quality: <span id="nlgWeightLabel">30%</span></span>
     </div>
     
     <div class="card-full" style="background: transparent; border: none; padding: 0; margin-top: 1rem;">
@@ -529,9 +703,9 @@ footer{margin-top:3rem;padding-top:1.5rem;border-top:1px solid var(--border);col
 {% endif %}
 
 <footer>
-  <div style="display:inline-block;margin:0 1rem;">📊 MulitaMiner Metrics Dashboard</div>
-  <div style="display:inline-block;margin:0 1rem;">📈 Interactive Dashboard (Chart.js)</div>
-  <div style="display:inline-block;margin:0 1rem;">Generated: {{ report_date }}</div>
+  <span>MulitaMiner Metrics Dashboard</span>
+  <span>Interactive Dashboard (Chart.js)</span>
+  <span>Generated: {{ report_date }}</span>
 </footer>
 
 <script>
@@ -558,7 +732,7 @@ const HAS_VULN_COUNT = {{ 'true' if has_vulncount else 'false' }};
 const HAS_ERROR_BREAKDOWN = {{ 'true' if has_error_breakdown else 'false' }};
 
 // Color palette (shared across all charts)
-const COLOR_PALETTE = ['#00e5ff','#813ff5','#14cf91','#f59e0b','#fc90a2','#dc2626','#ec4899','#3bf6dd','#f97316','#933ca8'];
+const COLOR_PALETTE = ['#F97316','#8B5CF6','#10B981','#3B82F6','#F59E0B','#EF4444','#06B6D4','#EC4899','#A78BFA','#34D399'];
 
 // Initialize model colors dynamically based on actual models
 const MC = {};
@@ -694,8 +868,8 @@ function buildHeatmap(tableId, fields, dataObj, type='sem'){
   });
 }
 
-const FONT={family:'Space Mono',size:13}, FONT_SM={family:'Space Mono',size:12};
-const GRID='#1e2d45', TICKS='#64748b';
+const FONT={family:'Inter',size:12}, FONT_SM={family:'Inter',size:11};
+const GRID='#1F1F28', TICKS='#52526A';
 const LEG={labels:{color:TICKS,font:FONT_SM}};
 const ttStd=ctx=>{const ds=ctx.dataset;const s=ds.errorBars?.[ctx.dataIndex]??0;return ` ${ds.label}: ${ctx.parsed.y.toFixed(3)} ±${s.toFixed(3)}`;};
 const ttVal=ctx=>{const ds=ctx.dataset;return ` ${ds.label}: ${ctx.parsed.y.toFixed(3)}`;};
@@ -1102,7 +1276,7 @@ function rebuildRadar(){
         return{label:MODEL_NAMES[m]||m,data:[ba,ra,df('severity'),df('cvss'),df('plugin'),pa,rca],borderColor:c,backgroundColor:c+'15',pointBackgroundColor:c,borderWidth:1.5,pointRadius:3};
       })
     },
-    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:LEG,tooltip:{callbacks:{label:i=>`${i.dataset.label}: ${(i.parsed.r*100).toFixed(1)}%`}}},scales:{r:{min:0.6,max:1.0,ticks:{color:TICKS,font:{family:'Space Mono',size:11},backdropColor:'transparent'},grid:{color:GRID},pointLabels:{color:'#94a3b8',font:{family:'Space Mono',size:12}}}}}
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:LEG,tooltip:{callbacks:{label:i=>`${i.dataset.label}: ${(i.parsed.r*100).toFixed(1)}%`}}},scales:{r:{min:0.6,max:1.0,ticks:{color:TICKS,font:{family:'Space Mono',size:11},backdropColor:'transparent'},grid:{color:GRID},pointLabels:{color:'#94a3b8',font:{family:'Inter',size:12}}}}}
   });
 
   mkChart('radarGrouped',{
@@ -1260,7 +1434,7 @@ function rebuildTradeoff(){
           display: true,
           position: 'bottom',
           labels: {
-            font: {family: "'Space Mono', monospace", size: 10},
+            font: {family: "'Inter', sans-serif", size: 10},
             color: '#e2e8f0',
             padding: 12,
             usePointStyle: true,
@@ -1275,10 +1449,10 @@ function rebuildTradeoff(){
         },
         quadrantBackground: {},
         tooltip: {
-          backgroundColor: 'rgba(10,14,26,0.9)',
+          backgroundColor: 'rgba(17,17,22,0.97)',
           padding: 12,
-          titleFont: {size: 12, family: "'Space Mono', monospace"},
-          bodyFont: {size: 11, family: "'Space Mono', monospace"},
+          titleFont: {size: 12, family: "'Inter', sans-serif"},
+          bodyFont: {size: 11, family: "'Inter', sans-serif"},
           callbacks: {
             title: (ctx) => ctx[0].raw.label,
             label: (ctx) => {
@@ -1500,8 +1674,8 @@ function rebuildFdrFnr() {
   // ── Custom HTML legend (two sections: LLMs + Baselines) ─────────────────
   const legendEl = document.getElementById('fdrFnrLegend');
   if (legendEl) {
-    const rowStyle = 'display:flex;flex-wrap:wrap;align-items:center;font-family:\'Space Mono\',monospace;font-size:0.66rem;color:#94a3b8;';
-    const lblStyle = 'color:#64748b;font-size:0.6rem;min-width:58px;flex-shrink:0;';
+    const rowStyle = 'display:flex;flex-wrap:wrap;align-items:center;font-family:\'Inter\',sans-serif;font-size:0.66rem;color:#94a3b8;';
+    const lblStyle = 'color:#64748b;font-size:0.6rem;font-weight:500;min-width:58px;flex-shrink:0;';
 
     const llmItems = MODELS.map((m, i) => {
       const color = MC[m] || FDR_PALETTE[i % FDR_PALETTE.length];
