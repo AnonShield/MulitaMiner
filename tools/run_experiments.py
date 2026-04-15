@@ -129,6 +129,7 @@ def execute_run(run_id, run_info, group_key, checkpoints, checkpoint_path,
             checkpoints[run_id]["status"] = "ok"
             checkpoints[run_id]["output_file"] = output_file
             checkpoints[run_id]["timestamp"] = timestamp
+            checkpoints[run_id]["elapsed_time"] = round(elapsed, 2)
             checkpoints[run_id]["cmd"] = " ".join(cmd)
             with open(checkpoint_path, "w", encoding="utf-8") as f:
                 json.dump(checkpoint_data, f, indent=2, ensure_ascii=False)
@@ -347,7 +348,16 @@ def main():
         sys.exit(0)
 
     end_time = time.time()
-    duration = end_time - start_time
+
+    total_runs_time = sum(
+        r.get("elapsed_time", 0)
+        for r in checkpoints.values()
+        if r.get("status") == "ok"
+    )
+    h = int(total_runs_time // 3600)
+    m = int((total_runs_time % 3600) // 60)
+    s = total_runs_time % 60
+    print(f"[INFO] Total experiment time (sum of all runs): {h:02d}:{m:02d}:{s:05.2f}")
 
     print("[INFO] Execution finished. Generating final report...")
     report_dir = os.path.abspath('results_runs')
@@ -358,7 +368,7 @@ def main():
         tokens_dir='results_tokens',
         report_dir=report_dir,
         include_metrics_time=True,
-        timing_report=run_stats.get('timing_report', [])
+        timing_report=[{"total_time": total_runs_time}]
     )
     print("[INFO] Final report generated.")
 
@@ -380,7 +390,7 @@ def main():
                 latest_report = os.path.join(plot_dir, reports[-1])
                 print(f"\n[SUCCESS] Interactive report generated!")
                 print(f"[SUCCESS] Open in browser: {latest_report}")
-                print(f"[SUCCESS] Total experiment time: {int(duration // 60)}m {int(duration % 60)}s")
+                print(f"[SUCCESS] Total experiment time: {h:02d}:{m:02d}:{s:05.2f}")
 
     except Exception as e:
         print(f"[WARNING] Failed to generate Plotly report: {e}")

@@ -591,40 +591,49 @@ Automates large-scale experiments with checkpoint support, automatic evaluation 
 # Syntax: Run experiments with specified configurations
 
 # Windows
-python tools/run_experiments.py --input-dir <input_directory> --llms <llm1> <llm2> ... --scanners <scanner1> <scanner2> ... --evaluation-methods <method1> <method2> ... --runs-per-model <number> --allow-duplicates <true/false> ...
+python tools/run_experiments.py --input-dir <input_directory> --llms <llm1> <llm2> ... --scanner <scanner> --evaluation-methods <method1> <method2> ... --runs-per-model <number> [--allow-duplicates]
 
 # Linux/macOS
-python3 tools/run_experiments.py --input-dir <input_directory> --llms <llm1> <llm2> ... --scanners <scanner1> <scanner2> ... --evaluation-methods <method1> <method2> ... --runs-per-model <number> --allow-duplicates <true/false> ...
+python3 tools/run_experiments.py --input-dir <input_directory> --llms <llm1> <llm2> ... --scanner <scanner> --evaluation-methods <method1> <method2> ... --runs-per-model <number> [--allow-duplicates]
 
-# Example: Run with DeepSeek and GPT-4 on OpenVAS
+# Example: Run with DeepSeek and GPT-4 on OpenVAS (with allow-duplicates)
 
 # Windows
-python tools/run_experiments.py --input-dir test\openvas --llms deepseek gpt4 --scanners openvas --evaluation-methods bert rouge --runs-per-model 5 --allow-duplicates true
+python tools/run_experiments.py --input-dir test\openvas --llms deepseek gpt4 --scanner openvas --evaluation-methods bert rouge --runs-per-model 5 --allow-duplicates
 
 # Linux/macOS
-python3 tools/run_experiments.py --input-dir test/openvas --llms deepseek gpt4 --scanners openvas --evaluation-methods bert rouge --runs-per-model 5 --allow-duplicates true
+python3 tools/run_experiments.py --input-dir test/openvas --llms deepseek gpt4 --scanner openvas --evaluation-methods bert rouge --runs-per-model 5 --allow-duplicates
+
+# Example: Run on Tenable (no --allow-duplicates)
+
+# Windows
+python tools/run_experiments.py --input-dir test\tenable --llms deepseek gpt4 --scanner tenable --evaluation-methods bert rouge --runs-per-model 5
+
+# Linux/macOS
+python3 tools/run_experiments.py --input-dir test/tenable --llms deepseek gpt4 --scanner tenable --evaluation-methods bert rouge --runs-per-model 5
 
 # Syntax: Resume from checkpoint
 
 # Windows
-python tools/run_experiments.py --input-dir <input_directory> --llms <llm> --scanners <scanner> --checkpoint-file <checkpoint_file.json>
+python tools/run_experiments.py --checkpoint-file <checkpoint_file.json>
 
 # Linux/macOS
-python3 tools/run_experiments.py --input-dir <input_directory> --llms <llm> --scanners <scanner> --checkpoint-file <checkpoint_file.json>
+python3 tools/run_experiments.py --checkpoint-file <checkpoint_file.json>
 
 # Example: Resume interrupted run
 
 # Windows
-python tools/run_experiments.py --input-dir test\openvas --llms deepseek --scanners openvas --checkpoint-file run_checkpoints_2026-03-16T12-28-08.json
+python tools/run_experiments.py --checkpoint-file run_checkpoints_2026-03-16T12-28-08.json
 
 # Linux/macOS
-python3 tools/run_experiments.py --input-dir test/openvas --llms deepseek --scanners openvas --checkpoint-file run_checkpoints_2026-03-16T12-28-08.json
+python3 tools/run_experiments.py --checkpoint-file run_checkpoints_2026-03-16T12-28-08.json
 ```
 
 **Key Features:**
 
+- **One scanner per invocation**: run separately for OpenVAS and Tenable
 - **Checkpoint support**: Resume interrupted experiments from checkpoint files
-- **Timing reports**: Tracks extraction and metrics evaluation times
+- **Timing reports**: Tracks and sums execution time across all runs
 - **Token cost analysis**: Integrates with `results_tokens/` directory
 - **Automatic reporting**: Generates comprehensive final report with `reporting.py`
 - **Chart generation**: Automatically calls `process_results.py` at the end
@@ -634,10 +643,10 @@ python3 tools/run_experiments.py --input-dir test/openvas --llms deepseek --scan
 
 - `--input-dir`: Directory with paired .xlsx (baseline) and .pdf (report) files
 - `--llms`: Space-separated list of LLMs (e.g., `deepseek gpt4 llama3`)
-- `--scanners`: Space-separated list of scanners (e.g., `openvas tenable`)
+- `--scanner`: Scanner to use (`openvas` or `tenable`)
 - `--evaluation-methods`: Evaluation methods (default: `bert`, can add `rouge`)
 - `--runs-per-model`: Number of runs per model combination (default: 10)
-- `--allow-duplicates`: Boolean per scanner (e.g., `true false` for `openvas tenable`)
+- `--allow-duplicates`: Flag to allow duplicates (recommended for OpenVAS; omit for Tenable)
 - `--checkpoint-file`: Optional checkpoint file to resume execution
 
 ### `tools/process_results.py` — Chart and Statistics Generation

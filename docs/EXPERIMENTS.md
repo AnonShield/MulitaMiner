@@ -93,23 +93,27 @@ Comparison against OpenVAS CSV baseline (6,343 vulnerabilities) using fuzzy matc
 # Run experiments with specified configurations
 
 # Windows
-python tools/run_experiments.py --input-dir test\openvas --llms deepseek gpt4 --scanners openvas --evaluation-methods bert rouge --runs-per-model 5 --allow-duplicates true
+python tools/run_experiments.py --input-dir test\openvas --llms deepseek gpt4 --scanner openvas --evaluation-methods bert rouge --runs-per-model 5
 
 # Linux/macOS
-python3 tools/run_experiments.py --input-dir test/openvas --llms deepseek gpt4 --scanners openvas --evaluation-methods bert rouge --runs-per-model 5 --allow-duplicates true
+python3 tools/run_experiments.py --input-dir test/openvas --llms deepseek gpt4 --scanner openvas --evaluation-methods bert rouge --runs-per-model 5
+
+# With allow-duplicates (OpenVAS recommended)
+python tools/run_experiments.py --input-dir test\openvas --llms deepseek gpt4 --scanner openvas --evaluation-methods bert rouge --runs-per-model 5 --allow-duplicates
 
 # Resume from checkpoint if interrupted
 
 # Windows
-python tools/run_experiments.py --input-dir test\openvas --llms deepseek --scanners openvas --checkpoint-file run_checkpoints_2026-03-16T12-28-08.json
+python tools/run_experiments.py --checkpoint-file run_checkpoints_2026-03-16T12-28-08.json
 
 # Linux/macOS
-python3 tools/run_experiments.py --input-dir test/openvas --llms deepseek --scanners openvas --checkpoint-file run_checkpoints_2026-03-16T12-28-08.json
+python3 tools/run_experiments.py --checkpoint-file run_checkpoints_2026-03-16T12-28-08.json
 ```
 
 **Key Features:**
 
-- Runs extraction, export, and evaluation for all pairs (report, scanner, LLM, run)
+- Runs extraction, export, and evaluation for all pairs (report, LLM, run)
+- One scanner per invocation — run twice for different scanners
 - Checkpoint support: resumes interrupted executions via `--checkpoint-file`
 - Generates detailed logs, output files, metrics, and automatic summaries
 - **Automatic reporting**: Generates comprehensive final report with timing and token cost analysis
@@ -120,10 +124,10 @@ python3 tools/run_experiments.py --input-dir test/openvas --llms deepseek --scan
 
 - `--input-dir`: Directory containing paired .xlsx (baseline) and .pdf (report) files
 - `--llms`: Space-separated LLMs to test (e.g., `deepseek gpt4 llama3`)
-- `--scanners`: Space-separated scanners (e.g., `openvas tenable`)
+- `--scanner`: Scanner to use (`openvas` or `tenable`)
 - `--evaluation-methods`: Evaluation methods (default: `bert`, can add `rouge`)
 - `--runs-per-model`: Number of runs per combination (default: 10)
-- `--allow-duplicates`: Boolean per scanner in order (e.g., `true false` for `openvas tenable`)
+- `--allow-duplicates`: Flag to allow duplicates (recommended for OpenVAS; omit for Tenable)
 - `--checkpoint-file`: Checkpoint file to resume from
 
 ### Output Structure
