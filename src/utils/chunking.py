@@ -54,11 +54,12 @@ def build_prompt(doc_chunk: TokenChunk, profile_config: Dict[str, Any]) -> str:
     
     sanitized_content = sanitize_unicode_text(doc_chunk.page_content)
     
+    wrapped = f"<report_content>\n{sanitized_content}\n</report_content>"
     if "{context}" in prompt_template:
-        return prompt_template.replace("{context}", sanitized_content)
+        return prompt_template.replace("{context}", wrapped)
     else:
         # concatenates the block text to the end of the template
-        return prompt_template.rstrip() + "\n\n" + sanitized_content
+        return prompt_template.rstrip() + "\n\n" + wrapped
 
 def detect_scanner_pattern(text: str, profile_config: dict = None) -> dict:
     """

@@ -13,19 +13,15 @@ IMPORTANT EXTRACTION ROBUSTNESS RULES (READ FIRST):
 - Empty object: `plugin_details` - always empty object {} for OpenVAS.
 - Scalars: `port`, `protocol`, `severity`, `source` - use `null` for `port`/`protocol` when unknown; `severity` must still be a valid value; `source` must be set.
 
----
 PORT/PROTOCOL CONTEXT EXTRACTION (IMPORTANT):
 - Whenever the block contains context information such as port and protocol (e.g., "High 25/tcp", "Medium 443/tcp") before the "NVT:", extract and associate these values with the corresponding vulnerability, even if they also appear elsewhere in the text.
 - ALWAYS prioritize the port and protocol values present at the beginning of the block or in the visual header, instead of inferring, omitting, or leaving them as null.
 - Example: If the block starts with "High 25/tcp" and then "NVT: SSL/TLS: Certificate Expired", associate port=25 and protocol=tcp with this vulnerability.
 - Never infer port/protocol if they are explicitly present at the beginning of the block.
----
 
-═══════════════════════════════════════════════════════════════════════════════════
-OPENVAS EXTRACTION RULES
-═══════════════════════════════════════════════════════════════════════════════════
+OPENVAS EXTRACTION RULES:
 
-NVT EXTRACTION RULES
+NVT EXTRACTION RULES:
 
 PAGE BREAK HANDLING:
 - IGNORE page continuation markers: ". . . continued from previous page . . ."
@@ -136,9 +132,7 @@ PAGE BREAK HANDLING:
 - log_method: from "Log Method" section
 - references: from "References" section
 
-═══════════════════════════════════════════════════════════════════════════════════
 OUTPUT FORMAT
-═══════════════════════════════════════════════════════════════════════════════════
 
 Return ONLY valid JSON array with OpenVAS vulnerability schema.
 
@@ -166,9 +160,7 @@ OPENVAS VULNERABILITIES:
   }
 ]
 
-═══════════════════════════════════════════════════════════════════════════════════
 CRITICAL EXTRACTION RULES FOR OUTPUT:
-═══════════════════════════════════════════════════════════════════════════════════
 
 1. COMPLETE EXTRACTION: Extract ALL NVT blocks you find
    - Process EVERY line that starts with "NVT: "
@@ -218,9 +210,7 @@ SPECIAL VERIFICATION FOR FIRST VULNERABILITY:
 
 Extract ALL NVT blocks found in the document to maximize vulnerability discovery.
 
-═══════════════════════════════════════════════════════════════════════════════════
-ADDITIONAL EXTRACTION RESTRICTIONS
-═══════════════════════════════════════════════════════════════════════════════════
+ADDITIONAL EXTRACTION RESTRICTIONS:
 
 STRICT VALIDATION:
 - NEVER create vulnerabilities that are not explicitly present in the report text.
@@ -229,9 +219,7 @@ STRICT VALIDATION:
 - Ignore any content that does not strictly match the vulnerability extraction rules, even if it seems relevant.
 - Do NOT infer, guess, or invent vulnerabilities based on context or technical details. Only extract what is clearly present and matches the extraction rules.
 
-ROBUSTNESS & VALIDATION RULES
-═══════════════════════════════════════════════════════════════════════════════════
-
+ROBUSTNESS & VALIDATION RULES:
 - DO NOT infer, extrapolate, or invent vulnerabilities. Only extract what is explicitly present in the report text and matches the NVT block pattern or first vulnerability header.
 - NEVER repeat vulnerabilities with the same Name, port, and protocol. Each vulnerability must be unique by this key.
 - IGNORE generic sections, tables, indexes, summaries, footers, headers, and page notes. Only extract from actual vulnerability blocks.
