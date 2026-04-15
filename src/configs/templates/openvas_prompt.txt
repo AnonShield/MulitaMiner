@@ -132,7 +132,7 @@ PAGE BREAK HANDLING:
 - log_method: from "Log Method" section
 - references: from "References" section
 
-OUTPUT FORMAT
+OUTPUT FORMAT:
 
 Return ONLY valid JSON array with OpenVAS vulnerability schema.
 
@@ -159,79 +159,73 @@ OPENVAS VULNERABILITIES:
    "source": "OPENVAS"
   }
 ]
+   You are an information extraction model specialized in OpenVAS vulnerability extraction.
 
-CRITICAL EXTRACTION RULES FOR OUTPUT:
+   Follow the rules below to ensure robust extraction, without unnecessary repetition:
 
-1. COMPLETE EXTRACTION: Extract ALL NVT blocks you find
-   - Process EVERY line that starts with "NVT: "
-   - Do NOT skip any vulnerabilities
-   - Include: CRITICAL, HIGH, MEDIUM, LOW, LOG severities
-   - Include: Service detections, Configuration checks, Banner grabs, System information
+   1. Extract ALL vulnerabilities that follow the NVT block pattern (line starting with "NVT: "). Do not omit any, even if some fields are missing (except if Name, description, or impact are missing—in these cases, discard the block).
 
-2. FIELD REQUIREMENTS:
-   - Name: ONLY from "NVT: " lines - exact copy of text after "NVT: " prefix
-   - All OpenVAS-specific fields must be filled as ARRAYS when available: description, detection_result, detection_method, impact, solution, insight, product_detection_result, log_method, references
-   - Always empty array for OpenVAS: instances = []
-   - Always empty object for OpenVAS: plugin_details = {}
-   - Always null for OpenVAS: plugin = null
-   - Always set: source = "OPENVAS"
+   2. For each vulnerability:
+      - Name: extract exactly the text after "NVT: " (do not include the prefix), only from lines that start with "NVT: ".
+      - description: extract from the "Summary" section (each paragraph as an array element).
+      - detection_result: from the "Vulnerability Detection Result" section (each line as an array element).
+      - detection_method: from the "Vulnerability Detection Method" section (each line as an array element).
+      - product_detection_result: from the "Product Detection Result" section (each line as an array element).
+      - impact: from the "Impact" section (each line/paragraph as an array element).
+      - solution: from the "Solution" section (each line as an array element).
+      - insight: from the "Vulnerability Insight" section (each line as an array element).
+      - log_method: from the "Log Method" section (each line as an array element).
+      - references: from the "References" section (each reference as an array element).
+      - cvss: extract from the severity header (e.g., "High (CVSS: 7.5)"). If not present, look for "CVSS Score", "Base Score", or CVSS vector. If still not found, use the default value by severity: CRITICAL=9.0, HIGH=7.0, MEDIUM=5.0, LOW=2.0, LOG=0.0. Always return as an array.
+      - severity: extract from the header (e.g., "High (CVSS: 7.5)" → "HIGH"). Always uppercase.
+      - port/protocol: extract only from lines above the severity header, following patterns like "High 443/tcp", "443/tcp", etc. If not present, leave as null.
+      - plugin: null
+      - plugin_details: {}
+      - instances: []
+      - source: "OPENVAS"
 
-4. SECTION MAPPING TO ARRAYS - HANDLE PAGE BREAKS:
-   - IGNORE page continuation text: ". . . continued from previous page . . ."
-   - MERGE content split by page breaks into single sections
-   - description: Extract text BELOW "Summary" header (split paragraphs into array elements)
-   - detection_result: Extract text BELOW "Vulnerability Detection Result" header (split lines into array elements)
-   - detection_method: Extract text BELOW "Vulnerability Detection Method" header (split lines into array elements)
-   - product_detection_result: Extract text BELOW "Product Detection Result" header (split lines into array elements)
-   - impact: Extract text BELOW "Impact" header (split lines into array elements)
-   - solution: Extract text BELOW "Solution" header (split lines into array elements)
-   - insight: Extract text BELOW "Vulnerability Insight" header (split lines into array elements)
-   - log_method: Extract text BELOW "Log Method" header (split lines into array elements)
-   - references: Extract text BELOW "References" header (each reference as separate array element)
+   3. Port/protocol context: always associate the values present at the beginning of the block or visual header with the corresponding NVT. If not present, inherit from the last valid header above.
 
-5. JSON VALIDATION:
-   - Return ONLY valid JSON array starting with [ and ending with ]
-   - NO explanatory text before or after JSON
-   - NO markdown code blocks like ```json or ```
-   - ALL string values in double quotes
-   - Numbers without quotes: 443, not "443"
-   - ALL text fields as arrays, not single strings
-   - Use null (not "null") for missing scalar values
-   - ENSURE every vulnerability has cvss array (use severity-based default if none found)
+   4. Ignore page break markers (". . . continued from previous page . . .", "Page X of Y", etc.) and treat content before/after as continuous.
 
-SPECIAL VERIFICATION FOR FIRST VULNERABILITY:
-   - CRITICAL: First vulnerability often lacks "NVT:" prefix - extract from document header
-   - Look for first vulnerability pattern: severity → port/protocol → CVSS score
-   - Extract name from title/description that follows header information
-   - Double-check that first vulnerability has proper cvss value
-   - If first vulnerability header lacks CVSS, apply severity-based mapping
-   - Verify severity and cvss are consistent (HIGH should have cvss ≥ 7.0)
-   - Ensure first vulnerability is not missed due to missing "NVT:" marker
+   5. Do not repeat vulnerabilities with the same Name, port, and protocol. Each vulnerability must be unique by this key.
 
-Extract ALL NVT blocks found in the document to maximize vulnerability discovery.
+   6. Fill missing fields according to type:
+      - Arrays: use [] when not applicable/unknown (description, detection_result, detection_method, impact, solution, insight, product_detection_result, log_method, references, cvss).
+      - port/protocol: null if unknown.
+      - plugin: null; plugin_details: {}; instances: []
 
-ADDITIONAL EXTRACTION RESTRICTIONS:
+   7. Output: return ONLY a valid JSON array, with no explanatory text before/after, no markdown. All fields must be present as in the schema below:
 
-STRICT VALIDATION:
-- NEVER create vulnerabilities that are not explicitly present in the report text.
-- Only extract vulnerabilities that follow the exact NVT block pattern or the first vulnerability header as described above.
-- If a vulnerability does not have at least the following fields filled: Name, description, impact, it MUST be discarded and NOT included in the output.
-- Ignore any content that does not strictly match the vulnerability extraction rules, even if it seems relevant.
-- Do NOT infer, guess, or invent vulnerabilities based on context or technical details. Only extract what is clearly present and matches the extraction rules.
+   [
+     {
+       "Name": "<vulnerability name>",
+       "description": ["<array of paragraphs>"],
+       "detection_result": ["<array of lines>"],
+       "detection_method": ["<array of lines>"],
+       "product_detection_result": ["<array of lines>"],
+       "impact": ["<array of lines>"],
+       "solution": ["<array of lines>"],
+       "insight": ["<array of lines>"],
+       "log_method": ["<array of lines>"],
+       "cvss": ["<score>", ...],
+       "port": <number or null>,
+       "protocol": "<tcp|udp|null>",
+       "severity": "CRITICAL|HIGH|MEDIUM|LOW|LOG",
+       "references": ["<array of references>"],
+       "plugin": null,
+       "plugin_details": {},
+       "instances": [],
+       "source": "OPENVAS"
+     }
+   ]
 
-ROBUSTNESS & VALIDATION RULES:
-- DO NOT infer, extrapolate, or invent vulnerabilities. Only extract what is explicitly present in the report text and matches the NVT block pattern or first vulnerability header.
-- NEVER repeat vulnerabilities with the same Name, port, and protocol. Each vulnerability must be unique by this key.
-- IGNORE generic sections, tables, indexes, summaries, footers, headers, and page notes. Only extract from actual vulnerability blocks.
-- DO NOT use information from footers, headers, or page notes as vulnerability data.
-- DO NOT fill required fields with invented or generic values. Only use real information from the report text.
-- If a vulnerability does not have at least Name, description, and impact filled, discard it.
-- EXAMPLES OF WHAT NOT TO EXTRACT:
-  * Lines like "Page X of Y", "Summary Table", "Configuration Overview", "System Information", "No <Header/Policy>"
-  * Repeated blocks with the same Name, port, protocol
-  * Generic or placeholder vulnerabilities
-- ALWAYS validate the final JSON output:
-  * No duplicate vulnerabilities
-  * All fields match the schema and types
-  * No extra or missing fields
-  * No markdown or explanatory text before/after JSON
+   8. Validation:
+      - Do not create vulnerabilities that are not explicitly present in the text.
+      - Do not infer, extrapolate, or invent vulnerabilities.
+      - Ignore generic sections, tables, indexes, footers, headers, and page notes.
+      - Do not fill required fields with invented values.
+      - If Name, description, or impact are missing, discard the block.
+      - Always validate the final JSON: no duplicates, all fields present, correct types, no markdown or extra text.
+
+   9. Special note: the first vulnerability may not have the "NVT:" prefix. If you identify the pattern severity → port/protocol → CVSS, extract it normally, ensuring Name, description, and impact are present.
