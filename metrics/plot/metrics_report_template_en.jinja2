@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>MulitaMiner — Metrics Dashboard</title>
+<meta name="theme-color" content="#0B0B0E">
 <script>
   // Load Chart.js from CDN
   window.chartReady = new Promise((resolve) => {
@@ -14,702 +15,1774 @@
   });
 </script>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap');
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   ◆ DESIGN SYSTEM — Modern SaaS Dark Theme
+   ═══════════════════════════════════════════════════════════════════════════ */
 
 :root {
-  /* Surfaces */
-  --bg:       #0B0B0E;
-  --surface:  #111116;
-  --surface2: #18181F;
-  --surface3: #1D1D26;
-  --surface4: #23232E;
-  /* Borders */
-  --border:  #1F1F28;
-  --border2: #2C2C3A;
-  --border3: #3A3A4E;
-  /* Primary — orange */
-  --accent:  #F97316;
-  --accent2: #8B5CF6;
-  --accent3: #10B981;
-  --accent4: #F59E0B;
-  --accent5: #EF4444;
-  /* Text */
-  --text:   #EEEEF2;
-  --text2:  #B4B4C8;
-  --muted:  #52526A;
-  --muted2: #8A8AA0;
-  /* Typography */
+  /* ──  Surfaces & Backgrounds ─────────────────────────────────────────── */
+  --bg-primary:   #0A0A0E;
+  --bg-secondary: #13131B;
+  --surface-1:    #17171F;
+  --surface-2:    #1F1F2A;
+  --surface-3:    #28283A;
+  --surface-hover: #2A2A3C;
+
+  /* ──  Borders ────────────────────────────────────────────────────────── */
+  --border-subtle:  #1C1C2A;
+  --border-normal:  #2A2A3A;
+  --border-strong:  #3A3A4A;
+
+  /* ──  Brand Colors ───────────────────────────────────────────────────── */
+  --orange:    #F97316;
+  --purple:    #8B5CF6;
+  --green:     #10B981;
+  --blue:      #0EA5E9;
+  --yellow:    #F59E0B;
+  --red:       #EF4444;
+  --cyan:      #06B6D4;
+  --pink:      #EC4899;
+
+  /* ──  Text & Typography ──────────────────────────────────────────────── */
+  --text-primary:   #F5F5FA;
+  --text-secondary: #C7C7D0;
+  --text-tertiary:  #8B8BA3;
+  --text-muted:     #5A5A6F;
+
+  /* ──  Typography ─────────────────────────────────────────────────────── */
   --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
   --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
-  /* Radius */
-  --r-xs: 4px;
-  --r-sm: 6px;
-  --r-md: 10px;
-  --r-lg: 16px;
-  /* Aliases for legacy inline styles */
-  --radius-sm: var(--r-sm);
-  --radius-md: var(--r-md);
-  /* Shadows */
-  --shadow-sm: 0 1px 3px rgba(0,0,0,.5);
-  --shadow-md: 0 4px 16px rgba(0,0,0,.55), 0 1px 4px rgba(0,0,0,.3);
-  /* Transition */
-  --t: 140ms ease;
+
+  /* ──  Spacing (8px grid) ─────────────────────────────────────────────── */
+  --space-xs:  4px;
+  --space-sm:  8px;
+  --space-md:  16px;
+  --space-lg:  24px;
+  --space-xl:  32px;
+  --space-2xl: 48px;
+
+  /* ──  Radius ─────────────────────────────────────────────────────────── */
+  --radius-xs:  4px;
+  --radius-sm:  8px;
+  --radius-md:  12px;
+  --radius-lg:  16px;
+
+  /* ──  Shadows ────────────────────────────────────────────────────────── */
+  --shadow-sm:  0 2px 6px rgba(0, 0, 0, 0.6);
+  --shadow-md:  0 4px 16px rgba(0, 0, 0, 0.65);
+  --shadow-lg:  0 8px 32px rgba(0, 0, 0, 0.75);
+  --shadow-xl:  0 12px 48px rgba(0, 0, 0, 0.85);
+
+  /* ──  Transitions ────────────────────────────────────────────────────── */
+  --duration-fast: 150ms;
+  --duration-normal: 300ms;
+  --duration-slow: 500ms;
+  --easing: cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  /* ──  Gradients ──────────────────────────────────────────────────────── */
+  --gradient-orange: linear-gradient(135deg, #F97316 0%, #FB923C 100%);
+  --gradient-purple: linear-gradient(135deg, #8B5CF6 0%, #A78BFA 100%);
+  --gradient-accent: linear-gradient(135deg, #F97316 0%, #8B5CF6 50%, #0EA5E9 100%);
 }
 
-*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
 
-body {
-  background: var(--bg);
-  color: var(--text);
-  font-family: var(--font-sans);
-  font-size: 14px;
-  line-height: 1.55;
-  min-height: 100vh;
-  padding: 32px 28px;
+html {
+  scroll-behavior: smooth;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* ── Header ─────────────────────────────────── */
+body {
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  font-size: 14px;
+  line-height: 1.6;
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 240px 1fr;
+  grid-template-rows: 60px 1fr auto;
+  gap: 0;
+  overflow-x: hidden;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   ◆ SIDEBAR — Navigation
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.sidebar {
+  grid-row: 1 / -1;
+  grid-column: 1;
+  background: linear-gradient(180deg, #0F0F1A 0%, #1A1A28 100%);
+  border-right: 1px solid var(--border-subtle);
+  padding: var(--space-lg) var(--space-md);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+  position: fixed;
+  height: 100vh;
+  width: 240px;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-normal) transparent;
+}
+
+.sidebar::-webkit-scrollbar {
+  width: 4px;
+}
+
+.sidebar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.sidebar::-webkit-scrollbar-thumb {
+  background: var(--border-normal);
+  border-radius: 2px;
+}
+
+.sidebar-brand {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  margin-bottom: var(--space-lg);
+  padding: var(--space-lg);
+  background: linear-gradient(135deg, rgba(249, 115, 22, 0.1) 0%, rgba(139, 92, 246, 0.1) 100%);
+  border: 1px solid rgba(249, 115, 22, 0.2);
+  border-radius: var(--radius-md);
+}
+
+.sidebar-brand-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-sm);
+  background: var(--surface-3);
+  border: 1.5px solid var(--border-normal);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 20px;
+  color: #fff;
+  flex-shrink: 0;
+}
+
+.sidebar-brand-text {
+  font-size: 16px;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+}
+
+.sidebar-brand-text .accent {
+  color: var(--orange);
+}
+
+.sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.sidebar-nav-section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.sidebar-nav-section-label {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+  padding: var(--space-md) var(--space-sm) var(--space-sm);
+}
+
+.sidebar-nav-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  padding: var(--space-md) var(--space-md);
+  border-radius: var(--radius-md);
+  background: transparent;
+  border: 1.5px solid transparent;
+  color: var(--text-tertiary);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--duration-medium) ease;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  position: relative;
+  overflow: visible;
+}
+
+.sidebar-nav-item:hover {
+  background: var(--surface-2);
+  color: var(--text-secondary);
+  border-color: var(--orange);
+  transform: translateX(4px);
+}
+
+.sidebar-nav-item.active {
+  background: linear-gradient(135deg, rgba(249, 115, 22, 0.2) 0%, rgba(139, 92, 246, 0.1) 100%);
+  border-color: var(--orange);
+  color: var(--orange);
+  font-weight: 700;
+  box-shadow: inset 0 0 12px rgba(249, 115, 22, 0.1);
+}
+
+.sidebar-nav-item-icon {
+  width: 18px;
+  height: 18px;
+  border-radius: var(--radius-sm);
+  background: currentColor;
+  opacity: 0.5;
+  flex-shrink: 0;
+  transition: all var(--duration-fast) ease;
+}
+
+.sidebar-nav-item.active .sidebar-nav-item-icon {
+  opacity: 1;
+  background: var(--orange);
+  box-shadow: 0 0 12px rgba(249, 115, 22, 0.4);
+  transform: scale(1.08);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   ◆ HEADER — Top Navigation
+   ═══════════════════════════════════════════════════════════════════════════ */
+
 header {
+  grid-column: 2;
+  grid-row: 1;
+  background: linear-gradient(180deg, #0F0F1A 0%, #1A1A28 100%);
+  border-bottom: 1px solid var(--border-subtle);
+  padding: 0 var(--space-xl);
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 16px;
+  gap: var(--space-xl);
+  z-index: 100;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: var(--space-lg);
+  flex: 1;
+  min-width: 0;
+}
+
+.header-title {
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--text-primary);
+}
+
+.header-subtitle {
+  font-size: 11px;
+  font-family: var(--font-mono);
+  color: var(--text-muted);
+  display: flex;
+  gap: var(--space-sm);
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+}
+
+.badge-group {
+  display: flex;
+  gap: var(--space-sm);
   flex-wrap: wrap;
-  padding-bottom: 20px;
-  margin-bottom: 28px;
-  border-bottom: 1px solid var(--border);
+  align-items: center;
 }
-.logo { font-size: 18px; font-weight: 600; letter-spacing: -0.03em; }
-.logo span { color: var(--accent); }
-.subtitle { font-size: 11px; font-family: var(--font-mono); color: var(--muted); margin-top: 3px; }
 
-/* ── Badges ─────────────────────────────────── */
-.badge-row { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
 .badge {
-  display: inline-flex; align-items: center; gap: 5px;
-  font-size: 11px; font-weight: 500; padding: 2px 9px;
-  border-radius: 20px; border: 1px solid;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 600;
+  border: 1px solid;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
+
 .badge::before {
-  content: ''; width: 4px; height: 4px; border-radius: 50%;
-  background: currentColor; opacity: .65; flex-shrink: 0;
-}
-.badge-bert  { border-color: rgba(249,115,22,.4);  color: var(--accent);  background: rgba(249,115,22,.07); }
-.badge-rouge { border-color: rgba(16,185,129,.4);  color: var(--accent3); background: rgba(16,185,129,.07); }
-.badge-det   { border-color: rgba(245,158,11,.4);  color: var(--accent4); background: rgba(245,158,11,.07); }
-.badge-std   { border-color: rgba(139,92,246,.4);  color: var(--accent2); background: rgba(139,92,246,.07); }
-
-/* ── Tabs — segment control ─────────────────── */
-.tabs {
-  display: inline-flex; gap: 1px;
-  background: var(--surface2); padding: 3px;
-  border-radius: var(--r-md); border: 1px solid var(--border);
-  margin-bottom: 24px; flex-wrap: wrap;
-}
-.tab {
-  font-size: 13px; font-weight: 500; padding: 5px 14px;
-  border-radius: 7px; border: none; background: transparent;
-  color: var(--muted2); cursor: pointer;
-  transition: all var(--t); white-space: nowrap; letter-spacing: -.01em;
-}
-.tab:hover  { color: var(--text2); background: var(--surface3); }
-.tab.active { color: var(--text); background: var(--surface4); box-shadow: var(--shadow-sm); }
-.panel { display: none; }
-.panel.active { display: block; }
-
-/* ── Controls ───────────────────────────────── */
-.controls { display: flex; align-items: center; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
-.ctrl-label { font-size: 12px; font-weight: 500; color: var(--muted); }
-select {
-  background: var(--surface2); border: 1px solid var(--border2);
-  border-radius: var(--r-sm); color: var(--text2);
-  font-family: var(--font-sans); font-size: 12px; padding: 4px 10px;
-  cursor: pointer; outline: none; -webkit-appearance: none; appearance: none;
-  transition: border-color var(--t);
-}
-select:hover { border-color: var(--border3); }
-select:focus { border-color: var(--accent); }
-.btn-group { display: flex; }
-.btn-toggle {
-  font-size: 12px; font-weight: 500; padding: 4px 12px;
-  background: var(--surface2); border: 1px solid var(--border2);
-  color: var(--muted2); cursor: pointer; transition: all var(--t); white-space: nowrap;
-}
-.btn-toggle:first-child { border-radius: var(--r-sm) 0 0 var(--r-sm); }
-.btn-toggle:last-child  { border-radius: 0 var(--r-sm) var(--r-sm) 0; }
-.btn-toggle:only-child  { border-radius: var(--r-sm); }
-.btn-toggle:hover:not(.on) { color: var(--text2); background: var(--surface3); }
-.btn-toggle.on { background: var(--accent); color: #fff; border-color: var(--accent); }
-
-/* Range inputs */
-input[type="range"] {
-  -webkit-appearance: none; appearance: none;
-  height: 4px; background: var(--border3);
-  border-radius: 2px; cursor: pointer; outline: none;
-}
-input[type="range"]::-webkit-slider-thumb {
-  -webkit-appearance: none; width: 14px; height: 14px;
-  background: var(--accent); border-radius: 50%; cursor: pointer;
-  box-shadow: 0 0 0 3px rgba(249,115,22,.2);
-}
-input[type="range"]::-moz-range-thumb {
-  width: 14px; height: 14px; background: var(--accent);
-  border-radius: 50%; cursor: pointer; border: none;
+  content: '';
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: currentColor;
+  opacity: 0.8;
 }
 
-/* ── Grid & Cards ───────────────────────────── */
-.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
-.grid-3 { display: grid; grid-template-columns: repeat(3,1fr); gap: 12px; margin-bottom: 16px; }
+.badge-orange {
+  background: rgba(249, 115, 22, 0.1);
+  border-color: rgba(249, 115, 22, 0.3);
+  color: var(--orange);
+}
 
-.card, .card-full {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--r-md);
-  padding: 20px;
+.badge-purple {
+  background: rgba(139, 92, 246, 0.1);
+  border-color: rgba(139, 92, 246, 0.3);
+  color: var(--purple);
+}
+
+.badge-green {
+  background: rgba(16, 185, 129, 0.1);
+  border-color: rgba(16, 185, 129, 0.3);
+  color: var(--green);
+}
+
+.badge-yellow {
+  background: rgba(245, 158, 11, 0.1);
+  border-color: rgba(245, 158, 11, 0.3);
+  color: var(--yellow);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   ◆ MAIN CONTENT
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+main {
+  grid-column: 2;
+  grid-row: 2;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-normal) transparent;
+}
+
+main::-webkit-scrollbar {
+  width: 8px;
+}
+
+main::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+main::-webkit-scrollbar-thumb {
+  background: var(--border-normal);
+  border-radius: 4px;
+}
+
+main::-webkit-scrollbar-thumb:hover {
+  background: var(--border-strong);
+}
+
+.content {
+  padding: var(--space-xl);
+  max-width: 1600px;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+   Hero Section
+   ───────────────────────────────────────────────────────────────────── */
+
+.hero {
+  margin-bottom: var(--space-2xl);
+  padding: var(--space-2xl);
+  background: linear-gradient(180deg, #0F0F1A 0%, #1A1A28 100%);
+  border: 1px solid var(--border-normal);
+  border-radius: var(--radius-lg);
+  position: relative;
+  overflow: hidden;
+}
+
+.hero::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -10%;
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, rgba(249, 115, 22, 0.1) 0%, transparent 70%);
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.hero-content {
+  position: relative;
+  z-index: 1;
+}
+
+.hero-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-lg);
+  margin-bottom: var(--space-2xl);
+}
+
+.hero-title {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.hero-title-text {
+  font-size: 28px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  background: linear-gradient(135deg, var(--text-primary) 0%, var(--text-secondary) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.hero-title-subtitle {
+  font-size: 14px;
+  color: var(--text-tertiary);
+  font-weight: 500;
+}
+
+.hero-title-description {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-top: var(--space-md);
+  line-height: 1.6;
+  max-width: 800px;
+  font-weight: 400;
+}
+
+.hero-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: var(--space-lg);
+  margin-bottom: var(--space-lg);
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+   KPI Card
+   ───────────────────────────────────────────────────────────────────── */
+
+.kpi-card {
+  padding: var(--space-lg);
+  background: linear-gradient(135deg, rgba(249, 115, 22, 0.05) 0%, rgba(139, 92, 246, 0.05) 100%);
+  border: 1px solid var(--border-normal);
+  border-radius: var(--radius-md);
+  transition: all var(--duration-fast) ease;
+  cursor: default;
+}
+
+.kpi-card:hover {
+  border-color: var(--border-strong);
+  transform: translateY(-2px);
   box-shadow: var(--shadow-sm);
-  transition: border-color var(--t);
-}
-.card { display: flex; flex-direction: column; }
-.card-full { display: flex; flex-direction: column; margin-bottom: 16px; }
-.card:hover, .card-full:hover { border-color: var(--border2); }
-
-/* ── Card Title ─────────────────────────────── */
-.card-title {
-  font-size: 11px; font-weight: 600; color: var(--muted2);
-  text-transform: uppercase; letter-spacing: .07em;
-  margin-bottom: 16px;
-  display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
-}
-.card-title::before {
-  content: ''; width: 5px; height: 5px; border-radius: 50%;
-  background: var(--accent); flex-shrink: 0;
-}
-.card-title.rouge::before   { background: var(--accent3); }
-.card-title.det::before     { background: var(--accent4); }
-.card-title.radar::before   { background: var(--accent2); }
-.card-title.stacked::before { background: var(--accent5); }
-
-/* ── Chart Description ──────────────────────── */
-.chart-description {
-  font-size: 12px; color: var(--muted2); line-height: 1.6;
-  margin-bottom: 16px; padding: 10px 12px;
-  background: var(--surface2);
-  border-left: 2px solid var(--border3);
-  border-radius: 0 var(--r-sm) var(--r-sm) 0;
 }
 
-/* ── Stat Cards ─────────────────────────────── */
+.kpi-label {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+  margin-bottom: var(--space-sm);
+}
+
+.kpi-value {
+  font-size: 28px;
+  font-weight: 800;
+  font-family: var(--font-mono);
+  letter-spacing: -0.02em;
+  margin-bottom: var(--space-xs);
+  background: linear-gradient(135deg, var(--orange) 0%, var(--purple) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.kpi-detail {
+  font-size: 12px;
+  color: var(--text-tertiary);
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+   Stat Card (KPI Cards)
+   ───────────────────────────────────────────────────────────────────── */
+
 .stat-card {
-  background: var(--surface2);
-  border: 1px solid var(--border);
-  border-radius: var(--r-md);
-  padding: 16px 20px; text-align: center;
-  position: relative; overflow: hidden;
-  transition: all var(--t);
+  padding: var(--space-lg);
+  padding-bottom: var(--space-xl);
+  background: var(--surface-2);
+  border: 1.5px solid var(--surface-3);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  transition: all var(--duration-fast) ease;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  position: relative;
+  min-height: 200px;
+  justify-content: flex-start;
 }
-.stat-card::after {
-  content: ''; position: absolute;
-  top: 0; left: 15%; right: 15%; height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(249,115,22,.55), transparent);
-}
-.stat-card:hover { border-color: var(--border2); transform: translateY(-1px); box-shadow: var(--shadow-md); }
-.stat-baseline { font-size: 10px; font-weight: 600; letter-spacing: .09em; text-transform: uppercase; color: var(--muted); margin-bottom: 6px; }
-.stat-value    { font-family: var(--font-mono); font-size: 28px; font-weight: 700; letter-spacing: -.03em; line-height: 1.1; }
-.stat-std      { font-family: var(--font-mono); font-size: 11px; color: var(--muted); margin-top: 3px; }
 
-/* ── Tables ─────────────────────────────────── */
-.rank-table { width: 100%; border-collapse: collapse; }
-.rank-table th {
-  font-size: 11px; font-weight: 600; color: var(--muted);
-  padding: 8px 12px; border-bottom: 1px solid var(--border2);
-  text-align: left; letter-spacing: .05em; text-transform: uppercase;
-  white-space: nowrap; background: var(--surface2);
+.stat-card:hover {
+  border-color: var(--accent);
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+  background: var(--surface-3);
 }
-.rank-table td {
-  padding: 8px 12px; border-bottom: 1px solid var(--border);
-  font-family: var(--font-mono); font-size: 12px; color: var(--text2); white-space: nowrap;
-}
-.rank-table tr:last-child td { border-bottom: none; }
-.rank-table tr:hover td { background: var(--surface2); color: var(--text); }
-.rank-1 { color: var(--accent4) !important; font-weight: 700; }
-.rank-2 { color: var(--muted2) !important; }
-.rank-3 { color: #cd7f32 !important; }
-.std-inline { color: var(--muted); font-size: 10px; }
 
-/* ── Heatmap Table ───────────────────────────── */
-.heatmap-table { width: 100%; border-collapse: collapse; margin: 12px 0; }
-.heatmap-table th {
-  font-size: 11px; font-weight: 600; color: var(--muted);
-  padding: 8px 10px; border-bottom: 1px solid var(--border2);
-  text-align: center; letter-spacing: .05em; text-transform: uppercase;
-  background: var(--surface2);
+.stat-baseline {
+  font-size: 10px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--text-muted);
 }
-.heatmap-table th:first-child { text-align: left; }
-.heatmap-table td { padding: 8px 10px; border-bottom: 1px solid var(--border); font-family: var(--font-mono); font-size: 12px; text-align: center; color: var(--text2); }
-.heatmap-table td:first-child { text-align: left; font-weight: 600; color: var(--text); }
-.heatmap-table tr:hover { background: var(--surface3); }
-.heatmap-cell { border-radius: var(--r-xs); padding: 4px 8px; color: var(--text); font-weight: 700; }
 
-/* ── Dynamic Heatmap ────────────────────────── */
-.heatmap-wrap { overflow-x: auto; }
-.heatmap { width: 100%; border-collapse: collapse; }
+.stat-value {
+  font-size: 42px;
+  font-weight: 800;
+  font-family: var(--font-mono);
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  margin: var(--space-sm) 0;
+}
+
+.stat-std {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-muted);
+  margin-top: var(--space-xs);
+}
+
+.stat-std {
+  font-size: 12px;
+  color: var(--text-tertiary);
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+   Tabs & Controls
+   ───────────────────────────────────────────────────────────────────── */
+
+.tabs {
+  display: none;
+}
+
+.tab-panel {
+  display: none;
+}
+
+.tab-panel.active {
+  display: block;
+  animation: fadeIn var(--duration-fast) ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.controls-bar {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  margin-bottom: var(--space-lg);
+  flex-wrap: wrap;
+  padding: var(--space-md);
+  background: var(--surface-2);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+}
+
+.control-group {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.control-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+select, input[type="range"] {
+  background: var(--surface-1);
+  border: 1px solid var(--border-normal);
+  color: var(--text-secondary);
+  font-family: var(--font-sans);
+  font-size: 12px;
+  padding: var(--space-sm) var(--space-md);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all var(--duration-fast) ease;
+}
+
+select:hover,
+input[type="range"]:hover {
+  border-color: var(--border-strong);
+}
+
+select:focus {
+  outline: none;
+  border-color: var(--orange);
+  box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.1);
+}
+
+select {
+  -webkit-appearance: none;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%238B8BA3' d='M1 1l5 5 5-5'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 8px center;
+  padding-right: 28px;
+}
+
+input[type="range"] {
+  width: 150px;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 14px;
+  height: 14px;
+  background: var(--orange);
+  border-radius: 50%;
+  cursor: pointer;
+  box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.2);
+}
+
+input[type="range"]::-moz-range-thumb {
+  width: 14px;
+  height: 14px;
+  background: var(--orange);
+  border-radius: 50%;
+  cursor: pointer;
+  border: none;
+}
+
+.btn-group {
+  display: inline-flex;
+  gap: 1px;
+  background: var(--surface-1);
+  padding: 2px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-normal);
+}
+
+.btn-toggle {
+  padding: 6px 14px;
+  background: var(--surface-2);
+  border: 1.5px solid var(--border-subtle);
+  color: var(--text-tertiary);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--duration-medium) ease;
+  border-radius: var(--radius-sm);
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-toggle:hover {
+  color: var(--text-secondary);
+  border-color: var(--orange);
+  background: var(--surface-3);
+  transform: translateY(-1px);
+}
+
+.btn-toggle.active,
+.btn-toggle.on {
+  background: linear-gradient(135deg, var(--orange), rgba(249, 115, 22, 0.8));
+  color: white;
+  border-color: var(--orange);
+  box-shadow: 0 4px 16px rgba(249, 115, 22, 0.35);
+  font-weight: 700;
+}
+
+.btn-toggle.active::after,
+.btn-toggle.on::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 50%;
+  width: 0;
+  height: 2px;
+  background: white;
+  transform: translateX(-50%);
+  animation: slideUnderline var(--duration-medium) ease forwards;
+}
+
+@keyframes slideUnderline {
+  to { width: 80%; }
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+   Cards & Sections
+   ───────────────────────────────────────────────────────────────────── */
+
+.card {
+  background: linear-gradient(180deg, #0F0F1A 0%, #1A1A28 100%);
+  border: 1px solid var(--border-normal);
+  border-radius: var(--radius-lg);
+  padding: var(--space-lg);
+  box-shadow: var(--shadow-sm);
+  transition: all var(--duration-fast) ease;
+  display: flex;
+  flex-direction: column;
+}
+
+.card:hover {
+  border-color: var(--border-strong);
+  box-shadow: var(--shadow-md);
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-md);
+  margin-bottom: var(--space-lg);
+}
+
+.card-title {
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.card-title-accent {
+  width: 4px;
+  height: 16px;
+  border-radius: 2px;
+  background: var(--orange);
+  flex-shrink: 0;
+}
+
+.card-title-accent.purple {
+  background: var(--purple);
+}
+
+.card-title-accent.green {
+  background: var(--green);
+}
+
+.card-description {
+  font-size: 12px;
+  color: var(--text-tertiary);
+  line-height: 1.6;
+  margin-bottom: var(--space-lg);
+  padding: var(--space-md);
+  background: rgba(139, 92, 246, 0.03);
+  border-left: 2px solid var(--purple);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+}
+
+.section {
+  margin-bottom: var(--space-2xl);
+}
+
+.section-title {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--orange);
+  margin-bottom: var(--space-lg);
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.section-title::before {
+  content: '';
+  width: 3px;
+  height: 14px;
+  border-radius: 1px;
+  background: var(--orange);
+  flex-shrink: 0;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+   Grid Layouts
+   ───────────────────────────────────────────────────────────────────── */
+
+.grid-auto {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: var(--space-lg);
+  margin-bottom: var(--space-lg);
+}
+
+.grid-2 {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-lg);
+  margin-bottom: var(--space-lg);
+}
+
+.grid-3 {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: var(--space-lg);
+  margin-bottom: var(--space-lg);
+}
+
+.grid-full {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-lg);
+  margin-bottom: var(--space-lg);
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+   Charts & Tables
+   ───────────────────────────────────────────────────────────────────── */
+
+.chart-wrapper {
+  position: relative;
+  width: 100%;
+  margin-bottom: var(--space-md);
+}
+
+canvas {
+  width: 100% !important;
+  height: auto !important;
+  display: block;
+}
+
+canvas#consistencyChart    { height: 320px !important; }
+canvas#blLineChart         { height: 280px !important; }
+canvas#stackedBar          { height: 280px !important; }
+canvas#semBar              { height: 300px !important; }
+canvas#detPrecRec          { height: 280px !important; }
+canvas#radarChart          { height: 380px !important; }
+canvas#radarGrouped        { height: 380px !important; }
+canvas#finalScoreChart     { height: 300px !important; }
+canvas#tradeoffBubbleChart { height: 380px !important; }
+canvas#fdrFnrChart         { height: 380px !important; }
+canvas#matchedRateChart    { height: 300px !important; }
+canvas#absentChart         { height: 300px !important; }
+
+.table-wrapper {
+  overflow-x: auto;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+}
+
+.table thead th {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+  padding: var(--space-md);
+  border-bottom: 1px solid var(--border-normal);
+  background: var(--surface-1);
+  text-align: left;
+  white-space: nowrap;
+}
+
+.table tbody td {
+  padding: var(--space-md);
+  border-bottom: 1px solid var(--border-subtle);
+  color: var(--text-secondary);
+  font-family: var(--font-mono);
+}
+
+.table tbody tr:hover {
+  background: var(--surface-1);
+}
+
+.table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.heatmap {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+}
+
 .heatmap th {
-  font-size: 11px; font-weight: 600; color: var(--muted);
-  padding: 8px 10px; text-align: center; white-space: nowrap;
-  border-bottom: 1px solid var(--border2); letter-spacing: .05em;
-  text-transform: uppercase; background: var(--surface2);
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+  padding: var(--space-sm);
+  border-bottom: 1px solid var(--border-normal);
+  background: var(--surface-1);
+  text-align: center;
+  white-space: nowrap;
 }
-.heatmap th:first-child { text-align: left; }
+
 .heatmap td {
-  padding: 7px 10px; text-align: center;
-  border-bottom: 1px solid var(--border);
-  font-family: var(--font-mono); font-size: 12px;
-  white-space: nowrap; position: relative; cursor: help;
-  transition: background var(--t); color: var(--text2);
+  padding: 8px;
+  border-bottom: 1px solid var(--border-subtle);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  text-align: center;
+  cursor: help;
+  transition: background var(--duration-fast) ease;
 }
-.heatmap td:first-child { text-align: left; color: var(--text); padding-left: 4px; font-weight: 500; }
-.heatmap tr:hover td { background: var(--surface2); }
-.heatmap td[data-tooltip]:hover::after {
-  content: attr(data-tooltip);
-  position: absolute; bottom: calc(100% + 6px); left: 50%; transform: translateX(-50%);
-  background: var(--surface3); border: 1px solid var(--border2);
-  border-radius: var(--r-sm); padding: 6px 10px; font-size: 11px;
-  font-family: var(--font-sans); white-space: nowrap; color: var(--text2);
-  z-index: 100; box-shadow: var(--shadow-md); pointer-events: none;
+
+.heatmap th:first-child,
+.heatmap td:first-child {
+  text-align: left;
+  font-weight: 600;
+  color: var(--text-secondary);
+  white-space: nowrap;
+  width: 15%;
+  min-width: 100px;
 }
-.heatmap td[data-tooltip]:hover::before {
-  content: ''; position: absolute;
-  bottom: calc(100% + 1px); left: 50%; transform: translateX(-50%);
-  border: 4px solid transparent; border-top-color: var(--surface3); z-index: 101;
+
+.heatmap tbody tr:hover td {
+  background: var(--surface-1);
 }
-.cell-std { font-size: 10px; opacity: .5; display: block; margin-top: 1px; }
 
-/* ── Legend ─────────────────────────────────── */
-.legend { display: flex; gap: 10px; margin-top: 12px; flex-wrap: wrap; }
-.legend-item { display: flex; align-items: center; gap: 6px; font-size: 11px; color: var(--muted2); font-weight: 500; }
-.legend-box { width: 10px; height: 10px; border-radius: 3px; flex-shrink: 0; }
+/* ─────────────────────────────────────────────────────────────────────────
+   Legend
+   ───────────────────────────────────────────────────────────────────── */
 
-/* ── Methodology ────────────────────────────── */
-.methodology-card { background: var(--surface2); border: 1px solid var(--border); border-radius: var(--r-sm); padding: 16px; margin-bottom: 16px; }
-.methodology-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
-.methodology-title { font-size: 11px; font-weight: 600; color: var(--muted2); letter-spacing: .06em; text-transform: uppercase; }
-.info-btn { background: var(--accent); color: #fff; border: none; width: 20px; height: 20px; border-radius: 50%; cursor: pointer; font-size: 11px; display: flex; align-items: center; justify-content: center; transition: all var(--t); font-weight: 700; flex-shrink: 0; }
-.info-btn:hover { background: var(--accent2); transform: scale(1.1); }
-.formula-box { background: var(--bg); border: 1px solid var(--border2); border-left: 2px solid var(--accent); padding: 10px 14px; border-radius: 0 var(--r-sm) var(--r-sm) 0; font-family: var(--font-mono); font-size: 13px; color: var(--text); line-height: 1.6; margin: 8px 0; }
-.formula-details { display: none; padding-top: 12px; border-top: 1px solid var(--border); margin-top: 12px; }
-.formula-details.show { display: block; }
-.detail-item { display: flex; gap: 8px; margin: 6px 0; font-size: 12px; color: var(--muted2); }
-.detail-item-bullet { color: var(--accent3); font-weight: 700; flex-shrink: 0; width: 1.2rem; }
+.legend {
+  display: flex;
+  gap: var(--space-md);
+  flex-wrap: wrap;
+  margin-top: var(--space-md);
+  padding: var(--space-md);
+  background: var(--surface-1);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+}
 
-/* ── Canvas ─────────────────────────────────── */
-canvas { width: 100% !important; height: auto !important; display: block; }
-canvas#consistencyChart    { height: 675px !important; }
-canvas#blLineChart         { height: 500px !important; }
-canvas#stackedBar          { height: 400px !important; }
-canvas#semBar              { height: 500px !important; }
-canvas#detPrecRec          { height: 450px !important; }
-canvas#radarChart          { height: 800px !important; }
-canvas#radarGrouped        { height: 800px !important; }
-canvas#finalScoreChart     { height: 600px !important; }
-canvas#tradeoffBubbleChart { height: 560px !important; }
-canvas#fdrFnrChart         { height: 450px !important; }
-canvas#matchedRateChart    { height: 500px !important; }
-canvas#absentChart         { height: 500px !important; }
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  font-size: 12px;
+  color: var(--text-secondary);
+}
 
-/* ── Footer ─────────────────────────────────── */
+.legend-box {
+  width: 12px;
+  height: 12px;
+  border-radius: 3px;
+  flex-shrink: 0;
+  border: 1px solid currentColor;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+   Methodology Card
+   ───────────────────────────────────────────────────────────────────── */
+
+.methodology {
+  background: var(--surface-1);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: var(--space-lg);
+  margin-bottom: var(--space-lg);
+}
+
+.methodology-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--space-md);
+}
+
+.methodology-title {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-secondary);
+}
+
+.info-btn {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--orange);
+  border: none;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all var(--duration-fast) ease;
+}
+
+.info-btn:hover {
+  background: var(--purple);
+  transform: scale(1.05);
+}
+
+.formula-box {
+  background: linear-gradient(180deg, #0F0F1A 0%, #1A1A28 100%);
+  border: 1px solid var(--border-normal);
+  border-left: 2px solid var(--orange);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  padding: var(--space-lg);
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: var(--text-primary);
+  line-height: 1.8;
+  margin: var(--space-md) 0;
+}
+
+.formula-details {
+  display: none;
+  padding-top: var(--space-md);
+  border-top: 1px solid var(--border-subtle);
+  margin-top: var(--space-md);
+}
+
+.formula-details.show {
+  display: block;
+}
+
+.detail-item {
+  display: flex;
+  gap: var(--space-md);
+  margin: var(--space-sm) 0;
+  font-size: 12px;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+.detail-bullet {
+  color: var(--green);
+  font-weight: 700;
+  flex-shrink: 0;
+  width: 1.2rem;
+  text-align: center;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   ◆ FOOTER
+   ═══════════════════════════════════════════════════════════════════════════ */
+
 footer {
-  margin-top: 48px; padding: 18px 0;
-  border-top: 1px solid var(--border);
-  display: flex; align-items: center; justify-content: center;
-  gap: 8px; flex-wrap: wrap;
-  font-size: 12px; color: var(--muted);
+  grid-column: 1 / -1;
+  grid-row: 3;
+  background: linear-gradient(180deg, #0F0F1A 0%, #1A1A28 100%);
+  border-top: 1px solid var(--border-subtle);
+  padding: var(--space-lg) var(--space-xl);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-lg);
+  font-size: 12px;
+  color: var(--text-muted);
+  flex-wrap: wrap;
+  text-align: center;
 }
-footer span + span::before { content: '·'; margin-right: 8px; color: var(--border3); }
 
-/* ── Responsive ─────────────────────────────── */
-@media (max-width: 900px) {
-  .grid-2, .grid-3 { grid-template-columns: 1fr; }
-  body { padding: 16px; }
-  .tabs { display: flex; width: 100%; }
-  .tab { flex: 1; text-align: center; font-size: 12px; }
+.footer-separator {
+  width: 1px;
+  height: 16px;
+  background: var(--border-subtle);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   ◆ RESPONSIVE
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+@media (max-width: 1400px) {
+  .grid-3 { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 1200px) {
+  .grid-2 { grid-template-columns: 1fr; }
+  body { grid-template-columns: 60px 1fr; }
+  .sidebar { width: 60px; padding: var(--space-sm); }
+  .sidebar-brand { flex-direction: column; gap: var(--space-xs); }
+  .sidebar-brand-text { display: none; }
+  .sidebar-nav-item { padding: var(--space-sm); justify-content: center; }
+  .sidebar-nav-item-text { display: none; }
+  .sidebar-nav-section-label { display: none; }
+}
+
+@media (max-width: 768px) {
+  body {
+    grid-template-columns: 1fr;
+    grid-template-rows: 60px 1fr auto;
+  }
+  .sidebar {
+    display: none;
+  }
+  .content {
+    padding: var(--space-lg);
+  }
+  .grid-3 { grid-template-columns: 1fr; }
+  .hero-header { flex-direction: column; }
+  .controls-bar { flex-direction: column; align-items: flex-start; }
+  .control-group { width: 100%; }
+  select { width: 100%; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 1ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 1ms !important;
+  }
 }
 </style>
 </head>
 <body>
 
-<header>
-  <div>
-    <div class="logo">Mulita<span>Miner</span></div>
-    <div class="subtitle">// Metrics Evaluation Dashboard — {{ report_date }}</div>
+<!-- ═══════════════════════════════════════════════════════════════════════════
+     ◆ SIDEBAR — Navigation
+     ═══════════════════════════════════════════════════════════════════════════ -->
+<aside class="sidebar">
+  <div class="sidebar-brand">
+    <div style="width:44px;height:36px;display:flex;align-items:center;justify-content:center;background:#fff;border-radius:16px;padding:4px;">
+      <img src="../imgs/report_icon.png" alt="MultaMiner" style="width:100%;height:100%;object-fit:contain;display:block;" />
+    </div>
+    <div class="sidebar-brand-text">Mulita<span class="accent">Miner</span></div>
   </div>
-  <div class="badge-row">
-    {% if has_bert %}<span class="badge badge-bert">BERTScore</span>{% endif %}
-    {% if has_rouge %}<span class="badge badge-rouge">ROUGE-L</span>{% endif %}
-    {% if has_det %}<span class="badge badge-det">Deterministic</span>{% endif %}
-    {% if has_stacked %}<span class="badge badge-std">Similarity</span>{% endif %}
+
+  <nav class="sidebar-nav">
+    <div class="sidebar-nav-section">
+      <div class="sidebar-nav-section-label">Analysis</div>
+      <button class="sidebar-nav-item active" onclick="showTab('overview', event)">
+        <div class="sidebar-nav-item-icon"></div>
+        <span>Overview</span>
+      </button>
+      <button class="sidebar-nav-item" onclick="showTab('performance', event)">
+        <div class="sidebar-nav-item-icon"></div>
+        <span>Performance</span>
+      </button>
+      <button class="sidebar-nav-item" onclick="showTab('comparison', event)">
+        <div class="sidebar-nav-item-icon"></div>
+        <span>Comparison</span>
+      </button>
+      <button class="sidebar-nav-item" onclick="showTab('insights', event)">
+        <div class="sidebar-nav-item-icon"></div>
+        <span>Insights</span>
+      </button>
+    </div>
+
+    {% if has_error_breakdown %}
+    <div class="sidebar-nav-section">
+      <div class="sidebar-nav-section-label">Diagnostics</div>
+      <button class="sidebar-nav-item" onclick="showTab('errors', event)">
+        <div class="sidebar-nav-item-icon"></div>
+        <span>Errors</span>
+      </button>
+    </div>
+    {% endif %}
+  </nav>
+</aside>
+
+<!-- ═══════════════════════════════════════════════════════════════════════════
+     ◆ HEADER — Top Navigation & Info
+     ═══════════════════════════════════════════════════════════════════════════ -->
+<header>
+  <div class="header-left">
+    <div>
+      <div class="header-title">Vulnerability Extraction Metrics</div>
+      <div class="header-subtitle">
+        <span>Report</span>
+        <span>{{ report_date }}</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="header-right">
+    <div class="badge-group">
+      {% if has_bert %}<span class="badge badge-orange">BERTScore</span>{% endif %}
+      {% if has_rouge %}<span class="badge badge-green">ROUGE-L</span>{% endif %}
+      {% if has_det %}<span class="badge badge-yellow">Extraction</span>{% endif %}
+      {% if has_stacked %}<span class="badge badge-purple">Similarity</span>{% endif %}
+    </div>
   </div>
 </header>
 
-<div class="tabs">
-  {% if has_bert %}
-  <button class="tab active" onclick="showTab('overview',this)">Overview</button>
-  <button class="tab" onclick="showTab('performance',this)">Performance Breakdown</button>
-  <button class="tab" onclick="showTab('comparison',this)">Model Comparison</button>
-  <button class="tab" onclick="showTab('insights',this)">Trade-off & Insights</button>
-  {% endif %}
-  {% if has_error_breakdown %}
-  <button class="tab" onclick="showTab('errors',this)">Error Analysis</button>
-  {% endif %}
-</div>
+<!-- ═══════════════════════════════════════════════════════════════════════════
+     ◆ MAIN CONTENT
+     ═══════════════════════════════════════════════════════════════════════════ -->
+<main>
+  <div class="content">
 
-<!-- ══ TAB 1: OVERVIEW ══ -->
-{% if has_bert %}
-<div class="panel active" id="tab-overview">
-  <div class="grid-3" id="statCards"></div>
-  <div class="grid-2">
-    <div class="card">
-      <div class="card-title">Model Consistency — Final Score Across Runs</div>
-      <div class="chart-description">Shows Final Score variation across runs for each model. Error bars represent min-max range; narrower bars indicate more consistent models. Helps identify which models are deterministic versus stochastic.</div>
-      <canvas id="consistencyChart" height="270"></canvas>
-    </div>
-    <div class="card">
-      <div class="card-title">Rankings — Final Score (Weighted Composite)</div>
-      <div class="chart-description">Ranked models by overall combined performance. Final Score integrates both structured extraction (IE, 70%) and text quality (70% semantic + 30% linguistic, 30%), providing a holistic evaluation metric.</div>
-      <table class="rank-table" id="rankTable"></table>
-    </div>
-  </div>
-  <div class="card-full">
-    <div class="card-title">Run Variability Analysis — Consistency Context</div>
-    <div class="chart-description">
-      Shows consistency of each model across multiple runs. <strong>Standard Deviation (σ)</strong> measures performance variance:
-      <br>• <strong style="color:#10b981">Low σ (< 0.05):</strong> Stable, reliable model — results are reproducible
-      <br>• <strong style="color:#f59e0b">Medium σ (0.05-0.10):</strong> Moderate variance — acceptable but some run-to-run variation
-      <br>• <strong style="color:#ef4444">High σ (> 0.10):</strong> High variance — results may be unstable; recommend more runs for confidence
-    </div>
-    <table class="heatmap-table" style="width:auto;margin:1rem 0">
-      <thead>
-        <tr>
-          <th style="text-align:left;width:15%">Model</th>
-          <th style="text-align:center;width:18%">Avg σ (All Metrics)</th>
-          <th style="text-align:center;width:25%">Consistency Level</th>
-          <th style="text-align:center;width:20%">Interpretation</th>
-          <th style="text-align:center;width:22%">Confidence</th>
-        </tr>
-      </thead>
-      <tbody id="variabilityTable"></tbody>
-    </table>
-  </div>
-</div>
-{% endif %}
+    <!-- ──────────────────────────────────────────────────────────────────────
+         HERO SECTION
+         ────────────────────────────────────────────────────────────────── -->
+    {% if has_bert %}
+    <section class="hero">
+      <div class="hero-content">
+        <div class="hero-header">
+          <div class="hero-title">
+            <div class="hero-title-text" id="heroTitleMain">Best Overall Performance</div>
+            <div class="hero-title-subtitle" id="heroTitleSub">Aggregated across all metrics</div>
+            <div id="heroDescription" class="hero-title-description">View aggregated results across all evaluation baselines, LLM models and metric dimensions.</div>
+          </div>
+          <div class="hero-icon" id="heroIconContainer" style="flex:1;display:flex;justify-content:flex-end;align-items:center;">
+            <!-- SVG será trocado via JS conforme a aba ativa -->
+            <div id="heroIconSvg" style="width:120px;height:120px;max-width:22vw;max-height:22vw;">
+              <!-- SVG inline: overview.svg como padrão -->
+              <svg viewBox="-2.4 -2.4 28.80 28.80" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;">
+                <g> <path d="M13 12C13 11.4477 13.4477 11 14 11H19C19.5523 11 20 11.4477 20 12V19C20 19.5523 19.5523 20 19 20H14C13.4477 20 13 19.5523 13 19V12Z" stroke="#F97316" stroke-width="1.5" stroke-linecap="round"/> <path d="M4 5C4 4.44772 4.44772 4 5 4H9C9.55228 4 10 4.44772 10 5V12C10 12.5523 9.55228 13 9 13H5C4.44772 13 4 12.5523 4 12V5Z" stroke="#8B5CF6" stroke-width="1.5" stroke-linecap="round"/> <path d="M4 17C4 16.4477 4.44772 16 5 16H9C9.55228 16 10 16.4477 10 17V19C10 19.5523 9.55228 20 9 20H5C4.44772 20 4 19.5523 4 19V17Z" stroke="#10B981" stroke-width="1.5" stroke-linecap="round"/> <path d="M13 5C13 4.44772 13.4477 4 14 4H19C19.5523 4 20 4.44772 20 5V7C20 7.55228 19.5523 8 19 8H14C13.4477 8 13 7.55228 13 7V5Z" stroke="#0EA5E9" stroke-width="1.5" stroke-linecap="round"/> </g>
+              </svg>
+            </div>
+          </div>
+        </div>
 
-<!-- ══ TAB 2: PERFORMANCE BREAKDOWN ══ -->
-<div class="panel" id="tab-performance">
-  <!-- ══ SECTION: TEXT QUALITY ══ -->
-  {% if has_bert or has_rouge %}
-  <div style="margin-bottom:32px;padding-bottom:24px;border-bottom:1px solid var(--border2);">
-    <div style="font-family:var(--font-sans); font-size:11px; font-weight:600; color:var(--accent); margin-bottom:20px; letter-spacing:.08em; text-transform:uppercase; display:flex; align-items:center; gap:8px;"><span style="display:inline-block;width:3px;height:14px;border-radius:2px;background:var(--accent);"></span>Text Quality</div>
-    
-    {% if has_bert and has_rouge %}
-    <div class="controls">
-      <span class="ctrl-label">Metric:</span>
-      <div class="btn-group">
-        <button class="btn-toggle on" id="semBert"  onclick="setSemMetric('bert')">BERT</button>
-        <button class="btn-toggle"   id="semRouge" onclick="setSemMetric('rouge')">ROUGE-L</button>
+        <div class="hero-stats" id="heroStats">
+          <!-- KPI cards populated by JavaScript -->
+        </div>
       </div>
-      <span class="ctrl-label">Baseline:</span>
-      <select id="semBaseline" onchange="rebuildSemantic()">
-        {% for bl in baselines %}<option value="{{ bl }}">{{ bl }}</option>{% endfor %}
-      </select>
+    </section>
+    {% endif %}
+
+    <!-- ──────────────────────────────────────────────────────────────────────
+         TAB NAVIGATION
+         ────────────────────────────────────────────────────────────────── -->
+    <div class="tabs">
+      {% if has_bert %}
+      <button class="tab-button active" onclick="switchTab('overview', event)">📊 Overview</button>
+      <button class="tab-button" onclick="switchTab('performance', event)">⚙️ Performance</button>
+      <button class="tab-button" onclick="switchTab('comparison', event)">📈 Comparison</button>
+      <button class="tab-button" onclick="switchTab('insights', event)">🔍 Trade-offs</button>
+      {% endif %}
+      {% if has_error_breakdown %}
+      <button class="tab-button" onclick="switchTab('errors', event)">⚠️ Errors</button>
+      {% endif %}
     </div>
-    {% else %}
-    <div class="controls">
-      <span class="ctrl-label">Baseline:</span>
-      <select id="semBaseline" onchange="rebuildSemantic()">
-        {% for bl in baselines %}<option value="{{ bl }}">{{ bl }}</option>{% endfor %}
-      </select>
+
+    <!-- ──────────────────────────────────────────────────────────────────────
+         TAB 1: OVERVIEW
+         ────────────────────────────────────────────────────────────────── -->
+    {% if has_bert %}
+    <div class="tab-panel active" id="tab-overview">
+      
+      <!-- KPI Cards Grid -->
+      <div class="grid-3" id="statCards"></div>
+
+      <!-- Consistency & Rankings -->
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">
+              <div class="card-title-accent"></div>
+              Consistency Across Runs
+            </div>
+          </div>
+          <div class="card-description">
+            Final Score variation showing model consistency. Narrower error bars indicate more reliable, deterministic models.
+          </div>
+          <div class="chart-wrapper">
+            <canvas id="consistencyChart"></canvas>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">
+              <div class="card-title-accent"></div>
+              Model Rankings
+            </div>
+          </div>
+          <div class="card-description">
+            Models ranked by Final Score: 70% IE + 30% Text Quality (BERTScore 70% + ROUGE-L 30%).
+          </div>
+          <div class="table-wrapper">
+            <table class="table" id="rankTable"></table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Variability Analysis -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">
+            <div class="card-title-accent"></div>
+            Run Variability & Consistency
+          </div>
+        </div>
+        <div class="card-description">
+          Stability analysis: σ (sigma) measures performance variance across runs.
+          <strong style="color: var(--green);">σ &lt; 0.05:</strong> Stable | 
+          <strong style="color: var(--yellow);">σ 0.05-0.10:</strong> Moderate | 
+          <strong style="color: var(--red);">σ &gt; 0.10:</strong> High variance
+        </div>
+        <div class="table-wrapper">
+          <table class="table heatmap" style="margin-top: var(--space-md);">
+            <thead>
+              <tr>
+                <th>Model</th>
+                <th>Avg σ</th>
+                <th>Consistency</th>
+                <th>Interpretation</th>
+                <th>Confidence</th>
+              </tr>
+            </thead>
+            <tbody id="variabilityTable"></tbody>
+          </table>
+        </div>
+      </div>
+
     </div>
     {% endif %}
-    
-    <div class="card-full">
-      <div class="card-title" id="semHeatTitle">{% if has_bert %}BERTScore{% else %}ROUGE-L{% endif %} Heatmap — Text Quality Fields × Models</div>
-      <div class="chart-description">(BERT/ROUGE-L) field-level performance heatmap. Darker cells indicate higher similarity scores. Each cell shows mean ± std for that field and model pair.</div>
-      <div class="heatmap-wrap"><table class="heatmap" id="semHeatmap"></table></div>
-      <div class="legend" id="semLegend"></div>
-    </div>
-    <div class="card-full">
-      <div class="card-title" id="semBarTitle">{% if has_bert %}BERTScore{% else %}ROUGE-L{% endif %} per Field — per Model (±Std)</div>
-      <div class="chart-description">(BERT/ROUGE-L) performance per Text Quality field. Compare how different models perform on each category (detection method, impact, references, etc.).</div>
-      <canvas id="semBar" height="200"></canvas>
-    </div>
-  </div>
-  {% endif %}
 
-  <!-- ══ SECTION: STRUCTURED EXTRACTION ══ -->
-  {% if has_det %}
-  <div style="margin-bottom:32px;">
-    <div style="font-family:var(--font-sans); font-size:11px; font-weight:600; color:var(--accent4); margin-bottom:20px; letter-spacing:.08em; text-transform:uppercase; display:flex; align-items:center; gap:8px;"><span style="display:inline-block;width:3px;height:14px;border-radius:2px;background:var(--accent4);"></span>Structured Extraction</div>
-    
-    <div class="controls">
-      <span class="ctrl-label">Metric:</span>
-      <div class="btn-group">
-        <button class="btn-toggle on" id="detF1"   onclick="setDetMetric('f1')">F1</button>
-        <button class="btn-toggle"   id="detPrec" onclick="setDetMetric('prec')">Precision</button>
-        <button class="btn-toggle"   id="detRec"  onclick="setDetMetric('rec')">Recall</button>
-      </div>
-      <span class="ctrl-label">Baseline:</span>
-      <select id="detBaseline" onchange="rebuildDet()">
-        {% for bl in baselines %}<option value="{{ bl }}">{{ bl }}</option>{% endfor %}
-      </select>
-    </div>
-    
-    <div class="card-full">
-      <div class="card-title det" id="detHeatTitle">F1-Score Heatmap — IE Fields × Models</div>
-      <div class="chart-description">Structured field extraction accuracy (severity, CVSS, plugin id, port, protocol). Darker cells = higher F1-scores. Mean ± std shown per field-model pair.</div>
-      <div class="heatmap-wrap"><table class="heatmap" id="detHeatmap"></table></div>
-      <div class="legend" id="detLegend"></div>
-    </div>
-    <div class="card-full">
-      <div class="card-title det">Precision vs Recall — per Model (average across fields, ±Std)</div>
-      <div class="chart-description"><strong>Structured Field Extraction:</strong> Comparison of precision (accuracy of extracted items, yellow) and recall (completeness of extractions, purple) for deterministic fields (severity, CVSS, plugin, port, protocol). Higher values are better for both metrics.</div>
-      <canvas id="detPrecRec" height="180"></canvas>
-    </div>
-  </div>
-  {% endif %}
-</div>
+    <!-- ──────────────────────────────────────────────────────────────────────
+         TAB 2: PERFORMANCE BREAKDOWN
+         ────────────────────────────────────────────────────────────────── -->
+    <div class="tab-panel" id="tab-performance">
 
-<!-- ══ TAB 3: MODEL COMPARISON ══ -->
-<div class="panel" id="tab-comparison">
-  <div class="controls">
-    <span class="ctrl-label">Baseline:</span>
-    <select id="radarBaseline" onchange="rebuildRadar()">
-      <option value="all">All (average)</option>
-      {% for bl in baselines %}<option value="{{ bl }}">{{ bl }}</option>{% endfor %}
-    </select>
-  </div>
-  <div class="grid-2">
-    <div class="card">
-      <div class="card-title radar">Multidimensional Radar</div>
-      <div class="chart-description">Comparative radar chart across all 12 semantic fields (BERT) and deterministic fields (F1). Larger areas indicate more consistent, higher-quality extractions.</div>
-      <canvas id="radarChart" height="320"></canvas>
-    </div>
-    <div class="card">
-      <div class="card-title">BERT · ROUGE-L · F1-Det — Overview (±Std)</div>
-      <div class="chart-description">Overall performance summary comparing semantic (BERT/ROUGE) and structured (F1-Det) metrics. Quick reference for model quality across all dimensions.</div>
-      <canvas id="radarGrouped" height="320"></canvas>
-    </div>
-  </div>
-  <div class="card-full">
-    <div class="card-title">Final Score Breakdown — IE + Text Quality Weighted Composite</div>
-    <div class="methodology-card">
-      <div class="methodology-header">
-        <div class="methodology-title">📐 Calculation Methodology</div>
-        <button class="info-btn" onclick="toggleMethodology()">ⓘ</button>
-      </div>
-      <div class="formula-box">
-        <strong>Final Score = 0.7 × IE + 0.3 × Text Quality</strong>
-      </div>
-      <div class="formula-details" id="methodologyDetails">
-        <div class="detail-item">
-          <span class="detail-item-bullet">•</span>
-          <span><strong>IE_score</strong> = avg F1 (severity, CVSS, plugin, port, protocol)</span>
+      <!-- TEXT QUALITY SECTION -->
+      {% if has_bert or has_rouge %}
+      <section class="section">
+        <div class="section-title" style="color: var(--orange);">Text Quality Analysis</div>
+
+        <div class="controls-bar">
+          {% if has_bert and has_rouge %}
+          <div class="control-group">
+            <span class="control-label">Metric:</span>
+            <div class="btn-group">
+              <button class="btn-toggle active" id="semBert" onclick="setSemMetric('bert')">BERTScore</button>
+              <button class="btn-toggle" id="semRouge" onclick="setSemMetric('rouge')">ROUGE-L</button>
+            </div>
+          </div>
+          {% endif %}
+          <div class="control-group">
+            <span class="control-label">Baseline:</span>
+            <select id="semBaseline" onchange="rebuildSemantic()">
+              {% for bl in baselines %}<option value="{{ bl }}">{{ bl }}</option>{% endfor %}
+            </select>
+          </div>
         </div>
-        <div class="detail-item">
-          <span class="detail-item-bullet">•</span>
-          <span><strong>Text_Quality_score</strong> = 0.7 × BERT + 0.3 × ROUGE-L</span>
+
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">
+              <div class="card-title-accent purple"></div>
+              Text Quality Heatmap
+            </div>
+          </div>
+          <div class="card-description" id="semHeatTitle">
+            Field-level semantic performance. Darker = higher similarity. Mean ± std shown per field-model.
+          </div>
+          <div class="table-wrapper">
+            <table class="heatmap" id="semHeatmap"></table>
+          </div>
+          <div class="legend" id="semLegend"></div>
         </div>
-        <div class="detail-item" style="margin-top:12px;padding-top:8px;border-top:1px solid var(--border);">
-          <span class="detail-item-bullet">→</span>
-          <span>IE weight: <strong>70%</strong> (prioritizes structured extraction)</span>
+
+        <div class="card" style="margin-top: var(--space-lg);">
+          <div class="card-header">
+            <div class="card-title">
+              <div class="card-title-accent purple"></div>
+              Per-Field Performance
+            </div>
+          </div>
+          <div class="card-description" id="semBarTitle">
+            Per-field semantic quality comparison across models with standard deviations.
+          </div>
+          <div class="chart-wrapper">
+            <canvas id="semBar"></canvas>
+          </div>
         </div>
-        <div class="detail-item">
-          <span class="detail-item-bullet">→</span>
-          <span>Text Quality weight: <strong>30%</strong> (combines semantic and linguistic quality)</span>
+      </section>
+      {% endif %}
+
+      <!-- STRUCTURED EXTRACTION SECTION -->
+      {% if has_det %}
+      <section class="section" style="padding-top: var(--space-lg); border-top: 1px solid var(--border-normal);">
+        <div class="section-title" style="color: var(--yellow);">Structured Extraction (IE)</div>
+
+        <div class="controls-bar">
+          <div class="control-group">
+            <span class="control-label">Metric:</span>
+            <div class="btn-group">
+              <button class="btn-toggle active" id="detF1" onclick="setDetMetric('f1')">F1-Score</button>
+              <button class="btn-toggle" id="detPrec" onclick="setDetMetric('prec')">Precision</button>
+              <button class="btn-toggle" id="detRec" onclick="setDetMetric('rec')">Recall</button>
+            </div>
+          </div>
+          <div class="control-group">
+            <span class="control-label">Baseline:</span>
+            <select id="detBaseline" onchange="rebuildDet()">
+              {% for bl in baselines %}<option value="{{ bl }}">{{ bl }}</option>{% endfor %}
+            </select>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">
+              <div class="card-title-accent"></div>
+              F1-Score Heatmap
+            </div>
+          </div>
+          <div class="card-description" id="detHeatTitle">
+            IE field extraction accuracy. Fields: severity, CVSS, plugin_id, port, protocol.
+          </div>
+          <div class="table-wrapper">
+            <table class="heatmap" id="detHeatmap"></table>
+          </div>
+          <div class="legend" id="detLegend"></div>
+        </div>
+
+        <div class="card" style="margin-top: var(--space-lg);">
+          <div class="card-header">
+            <div class="card-title">
+              <div class="card-title-accent"></div>
+              Precision vs Recall
+            </div>
+          </div>
+          <div class="card-description">
+            Trade-off between extraction completeness (recall) and accuracy (precision) for deterministic fields.
+          </div>
+          <div class="chart-wrapper">
+            <canvas id="detPrecRec"></canvas>
+          </div>
+        </div>
+      </section>
+      {% endif %}
+
+    </div>
+
+    <!-- ──────────────────────────────────────────────────────────────────────
+         TAB 3: MODEL COMPARISON
+         ────────────────────────────────────────────────────────────────── -->
+    <div class="tab-panel" id="tab-comparison">
+
+      <div class="controls-bar">
+        <div class="control-group">
+          <span class="control-label">Baseline:</span>
+          <select id="radarBaseline" onchange="rebuildRadar()">
+            <option value="all">All (average)</option>
+            {% for bl in baselines %}<option value="{{ bl }}">{{ bl }}</option>{% endfor %}
+          </select>
         </div>
       </div>
-    </div>
-    <div class="chart-description">Integrated performance metric showing the decomposition across all models. Higher Final Score indicates better overall extraction and semantic quality.</div>
-    <canvas id="finalScoreChart" height="240"></canvas>
-  </div>
-</div>
 
-<!-- ══ TAB 4: TRADE-OFF & INSIGHTS ══ -->
-<div class="panel" id="tab-insights">
-  <!-- Trade-off Bubble Chart -->
-  <div class="card-full">
-    <div class="card-title">Trade-off Analysis — IE vs Text Quality Performance</div>
-    <div class="chart-description">Bubble chart showing the trade-off between extraction quality (IE, x-axis) and text quality (y-axis). Bubble size represents Final Score. <strong>Quadrants:</strong> top-right = balanced (high both), top-left = quality-focused, bottom-right = extraction-focused, bottom-left = needs improvement.</div>
-    <div style="position:relative;height:560px;width:100%;">
-      <canvas id="tradeoffBubbleChart"></canvas>
-    </div>
-    <div style="margin-top:12px;padding:10px 14px;background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius-sm);font-family:var(--font-sans);font-size:12px;color:var(--muted2);line-height:1.6;display:flex;flex-wrap:wrap;gap:12px;">
-      <span><strong style="color:var(--text);">Quadrant Guide</strong></span>
-      <span style="color:var(--accent3);">↗ Top-right = Balanced</span>
-      <span style="color:var(--accent2);">↖ Top-left = Quality-focused</span>
-      <span style="color:var(--accent4);">↘ Bottom-right = Extraction-focused</span>
-      <span style="color:var(--accent5);">↙ Bottom-left = Needs Improvement</span>
-    </div>
-  </div>
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">
+              <div class="card-title-accent"></div>
+              Multidimensional Radar
+            </div>
+          </div>
+          <div class="card-description">
+            Comparative radar across 12 semantic + IE fields. Larger areas = more consistent performance.
+          </div>
+          <div class="chart-wrapper">
+            <canvas id="radarChart"></canvas>
+          </div>
+        </div>
 
-  <!-- FDR vs FNR Scatter -->
-  {% if has_fdr_fnr %}
-  <div class="card-full" style="margin-top:16px;">
-    <div class="card-title">FDR vs FNR — Trade-off: Invented × Absent Vulnerabilities</div>
-    <div class="chart-description">
-      Each shape = one <strong>(LLM, baseline)</strong> pair · color = LLM · shape = baseline · large circle = LLM mean.
-      <strong>FNR</strong> (X) = % real vulnerabilities missed = 1 − Recall.
-      <strong>FDR</strong> (Y) = % detections that are false positives = 1 − Precision.
-      Dashed lines connect each baseline point to the LLM mean — a wider "star" means more variance across ground-truth datasets.
-      Adjust the sliders to set your tolerance thresholds — the <span style="color:#10b981;font-weight:600;">green zone</span> updates live.
-    </div>
-
-    <div style="display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:0.6rem;margin-top:0.5rem;">
-      <span class="ctrl-label">Baseline:</span>
-      <div id="fdrBaselineBtns" style="display:flex;flex-wrap:wrap;gap:0;">
-        <button class="btn-toggle on" data-bl="all" onclick="setFdrBaseline(this)">All</button>
-        {% for bl in baselines %}<button class="btn-toggle" data-bl="{{ bl }}" onclick="setFdrBaseline(this)">{{ bl }}</button>{% endfor %}
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">
+              <div class="card-title-accent"></div>
+              Performance Overview
+            </div>
+          </div>
+          <div class="card-description">
+            Combined BERT, ROUGE-L, and F1-Det summary. Quick reference across all dimensions.
+          </div>
+          <div class="chart-wrapper">
+            <canvas id="radarGrouped"></canvas>
+          </div>
+        </div>
       </div>
-    </div>
 
-    <div class="controls" style="margin-bottom:0.6rem;">
-      <span class="ctrl-label">FNR threshold (X — % missed):</span>
-      <input type="range" id="fnrThreshold" min="0" max="50" value="15" step="1"
-             oninput="rebuildFdrFnr()" style="width:150px;cursor:pointer;">
-      <span id="fnrThresholdLabel" style="font-family:var(--font-mono);font-size:12px;font-weight:600;color:var(--accent);">15%</span>
-      <span style="margin-left:1.5rem;" class="ctrl-label">FDR threshold (Y — % invented):</span>
-      <input type="range" id="fdrThreshold" min="0" max="50" value="15" step="1"
-             oninput="rebuildFdrFnr()" style="width:150px;cursor:pointer;">
-      <span id="fdrThresholdLabel" style="font-family:var(--font-mono);font-size:12px;font-weight:600;color:var(--accent);">15%</span>
-    </div>
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">
+            <div class="card-title-accent"></div>
+            Final Score Breakdown
+          </div>
+        </div>
 
-    <div id="fdrFnrLegend" style="margin-bottom:8px;padding:8px 12px;background:var(--surface2);border-radius:var(--r-sm);border:1px solid var(--border);"></div>
+        <div class="methodology">
+          <div class="methodology-header">
+            <div class="methodology-title">📐 Calculation Methodology</div>
+            <button class="info-btn" onclick="toggleMethodology()">ⓘ</button>
+          </div>
+          <div class="formula-box">
+            <strong>Final Score = 0.7 × IE + 0.3 × Text Quality</strong>
+          </div>
+          <div class="formula-details" id="methodologyDetails">
+            <div class="detail-item">
+              <span class="detail-bullet">•</span>
+              <span><strong>IE_score</strong> = avg F1 (severity, CVSS, plugin, port, protocol)</span>
+            </div>
+            <div class="detail-item">
+              <span class="detail-bullet">•</span>
+              <span><strong>Text_Quality</strong> = 0.7 × BERT + 0.3 × ROUGE-L</span>
+            </div>
+            <div class="detail-item" style="margin-top: var(--space-md); padding-top: var(--space-sm); border-top: 1px solid var(--border-subtle);">
+              <span class="detail-bullet">→</span>
+              <span>IE weight: <strong>70%</strong> (prioritizes structured extraction)</span>
+            </div>
+            <div class="detail-item">
+              <span class="detail-bullet">→</span>
+              <span>Text Quality: <strong>30%</strong> (semantic + linguistic quality)</span>
+            </div>
+          </div>
+        </div>
 
-    <div style="position:relative;height:450px;width:100%;">
-      <canvas id="fdrFnrChart"></canvas>
-    </div>
-    <p style="font-size:11px;color:var(--muted);margin-top:8px;text-align:center;">
-      Large circle = LLM mean &nbsp;·&nbsp; Smaller shapes = individual baselines &nbsp;·&nbsp; Green zone = below both thresholds
-    </p>
-  </div>
-  {% endif %}
-
-  <!-- Metric Correlation (BERT × ROUGE-L) -->
-  {% if has_bert and has_rouge %}
-  <div class="card-full" style="margin-top:16px;padding-top:20px;border-top:1px solid var(--border);">
-    <div style="font-family:var(--font-sans); font-size:11px; font-weight:600; color:var(--muted2); margin-bottom:16px; letter-spacing:.08em; text-transform:uppercase; display:flex; align-items:center; gap:8px;"><span style="display:inline-block;width:3px;height:14px;border-radius:2px;background:var(--accent2);"></span>BERT vs ROUGE-L Correlation</div>
-    
-    <div style="display: flex; gap: 0.5rem; align-items: center; margin-bottom: 1rem;">
-      <span class="ctrl-label">Baseline:</span>
-      <select id="corrBaseline" onchange="rebuildCorrelation()">
-        <option value="all">All (average)</option>
-        {% for bl in baselines %}<option value="{{ bl }}">{{ bl }}</option>{% endfor %}
-      </select>
-    </div>
-    
-    <div class="card-full" style="background: transparent; border: none; padding: 0; margin-bottom: 1rem;">
-      <div class="card-title">BERTScore vs ROUGE-L Scatter — Field × Model</div>
-      <div class="chart-description">
-        Each point represents a (field, model) pair. X-axis = BERTScore, Y-axis = ROUGE-L. 
-        Dashed diagonal = perfect correlation (r=1.0).
-        <strong>Insight:</strong> Points clustered on diagonal = metrics are redundant; scattered points = complementary information.
+        <div class="card-description">
+          Integrated metric decomposition across models. Higher score = better extraction + quality.
+        </div>
+        <div class="chart-wrapper">
+          <canvas id="finalScoreChart"></canvas>
+        </div>
       </div>
-      <div style="position:relative;height:350px;width:100%;">
-        <canvas id="correlationChart"></canvas>
-      </div>
-    </div>
-    <div class="card-full" style="background: transparent; border: none; padding: 0;">
-      <div class="card-title">Correlation Heatmap — BERT vs ROUGE-L per Field</div>
-      <div class="chart-description">Pearson correlation coefficients (r) by field. Green (&gt;0.85) = high agreement; Orange (0.6-0.85) = moderate; Red (&lt;0.6) = low correlation = field-specific insights.</div>
-      <div class="heatmap-wrap"><table class="heatmap" id="corrHeatmap"></table></div>
-      <div class="legend" id="corrLegend"></div>
-    </div>
-  </div>
-  {% endif %}
 
-  <!-- Weight Sensitivity -->
-  {% if has_det and has_bert %}
-  <div class="card-full" style="margin-top:16px;padding-top:20px;border-top:1px solid var(--border);">
-    <div style="font-family:var(--font-sans); font-size:11px; font-weight:600; color:var(--muted2); margin-bottom:16px; letter-spacing:.08em; text-transform:uppercase; display:flex; align-items:center; gap:8px;"><span style="display:inline-block;width:3px;height:14px;border-radius:2px;background:var(--accent3);"></span>Weight Sensitivity Analysis</div>
-    
-    <div class="controls">
-      <span class="ctrl-label">IE Weight (%):</span>
-      <input type="range" id="ieWeight" min="0" max="100" value="70" onchange="rebuildSensitivity()" style="width:200px;cursor:pointer;">
-      <span id="ieWeightLabel" style="font-family:var(--font-mono);font-size:12px;font-weight:600;color:var(--accent);">70%</span>
-      <span style="font-size:12px;color:var(--muted);">Text Quality: <span id="nlgWeightLabel">30%</span></span>
     </div>
-    
-    <div class="card-full" style="background: transparent; border: none; padding: 0; margin-top: 1rem;">
-      <div class="card-title">Model Ranking Sensitivity — IE vs Text Quality Weighting</div>
-      <div class="chart-description">
-        Interactive analysis: adjust the IE (structured extraction) vs Text Quality (semantic + linguistic) weight using the slider above.
-        <strong>Default: 70% IE + 30% Text Quality.</strong> Shows how model rankings change with different priority weightings.
-        If rankings remain stable across weights, model performance is robust; if volatile, reliant on specific metric choice.
-      </div>
-      <div style="position:relative;height:320px;width:100%;">
-        <canvas id="sensitivityChart"></canvas>
-      </div>
-    </div>
-    <div class="card-full" style="background: transparent; border: none; padding: 0; margin-top: 1rem;">
-      <div class="card-title">Ranking Stability Index</div>
-      <div class="chart-description">Each row shows model rank under current weight setting. Compare with default to see sensitivity.</div>
-      <table class="rank-table" style="width:auto;margin:0 auto;">
-        <thead>
-          <tr>
-            <th>Model</th>
-            <th>Current Rank</th>
-            <th>Current Score</th>
-            <th>IE Component</th>
-            <th>Text Quality Component</th>
-          </tr>
-        </thead>
-        <tbody id="sensitivityRankTable"></tbody>
-      </table>
-    </div>
-  </div>
-  {% endif %}
-</div>
 
-<!-- ══ TAB 5: ERROR ANALYSIS ══ -->
-{% if has_error_breakdown %}
-<div class="panel" id="tab-errors">
-  <div class="controls">
-    <span class="ctrl-label">Baseline:</span>
-    <select id="errorBaseline" onchange="rebuildErrorBreakdown()">
-      {% for bl in baselines %}<option value="{{ bl }}">{{ bl }}</option>{% endfor %}
-    </select>
-  </div>
-  <div class="card-full">
-    <div class="card-title">Top Failed Vulnerabilities — Extraction Difficulty</div>
-    <div class="chart-description">
-      Shows vulnerabilities that models consistently fail to extract (marked as "Absent" = in baseline but not extracted by model).
-      <strong>Failure Rate</strong> = how many models fail to find this vulnerability. 
-      <strong>Avg BERT Score</strong> = quality of extraction when models do attempt it (or null if always absent).
-      Highest failure rates indicate systemically difficult vulnerabilities.
-    </div>
-    <table class="rank-table" style="width:auto;margin:0 auto;">
-      <thead>
-        <tr>
-          <th>Vulnerability</th>
-          <th>Failure Rate</th>
-          <th>Failed Models</th>
-          <th>Avg BERT Score</th>
-        </tr>
-      </thead>
-      <tbody id="errorBreakdownTable"></tbody>
-    </table>
-  </div>
-</div>
-{% endif %}
+    <!-- ──────────────────────────────────────────────────────────────────────
+         TAB 4: TRADE-OFF & INSIGHTS
+         ────────────────────────────────────────────────────────────────── -->
+    <div class="tab-panel" id="tab-insights">
 
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">
+            <div class="card-title-accent"></div>
+            IE vs Text Quality Trade-off
+          </div>
+        </div>
+        <div class="card-description">
+          Trade-off visualization: bubble size = Final Score. <strong>Top-right</strong> = balanced, <strong>top-left</strong> = quality-focused, <strong>bottom-right</strong> = extraction-focused.
+        </div>
+        <div class="chart-wrapper" style="height: 400px;">
+          <canvas id="tradeoffBubbleChart"></canvas>
+        </div>
+        <div class="legend" style="font-size: 11px;">
+          <span style="color: var(--green); font-weight: 600;">↗ Balanced</span>
+          <span style="color: var(--purple); font-weight: 600;">↖ Quality-focused</span>
+          <span style="color: var(--yellow); font-weight: 600;">↘ Extraction-focused</span>
+          <span style="color: var(--red); font-weight: 600;">↙ Needs Improvement</span>
+        </div>
+      </div>
+
+      {% if has_fdr_fnr %}
+      <div class="card" style="margin-top: var(--space-lg);">
+        <div class="card-header">
+          <div class="card-title">
+            <div class="card-title-accent"></div>
+            FDR vs FNR Analysis
+          </div>
+        </div>
+        <div class="card-description">
+          <strong>FNR</strong> (X) = % missed vulnerabilities (false negatives). <strong>FDR</strong> (Y) = % false positives.
+          Dashed lines = LLM mean, smaller shapes = individual baselines. Green zone = below thresholds.
+        </div>
+
+        <div class="controls-bar">
+          <div class="control-group">
+            <span class="control-label">Baseline:</span>
+            <div class="btn-group" id="fdrBaselineBtns">
+              <button class="btn-toggle active" data-bl="all" onclick="setFdrBaseline(this)">All</button>
+              {% for bl in baselines %}<button class="btn-toggle" data-bl="{{ bl }}" onclick="setFdrBaseline(this)">{{ bl }}</button>{% endfor %}
+            </div>
+          </div>
+        </div>
+
+        <div class="controls-bar">
+          <div class="control-group">
+            <span class="control-label">FNR Threshold (%):</span>
+            <input type="range" id="fnrThreshold" min="0" max="50" value="15" step="1" oninput="rebuildFdrFnr()" style="width: 150px;">
+            <span id="fnrThresholdLabel" style="font-family: var(--font-mono); font-weight: 600; color: var(--orange);">15%</span>
+          </div>
+          <div class="control-group">
+            <span class="control-label">FDR Threshold (%):</span>
+            <input type="range" id="fdrThreshold" min="0" max="50" value="15" step="1" oninput="rebuildFdrFnr()" style="width: 150px;">
+            <span id="fdrThresholdLabel" style="font-family: var(--font-mono); font-weight: 600; color: var(--orange);">15%</span>
+          </div>
+        </div>
+
+        <div id="fdrFnrLegend" style="margin-bottom: var(--space-md); padding: var(--space-md); background: var(--surface-1); border-radius: var(--radius-md); border: 1px solid var(--border-subtle);"></div>
+
+        <div class="chart-wrapper" style="height: 380px;">
+          <canvas id="fdrFnrChart"></canvas>
+        </div>
+      </div>
+      {% endif %}
+
+      {% if has_bert and has_rouge %}
+      <div class="card" style="margin-top: var(--space-lg);">
+        <div class="card-header">
+          <div class="card-title">
+            <div class="card-title-accent purple"></div>
+            BERT vs ROUGE-L Correlation
+          </div>
+        </div>
+
+        <div class="controls-bar">
+          <div class="control-group">
+            <span class="control-label">Baseline:</span>
+            <select id="corrBaseline" onchange="rebuildCorrelation()">
+              <option value="all">All (average)</option>
+              {% for bl in baselines %}<option value="{{ bl }}">{{ bl }}</option>{% endfor %}
+            </select>
+          </div>
+        </div>
+
+        <div class="card-description">
+          Correlation analysis: X = BERTScore, Y = ROUGE-L. Points on diagonal = redundant metrics, scattered = complementary.
+        </div>
+
+        <div class="chart-wrapper" style="height: 350px; margin-bottom: var(--space-lg);">
+          <canvas id="correlationChart"></canvas>
+        </div>
+
+        <div class="card-description" style="margin-bottom: var(--space-md);">
+          Pearson correlation by field: green (r &gt; 0.85) = high agreement, orange = moderate, red = divergent.
+        </div>
+        <div class="table-wrapper">
+          <table class="heatmap" id="corrHeatmap"></table>
+        </div>
+        <div class="legend" id="corrLegend"></div>
+      </div>
+      {% endif %}
+
+      {% if has_det and has_bert %}
+      <div class="card" style="margin-top: var(--space-lg);">
+        <div class="card-header">
+          <div class="card-title">
+            <div class="card-title-accent green"></div>
+            Weight Sensitivity Analysis
+          </div>
+        </div>
+        <div class="card-description">
+          How model rankings change with different IE vs Text Quality weightings. Default: 70/30.
+        </div>
+
+        <div class="controls-bar">
+          <div class="control-group">
+            <span class="control-label">IE Weight (%):</span>
+            <input type="range" id="ieWeight" min="0" max="100" value="70" onchange="rebuildSensitivity()" style="width: 200px;">
+            <span id="ieWeightLabel" style="font-family: var(--font-mono); font-weight: 600; color: var(--orange);">70%</span>
+            <span style="font-size: 12px; color: var(--text-muted);">Text Quality: <span id="nlgWeightLabel">30%</span></span>
+          </div>
+        </div>
+
+        <div class="chart-wrapper" style="height: 320px; margin-bottom: var(--space-lg);">
+          <canvas id="sensitivityChart"></canvas>
+        </div>
+
+        <div class="table-wrapper">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Model</th>
+                <th>Rank</th>
+                <th>Score</th>
+                <th>IE (70%)</th>
+                <th>Text Quality (30%)</th>
+              </tr>
+            </thead>
+            <tbody id="sensitivityRankTable"></tbody>
+          </table>
+        </div>
+      </div>
+      {% endif %}
+
+    </div>
+
+    <!-- ──────────────────────────────────────────────────────────────────────
+         TAB 5: ERROR ANALYSIS
+         ────────────────────────────────────────────────────────────────── -->
+    {% if has_error_breakdown %}
+    <div class="tab-panel" id="tab-errors">
+
+      <div class="controls-bar">
+        <div class="control-group">
+          <span class="control-label">Baseline:</span>
+          <select id="errorBaseline" onchange="rebuildErrorBreakdown()">
+            {% for bl in baselines %}<option value="{{ bl }}">{{ bl }}</option>{% endfor %}
+          </select>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">
+            <div class="card-title-accent"></div>
+            Top Failed Vulnerabilities
+          </div>
+        </div>
+        <div class="card-description">
+          Vulnerabilities that models consistently fail to extract (marked as "Absent"). Systemically difficult cases.
+        </div>
+        <div class="table-wrapper">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Vulnerability</th>
+                <th>Failure Rate</th>
+                <th>Failed Models</th>
+                <th>Avg BERT Score</th>
+              </tr>
+            </thead>
+            <tbody id="errorBreakdownTable"></tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+    {% endif %}
+
+  </div>
+</main>
+
+<!-- ═══════════════════════════════════════════════════════════════════════════
+     ◆ FOOTER
+     ═══════════════════════════════════════════════════════════════════════════ -->
 <footer>
   <span>MulitaMiner Metrics Dashboard</span>
-  <span>Interactive Dashboard (Chart.js)</span>
-  <span>Generated: {{ report_date }}</span>
+  <div class="footer-separator"></div>
+  <span>Interactive Analysis (Chart.js)</span>
+  <div class="footer-separator"></div>
+  <span>{{ report_date }}</span>
 </footer>
 
 <script>
 const BASELINES = {{ baselines | tojson }};
+
+// SVGs inline para cada aba
+const HERO_SVGS = {
+  overview: `<svg viewBox="-2.4 -2.4 28.80 28.80" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;"><g> <path d="M13 12C13 11.4477 13.4477 11 14 11H19C19.5523 11 20 11.4477 20 12V19C20 19.5523 19.5523 20 19 20H14C13.4477 20 13 19.5523 13 19V12Z" stroke="#F97316" stroke-width="1.5" stroke-linecap="round"/> <path d="M4 5C4 4.44772 4.44772 4 5 4H9C9.55228 4 10 4.44772 10 5V12C10 12.5523 9.55228 13 9 13H5C4.44772 13 4 12.5523 4 12V5Z" stroke="#8B5CF6" stroke-width="1.5" stroke-linecap="round"/> <path d="M4 17C4 16.4477 4.44772 16 5 16H9C9.55228 16 10 16.4477 10 17V19C10 19.5523 9.55228 20 9 20H5C4.44772 20 4 19.5523 4 19V17Z" stroke="#10B981" stroke-width="1.5" stroke-linecap="round"/> <path d="M13 5C13 4.44772 13.4477 4 14 4H19C19.5523 4 20 4.44772 20 5V7C20 7.55228 19.5523 8 19 8H14C13.4477 8 13 7.55228 13 7V5Z" stroke="#0EA5E9" stroke-width="1.5" stroke-linecap="round"/> </g></svg>`,
+  performance: `<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;"><g> <path d="M7 14L9.29289 11.7071C9.68342 11.3166 10.3166 11.3166 10.7071 11.7071L12.2929 13.2929C12.6834 13.6834 13.3166 13.6834 13.7071 13.2929L17 10M17 10V12.5M17 10H14.5" stroke="#F97316" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/> <path d="M22 12C22 16.714 22 19.0711 20.5355 20.5355C19.0711 22 16.714 22 12 22C7.28595 22 4.92893 22 3.46447 20.5355C2 19.0711 2 16.714 2 12C2 7.28595 2 4.92893 3.46447 3.46447C4.92893 2 7.28595 2 12 2C16.714 2 19.0711 2 20.5355 3.46447C21.5093 4.43821 21.8356 5.80655 21.9449 8" stroke="#8B5CF6" stroke-width="1.5" stroke-linecap="round"/> </g></svg>`,
+  insights: `<svg viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;"><g><path d="M387.942,226.563c0-72.753-59.189-131.943-131.943-131.943c-27.422,0-53.716,8.335-76.04,24.103c-3.557,2.513-4.403,7.433-1.891,10.99c2.514,3.557,7.433,4.403,10.99,1.891c19.648-13.878,42.796-21.214,66.942-21.214c64.058,0,116.172,52.115,116.172,116.172c0,45.82-27.052,87.489-68.919,106.155c-2.843,1.268-4.674,4.089-4.674,7.202v23.842h-9.4V256.893h14.099c9.877,0,18.547-5.959,22.085-15.18c3.539-9.221,1.081-19.45-6.261-26.057l-6.214-5.593c-7.042-6.339-16.794-7.881-25.449-4.027c-8.655,3.855-14.031,12.134-14.031,21.609v13.478h-34.818v-13.478c0-9.475-5.377-17.754-14.031-21.609c-8.655-3.855-18.406-2.312-25.449,4.027l-6.213,5.593c-7.341,6.608-9.799,16.836-6.261,26.057c3.539,9.221,12.208,15.18,22.085,15.18h14.099v106.869h-9.401V339.92c0-3.113-1.831-5.935-4.674-7.202c-41.867-18.666-68.919-60.335-68.919-106.155c0-26.823,8.878-52.014,25.675-72.85c2.732-3.391,2.199-8.355-1.19-11.087c-3.39-2.731-8.354-2.199-11.087,1.19c-18.808,23.333-29.167,52.72-29.167,82.747c0,50.314,28.716,96.217,73.593,118.363v18.836h-17.347c-4.355,0-7.885,3.53-7.885,7.885v85.158c0,30.435,24.76,55.195,55.195,55.195h56.772c30.435,0,55.195-24.76,55.195-55.195v-22.078c0-4.355-3.53-7.885-7.885-7.885s-7.885,3.53-7.885,7.885v14.193H188.189v-27.335h114.07c4.355,0,7.885-3.53,7.885-7.885c0-4.355-3.53-7.885-7.885-7.885h-114.07v-26.283h135.622v13.142c0,4.355,3.53,7.885,7.885,7.885s7.885-3.53,7.885-7.885v-21.027c0-4.355-3.53-7.885-7.885-7.885h-17.347v-18.836C359.226,322.779,387.942,276.875,387.942,226.563Z" fill="#F97316"/><path d="M289.179,227.644c0-4.751,3.58-6.714,4.677-7.203c1.098-0.488,4.952-1.836,8.482,1.341l6.214,5.593c3.737,3.364,2.542,7.498,2.087,8.686c-0.455,1.187-2.333,5.06-7.361,5.06h-14.099V227.644Z" fill="#8B5CF6"/><path d="M222.821,241.123h-14.099c-7.11,0-10.589-8.964-5.275-13.746l6.213-5.593c5.023-4.521,13.161-0.834,13.161,5.861V241.123Z" fill="#10B981"/><path d="M323.018,464.69c-3.664,17.974-19.593,31.54-38.632,31.54h-56.772c-19.04,0-34.968-13.566-38.631-31.54H323.018Z" fill="#0EA5E9"/><path d="M273.409,363.762h-34.818V256.893h34.818V363.762Z" fill="#F59E0B"/><path d="M256,0c-4.355,0-7.885,3.53-7.885,7.885v44.156c0,4.355,3.53,7.885,7.885,7.885s7.885-3.53,7.885-7.885V7.885C263.885,3.53,260.355,0,256,0Z" fill="#8B5CF6"/><path d="M174.517,71.762l-22.078-38.24c-2.177-3.771-7-5.064-10.771-2.886c-3.771,2.177-5.063,7-2.886,10.771l22.077,38.24c2.317,4.014,7.767,5.156,11.508,2.405C175.561,79.704,176.497,75.193,174.517,71.762Z" fill="#F97316"/><path d="M106.982,133.525l-38.24-22.078c-3.772-2.178-8.595-0.885-10.771,2.886c-2.177,3.771-0.885,8.594,2.886,10.771l38.24,22.078c4.022,2.323,9.308,0.572,11.168-3.671C111.857,139.88,110.412,135.504,106.982,133.525Z" fill="#8B5CF6"/><path d="M79.376,220.78H35.22c-4.355,0-7.885,3.53-7.885,7.885c0,4.355,3.53,7.885,7.885,7.885h44.156c4.355,0,7.885-3.53,7.885-7.885C87.261,224.311,83.73,220.78,79.376,220.78Z" fill="#10B981"/><path d="M109.868,313.036c-2.177-3.771-7-5.064-10.771-2.887l-38.24,22.078c-3.43,1.98-4.875,6.355-3.283,9.987c1.86,4.243,7.146,5.995,11.168,3.671l38.24-22.078C110.753,321.63,112.045,316.807,109.868,313.036Z" fill="#F59E0B"/><path d="M451.143,332.227l-38.24-22.078c-3.772-2.178-8.594-0.885-10.771,2.886c-2.177,3.771-0.885,8.594,2.886,10.771l38.24,22.078c4.022,2.323,9.309,0.572,11.168-3.671C456.019,338.582,454.574,334.207,451.143,332.227Z" fill="#8B5CF6"/><path d="M476.78,220.78h-44.156c-4.355,0-7.885,3.53-7.885,7.885c0,4.355,3.53,7.885,7.885,7.885h44.156c4.355,0,7.885-3.53,7.885-7.885C484.665,224.311,481.135,220.78,476.78,220.78Z" fill="#F97316"/><path d="M454.029,114.333c-2.177-3.771-7-5.063-10.771-2.886l-38.24,22.078c-3.771,2.177-5.063,7-2.886,10.771c1.46,2.529,4.111,3.944,6.836,3.944c1.337,0,2.694-0.341,3.935-1.058l38.24-22.078C454.915,122.926,456.207,118.104,454.029,114.333Z" fill="#0EA5E9"/><path d="M370.333,30.636c-3.771-2.178-8.594-0.885-10.771,2.886l-22.078,38.24c-2.177,3.771-0.885,8.594,2.886,10.771c3.725,2.151,8.624,0.833,10.771-2.886l22.078-38.24C375.396,37.636,374.104,32.813,370.333,30.636Z" fill="#F59E0B"/></g></svg>`,
+  comparison: `<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;"><g><rect x="2.45" y="16.77" width="3.82" height="5.73" stroke="#F97316" stroke-width="1.5"/><rect x="17.73" y="9.14" width="3.82" height="13.36" stroke="#8B5CF6" stroke-width="1.5"/><rect x="10.09" y="12.95" width="3.82" height="9.55" stroke="#10B981" stroke-width="1.5"/><line x1="0.55" y1="22.5" x2="23.45" y2="22.5" stroke="#0EA5E9" stroke-width="1.5"/><circle cx="11.05" cy="5.32" r="3.82" stroke="#F59E0B" stroke-width="1.5"/><line x1="4.36" y1="12" x2="8.18" y2="8.18" stroke="#EF4444" stroke-width="1.5"/></g></svg>`,
+  errors: `<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;"><g><path d="M12 17C12.5523 17 13 16.5523 13 16C13 15.4477 12.5523 15 12 15C11.4477 15 11 15.4477 11 16C11 16.5523 11.4477 17 12 17Z" fill="#EF4444"/><path d="M12 14V7" stroke="#F97316" stroke-width="1.5"/><path d="M12 21C16.9706 21 21 16.9706 21 12 21 7.0294 16.9706 2.99994 12 2.99994 7.0294 2.99994 2.99994 7.0294 2.99994 12 2.99994 16.9706 7.0294 21 12 21Z" stroke="#8B5CF6" stroke-linecap="square" stroke-linejoin="round" stroke-width="1.5"/></g></svg>`
+};
+
+function setHeroIcon(tabName) {
+  const iconDiv = document.getElementById('heroIconSvg');
+  if (!iconDiv) return;
+  iconDiv.innerHTML = HERO_SVGS[tabName] || HERO_SVGS['overview'];
+}
 const MODELS = {{ models | tojson }};
 const bert = {{ bert_data | tojson }};
 const rouge = {{ rouge_data | tojson }};
@@ -847,6 +1920,7 @@ function buildLegend(id, type='sem'){
 
 function buildHeatmap(tableId, fields, dataObj, type='sem'){
   const table = document.getElementById(tableId);
+  if(!table) return; // Table element not present
   table.innerHTML='';
   const thead = table.createTHead();
   thead.insertRow().innerHTML = `<th>Field</th>` +
@@ -913,13 +1987,21 @@ function mkChart(id,cfg){
   return CHARTS[id];
 }
 function buildOverview(){
-  const sc=document.getElementById('statCards'); sc.innerHTML='';
+  const sc=document.getElementById('statCards');
+  if(!sc) return; // statCards container not present
+  sc.innerHTML='';
   
   // Helpers para calcular médias entre todas as baselines
   const avgBertScore = (m) => avg(BASELINES.map(bl=>mBert(bl,m)));
   const avgBertStd = (m) => avg(BASELINES.map(bl=>sBert(bl,m)));
   const avgRougeScore = (m) => avg(BASELINES.map(bl=>mRouge(bl,m)));
   const avgRougeStd = (m) => avg(BASELINES.map(bl=>sRouge(bl,m)));
+  
+  // Se nenhum dado disponível, mostrar mensagem
+  if(!HAS_BERT && !HAS_ROUGE && !HAS_DET && !HAS_VULN_COUNT){
+    sc.innerHTML = '<div class="stat-card" style="grid-column:1/-1;text-align:center;padding:2rem;color:var(--text-muted);">No overview data available. Check if metrics were generated correctly.</div>';
+    return;
+  }
   
   // Mostrar card para BERTScore se tiver dados
   if(HAS_BERT){
@@ -1071,6 +2153,7 @@ function buildOverview(){
   }
 
   const table=document.getElementById('rankTable');
+  if(!table) return; // rankTable element not present
   table.innerHTML='';
   const thead=table.createTHead();
   thead.insertRow().innerHTML=`<th>Model</th>`+BASELINES.map(b=>`<th>${b}</th>`).join('')+`<th>Final Score</th>`;
@@ -1161,8 +2244,9 @@ function buildVariabilityTable(){
 }
 
 function rebuildStacked(){
+  if(!document.getElementById('stackedMetric')) return; // Element not present
   const metric=document.getElementById('stackedMetric').value;
-  const sel=document.getElementById('stackedBaseline').value;
+  const sel=document.getElementById('stackedBaseline')?.value || BASELINES[0];
   const stackedMetric=stacked[metric]||{};
   const bls=sel==='all'?Object.keys(stackedMetric):[sel];
   const CAT=['Highly Similar','Moderately Similar','Slightly Similar','Divergent','Absent'];
@@ -1182,6 +2266,7 @@ function rebuildStacked(){
     options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false,labels:{color:TICKS,font:FONT_SM}},tooltip:{callbacks:{label:i=>`${i.dataset.label}: ${i.parsed.y.toFixed(1)}%`}}},scales:{x:{stacked:true,ticks:{color:TICKS,font:FONT},grid:{color:GRID}},y:{stacked:true,min:0,max:100,ticks:{color:TICKS,font:FONT},grid:{color:GRID}}}}
   });
   const lgEl=document.getElementById('stackedLegend');
+  if(!lgEl) return; // stackedLegend element not present
   const THRESHOLDS = [
     { cat: 'Highly Similar', threshold: '> 0.70' },
     { cat: 'Moderately Similar', threshold: '> 0.60' },
@@ -1198,16 +2283,20 @@ function rebuildStacked(){
 let semMetric = HAS_BERT ? 'bert' : 'rouge';
 function setSemMetric(m){
   semMetric=m;
-  document.getElementById('semBert').classList.toggle('on',m==='bert');
-  document.getElementById('semRouge').classList.toggle('on',m==='rouge');
+  const semBertEl = document.getElementById('semBert');
+  const semRougeEl = document.getElementById('semRouge');
+  if(semBertEl) semBertEl.classList.toggle('active',m==='bert');
+  if(semRougeEl) semRougeEl.classList.toggle('active',m==='rouge');
   rebuildSemantic();
 }
 function rebuildSemantic(){
-  const bl=document.getElementById('semBaseline').value;
+  const semBaselineEl = document.getElementById('semBaseline');
+  if(!semBaselineEl) return; // semBaseline select not present
+  const bl=semBaselineEl.value;
   const src=semMetric==='bert'?bert:rouge;
   const label=semMetric==='bert'?'BERTScore':'ROUGE-L';
-  document.getElementById('semHeatTitle').textContent=`${label} Heatmap — Text Quality Fields × Models`;
-  document.getElementById('semBarTitle').textContent=`${label} per Field — per Model (±Std)`;
+  if(document.getElementById('semHeatTitle')) document.getElementById('semHeatTitle').textContent=`${label} Heatmap — Text Quality Fields × Models`;
+  if(document.getElementById('semBarTitle')) document.getElementById('semBarTitle').textContent=`${label} per Field — per Model (±Std)`;
   const dataObj={};
   MODELS.forEach(m=>{dataObj[m]={means:src[bl]?.[m]?.m??[0.5]*SEMANTIC_FIELDS.length,stds:src[bl]?.[m]?.s??[0.05]*SEMANTIC_FIELDS.length};});
   buildHeatmap('semHeatmap',SEMANTIC_FIELDS,dataObj,'sem');
@@ -1231,14 +2320,19 @@ function rebuildSemantic(){
 let detMetric='f1';
 function setDetMetric(m){
   detMetric=m;
-  ['f1','prec','rec'].forEach(k=>document.getElementById('det'+k.charAt(0).toUpperCase()+k.slice(1)).classList.toggle('on',k===m));
+  ['f1','prec','rec'].forEach(k=>{
+    const el = document.getElementById('det'+k.charAt(0).toUpperCase()+k.slice(1));
+    if(el) el.classList.toggle('active',k===m);
+  });
   rebuildDet();
 }
 function rebuildDet(){
-  const bl=document.getElementById('detBaseline').value;
+  const detBaselineEl = document.getElementById('detBaseline');
+  if(!detBaselineEl) return; // detBaseline select not present
+  const bl=detBaselineEl.value;
   const mk=detMetric;
   const label=mk==='f1'?'F1-Score':mk==='prec'?'Precision':'Recall';
-  document.getElementById('detHeatTitle').textContent=`${label} Heatmap — IE Fields × Models`;
+  if(document.getElementById('detHeatTitle')) document.getElementById('detHeatTitle').textContent=`${label} Heatmap — IE Fields × Models`;
   const dataObj={};
   MODELS.forEach(m=>{
     dataObj[m]={means:DET_FIELDS.map(f=>det[bl]?.[m]?.[f]?.[mk]?.m??0.5),stds:DET_FIELDS.map(f=>det[bl]?.[m]?.[f]?.[mk]?.s??0.05)};
@@ -1259,7 +2353,9 @@ function rebuildDet(){
 }
 
 function rebuildRadar(){
-  const sel=document.getElementById('radarBaseline').value;
+  const radarBaselineEl = document.getElementById('radarBaseline');
+  if(!radarBaselineEl) return; // radarBaseline select not present
+  const sel=radarBaselineEl.value;
   const bls=sel==='all'?BASELINES:[sel];
   const axes=['Avg BERTScore','Avg ROUGE-L','F1 severity','F1 cvss','F1 plugin','Avg Precision','Avg Recall'];
   mkChart('radarChart',{
@@ -1284,9 +2380,30 @@ function rebuildRadar(){
     data:{
       labels:MODELS.map(m=>MODEL_NAMES[m]||m),
       datasets:[
-        {label:'BERT',data:MODELS.map(m=>avg(bls.map(bl=>mBert(bl,m)))),errorBars:MODELS.map(m=>avg(bls.map(bl=>sBert(bl,m)))),backgroundColor:'rgba(0,229,255,0.55)',borderColor:'#00e5ff',borderWidth:1},
-        {label:'ROUGE-L',data:MODELS.map(m=>avg(bls.map(bl=>mRouge(bl,m)))),errorBars:MODELS.map(m=>avg(bls.map(bl=>sRouge(bl,m)))),backgroundColor:'rgba(16,185,129,0.55)',borderColor:'#10b981',borderWidth:1},
-        {label:'F1-Det',data:MODELS.map(m=>avg(bls.flatMap(bl=>DET_FIELDS.map(f=>det[bl]?.[m]?.[f]?.f1?.m??0.5)))),errorBars:MODELS.map(m=>avg(bls.flatMap(bl=>DET_FIELDS.map(f=>det[bl]?.[m]?.[f]?.f1?.s??0.05)))),backgroundColor:'rgba(245,158,11,0.55)',borderColor:'#f59e0b',borderWidth:1},
+        {
+          label:'BERT',
+          data:MODELS.map(m=>avg(bls.map(bl=>mBert(bl,m)))),
+          errorBars:MODELS.map(m=>avg(bls.map(bl=>sBert(bl,m)))),
+          backgroundColor:'rgba(6,182,212,0.55)', // Cyan com transparência
+          borderColor:'#0891b2',
+          borderWidth:2
+        },
+        {
+          label:'ROUGE-L',
+          data:MODELS.map(m=>avg(bls.map(bl=>mRouge(bl,m)))),
+          errorBars:MODELS.map(m=>avg(bls.map(bl=>sRouge(bl,m)))),
+          backgroundColor:'rgba(139,92,246,0.55)', // Roxo com transparência
+          borderColor:'#7c3aed',
+          borderWidth:2
+        },
+        {
+          label:'F1-Det',
+          data:MODELS.map(m=>avg(bls.flatMap(bl=>DET_FIELDS.map(f=>det[bl]?.[m]?.[f]?.f1?.m??0.5)))),
+          errorBars:MODELS.map(m=>avg(bls.flatMap(bl=>DET_FIELDS.map(f=>det[bl]?.[m]?.[f]?.f1?.s??0.05)))),
+          backgroundColor:'rgba(236,72,153,0.55)', // Rosa com transparência
+          borderColor:'#be184d',
+          borderWidth:2
+        },
       ]
     },
     options:{responsive:true,maintainAspectRatio:false,plugins:{legend:LEG,tooltip:{callbacks:{label:ttStd}}},scales:scaleY(0.6,1.0)}
@@ -1299,9 +2416,27 @@ function rebuildFinalScore(){
     data:{
       labels:MODELS.map(m=>MODEL_NAMES[m]||m),
       datasets:[
-        {label:'IE Score',data:MODELS.map(m=>calcIEScoreAvg(m)),backgroundColor:'rgba(245,158,11,0.7)',borderColor:'#f59e0b',borderWidth:1},
-        {label:'Text Quality Score',data:MODELS.map(m=>calcNLGScoreAvg(m)),backgroundColor:'rgba(16,185,129,0.7)',borderColor:'#10b981',borderWidth:1},
-        {label:'Final Score',data:MODELS.map(m=>calcFinalScoreAvg(m)),backgroundColor:'rgba(148,163,184,0.9)',borderColor:'#e2e8f0',borderWidth:2},
+        {
+          label:'IE Score',
+          data:MODELS.map(m=>calcIEScoreAvg(m)),
+          backgroundColor:'rgba(239,68,68,0.55)', // Vermelho #EF4444 translúcido
+          borderColor:'#EF4444',
+          borderWidth:2
+        },
+        {
+          label:'Text Quality Score',
+          data:MODELS.map(m=>calcNLGScoreAvg(m)),
+          backgroundColor:'rgba(139,92,246,0.55)', // Roxo translúcido
+          borderColor:'#7c3aed',
+          borderWidth:2
+        },
+        {
+          label:'Final Score',
+          data:MODELS.map(m=>calcFinalScoreAvg(m)),
+          backgroundColor:'rgba(45,212,191,0.55)', // Verde-água claro #2dd4bf translúcido
+          borderColor:'#2dd4bf',
+          borderWidth:2
+        },
       ]
     },
     options:{responsive:true,maintainAspectRatio:false,plugins:{legend:LEG,tooltip:{callbacks:{label:ttVal}}},scales:scaleY(0.6,1.0)}
@@ -1550,7 +2685,9 @@ function pearsonCorrelation(x, y) {
 }
 
 function rebuildCorrelation(){
-  const bl = document.getElementById('corrBaseline').value;
+  const corrBaselineEl = document.getElementById('corrBaseline');
+  if(!corrBaselineEl) return; // corrBaseline select not present
+  const bl = corrBaselineEl.value;
   const bertData = bl === 'all' ? Object.keys(bert).reduce((acc, b) => Object.assign(acc, bert[b]), {}) : bert[bl];
   const rougeData = bl === 'all' ? Object.keys(rouge).reduce((acc, b) => Object.assign(acc, rouge[b]), {}) : rouge[bl];
   
@@ -1841,11 +2978,11 @@ function rebuildFdrFnr() {
 }
 
 function rebuildSensitivity(){
-  const ieWeight = parseFloat(document.getElementById('ieWeight').value);
+  const ieWeight = parseFloat(document.getElementById('ieWeight')?.value || 70);
   const nlgWeight = 100 - ieWeight;
   
-  document.getElementById('ieWeightLabel').textContent = ieWeight + '%';
-  document.getElementById('nlgWeightLabel').textContent = nlgWeight + '%';
+  if(document.getElementById('ieWeightLabel')) document.getElementById('ieWeightLabel').textContent = ieWeight + '%';
+  if(document.getElementById('nlgWeightLabel')) document.getElementById('nlgWeightLabel').textContent = nlgWeight + '%';
   
   // Calculate scores with custom weights
   const scores = MODELS.map(m => {
@@ -1911,19 +3048,23 @@ function rebuildSensitivity(){
 }
 
 function rebuildErrorBreakdown(){
-  const baseline = document.getElementById('errorBaseline').value;
+  const errorBaselineEl = document.getElementById('errorBaseline');
+  if(!errorBaselineEl) return; // errorBaseline select not present
+  const baseline = errorBaselineEl.value;
+  
+  const errorTableEl = document.getElementById('errorBreakdownTable');
+  if(!errorTableEl) return; // errorBreakdownTable not present
   
   if(!HAS_ERROR_BREAKDOWN || !error_breakdown[baseline]){
-    document.getElementById('errorBreakdownTable').innerHTML = '<tr><td colspan="4" style="text-align:center;color:var(--muted);">No error breakdown data available</td></tr>';
+    errorTableEl.innerHTML = '<tr><td colspan="4" style="text-align:center;color:var(--muted);">No error breakdown data available</td></tr>';
     return;
   }
   
   const breakdownData = error_breakdown[baseline];
-  const errorTable = document.getElementById('errorBreakdownTable');
-  errorTable.innerHTML = '';
+  errorTableEl.innerHTML = '';
   
   breakdownData.forEach((item, idx) => {
-    const tr = errorTable.insertRow();
+    const tr = errorTableEl.insertRow();
     const failurePercent = (item.failure_rate * 100).toFixed(1);
     const bertScore = item.avg_bert_score !== null ? item.avg_bert_score.toFixed(3) : 'N/A';
     const rowColor = item.failure_rate >= 0.8 ? '#dc2626' : item.failure_rate >= 0.5 ? '#f59e0b' : '#10b981';
@@ -1948,46 +3089,76 @@ function resizeAllCharts(){
   });
 }
 
-function showTab(name,btn){
-  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
-  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
-  document.getElementById('tab-'+name).classList.add('active');
-  btn.classList.add('active');
+function showTab(name, event){
+  if(event?.preventDefault) event.preventDefault();
   
-  // Recalcular tamanho após mostrar aba
+  // Update hero title based on active tab
+  const titleMain = document.getElementById('heroTitleMain');
+  const titleSub = document.getElementById('heroTitleSub');
+  const heroTitles = {
+    'overview': { title: 'Overview Dashboard', subtitle: 'KPIs, consistency & rankings', description: 'View overall performance metrics across all baseline extractors and LLM models. Analyze consistency patterns and compare final scores with detailed breakdowns.' },
+    'performance': { title: 'Performance Analysis', subtitle: 'Text quality & extraction metrics', description: 'Deep dive into semantic similarity metrics, IE field-level performance, precision/recall analysis and heatmap comparisons across models and baselines.' },
+    'comparison': { title: 'Model Comparison', subtitle: 'Radar charts & final scores', description: 'Side-by-side model comparison with 12-field semantic radar, IE performance radar, and decomposed final scores (70% IE + 30% Text Quality).' },
+    'insights': { title: 'Advanced Insights', subtitle: 'Trade-offs & correlation analysis', description: 'Analyze extraction vs. quality trade-offs, discover correlations between metrics, and evaluate sensitivity of models to different factors and parameters.' },
+    'errors': { title: 'Error Breakdown', subtitle: 'Vulnerability extraction failures', description: 'Examine FDR/FNR trade-offs, error distributions, and statistical significance of extraction errors across models and baselines.' }
+  };
+  
+  const tabTitles = heroTitles[name] || { title: 'Dashboard', subtitle: 'Analysis', description: '' };
+  if(titleMain) titleMain.textContent = tabTitles.title;
+  if(titleSub) titleSub.textContent = tabTitles.subtitle;
+  const descEl = document.getElementById('heroDescription');
+  if(descEl) descEl.textContent = tabTitles.description;
+  setHeroIcon(name);
+  
+  // Update tab panel visibility
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-button').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.sidebar-nav-item').forEach(i => i.classList.remove('active'));
+  
+  const tabEl = document.getElementById('tab-' + name);
+  if(!tabEl) return; // Tab panel not found
+  tabEl.classList.add('active');
+  
+  // Activate corresponding header tab button
+  const headerBtn = Array.from(document.querySelectorAll('.tab-button')).find(b => b.textContent.toLowerCase().includes(name.charAt(0).toUpperCase() + name.slice(1).replace(/([A-Z])/g, ' $1').toLowerCase()));
+  if(headerBtn) headerBtn.classList.add('active');
+  
+  // Activate corresponding sidebar item
+  const sidebarBtn = Array.from(document.querySelectorAll('.sidebar-nav-item')).find(b => b.textContent.toLowerCase().trim() === name);
+  if(sidebarBtn) sidebarBtn.classList.add('active');
+  
   setTimeout(resizeAllCharts, 150);
   if(!built[name]){
-    built[name]=true;
-    if(name==='overview')buildOverview();
-    if(name==='performance'){rebuildSemantic();rebuildDet();}
-    if(name==='comparison'){rebuildRadar();rebuildFinalScore();rebuildTradeoff();}
-    if(name==='insights'){rebuildTradeoff();rebuildCorrelation();rebuildSensitivity();if(HAS_FDR_FNR)rebuildFdrFnr();}
-    if(name==='errors'){rebuildErrorBreakdown();}
+    built[name] = true;
+    if(name === 'overview') buildOverview();
+    if(name === 'performance'){ rebuildSemantic(); rebuildDet(); }
+    if(name === 'comparison'){ rebuildRadar(); rebuildFinalScore(); rebuildTradeoff(); }
+    if(name === 'insights'){ rebuildTradeoff(); rebuildCorrelation(); rebuildSensitivity(); if(HAS_FDR_FNR) rebuildFdrFnr(); }
+    if(name === 'errors'){ rebuildErrorBreakdown(); }
   }
+}
+
+function switchTab(name, event){
+  if(event?.preventDefault) event.preventDefault();
+  showTab(name, event);
 }
 
 function toggleMethodology(){
   const details = document.getElementById('methodologyDetails');
+  if(!details) return; // methodologyDetails not present
   const btn = event.target;
   details.classList.toggle('show');
-  btn.style.background = details.classList.contains('show') ? 'var(--accent2)' : 'var(--accent)';
+  btn.style.background = details.classList.contains('show') ? 'var(--purple)' : 'var(--orange)';
 }
 
 // Initialize first available tab
 window.chartReady.then(() => {
   if(HAS_BERT){
-    built['overview']=true;
-    buildOverview();
-  }else if(HAS_DET){
-    document.getElementById('tab-performance').classList.add('active');
-    document.querySelector('.tab').classList.add('active');
-    built['performance']=true;
-    rebuildDet();
-  }else if(HAS_ERROR_BREAKDOWN){
-    document.getElementById('tab-errors').classList.add('active');
-    Array.from(document.querySelectorAll('.tab')).find(b=>b.textContent.includes('Error'))?.classList.add('active');
-    built['errors']=true;
-    rebuildErrorBreakdown();
+    showTab('overview');
+  } else if(HAS_DET){
+    showTab('performance');
+  } else if(HAS_ERROR_BREAKDOWN){
+    showTab('errors');
   }
 });
 </script>

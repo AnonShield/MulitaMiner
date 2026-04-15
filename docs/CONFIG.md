@@ -53,11 +53,11 @@ The system then uses the tokenizer (tiktoken or HuggingFace) to:
 
 | Model            | Max Tokens | Reserve | Effective Chunk |
 | ---------------- | ---------- | ------- | --------------- |
-| gpt-4o-mini      | 12,000     | 2,000   | ~10,000 tokens  |
-| gpt-5-mini       | 16,000     | 2,000   | ~14,000 tokens  |
-| deepseek-coder   | 4,096      | 1,000   | ~3,096 tokens   |
-| granite-4-tiny   | 1,500      | 600     | ~900 tokens     |
-| mistral (Ollama) | 4,096      | 1,000   | ~3,096 tokens   |
+| gpt-4o-mini      | 14,500     | 3,500   | ~14,000 tokens  |
+| gpt-5-mini       | 16,000     | 5,000   | ~10,000 tokens  |
+| deepseek-coder   | 8,192      | 3,500   | ~7,500 tokens   |
+| granite-4-tiny   | 1,500      | 600     | ~4,000 tokens   |
+| mistral (Ollama) | 20,000     | 3,500   | ~15,000 tokens  |
 
 > **Note:** Actual chunk size may be slightly less to keep vulnerability records intact (splits at marker boundaries, not mid-record)
 
@@ -77,9 +77,9 @@ Current JSON files use a simplified, provider-aware structure:
   "endpoint": "https://api.openai.com/v1",
   "model": "gpt-4o-mini-2024-07-18",
   "temperature": 0.0,
-  "max_completion_tokens": 12000,
-  "max_chunk_size": 10000,
-  "reserve_for_response": 2000,
+  "max_completion_tokens": 14500,
+  "max_chunk_size": 14000,
+  "reserve_for_response": 3500,
   "tokenizer": {
     "type": "tiktoken",
     "model": "cl100k_base"

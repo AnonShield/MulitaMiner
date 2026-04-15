@@ -38,12 +38,11 @@ python3 main.py --input <pdf_path> [options]
 
 ### Evaluation Options
 
-| Parameter             | Description                 | Default                    |
-| --------------------- | --------------------------- | -------------------------- |
-| `--evaluate`          | Enable metrics evaluation   | `false`                    |
-| `--baseline-file`     | Ground truth file (.xlsx)   | required with `--evaluate` |
-| `--evaluation-method` | Method: `bert` or `rouge`   | `bert`                     |
-| `--allow-duplicates`  | Allow legitimate duplicates | `false`                    |
+| Parameter              | Description                              | Default |
+| ---------------------- | ---------------------------------------- | ------- |
+| `--baseline-path`      | Ground truth file (.xlsx or .json)       | none    |
+| `--evaluation-methods` | Methods: `bert`, `rouge` (space-separated) | none  |
+| `--allow-duplicates`   | Allow legitimate duplicates              | `false` |
 
 ## Usage Examples
 
@@ -143,50 +142,50 @@ python3 main.py --input cais_tenable.pdf --scanner cais_tenable --llm gpt4 --con
 # Syntax: Extract and evaluate with BERT
 
 # Windows
-python main.py --input <pdf_path> --scanner <scanner> --llm <llm> --evaluate --baseline <baseline_file> --evaluation-method bert [--allow-duplicates]
+python main.py --input <pdf_path> --scanner <scanner> --llm <llm> --baseline-path <baseline_file> --evaluation-methods bert [--allow-duplicates]
 
 # Linux/macOS
-python3 main.py --input <pdf_path> --scanner <scanner> --llm <llm> --evaluate --baseline <baseline_file> --evaluation-method bert [--allow-duplicates]
+python3 main.py --input <pdf_path> --scanner <scanner> --llm <llm> --baseline-path <baseline_file> --evaluation-methods bert [--allow-duplicates]
 
 # Example: OpenVAS extraction with BERT evaluation (xlsx)
 
 # Windows
-python main.py --input openvas_report.pdf --scanner openvas --llm deepseek --evaluate --baseline openvas_report.xlsx --evaluation-method bert --allow_duplicates
+python main.py --input openvas_report.pdf --scanner openvas --llm deepseek --baseline-path openvas_report.xlsx --evaluation-methods bert --allow-duplicates
 
 # Linux/macOS
-python3 main.py --input openvas_report.pdf --scanner openvas --llm deepseek --evaluate --baseline openvas_report.xlsx --evaluation-method bert --allow_duplicates
+python3 main.py --input openvas_report.pdf --scanner openvas --llm deepseek --baseline-path openvas_report.xlsx --evaluation-methods bert --allow-duplicates
 
 # Example: OpenVAS extraction with BERT evaluation (json)
 
 # Windows
-python main.py --input openvas_report.pdf --scanner openvas --llm deepseek --evaluate --baseline openvas_report.json --evaluation-method bert --allow_duplicates
+python main.py --input openvas_report.pdf --scanner openvas --llm deepseek --baseline-path openvas_report.json --evaluation-methods bert --allow-duplicates
 
 # Linux/macOS
-python3 main.py --input openvas_report.pdf --scanner openvas --llm deepseek --evaluate --baseline openvas_report.json --evaluation-method bert --allow_duplicates
+python3 main.py --input openvas_report.pdf --scanner openvas --llm deepseek --baseline-path openvas_report.json --evaluation-methods bert --allow-duplicates
 
 # Syntax: Extract and evaluate with ROUGE-L
 
 # Windows
-python main.py --input <pdf_path> --scanner <scanner> --llm <llm> --evaluate --baseline <baseline_file> --evaluation-method bert [--allow-duplicates]
+python main.py --input <pdf_path> --scanner <scanner> --llm <llm> --baseline-path <baseline_file> --evaluation-methods rouge [--allow-duplicates]
 
 # Linux/macOS
-python3 main.py --input <pdf_path> --scanner <scanner> --llm <llm> --evaluate --baseline <baseline_file> --evaluation-method bert [--allow-duplicates]
+python3 main.py --input <pdf_path> --scanner <scanner> --llm <llm> --baseline-path <baseline_file> --evaluation-methods rouge [--allow-duplicates]
 
 # Example: Tenable extraction with ROUGE-L evaluation (xlsx)
 
 # Windows
-python main.py --input tenable_report.pdf --scanner tenable --llm deepseek --evaluate --baseline tenable_report.xlsx --evaluation-method bert --allow_duplicates
+python main.py --input tenable_report.pdf --scanner tenable --llm deepseek --baseline-path tenable_report.xlsx --evaluation-methods rouge
 
 # Linux/macOS
-python3 main.py --input tenable_report.pdf --scanner tenable --llm deepseek --evaluate --baseline tenable_report.xlsx --evaluation-method bert --allow_duplicates
+python3 main.py --input tenable_report.pdf --scanner tenable --llm deepseek --baseline-path tenable_report.xlsx --evaluation-methods rouge
 
-# Example: Tenable extraction with ROUGE-L evaluation (json)
+# Example: Tenable extraction with both BERT and ROUGE (json baseline)
 
 # Windows
-python main.py --input tenable_report.pdf --scanner tenable --llm deepseek --evaluate --baseline tenable_report.json --evaluation-method bert --allow_duplicates
+python main.py --input tenable_report.pdf --scanner tenable --llm deepseek --baseline-path tenable_report.json --evaluation-methods bert rouge
 
 # Linux/macOS
-python3 main.py --input tenable_report.pdf --scanner tenable --llm deepseek --evaluate --baseline tenable_report.json --evaluation-method bert --allow_duplicates
+python3 main.py --input tenable_report.pdf --scanner tenable --llm deepseek --baseline-path tenable_report.json --evaluation-methods bert rouge
 ```
 
 ## Output Files and Logs

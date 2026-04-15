@@ -38,11 +38,12 @@ MulitaMiner/
 │       ├── cais_validator.py            # CAIS format validation
 │       ├── chunking.py                  # Chunk calculation and optimization
 │       ├── cli_args.py                  # CLI argument parsing
-│       ├── convertions.py               # Data conversion helpers
-│       ├── llm_utils.py                 # LLM loading and configuration
+│       ├── llm_debug.py                 # Debug logging of raw LLM responses
 │       ├── pdf_loader.py                # PDF text extraction and layout preservation
-│       ├── processing.py                # Main processing pipeline
-│       └── profile_registry.py          # Profile and scanner registration
+│       ├── processing.py                # Response extraction and content sanitization
+│       ├── profile_registry.py          # Profile and scanner registration
+│       ├── reporting.py                 # Execution summary and final report generation
+│       └── tokens_cost.py               # Token usage and cost calculation
 ├── metrics/
 │   ├── __init__.py
 │   ├── bert/
@@ -74,10 +75,10 @@ MulitaMiner/
 
 ### Processing System
 
-- **src/utils/processing.py**: Chunking engine with automatic token calculation
-- **src/utils/llm_utils.py**: Smart LLM loading with optimized configurations per model
+- **src/utils/processing.py**: Response extraction and content sanitization
 - **src/utils/pdf_loader.py**: Optimized text extraction with layout preservation
 - **src/utils/chunking.py**: Chunk calculation and optimization logic
+- **src/utils/reporting.py**: Final execution summary and report generation
 
 ### Specialized Strategies
 

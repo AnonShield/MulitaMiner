@@ -4,7 +4,7 @@ This document provides detailed installation instructions for MulitaMiner.
 
 ## System Requirements
 
-- **Python**: 3.8+ (recommended: Python 3.10+)
+- **Python**: 3.11+
 - **RAM**: 4GB+ recommended for large PDF processing
 - **OS**: Windows, Linux, or macOS
 
@@ -17,21 +17,48 @@ git clone https://github.com/AnonShield/MulitaMiner.git
 cd MulitaMiner
 ```
 
-### 2. Virtual Environment (Highly Recommended)
+### 2. Install Dependencies
+
+#### Recommended: uv (fast, modern Python package manager)
+
+[uv](https://docs.astral.sh/uv/) automatically creates the virtual environment and installs all dependencies in one command:
+
+```bash
+# Install uv (if not already installed)
+
+# Windows (PowerShell)
+powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
+
+# Linux/macOS
+curl -LsSf https://astral.sh/uv/install.sh | sh
+```
+
+```bash
+# Create virtual environment and install all dependencies
+uv sync
+```
+
+```bash
+# Activate the virtual environment
+
+# Windows
+.venv\Scripts\activate
+
+# Linux/macOS
+source .venv/bin/activate
+```
+
+#### Alternative: pip + venv
 
 ```bash
 # Windows
 python -m venv .venv
 .venv\Scripts\activate
+pip install -r requirements.txt
 
-# Linux/Mac
+# Linux/macOS
 python3 -m venv .venv
 source .venv/bin/activate
-```
-
-### 3. Install Dependencies
-
-```bash
 pip install -r requirements.txt
 ```
 
@@ -40,51 +67,60 @@ pip install -r requirements.txt
 ### Core - LLM Framework and Processing
 
 ```pip-requirements
-langchain>=0.1.0,<0.3.0          # Main framework for LLMs
-langchain-openai>=0.1.0,<0.2.0   # OpenAI integration
-langchain-core>=0.1.0,<0.2.0     # Langchain core
-tiktoken>=0.5.1,<0.7.0           # Tokenization
-python-dotenv>=0.21.0            # Environment variables
+langchain==0.3.28          # Main framework for LLMs
+langchain-core==0.3.84     # Langchain core
+langchain-openai==0.3.35   # OpenAI integration
+langchain-ollama==0.3.10   # Ollama integration
+tiktoken==0.12.0           # Tokenization (OpenAI models)
+python-dotenv==1.2.2       # Environment variables
 ```
 
 ### PDF Processing - Optimized Extraction
 
 ```pip-requirements
-pdfplumber>=0.10.0,<0.12.0       # PDF text extraction
+pdfplumber==0.11.9         # PDF text extraction
 ```
 
 ### UI/UX - Progress Bars and Feedback
 
 ```pip-requirements
-tqdm>=4.0.0,<5.0.0               # Progress bars
+tqdm==4.67.3               # Progress bars
 ```
 
 ### Data Processing - Merge and Normalization
 
 ```pip-requirements
-deepmerge>=1.1.0,<2.0.0          # Dictionary merge
+deepmerge==1.1.1           # Dictionary merge
 ```
 
 ### Export Formats - CSV, XLSX
 
 ```pip-requirements
-pandas>=1.3.0,<3.0.0             # DataFrames and manipulation
-openpyxl>=3.0.0,<4.0.0           # Excel export
+pandas==2.3.3              # DataFrames and manipulation
+openpyxl==3.1.5            # Excel export
 ```
 
 ### Metrics Evaluation and Visualization
 
 ```pip-requirements
-rapidfuzz>=3.0.0,<4.0.0          # Fuzzy matching
-bert-score>=0.3.0,<0.4.0         # BERTScore
-rouge-score>=0.1.0                # ROUGE
-torch>=1.10.0,<3.0.0             # Required for BERTScore
-numpy>=1.21.0,<2.0.0             # Numeric operations
-matplotlib>=3.4.0,<4.0.0         # Visualization
-seaborn>=0.11.0,<1.0.0           # Visualization
+rapidfuzz==3.14.5          # Fuzzy matching
+bert-score==0.3.13         # BERTScore
+rouge-score==0.1.2         # ROUGE
+torch==2.11.0              # Required for BERTScore
+numpy==1.26.4              # Numeric operations
+scikit-learn==1.8.0        # ML utilities (BERTScore dependency)
+matplotlib==3.10.8         # Visualization
+seaborn==0.13.2            # Visualization
 ```
 
-> **Note:** For XLSX/CSV export and metrics evaluation, install all dependencies above.
+### Report Generation
+
+```pip-requirements
+jinja2==3.1.6              # HTML report generation
+kaleido==1.2.0             # Static image export for charts
+```
+
+> **Note:** All versions are pinned in both `pyproject.toml` and `requirements.txt` for stability. `uv sync` reads from `pyproject.toml`; `pip install -r requirements.txt` uses the flat file — both install the same packages.
 > **Note:** The project forces UTF-8 encoding on Windows/Linux to avoid character errors.
 
 ## Verifying Installation
