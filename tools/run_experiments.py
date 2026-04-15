@@ -35,7 +35,7 @@ def make_checkpoint_path(ts):
 
 def execute_run(run_id, run_info, group_key, checkpoints, checkpoint_path,
                 checkpoint_data, checkpoint_lock, print_lock, args,
-                evaluation_methods, allow_duplicates_map, parallel, stop_event):
+                evaluation_methods, allow_duplicates, parallel, stop_event):
     """Execute a single experiment run as a subprocess."""
     if stop_event.is_set():
         return
@@ -61,7 +61,6 @@ def execute_run(run_id, run_info, group_key, checkpoints, checkpoint_path,
         run_prefix = f"{get_base(baseline_path)}_{llm}_run{run_num}"
         output_file = os.path.join(subdir, f"{run_prefix}.txt")
         timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
-        allow_duplicates = allow_duplicates_map.get(scanner, False)
 
         cmd = [
             sys.executable, 'main.py',
@@ -164,7 +163,7 @@ def execute_run(run_id, run_info, group_key, checkpoints, checkpoint_path,
 
 def run_group_sequential(group_key, group_run_ids, checkpoints, checkpoint_path,
                          checkpoint_data, checkpoint_lock, print_lock, args,
-                         evaluation_methods, allow_duplicates_map, parallel, stop_event):
+                         evaluation_methods, allow_duplicates, parallel, stop_event):
     """Run all experiments in a provider group sequentially."""
     for run_id in group_run_ids:
         if stop_event.is_set():
@@ -175,7 +174,7 @@ def run_group_sequential(group_key, group_run_ids, checkpoints, checkpoint_path,
         execute_run(
             run_id, run_info, group_key, checkpoints, checkpoint_path,
             checkpoint_data, checkpoint_lock, print_lock, args,
-            evaluation_methods, allow_duplicates_map, parallel, stop_event
+            evaluation_methods, allow_duplicates, parallel, stop_event
         )
 
 
@@ -186,14 +185,14 @@ def main():
                         help='Directory containing .xlsx (baseline) and .pdf (report) files. Both must have the same name, except for the extension.')
     parser.add_argument('--llms', type=str, nargs='+', default=None,
                         help='List of LLMs to test.')
-    parser.add_argument('--scanners', type=str, nargs='+', default=None,
-                        help='List of scanners to test.')
+    parser.add_argument('--scanner', type=str, default=None,
+                        help='Scanner to use (e.g., openvas, tenable).')
     parser.add_argument('--evaluation-methods', type=str, nargs='+', default=None,
                         help='List of evaluation methods (e.g., bert, rouge).')
     parser.add_argument('--runs-per-model', type=int, default=None,
                         help='Number of runs per model.')
-    parser.add_argument('--allow-duplicates', type=str, nargs='+', default=None,
-                        help='List of true/false values corresponding to the order of scanners. Example: --scanners openvas tenable --allow-duplicates true false (openvas=True, tenable=False).')
+    parser.add_argument('--allow-duplicates', action='store_true',
+                        help='Allow duplicates in results.')
     parser.add_argument('--checkpoint-file', type=str, default=None,
                         help='Checkpoint file to resume from. When provided, all other arguments become optional.')
     parser.add_argument('--debug', action='store_true',
@@ -228,7 +227,7 @@ def main():
         checkpoint_id = checkpoint_data.get("checkpoint_id", datetime.now().strftime("%Y-%m-%dT%H-%M-%S"))
         meta = checkpoint_data.get("meta", {})
         evaluation_methods = args.evaluation_methods or meta.get("evaluation_methods", ["bert"])
-        allow_duplicates_map = meta.get("allow_duplicates_map", {})
+        allow_duplicates = meta.get("allow_duplicates", False)
         pending = sum(1 for r in checkpoints.values() if r.get("status") != "ok")
         print(f"[INFO] Resuming from checkpoint: {checkpoint_path}")
         print(f"[INFO] Pending runs: {pending} / {len(checkpoints)}")
@@ -237,21 +236,13 @@ def main():
         # Fresh run — build everything from args
         if not args.llms:
             parser.error("--llms is required when not using --checkpoint-file")
-        if not args.scanners:
-            parser.error("--scanners is required when not using --checkpoint-file")
+        if not args.scanner:
+            parser.error("--scanner is required when not using --checkpoint-file")
 
         runs_per_model = args.runs_per_model or 10
-        allow_duplicates_list = args.allow_duplicates or ['false'] * len(args.scanners)
-
-        if len(allow_duplicates_list) != len(args.scanners):
-            print(f"[ERROR] The number of values in --allow-duplicates must match the number of scanners.")
-            sys.exit(1)
-
-        allow_duplicates_map = {
-            scanner: str_to_bool(allow)
-            for scanner, allow in zip(args.scanners, allow_duplicates_list)
-        }
+        allow_duplicates = args.allow_duplicates
         evaluation_methods = args.evaluation_methods or ["bert"]
+        scanner = args.scanner
 
         input_dir = args.input_dir
         xlsx_files = sorted([f for f in os.listdir(input_dir) if f.endswith('.xlsx')])
@@ -276,21 +267,15 @@ def main():
 
         print(f"[INFO] Total pairs found: {len(matched_pairs)}")
 
-        baselines = [pair[0] for pair in matched_pairs]
-        extractors = [pair[1] for pair in matched_pairs]
-
         os.makedirs("results_runs", exist_ok=True)
 
-        # Build run list
         all_run_ids = []
-        for baseline_path, extractor_path in zip(baselines, extractors):
-            for scanner in args.scanners:
-                for llm in args.llms:
-                    for run_num in range(1, runs_per_model + 1):
-                        run_id = f"{get_base(baseline_path)}_{llm}_run{run_num}"
-                        all_run_ids.append((run_id, baseline_path, extractor_path, scanner, llm, run_num))
+        for baseline_path, extractor_path in matched_pairs:
+            for llm in args.llms:
+                for run_num in range(1, runs_per_model + 1):
+                    run_id = f"{get_base(baseline_path)}_{llm}_run{run_num}"
+                    all_run_ids.append((run_id, baseline_path, extractor_path, scanner, llm, run_num))
 
-        # Create checkpoint
         checkpoint_id = datetime.now().strftime("%Y-%m-%dT%H-%M-%S")
         checkpoint_path = make_checkpoint_path(checkpoint_id)
         checkpoints = {}
@@ -312,7 +297,7 @@ def main():
             "checkpoint_id": checkpoint_id,
             "meta": {
                 "evaluation_methods": evaluation_methods,
-                "allow_duplicates_map": allow_duplicates_map,
+                "allow_duplicates": allow_duplicates,
                 "input_dir": input_dir,
             }
         }
@@ -346,7 +331,7 @@ def main():
                     group_key, group_run_ids, checkpoints,
                     checkpoint_path, checkpoint_data,
                     checkpoint_lock, print_lock, args,
-                    evaluation_methods, allow_duplicates_map, parallel, stop_event
+                    evaluation_methods, allow_duplicates, parallel, stop_event
                 ): group_key
                 for group_key, group_run_ids in provider_groups.items()
             }
