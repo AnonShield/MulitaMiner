@@ -138,7 +138,8 @@ class HuggingFaceLocalProvider(BaseLLMProvider):
     def invoke(self, prompt: str) -> str:
         """Send prompt to local model and return response text."""
         try:
-            result = self.llm(prompt, max_new_tokens=512)
+            max_tokens = self.config.get("max_completion_tokens") or self.config.get("max_tokens") or self.config.get("max_length", 512)
+            result = self.llm(prompt, max_new_tokens=int(max_tokens))
             if isinstance(result, list) and len(result) > 0:
                 return result[0].get("generated_text", "")
             return str(result)

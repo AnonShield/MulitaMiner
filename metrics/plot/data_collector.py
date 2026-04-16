@@ -714,114 +714,98 @@ def collect_vulnerability_counts(available_models: List[str], results_dir: str =
 def collect_error_breakdown(available_models: List[str], results_dir: str = "results_runs", top_n: int = 15) -> Dict:
     """
     Collect error breakdown analysis: which vulnerabilities do models consistently fail to extract?
-    
-    Identifies "Absent" vulnerabilities (in baseline but not extracted by model) and aggregates
-    across all models/runs to find which vulnerabilities are hardest to extract.
-    
+
+    Aggregation is per unique LLM (not per run). A model counts as having failed a vulnerability
+    when the majority (>50%) of its runs marked that vulnerability as Absent/Non-existent.
+
     Returns: { baseline: [
         {
             'vulnerability': name,
-            'failed_models': count_of_models_that_failed,
-            'total_models': total_models,
-            'failure_rate': failed_models / total_models,
-            'avg_bert_score': average_bert_score_when_attempted (or null if always absent)
+            'failed_models': count_of_unique_llms_that_failed,
+            'total_models': count_of_unique_llms_that_attempted,
+            'failure_rate': failed_models / total_models
         },
         ...
     ] } (sorted by failure_rate descending, top N only)
     """
     error_breakdown = {}
     results_path = Path(results_dir)
-    
+
     if not results_path.exists():
         return error_breakdown
-    
-    # Collect per baseline: vulnerability -> {failed_count: N, total_count: M, bert_scores: []}
-    baseline_vuln_data = {}  # baseline -> { vulnerability: {failed: int, total: int, scores: []} }
-    
+
+    # Collect per (baseline, vuln, llm): aggregate run-level failures so we can
+    # compute a per-LLM verdict rather than treating each run as a separate model.
+    # Shape: baseline -> { vuln: { llm: {'failed_runs': int, 'total_runs': int} } }
+    baseline_vuln_llm: Dict[str, Dict[str, Dict[str, Dict[str, int]]]] = {}
+
     for baseline_dir in results_path.iterdir():
         if not baseline_dir.is_dir():
             continue
-        
+
         baseline = baseline_dir.name
-        baseline_vuln_data[baseline] = {}
-        
+        baseline_vuln_llm[baseline] = {}
+
         for root, dirs, files in os.walk(baseline_dir):
             for fname in files:
-                # Look for BERT comparison files (they have the best categorization data)
                 if not fname.endswith('.xlsx') or 'bert_comparison_vulnerabilities' not in fname.lower():
                     continue
-                
+
                 llm = extract_llm_from_filename(fname, available_models)
                 if not llm:
                     continue
-                
+
                 try:
                     excel_file = os.path.join(root, fname)
-                    # Read Categorization sheet which has Category and BERTScore columns
                     df = pd.read_excel(excel_file, sheet_name='Categorization')
-                    
+
                     if 'Category' not in df.columns or 'Vulnerability_Name' not in df.columns:
                         continue
-                    
-                    # Look for BERT score column (may be named differently)
-                    score_col = None
-                    for col in df.columns:
-                        if 'bert' in col.lower() and ('score' in col.lower() or 'f1' in col.lower()):
-                            score_col = col
-                            break
-                    
-                    # Process each vulnerability
-                    for idx, row in df.iterrows():
+
+                    for _, row in df.iterrows():
                         vuln_name = row['Vulnerability_Name']
                         category = row['Category']
-                        
+
                         if pd.isna(vuln_name):
                             continue
-                        
-                        # Initialize if first time seeing this vulnerability
-                        if vuln_name not in baseline_vuln_data[baseline]:
-                            baseline_vuln_data[baseline][vuln_name] = {
-                                'failed': 0,
-                                'total': 0,
-                                'scores': []
-                            }
-                        
-                        baseline_vuln_data[baseline][vuln_name]['total'] += 1
-                        
-                        # Count as failed if "Absent" or "Non-existent"
+
+                        vuln_bucket = baseline_vuln_llm[baseline].setdefault(vuln_name, {})
+                        llm_bucket = vuln_bucket.setdefault(llm, {'failed_runs': 0, 'total_runs': 0})
+
+                        llm_bucket['total_runs'] += 1
                         if category in ['Absent', 'Non-existent']:
-                            baseline_vuln_data[baseline][vuln_name]['failed'] += 1
-                        else:
-                            # Record BERT score for "succeeded" cases
-                            if score_col and not pd.isna(row[score_col]):
-                                baseline_vuln_data[baseline][vuln_name]['scores'].append(float(row[score_col]))
-                
-                except Exception as e:
+                            llm_bucket['failed_runs'] += 1
+
+                except Exception:
                     continue
-    
-    # Build output: aggregate and compute statistics
-    for baseline, vuln_dict in baseline_vuln_data.items():
+
+    # Collapse per-LLM run stats into a single failed/attempted verdict per model
+    # (majority-vote: >50% of that model's runs failed → model counts as failed).
+    for baseline, vuln_dict in baseline_vuln_llm.items():
         results_list = []
-        
-        for vuln_name, data in vuln_dict.items():
-            if data['total'] == 0:
+
+        for vuln_name, llm_dict in vuln_dict.items():
+            total_models = len(llm_dict)
+            if total_models == 0:
                 continue
-            
-            failure_rate = data['failed'] / data['total']
-            avg_score = float(np.mean(data['scores'])) if data['scores'] else None
-            
+
+            failed_models = 0
+            for llm, stats in llm_dict.items():
+                if stats['total_runs'] == 0:
+                    continue
+                if (stats['failed_runs'] / stats['total_runs']) > 0.5:
+                    failed_models += 1
+
+            failure_rate = failed_models / total_models if total_models else 0.0
+
             results_list.append({
                 'vulnerability': vuln_name,
-                'failed_models': data['failed'],
-                'total_models': data['total'],
+                'failed_models': failed_models,
+                'total_models': total_models,
                 'failure_rate': float(failure_rate),
-                'avg_bert_score': avg_score
             })
-        
-        # Sort by failure_rate descending, then by failed_models descending
+
         results_list.sort(key=lambda x: (-x['failure_rate'], -x['failed_models']))
-        
-        # Keep only top N
         error_breakdown[baseline] = results_list[:top_n]
-    
+
     return error_breakdown

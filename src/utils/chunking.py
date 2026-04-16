@@ -30,7 +30,7 @@ def get_token_based_chunks(text: str, max_tokens: int,
     if tokenizer is None:
         try:
             tokenizer = tiktoken.encoding_for_model("gpt-3.5-turbo")
-        except:
+        except Exception:
             tokenizer = tiktoken.get_encoding("cl100k_base")
 
     chunks = []
@@ -106,10 +106,6 @@ def detect_scanner_pattern(text: str, profile_config: dict = None) -> dict:
             'max_vulnerabilities_per_chunk': 3
         }
 
-def register_scanner_pattern(scanner_name: str, marker_pattern: str):
-    # Stub for scanner pattern registry
-    pass
-
 def split_text_to_subchunks(text: str, target_size: int, profile_config: dict = None) -> List[str]:
     """
     Divide text into smaller subchunks - VERSION THAT RESPECTS MARKERS.
@@ -145,7 +141,8 @@ def split_text_to_subchunks(text: str, target_size: int, profile_config: dict = 
     if not marker_lines:
         return _simple_split_by_size(text, optimized_target)
 
-    # CORRECTION: Capture pre-marker context (contains CVSS, severity, port, protocol)
+    # Capture pre-marker context (section header with severity/port/protocol for OpenVAS).
+    # Propagated to every subchunk so the LLM sees the header context even after redivision.
     pre_marker_text = ''.join(lines[:marker_lines[0]]) if marker_lines[0] > 0 else ''
 
     subchunks = []
@@ -153,7 +150,6 @@ def split_text_to_subchunks(text: str, target_size: int, profile_config: dict = 
     vulns_per_chunk = pattern_info.get('max_vulnerabilities_per_chunk', 3)
 
     i = 0
-    first_chunk = True  # Flag to prefix pre_marker_text only in first chunk
     while i < len(marker_lines):
         # Determine how many vulns to include in this chunk
         vulns_in_chunk = 0
@@ -177,17 +173,11 @@ def split_text_to_subchunks(text: str, target_size: int, profile_config: dict = 
             if block_size > optimized_target:
                 # Save current chunk if not empty
                 if chunk_lines:
-                    prefix = pre_marker_text if first_chunk else ''
-                    subchunks.append(prefix + ''.join(chunk_lines))
-                    first_chunk = False
+                    subchunks.append(pre_marker_text + ''.join(chunk_lines))
 
-                # Divide large block
+                # Divide large block and prefix pre_marker_text to every sub-block
                 sub_blocks = _split_block_by_size(block_text, optimized_target)
-                # Prefix pre_marker_text to first sub-block if this is first chunk overall
-                if first_chunk and sub_blocks:
-                    sub_blocks[0] = pre_marker_text + sub_blocks[0]
-                    first_chunk = False
-                subchunks.extend(sub_blocks)
+                subchunks.extend(pre_marker_text + sb for sb in sub_blocks)
 
                 # Reset for next chunk
                 chunk_lines = []
@@ -203,9 +193,7 @@ def split_text_to_subchunks(text: str, target_size: int, profile_config: dict = 
 
         # Save chunk if not empty
         if chunk_lines:
-            prefix = pre_marker_text if first_chunk else ''
-            subchunks.append(prefix + ''.join(chunk_lines))
-            first_chunk = False
+            subchunks.append(pre_marker_text + ''.join(chunk_lines))
 
     return subchunks if subchunks else [text]
 
@@ -319,7 +307,7 @@ def smart_chunk_vulnerabilities(
             # Fallback only if no config available
             try:
                 tokenizer = tiktoken.encoding_for_model("gpt-3.5-turbo")
-            except:
+            except Exception:
                 tokenizer = tiktoken.get_encoding("cl100k_base")
     
     # No pair-handling adjustment - Tenable always has instances field
@@ -449,7 +437,7 @@ def intelligent_chunk_redivision(chunk_content: str, max_tokens: int,
     if tokenizer is None:
         try:
             tokenizer = tiktoken.encoding_for_model("gpt-3.5-turbo")
-        except:
+        except Exception:
             tokenizer = tiktoken.get_encoding("cl100k_base")
 
     from src.model_management import count_tokens
@@ -494,7 +482,7 @@ def robust_chunk_processing(doc_chunk: TokenChunk, llm, profile_config: Dict[str
         else:
             try:
                 tokenizer = tiktoken.encoding_for_model("gpt-3.5-turbo")
-            except:
+            except Exception:
                 tokenizer = tiktoken.get_encoding("cl100k_base")
     
     try:

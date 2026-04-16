@@ -89,60 +89,89 @@ EDGE CASES:
 - Vulnerability with no Instances block → instances=[]
 - Vulnerability with no Base block → description=[], solution=[], cvss=[], references=[], plugin_details={}
 
-EXAMPLE VALID TENABLE JSON:
+FEW-SHOT EXAMPLE:
+
+Input text from report:
+---
+Missing HTTP Strict Transport Security Policy
+VULNERABILITY HIGH PLUGIN ID 98056
+Description:
+The remote web server does not send the HTTP Strict-Transport-Security header.
+Solution:
+Enable HSTS by adding the Strict-Transport-Security header to HTTPS responses.
+Risk Information:
+CVSSV3 BASE SCORE 6.5
+CVSSV3 VECTOR CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:U/C:L/I:L/A:N
+Plugin Details:
+Publication date: 2019-03-20T00:00:00+00:00
+Modification date: 2024-06-01T00:00:00+00:00
+Family: Web Servers
+Severity: High
+Plugin ID: 98056
+Reference Information:
+CWE-523
+OWASP-2017-A6
+
+Missing HTTP Strict Transport Security Policy Instances (2)
+VULNERABILITY HIGH PLUGIN ID 98056
+Identification:
+instance: https://example.com/login
+input_type: link
+proof: No Strict-Transport-Security header found
+HTTP Info:
+REQUEST MADE: GET
+RESPONSE HEADERS: HTTP/2 200 Content-Type: text/html
+
+Identification:
+instance: https://example.com/api
+input_type: link
+proof: No Strict-Transport-Security header found
+HTTP Info:
+REQUEST MADE: GET
+RESPONSE HEADERS: HTTP/2 200 Content-Type: application/json
+---
+
+Expected output:
 [
   {
-    "Name": "PHP Unsupported Version",
-    "description": ["PHP version has reached end-of-life and no longer receives security updates"],
+    "Name": "Missing HTTP Strict Transport Security Policy",
+    "description": ["The remote web server does not send the HTTP Strict-Transport-Security header."],
     "detection_result": [],
     "detection_method": [],
     "product_detection_result": [],
     "impact": [],
-    "solution": ["Upgrade to PHP 8.1 or newer supported version"],
+    "solution": ["Enable HSTS by adding the Strict-Transport-Security header to HTTPS responses."],
     "insight": [],
     "log_method": [],
-    "cvss": [
-      "CVSSV4 BASE SCORE 6.9",
-      "CVSSV4 VECTOR CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:L/VI:N/VA:N/SC:N/SI:N/SA:N",
-      "CVSSV3 BASE SCORE 5.3",
-      "CVSSV3 VECTOR CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:U/C:L/I:N/A:N",
-      "CVSS BASE SCORE 5.0",
-      "CVSS VECTOR CVSS2#AV:N/AC:L/Au:N/C:P/I:N/A:N"
-    ],
+    "cvss": ["CVSSV3 BASE SCORE 6.5", "CVSSV3 VECTOR CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:U/C:L/I:L/A:N"],
     "port": null,
     "protocol": null,
     "severity": "HIGH",
-    "references": ["CVE-2024-0001", "https://www.php.net/supported-versions.php"],
-    "plugin": 12345,
+    "references": ["CWE-523", "OWASP-2017-A6"],
+    "plugin": 98056,
     "plugin_details": {
-      "publication_date": "2020-01-15T00:00:00+00:00",
-      "modification_date": "2025-01-07T00:00:00+00:00",
+      "publication_date": "2019-03-20T00:00:00+00:00",
+      "modification_date": "2024-06-01T00:00:00+00:00",
       "family": "Web Servers",
       "severity": "High",
-      "plugin_id": 12345
+      "plugin_id": 98056
     },
     "instances": [
       {
-        "instance": "https://juice-shop-388277804329.us-west1.run.app/apps/movie_search",
+        "instance": "https://example.com/login",
         "input_type": "link",
-        "input_name": "to",
-        "payload": "<payload used>",
-        "proof": "The scanner did not find any Strict-Transport-Security header in the response returned by the target when querying URL",
-        "output": "<description of the exploitation result>",
+        "proof": "No Strict-Transport-Security header found",
         "request_method": "GET",
         "http_status_code": 200,
         "http_protocol": "HTTP/2",
         "response_content_type": "text/html"
       },
       {
-        "instance": "https://juice-shop-388277804329.us-west1.run.app/apps/another_endpoint",
+        "instance": "https://example.com/api",
         "input_type": "link",
-        "input_name": "to",
-        "payload": "<payload used>",
-        "proof": "Another proof text",
-        "output": "<another exploitation result>",
-        "request_method": "POST",
-        "http_status_code": 201,
+        "proof": "No Strict-Transport-Security header found",
+        "request_method": "GET",
+        "http_status_code": 200,
         "http_protocol": "HTTP/2",
         "response_content_type": "application/json"
       }

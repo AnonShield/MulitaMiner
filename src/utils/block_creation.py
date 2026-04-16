@@ -173,7 +173,7 @@ def extract_vulns_from_blocks(blocks: list, llm, profile_config: dict,
                                         return int(val) == 0
                                     elif isinstance(val, int):
                                         return val == 0
-                                except:
+                                except Exception:
                                     return True
                                 return False
                             def is_invalid_str(val):

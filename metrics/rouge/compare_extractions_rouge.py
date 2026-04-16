@@ -195,15 +195,18 @@ def process_extraction_comparison(baseline_df: pd.DataFrame, extraction_df: pd.D
     extraction_df["_composite_key"] = extraction_df.apply(lambda r: build_composite_key(r, scanner_type), axis=1)
 
     # Duplicate handling in baseline
+    # _baseline_row_id preserves the ORIGINAL positional index in baseline_df,
+    # so downstream consumers (e.g., entity metrics) can use baseline_df.iloc[row_id]
+    # to recover the exact row matched — even when multiple rows share a Name.
     if not ALLOW_BASELINE_DUPLICATES:
         baseline_dedup = baseline_df.drop_duplicates(subset=["_Name_norm"], keep="first")
         if len(baseline_dedup) < len(baseline_df):
             dup_count = len(baseline_df) - len(baseline_dedup)
             print(f"   ℹ️ Removed {dup_count} duplicates from baseline (no legitimate duplicates)")
-        baseline_dedup["_baseline_row_id"] = range(len(baseline_dedup))
+        baseline_dedup["_baseline_row_id"] = baseline_dedup.index
     else:
         baseline_dedup = baseline_df.copy()
-        baseline_dedup["_baseline_row_id"] = range(len(baseline_dedup))
+        baseline_dedup["_baseline_row_id"] = baseline_dedup.index
         print(f"   ℹ️ Keeping {len(baseline_dedup)} baseline instances (legitimate duplicates)")
     
     # PHASE 1: Match by composite key (supports wildcards)
@@ -279,16 +282,16 @@ def process_extraction_comparison(baseline_df: pd.DataFrame, extraction_df: pd.D
         m_norm = final_map.get(n_norm)
         m_comp = final_composite_map.get(comp_key)
         if m_norm is None:
-            debug_rows.append([n_show, n_norm, comp_key, None, 0.0, "UNMATCHED"])
+            debug_rows.append([idx, None, n_show, n_norm, comp_key, None, 0.0, "UNMATCHED"])
         else:
             # Use RapidFuzz for consistency
             score = fuzz.ratio(n_norm, m_norm) / 100.0
             base_name_orig = baseline_dedup.loc[baseline_dedup["_Name_norm"] == m_norm, "Name"]
             base_name_orig = base_name_orig.iloc[0] if len(base_name_orig) else None
             match_type = "COMPOSITE" if m_comp else "NAME_ONLY"
-            debug_rows.append([n_show, n_norm, comp_key, base_name_orig, score, f"MATCHED_{match_type}"])
-    
-    mapping_debug_df = pd.DataFrame(debug_rows, columns=["Extraction_Name", "Extraction_Name_norm", "Composite_Key", "Baseline_Name_matched", "match_score", "Status"])
+            debug_rows.append([idx, None, n_show, n_norm, comp_key, base_name_orig, score, f"MATCHED_{match_type}"])
+
+    mapping_debug_df = pd.DataFrame(debug_rows, columns=["extraction_row_id", "baseline_row_id", "Extraction_Name", "Extraction_Name_norm", "Composite_Key", "Baseline_Name_matched", "match_score", "Status"])
 
     # Fast baseline index by composite key and by name
     base_idx_composite = baseline_dedup.set_index("_composite_key")
@@ -307,6 +310,9 @@ def process_extraction_comparison(baseline_df: pd.DataFrame, extraction_df: pd.D
     # Tracking of already used baseline rows (uses row_id, same as BERTScore)
     used_baseline_rowids = set()  # Uses _baseline_row_id as identifier
     base_idx_rowid = baseline_dedup.set_index("_baseline_row_id")
+    # Authoritative extraction→baseline row mapping, populated as scoring commits matches.
+    # Downstream entity metrics rely on this to recover the exact baseline row per extraction.
+    ext_to_baseline_rowid: Dict[int, int] = {}
 
     # REORDER: process first those with composite match (more accurate)
     # This prevents name matching from "stealing" baseline from more accurate composite match
@@ -319,7 +325,7 @@ def process_extraction_comparison(baseline_df: pd.DataFrame, extraction_df: pd.D
     # Comparison ROUGE-L
     print(f"[ROUGE] Calculating scores...")
     records = []
-    for _, row in tqdm(extraction_rows_sorted, total=len(extraction_rows_sorted), desc="   ROUGE-L scoring", leave=False):
+    for ext_idx, row in tqdm(extraction_rows_sorted, total=len(extraction_rows_sorted), desc="   ROUGE-L scoring", leave=False):
         name_show = row["Name"]
         key = row["_Name_norm"]
         comp_key = row["_composite_key"]
@@ -348,6 +354,7 @@ def process_extraction_comparison(baseline_df: pd.DataFrame, extraction_df: pd.D
                         out[f"{col}_rouge_l"] = rouge_score
                     records.append(out)
                     used_baseline_rowids.add(base_rowid)
+                    ext_to_baseline_rowid[ext_idx] = int(base_rowid)
                     found = True
                     break
             if not found:
@@ -398,6 +405,7 @@ def process_extraction_comparison(baseline_df: pd.DataFrame, extraction_df: pd.D
                     best_rowid = cand_rowid
             base_row = base_match.iloc[best_candidate_idx]
             used_baseline_rowids.add(best_rowid)
+            ext_to_baseline_rowid[ext_idx] = int(best_rowid)
         else:
             base_rowid = base_match["_baseline_row_id"]
             if base_rowid in used_baseline_rowids:
@@ -408,6 +416,7 @@ def process_extraction_comparison(baseline_df: pd.DataFrame, extraction_df: pd.D
                 continue
             base_row = base_match
             used_baseline_rowids.add(base_rowid)
+            ext_to_baseline_rowid[ext_idx] = int(base_rowid)
 
         out = {"Name": name_show, "_status": "OK"}
         for col in common_cols:
@@ -523,6 +532,12 @@ def process_extraction_comparison(baseline_df: pd.DataFrame, extraction_df: pd.D
             })
 
     summary_df = pd.DataFrame(summary_data)
+
+    # Populate baseline_row_id in mapping_debug_df from the authoritative
+    # scoring-phase mapping (same fix as BERT: prevents Name-based lookups from
+    # collapsing duplicate Names across different ports).
+    if ext_to_baseline_rowid:
+        mapping_debug_df["baseline_row_id"] = mapping_debug_df["extraction_row_id"].map(ext_to_baseline_rowid)
     
     return per_vuln_df, summary_df, mapping_debug_df, categorization_df, baseline_instances_matched, total_baseline_instances
 

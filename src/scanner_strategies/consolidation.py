@@ -191,7 +191,7 @@ def central_custom_allow_duplicates(vulnerabilities: list, profile_config: dict 
             'reason': dedup_reason
         }
     
-    # Filter by valid description (applies to all modes)
+    # Filter by valid Name and description (applies to all modes)
     def has_valid_description(vuln):
         desc = vuln.get("description")
         if not desc:
@@ -199,11 +199,17 @@ def central_custom_allow_duplicates(vulnerabilities: list, profile_config: dict 
         if isinstance(desc, list):
             return any(str(d).strip() for d in desc)
         return bool(str(desc).strip())
-    
+
+    def has_valid_name(vuln):
+        name = vuln.get("Name")
+        if not name:
+            return False
+        return bool(str(name).strip())
+
     valid_result = []
     removed = []
     for v in result:
-        if has_valid_description(v):
+        if has_valid_name(v) and has_valid_description(v):
             valid_result.append(v)
         else:
             removed.append(v)
@@ -211,7 +217,7 @@ def central_custom_allow_duplicates(vulnerabilities: list, profile_config: dict 
     # Save removed items log
     if removed:
         with open(removed_log_path, 'w', encoding='utf-8') as f:
-            f.write(f"# LOG OF REMOVED VULNERABILITIES (missing valid description)\n\n")
+            f.write(f"# LOG OF REMOVED VULNERABILITIES (missing valid Name or description)\n\n")
             for idx, v in enumerate(removed, 1):
                 f.write(f"Removed {idx}:\n")
                 f.write(json.dumps(v, ensure_ascii=False, indent=2))
@@ -224,7 +230,7 @@ def central_custom_allow_duplicates(vulnerabilities: list, profile_config: dict 
     from collections import defaultdict
     grouped = defaultdict(list)
     for v in result:
-        name = v.get('Name', '').strip()
+        name = (v.get('Name') or '').strip()
         port = v.get('port')
         protocol = v.get('protocol')
         if name == 'Services':

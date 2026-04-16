@@ -27,7 +27,7 @@ from src.model_management import load_profile, load_llm, init_llm, validate_and_
 from src.converters import execute_conversions
 from src.utils.cais_validator import validate_cais_vulnerability
 
-from src.utils.chunking import get_token_based_chunks, retry_chunk_with_subdivision
+from src.utils.chunking import get_token_based_chunks
 from src.scanner_strategies.consolidation import central_custom_allow_duplicates
 from src.utils.profile_registry import is_cais_profile
 from langchain_core.prompts import ChatPromptTemplate
@@ -81,59 +81,6 @@ def load_configs(args: argparse.Namespace) -> tuple:
     return profile_config, llm_config
 
 
-def process_vulnerabilities(doc_texts: list, llm, profile_config: dict) -> list:
-    """
-    Process all document chunks and extract vulnerabilities.
-    
-    Args:
-        doc_texts: List of document chunks
-        llm: Initialized LLM instance
-        profile_config: Profile configuration
-    
-    Returns:
-        List of all extracted vulnerabilities
-    """
-    all_vulnerabilities = []
-    max_retries = profile_config.get('retry_attempts', 3)
-    total_chunks = len(doc_texts)
-    
-    with tqdm(total=total_chunks, desc="Processing chunks", unit="chunk", ncols=80) as pbar:
-        for i, doc_chunk in enumerate(doc_texts):
-            tqdm.write(f"\n{'='*60}")
-            tqdm.write(f"Processing chunk {i+1}/{total_chunks}")
-            tqdm.write(f"{'='*60}")
-            try:
-                vulns_chunk = retry_chunk_with_subdivision(doc_chunk, llm, profile_config, max_retries)
-                if vulns_chunk:
-                    validator = get_validator(profile_config)
-                    validated_vulns = []
-                    for v in vulns_chunk:
-                        validated = validator(v)
-                        if validated:
-                            validated_vulns.append(validated)
-                    name_field = get_consolidation_field(validated_vulns, profile_config)
-                    all_vulnerabilities.extend(validated_vulns)
-                    names = [v.get(name_field) for v in validated_vulns if isinstance(v, dict) and v.get(name_field)]
-                    tqdm.write(f"[CHUNK {i+1}] {len(validated_vulns)}/{len(vulns_chunk)} valid vulnerabilities extracted.")
-                    if names:
-                        tqdm.write(f"Extracted Names:")
-                        for idx, name in enumerate(names, 1):
-                            tqdm.write(f"  {idx:2d}. {name}")
-                else:
-                    tqdm.write(f"[CHUNK {i+1}] No vulnerabilities extracted.")
-            except Exception as e:
-                error_msg = str(e).lower()
-                if any(kw in error_msg for kw in ['quota', '429', 'rate limit', 'timeout', 'connection']):
-                    tqdm.write(f"\n[CRITICAL ERROR] {type(e).__name__}: {str(e)[:200]}")
-                    tqdm.write(f"Stopping processing at chunk {i+1}/{total_chunks}")
-                    break
-                else:
-                    tqdm.write(f"\n[ERROR] {type(e).__name__}: {str(e)[:200]}")
-                    tqdm.write(f"Continuing with next chunk...")
-            pbar.update(1)
-    return all_vulnerabilities
-
-
 def save_results(vulnerabilities: list, output_file: str, profile_config: dict = None, allow_duplicates: bool = False) -> dict:
     """
     Save vulnerabilities to JSON file.
@@ -165,15 +112,25 @@ def save_results(vulnerabilities: list, output_file: str, profile_config: dict =
                 return any(str(d).strip() for d in desc)
             return bool(str(desc).strip())
 
-        removed_vulns = [v for v in final_vulns if not has_valid_description(v)]
-        final_vulns = [v for v in final_vulns if has_valid_description(v)]
+        def has_valid_name(vuln):
+            """Check if vulnerability has valid Name field."""
+            name = vuln.get("Name")
+            if not name:
+                return False
+            return bool(str(name).strip())
+
+        def is_valid(vuln):
+            return has_valid_name(vuln) and has_valid_description(vuln)
+
+        removed_vulns = [v for v in final_vulns if not is_valid(v)]
+        final_vulns = [v for v in final_vulns if is_valid(v)]
         
         if removed_vulns:
             log_path = os.path.splitext(output_file)[0] + '_removed_log.txt'
             with open(log_path, 'w', encoding='utf-8') as logf:
                 logf.write(
                     "VULNERABILITY REMOVAL LOG\n"
-                    "This file lists all vulnerabilities removed due to lack of valid description.\n"
+                    "This file lists all vulnerabilities removed due to lack of valid Name or description.\n"
                     "Each item presents relevant details for traceability.\n\n"
                 )
                 logf.write(f"Total vulnerabilities removed: {len(removed_vulns)}\n\n")
@@ -191,7 +148,7 @@ def save_results(vulnerabilities: list, output_file: str, profile_config: dict =
                         desc = str(desc).strip().replace('\n', ' ')
                         logf.write(f"   Original description (invalid): {desc[:200]}{'...' if len(desc)>200 else ''}\n")
                     logf.write("\n")
-                logf.write(f"Final summary: {len(removed_vulns)} vulnerabilities removed due to lack of valid description.\n")
+                logf.write(f"Final summary: {len(removed_vulns)} vulnerabilities removed due to lack of valid Name or description.\n")
             print(f"[REMOVED] Invalid entries filtered: {len(removed_vulns)}")
         
         with open(output_file, 'w', encoding='utf-8') as f:

@@ -1,6 +1,6 @@
 {
   "provider": "ollama",
-  "model": "gemma4-custom",
+  "model": "qwen3.5",
   "endpoint": "http://localhost:11434",
   "temperature": 0.0,
   "max_chunk_size": 13000,
@@ -11,6 +11,6 @@
   },
   "tokenizer": {
     "type": "huggingface",
-    "model": "google/gemma-4-E4B"
+    "model": "Qwen/Qwen3-8B"
   }
 }

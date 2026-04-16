@@ -5,7 +5,7 @@
   "temperature": 0.0,
   "max_tokens": 8192,
   "max_chunk_size": 4500,
-  "reserve_for_response": 1000,
+  "reserve_for_response": 2000,
   "tokenizer": {
     "type": "huggingface",
     "model": "meta-llama/Llama-3.3-70B-Instruct"

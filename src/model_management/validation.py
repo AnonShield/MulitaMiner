@@ -120,7 +120,7 @@ def validate_json_and_tokens(response: str, chunk_content: str, max_tokens: int,
     if tokenizer is None:
         try:
             tokenizer = tiktoken.encoding_for_model("gpt-3.5-turbo")
-        except:
+        except Exception:
             tokenizer = tiktoken.get_encoding("cl100k_base")
     
     result = {

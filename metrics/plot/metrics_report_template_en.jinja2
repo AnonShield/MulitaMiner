@@ -1109,37 +1109,156 @@ footer {
    ◆ RESPONSIVE
    ═══════════════════════════════════════════════════════════════════════════ */
 
+/* Tablets landscape — colapsa grid de 3 em 2 colunas */
 @media (max-width: 1400px) {
   .grid-3 { grid-template-columns: repeat(2, 1fr); }
 }
 
+/* Tablets — sidebar compacta (só ícones) */
 @media (max-width: 1200px) {
   .grid-2 { grid-template-columns: 1fr; }
   body { grid-template-columns: 60px 1fr; }
   .sidebar { width: 60px; padding: var(--space-sm); }
-  .sidebar-brand { flex-direction: column; gap: var(--space-xs); }
+  .sidebar-brand { flex-direction: column; gap: var(--space-xs); padding: var(--space-sm); }
   .sidebar-brand-text { display: none; }
   .sidebar-nav-item { padding: var(--space-sm); justify-content: center; }
   .sidebar-nav-item-text { display: none; }
   .sidebar-nav-section-label { display: none; }
+  .hero-header { flex-wrap: wrap; }
+  .hero { padding: var(--space-xl); }
 }
 
+/* Mobile — sidebar vira barra horizontal no topo */
 @media (max-width: 768px) {
   body {
     grid-template-columns: 1fr;
-    grid-template-rows: 60px 1fr auto;
+    /* linhas: nav-bar | header | main | footer */
+    grid-template-rows: auto 56px 1fr auto;
   }
+
+  /* Sidebar → tira horizontal com rolagem */
   .sidebar {
-    display: none;
+    position: static;
+    width: 100%;
+    height: auto;
+    grid-row: 1;
+    grid-column: 1;
+    flex-direction: row;
+    align-items: center;
+    gap: var(--space-sm);
+    padding: var(--space-sm) var(--space-md);
+    border-right: none;
+    border-bottom: 1px solid var(--border-subtle);
+    overflow-x: auto;
+    overflow-y: hidden;
   }
-  .content {
-    padding: var(--space-lg);
+  .sidebar-brand { display: none; }
+  .sidebar-nav {
+    flex-direction: row;
+    gap: var(--space-sm);
+    flex: 1;
   }
-  .grid-3 { grid-template-columns: 1fr; }
-  .hero-header { flex-direction: column; }
+  .sidebar-nav-section {
+    flex-direction: row;
+    gap: var(--space-xs);
+  }
+  .sidebar-nav-section-label { display: none; }
+  .sidebar-nav-item {
+    padding: var(--space-sm) var(--space-md);
+    justify-content: flex-start;
+    flex-shrink: 0;
+    font-size: 12px;
+  }
+  .sidebar-nav-item:hover { transform: none; }
+
+  /* Header: linha 2, uma coluna */
+  header {
+    grid-column: 1;
+    grid-row: 2;
+    padding: 0 var(--space-md);
+    gap: var(--space-md);
+  }
+  .header-subtitle { display: none; }
+  .header-title { font-size: 14px; }
+  /* badges estouram o header de 56px — escondemos no mobile */
+  .header-right { display: none; }
+
+  main {
+    grid-column: 1;
+    grid-row: 3;
+  }
+  footer { grid-row: 4; }
+
+  .content { padding: var(--space-md); }
+
+  /* Evita que filhos de grid/flex forcem overflow horizontal */
+  .grid-auto > *, .grid-3 > *, .grid-2 > *, .grid-full > * { min-width: 0; }
+  .card, .stat-card, .kpi-card { min-width: 0; }
+  .table-wrapper { max-width: 100%; }
+
+  /* Hero */
+  .hero { padding: var(--space-lg); margin-bottom: var(--space-xl); }
+  .hero-header { flex-direction: column; gap: var(--space-md); margin-bottom: var(--space-xl); }
+  .hero-title-text { font-size: 22px; }
+  .hero-stats { grid-template-columns: 1fr; gap: var(--space-md); }
+
+  /* Grids */
+  .grid-3, .grid-auto { grid-template-columns: 1fr; }
+
+  /* KPI / Stat */
+  .kpi-card { padding: var(--space-md); }
+  .kpi-value { font-size: 22px; }
+  .stat-card { min-height: auto; padding: var(--space-md); padding-bottom: var(--space-lg); }
+  .stat-value { font-size: 32px; }
+
+  /* Cards / Sections */
+  .card { padding: var(--space-md); }
+  .card-header { margin-bottom: var(--space-md); }
+  .section { margin-bottom: var(--space-xl); }
+
+  /* Controles */
   .controls-bar { flex-direction: column; align-items: flex-start; }
   .control-group { width: 100%; }
   select { width: 100%; }
+
+  /* Charts mais compactos em tela pequena */
+  canvas#radarChart,
+  canvas#radarGrouped,
+  canvas#tradeoffBubbleChart,
+  canvas#fdrFnrChart { height: 320px !important; }
+
+  /* Footer */
+  footer { padding: var(--space-md); gap: var(--space-sm); font-size: 11px; }
+  .footer-separator { display: none; }
+}
+
+/* Celulares pequenos — escala final de tipografia e charts */
+@media (max-width: 480px) {
+  .content { padding: var(--space-sm); }
+  .hero { padding: var(--space-md); }
+  .hero-title-text { font-size: 18px; }
+  .hero-title-subtitle { font-size: 12px; }
+  .hero-title-description { font-size: 12px; }
+
+  .stat-value { font-size: 26px; }
+  .kpi-value { font-size: 20px; }
+
+  .table, .heatmap { font-size: 11px; }
+  .table thead th, .table tbody td,
+  .heatmap th, .heatmap td { padding: var(--space-sm); }
+
+  canvas#consistencyChart,
+  canvas#blLineChart,
+  canvas#stackedBar,
+  canvas#semBar,
+  canvas#detPrecRec,
+  canvas#finalScoreChart,
+  canvas#matchedRateChart,
+  canvas#absentChart { height: 240px !important; }
+  canvas#radarChart,
+  canvas#radarGrouped,
+  canvas#tradeoffBubbleChart,
+  canvas#fdrFnrChart { height: 280px !important; }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -1405,6 +1524,24 @@ footer {
             <canvas id="semBar"></canvas>
           </div>
         </div>
+
+        {% if has_stacked %}
+        <div class="card" style="margin-top: var(--space-lg);">
+          <div class="card-header">
+            <div class="card-title">
+              <div class="card-title-accent purple"></div>
+              Similarity Distribution
+            </div>
+          </div>
+          <div class="card-description" id="stackedTitle">
+            Distribution of field-level similarity across categories (Highly / Moderately / Slightly Similar, Divergent, Absent). Uses the metric and baseline selected above.
+          </div>
+          <div class="chart-wrapper">
+            <canvas id="stackedBar"></canvas>
+          </div>
+          <div class="legend" id="stackedLegend"></div>
+        </div>
+        {% endif %}
       </section>
       {% endif %}
 
@@ -1489,7 +1626,7 @@ footer {
             </div>
           </div>
           <div class="card-description">
-            Comparative radar across 12 semantic + IE fields. Larger areas = more consistent performance.
+            Five orthogonal dimensions: text quality (BERTScore, ROUGE-L), structured extraction (F1 Avg), coverage (Match Rate), and stability across runs (Consistency). Larger areas = better overall.
           </div>
           <div class="chart-wrapper">
             <canvas id="radarChart"></canvas>
@@ -1600,10 +1737,10 @@ footer {
         <div class="controls-bar">
           <div class="control-group">
             <span class="control-label">Baseline:</span>
-            <div class="btn-group" id="fdrBaselineBtns">
-              <button class="btn-toggle active" data-bl="all" onclick="setFdrBaseline(this)">All</button>
-              {% for bl in baselines %}<button class="btn-toggle" data-bl="{{ bl }}" onclick="setFdrBaseline(this)">{{ bl }}</button>{% endfor %}
-            </div>
+            <select id="fdrBaselineSel" onchange="rebuildFdrFnr()">
+              <option value="all" selected>All</option>
+              {% for bl in baselines %}<option value="{{ bl }}">{{ bl }}</option>{% endfor %}
+            </select>
           </div>
         </div>
 
@@ -1634,6 +1771,35 @@ footer {
           <div class="card-title">
             <div class="card-title-accent purple"></div>
             BERT vs ROUGE-L Correlation
+          </div>
+        </div>
+
+        <div class="methodology">
+          <div class="methodology-header">
+            <div class="methodology-title">📊 What is Pearson correlation?</div>
+            <button class="info-btn" onclick="togglePearsonInfo()">ⓘ</button>
+          </div>
+          <div class="formula-details" id="pearsonInfoDetails">
+            <div class="detail-item">
+              <span class="detail-bullet">•</span>
+              <span><strong>r</strong> ∈ [−1, 1] measures linear agreement between BERTScore and ROUGE-L across models for a given field.</span>
+            </div>
+            <div class="detail-item">
+              <span class="detail-bullet">•</span>
+              <span><strong>r &gt; 0.85</strong>: both metrics rank models the same way (redundant — pick either).</span>
+            </div>
+            <div class="detail-item">
+              <span class="detail-bullet">•</span>
+              <span><strong>0.3 &lt; r ≤ 0.85</strong>: partial agreement — metrics capture overlapping but distinct aspects.</span>
+            </div>
+            <div class="detail-item">
+              <span class="detail-bullet">•</span>
+              <span><strong>r ≤ 0.3</strong>: metrics disagree — semantic (BERT) and lexical (ROUGE) views diverge; worth comparing side by side.</span>
+            </div>
+            <div class="detail-item" style="margin-top: var(--space-md); padding-top: var(--space-sm); border-top: 1px solid var(--border-subtle);">
+              <span class="detail-bullet">→</span>
+              <span><strong>N/A</strong>: field has zero variance across models (constant value like <code>source</code>, or empty like <code>plugin_details</code>/<code>instances</code> in OpenVAS runs). Pearson is mathematically undefined.</span>
+            </div>
           </div>
         </div>
 
@@ -1741,7 +1907,6 @@ footer {
                 <th>Vulnerability</th>
                 <th>Failure Rate</th>
                 <th>Failed Models</th>
-                <th>Avg BERT Score</th>
               </tr>
             </thead>
             <tbody id="errorBreakdownTable"></tbody>
@@ -2244,11 +2409,17 @@ function buildVariabilityTable(){
 }
 
 function rebuildStacked(){
-  if(!document.getElementById('stackedMetric')) return; // Element not present
-  const metric=document.getElementById('stackedMetric').value;
-  const sel=document.getElementById('stackedBaseline')?.value || BASELINES[0];
+  if(!document.getElementById('stackedBar')) return; // Element not present
+  if(!HAS_STACKED) return;
+  const metric=(typeof semMetric!=='undefined')?semMetric:(HAS_BERT?'bert':'rouge');
+  const sel=document.getElementById('semBaseline')?.value || BASELINES[0];
   const stackedMetric=stacked[metric]||{};
   const bls=sel==='all'?Object.keys(stackedMetric):[sel];
+  const titleEl=document.getElementById('stackedTitle');
+  if(titleEl){
+    const label=metric==='bert'?'BERTScore':'ROUGE-L';
+    titleEl.textContent=`Distribution of field-level similarity across categories (Highly / Moderately / Slightly Similar, Divergent, Absent) — ${label} · ${sel}.`;
+  }
   const CAT=['Highly Similar','Moderately Similar','Slightly Similar','Divergent','Absent'];
   const CAT_COLORS=['#10b981','#00e5ff','#f59e0b','#f43f5e','#64748b'];
   mkChart('stackedBar',{
@@ -2315,6 +2486,7 @@ function rebuildSemantic(){
     },
     options:{responsive:true,maintainAspectRatio:false,plugins:{legend:LEG,tooltip:{callbacks:{label:ttStd}}},scales:scaleY(0.6,1.0)}
   });
+  rebuildStacked();
 }
 
 let detMetric='f1';
@@ -2357,7 +2529,7 @@ function rebuildRadar(){
   if(!radarBaselineEl) return; // radarBaseline select not present
   const sel=radarBaselineEl.value;
   const bls=sel==='all'?BASELINES:[sel];
-  const axes=['Avg BERTScore','Avg ROUGE-L','F1 severity','F1 cvss','F1 plugin','Avg Precision','Avg Recall'];
+  const axes=['BERTScore','ROUGE-L','F1 Avg (IE)','Match Rate','Consistency'];
   mkChart('radarChart',{
     type:'radar',
     data:{
@@ -2366,10 +2538,16 @@ function rebuildRadar(){
         const c=MC[m];
         const ba=avg(bls.map(bl=>mBert(bl,m)));
         const ra=avg(bls.map(bl=>mRouge(bl,m)));
-        const df=f=>avg(bls.map(bl=>det[bl]?.[m]?.[f]?.f1?.m??0.5));
-        const pa=avg(bls.flatMap(bl=>DET_FIELDS.map(f=>det[bl]?.[m]?.[f]?.prec?.m??0.5)));
-        const rca=avg(bls.flatMap(bl=>DET_FIELDS.map(f=>det[bl]?.[m]?.[f]?.rec?.m??0.5)));
-        return{label:MODEL_NAMES[m]||m,data:[ba,ra,df('severity'),df('cvss'),df('plugin'),pa,rca],borderColor:c,backgroundColor:c+'15',pointBackgroundColor:c,borderWidth:1.5,pointRadius:3};
+        const f1Avg=avg(bls.flatMap(bl=>DET_FIELDS.map(f=>det[bl]?.[m]?.[f]?.f1?.m??0.5)));
+        const mr=avg(bls.map(bl=>matched_rate[bl]?.[m]?.m??0));
+        // Consistency: 1 - weighted avg std (0.7 IE + 0.3 NLG), same formula as consistencyChart
+        const bertStds=bls.map(bl=>sBert(bl,m));
+        const rougeStds=bls.map(bl=>sRouge(bl,m));
+        const detStds=bls.flatMap(bl=>DET_FIELDS.map(f=>det[bl]?.[m]?.[f]?.f1?.s??0.02));
+        const nlgStd=avg(bertStds)*0.7+avg(rougeStds)*0.3;
+        const ieStd=avg(detStds);
+        const consistency=Math.max(0,Math.min(1,1-(0.7*ieStd+0.3*nlgStd)));
+        return{label:MODEL_NAMES[m]||m,data:[ba,ra,f1Avg,mr,consistency],borderColor:c,backgroundColor:c+'15',pointBackgroundColor:c,borderWidth:1.5,pointRadius:3};
       })
     },
     options:{responsive:true,maintainAspectRatio:false,plugins:{legend:LEG,tooltip:{callbacks:{label:i=>`${i.dataset.label}: ${(i.parsed.r*100).toFixed(1)}%`}}},scales:{r:{min:0.6,max:1.0,ticks:{color:TICKS,font:{family:'Space Mono',size:11},backdropColor:'transparent'},grid:{color:GRID},pointLabels:{color:'#94a3b8',font:{family:'Inter',size:12}}}}}
@@ -2675,13 +2853,15 @@ function rebuildAbsent(){
 }
 
 function pearsonCorrelation(x, y) {
-  if(x.length !== y.length || x.length < 2) return 0;
+  if(x.length !== y.length || x.length < 2) return null;
   const n = x.length;
   const mx = x.reduce((a, b) => a + b) / n;
   const my = y.reduce((a, b) => a + b) / n;
   const num = x.reduce((s, xi, i) => s + (xi - mx) * (y[i] - my), 0);
   const denom = Math.sqrt(x.reduce((s, xi) => s + Math.pow(xi - mx, 2), 0) * y.reduce((s, yi) => s + Math.pow(yi - my, 2), 0));
-  return denom !== 0 ? num / denom : 0;
+  // denom === 0 means one of the vectors has zero variance (constant/empty field).
+  // Pearson is mathematically undefined here — return null so caller shows N/A.
+  return denom !== 0 ? num / denom : null;
 }
 
 function rebuildCorrelation(){
@@ -2760,31 +2940,24 @@ function rebuildCorrelation(){
   SEMANTIC_FIELDS.forEach(field => {
     const r = corrData[field];
     const tr = tbody.insertRow();
-    let interp = '';
-    if(r > 0.85) interp = 'High agreement';
-    else if(r > 0.6) interp = 'Moderate agreement';
-    else if(r > 0.3) interp = 'Weak link';
-    else interp = 'Divergent metrics';
-    
-    let color = '';
-    if(r > 0.85) color = '#10b98144';
-    else if(r > 0.6) color = '#f59e0b44';
-    else color = '#f43f5e44';
-    
+    let interp = '', color = '', rCell = '';
+    if(r === null){
+      interp = 'N/A — constant or empty field (zero variance)';
+      color = 'var(--surface-2)';
+      rCell = '—';
+    } else if(r > 0.85){ interp = 'High agreement'; color = '#10b98144'; rCell = r.toFixed(3); }
+    else if(r > 0.6){ interp = 'Moderate agreement'; color = '#f59e0b44'; rCell = r.toFixed(3); }
+    else if(r > 0.3){ interp = 'Weak link'; color = '#f43f5e44'; rCell = r.toFixed(3); }
+    else { interp = 'Divergent metrics'; color = '#f43f5e44'; rCell = r.toFixed(3); }
+
     tr.innerHTML = `
       <td>${field}</td>
-      <td style="background:${color};font-weight:700">${r.toFixed(3)}</td>
+      <td style="background:${color};font-weight:700">${rCell}</td>
       <td style="font-size:0.75rem;color:var(--muted2)">${interp}</td>
     `;
   });
   
   buildLegend('corrLegend', 'corr');
-}
-
-function setFdrBaseline(btn) {
-  document.querySelectorAll('#fdrBaselineBtns .btn-toggle').forEach(b => b.classList.remove('on'));
-  btn.classList.add('on');
-  rebuildFdrFnr();
 }
 
 function rebuildFdrFnr() {
@@ -2799,8 +2972,8 @@ function rebuildFdrFnr() {
   if (fdrLbl) fdrLbl.textContent = fdrThreshold.toFixed(0) + '%';
 
   // ── Active baseline filter ───────────────────────────────────────────────
-  const activeBtn = document.querySelector('#fdrBaselineBtns .btn-toggle.on');
-  const activeBl  = activeBtn ? activeBtn.dataset.bl : 'all';
+  const sel       = document.getElementById('fdrBaselineSel');
+  const activeBl  = sel ? sel.value : 'all';
   const showAll   = activeBl === 'all';
   const activeBls = showAll ? BASELINES : (BASELINES.includes(activeBl) ? [activeBl] : BASELINES);
 
@@ -3056,24 +3229,22 @@ function rebuildErrorBreakdown(){
   if(!errorTableEl) return; // errorBreakdownTable not present
   
   if(!HAS_ERROR_BREAKDOWN || !error_breakdown[baseline]){
-    errorTableEl.innerHTML = '<tr><td colspan="4" style="text-align:center;color:var(--muted);">No error breakdown data available</td></tr>';
+    errorTableEl.innerHTML = '<tr><td colspan="3" style="text-align:center;color:var(--muted);">No error breakdown data available</td></tr>';
     return;
   }
-  
+
   const breakdownData = error_breakdown[baseline];
   errorTableEl.innerHTML = '';
-  
+
   breakdownData.forEach((item, idx) => {
     const tr = errorTableEl.insertRow();
     const failurePercent = (item.failure_rate * 100).toFixed(1);
-    const bertScore = item.avg_bert_score !== null ? item.avg_bert_score.toFixed(3) : 'N/A';
     const rowColor = item.failure_rate >= 0.8 ? '#dc2626' : item.failure_rate >= 0.5 ? '#f59e0b' : '#10b981';
-    
+
     tr.innerHTML = `
       <td style="font-weight:600;color:var(--text)">${item.vulnerability}</td>
       <td style="text-align:center;font-weight:700;color:${rowColor}">${failurePercent}%</td>
       <td style="text-align:center;color:var(--text)">${item.failed_models} / ${item.total_models}</td>
-      <td style="text-align:center;color:var(--muted)">${bertScore}</td>
     `;
   });
 }
@@ -3146,6 +3317,14 @@ function switchTab(name, event){
 function toggleMethodology(){
   const details = document.getElementById('methodologyDetails');
   if(!details) return; // methodologyDetails not present
+  const btn = event.target;
+  details.classList.toggle('show');
+  btn.style.background = details.classList.contains('show') ? 'var(--purple)' : 'var(--orange)';
+}
+
+function togglePearsonInfo(){
+  const details = document.getElementById('pearsonInfoDetails');
+  if(!details) return;
   const btn = event.target;
   details.classList.toggle('show');
   btn.style.background = details.classList.contains('show') ? 'var(--purple)' : 'var(--orange)';

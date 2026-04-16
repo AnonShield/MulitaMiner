@@ -4,7 +4,7 @@
   "model": "qwen/qwen3-32b",
   "temperature": 0.0,
   "max_completion_tokens": 40960,
-  "max_chunk_size": 90000,
+  "max_chunk_size": 60000,
   "reserve_for_response": 8000,
   "tokenizer": {
     "type": "huggingface",

@@ -148,17 +148,25 @@ class OpenVASStrategy(ScannerStrategy):
         
         return blocks
     
+    @staticmethod
+    def _normalize_name(name) -> str:
+        """Lowercase + strip + collapse internal whitespace for dedup key."""
+        if not name:
+            return ''
+        return re.sub(r'\s+', ' ', str(name).strip().lower())
+
     def vulnerability_processing_logic(self, vulns: List[Dict], allow_duplicates: bool = True, profile_config: Dict = None) -> List[Dict]:
         """
         Consolida todas as vulnerabilidades do OpenVAS agrupando por (Name, port, protocol),
         faz merge das duplicatas, mantendo a mais completa (com descrição válida).
+        Passa também por um dedup fuzzy (rapidfuzz) para agrupar Nomes com pequenas variações.
         """
         if not vulns:
             return []
         from collections import defaultdict
         grouped = defaultdict(list)
         for v in vulns:
-            name = v.get('Name', '').strip()
+            name = (v.get('Name') or '').strip()
             port = v.get('port')
             protocol = v.get('protocol')
             if name == 'Services':
@@ -172,11 +180,11 @@ class OpenVASStrategy(ScannerStrategy):
                         return val
                 key = tuple(sorted((k, make_hashable(vv)) for k, vv in v.items()))
             else:
-                key = (name, port, protocol)
+                key = (self._normalize_name(name), port, protocol)
             grouped[key].append(v)
-        merged = []
         def count_filled_fields(vuln):
             return sum(1 for k, val in vuln.items() if val not in [None, '', [], {}, 0])
+        merged = []
         for group in grouped.values():
             if len(group) == 1:
                 merged.append(group[0])
@@ -184,7 +192,56 @@ class OpenVASStrategy(ScannerStrategy):
                 # Merge: keep the most complete
                 most_complete = max(group, key=count_filled_fields)
                 merged.append(most_complete)
-        return merged
+        return self._fuzzy_merge(merged, threshold=90)
+
+    def _fuzzy_merge(self, vulns: List[Dict], threshold: int = 90) -> List[Dict]:
+        """
+        Second dedup pass: within same (port, protocol), cluster vulns whose
+        normalized Name similarity >= threshold (via rapidfuzz) and keep the
+        most complete one. 'Services' entries are passed through unchanged.
+        """
+        if not vulns:
+            return []
+        try:
+            from rapidfuzz import fuzz
+        except ImportError:
+            return vulns
+        from collections import defaultdict
+        buckets = defaultdict(list)
+        services = []
+        for v in vulns:
+            if (v.get('Name') or '').strip() == 'Services':
+                services.append(v)
+            else:
+                buckets[(v.get('port'), v.get('protocol'))].append(v)
+
+        def count_filled_fields(vuln):
+            return sum(1 for k, val in vuln.items() if val not in [None, '', [], {}, 0])
+
+        result = list(services)
+        for items in buckets.values():
+            if len(items) == 1:
+                result.append(items[0])
+                continue
+            # Greedy clustering by name similarity
+            clusters: List[List[Dict]] = []
+            for v in items:
+                vname = self._normalize_name(v.get('Name') or '')
+                placed = False
+                for cluster in clusters:
+                    rep_name = self._normalize_name(cluster[0].get('Name') or '')
+                    if vname and rep_name and fuzz.ratio(vname, rep_name) >= threshold:
+                        cluster.append(v)
+                        placed = True
+                        break
+                if not placed:
+                    clusters.append([v])
+            for cluster in clusters:
+                if len(cluster) == 1:
+                    result.append(cluster[0])
+                else:
+                    result.append(max(cluster, key=count_filled_fields))
+        return result
     
     def get_consolidation_report(self, input_count: int, output_count: int, removed: int) -> Dict:
         """

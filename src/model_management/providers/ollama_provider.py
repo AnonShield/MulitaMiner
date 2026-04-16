@@ -45,15 +45,19 @@ class OllamaProvider(BaseLLMProvider):
         self.endpoint = endpoint
         
         try:
-            # Create ChatOllama instance
-            self.llm = ChatOllama(
-                model=config["model"],
-                base_url=endpoint,
-                temperature=temperature,
-                timeout=config.get("timeout", 120),
-                num_predict=max_tokens,
-            )
-            
+            ollama_kwargs = {
+                "model": config["model"],
+                "base_url": endpoint,
+                "temperature": temperature,
+                "timeout": config.get("timeout", 120),
+                "num_predict": max_tokens,
+            }
+            # Forward runtime options (num_ctx, top_k, top_p, repeat_penalty, ...)to the Ollama server.
+            for opt_key, opt_val in config.get("options", {}).items():
+                ollama_kwargs[opt_key] = opt_val
+
+            self.llm = ChatOllama(**ollama_kwargs)
+
         except Exception as e:
             raise RuntimeError(
                 f"Failed to initialize Ollama provider. "

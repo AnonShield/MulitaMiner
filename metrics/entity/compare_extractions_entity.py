@@ -183,65 +183,74 @@ def main():
             return
         
         print(f"[ENTITY] Found deterministic fields: {deterministic_fields}")
-        
-        # Create name→index mappings for faster lookup
-        baseline_name_idx = {}
-        for idx, name in enumerate(baseline_df['Name'].astype(str).str.strip()):
-            if name not in baseline_name_idx:  # Keep first occurrence
-                baseline_name_idx[name.lower()] = idx
-        
-        extraction_name_idx = {}
-        for idx, name in enumerate(extraction_df['Name'].astype(str).str.strip()):
-            if name not in extraction_name_idx:
-                extraction_name_idx[name.lower()] = idx
-        
+
+        # Prefer authoritative row indices recorded by BERT during scoring.
+        # Each row in mapping_df represents one extraction with its paired baseline
+        # row — this handles duplicate Names at different ports correctly.
+        has_row_ids = (
+            mapping_df is not None
+            and 'extraction_row_id' in mapping_df.columns
+            and 'baseline_row_id' in mapping_df.columns
+        )
+
+        if has_row_ids:
+            # Build pair list directly from mapping_df; bypass Name lookups entirely.
+            matched_pairs = []
+            for _, r in mapping_df.iterrows():
+                ext_rid = r.get('extraction_row_id')
+                base_rid = r.get('baseline_row_id')
+                if pd.isna(ext_rid) or pd.isna(base_rid):
+                    continue
+                matched_pairs.append((int(ext_rid), int(base_rid), str(r.get('Extraction_Name', '')).strip()))
+            print(f"[ENTITY] Using row-id pairs from Mapping_Debug: {len(matched_pairs)}")
+        else:
+            # Legacy fallback: Name-based lookup (first occurrence only)
+            baseline_name_idx: dict = {}
+            extraction_name_idx: dict = {}
+            for idx, name in enumerate(baseline_df['Name'].astype(str).str.strip()):
+                if name.lower() not in baseline_name_idx:
+                    baseline_name_idx[name.lower()] = idx
+            for idx, name in enumerate(extraction_df['Name'].astype(str).str.strip()):
+                if name.lower() not in extraction_name_idx:
+                    extraction_name_idx[name.lower()] = idx
+
+            matched_pairs = []
+            for _, match_row in matched_df.iterrows():
+                extraction_name = str(match_row.get('Name', '')).strip()
+                ext_key = extraction_name.lower()
+                extraction_idx = extraction_name_idx.get(ext_key)
+                if extraction_idx is None:
+                    continue
+                matched_baseline_name = None
+                if mapping_df is not None:
+                    ext_in_mapping = mapping_df[mapping_df['Extraction_Name'].astype(str).str.strip().str.lower() == ext_key]
+                    if not ext_in_mapping.empty:
+                        matched_baseline_name = str(ext_in_mapping.iloc[0]['Baseline_Name_matched']).strip()
+                if matched_baseline_name is None:
+                    matched_baseline_name = extraction_name
+                baseline_idx = baseline_name_idx.get(matched_baseline_name.lower())
+                if baseline_idx is None:
+                    continue
+                matched_pairs.append((extraction_idx, baseline_idx, extraction_name))
+
         # Calculate metrics for each deterministic field
         field_metrics = {}
         detailed_results = []
-        
+
         for field_lower in deterministic_fields:
             actual_col = field_map[field_lower]
             baseline_vals = []
             extraction_vals = []
             vuln_names = []
-            
-            # For each matched pair, find the baseline and extraction values
-            for _, match_row in matched_df.iterrows():
-                extraction_name = str(match_row.get('Name', '')).strip()
-                
-                # Find extraction index by name
-                extraction_idx = extraction_name_idx.get(extraction_name.lower())
-                if extraction_idx is None:
-                    continue
-                
-                # For baseline, need to correlate from mapping_df
-                matched_baseline_name = None
-                if mapping_df is not None:
-                    # Find in mapping_df
-                    ext_in_mapping = mapping_df[mapping_df['Extraction_Name'].astype(str).str.strip().str.lower() == extraction_name.lower()]
-                    if not ext_in_mapping.empty:
-                        matched_baseline_name = str(ext_in_mapping.iloc[0]['Baseline_Name_matched']).strip()
-                
-                # If not found in mapping, try to infer (may not work for duplicates)
-                if matched_baseline_name is None:
-                    matched_baseline_name = extraction_name
-                
-                baseline_idx = baseline_name_idx.get(matched_baseline_name.lower())
-                if baseline_idx is None:
-                    continue
-                
-                # Extract field values
+
+            for extraction_idx, baseline_idx, extraction_name in matched_pairs:
                 try:
-                    # Use generic normalization from field_mapper
                     b_val = normalize_field_value(baseline_df.iloc[baseline_idx][actual_col], field_lower)
                     e_val = normalize_field_value(extraction_df.iloc[extraction_idx][actual_col], field_lower)
-                    
                     baseline_vals.append(b_val)
                     extraction_vals.append(e_val)
                     vuln_names.append(extraction_name)
-                    
-                except Exception as e:
-                    # Skip if can't extract
+                except Exception:
                     continue
             
             if not baseline_vals:
