@@ -44,6 +44,7 @@ class OllamaProvider(BaseLLMProvider):
         
         self.model_name = config["model"]
         self.endpoint = endpoint
+        self.disable_thinking = bool(config.get("disable_thinking", False))
         
         try:
             ollama_kwargs = {
@@ -106,6 +107,8 @@ class OllamaProvider(BaseLLMProvider):
     def invoke(self, prompt: str) -> str:
         """Send prompt to Ollama and return response text."""
         try:
+            if self.disable_thinking:
+                prompt = f"/no_think\n{prompt}"
             response = self.llm.invoke(prompt)
             return response.content
         except Exception as e:

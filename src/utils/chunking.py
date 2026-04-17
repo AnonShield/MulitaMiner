@@ -498,13 +498,13 @@ def robust_chunk_processing(doc_chunk: TokenChunk, llm, profile_config: Dict[str
                                               max_tokens, prompt, tokenizer=tokenizer)
         
         # Debug logging
-        if debug_mode and response_content:
+        if debug_mode:
             prompt_tokens = len(tokenizer.encode(prompt))
             save_llm_response_debug(
                 pdf_name=pdf_name,
                 llm_name=llm_name,
                 chunk_idx=0,
-                response_content=response_content,
+                response_content=response_content or "",
                 retry_count=0,
                 was_redivided=False,
                 parsing_success=validation.get('json_valid', False),
@@ -530,13 +530,13 @@ def robust_chunk_processing(doc_chunk: TokenChunk, llm, profile_config: Dict[str
                     tqdm.write(f"[CHUNK] Retry {retry_attempt + 1} succeeded with non-empty content.")
                     retry_validation = validate_json_and_tokens(retry_response_content, doc_chunk.page_content,
                                                                max_tokens, prompt, tokenizer=tokenizer)
-                    if debug_mode and retry_response_content:
+                    if debug_mode:
                         prompt_tokens = len(tokenizer.encode(prompt))
                         save_llm_response_debug(
                             pdf_name=pdf_name,
                             llm_name=llm_name,
                             chunk_idx=0,
-                            response_content=retry_response_content,
+                            response_content=retry_response_content or "",
                             retry_count=retry_attempt + 1,
                             was_redivided=False,
                             parsing_success=retry_validation.get('json_valid', False),
@@ -564,13 +564,13 @@ def robust_chunk_processing(doc_chunk: TokenChunk, llm, profile_config: Dict[str
                                                       max_tokens, prompt, tokenizer=tokenizer)
                 
                 # Debug logging with actual validation results
-                if debug_mode and response_content:
+                if debug_mode:
                     prompt_tokens = len(tokenizer.encode(prompt))
                     save_llm_response_debug(
                         pdf_name=pdf_name,
                         llm_name=llm_name,
                         chunk_idx=0,
-                        response_content=response_content,
+                        response_content=response_content or "",
                         retry_count=retry + 1,
                         was_redivided=False,
                         parsing_success=validation.get('json_valid', False),
@@ -602,13 +602,13 @@ def robust_chunk_processing(doc_chunk: TokenChunk, llm, profile_config: Dict[str
                                                           max_tokens, sub_prompt, tokenizer=tokenizer)
                 
                 # Debug logging with actual validation results
-                if debug_mode and sub_response_content:
+                if debug_mode:
                     prompt_tokens = len(tokenizer.encode(sub_prompt))
                     save_llm_response_debug(
                         pdf_name=pdf_name,
                         llm_name=llm_name,
                         chunk_idx=idx,
-                        response_content=sub_response_content,
+                        response_content=sub_response_content or "",
                         retry_count=0,
                         was_redivided=True,
                         parsing_success=sub_validation.get('json_valid', False),

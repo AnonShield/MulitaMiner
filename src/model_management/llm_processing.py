@@ -61,6 +61,7 @@ def validate_and_normalize_vulnerability(vuln) -> Optional[Dict[str, Any]]:
             return None
     
     # Required fields with their expected types
+    # cvss accepts scalar (OpenVAS: single number) or list (Tenable: score + vector strings)
     required_structure = {
         "Name": str,
         "description": list,
@@ -71,7 +72,7 @@ def validate_and_normalize_vulnerability(vuln) -> Optional[Dict[str, Any]]:
         "insight": list,
         "product_detection_result": list,
         "log_method": list,
-        "cvss": list,
+        "cvss": (type(None), int, float, list),
         "port": (type(None), int, str),
         "protocol": (type(None), str),
         "severity": str,
@@ -81,7 +82,7 @@ def validate_and_normalize_vulnerability(vuln) -> Optional[Dict[str, Any]]:
         "http_info": list,
         "source": str,
     }
-    
+
     # Normalize fields
     for field, expected_type in required_structure.items():
         if field not in vuln:
@@ -92,10 +93,10 @@ def validate_and_normalize_vulnerability(vuln) -> Optional[Dict[str, Any]]:
                 vuln[field] = ""
             elif expected_type == int:
                 vuln[field] = None
-            elif expected_type == (type(None), int, str):
+            elif isinstance(expected_type, tuple):
                 vuln[field] = None
             continue
-        
+
         # Validate and fix type
         value = vuln[field]
         if expected_type == list and not isinstance(value, list):

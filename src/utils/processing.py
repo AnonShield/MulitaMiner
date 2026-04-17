@@ -3,8 +3,12 @@ Processing of chunks and vulnerabilities.
 Contains tokenization, splitting, retry and consolidation logic.
 """
 
+import re
 import unicodedata
 from typing import List, Dict, Any
+
+_THINK_BLOCK_RE = re.compile(r"<think>.*?</think>", re.DOTALL | re.IGNORECASE)
+_OPEN_THINK_RE = re.compile(r"<think>.*", re.DOTALL | re.IGNORECASE)
 
 def normalize_ligatures(text: str) -> str:
     """
@@ -79,19 +83,20 @@ def sanitize_unicode_text(text: str) -> str:
 def extract_response_content(response) -> str:
     """
     Extract response content from LLM response object.
-    
+
     Handles both string responses and LangChain response objects.
-    
-    Args:
-        response: Response from llm.invoke() - can be str or object with .content
-    
-    Returns:
-        Response content as string
+    Strips <think>...</think> reasoning blocks emitted by thinking models
+    (Qwen3, DeepSeek-R1, etc.) so downstream JSON parsing sees only the answer.
     """
     if response is None:
         return ""
     if isinstance(response, str):
-        return response
-    if hasattr(response, 'content'):
-        return response.content
-    return str(response)
+        content = response
+    elif hasattr(response, 'content'):
+        content = response.content or ""
+    else:
+        content = str(response)
+
+    content = _THINK_BLOCK_RE.sub("", content)
+    content = _OPEN_THINK_RE.sub("", content)
+    return content.strip()

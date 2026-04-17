@@ -3,9 +3,10 @@
   "model": "mistral-custom",
   "endpoint": "http://localhost:11434",
   "temperature": 0.0,
-  "max_chunk_size": 13000,
-  "reserve_for_response": 3500,
-  "timeout": 300,
+  "max_tokens": 8192,
+  "max_chunk_size": 10000,
+  "reserve_for_response": 5000,
+  "timeout": 7200,
   "options": {
     "num_ctx": 20000
   },
