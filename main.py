@@ -98,9 +98,7 @@ def save_results(vulnerabilities: list, output_file: str, profile_config: dict =
         print(f"\n[PROCESSING] Consolidating vulnerabilities (allow_duplicates={allow_duplicates})")
         final_vulns = central_custom_allow_duplicates(vulnerabilities, profile_config, allow_duplicates, output_file=output_file)
         after_consolidation_count = len(final_vulns) if final_vulns else 0
-        if final_vulns:
-            print(f"\n[EXTRACTION] Total vulnerabilities found: {len(final_vulns)}")
-        else:
+        if not final_vulns:
             print(f"\n[EXTRACTION] No vulnerabilities found.")
         
         def has_valid_description(vuln):
@@ -320,7 +318,6 @@ def main():
 
     print(f"\n{'-'*60}")
     print(f"[EXTRACTION] Total blocks processed: {total_chunks}")
-    print(f"[EXTRACTION] Total vulnerabilities found: {len(all_vulnerabilities)}")
     print(f"{'-'*60}")
 
     run_prefix = os.environ.get("RUN_PREFIX")

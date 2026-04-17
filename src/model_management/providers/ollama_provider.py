@@ -5,6 +5,7 @@ Connects to Ollama running on localhost:11434 (or custom endpoint).
 Supported models: Mistral, DeepSeek, Llama2, Neural Chat, etc.
 """
 
+import requests
 from langchain_ollama import ChatOllama
 from .base_provider import BaseLLMProvider
 
@@ -58,12 +59,49 @@ class OllamaProvider(BaseLLMProvider):
 
             self.llm = ChatOllama(**ollama_kwargs)
 
+            self._verify_num_ctx(config, endpoint)
+
         except Exception as e:
             raise RuntimeError(
                 f"Failed to initialize Ollama provider. "
                 f"Ensure Ollama is running at {endpoint}. "
                 f"Error: {str(e)}"
             ) from e
+
+    def _verify_num_ctx(self, config: dict, endpoint: str):
+        """Query Ollama server to verify num_ctx is being applied."""
+        requested_ctx = config.get("options", {}).get("num_ctx")
+        if requested_ctx is None:
+            return
+
+        try:
+            resp = requests.post(
+                f"{endpoint}/api/show",
+                json={"name": config["model"]},
+                timeout=10,
+            )
+            if resp.status_code != 200:
+                print(f"[OLLAMA] WARNING: Could not verify num_ctx (server returned {resp.status_code})")
+                return
+
+            data = resp.json()
+            model_params = data.get("model_info", {})
+
+            # Ollama reports context length under various keys depending on architecture
+            server_ctx = None
+            for key in model_params:
+                if "context_length" in key:
+                    server_ctx = model_params[key]
+                    break
+
+            if server_ctx is None:
+                print(f"[OLLAMA] {config['model']} initialized (num_ctx: {requested_ctx} — could not read model default to compare)")
+            elif requested_ctx <= server_ctx:
+                print(f"[OLLAMA] {config['model']} initialized (num_ctx: {requested_ctx} \u2713, model supports up to {server_ctx})")
+            else:
+                print(f"[OLLAMA] WARNING: num_ctx={requested_ctx} exceeds model capacity ({server_ctx}) — Ollama will clamp it down")
+        except Exception:
+            print(f"[OLLAMA] {config['model']} initialized (num_ctx: {requested_ctx} — server unreachable for verification)")
     
     def invoke(self, prompt: str) -> str:
         """Send prompt to Ollama and return response text."""
