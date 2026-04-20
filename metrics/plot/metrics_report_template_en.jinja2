@@ -2550,7 +2550,7 @@ function rebuildRadar(){
         return{label:MODEL_NAMES[m]||m,data:[ba,ra,f1Avg,mr,consistency],borderColor:c,backgroundColor:c+'15',pointBackgroundColor:c,borderWidth:1.5,pointRadius:3};
       })
     },
-    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:LEG,tooltip:{callbacks:{label:i=>`${i.dataset.label}: ${(i.parsed.r*100).toFixed(1)}%`}}},scales:{r:{min:0.6,max:1.0,ticks:{color:TICKS,font:{family:'Space Mono',size:11},backdropColor:'transparent'},grid:{color:GRID},pointLabels:{color:'#94a3b8',font:{family:'Inter',size:12}}}}}
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:LEG,tooltip:{callbacks:{label:i=>`${i.dataset.label}: ${(i.parsed.r*100).toFixed(1)}%`}}},scales:{r:{min:0,max:1.0,ticks:{color:TICKS,font:{family:'Space Mono',size:11},backdropColor:'transparent',stepSize:0.2},grid:{color:GRID},pointLabels:{color:'#94a3b8',font:{family:'Inter',size:12}}}}}
   });
 
   mkChart('radarGrouped',{

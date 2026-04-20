@@ -471,6 +471,10 @@ def robust_chunk_processing(doc_chunk: TokenChunk, llm, profile_config: Dict[str
                              llm_name: str = "unknown", debug_mode: bool = False) -> Dict[str, Any]:
     # Use max_chunk_size instead of getattr(llm, 'max_tokens', 4096)
     max_tokens = max_chunk_size
+    # num_predict = model's output cap (from llm_config.max_tokens); used only for truncation diagnostics
+    num_predict = None
+    if profile_config and isinstance(profile_config.get('llm_config'), dict):
+        num_predict = profile_config['llm_config'].get('max_tokens')
     all_vulnerabilities = []
     total_tokens_output = 0
     
@@ -495,7 +499,8 @@ def robust_chunk_processing(doc_chunk: TokenChunk, llm, profile_config: Dict[str
         
         # Validate first before logging
         validation = validate_json_and_tokens(response_content, doc_chunk.page_content,
-                                              max_tokens, prompt, tokenizer=tokenizer)
+                                              max_tokens, prompt, tokenizer=tokenizer,
+                                              num_predict=num_predict)
         
         # Debug logging
         if debug_mode:
@@ -510,7 +515,8 @@ def robust_chunk_processing(doc_chunk: TokenChunk, llm, profile_config: Dict[str
                 parsing_success=validation.get('json_valid', False),
                 validation_success=validation.get('json_valid', False),
                 prompt_tokens=prompt_tokens,
-                response_tokens=response_tokens
+                response_tokens=response_tokens,
+                likely_truncated=validation.get('likely_truncated', False)
             )
         
         # CRITICAL FIX: Detect empty response and retry before redivision
@@ -529,7 +535,8 @@ def robust_chunk_processing(doc_chunk: TokenChunk, llm, profile_config: Dict[str
                     # Got non-empty response, validate and return if valid
                     tqdm.write(f"[CHUNK] Retry {retry_attempt + 1} succeeded with non-empty content.")
                     retry_validation = validate_json_and_tokens(retry_response_content, doc_chunk.page_content,
-                                                               max_tokens, prompt, tokenizer=tokenizer)
+                                                               max_tokens, prompt, tokenizer=tokenizer,
+                                                               num_predict=num_predict)
                     if debug_mode:
                         prompt_tokens = len(tokenizer.encode(prompt))
                         save_llm_response_debug(
@@ -542,7 +549,8 @@ def robust_chunk_processing(doc_chunk: TokenChunk, llm, profile_config: Dict[str
                             parsing_success=retry_validation.get('json_valid', False),
                             validation_success=retry_validation.get('json_valid', False) and retry_validation.get('token_valid', False),
                             prompt_tokens=prompt_tokens,
-                            response_tokens=retry_response_tokens
+                            response_tokens=retry_response_tokens,
+                            likely_truncated=retry_validation.get('likely_truncated', False)
                         )
                     if retry_validation['json_valid']:
                         tqdm.write(f"✅ [CHUNK] Retry {retry_attempt + 1}: JSON is valid!")
@@ -561,8 +569,9 @@ def robust_chunk_processing(doc_chunk: TokenChunk, llm, profile_config: Dict[str
                 
                 # Validate first to get real success flags
                 validation = validate_json_and_tokens(response_content, doc_chunk.page_content,
-                                                      max_tokens, prompt, tokenizer=tokenizer)
-                
+                                                      max_tokens, prompt, tokenizer=tokenizer,
+                                                      num_predict=num_predict)
+
                 # Debug logging with actual validation results
                 if debug_mode:
                     prompt_tokens = len(tokenizer.encode(prompt))
@@ -576,7 +585,8 @@ def robust_chunk_processing(doc_chunk: TokenChunk, llm, profile_config: Dict[str
                         parsing_success=validation.get('json_valid', False),
                         validation_success=validation.get('json_valid', False) and validation.get('token_valid', False),
                         prompt_tokens=prompt_tokens,
-                        response_tokens=response_tokens
+                        response_tokens=response_tokens,
+                        likely_truncated=validation.get('likely_truncated', False)
                     )
                 
                 if validation['json_valid']:
@@ -599,7 +609,8 @@ def robust_chunk_processing(doc_chunk: TokenChunk, llm, profile_config: Dict[str
                 
                 # Validate first to get real success flags
                 sub_validation = validate_json_and_tokens(sub_response_content, chunk_content,
-                                                          max_tokens, sub_prompt, tokenizer=tokenizer)
+                                                          max_tokens, sub_prompt, tokenizer=tokenizer,
+                                                          num_predict=num_predict)
                 
                 # Debug logging with actual validation results
                 if debug_mode:
@@ -614,7 +625,8 @@ def robust_chunk_processing(doc_chunk: TokenChunk, llm, profile_config: Dict[str
                         parsing_success=sub_validation.get('json_valid', False),
                         validation_success=sub_validation.get('json_valid', False) and sub_validation.get('token_valid', False),
                         prompt_tokens=prompt_tokens,
-                        response_tokens=response_tokens
+                        response_tokens=response_tokens,
+                        likely_truncated=sub_validation.get('likely_truncated', False)
                     )
                 
                 if sub_validation['json_valid']:

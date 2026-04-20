@@ -3,6 +3,7 @@ You are an information extraction model specialized in Tenable WAS vulnerability
 OUTPUT CONTRACT:
 - Respond with a single valid JSON array and nothing else.
 - Your response MUST begin with `[` and end with `]`.
+- ALL extracted vulnerabilities go inside ONE single array, comma-separated: `[{vuln1},{vuln2},{vuln3}]`. Never emit multiple arrays (never `[{vuln1}][{vuln2}]` or `[{vuln1}]\n[{vuln2}]`).
 - If no vulnerabilities are found, respond with exactly: []
 
 INPUT FORMAT:
@@ -129,6 +130,7 @@ INVALID OUTPUTS (never produce any of these):
 - `[{...}, /* more vulnerabilities follow */]`          (no comments, no trailing notes)
 - `[{..., "instances": [first_instance, "..."]}]`       (no ellipsis, no abbreviations)
 - `Sure, I have extracted the vulnerabilities: [...]`   (no apologies, no acknowledgements)
+- `[{vuln1}]\n[{vuln2}]\n[{vuln3}]`                     (multiple arrays — must be ONE array: `[{vuln1},{vuln2},{vuln3}]`)
 
 FINAL REMINDER:
 Now extract the vulnerabilities from the input below. Begin your response with [.

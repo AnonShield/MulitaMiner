@@ -8,8 +8,11 @@ Provides robust validation of LLM responses, including:
 """
 
 import json
+import re
 import tiktoken
-from typing import Dict, Any, List
+from typing import Dict, Any, List, Optional
+
+_CONCAT_ARRAY_RE = re.compile(r'\]\s*\[')
 
 
 def parse_json_response(resposta, chunk_id=""):
@@ -84,29 +87,47 @@ def parse_json_response(resposta, chunk_id=""):
             idx = cleaned.find('[')
             if idx != -1:
                 cleaned = cleaned[idx:]
-        
+
         parsed = json.loads(cleaned)
         if isinstance(parsed, list):
             return parsed
     except Exception:
         pass
-    
+
+    # Strategy 5: Concatenated arrays — model emitted `[a][b][c]` instead of `[a,b,c]`
+    # Merges `][`, `]\n[`, `]  [` etc. into `,` so the whole thing becomes one array.
+    try:
+        start = resposta.find('[')
+        end = resposta.rfind(']') + 1
+        if start != -1 and end > start and _CONCAT_ARRAY_RE.search(resposta[start:end]):
+            candidate = _CONCAT_ARRAY_RE.sub(',', resposta[start:end])
+            parsed = json.loads(candidate)
+            if isinstance(parsed, list):
+                print(f"[WARN{chunk_id}] Recovered {len(parsed)} vulns via multi-array merge fallback")
+                return parsed
+    except Exception:
+        pass
+
     print(f"[WARN{chunk_id}] No parsing strategy could extract valid JSON")
     return []
 
 
-def validate_json_and_tokens(response: str, chunk_content: str, max_tokens: int, 
-                             prompt_template: str = "", tokenizer=None) -> Dict[str, Any]:
+def validate_json_and_tokens(response: str, chunk_content: str, max_tokens: int,
+                             prompt_template: str = "", tokenizer=None,
+                             num_predict: Optional[int] = None) -> Dict[str, Any]:
     """
     Validate LLM response JSON and check token limits.
-    
+
     Args:
         response: Response string from LLM
         chunk_content: Original chunk content sent to LLM
-        max_tokens: Maximum tokens allowed for this chunk
+        max_tokens: Maximum tokens allowed for this chunk (input budget)
         prompt_template: Template prompt used (for token counting)
         tokenizer: Tokenizer object (tiktoken or HuggingFace). If None, uses tiktoken fallback.
-    
+        num_predict: Model's output token cap (mapped from llm_config.max_tokens). When the
+            response lands within 5% of this cap AND the JSON is invalid, likely_truncated
+            is flagged so truncation can be distinguished from format/syntax errors.
+
     Returns:
         dict with validation results:
         - json_valid (bool): Whether response is valid JSON
@@ -115,6 +136,7 @@ def validate_json_and_tokens(response: str, chunk_content: str, max_tokens: int,
         - token_count (int): Total tokens used
         - errors (list): List of error messages
         - needs_redivision (bool): Whether chunk should be redivided
+        - likely_truncated (bool): Response hit the output cap (diagnostic only)
     """
     # Use provided tokenizer or create fallback
     if tokenizer is None:
@@ -122,14 +144,15 @@ def validate_json_and_tokens(response: str, chunk_content: str, max_tokens: int,
             tokenizer = tiktoken.encoding_for_model("gpt-3.5-turbo")
         except Exception:
             tokenizer = tiktoken.get_encoding("cl100k_base")
-    
+
     result = {
         'json_valid': False,
         'json_data': None,
         'token_valid': True,
         'token_count': 0,
         'errors': [],
-        'needs_redivision': False
+        'needs_redivision': False,
+        'likely_truncated': False,
     }
     
     # 1. JSON VALIDATION
@@ -171,5 +194,15 @@ def validate_json_and_tokens(response: str, chunk_content: str, max_tokens: int,
             result['errors'].append("JSON mal formado - colchetes desbalanceados")
         if response.count('{') != response.count('}'):
             result['errors'].append("JSON mal formado - chaves desbalanceadas")
-    
+
+    # 5. TRUNCATION DETECTION (diagnostic): response hit the num_predict cap
+    # Flagged only when JSON also failed — an intact JSON at cap is just a tight fit.
+    if num_predict and num_predict > 0 and not result['json_valid']:
+        if response_tokens >= int(num_predict * 0.95):
+            result['likely_truncated'] = True
+            result['errors'].append(
+                f"Response {response_tokens}/{num_predict} tokens (>=95% of num_predict cap) "
+                f"AND JSON invalid — likely truncated. Consider bumping max_tokens or shrinking chunk."
+            )
+
     return result

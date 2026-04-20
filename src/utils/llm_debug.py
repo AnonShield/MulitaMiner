@@ -77,6 +77,7 @@ def save_llm_response_debug(
     error_message: Optional[str] = None,
     prompt_tokens: int = 0,
     response_tokens: int = 0,
+    likely_truncated: bool = False,
     scenario: str = "default",
     debug_dir: str = DEFAULT_DEBUG_DIR
 ) -> None:
@@ -132,6 +133,7 @@ def save_llm_response_debug(
             "response_length": len(response_content),
             "parsing_success": parsing_success,
             "validation_success": validation_success,
+            "likely_truncated": likely_truncated,
             "error_message": error_message,
             "raw_response": response_content
         }
