@@ -183,7 +183,8 @@ class OpenVASStrategy(ScannerStrategy):
                 key = (self._normalize_name(name), port, protocol)
             grouped[key].append(v)
         def count_filled_fields(vuln):
-            return sum(1 for k, val in vuln.items() if val not in [None, '', [], {}, 0])
+            # cvss=0.0 is a legitimate value for LOG-severity OpenVAS entries, so 0 is not treated as empty.
+            return sum(1 for k, val in vuln.items() if val not in [None, '', [], {}])
         merged = []
         for group in grouped.values():
             if len(group) == 1:
@@ -216,7 +217,8 @@ class OpenVASStrategy(ScannerStrategy):
                 buckets[(v.get('port'), v.get('protocol'))].append(v)
 
         def count_filled_fields(vuln):
-            return sum(1 for k, val in vuln.items() if val not in [None, '', [], {}, 0])
+            # cvss=0.0 is a legitimate value for LOG-severity OpenVAS entries, so 0 is not treated as empty.
+            return sum(1 for k, val in vuln.items() if val not in [None, '', [], {}])
 
         result = list(services)
         for items in buckets.values():

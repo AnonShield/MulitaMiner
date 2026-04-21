@@ -5,6 +5,32 @@ from langchain_core.documents import Document
 import pdfplumber
 import datetime
 
+# OpenVAS PDFs (LaTeX-generated, Computer Modern font) have a broken ToUnicode
+# CMap: ligatures and quote glyphs extract as "(cid:<N>)" literals. Removing
+# them blindly destroys words ("affected" → "aected"). Map them to text.
+# Evidence collected from the bBWA, JuiceShop, and artifactory OpenVAS reports.
+_CID_MAP = {
+    16: '"',
+    17: '"',
+    27: 'ff',
+    28: 'fi',
+    29: 'fl',
+    30: 'ffi',
+    31: 'ffl',
+}
+
+
+def _restore_cid_glyphs(text: str) -> str:
+    # Wrap continuation: "word-part\n   (cid:44)→rest" is the same word split.
+    text = re.sub(r'\n[ \t]*\(cid:44\)→', '', text)
+    for cid, glyph in _CID_MAP.items():
+        text = text.replace(f'(cid:{cid})', glyph)
+    # Fallback: any CID we don't know yet gets dropped (prior behaviour).
+    text = re.sub(r'\(cid:\d+\)', '', text)
+    # De-hyphenate soft-wrapped words: "down-\n   loaded" → "downloaded".
+    text = re.sub(r'(\w)-\n[ \t]*(\w)', r'\1\2', text)
+    return text
+
 def merge_page_continuations(text_pages):
     """
     Merge sections cut by page breaks.
@@ -199,8 +225,8 @@ def extract_visual_layout_from_pdf(pdf_path):
                              continue
                          linha_preservada = linha.replace('\t', '    ')
                          texto_processado += linha_preservada + '\n'
-                     # Sanitization by page
-                     texto_processado = re.sub(r"\(cid:\d+\)", "", texto_processado)
+                     # Sanitization by page (CID restoration happens post-join
+                     # so cross-page wrap markers like (cid:44)→ can be joined).
                      texto_processado = texto_processado.replace('ÔåÆ', '->')
                      texto_processado = texto_processado.replace('ÔÇÖ', "'")
                      texto_processado = texto_processado.replace('ÔÇ£', '"').replace('ÔÇØ', '"')
@@ -217,6 +243,7 @@ def extract_visual_layout_from_pdf(pdf_path):
              
              # Normalize typographic ligatures
              texto_completo = unicodedata.normalize('NFKC', texto_completo)
+             texto_completo = _restore_cid_glyphs(texto_completo)
 
              # Find start of first vulnerability
              scanner = None

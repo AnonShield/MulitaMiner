@@ -69,7 +69,7 @@ def execute_run(run_id, run_info, group_key, checkpoints, checkpoint_path,
             '--llm', llm,
             '--output-file', run_prefix,
             '--output-dir', subdir,
-            '--convert', 'all',
+            '--convert', 'xlsx',
             '--baseline-path', baseline_path,
         ]
 

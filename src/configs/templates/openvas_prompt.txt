@@ -40,7 +40,7 @@ EXTRACTION RULES:
    - log_method: from "Log Method" (each line as an array element).
    - references: from "References" (each reference as an array element).
    - cvss: extract the numeric score from the severity header (e.g., "High (CVSS: 7.5)" → 7.5). If not present, look for "CVSS Score", "Base Score", or CVSS vector score. If still not found, use the default by severity: CRITICAL=9.0, HIGH=7.0, MEDIUM=5.0, LOW=2.0, LOG=0.0. Return as a single number (not a list, not a string).
-   - severity: from the header (e.g., "High (CVSS: 7.5)" → "HIGH"). Always uppercase.
+   - severity: from the header (e.g., "High (CVSS: 7.5)" → "HIGH"). Always uppercase. Use LOG for purely informational NVTs (service/version detection, fingerprinting, cipher suite reports, CPE inventory, OS detection, traceroute — anything that reports facts without flagging a vulnerability). NEVER map "Log" to "LOW" — they are distinct categories; "Log" in the header ALWAYS becomes "LOG", never "LOW".
    - port/protocol: from headers like "High 443/tcp". If not present directly above this NVT, inherit from the last valid header above in the block.
    - plugin: null
    - plugin_details: {}
