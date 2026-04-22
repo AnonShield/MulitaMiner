@@ -108,7 +108,14 @@ def normalize_field_value(value, field_name: str = None) -> str:
         if value_str.isdigit() or value_str.lower() == 'general':
             return value_str
         return ""
-    
+
+    # Special case: cvss — normalize int vs float representations (7, 7.0, 7.00 → '7')
+    if field_name and field_name.lower() == 'cvss':
+        try:
+            return f"{float(value_str):g}"
+        except ValueError:
+            return ""
+
     # Default: lowercase for all other fields
     return value_str.lower()
 

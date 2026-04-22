@@ -28,15 +28,13 @@ def convert_single_format(json_file_path: str, format_type: str, args) -> Option
         # Generate output filename with correct extension
         # Keeps the JSON base name (which already includes model and timestamp)
         if hasattr(args, 'output_file') and args.output_file and args.convert != 'all':
-            # If xlsx, force .xlsx extension
-            if format_type == 'xlsx':
-                output_file = os.path.splitext(args.output_file)[0] + '.xlsx'
-            elif format_type == 'csv':
-                output_file = os.path.splitext(args.output_file)[0] + '.csv'
-            elif format_type == 'tsv':
-                output_file = os.path.splitext(args.output_file)[0] + '.tsv'
-            else:
-                output_file = args.output_file
+            ext = {'xlsx': '.xlsx', 'csv': '.csv', 'tsv': '.tsv'}.get(format_type, '')
+            output_file = os.path.splitext(args.output_file)[0] + ext
+            # Honor --output-dir when output_file is a bare name
+            if (getattr(args, 'output_dir', None)
+                    and not os.path.isabs(output_file)
+                    and not os.path.dirname(output_file)):
+                output_file = os.path.join(args.output_dir, output_file)
         else:
             if hasattr(args, 'output_dir') and args.output_dir:
                 output_file = os.path.join(args.output_dir, f"{base_name}.{format_type}")
