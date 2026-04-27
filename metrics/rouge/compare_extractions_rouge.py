@@ -34,6 +34,7 @@ from common.config import BASELINE_DIR, FUZZY_THRESHOLD, SPARSE_FIELDS, DEFAULT_
 from common.normalization import normalize_name, normalize_field_data
 from common.matching import best_fuzzy_match
 from common.field_mapper import get_semantic_fields, get_excluded_fields
+from common.sheet_resolver import resolve_baseline_sheet
 
 
 def detect_scanner_type(df: pd.DataFrame) -> str:
@@ -144,8 +145,6 @@ def key_match_score(key1: str, key2: str) -> float:
 # =========================
 # CONFIG (specific to ROUGE)
 # =========================
-BASELINE_SHEET = "Vulnerabilities"
-
 # Extraction sheets to compare
 EXTRACTION_SHEETS = DEFAULT_EXTRACTION_SHEETS
 
@@ -588,9 +587,10 @@ def main():
 
     # Load Excel file
     excel_data = pd.ExcelFile(baseline_file, engine="openpyxl")
-    # Load baseline
-    print(f"Loading baseline sheet: {BASELINE_SHEET}")
-    baseline_df = pd.read_excel(baseline_file, sheet_name=BASELINE_SHEET, engine="openpyxl")
+    # Load baseline (accepts "Vulnerabilities" or "Sheet1")
+    resolved_baseline_sheet = resolve_baseline_sheet(excel_data)
+    print(f"Loading baseline sheet: {resolved_baseline_sheet}")
+    baseline_df = pd.read_excel(baseline_file, sheet_name=resolved_baseline_sheet, engine="openpyxl")
     print(f"Baseline loaded - Shape: {baseline_df.shape}")
     print(f"Baseline columns: {list(baseline_df.columns)}")
     

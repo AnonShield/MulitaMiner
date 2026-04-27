@@ -195,11 +195,56 @@ class OpenVASStrategy(ScannerStrategy):
                 merged.append(most_complete)
         return self._fuzzy_merge(merged, threshold=90)
 
+    _CVE_PATTERN = re.compile(r'CVE-\d{4}-\d+', re.IGNORECASE)
+
+    def _extract_cves(self, vuln: Dict) -> set:
+        """
+        Extract CVE IDs from `references` field (typically a list of strings).
+        Used as semantic guard in fuzzy merge: vulns with disjoint CVE sets are
+        treated as distinct even when names are similar.
+        """
+        cves = set()
+        refs = vuln.get('references')
+        if not refs:
+            return cves
+        if isinstance(refs, list):
+            for r in refs:
+                cves.update(m.upper() for m in self._CVE_PATTERN.findall(str(r)))
+        else:
+            cves.update(m.upper() for m in self._CVE_PATTERN.findall(str(refs)))
+        return cves
+
+    def _should_merge(self, v: Dict, cluster_rep: Dict, threshold: int, fuzz) -> bool:
+        """
+        Decide whether vuln `v` should join the cluster represented by `cluster_rep`.
+
+        Step 1 — Name similarity gate: fuzz.ratio < threshold rejects immediately.
+        Step 2 — CVE semantic guard: when both vulns carry CVEs, merge only when
+                 one CVE set is a subset of the other (one extraction missed CVEs
+                 the other captured). Partial overlap with extras on both sides
+                 means the vulns are actually distinct (e.g. shared CVE-A but
+                 each carries a unique CVE-B/CVE-C). When either side has no CVE,
+                 falls back to the threshold decision.
+        """
+        vname = self._normalize_name(v.get('Name') or '')
+        rep_name = self._normalize_name(cluster_rep.get('Name') or '')
+        if not (vname and rep_name):
+            return False
+        if fuzz.ratio(vname, rep_name) < threshold:
+            return False
+
+        v_cves = self._extract_cves(v)
+        rep_cves = self._extract_cves(cluster_rep)
+        if v_cves and rep_cves and not (v_cves.issubset(rep_cves) or rep_cves.issubset(v_cves)):
+            return False
+        return True
+
     def _fuzzy_merge(self, vulns: List[Dict], threshold: int = 90) -> List[Dict]:
         """
         Second dedup pass: within same (port, protocol), cluster vulns whose
-        normalized Name similarity >= threshold (via rapidfuzz) and keep the
-        most complete one. 'Services' entries are passed through unchanged.
+        normalized Name similarity >= threshold (via rapidfuzz) AND whose CVE
+        sets are not disjoint. Keeps the most complete in each cluster.
+        'Services' entries are passed through unchanged.
         """
         if not vulns:
             return []
@@ -225,14 +270,12 @@ class OpenVASStrategy(ScannerStrategy):
             if len(items) == 1:
                 result.append(items[0])
                 continue
-            # Greedy clustering by name similarity
+            # Greedy clustering: name similarity gate, then CVE semantic guard
             clusters: List[List[Dict]] = []
             for v in items:
-                vname = self._normalize_name(v.get('Name') or '')
                 placed = False
                 for cluster in clusters:
-                    rep_name = self._normalize_name(cluster[0].get('Name') or '')
-                    if vname and rep_name and fuzz.ratio(vname, rep_name) >= threshold:
+                    if self._should_merge(v, cluster[0], threshold, fuzz):
                         cluster.append(v)
                         placed = True
                         break

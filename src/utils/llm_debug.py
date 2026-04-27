@@ -70,6 +70,10 @@ def save_llm_response_debug(
     llm_name: str,
     chunk_idx: int,
     response_content: str,
+    block_idx: int = 0,
+    chunk_chars: int = 0,
+    vulns_extracted: int = 0,
+    recovered_via: Optional[str] = None,
     retry_count: int = 0,
     was_redivided: bool = False,
     parsing_success: bool = True,
@@ -83,17 +87,27 @@ def save_llm_response_debug(
 ) -> None:
     """
     Save LLM response to JSONL file for debugging.
-    
+
     Each response is appended as a separate JSON line, allowing for:
     - Efficient append-only operations
     - Memory-efficient parsing of large files
     - Easy filtering and analysis of specific chunks
-    
+
     Args:
         pdf_name: PDF file name (without extension)
         llm_name: LLM model name
-        chunk_idx: Index of the chunk within the PDF
+        chunk_idx: Index of the chunk within the PDF (sub-chunk index when
+            redivided; 0 for the main chunk attempt).
         response_content: Raw response text from LLM
+        block_idx: Index of the original PDF block this chunk belongs to,
+            for traceability across redivisions.
+        chunk_chars: Length (in characters) of the chunk text sent to the LLM.
+            Distinct from response length; useful to spot oversized inputs.
+        vulns_extracted: Number of vulnerabilities recovered from the response
+            after JSON parsing (0 when parsing failed or response was empty).
+        recovered_via: Identifier of the parsing strategy that succeeded
+            (e.g. "direct", "markdown_block", "concat_arrays", "json_repair").
+            None when parsing failed entirely.
         retry_count: Number of retries for this chunk
         was_redivided: Whether chunk was subdivided due to failure
         parsing_success: Whether JSON parsing succeeded
@@ -101,50 +115,40 @@ def save_llm_response_debug(
         error_message: Error message if operation failed (None if successful)
         prompt_tokens: Number of tokens in the prompt
         response_tokens: Number of tokens in the response
+        likely_truncated: Response hit the model's output cap
         scenario: Processing scenario/context name
         debug_dir: Root debug directory name
-    
+
     Returns:
         None
-    
-    Example:
-        save_llm_response_debug(
-            pdf_name="openvas_report_1",
-            llm_name="gpt-4",
-            chunk_idx=0,
-            response_content='{"vulnerabilities": [...]}',
-            parsing_success=True,
-            validation_success=True,
-            prompt_tokens=487,
-            response_tokens=612
-        )
     """
     try:
         # Use session-specific filename (generated once, reused for all responses)
         responses_file = _get_session_filename(pdf_name, llm_name, scenario, debug_dir)
-        
-        # Build response entry
+
         entry = {
+            "block_idx": block_idx,
             "chunk_idx": chunk_idx,
             "retry_count": retry_count,
             "was_redivided": was_redivided,
+            "chunk_chars": chunk_chars,
             "prompt_tokens": prompt_tokens,
             "response_tokens": response_tokens,
-            "response_length": len(response_content),
+            "vulns_extracted": vulns_extracted,
             "parsing_success": parsing_success,
             "validation_success": validation_success,
             "likely_truncated": likely_truncated,
+            "recovered_via": recovered_via,
             "error_message": error_message,
-            "raw_response": response_content
+            "raw_response": response_content,
         }
-        
+
         # Append to JSONL file (one JSON object per line)
         with open(responses_file, 'a', encoding='utf-8') as f:
             f.write(json.dumps(entry, ensure_ascii=False) + '\n')
-        
-    except Exception as e:
+
+    except Exception:
         # Silently fail to avoid breaking main processing
-        # Could be enhanced with a logging system if needed
         pass
 
 

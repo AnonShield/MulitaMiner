@@ -12,90 +12,95 @@ import re
 import tiktoken
 from typing import Dict, Any, List, Optional
 
+try:
+    from json_repair import repair_json
+    _HAS_JSON_REPAIR = True
+except ImportError:
+    _HAS_JSON_REPAIR = False
+
 _CONCAT_ARRAY_RE = re.compile(r'\]\s*\[')
 
 
-def parse_json_response(resposta, chunk_id=""):
+def parse_json_response(resposta, chunk_id="", return_strategy=False):
     """
     Parse JSON response from LLM with flexible handling.
-    
-    Tries multiple strategies to extract valid JSON:
-    1. Direct JSON parse
-    2. Extract from wrapped dict with "vulnerabilities" key
-    3. Extract from markdown code blocks
-    4. Extract any JSON array from text
-    
+
+    Tries multiple strategies to extract valid JSON, in order:
+    - "direct"          → json.loads on the raw response
+    - "bracket_slice"   → slice between first '[' and last ']'
+    - "markdown_block"  → content of ```json ... ``` fence
+    - "prefix_strip"    → drop leading prose ("Here is...", "Based on...")
+    - "concat_arrays"   → merge `][` artifacts into a single array
+    - "json_repair"     → json-repair library (last-resort fixer)
+
     Args:
-        resposta: Response string from LLM
-        chunk_id: ID for logging purposes
-    
+        resposta: Response string from LLM.
+        chunk_id: ID for logging purposes.
+        return_strategy: When True, returns (vulns, strategy_name). The strategy
+            is None if parsing failed. Default False keeps the original API.
+
     Returns:
-        list: Parsed vulnerabilities list, or empty list if parsing failed
+        list of vulns, or (list, strategy_name) when return_strategy=True.
     """
+    def _result(vulns, strategy):
+        return (vulns, strategy) if return_strategy else vulns
+
+    # Strategy: direct
     try:
-        # Strategy 1: Direct JSON parse
         parsed = json.loads(resposta)
         if isinstance(parsed, list):
-            return parsed
-        elif isinstance(parsed, dict) and "vulnerabilities" in parsed:
-            # Handle wrapped response
+            return _result(parsed, "direct")
+        if isinstance(parsed, dict) and "vulnerabilities" in parsed:
             vulns = parsed.get("vulnerabilities", [])
-            return vulns if isinstance(vulns, list) else []
-        elif isinstance(parsed, dict):
-            # Try to extract list from dict
+            return _result(vulns if isinstance(vulns, list) else [], "direct")
+        if isinstance(parsed, dict):
             for key in parsed:
-                if isinstance(parsed[key], list) and len(parsed[key]) > 0:
+                if isinstance(parsed[key], list) and parsed[key]:
                     first_item = parsed[key][0]
                     if isinstance(first_item, dict) and "Name" in first_item:
-                        return parsed[key]
-            return []
+                        return _result(parsed[key], "direct")
+            return _result([], "direct")
     except json.JSONDecodeError:
         pass
-    
-    # Strategy 2: Extract JSON from markdown/text
+
+    # Strategy: bracket_slice — first `[` to last `]`
     try:
         start = resposta.find('[')
         end = resposta.rfind(']') + 1
         if start != -1 and end > start:
-            json_str = resposta[start:end]
-            parsed = json.loads(json_str)
+            parsed = json.loads(resposta[start:end])
             if isinstance(parsed, list):
-                return parsed
+                return _result(parsed, "bracket_slice")
     except Exception:
         pass
-    
-    # Strategy 3: Extract JSON code block
+
+    # Strategy: markdown_block — ```json ... ```
     try:
         code_start = resposta.find('```json')
         if code_start != -1:
             code_start += len('```json')
             code_end = resposta.find('```', code_start)
             if code_end != -1:
-                json_str = resposta[code_start:code_end].strip()
-                parsed = json.loads(json_str)
+                parsed = json.loads(resposta[code_start:code_end].strip())
                 if isinstance(parsed, list):
-                    return parsed
+                    return _result(parsed, "markdown_block")
     except Exception:
         pass
-    
-    # Strategy 4: Look for any JSON array
+
+    # Strategy: prefix_strip — drop "Here is..." / "Based on..." prefixes
     try:
-        # Remove common prefixes
         cleaned = resposta.strip()
         if cleaned.startswith('Here') or cleaned.startswith('Based'):
-            # Skip intro text, find first [
             idx = cleaned.find('[')
             if idx != -1:
                 cleaned = cleaned[idx:]
-
         parsed = json.loads(cleaned)
         if isinstance(parsed, list):
-            return parsed
+            return _result(parsed, "prefix_strip")
     except Exception:
         pass
 
-    # Strategy 5: Concatenated arrays — model emitted `[a][b][c]` instead of `[a,b,c]`
-    # Merges `][`, `]\n[`, `]  [` etc. into `,` so the whole thing becomes one array.
+    # Strategy: concat_arrays — model emitted `[a][b][c]` instead of `[a,b,c]`
     try:
         start = resposta.find('[')
         end = resposta.rfind(']') + 1
@@ -103,13 +108,34 @@ def parse_json_response(resposta, chunk_id=""):
             candidate = _CONCAT_ARRAY_RE.sub(',', resposta[start:end])
             parsed = json.loads(candidate)
             if isinstance(parsed, list):
-                print(f"[WARN{chunk_id}] Recovered {len(parsed)} vulns via multi-array merge fallback")
-                return parsed
+                print(f"[WARN{chunk_id}] Recovered {len(parsed)} vulns via concat_arrays fallback")
+                return _result(parsed, "concat_arrays")
     except Exception:
         pass
 
+    # Strategy: json_repair — last-resort recovery for malformed JSON
+    if _HAS_JSON_REPAIR:
+        try:
+            parsed = repair_json(resposta, return_objects=True)
+            if isinstance(parsed, list) and parsed:
+                print(f"[WARN{chunk_id}] Recovered {len(parsed)} vulns via json_repair")
+                return _result(parsed, "json_repair")
+            if isinstance(parsed, dict):
+                if "vulnerabilities" in parsed and isinstance(parsed["vulnerabilities"], list):
+                    vulns = parsed["vulnerabilities"]
+                    print(f"[WARN{chunk_id}] Recovered {len(vulns)} vulns via json_repair (wrapped)")
+                    return _result(vulns, "json_repair")
+                for key in parsed:
+                    if isinstance(parsed[key], list) and parsed[key]:
+                        first = parsed[key][0]
+                        if isinstance(first, dict) and "Name" in first:
+                            print(f"[WARN{chunk_id}] Recovered {len(parsed[key])} vulns via json_repair (key={key})")
+                            return _result(parsed[key], "json_repair")
+        except Exception:
+            pass
+
     print(f"[WARN{chunk_id}] No parsing strategy could extract valid JSON")
-    return []
+    return _result([], None)
 
 
 def validate_json_and_tokens(response: str, chunk_content: str, max_tokens: int,
@@ -153,12 +179,17 @@ def validate_json_and_tokens(response: str, chunk_content: str, max_tokens: int,
         'errors': [],
         'needs_redivision': False,
         'likely_truncated': False,
+        'recovered_via': None,
     }
-    
+
     # 1. JSON VALIDATION
+    # Empty list `[]` is a VALID response — the LLM legitimately found no vulns
+    # in this chunk. Treating it as failure causes wasteful redivision and may
+    # split real vulnerabilities across sub-chunks, losing them entirely.
     try:
-        json_data = parse_json_response(response)
-        if json_data and isinstance(json_data, list):
+        json_data, strategy = parse_json_response(response, return_strategy=True)
+        result['recovered_via'] = strategy
+        if isinstance(json_data, list):
             result['json_valid'] = True
             result['json_data'] = json_data
         else:

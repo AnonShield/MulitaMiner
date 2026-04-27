@@ -236,6 +236,106 @@ def generate_matched_rate_png(matched_rate_data: Dict, recall_data: Dict = None,
     print(f"  • PNG saved: {fname_out}")
 
 
+def generate_below_hs_pies_png(stacked_data: Dict, output_dir: str = 'plot_runs') -> None:
+    """
+    Generate PNG pie charts showing how each model contributes to scores below
+    "Highly Similar", aggregated across all baselines and runs. Splits failures
+    into two complementary types:
+      - Quality issues (extracted but Moderately/Slightly/Divergent)
+      - Recall issues  (Absent — not extracted at all)
+
+    Output: two PNGs per metric (quality + absent), each summarizing performance
+    over the full set of baselines. Per-baseline breakdowns remain accessible
+    via the interactive HTML report.
+
+    Aggregation: the per-model failure share is averaged across baselines where
+    the model has data. Each baseline contributes equally regardless of size —
+    a deliberate "consistency across scenarios" view; per-baseline detail lives
+    in the HTML report.
+
+    Args:
+        stacked_data: { metric: { baseline: { model: [%HS, %Mod, %Sl, %Div, %Abs] } } }
+        output_dir: Directory to save PNG files
+    """
+    if not stacked_data:
+        return
+
+    os.makedirs(output_dir, exist_ok=True)
+
+    # Stable per-model color mapping so the same model uses the same color
+    # across every pie generated in this run.
+    model_color_palette = [
+        '#0066CC', '#d85231', '#2ca02c', '#9467bd', '#ff7f0e',
+        '#17becf', '#e377c2', '#bcbd22', '#8c564b', '#7f7f7f',
+    ]
+    all_models = sorted({m for bl in stacked_data.values() for d in bl.values() for m in d.keys()})
+    color_by_model = {m: model_color_palette[i % len(model_color_palette)]
+                      for i, m in enumerate(all_models)}
+
+    kinds = [
+        ('quality', 'Distribution of Scores Below Highly Similar', (1, 4)),  # Mod + Sl + Div
+        ('absent',  'Distribution of Absent Vulnerabilities',      (4, 5)),  # Absent only
+    ]
+
+    timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+
+    for metric, baseline_data in stacked_data.items():
+        if not baseline_data:
+            continue
+
+        # Models present in at least one baseline for this metric
+        models = sorted({m for d in baseline_data.values() for m in d.keys()})
+        if not models:
+            continue
+
+        for kind_key, kind_label, (i_start, i_end) in kinds:
+            # Average each model's failure share across baselines where it appears
+            per_model = {}
+            for m in models:
+                model_values = [
+                    sum(d[m][i_start:i_end])
+                    for d in baseline_data.values()
+                    if m in d
+                ]
+                if model_values:
+                    per_model[m] = sum(model_values) / len(model_values)
+                else:
+                    per_model[m] = 0.0
+
+            total = sum(per_model.values())
+            if total <= 0:
+                continue
+
+            ordered_models = [m for m in models if per_model[m] > 0]
+            shares = [per_model[m] / total * 100 for m in ordered_models]
+            colors = [color_by_model[m] for m in ordered_models]
+
+            fig, ax = plt.subplots(figsize=(10, 8))
+            ax.pie(
+                shares,
+                labels=[m.capitalize() for m in ordered_models],
+                colors=colors,
+                autopct='%1.1f%%',
+                startangle=90,
+                pctdistance=0.75,
+                textprops={'fontsize': 13},
+                wedgeprops={'edgecolor': 'white', 'linewidth': 1.5},
+            )
+            ax.set_title(
+                f'{kind_label}\n{metric.upper()} — All baselines (mean)',
+                fontsize=15, fontweight='bold'
+            )
+
+            plt.tight_layout()
+            fname_out = os.path.join(
+                output_dir,
+                f'below_hs_{kind_key}_{metric}_{timestamp}.png'
+            )
+            plt.savefig(fname_out, dpi=150, bbox_inches='tight')
+            plt.close()
+            print(f"  • PNG saved: {fname_out}")
+
+
 def generate_absent_nonexistent_png(absent_nonexistent_data: Dict, output_dir: str = 'plot_runs') -> None:
     """
     Generate PNG chart for absent and non-existent vulnerability counts (STD).

@@ -37,6 +37,7 @@ from metrics.plot.data_collector import (
 )
 from metrics.plot.png_generator import (
     generate_similarity_pngs,
+    generate_below_hs_pies_png,
     generate_matched_rate_png,
     generate_absent_nonexistent_png,
 )
@@ -173,6 +174,7 @@ def main():
             os.makedirs(args.output_dir, exist_ok=True)
             if has_stacked:
                 generate_similarity_pngs(stacked_data, args.output_dir)
+                generate_below_hs_pies_png(stacked_data, args.output_dir)
             if has_matched or has_recall:
                 generate_matched_rate_png(matched_rate_data, recall_data, args.output_dir)
             if has_absent_nonexist:

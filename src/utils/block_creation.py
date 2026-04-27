@@ -138,7 +138,8 @@ def extract_vulns_from_blocks(blocks: list, llm, profile_config: dict,
                     scanner_type=scanner_type,
                     pdf_name=pdf_name,
                     llm_name=llm_name,
-                    debug_mode=debug_mode
+                    debug_mode=debug_mode,
+                    block_idx=block_idx,
                 )
                 vulns = chunk_result.get('vulnerabilities', [])
                 tokens_output = chunk_result.get('tokens_output', 0)

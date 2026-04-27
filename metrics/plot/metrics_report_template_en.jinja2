@@ -881,6 +881,34 @@ canvas#fdrFnrChart         { height: 380px !important; }
 canvas#matchedRateChart    { height: 300px !important; }
 canvas#absentChart         { height: 300px !important; }
 
+.below-hs-pair {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: var(--space-lg);
+  align-items: start;
+}
+.below-hs-pie-block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-sm);
+}
+.below-hs-pie-block .below-hs-pie-title {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text);
+  text-align: center;
+}
+.below-hs-canvas-wrap {
+  width: 260px;
+  height: 260px;
+  position: relative;
+}
+.below-hs-canvas-wrap canvas {
+  width: 100% !important;
+  height: 100% !important;
+}
+
 .table-wrapper {
   overflow-x: auto;
 }
@@ -1541,6 +1569,30 @@ footer {
           </div>
           <div class="legend" id="stackedLegend"></div>
         </div>
+
+        <div class="card" style="margin-top: var(--space-lg);">
+          <div class="card-header">
+            <div class="card-title">
+              <div class="card-title-accent purple"></div>
+              Distribution of Scores Below Highly Similar
+            </div>
+          </div>
+          <div class="card-description" id="belowHsTitle">
+            How each model contributes to scores below HS. Left: quality issues (extracted but Moderately / Slightly / Divergent). Right: recall issues (Absent — not extracted at all).
+          </div>
+          <div class="below-hs-pair">
+            <div class="below-hs-pie-block">
+              <div class="below-hs-pie-title">Quality issues (extracted but below HS)</div>
+              <div class="below-hs-canvas-wrap"><canvas id="belowHsQualityPie"></canvas></div>
+              <div class="legend" id="belowHsQualityLegend"></div>
+            </div>
+            <div class="below-hs-pie-block">
+              <div class="below-hs-pie-title">Recall issues (Absent)</div>
+              <div class="below-hs-canvas-wrap"><canvas id="belowHsAbsentPie"></canvas></div>
+              <div class="legend" id="belowHsAbsentLegend"></div>
+            </div>
+          </div>
+        </div>
         {% endif %}
       </section>
       {% endif %}
@@ -1626,7 +1678,7 @@ footer {
             </div>
           </div>
           <div class="card-description">
-            Five orthogonal dimensions: text quality (BERTScore, ROUGE-L), structured extraction (F1 Avg), coverage (Match Rate), and stability across runs (Consistency). Larger areas = better overall.
+            Six orthogonal dimensions: text quality (BERTScore, ROUGE-L), structured extraction (F1 Avg), coverage (Recall = matched/baseline), purity (Precision = matched/extracted), and stability across runs (Consistency). Larger areas = better overall.
           </div>
           <div class="chart-wrapper">
             <canvas id="radarChart"></canvas>
@@ -2451,6 +2503,77 @@ function rebuildStacked(){
   }).join('');
 }
 
+// Two unified doughnuts, one per failure type. Slice = model.
+// Slice size = that model's share of the total failures across all models,
+// so slices sum to 100 within each pie. Tooltip shows both the share and
+// the model's own per-category percentage for context.
+function rebuildBelowHsPies(){
+  const qPie=document.getElementById('belowHsQualityPie');
+  const aPie=document.getElementById('belowHsAbsentPie');
+  if((!qPie&&!aPie)||!HAS_STACKED) return;
+  const metric=(typeof semMetric!=='undefined')?semMetric:(HAS_BERT?'bert':'rouge');
+  const sel=document.getElementById('semBaseline')?.value || BASELINES[0];
+  const stackedMetric=stacked[metric]||{};
+  const bls=sel==='all'?Object.keys(stackedMetric):[sel];
+  const titleEl=document.getElementById('belowHsTitle');
+  if(titleEl){
+    const label=metric==='bert'?'BERTScore':'ROUGE-L';
+    titleEl.textContent=`How each model contributes to scores below HS — ${label} · ${sel}. Left: quality issues (extracted but Moderately / Slightly / Divergent). Right: recall issues (Absent).`;
+  }
+
+  // Per-model own percentages (averaged across selected baselines)
+  const qualityPerModel={};
+  const absentPerModel={};
+  MODELS.forEach(m=>{
+    const cats=[0,1,2,3,4].map(ci=>avg(bls.map(bl=>stackedMetric[bl]?.[m]?.[ci]??0)));
+    qualityPerModel[m]=cats[1]+cats[2]+cats[3];
+    absentPerModel[m]=cats[4];
+  });
+
+  function buildPie(canvasId,legendId,perModel){
+    const totalShare=MODELS.reduce((acc,m)=>acc+(perModel[m]||0),0);
+    const data=MODELS.map(m=>{
+      const own=perModel[m]||0;
+      const share=totalShare>0?(own/totalShare*100):0;
+      return {model:m,own,share};
+    });
+    const colors=MODELS.map(m=>MC[m]||'#888');
+    mkChart(canvasId,{
+      type:'doughnut',
+      data:{
+        labels:data.map(d=>MODEL_NAMES[d.model]||d.model),
+        datasets:[{
+          data:data.map(d=>d.share),
+          backgroundColor:colors.map(c=>c+'AA'),
+          borderColor:colors,
+          borderWidth:1,
+        }]
+      },
+      options:{
+        responsive:true,maintainAspectRatio:false,
+        plugins:{
+          legend:{display:false},
+          tooltip:{callbacks:{
+            label:i=>{
+              const d=data[i.dataIndex];
+              return `${MODEL_NAMES[d.model]||d.model}: ${d.share.toFixed(1)}% of total (model own: ${d.own.toFixed(1)}%)`;
+            }
+          }}
+        }
+      }
+    });
+    const lgEl=document.getElementById(legendId);
+    if(lgEl){
+      lgEl.innerHTML=data.map((d,i)=>{
+        return `<div class="legend-item"><div class="legend-box" style="background:${colors[i]}AA;border:1px solid ${colors[i]}"></div><span>${MODEL_NAMES[d.model]||d.model} <span style="color:var(--muted);font-size:0.65rem;">(${d.share.toFixed(1)}%)</span></span></div>`;
+      }).join('');
+    }
+  }
+
+  if(qPie) buildPie('belowHsQualityPie','belowHsQualityLegend',qualityPerModel);
+  if(aPie) buildPie('belowHsAbsentPie','belowHsAbsentLegend',absentPerModel);
+}
+
 let semMetric = HAS_BERT ? 'bert' : 'rouge';
 function setSemMetric(m){
   semMetric=m;
@@ -2487,6 +2610,7 @@ function rebuildSemantic(){
     options:{responsive:true,maintainAspectRatio:false,plugins:{legend:LEG,tooltip:{callbacks:{label:ttStd}}},scales:scaleY(0.6,1.0)}
   });
   rebuildStacked();
+  rebuildBelowHsPies();
 }
 
 let detMetric='f1';
@@ -2529,25 +2653,39 @@ function rebuildRadar(){
   if(!radarBaselineEl) return; // radarBaseline select not present
   const sel=radarBaselineEl.value;
   const bls=sel==='all'?BASELINES:[sel];
-  const axes=['BERTScore','ROUGE-L','F1 Avg (IE)','Match Rate','Consistency'];
+  const axes=['BERTScore','ROUGE-L','F1 Avg (IE)','Recall','Precision','Consistency'];
   mkChart('radarChart',{
     type:'radar',
     data:{
       labels:axes,
       datasets:MODELS.map(m=>{
         const c=MC[m];
-        const ba=avg(bls.map(bl=>mBert(bl,m)));
-        const ra=avg(bls.map(bl=>mRouge(bl,m)));
-        const f1Avg=avg(bls.flatMap(bl=>DET_FIELDS.map(f=>det[bl]?.[m]?.[f]?.f1?.m??0.5)));
-        const mr=avg(bls.map(bl=>matched_rate[bl]?.[m]?.m??0));
+        // Skip baselines/fields where the model has no data instead of using
+        // synthetic defaults — keeps the average truthful when a model
+        // didn't run (or failed) on a given baseline.
+        const isNum=v=>typeof v==='number'&&!isNaN(v);
+        const baVals=bls.map(bl=>mBert(bl,m)).filter(isNum);
+        const raVals=bls.map(bl=>mRouge(bl,m)).filter(isNum);
+        const f1Vals=bls.flatMap(bl=>DET_FIELDS.map(f=>det[bl]?.[m]?.[f]?.f1?.m)).filter(isNum);
+        // Recall    = matched / baseline_total (coverage)
+        // Precision = matched / extracted_total (purity), reused from matched_rate
+        const recallVals=bls.map(bl=>recall[bl]?.[m]?.m).filter(isNum);
+        const precisionVals=bls.map(bl=>matched_rate[bl]?.[m]?.m).filter(isNum);
+        const ba=baVals.length?avg(baVals):0;
+        const ra=raVals.length?avg(raVals):0;
+        const f1Avg=f1Vals.length?avg(f1Vals):0;
+        // recall and matched_rate are stored as percent (0–100); the radar uses
+        // 0–1 for every other axis, so we normalize here before plotting.
+        const rec=recallVals.length?avg(recallVals)/100:0;
+        const prec=precisionVals.length?avg(precisionVals)/100:0;
         // Consistency: 1 - weighted avg std (0.7 IE + 0.3 NLG), same formula as consistencyChart
-        const bertStds=bls.map(bl=>sBert(bl,m));
-        const rougeStds=bls.map(bl=>sRouge(bl,m));
-        const detStds=bls.flatMap(bl=>DET_FIELDS.map(f=>det[bl]?.[m]?.[f]?.f1?.s??0.02));
-        const nlgStd=avg(bertStds)*0.7+avg(rougeStds)*0.3;
-        const ieStd=avg(detStds);
+        const bertStds=bls.map(bl=>sBert(bl,m)).filter(isNum);
+        const rougeStds=bls.map(bl=>sRouge(bl,m)).filter(isNum);
+        const detStds=bls.flatMap(bl=>DET_FIELDS.map(f=>det[bl]?.[m]?.[f]?.f1?.s)).filter(isNum);
+        const nlgStd=(bertStds.length?avg(bertStds):0)*0.7+(rougeStds.length?avg(rougeStds):0)*0.3;
+        const ieStd=detStds.length?avg(detStds):0;
         const consistency=Math.max(0,Math.min(1,1-(0.7*ieStd+0.3*nlgStd)));
-        return{label:MODEL_NAMES[m]||m,data:[ba,ra,f1Avg,mr,consistency],borderColor:c,backgroundColor:c+'15',pointBackgroundColor:c,borderWidth:1.5,pointRadius:3};
+        return{label:MODEL_NAMES[m]||m,data:[ba,ra,f1Avg,rec,prec,consistency],borderColor:c,backgroundColor:c+'15',pointBackgroundColor:c,borderWidth:1.5,pointRadius:3};
       })
     },
     options:{responsive:true,maintainAspectRatio:false,plugins:{legend:LEG,tooltip:{callbacks:{label:i=>`${i.dataset.label}: ${(i.parsed.r*100).toFixed(1)}%`}}},scales:{r:{min:0,max:1.0,ticks:{color:TICKS,font:{family:'Space Mono',size:11},backdropColor:'transparent',stepSize:0.2},grid:{color:GRID},pointLabels:{color:'#94a3b8',font:{family:'Inter',size:12}}}}}

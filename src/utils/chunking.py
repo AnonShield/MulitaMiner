@@ -465,11 +465,94 @@ def intelligent_chunk_redivision(chunk_content: str, max_tokens: int,
             validated_chunks.append(chunk)
     return validated_chunks
 
+def _is_empty_response(content: str) -> bool:
+    """LLM returned a syntactically valid but empty array (`[]`)."""
+    return bool(content) and content.strip() in ('[]', '[ ]', '')
+
+
+def _invoke_validate_log(llm, prompt: str, chunk_content: str, max_tokens: int,
+                         tokenizer, num_predict, debug_mode: bool,
+                         debug_kwargs: dict) -> tuple:
+    """
+    Single LLM call: invoke, validate response, optionally log to debug JSONL.
+
+    Args:
+        debug_kwargs: pdf_name, llm_name, block_idx, chunk_idx, retry_count,
+            was_redivided. Other debug fields (chunk_chars, vulns_extracted,
+            recovered_via, etc.) are derived here so callers stay simple.
+
+    Returns:
+        (response_content, response_tokens, validation_dict)
+    """
+    response = llm.invoke(prompt)
+    content = extract_response_content(response)
+    tokens_used = len(tokenizer.encode(content)) if content else 0
+
+    validation = validate_json_and_tokens(
+        content, chunk_content, max_tokens, prompt,
+        tokenizer=tokenizer, num_predict=num_predict
+    )
+
+    if debug_mode:
+        json_data = validation.get('json_data') or []
+        save_llm_response_debug(
+            **debug_kwargs,
+            response_content=content or "",
+            chunk_chars=len(chunk_content) if chunk_content else 0,
+            vulns_extracted=len(json_data) if isinstance(json_data, list) else 0,
+            recovered_via=validation.get('recovered_via'),
+            parsing_success=validation.get('json_valid', False),
+            validation_success=(validation.get('json_valid', False)
+                                and validation.get('token_valid', False)),
+            prompt_tokens=len(tokenizer.encode(prompt)),
+            response_tokens=tokens_used,
+            likely_truncated=validation.get('likely_truncated', False),
+        )
+
+    return content, tokens_used, validation
+
+
+def _retry_empty_response(llm, prompt: str, chunk_content: str, max_tokens: int,
+                          tokenizer, num_predict, debug_mode: bool,
+                          debug_base: dict, max_retries: int = 2,
+                          context_label: str = "CHUNK") -> tuple:
+    """
+    Re-call the LLM up to `max_retries` times when the initial response was `[]`.
+
+    Empty `[]` may be a legitimate "no vulns here" answer OR a transient LLM
+    failure. A simple repeat call often resolves the latter at low cost.
+
+    Args:
+        debug_base: pdf_name, llm_name, chunk_idx, was_redivided.
+                    `retry_count` is set automatically per attempt.
+
+    Returns:
+        (content, total_extra_tokens, validation) of the first successful retry,
+        or (None, total_extra_tokens, None) if all retries also returned empty
+        or invalid JSON.
+    """
+    total_extra_tokens = 0
+    for attempt in range(max_retries):
+        debug_kwargs = {**debug_base, 'retry_count': attempt + 1}
+        content, tokens_used, validation = _invoke_validate_log(
+            llm, prompt, chunk_content, max_tokens, tokenizer,
+            num_predict, debug_mode, debug_kwargs
+        )
+        total_extra_tokens += tokens_used
+
+        if not _is_empty_response(content) and validation['json_valid']:
+            recovered = len(validation['json_data'])
+            tqdm.write(f"✅ [{context_label}] Retry {attempt + 1}: recovered {recovered} vulns")
+            return content, total_extra_tokens, validation
+
+    return None, total_extra_tokens, None
+
+
 def robust_chunk_processing(doc_chunk: TokenChunk, llm, profile_config: Dict[str, Any],
                              max_retries: int = 3, tokenizer=None,
                              max_chunk_size: int = 4096, pdf_name: str = "unknown",
-                             llm_name: str = "unknown", debug_mode: bool = False) -> Dict[str, Any]:
-    # Use max_chunk_size instead of getattr(llm, 'max_tokens', 4096)
+                             llm_name: str = "unknown", debug_mode: bool = False,
+                             block_idx: int = 0) -> Dict[str, Any]:
     max_tokens = max_chunk_size
     # num_predict = model's output cap (from llm_config.max_tokens); used only for truncation diagnostics
     num_predict = None
@@ -477,7 +560,7 @@ def robust_chunk_processing(doc_chunk: TokenChunk, llm, profile_config: Dict[str
         num_predict = profile_config['llm_config'].get('max_tokens')
     all_vulnerabilities = []
     total_tokens_output = 0
-    
+
     # Ensure tokenizer is initialized from LLM config if not provided
     if tokenizer is None:
         from src.model_management import get_tokenizer
@@ -488,155 +571,99 @@ def robust_chunk_processing(doc_chunk: TokenChunk, llm, profile_config: Dict[str
                 tokenizer = tiktoken.encoding_for_model("gpt-3.5-turbo")
             except Exception:
                 tokenizer = tiktoken.get_encoding("cl100k_base")
-    
+
     try:
-        attempt_counter = 1
         prompt = build_prompt(doc_chunk, profile_config)
-        response = llm.invoke(prompt)
-        response_content = extract_response_content(response)
-        response_tokens = len(tokenizer.encode(response_content)) if response_content else 0
+        debug_base = {
+            'pdf_name': pdf_name,
+            'llm_name': llm_name,
+            'block_idx': block_idx,
+            'chunk_idx': 0,
+            'was_redivided': False,
+        }
+
+        # First attempt
+        response_content, response_tokens, validation = _invoke_validate_log(
+            llm, prompt, doc_chunk.page_content, max_tokens, tokenizer,
+            num_predict, debug_mode, {**debug_base, 'retry_count': 0}
+        )
         total_tokens_output += response_tokens
-        
-        # Validate first before logging
-        validation = validate_json_and_tokens(response_content, doc_chunk.page_content,
-                                              max_tokens, prompt, tokenizer=tokenizer,
-                                              num_predict=num_predict)
-        
-        # Debug logging
-        if debug_mode:
-            prompt_tokens = len(tokenizer.encode(prompt))
-            save_llm_response_debug(
-                pdf_name=pdf_name,
-                llm_name=llm_name,
-                chunk_idx=0,
-                response_content=response_content or "",
-                retry_count=0,
-                was_redivided=False,
-                parsing_success=validation.get('json_valid', False),
-                validation_success=validation.get('json_valid', False),
-                prompt_tokens=prompt_tokens,
-                response_tokens=response_tokens,
-                likely_truncated=validation.get('likely_truncated', False)
+
+        # Empty `[]` may be transient — retry before deciding it's the real answer
+        if _is_empty_response(response_content):
+            tqdm.write("[CHUNK] Empty response [] detected. Retrying...")
+            _, extra_tokens, retry_validation = _retry_empty_response(
+                llm, prompt, doc_chunk.page_content, max_tokens, tokenizer,
+                num_predict, debug_mode, debug_base, max_retries=2, context_label="CHUNK"
             )
-        
-        # CRITICAL FIX: Detect empty response and retry before redivision
-        # GPT-5 mini can be non-deterministic at temperature=0 (o-series architecture)
-        # If response is empty, simple retry with same prompt may succeed
-        if response_content and response_content.strip() in ('[]', '[ ]', ''):
-            tqdm.write(f"[CHUNK] Empty response [] detected. Attempting {2} simple retries...")
-            for retry_attempt in range(2):
-                attempt_counter += 1
-                retry_response = llm.invoke(prompt)
-                retry_response_content = extract_response_content(retry_response)
-                retry_response_tokens = len(tokenizer.encode(retry_response_content)) if retry_response_content else 0
-                total_tokens_output += retry_response_tokens
-                
-                if retry_response_content and retry_response_content.strip() not in ('[]', '[ ]', ''):
-                    # Got non-empty response, validate and return if valid
-                    tqdm.write(f"[CHUNK] Retry {retry_attempt + 1} succeeded with non-empty content.")
-                    retry_validation = validate_json_and_tokens(retry_response_content, doc_chunk.page_content,
-                                                               max_tokens, prompt, tokenizer=tokenizer,
-                                                               num_predict=num_predict)
-                    if debug_mode:
-                        prompt_tokens = len(tokenizer.encode(prompt))
-                        save_llm_response_debug(
-                            pdf_name=pdf_name,
-                            llm_name=llm_name,
-                            chunk_idx=0,
-                            response_content=retry_response_content or "",
-                            retry_count=retry_attempt + 1,
-                            was_redivided=False,
-                            parsing_success=retry_validation.get('json_valid', False),
-                            validation_success=retry_validation.get('json_valid', False) and retry_validation.get('token_valid', False),
-                            prompt_tokens=prompt_tokens,
-                            response_tokens=retry_response_tokens,
-                            likely_truncated=retry_validation.get('likely_truncated', False)
-                        )
-                    if retry_validation['json_valid']:
-                        tqdm.write(f"✅ [CHUNK] Retry {retry_attempt + 1}: JSON is valid!")
-                        return {'vulnerabilities': retry_validation['json_data'], 'tokens_output': total_tokens_output}
-        
+            total_tokens_output += extra_tokens
+            if retry_validation:
+                return {'vulnerabilities': retry_validation['json_data'],
+                        'tokens_output': total_tokens_output}
+
         if validation['json_valid'] and validation['token_valid']:
-            tqdm.write(f"✅ [CHUNK] Attempt {attempt_counter}: JSON is valid!")
-            return {'vulnerabilities': validation['json_data'], 'tokens_output': total_tokens_output}
+            return {'vulnerabilities': validation['json_data'],
+                    'tokens_output': total_tokens_output}
+
+        # Invalid JSON but chunk size is OK — retry without redivision
         if not validation['needs_redivision']:
             for retry in range(2):
-                attempt_counter += 1
-                response = llm.invoke(prompt)
-                response_content = extract_response_content(response)
-                response_tokens = len(tokenizer.encode(response_content)) if tokenizer else 0
+                response_content, response_tokens, validation = _invoke_validate_log(
+                    llm, prompt, doc_chunk.page_content, max_tokens, tokenizer,
+                    num_predict, debug_mode, {**debug_base, 'retry_count': retry + 1}
+                )
                 total_tokens_output += response_tokens
-                
-                # Validate first to get real success flags
-                validation = validate_json_and_tokens(response_content, doc_chunk.page_content,
-                                                      max_tokens, prompt, tokenizer=tokenizer,
-                                                      num_predict=num_predict)
-
-                # Debug logging with actual validation results
-                if debug_mode:
-                    prompt_tokens = len(tokenizer.encode(prompt))
-                    save_llm_response_debug(
-                        pdf_name=pdf_name,
-                        llm_name=llm_name,
-                        chunk_idx=0,
-                        response_content=response_content or "",
-                        retry_count=retry + 1,
-                        was_redivided=False,
-                        parsing_success=validation.get('json_valid', False),
-                        validation_success=validation.get('json_valid', False) and validation.get('token_valid', False),
-                        prompt_tokens=prompt_tokens,
-                        response_tokens=response_tokens,
-                        likely_truncated=validation.get('likely_truncated', False)
-                    )
-                
                 if validation['json_valid']:
-                    return {'vulnerabilities': validation['json_data'], 'tokens_output': total_tokens_output}
-        tqdm.write(f"[CHUNK] Performing intelligent redivision...")
+                    return {'vulnerabilities': validation['json_data'],
+                            'tokens_output': total_tokens_output}
+
+        # Last resort: redivide chunk and process each sub-chunk
+        tqdm.write("[CHUNK] Performing intelligent redivision...")
         new_chunks = intelligent_chunk_redivision(
             doc_chunk.page_content, max_tokens, validation,
-            tokenizer=tokenizer,
-            profile_config=profile_config
+            tokenizer=tokenizer, profile_config=profile_config
         )
+
         for idx, chunk_content in enumerate(new_chunks):
-            attempt_counter += 1
-            sub_chunk = TokenChunk(chunk_content)
-            sub_prompt = build_prompt(sub_chunk, profile_config)
+            sub_prompt = build_prompt(TokenChunk(chunk_content), profile_config)
+            sub_debug_base = {
+                'pdf_name': pdf_name,
+                'llm_name': llm_name,
+                'block_idx': block_idx,
+                'chunk_idx': idx,
+                'was_redivided': True,
+            }
+
             try:
-                sub_response = llm.invoke(sub_prompt)
-                sub_response_content = extract_response_content(sub_response)
-                response_tokens = len(tokenizer.encode(sub_response_content)) if tokenizer else 0
-                total_tokens_output += response_tokens
-                
-                # Validate first to get real success flags
-                sub_validation = validate_json_and_tokens(sub_response_content, chunk_content,
-                                                          max_tokens, sub_prompt, tokenizer=tokenizer,
-                                                          num_predict=num_predict)
-                
-                # Debug logging with actual validation results
-                if debug_mode:
-                    prompt_tokens = len(tokenizer.encode(sub_prompt))
-                    save_llm_response_debug(
-                        pdf_name=pdf_name,
-                        llm_name=llm_name,
-                        chunk_idx=idx,
-                        response_content=sub_response_content or "",
-                        retry_count=0,
-                        was_redivided=True,
-                        parsing_success=sub_validation.get('json_valid', False),
-                        validation_success=sub_validation.get('json_valid', False) and sub_validation.get('token_valid', False),
-                        prompt_tokens=prompt_tokens,
-                        response_tokens=response_tokens,
-                        likely_truncated=sub_validation.get('likely_truncated', False)
+                sub_content, sub_tokens, sub_validation = _invoke_validate_log(
+                    llm, sub_prompt, chunk_content, max_tokens, tokenizer,
+                    num_predict, debug_mode, {**sub_debug_base, 'retry_count': 0}
+                )
+                total_tokens_output += sub_tokens
+
+                # Same empty-retry policy applies to sub-chunks: a fragmented vuln
+                # may still hold extractable content even without the leading marker.
+                if _is_empty_response(sub_content):
+                    tqdm.write(f"[SUB-CHUNK {idx + 1}] Empty response []. Retrying...")
+                    _, extra_tokens, retry_validation = _retry_empty_response(
+                        llm, sub_prompt, chunk_content, max_tokens, tokenizer,
+                        num_predict, debug_mode, sub_debug_base, max_retries=2,
+                        context_label=f"SUB-CHUNK {idx + 1}"
                     )
-                
+                    total_tokens_output += extra_tokens
+                    if retry_validation:
+                        sub_validation = retry_validation
+
                 if sub_validation['json_valid']:
                     all_vulnerabilities.extend(sub_validation['json_data'])
                 else:
-                    tqdm.write(f"[CHUNK] Subchunk {idx+1} did not return valid JSON.")
+                    tqdm.write(f"[CHUNK] Subchunk {idx + 1} did not return valid JSON.")
             except Exception as e:
-                tqdm.write(f"[CHUNK] Error in subchunk {idx+1}: {e}")
+                tqdm.write(f"[CHUNK] Error in subchunk {idx + 1}: {e}")
                 continue
+
         return {'vulnerabilities': all_vulnerabilities, 'tokens_output': total_tokens_output}
+
     except Exception as e:
         tqdm.write(f"[CHUNK] Unexpected error: {e}")
         return {'vulnerabilities': [], 'tokens_output': 0}
@@ -646,14 +673,16 @@ def retry_chunk_with_subdivision(doc_chunk: TokenChunk, llm,
                                   max_retries: int = 3, tokenizer=None,
                                   max_chunk_size: int = 4096,
                                   scanner_type: str = None, pdf_name: str = "unknown",
-                                  llm_name: str = "unknown", debug_mode: bool = False) -> Dict[str, Any]:
+                                  llm_name: str = "unknown", debug_mode: bool = False,
+                                  block_idx: int = 0) -> Dict[str, Any]:
     result = robust_chunk_processing(
         doc_chunk, llm, profile_config, max_retries,
         tokenizer=tokenizer,
         max_chunk_size=max_chunk_size,
         pdf_name=pdf_name,
         llm_name=llm_name,
-        debug_mode=debug_mode
+        debug_mode=debug_mode,
+        block_idx=block_idx,
     )
     vulnerabilities = result.get('vulnerabilities', [])
     tokens_output = result.get('tokens_output', 0)
