@@ -228,22 +228,25 @@ def central_custom_allow_duplicates(vulnerabilities: list, profile_config: dict 
     
     # Rebuild grouping para detalhes do log
     from collections import defaultdict
+    def make_hashable(val):
+        if isinstance(val, list):
+            return tuple(make_hashable(x) for x in val)
+        elif isinstance(val, dict):
+            return tuple(sorted((k, make_hashable(vv)) for k, vv in val.items()))
+        else:
+            return val
     grouped = defaultdict(list)
     for v in result:
-        name = (v.get('Name') or '').strip()
+        name_val = v.get('Name') or ''
+        if isinstance(name_val, list):
+            name_val = ' '.join(str(x) for x in name_val)
+        name = str(name_val).strip()
         port = v.get('port')
         protocol = v.get('protocol')
         if name == 'Services':
-            def make_hashable(val):
-                if isinstance(val, list):
-                    return tuple(val)
-                elif isinstance(val, dict):
-                    return tuple(sorted(val.items()))
-                else:
-                    return val
             key = tuple(sorted((k, make_hashable(vv)) for k, vv in v.items()))
         else:
-            key = (name, port, protocol)
+            key = (name, make_hashable(port), make_hashable(protocol))
         grouped[key].append(v)
     
     # Generate modular log

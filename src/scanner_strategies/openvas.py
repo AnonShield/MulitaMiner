@@ -3,6 +3,15 @@ import os
 from typing import List, Dict, Tuple
 from .base import ScannerStrategy
 
+
+def make_hashable(val):
+    if isinstance(val, list):
+        return tuple(make_hashable(x) for x in val)
+    elif isinstance(val, dict):
+        return tuple(sorted((k, make_hashable(vv)) for k, vv in val.items()))
+    else:
+        return val
+
 class OpenVASStrategy(ScannerStrategy):
     scanner_name = 'openvas'
     requires_visual_layout = True
@@ -170,17 +179,9 @@ class OpenVASStrategy(ScannerStrategy):
             port = v.get('port')
             protocol = v.get('protocol')
             if name == 'Services':
-                # Garante que todos os valores sejam hashable
-                def make_hashable(val):
-                    if isinstance(val, list):
-                        return tuple(val)
-                    elif isinstance(val, dict):
-                        return tuple(sorted(val.items()))
-                    else:
-                        return val
                 key = tuple(sorted((k, make_hashable(vv)) for k, vv in v.items()))
             else:
-                key = (self._normalize_name(name), port, protocol)
+                key = (self._normalize_name(name), make_hashable(port), make_hashable(protocol))
             grouped[key].append(v)
         def count_filled_fields(vuln):
             # cvss=0.0 is a legitimate value for LOG-severity OpenVAS entries, so 0 is not treated as empty.
@@ -259,7 +260,7 @@ class OpenVASStrategy(ScannerStrategy):
             if (v.get('Name') or '').strip() == 'Services':
                 services.append(v)
             else:
-                buckets[(v.get('port'), v.get('protocol'))].append(v)
+                buckets[(make_hashable(v.get('port')), make_hashable(v.get('protocol')))].append(v)
 
         def count_filled_fields(vuln):
             # cvss=0.0 is a legitimate value for LOG-severity OpenVAS entries, so 0 is not treated as empty.

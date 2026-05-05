@@ -41,13 +41,17 @@ EXTRACTION RULES:
    - references: from "References" (each reference as an array element).
    - cvss: extract the numeric score from the severity header (e.g., "High (CVSS: 7.5)" → 7.5). If not present, look for "CVSS Score", "Base Score", or CVSS vector score. If still not found, use the default by severity: CRITICAL=9.0, HIGH=7.0, MEDIUM=5.0, LOW=2.0, LOG=0.0. Return as a single number (not a list, not a string).
    - severity: from the header (e.g., "High (CVSS: 7.5)" → "HIGH"). Always uppercase. Use LOG for purely informational NVTs (service/version detection, fingerprinting, cipher suite reports, CPE inventory, OS detection, traceroute — anything that reports facts without flagging a vulnerability). NEVER map "Log" to "LOW" — they are distinct categories; "Log" in the header ALWAYS becomes "LOG", never "LOW".
-   - port/protocol: from headers like "High 443/tcp". If not present directly above this NVT, inherit from the last valid header above in the block.
+   - port/protocol: prefer values that appear INSIDE this NVT's text (e.g., a line like "path / port: 80/tcp", "Service: 443/tcp", or any explicit `<number>/<tcp|udp>` reference within Detection Result, Product Detection Result, Detection Method, Insight, or other sections of THIS NVT). If no such value exists in the NVT body, fall back to the section header above (e.g., "High 443/tcp"); if not present directly above, inherit from the last valid header above in the block. Never use a port/protocol that does not appear in this NVT's text or in a header above it.
    - plugin: null
    - plugin_details: {}
    - instances: []
    - source: "OPENVAS"
 
-3. Port/protocol context: always associate the values at the beginning of the block or visual header with the corresponding NVT. If not present, inherit from the last valid header above.
+3. Port/protocol resolution order for each NVT (use the FIRST that applies):
+   (a) An explicit `<number>/<tcp|udp>` mentioned inside THIS NVT's body (most reliable — e.g., "path / port: 80/tcp" inside Detection Result).
+   (b) The closest `<port>/<proto>` header above this NVT in the chunk.
+   (c) The last valid header above in the block (inheritance).
+   Never invent or carry over a port from a previous NVT or another section. If none of (a)–(c) yields a value, set port=null and protocol=null.
 
 4. Do not repeat vulnerabilities with the same (Name, port, protocol) — each must be unique by this key.
 

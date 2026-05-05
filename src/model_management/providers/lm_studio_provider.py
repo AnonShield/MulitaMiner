@@ -11,7 +11,7 @@ from langchain_openai import ChatOpenAI
 from .base_provider import BaseLLMProvider
 
 
-class Llm_studioProvider(BaseLLMProvider):
+class Lm_studioProvider(BaseLLMProvider):
     """Provider for LLM Studio local models via OpenAI-compatible API."""
     
     def __init__(self, config: dict):

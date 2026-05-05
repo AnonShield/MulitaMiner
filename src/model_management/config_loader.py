@@ -85,7 +85,7 @@ def get_provider_key(llm_name):
     config = load_llm(llm_name)
     if config is None:
         return "unknown"
-    if config.get("provider") in ("ollama", "llm_studio"):
+    if config.get("provider") in ("ollama", "lm_studio"):
         return "local"
     endpoint = config.get("endpoint", "")
     netloc = urlparse(endpoint).netloc

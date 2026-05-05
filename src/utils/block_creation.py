@@ -151,6 +151,18 @@ def extract_vulns_from_blocks(blocks: list, llm, profile_config: dict,
                     'tokens_output': tokens_output
                 })
 
+                # Flatten one level of nesting: some LLMs (e.g. granite4) wrap a vuln dict
+                # in an extra list, yielding [[{vuln}], ...] instead of [{vuln}, ...].
+                # Unwrap singleton lists whose only element is a dict so the real vuln
+                # isn't dropped by the isinstance filter below.
+                flattened = []
+                for v in vulns:
+                    if isinstance(v, list) and len(v) == 1 and isinstance(v[0], dict):
+                        flattened.append(v[0])
+                    else:
+                        flattened.append(v)
+                vulns = flattened
+
                 if profile_config and profile_config.get('reader', '').lower() == 'tenable':
                     all_vulns.extend([v for v in vulns if isinstance(v, dict)])
                 else:

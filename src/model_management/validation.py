@@ -17,6 +17,9 @@ try:
     _HAS_JSON_REPAIR = True
 except ImportError:
     _HAS_JSON_REPAIR = False
+    print("[WARN] json-repair not installed in current env. "
+          "Install with: pip install json-repair==0.59.5 "
+          "(LLM JSON recovery will be limited)")
 
 _CONCAT_ARRAY_RE = re.compile(r'\]\s*\[')
 
@@ -63,14 +66,26 @@ def parse_json_response(resposta, chunk_id="", return_strategy=False):
     except json.JSONDecodeError:
         pass
 
-    # Strategy: bracket_slice — first `[` to last `]`
+    # Strategy: bracket_slice — first `[` to last `]`, then peel trailing `]`
+    # if the slice has more `]` than `[` (e.g. model emits `[...]\n]`).
     try:
         start = resposta.find('[')
         end = resposta.rfind(']') + 1
         if start != -1 and end > start:
-            parsed = json.loads(resposta[start:end])
-            if isinstance(parsed, list):
-                return _result(parsed, "bracket_slice")
+            candidate = resposta[start:end]
+            for _ in range(candidate.count(']') - candidate.count('[')):
+                trim = candidate.rfind(']')
+                if trim == -1:
+                    break
+                candidate = candidate[:trim].rstrip()
+            try:
+                parsed = json.loads(candidate)
+                if isinstance(parsed, list):
+                    return _result(parsed, "bracket_slice")
+            except json.JSONDecodeError:
+                parsed = json.loads(resposta[start:end])
+                if isinstance(parsed, list):
+                    return _result(parsed, "bracket_slice")
     except Exception:
         pass
 

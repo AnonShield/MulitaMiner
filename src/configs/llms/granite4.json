@@ -1,12 +1,12 @@
 {
-  "provider": "llm_studio",
+  "provider": "lm_studio",
   "model": "ibm/granite-4-h-tiny",
   "endpoint": "http://localhost:1234/v1",
   "temperature": 0.0,
-  "max_tokens": 2000,
-  "max_chunk_size": 15000,
-  "reserve_for_response": 5000,
-  "timeout": 180,
+  "max_tokens": 4000,
+  "max_chunk_size": 18000,
+  "reserve_for_response": 6000,
+  "timeout": 240,
   "tokenizer": {
     "type": "huggingface",
     "model": "ibm-granite/granite-4.0-h-tiny"

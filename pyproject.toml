@@ -14,6 +14,7 @@ dependencies = [
     "tiktoken==0.12.0",
     "python-dotenv==1.2.2",
     "deepmerge==1.1.1",
+    "json-repair==0.59.5",
     "pandas==2.3.3",
     "openpyxl==3.1.5",
     "rapidfuzz==3.14.5",

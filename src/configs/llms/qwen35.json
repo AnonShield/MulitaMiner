@@ -1,11 +1,11 @@
 {
   "provider": "ollama",
-  "model": "qwen3.5",
+  "model": "qwen35-custom",
   "endpoint": "http://localhost:11434",
   "temperature": 0.0,
-  "max_tokens": 8192,
-  "max_chunk_size": 13000,
-  "reserve_for_response": 3500,
+  "max_tokens": 4000,
+  "max_chunk_size": 18000,
+  "reserve_for_response": 4000,
   "timeout": 7200,
   "disable_thinking": true,
   "options": {
