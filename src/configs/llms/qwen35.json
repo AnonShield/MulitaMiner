@@ -4,12 +4,12 @@
   "endpoint": "http://localhost:11434",
   "temperature": 0.0,
   "max_tokens": 4000,
-  "max_chunk_size": 18000,
-  "reserve_for_response": 4000,
+  "max_chunk_size": 9000,
+  "reserve_for_response": 3000,
   "timeout": 7200,
   "disable_thinking": true,
   "options": {
-    "num_ctx": 20000
+    "num_ctx": 16000
   },
   "tokenizer": {
     "type": "huggingface",

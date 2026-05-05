@@ -466,8 +466,34 @@ def intelligent_chunk_redivision(chunk_content: str, max_tokens: int,
     return validated_chunks
 
 def _is_empty_response(content: str) -> bool:
-    """LLM returned a syntactically valid but empty array (`[]`)."""
-    return bool(content) and content.strip() in ('[]', '[ ]', '')
+    """LLM returned no content or a syntactically valid but empty array (`[]`)."""
+    if not content:
+        return True
+    return content.strip() in ('[]', '[ ]', '')
+
+
+def _detect_underextraction(chunk_content: str, num_extracted: int,
+                             profile_config: Dict[str, Any]) -> bool:
+    """
+    Local LLMs (gemma4/mistral 7B) often "lost-in-the-middle" on large chunks:
+    the response parses as valid JSON but contains far fewer vulnerabilities
+    than the chunk actually has. We catch this by comparing the count of
+    scanner markers (e.g. NVT:) in the chunk against the number of items the
+    LLM returned. If the LLM returned less than half the markers it saw,
+    treat as a soft failure and force redivision.
+    """
+    if not profile_config:
+        return False
+    marker_pattern = profile_config.get('chunking', {}).get('marker_pattern')
+    if not marker_pattern:
+        return False
+    try:
+        markers = len(re.findall(marker_pattern, chunk_content, flags=re.MULTILINE))
+    except re.error:
+        return False
+    if markers < 2:
+        return False
+    return num_extracted * 2 < markers
 
 
 def _invoke_validate_log(llm, prompt: str, chunk_content: str, max_tokens: int,
@@ -598,12 +624,22 @@ def robust_chunk_processing(doc_chunk: TokenChunk, llm, profile_config: Dict[str
             )
             total_tokens_output += extra_tokens
             if retry_validation:
-                return {'vulnerabilities': retry_validation['json_data'],
-                        'tokens_output': total_tokens_output}
+                n = len(retry_validation['json_data']) if isinstance(retry_validation.get('json_data'), list) else 0
+                if not _detect_underextraction(doc_chunk.page_content, n, profile_config):
+                    return {'vulnerabilities': retry_validation['json_data'],
+                            'tokens_output': total_tokens_output}
+                tqdm.write(f"[CHUNK] Underextraction detected after retry ({n} vulns vs many markers). Forcing redivision.")
+                validation = retry_validation
+                validation['needs_redivision'] = True
 
         if validation['json_valid'] and validation['token_valid']:
-            return {'vulnerabilities': validation['json_data'],
-                    'tokens_output': total_tokens_output}
+            n = len(validation['json_data']) if isinstance(validation.get('json_data'), list) else 0
+            if _detect_underextraction(doc_chunk.page_content, n, profile_config):
+                tqdm.write(f"[CHUNK] Underextraction detected ({n} vulns vs many markers). Forcing redivision.")
+                validation['needs_redivision'] = True
+            else:
+                return {'vulnerabilities': validation['json_data'],
+                        'tokens_output': total_tokens_output}
 
         # Invalid JSON but chunk size is OK — retry without redivision
         if not validation['needs_redivision']:
@@ -655,7 +691,30 @@ def robust_chunk_processing(doc_chunk: TokenChunk, llm, profile_config: Dict[str
                         sub_validation = retry_validation
 
                 if sub_validation['json_valid']:
-                    all_vulnerabilities.extend(sub_validation['json_data'])
+                    sub_data = sub_validation['json_data'] or []
+                    if _detect_underextraction(chunk_content, len(sub_data), profile_config):
+                        tqdm.write(f"[SUB-CHUNK {idx + 1}] Underextraction detected ({len(sub_data)} vulns vs many markers). Splitting further.")
+                        deeper = split_text_to_subchunks(
+                            chunk_content,
+                            max(len(chunk_content) // 2, 1000),
+                            profile_config=profile_config,
+                        )
+                        for d_idx, d_content in enumerate(deeper):
+                            d_prompt = build_prompt(TokenChunk(d_content), profile_config)
+                            try:
+                                d_content_resp, d_tokens, d_validation = _invoke_validate_log(
+                                    llm, d_prompt, d_content, max_tokens, tokenizer,
+                                    num_predict, debug_mode,
+                                    {**sub_debug_base, 'chunk_idx': idx * 100 + d_idx, 'retry_count': 0}
+                                )
+                                total_tokens_output += d_tokens
+                                if d_validation['json_valid']:
+                                    all_vulnerabilities.extend(d_validation['json_data'] or [])
+                            except Exception as e:
+                                tqdm.write(f"[SUB-CHUNK {idx + 1}.{d_idx + 1}] Error: {e}")
+                                continue
+                    else:
+                        all_vulnerabilities.extend(sub_data)
                 else:
                     tqdm.write(f"[CHUNK] Subchunk {idx + 1} did not return valid JSON.")
             except Exception as e:
