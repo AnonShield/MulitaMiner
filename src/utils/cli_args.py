@@ -11,6 +11,8 @@ def parse_arguments() -> argparse.Namespace:
                        help='Scanner profile name (e.g., "openvas"). Loads the corresponding .json from src/configs/scanners/.')
     parser.add_argument('--llm', default='gpt4', 
                        help='LLM configuration name (e.g., "llama3"). Loads the corresponding .json from src/configs/llms/.')
+    parser.add_argument('--use-md', dest='use_md', action='store_true',
+                       help='Use Markdown extraction (pymupdf4llm) instead of visual layout (pdfplumber)')
     
     # Conversion options group
     conversion_group = parser.add_argument_group('Conversion & Output Options')

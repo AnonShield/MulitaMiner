@@ -351,5 +351,175 @@ def save_visual_layout(content, pdf_path, process_id=None):
          print(f"Error saving visual layout: {e}")
          return None
 
-def load_pdf_with_pypdf2(pdf_path):
-     return extract_visual_layout_from_pdf(pdf_path)
+def extract_pymupdf_text(pdf_path):
+     """
+     Extract PDF content using PyMuPDF dict blocks method (best preservation).
+     Returns two documents: [summary, extraction_text]
+     """
+     try:
+         import fitz
+     except ImportError:
+         print("[ERROR] pymupdf not installed. Install with: pip install pymupdf")
+         return None
+     
+     print(f"Extracting text via PyMuPDF: {os.path.basename(pdf_path)}")
+     try:
+         doc = fitz.open(pdf_path)
+         
+         # Use dict blocks method for best content preservation
+         full_text = ""
+         for page_num, page in enumerate(doc):
+             try:
+                 page_dict = page.get_text("dict")
+                 if isinstance(page_dict, dict) and 'blocks' in page_dict:
+                     for block in page_dict['blocks']:
+                         if 'lines' in block:
+                             for line in block['lines']:
+                                 for span in line['spans']:
+                                     text = span.get('text', '')
+                                     full_text += text
+                                 full_text += '\n'
+                         elif block.get('type') == 1:  # Image block
+                             continue
+             except Exception as e:
+                 print(f"Warning: Error processing page {page_num + 1}: {e}")
+                 continue
+         
+         doc.close()
+         
+         if not full_text or not full_text.strip():
+             print("[ERROR] No text extracted from PDF.")
+             return None
+         
+         print(f"[PYMUPDF] Total extraction length: {len(full_text)} characters")
+         
+         # Identify scanner type
+         scanner = None
+         if 'openvas' in os.path.basename(pdf_path).lower():
+             scanner = 'openvas'
+         elif 'tenable' in os.path.basename(pdf_path).lower():
+             scanner = 'tenable'
+         
+         # Find start of first vulnerability (same logic as pdfplumber)
+         sumario = ''
+         texto_extracao = full_text
+         
+         if scanner == 'openvas':
+             marker_pattern = r'^\s*NVT:'
+             match_inicio_vuln = re.search(marker_pattern, full_text, re.MULTILINE)
+             if match_inicio_vuln:
+                 start_pos = match_inicio_vuln.start()
+                 sumario = full_text[:start_pos]
+                 texto_extracao = full_text[start_pos:]
+                 print(f"[PYMUPDF] OpenVAS: Summary extracted using marker '{marker_pattern}' at {start_pos}")
+             else:
+                 sumario = ''
+                 texto_extracao = full_text
+                 print(f"[PYMUPDF] OpenVAS: No marker found. Using full text.")
+         
+         elif scanner == 'tenable':
+             # Same patterns as pdfplumber
+             export_marker = 'Web Application Scanning Detailed Scan Export:'
+             early_patterns = [
+                 re.compile(r'VULNERABILITY\s+(CRITICAL|HIGH|MEDIUM|LOW|INFO)\s+PLUGIN\s+ID\s+\d+', re.IGNORECASE),
+                 re.compile(r'CVSSV[34]\s+BASE\s+SCORE\s+[\d.]+', re.IGNORECASE),
+                 re.compile(r'PUBLICATION\s+DATE\s+\d{4}-\d{2}-\d{2}', re.IGNORECASE),
+             ]
+             
+             earliest_pos = len(full_text)
+             for pattern in early_patterns:
+                 m = pattern.search(full_text)
+                 if m and m.start() < earliest_pos:
+                     earliest_pos = m.start()
+             
+             if earliest_pos < len(full_text):
+                 last_export_pos = full_text.rfind(export_marker, 0, earliest_pos)
+                 if last_export_pos != -1:
+                     line_start_export = full_text.rfind('\n', 0, last_export_pos)
+                     cut_pos = line_start_export + 1 if line_start_export != -1 else 0
+                 else:
+                     cut_pos = earliest_pos
+                 
+                 sumario = full_text[:cut_pos].rstrip()
+                 texto_extracao = full_text[cut_pos:]
+                 texto_extracao = re.sub(r'Web Application Scanning Detailed Scan Export:[^\n]*', '', texto_extracao)
+                 print(f"[PYMUPDF] Tenable WAS: Summary extracted at {cut_pos}")
+             else:
+                 sumario = ''
+                 texto_extracao = full_text
+                 print("[PYMUPDF] Tenable WAS: No marker found. Using full text.")
+         else:
+             sumario = ''
+             texto_extracao = full_text
+             print("[PYMUPDF] Scanner not identified. Using full content.")
+         
+         # Create documents
+         documentos = []
+         
+         if sumario.strip():
+             documentos.append(Document(
+                 page_content=sumario,
+                 metadata={
+                     "source": pdf_path,
+                     "pages": "SUMARIO",
+                     "extraction_method": "pymupdf_dict_blocks_SUMMARY"
+                 }
+             ))
+         else:
+             documentos.append(Document(
+                 page_content="",
+                 metadata={
+                     "source": pdf_path,
+                     "pages": "SUMARIO",
+                     "extraction_method": "pymupdf_dict_blocks_SUMMARY"
+                 }
+             ))
+         
+         documentos.append(Document(
+             page_content=texto_extracao,
+             metadata={
+                 "source": pdf_path,
+                 "pages": "EXTRACAO",
+                 "extraction_method": "pymupdf_dict_blocks_EXTRACTION"
+             }
+         ))
+         
+         if not texto_extracao or not texto_extracao.strip():
+             print("[ERROR] No extraction text available.")
+             return None
+         
+         return documentos
+         
+     except Exception as e:
+         print(f"[ERROR] Error extracting with PyMuPDF: {e}")
+         import traceback
+         traceback.print_exc()
+         return None
+
+
+def extract_markdown_from_pdf(pdf_path):
+     """
+     Extract PDF content using PyMuPDF dict blocks (improved method).
+     Returns two documents: [summary, extraction_text]
+     
+     Note: Previously used pymupdf4llm.to_markdown(), but dict blocks method
+     extracts 3-4x more content, so switching to that for better vulnerability detection.
+     """
+     return extract_pymupdf_text(pdf_path)
+
+
+def load_pdf_with_pypdf2(pdf_path, method='pdfplumber'):
+     """
+     Load PDF using the specified extraction method.
+     
+     Args:
+         pdf_path: Path to PDF file
+         method: 'pdfplumber' (visual layout) or 'markdown' (pymupdf4llm)
+     
+     Returns:
+         List of Document objects [summary, extraction_text]
+     """
+     if method.lower() == 'markdown':
+         return extract_markdown_from_pdf(pdf_path)
+     else:
+         return extract_visual_layout_from_pdf(pdf_path)

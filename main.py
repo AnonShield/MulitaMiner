@@ -152,10 +152,12 @@ def save_results(vulnerabilities: list, output_file: str, profile_config: dict =
         with open(output_file, 'w', encoding='utf-8') as f:
             json.dump(final_vulns, f, indent=2, ensure_ascii=False)
         
+        pdf_extraction_method = os.environ.get("PDF_EXTRACTION_METHOD", "PDFPLUMBER")
         print("\n" + "="*60)
         print("[SUMMARY] EXTRACTION COMPLETE")
         print("="*60)
         print(f"Output file: {output_file}")
+        print(f"PDF Extraction Method: {pdf_extraction_method}")
         print(f"Final vulnerabilities: {len(final_vulns)}")
         if removed_vulns:
             print(f"  (removed {len(removed_vulns)} invalid)")
@@ -265,14 +267,20 @@ def main():
         reserve_response = 1000
     reserve_response = int(reserve_response)
     
+    # Set extraction method variable for identification
+    extraction_method = "MARKDOWN" if getattr(args, 'use_md', False) else "PDFPLUMBER"
+    os.environ["PDF_EXTRACTION_METHOD"] = extraction_method
+    
     print(f"\n{'='*60}")
     print(f"[CONFIG] LLM: {llm_config.get('model')}")
     print(f"[CONFIG] Max tokens: {max_tokens}")
     print(f"[CONFIG] Reserve for response: {reserve_response}")
+    print(f"[CONFIG] PDF Extraction Method: {extraction_method}")
+    print(f"[CONFIG] Use Markdown: {getattr(args, 'use_md', False)}")
     print(f"{'='*60}\n")
 
-    # Extração do PDF com layout visual
-    documents = load_pdf_with_pypdf2(args.input)
+    # Extração do PDF com método selecionado
+    documents = load_pdf_with_pypdf2(args.input, method=extraction_method.lower())
     if not documents or len(documents) < 2:
         print("[ERROR] No text could be extracted from the PDF.")
         return

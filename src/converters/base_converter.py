@@ -32,7 +32,7 @@ class BaseConverter(ABC):
     
     def load_json_data(self, json_file_path: str) -> List[Dict[str, Any]]:
         """
-        Load JSON data from file
+        Load JSON data from file (supports both old format and new format with metadata)
         
         Args:
             json_file_path: Path to JSON file
@@ -44,10 +44,21 @@ class BaseConverter(ABC):
             with open(json_file_path, 'r', encoding='utf-8') as f:
                 data = json.load(f)
             
-            if not isinstance(data, list):
-                raise ValueError("JSON deve conter uma lista de vulnerabilidades")
+            # Support both old format (list) and new format (with metadata)
+            if isinstance(data, dict) and 'vulnerabilities' in data:
+                # New format with metadata
+                vulnerabilities = data.get('vulnerabilities', [])
+                metadata = data.get('metadata', {})
+                print(f"[INFO] Loaded JSON with metadata. Extraction method: {metadata.get('pdf_extraction_method', 'unknown')}")
+                if not isinstance(vulnerabilities, list):
+                    raise ValueError("JSON deve conter uma lista de vulnerabilidades em 'vulnerabilities'")
+                return vulnerabilities
+            elif isinstance(data, list):
+                # Old format (backward compatibility)
+                return data
+            else:
+                raise ValueError("JSON format not recognized. Expected list or dict with 'vulnerabilities' key")
             
-            return data
         except FileNotFoundError:
             raise FileNotFoundError(f"Arquivo JSON não encontrado: {json_file_path}")
         except json.JSONDecodeError as e:
