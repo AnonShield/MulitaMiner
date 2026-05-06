@@ -312,7 +312,7 @@ def smart_chunk_vulnerabilities(
     
     # No pair-handling adjustment - Tenable always has instances field
     max_vulns_adjusted = max_vulnerabilities_per_chunk
-    
+
     # If no marker pattern, fallback to simple token-based chunking
     if not marker_pattern:
         return get_token_based_chunks(
@@ -322,12 +322,12 @@ def smart_chunk_vulnerabilities(
             tokenizer=tokenizer,
             profile_config=profile_config
         )
-    
+
     # Parse text into lines
     lines = text.splitlines(keepends=True)
     if not lines:
         return [TokenChunk(text)]
-    
+
     # Find vulnerability boundaries via marker
     marker_indices = []
     for i, line in enumerate(lines):
@@ -359,7 +359,7 @@ def smart_chunk_vulnerabilities(
     # Build chunks respecting ALL constraints simultaneously
     chunks = []
     i = 0
-    
+
     while i < len(marker_indices):
         current_chunk_lines = []
         current_chunk_tokens = 0
@@ -384,11 +384,23 @@ def smart_chunk_vulnerabilities(
             if vulns_in_chunk > 0 and (would_exceed_tokens or would_exceed_chars or would_exceed_vulns):
                 break
             
-            # If this single vuln exceeds token limit on its own, include it anyway
-            # but save the chunk immediately - let intelligent_chunk_redivision handle subdivision if needed
-            if vuln_tokens > chunk_size_tokens and vulns_in_chunk == 0:
-                tqdm.write(f"[CHUNK] Warning: Vulnerability spans {vuln_tokens} tokens (limit: {chunk_size_tokens}). "
-                           "Sending anyway for redivision if needed.")
+            # If this single vuln exceeds ANY size limit on its own, include it anyway
+            # but save the chunk immediately - let intelligent_chunk_redivision handle subdivision if needed.
+            # Covers both token overflow AND char overflow. Without the char clause, a vuln_text
+            # larger than optimized_target_chars but smaller than chunk_size_tokens would loop
+            # forever: would_exceed_chars=True breaks inner loop without advancing i, and outer
+            # loop restarts on the same marker indefinitely.
+            single_vuln_exceeds = (
+                vuln_tokens > chunk_size_tokens
+                or len(vuln_text) > optimized_target_chars
+            )
+            if single_vuln_exceeds and vulns_in_chunk == 0:
+                tqdm.write(
+                    f"[CHUNK] Warning: Vulnerability alone exceeds limits "
+                    f"(tokens={vuln_tokens}/{chunk_size_tokens}, "
+                    f"chars={len(vuln_text):,}/{optimized_target_chars:,}). "
+                    "Sending anyway for redivision if needed."
+                )
                 current_chunk_lines.extend(vuln_lines)
                 current_chunk_tokens += vuln_tokens
                 vulns_in_chunk += 1

@@ -89,19 +89,22 @@ def _load_tokenizer(tokenizer_config: dict):
 def count_tokens(text: str, tokenizer=None) -> int:
     """
     Count tokens in text, agnostic to tokenizer type.
-    
+
     Args:
         text: Text to count tokens for
         tokenizer: Tokenizer object (tiktoken or HF AutoTokenizer)
-    
+
     Returns:
         int: Number of tokens
     """
+    if not text:
+        return 0
+
     if tokenizer is None:
         warnings.warn(
             "count_tokens was called without a tokenizer. Falling back to default 'cl100k_base'.",
             RuntimeWarning
         )
         tokenizer = tiktoken.get_encoding("cl100k_base")
-    
+
     return len(tokenizer.encode(text))
