@@ -29,16 +29,11 @@ def parse_arguments_common(require_model: bool = False):
         parser.error(f"Baseline file not found: {args.baseline_file}")
     if not os.path.isfile(args.extraction_file):
         parser.error(f"Extraction file not found: {args.extraction_file}")
-    # If not specified, set default directory based on metric detected by script name
+    # If --output-dir is not specified, fall back to metrics/results/. Per-run
+    # outputs are normally written into the run's own directory, so this only
+    # fires when the script is invoked directly without that flag.
     if not args.output_dir:
-        import sys
-        script_name = Path(sys.argv[0]).name.lower()
-        if 'bert' in script_name:
-            args.output_dir = str(Path('metrics/bert/results'))
-        elif 'rouge' in script_name:
-            args.output_dir = str(Path('metrics/rouge/results'))
-        else:
-            args.output_dir = str(Path('metrics/results'))
+        args.output_dir = str(Path('metrics/results'))
     output_dir = Path(args.output_dir)
     output_dir.mkdir(parents=True, exist_ok=True)
     return args

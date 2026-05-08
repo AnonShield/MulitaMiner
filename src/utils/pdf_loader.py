@@ -5,10 +5,6 @@ from langchain_core.documents import Document
 import pdfplumber
 import datetime
 
-# OpenVAS PDFs (LaTeX-generated, Computer Modern font) have a broken ToUnicode
-# CMap: ligatures and quote glyphs extract as "(cid:<N>)" literals. Removing
-# them blindly destroys words ("affected" → "aected"). Map them to text.
-# Evidence collected from the bBWA, JuiceShop, and artifactory OpenVAS reports.
 _CID_MAP = {
     16: '"',
     17: '"',
@@ -18,7 +14,6 @@ _CID_MAP = {
     30: 'ffi',
     31: 'ffl',
 }
-
 
 def _restore_cid_glyphs(text: str) -> str:
     # Wrap continuation: "word-part\n   (cid:44)→rest" is the same word split.

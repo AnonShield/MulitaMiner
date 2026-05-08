@@ -189,7 +189,10 @@ def main():
     parser.add_argument('--scanner', type=str, default=None,
                         help='Scanner to use (e.g., openvas, tenable).')
     parser.add_argument('--evaluation-methods', type=str, nargs='+', default=None,
-                        help='List of evaluation methods (e.g., bert, rouge).')
+                        help=('List of evaluation methods. Available: bert, rouge, entity, '
+                              'schema, severity, coverage. Use "all" to run every method '
+                              '(recommended). Producer/consumer dependencies are resolved '
+                              'automatically (e.g. requesting only "coverage" auto-adds "bert").'))
     parser.add_argument('--runs-per-model', type=int, default=None,
                         help='Number of runs per model.')
     parser.add_argument('--allow-duplicates', action='store_true',

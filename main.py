@@ -177,21 +177,79 @@ def save_results(vulnerabilities: list, output_file: str, profile_config: dict =
         }
 
 
+# Dispatch table for evaluation methods. Each entry is a list:
+# ``[script_path, *fixed_args]``. The fixed args are appended after the
+# common ones (--baseline-file etc.) and let us route ``bert`` and ``rouge``
+# to the unified pipeline with the right ``--scorer`` without keeping
+# wrapper scripts around. Adding a new pipeline = one new entry here.
+_UNIFIED = os.path.join('metrics', 'pipelines', 'compare_extractions.py')
+METRIC_SCRIPTS: dict[str, list[str]] = {
+    'bert':     [_UNIFIED, '--scorer', 'bertscore'],
+    'rouge':    [_UNIFIED, '--scorer', 'rouge_l'],
+    'entity':   [os.path.join('metrics', 'entity',    'compare_extractions_entity.py')],
+    'schema':   [os.path.join('metrics', 'pipelines', 'schema_check.py')],
+    'severity': [os.path.join('metrics', 'pipelines', 'confusion_severity.py')],
+    'coverage': [os.path.join('metrics', 'pipelines', 'coverage.py')],
+}
+
+# Order used when the user requests ``all``. Schema runs first (operates on
+# the raw JSON, no dependencies); bert/rouge produce the matched pairs that
+# entity, severity and coverage metrics consume.
+ALL_METHODS_ORDER: list[str] = ['schema', 'bert', 'rouge', 'entity', 'severity', 'coverage']
+
+# Methods that need a bert_comparison_*.xlsx or rouge_comparison_*.xlsx
+# already in the run directory before they execute.
+_DEPS_ON_PAIRS: set[str] = {'entity', 'severity', 'coverage'}
+
+
+def expand_evaluation_methods(methods: list[str]) -> list[str]:
+    """Resolve the user's request into a canonical execution list.
+
+    Behaviour:
+        * ``'all'`` expands to every registered method.
+        * Unknown methods are warned and dropped.
+        * If any consumer (``entity``/``severity``/``paper``) is requested
+          without a producer (``bert``/``rouge``) being part of the list,
+          ``bert`` is auto-added so the consumer has matched pairs to read.
+        * The returned list is ordered by :data:`ALL_METHODS_ORDER`,
+          regardless of the order the user passed — this guarantees that
+          producers run before consumers even when the input is unordered.
+    """
+    requested: set[str] = set()
+    for m in methods:
+        if m == 'all':
+            requested.update(ALL_METHODS_ORDER)
+        elif m in METRIC_SCRIPTS:
+            requested.add(m)
+        else:
+            print(f"[WARN] Unknown evaluation method: {m} (skipping)")
+
+    if (requested & _DEPS_ON_PAIRS) and not (requested & {'bert', 'rouge'}):
+        print("[INFO] Auto-adding 'bert' because entity/severity/coverage need matched pairs.")
+        requested.add('bert')
+
+    return [m for m in ALL_METHODS_ORDER if m in requested]
+
+
 def run_evaluation_method(args: argparse.Namespace, extraction_output_path: str, method: str):
     """
     Run metrics evaluation script as separate process.
-    
+
     Args:
         args: Command line arguments containing --baseline_path and --llm
         extraction_output_path: Path to generated .xlsx extraction file
-        method: Evaluation method to run (bert, rouge, entity)
+        method: Evaluation method to run (key in METRIC_SCRIPTS)
     """
     print(f"\n{'='*60}")
     print(f"[METRICS] Evaluating with: {method.upper()}")
     print(f"{'='*60}")
 
-    script_path = os.path.join('metrics', method, f'compare_extractions_{method}.py')
+    entry = METRIC_SCRIPTS.get(method)
+    if entry is None:
+        print(f"[ERROR] Unknown evaluation method: {method}")
+        return
 
+    script_path, *fixed_args = entry
     if not os.path.isfile(script_path):
         print(f"Error: Evaluation script not found at '{script_path}'")
         return
@@ -204,7 +262,8 @@ def run_evaluation_method(args: argparse.Namespace, extraction_output_path: str,
         script_path,
         '--baseline-file', args.baseline_path,
         '--extraction-file', extraction_output_path,
-        '--output-dir', output_dir
+        '--output-dir', output_dir,
+        *fixed_args,
     ]
     
     # Pass LLM model name to metrics script
@@ -380,11 +439,16 @@ def main():
         metric_duration = 0
         if args.evaluation_methods and args.baseline_path:
             if xlsx_output_path and os.path.isfile(xlsx_output_path):
-                # Run each evaluation method
-                for method in args.evaluation_methods:
+                # Expand 'all', dedupe, auto-add producer dependencies, and
+                # always include 'entity' (legacy default — runs alongside
+                # any explicit list). The final list is reordered by
+                # ALL_METHODS_ORDER so producers always run before consumers.
+                methods = expand_evaluation_methods(args.evaluation_methods)
+                if 'entity' not in methods:
+                    methods.append('entity')
+                methods = [m for m in ALL_METHODS_ORDER if m in methods]
+                for method in methods:
                     run_evaluation_method(args, xlsx_output_path, method)
-                # Always run entity metrics if any evaluation methods are specified
-                run_evaluation_method(args, xlsx_output_path, 'entity')
                 metric_duration = time.time() - metric_start
             else:
                 print("[ERROR] Evaluation requested, but no .xlsx file was generated for evaluation.")
