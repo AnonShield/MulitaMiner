@@ -46,26 +46,27 @@ class ScannerStrategy(ABC):
         """
         return [], None, None, None
     
-    def create_blocks(self, report_text: str, temp_dir: str, initial_context: Tuple) -> List[Dict]:
+    def create_blocks(self, report_text: str, temp_dir: str, initial_context: Tuple, output_ext: str = "txt") -> List[Dict]:
         """
         Create blocks from report text. Override for custom logic.
         Default: Creates a single block with entire report.
-        
+
         Args:
             report_text: Text extracted from report
             temp_dir: Directory to save block files
             initial_context: Tuple from extract_visual_context()
-        
+            output_ext: Extension to use for block files (e.g. "txt", "md")
+
         Returns:
             List of block dictionaries with structure:
             {'file': path, 'port': port, 'protocol': protocol, 'severity': severity}
         """
         import os
-        
+
         initial_context_lines, initial_severity, initial_port, initial_protocol = initial_context
-        
+
         # Default: single block with all text
-        block_path = os.path.join(temp_dir, f"block_{self.scanner_name}_1.txt")
+        block_path = os.path.join(temp_dir, f"block_{self.scanner_name}_1.{output_ext}")
         with open(block_path, 'w', encoding='utf-8') as f:
             if initial_context_lines:
                 for ctx_line in initial_context_lines:

@@ -325,15 +325,15 @@ def extract_visual_layout_from_pdf(pdf_path):
          print(f"Error extracting visual layout: {e}")
          return None
 
-def save_visual_layout(content, pdf_path, process_id=None):
+def save_visual_layout(content, pdf_path, process_id=None, output_ext="txt"):
      """
-     Salva o layout visual extraído em arquivo TXT para referência.
+     Salva o layout visual extraído em arquivo de texto para referência.
      """
      base_name = os.path.splitext(os.path.basename(pdf_path))[0]
      if process_id:
-         output_visual_path = f"visual_layout_extracted_{base_name}_{process_id}.txt"
+         output_visual_path = f"visual_layout_extracted_{base_name}_{process_id}.{output_ext}"
      else:
-         output_visual_path = f"visual_layout_extracted_{base_name}.txt"
+         output_visual_path = f"visual_layout_extracted_{base_name}.{output_ext}"
      try:
          with open(output_visual_path, 'w', encoding='utf-8') as f:
              # Informative header
@@ -345,6 +345,99 @@ def save_visual_layout(content, pdf_path, process_id=None):
      except Exception as e:
          print(f"Error saving visual layout: {e}")
          return None
+
+def load_pdf_with_marker(pdf_path):
+    """
+    Extract PDF to Markdown using Marker library.
+    Returns a list of Document objects compatible with the rest of the pipeline.
+    """
+    try:
+        from marker.converters.pdf import PdfConverter
+        from marker.models import create_model_dict
+        from marker.output import text_from_rendered
+    except ImportError:
+        print("ERROR: marker-pdf not installed. Install with: pip install marker-pdf")
+        return None
+
+    try:
+        print(f"Extracting PDF with Marker: {os.path.basename(pdf_path)}")
+
+        converter = PdfConverter(artifact_dict=create_model_dict())
+        rendered = converter(pdf_path)
+        full_text, _, _ = text_from_rendered(rendered)
+
+        # Marker injects <span id="page-X-Y"></span> anchors that break
+        # downstream header regexes (e.g. "## <span...>High 9390/tcp").
+        full_text = re.sub(r'<span[^>]*></span>\s*', '', full_text)
+
+        if not full_text or not full_text.strip():
+            print("Warning: No text extracted by Marker. The file may be corrupted or contain only images.")
+            return None
+        
+        # Find table of contents / summary boundary
+        scanner = None
+        if 'openvas' in os.path.basename(pdf_path).lower():
+            scanner = 'openvas'
+        elif 'tenable' in os.path.basename(pdf_path).lower():
+            scanner = 'tenable'
+        
+        # Split into summary and extraction
+        if scanner == 'openvas':
+            # Cut at the first severity header (e.g. "High 25/tcp"). This
+            # avoids losing the first NVT — marker fuses severity + NVT into
+            # a single line ("## High (CVSS: 7.5) NVT: SMTP too long line"),
+            # so a plain "^NVT:" cut would skip that finding entirely. TOC
+            # rows live inside markdown tables and start with "|", so they
+            # don't match.
+            marker_pattern = r'^\s*#*\s*(?:Critical|High|Medium|Low|Log)\s+(?:\d+|general)/[a-zA-Z0-9_-]+'
+            match_inicio_vuln = re.search(marker_pattern, full_text, re.MULTILINE | re.IGNORECASE)
+            if match_inicio_vuln:
+                start_pos = match_inicio_vuln.start()
+                sumario = full_text[:start_pos]
+                texto_extracao = full_text[start_pos:]
+                print(f"[MARKER] Table of contents extracted up to {start_pos} characters.")
+            else:
+                sumario = ''
+                texto_extracao = full_text
+                print(f"[MARKER] No severity header found. Table of contents empty.")
+        elif scanner == 'tenable':
+            # Similar logic for Tenable if a marker is identified
+            sumario = ''
+            texto_extracao = full_text
+            print("[MARKER] Tenable WAS: Treating entire content as extraction.")
+        else:
+            sumario = ''
+            texto_extracao = full_text
+            print("[MARKER] Scanner not identified. Treating entire content as extraction.")
+        
+        # Create documents
+        documentos = []
+        
+        if sumario.strip():
+            documentos.append(Document(
+                page_content=sumario,
+                metadata={
+                    "source": pdf_path,
+                    "pages": "SUMARIO",
+                    "extraction_method": "marker_SUMMARY"
+                }
+            ))
+        
+        documentos.append(Document(
+            page_content=texto_extracao,
+            metadata={
+                "source": pdf_path,
+                "pages": "EXTRACAO",
+                "extraction_method": "marker_EXTRACTION"
+            }
+        ))
+        
+        return documentos if documentos else None
+        
+    except Exception as e:
+        print(f"Error extracting with Marker: {e}")
+        return None
+
 
 def load_pdf_with_pypdf2(pdf_path):
      return extract_visual_layout_from_pdf(pdf_path)

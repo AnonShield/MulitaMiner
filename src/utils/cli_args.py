@@ -19,6 +19,8 @@ def parse_arguments() -> argparse.Namespace:
     conversion_group.add_argument('--convert', choices=['csv', 'xlsx', 'tsv', 'all', 'none'],
                        default='xlsx',
                        help='Convert JSON output to a specific format. Use "all" or "xlsx" for evaluation (default: xlsx).')
+    conversion_group.add_argument('--md', dest='use_markdown', action='store_true',
+                       help='Use Markdown format for PDF text extraction instead of plain text (default: False)')
     conversion_group.add_argument('--csv-delimiter', dest='csv_delimiter', default=',',
                        help='Delimiter for CSV (default: ,)')
     conversion_group.add_argument('--csv-encoding', dest='csv_encoding', default='utf-8-sig',

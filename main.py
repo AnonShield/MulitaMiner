@@ -21,7 +21,8 @@ from tqdm import tqdm
 
 from src.utils.block_creation import create_session_blocks_from_text, extract_vulns_from_blocks, cleanup_temp_blocks
 from src.utils.cli_args import parse_arguments
-from src.utils.pdf_loader import load_pdf_with_pypdf2, save_visual_layout
+from src.utils.pdf_loader import save_visual_layout
+from src.utils.extractors import get_extractor
 from src.utils import pdf_loader, block_creation
 from src.model_management import load_profile, load_llm, init_llm, validate_and_normalize_vulnerability
 from src.converters import execute_conversions
@@ -331,18 +332,34 @@ def main():
     print(f"{'='*60}\n")
 
     # Extração do PDF com layout visual
-    documents = load_pdf_with_pypdf2(args.input)
-    if not documents or len(documents) < 2:
+    print(f"[PDF] Loading PDF from: {args.input}")
+    
+    extractor = get_extractor(getattr(args, 'use_markdown', False))
+    print(f"[PDF] Using extractor: {extractor.__class__.__name__}")
+    result = extractor.extract(args.input, args.scanner)
+
+    if result is None:
         print("[ERROR] No text could be extracted from the PDF.")
         return
 
-    # Salvar layout visual a partir do primeiro documento (sumário)
+    output_ext = result.output_ext
+
+    # Salvar layout visual a partir do sumário
     # Visual layout é independente do LLM - reutilizável para todos
-    visual_file = save_visual_layout(documents[0].page_content, args.input)
+    visual_file = save_visual_layout(result.summary.page_content, args.input, output_ext=output_ext)
     print(f"[LAYOUT] Visual layout saved: {visual_file}")
 
-    # Extração do texto
-    extraction_text = documents[1].page_content
+    extraction_text = result.extraction.page_content
+
+    # Salvar texto completo de extração em arquivo
+    pdf_base_name = os.path.splitext(os.path.basename(args.input))[0]
+    extraction_file = f"extraction_{pdf_base_name}.{output_ext}"
+    try:
+        with open(extraction_file, 'w', encoding='utf-8') as f:
+            f.write(extraction_text)
+        print(f"[EXTRACTION] Full extraction saved: {extraction_file}")
+    except Exception as e:
+        print(f"[WARN] Could not save extraction file: {e}")
 
     # Criação de blocos de sessão com nome único para paralelismo (PRECISA do LLM)
     unique_process_id = args.llm
@@ -351,7 +368,8 @@ def main():
         extraction_text,
         temp_dir=temp_dir,
         visual_layout_path=visual_file,
-        scanner=args.scanner
+        scanner=args.scanner,
+        output_ext=output_ext
     )
     print(f"[BLOCKS] {len(session_blocks)} session blocks created")
 

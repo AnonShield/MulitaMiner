@@ -22,12 +22,17 @@ class TenableWASStrategy(ScannerStrategy):
         re.IGNORECASE
     )
     
-    def create_blocks(self, report_text: str, temp_dir: str, initial_context: Tuple) -> List[Dict]:
+    def create_blocks(self, report_text: str, temp_dir: str, initial_context: Tuple, output_ext: str = "txt") -> List[Dict]:
         """
         Create blocks by severity for Tenable WAS.
-        Strategy: Single pass through text, detecting each header 
+        Strategy: Single pass through text, detecting each header
         "VULNERABILITY <SEVERITY> PLUGIN ID" and assigning content until next header.
+
+        Args:
+            output_ext: Extension to use for block files (e.g. "txt", "md")
         """
+        file_ext = f".{output_ext}"
+        
         severidades = ["CRITICAL", "HIGH", "MEDIUM", "LOW", "INFO"]
         blocks_por_severidade = {s: [] for s in severidades}
         
@@ -71,7 +76,7 @@ class TenableWASStrategy(ScannerStrategy):
         for severidade in severidades:
             bloco = blocks_por_severidade[severidade]
             if bloco:
-                block_path = os.path.join(temp_dir, f"block_tenable_{severidade}.txt")
+                block_path = os.path.join(temp_dir, f"block_tenable_{severidade}{file_ext}")
                 with open(block_path, 'w', encoding='utf-8') as f:
                     f.write('\n'.join(bloco))
                 blocks.append({

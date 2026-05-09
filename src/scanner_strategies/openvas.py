@@ -21,13 +21,13 @@ class OpenVASStrategy(ScannerStrategy):
         """Custom consolidation activates when allow_duplicates=True"""
         return True
     
-    # Constantes para headers
+    # Constantes para headers (com suporte a markdown opcional)
     HEADER_REGEX = re.compile(
-        r"^(?:\d+\.\d+\.\d+\s+)?(Critical|High|Medium|Low|Log)\s+(\d+|general)/([a-zA-Z0-9_-]+)",
+        r"^(?:#+\s+)?(Critical|High|Medium|Low|Log)\s+(\d+|general)/([a-zA-Z0-9_-]+)",
         re.IGNORECASE
     )
     HEADER_REGEX_ALT = re.compile(
-        r"^(Critical|High|Medium|Low|Log)\s+(\d+|general)/([a-zA-Z0-9_-]+)",
+        r"^(?:#+\s+)?(Critical|High|Medium|Low|Log)\s+(\d+|general)/([a-zA-Z0-9_-]+)",
         re.IGNORECASE
     )
     
@@ -70,9 +70,18 @@ class OpenVASStrategy(ScannerStrategy):
         
         return initial_context_lines, initial_severity, initial_port, initial_protocol
     
-    def create_blocks(self, report_text: str, temp_dir: str, initial_context: Tuple) -> List[Dict]:
-        """Parse OpenVAS report and create blocks for each vulnerability."""
+    def create_blocks(self, report_text: str, temp_dir: str, initial_context: Tuple, output_ext: str = "txt") -> List[Dict]:
+        """Parse OpenVAS report and create blocks for each vulnerability.
+
+        Args:
+            report_text: Text extracted from report (may contain markdown)
+            temp_dir: Directory to save block files
+            initial_context: Tuple from extract_visual_context()
+            output_ext: Extension to use for block files (e.g. "txt", "md")
+        """
         initial_context_lines, initial_severity, initial_port, initial_protocol = initial_context
+
+        file_ext = f".{output_ext}"
         
         lines = report_text.splitlines()
         blocks = []
@@ -106,7 +115,7 @@ class OpenVASStrategy(ScannerStrategy):
                     bloco_port = current_port
                     bloco_protocol = current_protocol
                     block_idx += 1
-                    block_path = os.path.join(temp_dir, f"block_{bloco_severity}_{bloco_port}_{bloco_protocol}_{block_idx}.txt")
+                    block_path = os.path.join(temp_dir, f"block_{bloco_severity}_{bloco_port}_{bloco_protocol}_{block_idx}{file_ext}")
                     with open(block_path, 'w', encoding='utf-8') as f:
                         if len(blocks) == 0 and initial_context_lines:
                             for ctx_line in initial_context_lines:
@@ -141,7 +150,7 @@ class OpenVASStrategy(ScannerStrategy):
                 if bloco_severity is None and initial_severity is not None:
                     bloco_severity = initial_severity
             
-            block_path = os.path.join(temp_dir, f"block_{bloco_severity}_{bloco_port}_{bloco_protocol}_{block_idx}.txt")
+            block_path = os.path.join(temp_dir, f"block_{bloco_severity}_{bloco_port}_{bloco_protocol}_{block_idx}{file_ext}")
             with open(block_path, 'w', encoding='utf-8') as f:
                 if bloco_is_first and initial_context_lines:
                     for ctx_line in initial_context_lines:

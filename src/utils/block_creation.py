@@ -6,26 +6,33 @@ import tiktoken
 from .chunking import retry_chunk_with_subdivision
 from src.model_management import get_tokenizer, count_tokens
 
-def create_session_blocks_from_text(report_text: str, temp_dir: str = 'temp_blocks', 
-                                    visual_layout_path: str = None, scanner: str = 'openvas') -> list:
+def create_session_blocks_from_text(report_text: str, temp_dir: str = 'temp_blocks',
+                                    visual_layout_path: str = None, scanner: str = 'openvas', output_ext: str = "txt") -> list:
     """
     Create temporary session block files from extracted report text.
     Uses scanner-specific strategies for block creation.
-    
+
+    Args:
+        report_text: Extracted report text
+        temp_dir: Directory to store temporary blocks
+        visual_layout_path: Path to visual layout file (if applicable)
+        scanner: Scanner name (e.g., 'openvas')
+        output_ext: Extension for block files (e.g. "txt", "md")
+
     Fallback: If scanner has no custom strategy, creates a single block with all text.
     """
     from src.scanner_strategies.registry import get_strategy
-    
+
     if os.path.exists(temp_dir):
         shutil.rmtree(temp_dir)
     os.makedirs(temp_dir, exist_ok=True)
-    
+
     # Get scanner strategy
     strategy = get_strategy(scanner)
-    
+
     if strategy is None:
         # Fallback for unknown scanner: create single block
-        block_path = os.path.join(temp_dir, f"block_generic.txt")
+        block_path = os.path.join(temp_dir, f"block_generic.{output_ext}")
         with open(block_path, 'w', encoding='utf-8') as f:
             f.write(report_text)
         return [{
@@ -34,14 +41,14 @@ def create_session_blocks_from_text(report_text: str, temp_dir: str = 'temp_bloc
             'protocol': None,
             'severity': None
         }]
-    
+
     # Extract visual context if scanner requires it
     context = ([], None, None, None)
     if strategy.requires_visual_layout and visual_layout_path:
         context = strategy.extract_visual_context(visual_layout_path)
-    
+
     # Delegate block creation to strategy
-    return strategy.create_blocks(report_text, temp_dir, context)
+    return strategy.create_blocks(report_text, temp_dir, context, output_ext=output_ext)
 
 def extract_vulns_from_blocks(blocks: list, llm, profile_config: dict,
                                chunk_func, llm_config: dict = None, pdf_name: str = "unknown",
