@@ -247,15 +247,15 @@ python3 metrics/rouge/compare_extractions_rouge.py --baseline-file test/openvas/
 # Run full experiment suite
 
 # Windows
-python tools/run_experiments.py --input-dir test\openvas --llms deepseek --scanners openvas --evaluation-methods bert rouge --runs-per-model 5 --allow-duplicates true
+python tools/run_experiments.py --input-dir test\openvas --llm deepseek --scanner openvas --metrics bert rouge --runs-per-model 5 --allow-duplicates
 
 # Linux/macOS
-python3 tools/run_experiments.py --input-dir test/openvas --llms deepseek --scanners openvas --evaluation-methods bert rouge --runs-per-model 5 --allow-duplicates true
+python3 tools/run_experiments.py --input-dir test/openvas --llm deepseek --scanner openvas --metrics bert rouge --runs-per-model 5 --allow-duplicates
 ```
 
 **Expected time**: ~40 minutes
 
-**Expected result**: Organized results in `results_runs/` with extracted vulnerabilities (JSON/XLSX per run), BERTScore and ROUGE-L evaluation reports, and a final aggregated report with token usage and cost estimation. Charts and visualizations (heatmaps, stacked similarity plots) are saved in `plot_runs/`.
+**Expected result**: Organized results in `results_runs/` with extracted vulnerabilities (JSON per run; pass `--convert xlsx` to also emit XLSX), BERTScore and ROUGE-L evaluation reports, an `aggregated_metrics.xlsx` summary, and a Markdown final report with token usage and cost estimation. Charts and visualizations are saved in `plot_runs/`.
 
 > **Note**:
 > For practical reasons (time, token cost, and infrastructure), this experiment does not use the same set of reports and LLMs as the paper. Here, a simplified version was used: only 1 report and 1 LLM (deepseek), chosen for its cost-effectiveness and performance.

@@ -18,9 +18,12 @@ Sources collected (whatever exists in the run dir):
 
 Usage::
 
-    python -m metrics.aggregators.multi_run
-        --root results_runs results_runs_V2
-        --output aggregated_metrics.xlsx
+    # Aggregate one root at a time (each root gets its own xlsx):
+    python -m metrics.aggregators.multi_run --root results_runs_v3
+    python -m metrics.aggregators.multi_run --root results_runs_v2
+
+    # Cross-version comparison merges them at plot time, no need to
+    # combine the xlsx files first.
 """
 from __future__ import annotations
 
@@ -111,6 +114,19 @@ def _read_rouge(run: RunArtifacts) -> list[dict]:
     )
 
 
+def _read_token_f1(run: RunArtifacts) -> list[dict]:
+    """Token-F1 (SQuAD-style) per text field — third leg of the §3.4 trio."""
+    path = run.first("token_f1")
+    if path is None:
+        return []
+    return _read_summary_xlsx(
+        path, source="token_f1", run=run,
+        value_columns=("Avg_Token_F1", "Std_Token_F1", "Min_Token_F1",
+                       "Max_Token_F1", "Median_Token_F1"),
+        field_col="Column",
+    )
+
+
 def _read_entity(run: RunArtifacts) -> list[dict]:
     path = run.first("entity")
     if path is None:
@@ -132,7 +148,7 @@ def _read_severity(run: RunArtifacts) -> list[dict]:
     except (ValueError, FileNotFoundError):
         return []
     rows = []
-    for col in ("macro_F1", "accuracy", "n_pairs"):
+    for col in ("macro_F1", "coverage_aware_macro_F1", "accuracy", "n_pairs"):
         if col in df.columns and not df.empty:
             rows.append(_emit(run, "severity", "_overall", col, float(df.iloc[0][col])))
     return rows
@@ -166,6 +182,16 @@ def _read_coverage(run: RunArtifacts) -> list[dict]:
 
 
 def _read_schema(run: RunArtifacts) -> list[dict]:
+    """Collect evaluative schema metrics. Tautological cross-version metrics
+    (type_coercion_rate, canon→V3 conformance, V3-anchored extras) were
+    intentionally dropped — they reward V3 by definition and don't measure
+    pipeline quality. See ``schema_check.py`` docstring for the rationale.
+
+    Backwards compatibility: legacy schema_report JSONs (pre-cleanup) carried
+    both the canon→V3 view at top level and a nested ``native`` block.
+    New reports carry the native metrics at top level directly. This reader
+    handles both: if ``native`` is present, prefer it; otherwise read top-level.
+    """
     path = run.first("schema")
     if path is None:
         return []
@@ -174,18 +200,23 @@ def _read_schema(run: RunArtifacts) -> list[dict]:
     except (json.JSONDecodeError, OSError):
         return []
     rows = []
-    for col in ("schema_conformance_rate", "type_coercion_rate",
-                "extra_fields_rate", "n_records"):
-        if col in report:
-            rows.append(_emit(run, "schema", "_overall", col, float(report[col])))
     rows.append(_emit(run, "schema", "_overall", "json_valid",
                       1.0 if report.get("json_valid") else 0.0))
+    if "n_records" in report:
+        rows.append(_emit(run, "schema", "_overall", "n_records", float(report["n_records"])))
+    # Prefer the native block for backwards compat; fall back to top-level
+    # (new reports only carry native, top-level == native).
+    src = report.get("native") if isinstance(report.get("native"), dict) else report
+    for col in ("schema_conformance_rate", "schema_field_conformance_rate", "extra_fields_rate"):
+        if col in src:
+            rows.append(_emit(run, "schema", "_overall", col, float(src[col])))
     return rows
 
 
 _READERS = {
     "bert": _read_bert,
     "rouge": _read_rouge,
+    "token_f1": _read_token_f1,
     "entity": _read_entity,
     "severity": _read_severity,
     "coverage": _read_coverage,
@@ -221,16 +252,26 @@ def aggregate(long_df: pd.DataFrame) -> pd.DataFrame:
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Aggregate per-run metrics across runs.")
-    parser.add_argument("--root", type=Path, nargs="+", required=True,
-                        help="One or more result roots (e.g. results_runs results_runs_V2)")
-    parser.add_argument("--output", type=Path, required=True,
-                        help="Output XLSX path")
+    parser = argparse.ArgumentParser(
+        description="Aggregate per-run metrics for ONE result root.",
+        epilog=("Each root keeps its own ``aggregated_metrics.xlsx``. To compare "
+                "versions, run this once per root and then pass both roots to "
+                "``metrics.plot.metrics`` — it merges them in-memory at plot time."),
+    )
+    parser.add_argument("--root", type=Path, required=True,
+                        help="The result root to aggregate (e.g. results_runs_v3).")
+    parser.add_argument("--output", type=Path, default=None,
+                        help="Output XLSX path. Default: <root>/aggregated_metrics.xlsx")
     args = parser.parse_args()
 
-    long_df = gather_long(args.root)
+    if args.output is None:
+        args.output = args.root / "aggregated_metrics.xlsx"
+
+    # ``gather_long`` still accepts a list (other callers like
+    # ``statistical_tests`` and ``version_compare`` pass multi-root). Wrap.
+    long_df = gather_long([args.root])
     if long_df.empty:
-        print("[AGG] No artifacts found under the given roots.")
+        print(f"[AGG] No artifacts found under {args.root}.")
         return
 
     agg_df = aggregate(long_df)
@@ -240,12 +281,10 @@ def main() -> None:
         agg_df.to_excel(writer, sheet_name="Aggregated", index=False)
         long_df.to_excel(writer, sheet_name="Long", index=False)
 
-    versions = sorted(long_df["version"].unique())
     sources = sorted(long_df["source"].unique())
     print(
-        f"[AGG] runs collected: {long_df.groupby(['version','target','model'])['run'].nunique().sum()}"
+        f"[AGG] runs collected: {long_df.groupby(['target','model'])['run'].nunique().sum()}"
     )
-    print(f"[AGG] versions: {versions}")
     print(f"[AGG] sources : {sources}")
     print(f"[AGG] long rows: {len(long_df)} → aggregated rows: {len(agg_df)}")
     print(f"[AGG] saved → {args.output}")

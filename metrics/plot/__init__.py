@@ -1,17 +1,16 @@
+"""Metrics visualization and reporting module.
+
+Public API:
+    themes        — design tokens (palette, motion, thresholds)
+    Dataset       — typed container for chart input data
+    load_dataset  — read aggregated_metrics.xlsx + per-run files
+    build_report  — write the full HTML report
+    export_all    — write the PNG figures used in the paper
 """
-Metrics visualization and reporting module.
 
-Provides interactive Plotly charts, PNG exports, and unified HTML reports.
-"""
+from . import themes
+from .data_source import Dataset, load_dataset
+from .report import build_report
+from .png import export_all
 
-from .plot_generator import MetricsPlotter, PlotlyTheme, THEME_COLORS, MODEL_COLORS, SIMILARITY_COLORS
-from .report_generator import ReportGenerator
-
-__all__ = [
-    'MetricsPlotter',
-    'PlotlyTheme',
-    'ReportGenerator',
-    'THEME_COLORS',
-    'MODEL_COLORS',
-    'SIMILARITY_COLORS',
-]
+__all__ = ["themes", "Dataset", "load_dataset", "build_report", "export_all"]

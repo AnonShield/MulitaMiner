@@ -1,0 +1,1173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MulitaMiner — Metrics Report</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@sgratzl/chartjs-chart-boxplot@4.4.4/build/index.umd.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  /* Dark neon — original cyberpunk-y page aesthetic */
+  --bg:#0A0A0E; --bg-2:#13131B;
+  --surface-1:#17171F; --surface-2:#1F1F2A; --surface-3:#28283A;
+  --border:#2A2A3A; --border-strong:#3A3A4A;
+  --orange:#F97316; --purple:#8B5CF6; --green:#10B981; --blue:#0EA5E9;
+  --yellow:#F59E0B; --red:#EF4444; --cyan:#06B6D4; --pink:#EC4899;
+  --text:#F5F5FA; --text-2:#C7C7D0; --text-3:#8B8BA3; --text-muted:#5A5A6F;
+  --font-sans:'Inter',system-ui,-apple-system,sans-serif;
+  --font-mono:'JetBrains Mono',monospace;
+  --radius:12px;
+  --t:150ms cubic-bezier(.2,.8,.2,1);
+  /* Fill alpha (~85%) appended to hex colors in JS for soft chart fills. */
+  --alpha:D9;
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased;}
+body{
+  background:var(--bg);color:var(--text);font-family:var(--font-sans);font-size:14px;line-height:1.6;
+  min-height:100vh;display:grid;grid-template-columns:240px 1fr;grid-template-rows:64px 1fr;overflow-x:hidden;
+}
+
+/* ── Sidebar ── */
+.sidebar{
+  grid-row:1/-1;grid-column:1;background:linear-gradient(180deg,#0F0F1A,#1A1A28);
+  border-right:1px solid var(--border);padding:24px 16px;
+  position:fixed;height:100vh;width:240px;top:0;left:0;z-index:1000;overflow-y:auto;
+  display:flex;flex-direction:column;gap:24px;
+}
+.brand{display:flex;align-items:center;gap:12px;padding:18px;
+  background:linear-gradient(135deg,rgba(249,115,22,.10),rgba(139,92,246,.10));
+  border:1px solid rgba(249,115,22,.2);border-radius:var(--radius);}
+.brand-icon{width:42px;height:42px;border-radius:8px;background:var(--surface-3);
+  display:flex;align-items:center;justify-content:center;font-weight:700;font-size:18px;}
+.brand-text{font-size:15px;font-weight:800;}
+.brand-text .a{color:var(--orange);}
+.nav-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--text-muted);padding:12px 8px 8px;}
+.nav-item{display:flex;align-items:center;gap:14px;padding:12px 14px;border-radius:var(--radius);
+  border:1.5px solid transparent;color:var(--text-3);font-size:13px;font-weight:600;
+  text-decoration:none;cursor:pointer;transition:all var(--t);background:transparent;}
+.nav-item:hover{background:var(--surface-2);color:var(--text-2);border-color:var(--orange);transform:translateX(3px);}
+.nav-item.active{background:linear-gradient(135deg,rgba(249,115,22,.18),rgba(139,92,246,.10));
+  border-color:var(--orange);color:var(--orange);}
+.nav-dot{width:10px;height:10px;border-radius:50%;background:currentColor;opacity:.5;flex-shrink:0;}
+.nav-item.active .nav-dot{opacity:1;box-shadow:0 0 10px rgba(249,115,22,.5);}
+
+/* ── Header ── */
+header{
+  grid-column:2;grid-row:1;background:linear-gradient(180deg,#0F0F1A,#1A1A28);
+  border-bottom:1px solid var(--border);padding:0 32px;
+  display:flex;align-items:center;justify-content:space-between;z-index:100;
+}
+.h-title{font-size:16px;font-weight:700;}
+.h-sub{font-size:11px;font-family:var(--font-mono);color:var(--text-muted);}
+.badges{display:flex;gap:8px;flex-wrap:wrap;}
+.badge{display:inline-flex;align-items:center;gap:6px;padding:4px 12px;border-radius:12px;
+  font-size:11px;font-weight:600;border:1px solid;text-transform:uppercase;letter-spacing:.05em;}
+.badge::before{content:'';width:5px;height:5px;border-radius:50%;background:currentColor;}
+.b-orange{background:rgba(249,115,22,.10);border-color:rgba(249,115,22,.3);color:var(--orange);}
+.b-purple{background:rgba(139,92,246,.10);border-color:rgba(139,92,246,.3);color:var(--purple);}
+.b-green {background:rgba(16,185,129,.10);border-color:rgba(16,185,129,.3);color:var(--green);}
+.b-yellow{background:rgba(245,158,11,.10);border-color:rgba(245,158,11,.3);color:var(--yellow);}
+.b-blue  {background:rgba(14,165,233,.10);border-color:rgba(14,165,233,.3);color:var(--blue);}
+
+/* ── Main ── */
+main{grid-column:2;grid-row:2;overflow-y:auto;}
+.content{padding:32px;max-width:1600px;}
+
+.view{display:none;}
+.view.active{display:block;animation:fade .25s ease-out;}
+@keyframes fade{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:none;}}
+
+/* ── Hero / KPIs ── */
+.hero{margin-bottom:32px;padding:40px;background:linear-gradient(180deg,#0F0F1A,#1A1A28);
+  border:1px solid var(--border);border-radius:16px;position:relative;overflow:hidden;}
+.hero::before{content:'';position:absolute;top:-50%;right:-10%;width:600px;height:600px;
+  background:radial-gradient(circle,rgba(249,115,22,.10),transparent 70%);border-radius:50%;}
+.hero-eye{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--orange);margin-bottom:12px;}
+.hero h1{font-size:32px;font-weight:800;letter-spacing:-.02em;line-height:1.15;margin-bottom:14px;
+  background:linear-gradient(135deg,var(--text),var(--text-2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.hero p{font-size:14px;color:var(--text-3);max-width:720px;margin-bottom:32px;position:relative;}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;position:relative;}
+@media(max-width:1100px){.kpis{grid-template-columns:repeat(2,1fr);}}
+.kpi{padding:20px;background:var(--surface-2);border:1.5px solid var(--surface-3);border-radius:14px;position:relative;overflow:hidden;}
+.kpi::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--c,var(--orange));}
+.kpi-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--text-muted);margin-bottom:14px;}
+.kpi-val{font-size:36px;font-weight:800;font-family:var(--font-mono);line-height:1.1;letter-spacing:-.02em;
+  background:linear-gradient(135deg,var(--c,var(--orange)),var(--c2,var(--purple)));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.kpi-sub{font-size:12px;color:var(--text-3);font-family:var(--font-mono);margin-top:4px;}
+
+/* ── Sections + cards ── */
+.section-head{display:flex;align-items:baseline;gap:14px;margin-bottom:8px;}
+.section-eye{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--text-muted);}
+.section-title{font-size:22px;font-weight:700;letter-spacing:-.01em;}
+.section-desc{color:var(--text-3);margin-bottom:20px;max-width:760px;}
+.grid{display:grid;gap:20px;}
+.grid.two{grid-template-columns:1fr 1fr;}
+@media(max-width:1300px){.grid.two{grid-template-columns:1fr;}}
+
+.card{background:var(--surface-2);border:1.5px solid var(--surface-3);border-radius:14px;overflow:hidden;}
+.card-h{padding:18px 20px;display:flex;align-items:center;gap:14px;border-bottom:1px solid var(--border);}
+.card-h-bar{width:4px;height:18px;border-radius:2px;background:var(--c,var(--orange));}
+.card-h-t{font-size:14px;font-weight:700;}
+.card-h-t[title]{cursor:help;border-bottom:1px dotted rgba(255,255,255,.35);}
+.card-d{padding:0 20px 12px;color:var(--text-3);font-size:13px;}
+.chart-box{padding:16px;height:480px;position:relative;}
+.chart-box.tall{height:600px;}
+.chart-box.short{height:360px;}
+
+/* ── Heatmaps (CSS grid) ── */
+.hm{padding:18px;overflow-x:auto;}
+.hm-table{display:grid;gap:1px;background:var(--border);border:1px solid var(--border);border-radius:6px;overflow:hidden;min-width:max-content;}
+.hm-cell{background:var(--surface-2);padding:10px 8px;text-align:center;font-size:12px;font-family:var(--font-mono);font-variant-numeric:tabular-nums;color:var(--text);white-space:nowrap;}
+.hm-cell.hd{background:var(--surface-3);font-weight:700;color:var(--text-2);font-size:11px;text-transform:uppercase;letter-spacing:.04em;font-family:var(--font-sans);padding:10px 12px;}
+.hm-cell.row-h{background:var(--surface-3);font-weight:700;color:var(--text-2);font-size:12px;text-transform:none;text-align:left;padding:10px 14px 10px 12px;font-family:var(--font-sans);}
+.hm-cell.empty-cell{background:var(--surface-1);color:var(--text-muted);}
+.hm-legend{margin-top:12px;display:flex;align-items:center;gap:12px;font-size:11px;color:var(--text-3);font-family:var(--font-mono);}
+.hm-ramp{flex:1;height:10px;border-radius:3px;}
+/* Severity small-multiples — 4 panels per row at typical container widths
+   with generous breathing room; cells shrink-to-fit so the card never
+   horizontal-scrolls (compact overrides below relax the global .hm rules). */
+.sm-grid{display:grid;gap:36px 32px;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));}
+.sm-grid .hm{padding:10px;overflow:hidden;}
+.sm-grid .hm-table{min-width:0;}
+.sm-grid .hm-cell{padding:6px 4px;font-size:11px;white-space:nowrap;}
+.sm-grid .hm-cell.hd{font-size:9.5px;padding:6px 4px;letter-spacing:.03em;}
+.sm-grid .hm-cell.row-h{font-size:10px;padding:6px 6px;text-align:center;}
+.sm-title{font-size:13px;font-weight:600;color:var(--text);margin-bottom:8px;text-align:center;}
+
+.empty{padding:48px 24px;text-align:center;color:var(--text-muted);font-size:13px;font-style:italic;}
+.hm-wrap{display:flex;flex-direction:column;}
+.hm-subhead{font-size:12px;font-weight:600;color:var(--text-2);text-align:center;padding:8px 0 0;text-transform:uppercase;letter-spacing:.06em;}
+
+/* Drill-down text-similarity heatmaps: shrink cells so the table fits the
+   card width — no horizontal scroll even with 7+ fields × 6 models. */
+#drill_text_grid .hm{padding:10px;overflow:hidden;}
+#drill_text_grid .hm-table{min-width:0;}
+#drill_text_grid .hm-cell{padding:7px 4px;font-size:11px;}
+#drill_text_grid .hm-cell.hd{font-size:10px;padding:7px 4px;letter-spacing:.03em;}
+#drill_text_grid .hm-cell.row-h{font-size:11px;padding:7px 8px;}
+
+/* ── Leaderboard table ── */
+.lb-wrap{padding:6px 18px 18px;}
+.lb{width:100%;border-collapse:separate;border-spacing:0;font-size:13px;}
+.lb thead th{
+  text-align:right;padding:10px 12px;font-size:11px;font-weight:700;
+  text-transform:uppercase;letter-spacing:.06em;color:var(--text-muted);
+  border-bottom:1px solid var(--border);background:transparent;
+}
+.lb thead th.lb-rank{width:38px;text-align:center;}
+.lb thead th.lb-model{text-align:left;}
+.lb tbody td{padding:11px 12px;border-bottom:1px solid var(--border);font-variant-numeric:tabular-nums;text-align:right;color:var(--text-2);}
+.lb tbody tr:last-child td{border-bottom:none;}
+.lb tbody tr:hover td{background:var(--surface-1);}
+.lb td.lb-rank{text-align:center;font-family:var(--font-mono);color:var(--text-muted);font-size:12px;}
+.lb td.lb-model{text-align:left;color:var(--text);font-weight:600;display:flex;align-items:center;gap:10px;}
+.lb-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+.lb td.lb-num{font-family:var(--font-mono);}
+.lb td.lb-best{color:var(--orange);font-weight:700;}
+
+.band{display:inline-block;padding:2px 8px;border-radius:6px;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.04em;font-family:var(--font-sans);}
+.band-very-stable{background:rgba(16,185,129,.15);color:var(--green);border:1px solid rgba(16,185,129,.35);}
+.band-stable     {background:rgba(14,165,233,.15);color:var(--blue);border:1px solid rgba(14,165,233,.35);}
+.band-moderate   {background:rgba(245,158,11,.15);color:var(--yellow);border:1px solid rgba(245,158,11,.35);}
+.band-unstable   {background:rgba(239,68,68,.15);color:var(--red);border:1px solid rgba(239,68,68,.35);}
+
+.missed-models{display:inline-flex;flex-wrap:wrap;gap:4px;}
+.missed-models .mm{font-family:var(--font-mono);font-size:10px;background:var(--surface-1);border:1px solid var(--border);color:var(--text-3);padding:1px 6px;border-radius:4px;}
+
+/* ── Scope panel ── */
+.scope{padding:14px 20px 20px;display:flex;flex-direction:column;gap:16px;}
+.scope-block{display:flex;flex-direction:column;gap:8px;}
+.scope-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--text-muted);display:flex;align-items:center;gap:8px;}
+.scope-count{font-family:var(--font-mono);font-size:11px;color:var(--orange);background:rgba(249,115,22,.12);padding:2px 8px;border-radius:10px;}
+.scope-chips{display:flex;flex-wrap:wrap;gap:6px;}
+.scope-chip{
+  display:inline-block;padding:4px 10px;border-radius:6px;
+  font-size:12px;font-family:var(--font-mono);
+  background:var(--surface-1);border:1px solid var(--border);color:var(--text-2);
+}
+.scope-chip-alt{background:rgba(139,92,246,.10);border-color:rgba(139,92,246,.3);color:var(--purple);}
+.scope-chip-mono{background:rgba(14,165,233,.08);border-color:rgba(14,165,233,.25);color:var(--blue);}
+.scope-empty{font-size:12px;color:var(--text-muted);font-style:italic;}
+
+/* ── How-to-read ── */
+.readme{padding:14px 20px 20px;display:flex;flex-direction:column;gap:12px;font-size:13px;color:var(--text-2);}
+.readme-row{display:flex;gap:12px;align-items:flex-start;}
+.readme-tag{
+  font-family:var(--font-mono);font-size:10px;font-weight:700;
+  background:var(--surface-1);border:1px solid var(--border);color:var(--text-muted);
+  padding:3px 7px;border-radius:5px;flex-shrink:0;margin-top:1px;
+}
+.readme-row strong{color:var(--text);}
+
+/* Baseline selector for similarity chart */
+.bl-select-row{display:flex;align-items:center;gap:12px;padding:14px 18px 0;}
+.bl-select-label{font-size:11px;color:var(--text-3);font-weight:600;text-transform:uppercase;letter-spacing:.06em;}
+.bl-select{
+  background:var(--surface-1);color:var(--text);border:1px solid var(--border-strong);
+  border-radius:8px;padding:6px 12px;font:13px var(--font-mono);cursor:pointer;
+  outline:none;transition:border-color var(--t);
+}
+.bl-select:focus,.bl-select:hover{border-color:var(--orange);}
+
+/* ── Print ── */
+@media print{
+  body{grid-template-columns:1fr;background:#fff;color:#111;}
+  .sidebar,header{display:none;}main{grid-column:1;}
+  .card,.kpi,.hero{background:#fff;border-color:#ddd;}
+  .hero h1,.kpi-val{-webkit-text-fill-color:#111;color:#111;background:none;}
+  .view{display:block !important;}
+}
+@media(prefers-reduced-motion:reduce){*{animation:none !important;transition:none !important;}}
+</style>
+</head>
+<body>
+
+<aside class="sidebar">
+  <div class="brand">
+    <div class="brand-icon">M</div>
+    <div class="brand-text">Mulita<span class="a">Miner</span></div>
+  </div>
+  <div>
+    <div class="nav-label">Report</div>
+    <button class="nav-item active" data-view="summary"><span class="nav-dot"></span>Summary</button>
+    <button class="nav-item" data-view="quality"><span class="nav-dot"></span>Quality</button>
+    <button class="nav-item" data-view="robustness"><span class="nav-dot"></span>Robustness</button>
+    <button class="nav-item" data-view="diagnostic"><span class="nav-dot"></span>Diagnostic</button>
+    <button class="nav-item" data-view="drilldown"><span class="nav-dot"></span>Drill-down</button>
+  </div>
+</aside>
+
+<header>
+  <div>
+    <div class="h-title">Metrics Report</div>
+    <div class="h-sub">{{ report_date }} · {{ models | length }} models · {{ targets | length }} targets · {{ n_runs_total }} runs</div>
+  </div>
+  <div class="badges">
+    <span class="badge b-orange">BERTScore</span>
+    <span class="badge b-green">ROUGE-L</span>
+    <span class="badge b-yellow">Entity</span>
+    <span class="badge b-purple">Severity</span>
+    <span class="badge b-blue">Coverage</span>
+  </div>
+</header>
+
+<main><div class="content">
+
+  {# ── Summary ── #}
+  <section class="view active" data-view="summary">
+    <div class="hero">
+      <div class="hero-eye">Executive Summary</div>
+      <h1>{% if models | length == 0 %}No models extracted yet{% elif models | length == 1 %}Extraction quality for {{ models[0] }}{% else %}Extraction quality across {{ models | length }} models{% endif %}</h1>
+      <p>At-a-glance answers to the questions readers ask first. Each card is the model's mean across all runs.
+         Use the sidebar to switch between Quality, Robustness, Diagnostic, or Drill-down views.</p>
+      <div class="kpis">
+        {% for c in cards %}
+        <div class="kpi" style="--c:{{ c.color }};--c2:{{ c.color }}88;">
+          <div class="kpi-label">{{ c.title }}</div>
+          <div class="kpi-val">{{ c.value }}</div>
+          <div class="kpi-sub">{{ c.subtitle }}</div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+
+    {# ── Leaderboard ── #}
+    <div class="grid two" style="margin-top:24px;">
+      <div class="card" style="--c:var(--orange); grid-column: span 2;">
+        <div class="card-h"><div class="card-h-bar"></div><div class="card-h-t" title="One row per model, sorted by F1 (coverage-aware) desc. Columns: Effective F1, F1 (matched, conditional), Schema validity, Severity Macro-F1, Exact Record Match. Dash means metric not available for that model. Effective F1 = recall × per-match F1.">Model leaderboard — sorted by F1</div></div>
+        <div class="card-d">One row per model. <strong>Effective F1</strong> = recall × per-match F1 (coverage-aware — penalises pipelines that skip hard vulns). F1 (matched) is the legacy conditioned-on-match number for reference. Hyphen = metric not available.</div>
+        {% if leaderboard %}
+        <div class="lb-wrap">
+          <table class="lb">
+            <thead>
+              <tr>
+                <th class="lb-rank">#</th>
+                <th class="lb-model">Model</th>
+                <th title="Recall × per-match F1 — coverage-aware">Effective F1</th>
+                <th title="F1 conditioned on successful match (selection-biased)">F1 (matched)</th>
+                <th>Schema validity</th>
+                <th>Severity Macro-F1</th>
+                <th>Exact Record Match</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for r in leaderboard %}
+              <tr>
+                <td class="lb-rank">{{ loop.index }}</td>
+                <td class="lb-model"><span class="lb-dot" style="background:var(--orange);"></span>{{ r.model }}</td>
+                <td class="lb-num{% if loop.first %} lb-best{% endif %}">{{ r.eff_str }}</td>
+                <td class="lb-num">{{ r.f1_str }}</td>
+                <td class="lb-num">{{ r.schema_str }}</td>
+                <td class="lb-num">{{ r.sev_str }}</td>
+                <td class="lb-num">{{ r.erm_str }}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+        {% else %}
+        <div class="empty">No aggregated metrics yet — run the pipeline first.</div>
+        {% endif %}
+      </div>
+    </div>
+
+    {# ── Consistency table ── #}
+    <div class="grid two" style="margin-top:20px;">
+      <div class="card" style="--c:var(--green); grid-column: span 2;">
+        <div class="card-h"><div class="card-h-bar"></div><div class="card-h-t" title="Per-model variability of F1 across runs. CV = σ/μ in % (lower = more reproducible). Bands: very stable <2%, stable <5%, moderate <10%, unstable ≥10%. Sorted by CV ascending — most reliable models on top.">Run-to-run consistency</div></div>
+        <div class="card-d">CV (coefficient of variation = σ/μ on F1 across runs). Lower = more reproducible. Bands: very stable &lt;2%, stable &lt;5%, moderate &lt;10%, unstable ≥10%.</div>
+        {% if consistency %}
+        <div class="lb-wrap">
+          <table class="lb">
+            <thead>
+              <tr>
+                <th class="lb-rank">#</th>
+                <th class="lb-model">Model</th>
+                <th>Mean F1</th>
+                <th>σ</th>
+                <th>CV</th>
+                <th>Runs</th>
+                <th>Stability</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for r in consistency %}
+              <tr>
+                <td class="lb-rank">{{ loop.index }}</td>
+                <td class="lb-model"><span class="lb-dot" style="background:var(--green);"></span>{{ r.model }}</td>
+                <td class="lb-num">{{ r.mean_str }}</td>
+                <td class="lb-num">{{ r.std_str }}</td>
+                <td class="lb-num{% if loop.first %} lb-best{% endif %}">{{ r.cv_str }}</td>
+                <td class="lb-num">{{ r.n_runs }}</td>
+                <td class="lb-num"><span class="band band-{{ r.band | replace(' ', '-') }}">{{ r.band }}</span></td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+        {% else %}
+        <div class="empty">No multi-run F1 data yet.</div>
+        {% endif %}
+      </div>
+    </div>
+
+    {# ── Scope panel ── #}
+    <div class="grid two" style="margin-top:20px;">
+      <div class="card" style="--c:var(--purple);">
+        <div class="card-h"><div class="card-h-bar"></div><div class="card-h-t" title="Chips listing all models, baselines and metric sources discovered in this run set. Use as a quick sanity check — if a model/baseline you expected is missing, the aggregator didn't find files for it.">Scope</div></div>
+        <div class="scope">
+          <div class="scope-block">
+            <div class="scope-label">Models <span class="scope-count">{{ models | length }}</span></div>
+            <div class="scope-chips">
+              {% for m in models %}<span class="scope-chip">{{ m }}</span>{% endfor %}
+              {% if not models %}<span class="scope-empty">none</span>{% endif %}
+            </div>
+          </div>
+          <div class="scope-block">
+            <div class="scope-label">Baselines <span class="scope-count">{{ targets | length }}</span></div>
+            <div class="scope-chips">
+              {% for t in targets %}<span class="scope-chip scope-chip-alt">{{ t }}</span>{% endfor %}
+              {% if not targets %}<span class="scope-empty">none</span>{% endif %}
+            </div>
+          </div>
+          <div class="scope-block">
+            <div class="scope-label">Metric sources <span class="scope-count">{{ sources | length }}</span></div>
+            <div class="scope-chips">
+              {% for s in sources %}<span class="scope-chip scope-chip-mono">{{ s }}</span>{% endfor %}
+              {% if not sources %}<span class="scope-empty">none</span>{% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" style="--c:var(--green);">
+        <div class="card-h"><div class="card-h-bar"></div><div class="card-h-t" title="Condensed legend for the other 4 sidebar views — Quality, Robustness, Diagnostic, Drill-down. Hover each section card title for its own detailed tooltip.">How to read this report</div></div>
+        <div class="readme">
+          <div class="readme-row"><span class="readme-tag">02</span><div><strong>Quality</strong> — which model wins. P/R/F1 ranking + hallucination/omission trade-off.</div></div>
+          <div class="readme-row"><span class="readme-tag">03</span><div><strong>Robustness</strong> — can you trust it. Run-to-run variance + Wilcoxon p-values (Bonferroni-adjusted).</div></div>
+          <div class="readme-row"><span class="readme-tag">04</span><div><strong>Diagnostic</strong> — where it fails. Schema, severity confusion, per-field F1.</div></div>
+          <div class="readme-row"><span class="readme-tag">05</span><div><strong>Drill-down</strong> — text similarity per field (BERT vs ROUGE) + similarity distribution per baseline.</div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  {# ── Quality ── #}
+  <section class="view" data-view="quality">
+    <div class="section-head"><span class="section-eye">02</span><h2 class="section-title">Quality — which model is best?</h2></div>
+    <p class="section-desc">Precision/Recall/F1 ranks the models; the scatter shows the trade-off between hallucinating and missing.</p>
+    <div class="grid two">
+      <div class="card" style="--c:var(--orange);">
+        <div class="card-h"><div class="card-h-bar"></div><div class="card-h-t" title="Per model: three bars (P / R / F1) with error bars showing σ across runs. Averaged across fields and targets. Models sorted by F1 desc. Source: entity_metrics_*.xlsx Summary.">Precision · Recall · F1</div></div>
+        <div class="card-d">Mean ± σ across runs. Models sorted by F1 descending.</div>
+        <div class="chart-box"><canvas id="ch-quality_prf"></canvas></div>
+      </div>
+      <div class="card" style="--c:var(--purple);">
+        <div class="card-h"><div class="card-h-bar"></div><div class="card-h-t" title="Scatter: X = hallucination rate (fraction of extracted cells with no baseline counterpart), Y = omission rate (fraction of baseline cells the model left empty). Bubble size = N runs. Bottom-left ideal. The diagonal helps spot Pareto-dominated models.">Hallucination × Omission</div></div>
+        <div class="card-d">Bottom-left is ideal: low hallucination + low omission. Point size scales with N runs.</div>
+        <div class="chart-box"><canvas id="ch-quality_halluc"></canvas></div>
+      </div>
+    </div>
+
+    <div class="card" style="--c:var(--cyan); margin-top:20px;">
+      <div class="card-h"><div class="card-h-bar"></div><div class="card-h-t" title="One labelled point per model. X = recall (1 − omission_rate), Y = per-match F1. Top-right ideal. Dashed grey curves = iso-Effective-F1 contours (recall × F1 = const). Models on the same contour are equally good despite different recall/F1 trade-offs. See metrics.md §4.1.">Recall × per-match F1 — the coverage trade-off</div></div>
+      <div class="card-d">Each point = one model. <strong>Top-right is ideal</strong>. Dashed lines are <strong>iso-Effective-F1 contours</strong> (every point on the same curve has the same Effective F1 = recall × F1). Two models on the same contour are equally good despite different recall/F1 trade-offs; moving up-and-right between contours is real improvement. See metrics.md §4.1 for the formula.</div>
+      <div class="chart-box tall"><canvas id="ch-quality_recall_f1"></canvas></div>
+    </div>
+  </section>
+
+  {# ── Robustness ── #}
+  <section class="view" data-view="robustness">
+    <div class="section-head"><span class="section-eye">03</span><h2 class="section-title">Robustness — can I trust the numbers?</h2></div>
+    <p class="section-desc">Run-to-run variance and pairwise statistical tests. p-values are Bonferroni-adjusted across the comparison family.</p>
+    <div class="grid two">
+      <div class="card" style="--c:var(--green);">
+        <div class="card-h"><div class="card-h-bar"></div><div class="card-h-t" title="Boxplot of per-run mean F1, one box per model. Jitter overlay shows each individual run. Wider boxes = less reproducible. Outliers worth investigating — usually a 'bad run' that hit a corner case. Models ordered by median F1 desc.">F1 distribution across runs</div></div>
+        <div class="card-d">Boxplot with all individual runs as points. Wider boxes mean less reliable scores.</div>
+        <div class="chart-box"><canvas id="ch-robust_box"></canvas></div>
+      </div>
+      <div class="card" style="--c:var(--cyan);">
+        <div class="card-h"><div class="card-h-bar"></div><div class="card-h-t" title="Model × model matrix. Cell (i,j) = Bonferroni-adjusted p-value for 'F1 of model i differs from F1 of model j' (paired by run). Coloured = significant (p < 0.05 after correction). Diagonal blank. Symmetric matrix.">Pairwise Wilcoxon</div></div>
+        <div class="card-d">Darker cells indicate the two models differ significantly (p &lt; 0.05 after Bonferroni).</div>
+        <div class="hm" id="hm-robust_wilcoxon"></div>
+      </div>
+    </div>
+  </section>
+
+  {# ── Diagnostic ── #}
+  <section class="view" data-view="diagnostic">
+    <div class="section-head"><span class="section-eye">04</span><h2 class="section-title">Diagnostic — where does it fail?</h2></div>
+    <p class="section-desc">Schema fidelity, severity classification errors, per-field coverage, and downstream coercion cost. Each card answers a different "where does my pipeline fail" question.</p>
+
+    {# Schema sub-section: 3 charts that together answer "is my output canonical?" #}
+    <div class="grid two">
+      <div class="card" style="--c:var(--green);">
+        <div class="card-h"><div class="card-h-bar"></div><div class="card-h-t" title="Bar of schema_conformance_rate per model (% records passing structural validation). Uses the native check when available (LLM compliance with its own version's prompt), falling back to legacy auto-mode. 100% = every record passes; low values warrant inspecting missing_field_counts.">Schema validity per model</div></div>
+        <div class="card-d">Fraction of records conforming to the V3 schema (LLM compliance with the prompt — uses the native check when available).</div>
+        <div class="chart-box short"><canvas id="ch-diag_schema_validity"></canvas></div>
+      </div>
+      <div class="card" style="--c:var(--cyan);">
+        <div class="card-h"><div class="card-h-bar"></div><div class="card-h-t" title="% of runs that produced parseable JSON without repair (json.loads succeeded). Floor metric — 100% expected from any working pipeline. <100% means the LLM is emitting preamble, markdown fences, truncation, or quote-escape issues.">JSON validity rate</div></div>
+        <div class="card-d">Fraction of runs whose raw output parses as JSON. Floor metric — 100% expected from a working pipeline.</div>
+        <div class="chart-box short"><canvas id="ch-diag_json_validity"></canvas></div>
+      </div>
+    </div>
+
+    <div class="grid" style="margin-top:20px;">
+      <div class="card" style="--c:var(--blue);">
+        <div class="card-h"><div class="card-h-bar"></div><div class="card-h-t" title="Legacy model × field heatmap of schema_conformance_rate. Today the schema check only emits one _overall field per record, so the heatmap collapses to a 1-column matrix. Kept alongside the per-model bars for when per-field schema validation lands.">Schema conformance heatmap</div></div>
+        <div class="card-d">Per-field conformance matrix (currently 1 column — schema check emits <code>_overall</code>; expands when per-field validation lands).</div>
+        <div class="hm" id="hm-diag_schema"></div>
+      </div>
+      <div class="card" style="--c:var(--pink);">
+        <div class="card-h"><div class="card-h-bar"></div><div class="card-h-t" title="One mini-matrix per model (small multiples). Rows = true class (baseline severity), cols = predicted (LLM severity). Diagonal = correct. Off-diagonal in adjacent cells (e.g. MEDIUM↔HIGH) is acceptable; far off-diagonal (LOG→CRITICAL) is catastrophic. Cell value = mean count across runs.">Severity confusion</div></div>
+        <div class="card-d">One mini matrix per model. Diagonal = correct classification (rows=true, cols=predicted).</div>
+        <div class="hm" id="hm-diag_severity"></div>
+      </div>
+      <div class="card" style="--c:var(--yellow);">
+        <div class="card-h"><div class="card-h-bar"></div><div class="card-h-t" title="Heatmap: rows = field, cols = model. Cell = mean entity F1_Score for that (field, model). Fields ordered by overall mean desc — easiest at top, hardest at bottom. Helps identify which fields bottleneck the pipeline (usually description/solution — free text).">Per-field F1</div></div>
+        <div class="card-d">Field-level breakdown. Fields ordered by overall difficulty (mean across models).</div>
+        <div class="hm" id="hm-diag_field_coverage"></div>
+      </div>
+    </div>
+
+    <div class="grid two" style="margin-top:20px;">
+      <div class="card" style="--c:var(--red);">
+        <div class="card-h"><div class="card-h-bar"></div><div class="card-h-t" title="Heatmap of hallucination_rate per (field, model). Rate = fraction of cells where the model wrote content but the baseline is empty. Fields ordered worst-at-bottom. Identifies which fields the LLM is most prone to invent content for.">Per-field hallucination rate</div></div>
+        <div class="card-d">Fraction of cells where the model filled a field that the baseline left empty. Worst-offending fields at the bottom.</div>
+        <div class="hm" id="hm-diag_field_halluc"></div>
+      </div>
+      <div class="card" style="--c:var(--orange);">
+        <div class="card-h"><div class="card-h-bar"></div><div class="card-h-t" title="Symmetrical to the hallucination heatmap: rate = fraction of cells where the baseline has content but the model left it empty. Compare with hallucination to see if a model has systemic bias toward 'say something' (high hall) or 'say nothing' (high omit).">Per-field omission rate</div></div>
+        <div class="card-d">Fraction of cells where the model left empty a field the baseline had populated. Worst-offending fields at the bottom.</div>
+        <div class="hm" id="hm-diag_field_omiss"></div>
+      </div>
+    </div>
+
+    <div class="grid two" style="margin-top:20px;">
+      <div class="card" style="--c:var(--purple);">
+        <div class="card-h"><div class="card-h-bar"></div><div class="card-h-t" title="% of records where the LLM invented keys outside the V3 schema (e.g. emitted a 'risk_level' field that doesn't exist). 0% expected from a compliant pipeline; high values suggest prompt drift or the LLM hallucinating metadata fields.">Extra fields rate per model</div></div>
+        <div class="card-d">Fraction of records where the model invented keys outside the V3 schema. <strong>0% expected</strong> from a compliant pipeline; high values suggest prompt drift or schema misalignment.</div>
+        <div class="chart-box short"><canvas id="ch-diag_extra_fields"></canvas></div>
+      </div>
+      <div class="card" style="--c:var(--yellow);">
+        <div class="card-h"><div class="card-h-bar"></div><div class="card-h-t" title="Top 10 schema fields the LLM most often failed to emit, summed across runs. Columns: Field name, total omission count, distinct models affected. Many models affected = systemic prompt issue. Few = model-specific gap.">Top-N most-omitted fields</div></div>
+        <div class="card-d">Schema fields the LLM most frequently failed to emit, summed across runs. <strong>Many models</strong> = systemic prompt issue; <strong>few models</strong> = model-specific gap.</div>
+        <div class="lb-wrap" id="missing-fields-table"></div>
+      </div>
+    </div>
+  </section>
+
+  {# ── Drill-down ── #}
+  <section class="view" data-view="drilldown">
+    <div class="section-head"><span class="section-eye">05</span><h2 class="section-title">Drill-down</h2></div>
+    <p class="section-desc">Per-field text similarity. BERTScore is lenient on phrasing (semantic overlap); ROUGE-L penalises lexical drift (surface form).</p>
+    <div class="card" style="--c:var(--cyan);">
+      <div class="card-h"><div class="card-h-bar"></div><div class="card-h-t" title="Three stacked heatmaps (one per scorer). Each cell = mean score across runs for one (model, field). BERTScore = semantic overlap (lenient on phrasing); ROUGE-L = lexical LCS (strict on surface form); Token-F1 = SQuAD-style overlap (robust to reorder). Switch baselines with the dropdown.">Text similarity by field — BERTScore · ROUGE-L · Token-F1</div></div>
+      <div class="card-d">Each cell = mean score across runs. Darker = higher similarity. Fields ordered by overall difficulty (easiest at top). Each scorer answers a different question: BERTScore = semantic overlap (lenient on phrasing), ROUGE-L = lexical subsequence (strict on surface form), Token-F1 = SQuAD-style token overlap (robust to reordering).</div>
+      <div class="bl-select-row">
+        <label for="drill_text_baseline" class="bl-select-label">Baseline</label>
+        <select id="drill_text_baseline" class="bl-select"></select>
+      </div>
+      <div id="drill_text_grid" class="grid"></div>
+    </div>
+
+    <div class="card" style="--c:var(--green);margin-top:20px;">
+      <div class="card-h"><div class="card-h-bar"></div><div class="card-h-t" title="Stacked share of vulnerabilities per similarity bucket (Highly/Moderately/Slightly Similar, Divergent, Absent). Thresholds (BERTScore F1): >0.70 Highly, 0.60–0.70 Moderately, 0.40–0.60 Slightly, ≤0.40 Divergent. Absent = baseline has it, model didn't extract. Non-existent excluded — LLM invention, not similarity.">Similarity distribution per model</div></div>
+      <div class="card-d">Stacked share of vulnerabilities falling in each similarity bucket. <em>Non-existent</em> (LLM inventions) is excluded — it isn't a similarity score.</div>
+      <div class="bl-select-row">
+        <label for="drill_similarity_baseline" class="bl-select-label">Baseline</label>
+        <select id="drill_similarity_baseline" class="bl-select"></select>
+      </div>
+      <div class="grid two">
+        <div class="chart-box tall"><canvas id="ch-drill_similarity_bert"></canvas></div>
+        <div class="chart-box tall"><canvas id="ch-drill_similarity_rouge"></canvas></div>
+      </div>
+    </div>
+
+    {# ── Most-missed vulnerabilities ── #}
+    <div class="card" style="--c:var(--red);margin-top:20px;">
+      <div class="card-h"><div class="card-h-bar"></div><div class="card-h-t" title="Baseline vulnerabilities tagged 'Absent' most often. Per row: name, total miss count, miss rate (misses / total (run, model) observations), and which models missed it. High model count = systemic gap across the family; few = model-specific blind spot.">Most-missed vulnerabilities per baseline</div></div>
+      <div class="card-d">Names tagged <em>Absent</em> most often across every (run, model) attempt for the selected baseline.
+        <strong>Misses</strong> = how many attempts missed it.
+        <strong>Miss rate</strong> = misses ÷ total attempts of this baseline (e.g. 3 models × 10 runs = 30 attempts).
+        <strong>Models</strong> = which distinct models missed it (lots of chips = systemic; few = model-specific gap).
+        Note: BERT and ROUGE share the same alignment, so a vuln being <em>Absent</em> doesn't depend on the scorer — we count one observation per (model, run), not per (model, run, scorer).</div>
+      <div class="bl-select-row">
+        <label for="missed_baseline" class="bl-select-label">Baseline</label>
+        <select id="missed_baseline" class="bl-select"></select>
+      </div>
+      <div class="lb-wrap" id="missed-table-wrap">
+        <div class="empty">No Categorization data yet.</div>
+      </div>
+    </div>
+  </section>
+
+</div></main>
+
+<script>
+const CHART_DATA        = {{ chart_data_json | safe }};
+const PALETTE           = {{ palette_json | safe }};
+const RAMP              = {{ ramp_json | safe }};
+const SIMILARITY_COLORS = {{ similarity_colors_json | safe }};
+const METRIC_COLORS     = {{ metric_colors_json | safe }};
+const THEME             = {{ theme_tokens_json | safe }};
+
+/* ── View switching ── */
+const navs  = document.querySelectorAll('.nav-item[data-view]');
+const views = document.querySelectorAll('.view[data-view]');
+function show(id){
+  views.forEach(v => v.classList.toggle('active', v.dataset.view === id));
+  navs.forEach(n => n.classList.toggle('active', n.dataset.view === id));
+  // Chart.js needs a resize hint when its canvas was display:none.
+  Object.values(window._charts || {}).forEach(c => c && c.resize());
+}
+navs.forEach(n => n.addEventListener('click', () => show(n.dataset.view)));
+
+/* ── Chart.js global defaults (sourced from THEME tokens in themes.py) ── */
+Chart.defaults.font.family = "'Inter', system-ui, sans-serif";
+Chart.defaults.color = THEME.text_2;
+Chart.defaults.borderColor = THEME.border;
+Chart.defaults.plugins.legend.labels.color = THEME.text;
+Chart.defaults.plugins.tooltip.backgroundColor = THEME.surface_3;
+Chart.defaults.plugins.tooltip.titleColor = THEME.text;
+Chart.defaults.plugins.tooltip.bodyColor = THEME.text_2;
+Chart.defaults.plugins.tooltip.borderColor = THEME.border_strong;
+Chart.defaults.plugins.tooltip.borderWidth = 1;
+
+const grid = { color: 'rgba(58,58,74,.4)', drawBorder: false };
+const ALPHA = 'B3'; // ~70% — applied to flat hex fills for visible glow through dark bg.
+
+window._charts = {};
+function emptyCanvas(id, msg){
+  const cv = document.getElementById(id);
+  if(!cv) return;
+  const wrap = cv.parentElement;
+  wrap.innerHTML = `<div class="empty">${msg}</div>`;
+}
+
+/* ── Quality: P/R/F1 grouped bars with error bars (drawn via plugin) ── */
+const errorBarsPlugin = {
+  id: 'errorBars',
+  afterDatasetsDraw(chart){
+    const {ctx} = chart;
+    chart.data.datasets.forEach((ds, i) => {
+      if(!ds.errors) return;
+      const meta = chart.getDatasetMeta(i);
+      meta.data.forEach((bar, j) => {
+        const e = ds.errors[j];
+        if(!e) return;
+        const xScale = chart.scales.x, yScale = chart.scales.y;
+        const x = bar.x;
+        const yTop = yScale.getPixelForValue(ds.data[j] + e);
+        const yBot = yScale.getPixelForValue(Math.max(0, ds.data[j] - e));
+        ctx.save();
+        ctx.strokeStyle = THEME.text_2; ctx.lineWidth = 1.4;
+        ctx.beginPath();
+        ctx.moveTo(x, yTop); ctx.lineTo(x, yBot);
+        ctx.moveTo(x-5, yTop); ctx.lineTo(x+5, yTop);
+        ctx.moveTo(x-5, yBot); ctx.lineTo(x+5, yBot);
+        ctx.stroke();
+        ctx.restore();
+      });
+    });
+  }
+};
+Chart.register(errorBarsPlugin);
+
+(function(){
+  const d = CHART_DATA.quality_prf;
+  if(d.empty){ emptyCanvas('ch-quality_prf', 'No entity metrics yet'); return; }
+  const colors = {Precision: METRIC_COLORS.Precision, Recall: METRIC_COLORS.Recall, F1: METRIC_COLORS.F1};
+  const datasets = ['Precision','Recall','F1'].map(k => ({
+    label: k, data: d.values[k], errors: d.stds[k],
+    backgroundColor: colors[k] + ALPHA, borderColor: colors[k], borderWidth: 0, borderRadius: 4,
+  }));
+  window._charts.quality_prf = new Chart(document.getElementById('ch-quality_prf'), {
+    type:'bar',
+    data:{ labels: d.models, datasets },
+    options:{
+      responsive:true, maintainAspectRatio:false,
+      scales:{
+        y:{ min:0, max:1, grid },
+        x:{ grid:{display:false}, ticks:{autoSkip:false, font:{size:12}} },
+      },
+      layout:{ padding:{bottom:8} },
+      plugins:{ legend:{position:'top'} },
+    }
+  });
+})();
+
+/* ── Quality: hallucination × omission scatter ── */
+(function(){
+  const d = CHART_DATA.quality_halluc;
+  if(d.empty){ emptyCanvas('ch-quality_halluc', 'No coverage metrics yet'); return; }
+  const sortedModels = d.points.map(p => p.model).sort();
+  const colorFor = m => PALETTE[sortedModels.indexOf(m) % PALETTE.length];
+  const points = d.points.map(p => ({
+    x: p.halluc, y: p.omiss, r: Math.max(7, Math.min(20, p.n * 1.6)),
+    label: p.model, n: p.n,
+  }));
+  const xMax = Math.max(0.5, ...d.points.map(p => p.halluc)) * 1.2;
+  const yMax = Math.max(0.5, ...d.points.map(p => p.omiss)) * 1.2;
+  window._charts.quality_halluc = new Chart(document.getElementById('ch-quality_halluc'), {
+    type:'bubble',
+    data:{ datasets: points.map(p => ({
+      label: p.label, data: [p],
+      backgroundColor: colorFor(p.label) + ALPHA,
+      borderColor: colorFor(p.label), borderWidth: 1.5,
+    })) },
+    options:{
+      responsive:true, maintainAspectRatio:false,
+      scales:{
+        x:{ min:0, max:xMax, title:{display:true,text:'Hallucination rate'},
+            ticks:{callback:v=>Math.round(v*100)+'%'}, grid },
+        y:{ min:0, max:yMax, title:{display:true,text:'Omission rate'},
+            ticks:{callback:v=>Math.round(v*100)+'%'}, grid },
+      },
+      plugins:{
+        legend:{position:'right', labels:{boxWidth:10, padding:10}},
+        tooltip:{ callbacks:{ label: ctx => {
+          const p = ctx.raw;
+          return `${p.label}: halluc=${(p.x*100).toFixed(1)}%, omiss=${(p.y*100).toFixed(1)}% (n=${p.n})`;
+        }}},
+      },
+    }
+  });
+})();
+
+/* ── Quality: Recall × F1 scatter with iso-Effective-F1 contours ── */
+(function(){
+  const d = CHART_DATA.quality_recall_f1;
+  const cv = document.getElementById('ch-quality_recall_f1');
+  if(!cv) return;
+  if(d.empty){
+    cv.parentElement.innerHTML = `<div class="empty">${d.reason || 'No coverage / F1 data yet'}</div>`;
+    return;
+  }
+  const sortedModels = d.points.map(p => p.model).sort();
+  const colorFor = m => PALETTE[sortedModels.indexOf(m) % PALETTE.length];
+
+  const dataset = {
+    label: 'Models',
+    data: d.points.map(p => ({ x: p.recall, y: p.f1, model: p.model, eff: p.effective })),
+    backgroundColor: d.points.map(p => colorFor(p.model) + ALPHA),
+    borderColor: d.points.map(p => colorFor(p.model)),
+    borderWidth: 2.5,
+    pointRadius: 11,
+    pointHoverRadius: 14,
+  };
+  // Iso-Effective-F1 contours at 0.5, 0.7, 0.85.
+  const isoContours = [0.5, 0.7, 0.85].map(eff => {
+    const pts = [];
+    for(let r = eff; r <= 1.001; r += 0.01) pts.push({x: r, y: eff / r});
+    return {
+      label: `Eff = ${eff}`, data: pts, type: 'line',
+      borderColor: THEME.border_strong, borderWidth: 1, borderDash: [3, 3],
+      pointRadius: 0, fill: false, showLine: true, tension: 0.1,
+    };
+  });
+  // Plugin: model labels next to each point.
+  const labelsPlugin = {
+    id: 'modelLabels',
+    afterDatasetsDraw(chart){
+      const meta = chart.getDatasetMeta(isoContours.length);  // points dataset comes after iso lines
+      if(!meta || !meta.data) return;
+      const {ctx} = chart;
+      ctx.save();
+      ctx.fillStyle = THEME.text;
+      ctx.font = '11px Inter, sans-serif';
+      ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+      meta.data.forEach((pt, i) => {
+        const p = chart.data.datasets[isoContours.length].data[i];
+        ctx.fillText(p.model, pt.x + 12, pt.y);
+      });
+      ctx.restore();
+    }
+  };
+  window._charts['quality_recall_f1'] = new Chart(cv, {
+    type: 'scatter',
+    data: { datasets: [...isoContours, dataset] },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      scales: {
+        x: { min: 0, max: 1, title: {display:true, text: 'Recall (1 − omission_rate)'},
+             ticks: {callback: v => (v*100).toFixed(0)+'%'}, grid },
+        y: { min: 0, max: 1, title: {display:true, text: 'Per-match F1 score'},
+             ticks: {callback: v => v.toFixed(2)}, grid },
+      },
+      plugins: {
+        legend: { display: false },  // labels-on-points + iso lines speak for themselves
+        tooltip: { callbacks: { label: ctx => {
+          const p = ctx.raw;
+          if(p.model === undefined) return null;  // iso line
+          return `${p.model}: recall=${(p.x*100).toFixed(1)}%, F1=${p.y.toFixed(3)}, Eff=${p.eff.toFixed(3)}`;
+        }}},
+      },
+    },
+    plugins: [labelsPlugin],
+  });
+})();
+
+/* ── Robustness: F1 boxplot ── */
+(function(){
+  const d = CHART_DATA.robust_box;
+  if(d.empty){ emptyCanvas('ch-robust_box', 'No entity metrics yet'); return; }
+  const sorted = d.models.slice().sort();
+  const colorFor = m => PALETTE[sorted.indexOf(m) % PALETTE.length];
+  window._charts.robust_box = new Chart(document.getElementById('ch-robust_box'), {
+    type:'boxplot',
+    data:{
+      labels: d.models,
+      datasets: [{
+        label:'F1',
+        data: d.models.map(m => d.values[m]),
+        backgroundColor: d.models.map(m => colorFor(m) + '55'),
+        borderColor: d.models.map(m => colorFor(m)),
+        borderWidth: 2, itemRadius: 3, itemBackgroundColor: d.models.map(m => colorFor(m)),
+      }]
+    },
+    options:{
+      responsive:true, maintainAspectRatio:false,
+      scales:{
+        y:{min:0,max:1,grid},
+        x:{grid:{display:false}, ticks:{autoSkip:false, font:{size:12}}},
+      },
+      layout:{ padding:{bottom:8} },
+      plugins:{ legend:{display:false} },
+    }
+  });
+})();
+
+/* ── Heatmap renderers (CSS grid) ── */
+function rampColor(v){
+  // v in [0,1], maps via RAMP stops to a color string.
+  if(v == null || isNaN(v)) return null;
+  v = Math.max(0, Math.min(1, v));
+  for(let i=1; i<RAMP.length; i++){
+    const [s0,c0] = RAMP[i-1], [s1,c1] = RAMP[i];
+    if(v <= s1){
+      const t = (v - s0) / (s1 - s0);
+      return mix(c0, c1, t);
+    }
+  }
+  return RAMP[RAMP.length-1][1];
+}
+function mix(a, b, t){
+  const pa = parseInt(a.slice(1),16), pb = parseInt(b.slice(1),16);
+  const r = Math.round(((pa>>16)&255)*(1-t) + ((pb>>16)&255)*t);
+  const g = Math.round(((pa>>8)&255)*(1-t)  + ((pb>>8)&255)*t);
+  const bl= Math.round((pa&255)*(1-t)       + (pb&255)*t);
+  return `rgb(${r},${g},${bl})`;
+}
+function textOn(bgColor){
+  // Pick dark/light text based on bg luminance — uses THEME so contrast
+  // tokens stay aligned with the rest of the page.
+  const m = bgColor.match(/\d+/g); if(!m) return THEME.text;
+  const [r,g,b] = m.map(Number);
+  const lum = (0.299*r + 0.587*g + 0.114*b) / 255;
+  return lum > 0.6 ? THEME.surface_2 : THEME.text;
+}
+
+function renderHeatmap(containerId, opts){
+  // opts: {rowLabels, colLabels, matrix, fmt, vmin=0, vmax=1, invertColor=false, emptyMsg, legendLabel}
+  const c = document.getElementById(containerId);
+  if(!c) return;
+  if(!opts.rowLabels.length || !opts.colLabels.length){
+    c.innerHTML = `<div class="empty">${opts.emptyMsg || 'No data yet'}</div>`;
+    return;
+  }
+  const ncols = opts.colLabels.length + 1;
+  // Auto row-label column so long model names aren't truncated.
+  // Cell columns use 0 min so they can shrink when the host CSS overrides
+  // the default min-width (e.g. drill-down heatmaps fit the card width).
+  const tpl = `minmax(100px, max-content) repeat(${opts.colLabels.length}, minmax(0, 1fr))`;
+  let html = `<div class="hm-table" style="grid-template-columns:${tpl};">`;
+  html += `<div class="hm-cell hd"></div>`;
+  opts.colLabels.forEach(l => html += `<div class="hm-cell hd">${escapeHtml(l)}</div>`);
+  opts.matrix.forEach((row, i) => {
+    html += `<div class="hm-cell row-h">${escapeHtml(opts.rowLabels[i])}</div>`;
+    row.forEach(v => {
+      if(v == null){
+        html += `<div class="hm-cell empty-cell">—</div>`;
+      } else {
+        const norm = (v - opts.vmin) / (opts.vmax - opts.vmin);
+        const t = opts.invertColor ? 1 - norm : norm;
+        const bg = rampColor(t);
+        const fg = textOn(bg);
+        html += `<div class="hm-cell" style="background:${bg};color:${fg};">${opts.fmt(v)}</div>`;
+      }
+    });
+  });
+  html += `</div>`;
+  if(opts.legendLabel){
+    // Build the gradient straight from RAMP so the strip is always in sync
+    // with the actual cell colormap — no risk of stale CSS.
+    const stops = RAMP.map(([s, col]) => `${col} ${(s*100).toFixed(0)}%`).join(',');
+    const gradient = `linear-gradient(to right, ${stops})`;
+    html += `<div class="hm-legend"><span>${opts.legendMin || opts.vmin}</span><div class="hm-ramp" style="background:${gradient};"></div><span>${opts.legendMax || opts.vmax} — ${opts.legendLabel}</span></div>`;
+  }
+  c.innerHTML = html;
+}
+function escapeHtml(s){ return String(s).replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch])); }
+
+/* ── Wilcoxon heatmap (lower p = darker) ── */
+(function(){
+  const d = CHART_DATA.robust_wilcoxon;
+  if(d.empty){
+    document.getElementById('hm-robust_wilcoxon').innerHTML = `<div class="empty">${d.reason || 'No data yet'}</div>`;
+    return;
+  }
+  renderHeatmap('hm-robust_wilcoxon', {
+    rowLabels: d.models, colLabels: d.models, matrix: d.matrix,
+    fmt: v => v.toFixed(3), vmin: 0, vmax: 1, invertColor: true,
+    legendLabel: 'p-value (Bonferroni)', legendMin: '0 (sig.)', legendMax: '1 (no diff.)',
+  });
+})();
+
+(function(){
+  const d = CHART_DATA.diag_schema;
+  if(d.empty){ document.getElementById('hm-diag_schema').innerHTML = `<div class="empty">No schema reports yet</div>`; return; }
+  renderHeatmap('hm-diag_schema', {
+    rowLabels: d.models, colLabels: d.fields, matrix: d.matrix,
+    fmt: v => (v*100).toFixed(2)+'%', vmin: 0, vmax: 1,
+    legendLabel: 'conformance', legendMin: '0%', legendMax: '100%',
+  });
+})();
+
+/* ── Diagnostic Schema sub-section: validity per model + JSON validity + type-coercion stack ── */
+function _emptyCanvas(id, msg){
+  const cv = document.getElementById(id);
+  if(cv) cv.parentElement.innerHTML = `<div class="empty">${msg}</div>`;
+}
+
+(function(){
+  const d = CHART_DATA.diag_schema_validity;
+  if(d.empty){ _emptyCanvas('ch-diag_schema_validity', 'No schema conformance data yet'); return; }
+  window._charts['diag_schema_validity'] = new Chart(document.getElementById('ch-diag_schema_validity'), {
+    type:'bar',
+    data:{ labels: d.models, datasets:[{
+      label:'Conformance', data: d.values,
+      backgroundColor: '#A3BE8C' + ALPHA, borderColor: '#A3BE8C', borderWidth: 1, borderRadius: 4,
+    }]},
+    options:{
+      responsive:true, maintainAspectRatio:false,
+      scales:{ y:{min:0, max:100, grid, ticks:{callback: v => v+'%'}},
+               x:{grid:{display:false}, ticks:{autoSkip:false, font:{size:12}}} },
+      plugins:{ legend:{display:false},
+                tooltip:{callbacks:{label: ctx => `${ctx.parsed.y.toFixed(2)}% records conformant`}} },
+    }
+  });
+})();
+
+(function(){
+  const d = CHART_DATA.diag_json_validity;
+  if(d.empty){ _emptyCanvas('ch-diag_json_validity', 'No JSON validity data yet'); return; }
+  window._charts['diag_json_validity'] = new Chart(document.getElementById('ch-diag_json_validity'), {
+    type:'bar',
+    data:{ labels: d.models, datasets:[{
+      label:'JSON valid', data: d.values,
+      backgroundColor: '#88C0D0' + ALPHA, borderColor: '#88C0D0', borderWidth: 1, borderRadius: 4,
+    }]},
+    options:{
+      responsive:true, maintainAspectRatio:false,
+      scales:{ y:{min:0, max:100, grid, ticks:{callback: v => v+'%'}},
+               x:{grid:{display:false}, ticks:{autoSkip:false, font:{size:12}}} },
+      plugins:{ legend:{display:false} },
+    }
+  });
+})();
+
+(function(){
+  const d = CHART_DATA.diag_field_coverage;
+  if(d.empty){ document.getElementById('hm-diag_field_coverage').innerHTML = `<div class="empty">No entity metrics yet</div>`; return; }
+  renderHeatmap('hm-diag_field_coverage', {
+    rowLabels: d.fields, colLabels: d.models, matrix: d.matrix,
+    fmt: v => v.toFixed(3), vmin: 0, vmax: 1,
+    legendLabel: d.metric || 'F1', legendMin: '0', legendMax: '1',
+  });
+})();
+
+/* Extra fields rate per model — diagnostic. */
+(function(){
+  const d = CHART_DATA.diag_extra_fields;
+  const cv = document.getElementById('ch-diag_extra_fields');
+  if(!cv) return;
+  if(d.empty){ cv.parentElement.innerHTML = `<div class="empty">No extra-fields data yet</div>`; return; }
+  window._charts['diag_extra_fields'] = new Chart(cv, {
+    type:'bar',
+    data:{ labels: d.models, datasets:[{
+      label:'Extra fields rate', data: d.values,
+      backgroundColor: '#C77DFF' + ALPHA, borderColor: '#C77DFF', borderWidth: 1, borderRadius: 4,
+    }]},
+    options:{
+      responsive:true, maintainAspectRatio:false,
+      scales:{ y:{min:0, max: Math.max(10, ...d.values) * 1.2, grid, ticks:{callback: v => v.toFixed(1)+'%'}},
+               x:{grid:{display:false}, ticks:{autoSkip:false, font:{size:12}}} },
+      plugins:{ legend:{display:false} },
+    }
+  });
+})();
+
+/* Top-N missing fields table. */
+(function(){
+  const d = CHART_DATA.diag_missing_fields;
+  const wrap = document.getElementById('missing-fields-table');
+  if(!wrap) return;
+  if(d.empty){ wrap.innerHTML = `<div class="empty">No missing-field counts yet</div>`; return; }
+  let html = `<table class="lb">
+    <thead><tr>
+      <th class="lb-rank">#</th>
+      <th class="lb-model">Field</th>
+      <th>Omitted (count)</th>
+      <th>Models affected</th>
+    </tr></thead><tbody>`;
+  d.rows.forEach((r, i) => {
+    const chips = r.models.map(m => `<span class="mm">${escapeHtml(m)}</span>`).join('');
+    html += `<tr>
+      <td class="lb-rank">${i+1}</td>
+      <td class="lb-model" style="font-family:var(--font-mono);font-size:12px;">${escapeHtml(r.field)}</td>
+      <td class="lb-num">${r.count}</td>
+      <td class="lb-num"><span class="missed-models">${chips}</span><span style="color:var(--text-muted);margin-left:6px;">(${r.n_models})</span></td>
+    </tr>`;
+  });
+  html += `</tbody></table>`;
+  wrap.innerHTML = html;
+})();
+
+(function(){
+  for(const [src, label, lo, hi] of [
+    ['diag_field_halluc',  'hallucination rate', '0%', '100%'],
+    ['diag_field_omiss',   'omission rate',      '0%', '100%'],
+  ]){
+    const d = CHART_DATA[src];
+    const el = document.getElementById(`hm-${src}`);
+    if(!el) continue;
+    if(d.empty){
+      el.innerHTML = `<div class="empty">No coverage per-field data yet</div>`;
+      continue;
+    }
+    renderHeatmap(`hm-${src}`, {
+      rowLabels: d.fields, colLabels: d.models, matrix: d.matrix,
+      fmt: v => (v*100).toFixed(1)+'%', vmin: 0, vmax: 1,
+      legendLabel: label, legendMin: lo, legendMax: hi,
+    });
+  }
+})();
+
+/* ── Severity small multiples (one heatmap per model) ── */
+(function(){
+  const d = CHART_DATA.diag_severity;
+  const c = document.getElementById('hm-diag_severity');
+  if(!c) return;
+  if(d.empty){ c.innerHTML = `<div class="empty">Run severity metric first</div>`; return; }
+  c.innerHTML = '<div class="sm-grid"></div>';
+  const grid = c.querySelector('.sm-grid');
+  d.models.forEach(m => {
+    const sub = d.matrices[m];
+    const wrap = document.createElement('div');
+    wrap.innerHTML = `<div class="sm-title">${escapeHtml(m)}</div><div id="hm-sev-${cssEsc(m)}"></div>`;
+    grid.appendChild(wrap);
+    renderHeatmap(`hm-sev-${cssEsc(m)}`, {
+      rowLabels: sub.labels, colLabels: sub.labels, matrix: sub.matrix,
+      fmt: v => v >= 0.5 ? v.toFixed(0) : '·',
+      vmin: 0, vmax: d.z_max || 1,
+    });
+  });
+})();
+function cssEsc(s){ return String(s).replace(/[^a-zA-Z0-9_-]/g, '_'); }
+
+/* ── Drill-down: similarity distribution stacked bars (BERT + ROUGE) ──
+   One stacked bar per model for the selected baseline. The dropdown
+   above the charts swaps both BERT and ROUGE in sync. */
+// SIMILARITY_COLORS is injected from themes.py at the top of this script
+// (search for `const SIMILARITY_COLORS`). Single source of truth lives in
+// metrics/plot/themes.py — edit there to change the HTML similarity palette.
+
+function similarityChart(canvasId, title){
+  return new Chart(document.getElementById(canvasId), {
+    type:'bar',
+    data:{ labels: [], datasets: [] },
+    options:{
+      responsive:true, maintainAspectRatio:false,
+      scales:{
+        x:{ stacked:true, grid:{display:false}, ticks:{autoSkip:false, font:{size:12}} },
+        y:{ stacked:true, min:0, max:100, grid, ticks:{callback:v=>v+'%'} },
+      },
+      layout:{ padding:{bottom:8} },
+      plugins:{
+        title:{display:true, text:title, color: THEME.text, font:{size:13, weight:'600'}},
+        legend:{position:'bottom', labels:{boxWidth:12, padding:8, font:{size:11}}},
+        tooltip:{ callbacks:{ label: ctx => `${ctx.dataset.label}: ${ctx.parsed.y.toFixed(1)}%` } },
+      },
+    }
+  });
+}
+
+function updateSimilarityChart(chart, perBaseline, models, baseline, categories){
+  const dist = perBaseline[baseline] || {};
+  chart.data.labels = models;
+  chart.data.datasets = categories.map((cat, i) => ({
+    label: cat,
+    data: models.map(m => (dist[m] ?? [0,0,0,0,0])[i]),
+    backgroundColor: SIMILARITY_COLORS[cat] + ALPHA,
+    borderColor: SIMILARITY_COLORS[cat],
+    borderWidth: 0,
+  }));
+  chart.update();
+}
+
+(function(){
+  const d = CHART_DATA.drill_similarity;
+  const cBert  = document.getElementById('ch-drill_similarity_bert');
+  const cRouge = document.getElementById('ch-drill_similarity_rouge');
+  if(d.empty){
+    cBert.parentElement.innerHTML  = `<div class="empty">No bert/rouge categorization yet</div>`;
+    cRouge.parentElement.innerHTML = `<div class="empty">No bert/rouge categorization yet</div>`;
+    document.querySelector('.bl-select-row').style.display = 'none';
+    return;
+  }
+  const sel = document.getElementById('drill_similarity_baseline');
+  sel.innerHTML = d.baselines.map(b => `<option value="${escapeHtml(b)}">${escapeHtml(b)}</option>`).join('');
+  const bertCh  = similarityChart('ch-drill_similarity_bert',  'BERTScore');
+  const rougeCh = similarityChart('ch-drill_similarity_rouge', 'ROUGE-L');
+  window._charts.drill_similarity_bert  = bertCh;
+  window._charts.drill_similarity_rouge = rougeCh;
+  function refresh(){
+    const b = sel.value;
+    updateSimilarityChart(bertCh,  d.bert,  d.models, b, d.categories);
+    updateSimilarityChart(rougeCh, d.rouge, d.models, b, d.categories);
+  }
+  sel.addEventListener('change', refresh);
+  refresh();
+})();
+
+/* ── Most-missed vulnerabilities (Drill-down view) ── */
+(function(){
+  const d = CHART_DATA.missed_vulns;
+  const sel  = document.getElementById('missed_baseline');
+  const wrap = document.getElementById('missed-table-wrap');
+  if(!sel || !wrap) return;
+  if(d.empty){
+    document.querySelector('#missed-table-wrap').previousElementSibling.style.display = 'none';
+    return;
+  }
+  sel.innerHTML = d.baselines.map(b => `<option value="${escapeHtml(b)}">${escapeHtml(b)}</option>`).join('');
+  function refresh(){
+    const rows = d.rows[sel.value] || [];
+    if(!rows.length){
+      wrap.innerHTML = `<div class="empty">Nothing missed for this baseline.</div>`;
+      return;
+    }
+    let html = `<table class="lb">
+      <thead><tr>
+        <th class="lb-rank">#</th>
+        <th class="lb-model">Vulnerability name</th>
+        <th>Misses</th>
+        <th>Miss rate</th>
+        <th>Models</th>
+      </tr></thead><tbody>`;
+    rows.forEach((r, i) => {
+      const chips = r.models.map(m => `<span class="mm">${escapeHtml(m)}</span>`).join('');
+      html += `<tr>
+        <td class="lb-rank">${i+1}</td>
+        <td class="lb-model" style="font-family:var(--font-mono);font-size:12px;">${escapeHtml(r.name)}</td>
+        <td class="lb-num">${r.count}</td>
+        <td class="lb-num">${r.pct.toFixed(1)}%</td>
+        <td class="lb-num"><span class="missed-models">${chips}</span><span style="color:var(--text-muted);margin-left:6px;">(${r.n_models})</span></td>
+      </tr>`;
+    });
+    html += `</tbody></table>`;
+    wrap.innerHTML = html;
+  }
+  sel.addEventListener('change', refresh);
+  refresh();
+})();
+
+/* ── Drill-down: per-field text-scorer heatmaps (BERT, ROUGE, Token-F1) ──
+   Baseline selector swaps the 3 heatmaps in sync. The "All baselines"
+   option (key __all__) is the legacy global mean. */
+(function(){
+  const d = CHART_DATA.drill_text;
+  const grid = document.getElementById('drill_text_grid');
+  const sel  = document.getElementById('drill_text_baseline');
+  if(!grid || !sel) return;
+  if(d.empty){
+    grid.innerHTML = `<div class="empty">No bert/rouge/token_f1 metrics yet</div>`;
+    document.querySelector('.card .bl-select-row + #drill_text_grid')?.previousElementSibling?.remove?.();
+    return;
+  }
+  const LABELS = { bert: 'BERTScore F1', rouge: 'ROUGE-L', token_f1: 'Token-F1' };
+  const baselineLabel = b => b === '__all__' ? 'All baselines (mean)' : b;
+
+  sel.innerHTML = d.baselines.map(b =>
+    `<option value="${escapeHtml(b)}">${escapeHtml(baselineLabel(b))}</option>`
+  ).join('');
+
+  // Stack vertically so each heatmap gets full card width.
+  grid.style.gridTemplateColumns = '1fr';
+  grid.innerHTML = d.available.map(s => `
+    <div class="hm-wrap">
+      <div class="hm-subhead">${LABELS[s] || s}</div>
+      <div class="hm" id="hm-drill_text_${s}"></div>
+    </div>`).join('');
+
+  function refresh(){
+    const mats = d.matrices[sel.value] || {};
+    d.available.forEach(s => {
+      renderHeatmap(`hm-drill_text_${s}`, {
+        rowLabels: d.models, colLabels: d.fields, matrix: mats[s],
+        fmt: v => v.toFixed(3), vmin: 0, vmax: 1,
+        legendLabel: LABELS[s] || s, legendMin: '0', legendMax: '1',
+      });
+    });
+  }
+  sel.addEventListener('change', refresh);
+  refresh();
+})();
+</script>
+</body>
+</html>

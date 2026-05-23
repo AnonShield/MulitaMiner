@@ -29,7 +29,11 @@ def convert_single_format(json_file_path: str, format_type: str, args) -> Option
         # Keeps the JSON base name (which already includes model and timestamp)
         if hasattr(args, 'output_file') and args.output_file and args.convert != 'all':
             ext = {'xlsx': '.xlsx', 'csv': '.csv', 'tsv': '.tsv'}.get(format_type, '')
-            output_file = os.path.splitext(args.output_file)[0] + ext
+            # Only strip a recognized format extension; otherwise keep the name as-is
+            # (avoids splitext eating dotted suffixes like "...5.11.0_gpt4_run1").
+            root, current_ext = os.path.splitext(args.output_file)
+            base = root if current_ext.lower() in {'.xlsx', '.csv', '.tsv', '.json'} else args.output_file
+            output_file = base + ext
             # Honor --output-dir when output_file is a bare name
             if (getattr(args, 'output_dir', None)
                     and not os.path.isabs(output_file)
@@ -85,18 +89,18 @@ def execute_conversions(json_file_path: str, args) -> List[str]:
     Args:
         json_file_path: Path to the JSON file to convert
         args: Parsed command-line arguments containing:
-            - args.convert: 'csv', 'tsv', 'xlsx', 'all', or 'none'
+            - args.convert: 'csv', 'tsv', 'xlsx', 'all', or None (no conversion)
             - args.output_dir: Optional output directory
             - args.output_file: Optional output filename
             - args.csv_delimiter: CSV delimiter (default: ',')
             - args.csv_encoding: CSV encoding (default: 'utf-8-sig')
-    
+
     Returns:
         List of paths to converted files
     """
-    convert_type = getattr(args, 'convert', 'none')
-    
-    if convert_type == 'none':
+    convert_type = getattr(args, 'convert', None)
+
+    if not convert_type:
         return []
     
     print(f"\n=== FORMAT CONVERSIONS ===")

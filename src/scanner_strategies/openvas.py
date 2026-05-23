@@ -21,54 +21,90 @@ class OpenVASStrategy(ScannerStrategy):
         """Custom consolidation activates when allow_duplicates=True"""
         return True
     
-    # Constantes para headers (com suporte a markdown opcional)
+    # Header detection — supports three layouts the report can emit:
+    #   (1) "High 443/tcp"                 → severity then port/proto (text PDF)
+    #   (2) "443/tcp High"                 → port/proto then severity (markdown extractor — order reversed)
+    #   (3) "2.1.1 Critical 8019/tcp"      → section-number prefix (markdown TOC numbering)
+    # All three carry the same three groups: severity (group 'sev'), port (group 'port'),
+    # protocol (group 'proto'). Optional `#+ ` prefix accepts markdown headings.
+    _SEV = r"(?P<sev>Critical|High|Medium|Low|Log)"
+    _PORT = r"(?P<port>\d+|general)"
+    _PROTO = r"(?P<proto>[a-zA-Z0-9_-]+)"
+    _SECTION_NUM = r"(?:\d+(?:\.\d+)*\s+)?"  # optional "2.1.1 " prefix
     HEADER_REGEX = re.compile(
-        r"^(?:#+\s+)?(Critical|High|Medium|Low|Log)\s+(\d+|general)/([a-zA-Z0-9_-]+)",
-        re.IGNORECASE
+        rf"^(?:#+\s+)?{_SECTION_NUM}{_SEV}\s+{_PORT}/{_PROTO}",
+        re.IGNORECASE,
     )
+    # Alternative order: port/proto first, severity second (markdown layout).
     HEADER_REGEX_ALT = re.compile(
-        r"^(?:#+\s+)?(Critical|High|Medium|Low|Log)\s+(\d+|general)/([a-zA-Z0-9_-]+)",
-        re.IGNORECASE
+        rf"^(?:#+\s+)?{_PORT}/{_PROTO}\s+{_SEV}",
+        re.IGNORECASE,
     )
     
+    # Lines worth carrying alongside the header — typically the severity+CVSS
+    # line that the LLM needs to populate the cvss field for the first NVT.
+    _CVSS_LINE_RE = re.compile(
+        rf"^(?:#+\s+)?(?:Critical|High|Medium|Low|Log)\s*\(CVSS:\s*[0-9.]+\s*\)",
+        re.IGNORECASE,
+    )
+
     def extract_visual_context(self, visual_layout_path: str) -> Tuple[List, None, None, None]:
-        """Extract severity/port/protocol from visual layout PDF."""
+        """Extract the **last header + its CVSS context** from the visual layout.
+
+        Returns a 4-tuple ``(context_lines, severity, port, protocol)``:
+
+        * ``context_lines``: 1-2 lines — the matched header (``High 25/tcp``)
+          plus the immediately following ``High (CVSS: X.X)`` line **when
+          present**. The CVSS line carries the score for the first NVT after
+          the header; dropping it would force the LLM to invent a cvss for
+          that NVT (the very bug the cleanup of the orange "default by
+          severity" rule was meant to prevent).
+        * Severity / port / protocol: parsed from the header for callers that
+          want the structured tuple.
+
+        Lines unrelated to the header (Summary, page numbers, NVT bodies) are
+        *not* included — that was the noise the previous implementation
+        prepended to block_1.
+        """
         if not visual_layout_path or 'openvas' not in visual_layout_path.lower():
             return [], None, None, None
-        
-        initial_context_lines = []
-        initial_severity = None
-        initial_port = None
-        initial_protocol = None
-        
+
+        initial_severity = initial_port = initial_protocol = None
+        header_idx = None
+        layout_lines = []
+
         try:
             with open(visual_layout_path, encoding="utf-8") as f:
                 layout_lines = [l.strip() for l in f.readlines() if l.strip()]
-            
-            # Search from bottom to top for first valid header
-            found_idx = None
-            for idx in range(len(layout_lines)-1, -1, -1):
+            for idx in range(len(layout_lines) - 1, -1, -1):
                 line = layout_lines[idx]
-                m = self.HEADER_REGEX.match(line)
-                if not m:
-                    m = self.HEADER_REGEX_ALT.match(line)
+                m = self.HEADER_REGEX.match(line) or self.HEADER_REGEX_ALT.match(line)
                 if m:
-                    initial_severity = m.group(1)
-                    initial_port = m.group(2)
-                    initial_protocol = m.group(3)
-                    found_idx = idx
+                    initial_severity = m.group("sev")
+                    initial_port = m.group("port")
+                    initial_protocol = m.group("proto")
+                    header_idx = idx
                     break
-            
-            # Define initial_context_lines as last 5 lines above found header (or all if none)
-            if found_idx is not None:
-                initial_context_lines = layout_lines[max(0, found_idx-4):found_idx+1]
-            else:
-                initial_context_lines = layout_lines[-5:] if layout_lines else []
-        
         except Exception:
             pass
-        
-        return initial_context_lines, initial_severity, initial_port, initial_protocol
+
+        if header_idx is None:
+            return [], initial_severity, initial_port, initial_protocol
+
+        header_line = f"{initial_severity} {initial_port}/{initial_protocol}"
+        context_lines = [header_line]
+
+        # Capture up to the next 2 lines after the header IF they look like
+        # a CVSS info line ("High (CVSS: 7.5)") — the LLM needs that for the
+        # first NVT in the chunk. Stop at NVT: or any non-CVSS noise.
+        for next_line in layout_lines[header_idx + 1: header_idx + 3]:
+            if next_line.lower().startswith("nvt:"):
+                break
+            if self._CVSS_LINE_RE.match(next_line):
+                context_lines.append(next_line)
+                break  # one CVSS line is enough; further lines are noise
+
+        return context_lines, initial_severity, initial_port, initial_protocol
     
     def create_blocks(self, report_text: str, temp_dir: str, initial_context: Tuple, output_ext: str = "txt") -> List[Dict]:
         """Parse OpenVAS report and create blocks for each vulnerability.
@@ -82,7 +118,7 @@ class OpenVASStrategy(ScannerStrategy):
         initial_context_lines, initial_severity, initial_port, initial_protocol = initial_context
 
         file_ext = f".{output_ext}"
-        
+
         lines = report_text.splitlines()
         blocks = []
         current_block = []
@@ -90,16 +126,32 @@ class OpenVASStrategy(ScannerStrategy):
         current_protocol = initial_protocol
         current_severity = initial_severity
         block_idx = 0
-        
-        # Try to extract port/protocol from first NVT
+
+        # Decide ONCE whether the first block actually needs the visual-layout
+        # context prepended. If the report_text already carries a header above
+        # its first NVT, the LLM has all it needs — prepending becomes noise.
+        # If it doesn't, the visual_layout is the only way to recover the
+        # implicit "this NVT belongs to header X" — fall back to it.
         first_nvt_idx = next((i for i, l in enumerate(lines) if l.strip().startswith('NVT:')), None)
+        report_has_inline_header = False
+        if first_nvt_idx is not None:
+            # Search the few lines above the first NVT for a header.
+            window = [lines[i].strip() for i in range(max(0, first_nvt_idx - 3), first_nvt_idx)]
+            for candidate in window:
+                if self.HEADER_REGEX.match(candidate) or self.HEADER_REGEX_ALT.match(candidate):
+                    report_has_inline_header = True
+                    break
+        # Skip the visual-layout prepend when the report already self-describes.
+        prepend_layout = (not report_has_inline_header) and bool(initial_context_lines)
+
+        # Try to extract port/protocol from first NVT
         if first_nvt_idx is not None and first_nvt_idx >= 2:
             port_line = lines[first_nvt_idx - 2].strip()
-            port_match = self.HEADER_REGEX.match(port_line)
+            port_match = self.HEADER_REGEX.match(port_line) or self.HEADER_REGEX_ALT.match(port_line)
             if port_match:
-                current_severity = port_match.group(1)
-                current_port = port_match.group(2)
-                current_protocol = port_match.group(3)
+                current_severity = port_match.group("sev")
+                current_port = port_match.group("port")
+                current_protocol = port_match.group("proto")
             else:
                 alt_match = re.match(r"^(\d+|general)/([a-zA-Z0-9_-]+)", port_line, re.IGNORECASE)
                 if alt_match:
@@ -108,7 +160,8 @@ class OpenVASStrategy(ScannerStrategy):
         
         # Iterate through lines and create blocks by severity headers
         for line in lines:
-            header_match = self.HEADER_REGEX.match(line.strip())
+            stripped = line.strip()
+            header_match = self.HEADER_REGEX.match(stripped) or self.HEADER_REGEX_ALT.match(stripped)
             if header_match:
                 if current_block:
                     bloco_severity = current_severity
@@ -117,7 +170,7 @@ class OpenVASStrategy(ScannerStrategy):
                     block_idx += 1
                     block_path = os.path.join(temp_dir, f"block_{bloco_severity}_{bloco_port}_{bloco_protocol}_{block_idx}{file_ext}")
                     with open(block_path, 'w', encoding='utf-8') as f:
-                        if len(blocks) == 0 and initial_context_lines:
+                        if len(blocks) == 0 and prepend_layout:
                             for ctx_line in initial_context_lines:
                                 f.write(f"{ctx_line}\n")
                             f.write("---\n")
@@ -129,9 +182,9 @@ class OpenVASStrategy(ScannerStrategy):
                         'severity': bloco_severity
                     })
                     current_block = []
-                current_severity = header_match.group(1)
-                current_port = header_match.group(2)
-                current_protocol = header_match.group(3)
+                current_severity = header_match.group("sev")
+                current_port = header_match.group("port")
+                current_protocol = header_match.group("proto")
             current_block.append(line)
         
         # Handle last block
@@ -152,7 +205,7 @@ class OpenVASStrategy(ScannerStrategy):
             
             block_path = os.path.join(temp_dir, f"block_{bloco_severity}_{bloco_port}_{bloco_protocol}_{block_idx}{file_ext}")
             with open(block_path, 'w', encoding='utf-8') as f:
-                if bloco_is_first and initial_context_lines:
+                if bloco_is_first and prepend_layout:
                     for ctx_line in initial_context_lines:
                         f.write(f"{ctx_line}\n")
                     f.write("---\n")

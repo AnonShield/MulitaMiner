@@ -48,6 +48,10 @@ from metrics.entity.compare_extractions_entity import (  # noqa: E402
 SEVERITY_LABELS: list[str] = ["LOG", "LOW", "MEDIUM", "HIGH", "CRITICAL"]
 # Pseudo-labels for values that escape the canonical vocabulary.
 OTHER, EMPTY = "__OTHER__", "__EMPTY__"
+# Pseudo-label for the coverage-aware variant: marks "no counterpart"
+# (omitted baseline row OR hallucinated extraction row). Lets the
+# confusion matrix carry FN/FP information from unmatched records.
+MISSING = "__MISSING__"
 
 
 # ---------------------------------------------------------------------------
@@ -95,6 +99,58 @@ def _build_pairs(
         except (IndexError, KeyError):
             continue
         pairs.append((_normalize_severity(base_sev), _normalize_severity(ext_sev)))
+    return pairs
+
+
+def _build_coverage_aware_pairs(
+    mapping_df: pd.DataFrame | None,
+    baseline_df: pd.DataFrame,
+    extraction_df: pd.DataFrame,
+) -> list[tuple[str, str]]:
+    """Same as ``_build_pairs`` plus the unmatched records.
+
+    Omitted baseline records contribute (base_sev, __MISSING__) — they
+    count as FN for ``base_sev``. Hallucinated extractions contribute
+    (__MISSING__, ext_sev) — FP for ``ext_sev``. Together with the
+    matched pairs this yields a confusion matrix that honestly reflects
+    pipelines that silently skip findings (the selection bias that
+    plagues the matched-only F1).
+    """
+    matched_ext: set[int] = set()
+    matched_base: set[int] = set()
+    pairs: list[tuple[str, str]] = []
+
+    if (mapping_df is not None
+            and "extraction_row_id" in mapping_df.columns
+            and "baseline_row_id" in mapping_df.columns):
+        for _, row in mapping_df.iterrows():
+            ext_id, base_id = row.get("extraction_row_id"), row.get("baseline_row_id")
+            if pd.isna(ext_id) or pd.isna(base_id):
+                continue
+            try:
+                base_sev = baseline_df.iloc[int(base_id)].get("severity")
+                ext_sev = extraction_df.iloc[int(ext_id)].get("severity")
+            except (IndexError, KeyError):
+                continue
+            pairs.append((_normalize_severity(base_sev), _normalize_severity(ext_sev)))
+            matched_ext.add(int(ext_id))
+            matched_base.add(int(base_id))
+
+    # Omitted baseline rows — FN for whatever class the baseline says.
+    if "severity" in baseline_df.columns:
+        for i in range(len(baseline_df)):
+            if i in matched_base:
+                continue
+            pairs.append((_normalize_severity(baseline_df.iloc[i].get("severity")),
+                          MISSING))
+
+    # Hallucinated extraction rows — FP for whatever class the LLM emitted.
+    if "severity" in extraction_df.columns:
+        for i in range(len(extraction_df)):
+            if i in matched_ext:
+                continue
+            pairs.append((MISSING,
+                          _normalize_severity(extraction_df.iloc[i].get("severity"))))
     return pairs
 
 
@@ -146,10 +202,12 @@ def assess(
     except (ValueError, FileNotFoundError):
         mapping_df = None
 
-    baseline_df = _read_first_sheet(baseline_xlsx)
-    extraction_df = _read_first_sheet(extraction_xlsx)
+    from metrics.common.io import load_baseline, load_extraction
+    baseline_df = load_baseline(baseline_xlsx)
+    extraction_df = load_extraction(extraction_xlsx)
 
     pairs = _build_pairs(mapping_df, baseline_df, extraction_df)
+    cov_pairs = _build_coverage_aware_pairs(mapping_df, baseline_df, extraction_df)
 
     labels = list(SEVERITY_LABELS)
     if include_other:
@@ -158,21 +216,36 @@ def assess(
     matrix = _confusion_matrix(pairs, labels)
     per_class = _per_class_metrics(matrix)
 
-    # Macro-F1 over classes with non-zero support — including zero-support
-    # classes inflates the average artificially.
+    # Legacy: macro over classes with non-zero support among matched pairs.
+    # Same selection bias as F1 — a pipeline that omits hard findings can
+    # score artificially high here.
     supported = per_class[per_class["Support"] > 0]
     macro_f1 = float(supported["F1"].mean()) if not supported.empty else 0.0
     micro_tp = int(sum(matrix.loc[lbl, lbl] for lbl in labels))
     micro_total = int(matrix.values.sum())
     accuracy = micro_tp / micro_total if micro_total else 0.0
 
+    # Coverage-aware: include omitted (→ FN) and hallucinated (→ FP) so
+    # pipelines that silently skip findings get penalised. Uses the 5 real
+    # severity labels for macro (MISSING is a pseudo-label, not a real class).
+    cov_matrix = _confusion_matrix(cov_pairs, labels + [MISSING])
+    cov_per_class = _per_class_metrics(cov_matrix.loc[labels + [MISSING], labels + [MISSING]])
+    cov_real = cov_per_class[cov_per_class["Class"].isin(labels)]
+    cov_supported = cov_real[cov_real["Support"] > 0]
+    coverage_aware_macro_f1 = (
+        float(cov_supported["F1"].mean()) if not cov_supported.empty else 0.0
+    )
+
     summary = pd.DataFrame([{
         "n_pairs": len(pairs),
         "macro_F1": macro_f1,
+        "coverage_aware_macro_F1": coverage_aware_macro_f1,
         "accuracy": accuracy,
     }])
 
-    return {"matrix": matrix, "per_class": per_class, "summary": summary}
+    return {"matrix": matrix, "per_class": per_class, "summary": summary,
+            "coverage_aware_matrix": cov_matrix,
+            "coverage_aware_per_class": cov_per_class}
 
 
 # ---------------------------------------------------------------------------
@@ -208,11 +281,16 @@ def main() -> None:
         result["matrix"].to_excel(writer, sheet_name="Confusion")
         result["per_class"].to_excel(writer, sheet_name="Per_Class", index=False)
         result["summary"].to_excel(writer, sheet_name="Summary", index=False)
+        result["coverage_aware_matrix"].to_excel(writer, sheet_name="Confusion_CovAware")
+        result["coverage_aware_per_class"].to_excel(writer, sheet_name="Per_Class_CovAware",
+                                                    index=False)
 
     s = result["summary"].iloc[0]
     print(
         f"[SEVERITY] pairs={int(s['n_pairs'])}, "
-        f"macro_F1={s['macro_F1']:.3f}, accuracy={s['accuracy']:.3f}"
+        f"macro_F1={s['macro_F1']:.3f}, "
+        f"cov_macro_F1={s['coverage_aware_macro_F1']:.3f}, "
+        f"accuracy={s['accuracy']:.3f}"
     )
     print(f"[SEVERITY] saved → {output_xlsx}")
 

@@ -325,23 +325,77 @@ def extract_visual_layout_from_pdf(pdf_path):
          print(f"Error extracting visual layout: {e}")
          return None
 
-def save_visual_layout(content, pdf_path, process_id=None, output_ext="txt"):
+def _resolve_visual_cache_dir(output_dir):
+     """Pick where the visual_layouts cache lives.
+
+     Priority (most-specific first):
+       1. If ``output_dir`` is inside an experiments root (``results_runs[_*]``),
+          cache lives at ``<results_runs_*>/visual_layouts/`` — keeps the
+          cache co-located with the experiment outputs.
+       2. Otherwise, fall back to ``<project_root>/visual_layouts/`` — useful
+          when running ``main.py`` ad-hoc with a custom output dir.
+
+     Heuristic: walk up from output_dir; the first ancestor whose name starts
+     with ``results_runs`` is the experiments root. Stops at filesystem root
+     to avoid infinite loops on weird paths.
      """
-     Salva o layout visual extraído em arquivo de texto para referência.
+     if output_dir:
+         current = os.path.abspath(output_dir)
+         # Cap at 6 levels — typical structure is results_runs/<baseline>/<llm>/<run>/
+         # so 3-4 hops up is enough; extra cushion for nested experiments.
+         for _ in range(6):
+             parent = os.path.dirname(current)
+             if parent == current:
+                 break
+             if os.path.basename(current).lower().startswith("results_runs"):
+                 return os.path.join(current, "visual_layouts")
+             current = parent
+     # Fallback: project root (parent of src/utils/).
+     project_root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+     return os.path.join(project_root, "visual_layouts")
+
+
+def save_visual_layout(content, pdf_path, process_id=None, output_ext="txt", output_dir=None):
+     """
+     Salva o layout visual extraído (texto cru do PDF) em cache compartilhado.
+
+     The visual layout is **deterministic per PDF** — the same input file
+     always produces the same layout text. So caching it once per baseline
+     lets subsequent runs of the same PDF reuse it without re-extraction.
+
+     Cache location depends on context (see :func:`_resolve_visual_cache_dir`):
+       - When invoked under ``results_runs[_*]/`` (the experiments tree),
+         cached files live at ``<that_root>/visual_layouts/``.
+       - Otherwise, project root ``visual_layouts/``.
+
+     Args:
+         content:    extracted layout text (from the PDF reader's summary).
+         pdf_path:   source PDF path — used to derive the cache key.
+         process_id: ignored; kept for caller compatibility.
+         output_ext: txt or md.
+         output_dir: a run dir or output target — used only to locate the
+                     experiments root for cache placement.
+     Returns:
+         Absolute path to the (cached or newly written) layout file, or
+         ``None`` on write error.
      """
      base_name = os.path.splitext(os.path.basename(pdf_path))[0]
-     if process_id:
-         output_visual_path = f"visual_layout_extracted_{base_name}_{process_id}.{output_ext}"
-     else:
-         output_visual_path = f"visual_layout_extracted_{base_name}.{output_ext}"
+     filename = f"{base_name}.{output_ext}"
+
+     cache_dir = _resolve_visual_cache_dir(output_dir)
+     os.makedirs(cache_dir, exist_ok=True)
+     cached_path = os.path.join(cache_dir, filename)
+
+     if os.path.isfile(cached_path):
+         return cached_path
+
      try:
-         with open(output_visual_path, 'w', encoding='utf-8') as f:
-             # Informative header
+         with open(cached_path, 'w', encoding='utf-8') as f:
              f.write(f"Layout Visual Extraído: {os.path.basename(pdf_path)}\n")
              f.write(f"Extraído em: {datetime.datetime.now().strftime('%d/%m/%Y às %H:%M:%S')}\n")
              f.write("=" * 80 + "\n\n")
              f.write(content)
-         return output_visual_path
+         return cached_path
      except Exception as e:
          print(f"Error saving visual layout: {e}")
          return None

@@ -61,9 +61,21 @@ CANONICAL_FIELDS: tuple[str, ...] = (
 
 # Subset compared exactly for ERM. Free-text and list fields are excluded
 # because byte-equality on those is too noisy to be meaningful.
-DETERMINISTIC_FIELDS: tuple[str, ...] = (
+#
+# Note: this list intentionally differs from
+# ``metrics.common.schema_canonicalizer.V2_TO_V3_COERCIBLE_FIELDS`` and from
+# ``src/configs/schema/field_categories.json``. Each list answers a different
+# question:
+#   - ``ERM_FIELDS``                  → fields whose exact equality counts in ERM
+#   - ``V2_TO_V3_COERCIBLE_FIELDS``  → fields whose *type* differs between V2 and V3
+#   - ``field_categories.json``       → general semantic/deterministic categorisation
+# ``protocol`` is in ERM but not coercible (str in both versions); ``plugin_details``
+# is coercible but not in ERM (dict structure too noisy for byte equality).
+ERM_FIELDS: tuple[str, ...] = (
     "cvss", "port", "protocol", "severity", "source",
 )
+# Backwards-compat alias (other modules / tests may still import the old name).
+DETERMINISTIC_FIELDS = ERM_FIELDS
 
 
 # ---------------------------------------------------------------------------
@@ -95,7 +107,7 @@ def compute_erm(pairs: list[tuple[dict, dict]]) -> tuple[int, int]:
     for ext, base in pairs:
         if all(_exact_eq(_canonical_field_value(ext, f),
                          _canonical_field_value(base, f))
-               for f in DETERMINISTIC_FIELDS):
+               for f in ERM_FIELDS):
             exact += 1
     return exact, len(pairs)
 
@@ -226,20 +238,27 @@ def assess(
     except (ValueError, FileNotFoundError):
         mapping_df = None
 
-    baseline_df = _read_first_sheet(baseline_xlsx)
-    extraction_df = _read_first_sheet(extraction_xlsx)
+    from metrics.common.io import load_baseline, load_extraction
+    baseline_df = load_baseline(baseline_xlsx)
+    extraction_df = load_extraction(extraction_xlsx)
 
     matched, ext_only, base_only = _build_lists(mapping_df, baseline_df, extraction_df)
 
     erm, n_pairs = compute_erm(matched)
     presence = compute_field_presence_rates(matched, ext_only, base_only)
 
+    n_ext_total = n_pairs + len(ext_only)
+    n_base_total = n_pairs + len(base_only)
     summary = pd.DataFrame([{
         "n_matched_pairs": n_pairs,
         "n_extraction_unmatched": len(ext_only),
         "n_baseline_unmatched": len(base_only),
         "exact_record_match": (erm / n_pairs) if n_pairs else 0.0,
         "n_exact_records": erm,
+        # Vuln-level rates: normalized per run by baseline/extracted size, so they
+        # don't get biased by baselines of different sizes when aggregated.
+        "vuln_hallucination_rate": (len(ext_only) / n_ext_total) if n_ext_total else 0.0,
+        "vuln_omission_rate": (len(base_only) / n_base_total) if n_base_total else 0.0,
         **presence,
     }])
 

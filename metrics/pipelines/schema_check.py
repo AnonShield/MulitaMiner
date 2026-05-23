@@ -1,22 +1,28 @@
-"""Schema-level metrics for a single run JSON (metrics.md §0 + §1).
+"""Schema-level metrics for a single run JSON (native validation only).
 
 Operates on the *raw* LLM output (JSON) — not the post-processed XLSX —
 because schema fidelity is exactly what we want to measure *before* any
 normalization performed by the conversion step.
 
+Each run is auto-detected as V1/V2/V3 and validated against the SCHEMA
+OF THAT VERSION (i.e., the contract the LLM was actually given). Cross-
+version "canon → V3" metrics were dropped because they are tautological:
+they reward V3 by definition (V3 = the canonical schema). What remains
+is evaluative — "did the LLM follow the prompt it received?".
+
 Reports:
 
-    json_valid              — file parses as JSON
-    schema_conformance_rate — fraction of records with all V3 fields, valid types
-    type_coercion_rate      — coercions applied per coercible field, per record
-    coercion_breakdown      — count of each coercion label
-    extra_fields_rate       — fraction of records with keys outside V3 schema
-    missing_field_counts    — Counter of fields missing across records
-    type_error_examples     — first 20 type-mismatch messages
-    extra_field_counts      — Counter of unexpected keys
+    json_valid                    — file parses as JSON
+    schema_conformance_rate       — fraction of records with all native fields, valid types
+    schema_field_conformance_rate — field-level fraction (softer than record-binary)
+    extra_fields_rate             — fraction of records carrying keys outside the native schema
+    missing_field_counts          — Counter of fields missing across records
+    type_error_field_counts       — Counter of fields failing type check
+    field_failure_counts          — combined missing + type-error counts per field
+    extra_field_counts            — Counter of unexpected keys
 
-Pipeline version is auto-detected from the data: if any record carries
-``cvss`` as a list or ``plugin_details`` as a list, it is V2; otherwise V3.
+Version detection: presence of ``identification``/``http_info`` → V1;
+``cvss`` as list or ``plugin_details`` as list → V2; otherwise V3.
 
 CLI is the project-standard ``parse_arguments_common``: when invoked via
 ``main.py`` it receives ``--baseline-file`` / ``--extraction-file`` /
@@ -50,7 +56,6 @@ if sys.platform.startswith("win") and sys.stdout.encoding and sys.stdout.encodin
 sys.path.insert(0, str(Path(__file__).parents[2]))
 
 from metrics.common.cli import parse_arguments_common  # noqa: E402
-from metrics.common.schema_canonicalizer import canonicalize_records  # noqa: E402
 
 # V3 canonical schema. Lists for ``plugin_details`` are intentionally not
 # accepted here — that is precisely what V2 emits, and we want it flagged
@@ -67,7 +72,7 @@ V3_SCHEMA: dict[str, tuple[type, ...]] = {
     "log_method": (list,),
     "cvss": (float, int, type(None)),
     "port": (int, str, type(None)),
-    "protocol": (str,),
+    "protocol": (str, type(None)),
     "severity": (str,),
     "references": (list,),
     "plugin": (str, type(None)),
@@ -76,16 +81,60 @@ V3_SCHEMA: dict[str, tuple[type, ...]] = {
     "source": (str,),
 }
 
+# V2 canonical schema — what the V2 prompt actually contracted the LLM to emit
+# AT THE TIME OF THE EXPERIMENTS. Verified against the historical prompt:
+#
+#   - ``cvss``     → "ALWAYS return as array, never empty"   → list
+#   - ``severity`` → "MUST be UPPERCASE"                     → str
+#   - ``port``     → "scalar, null when unknown"             → int|str|None
+#
+# Fields added POST-HOC to the V2 extraction outputs (after the experiments
+# already ran, by an external script) are listed below. They were never part
+# of the V2 prompt the LLM saw, so penalising V2 for getting their types
+# wrong would conflate "LLM compliance with prompt" (what schema-native is
+# meant to measure) with "manual post-processing bug". They are excluded
+# from V2_SCHEMA so V2 native conformance reflects only what the LLM was
+# actually asked to produce.
+#
+# The ONLY intentional schema difference V2→V3 that the LLM is responsible for
+# is ``cvss`` (list → float).
+V2_POST_HOC_FIELDS: set[str] = {"plugin_details", "instances"}
+
+V2_SCHEMA: dict[str, tuple[type, ...]] = {
+    field: types for field, types in V3_SCHEMA.items()
+    if field not in V2_POST_HOC_FIELDS
+}
+V2_SCHEMA["cvss"] = (list,)  # only intentional V2→V3 type difference
+
+# V1 canonical schema — the legacy "openvas" profile (main.py).
+# Source of truth: ``v1_output.schema.json`` at the repo root. Differences
+# from V3 the V1 prompt explicitly asked the LLM to emit:
+#   - ``cvss``        list[7] with score at index 0, six nulls after
+#   - ``plugin``      empty list (placeholder; never populated in V1)
+#   - ``identification`` / ``http_info``  empty lists (V1-only placeholders)
+#   - no ``plugin_details`` / ``instances`` (V2+ additions)
+# TEMPORARY — V1 ships with the paper, then this block + V1_POST_HOC_FIELDS
+# come out alongside the V1 canonicalizer rules.
+V1_ONLY_FIELDS: set[str] = {"identification", "http_info"}
+V1_SCHEMA: dict[str, tuple[type, ...]] = {
+    field: types for field, types in V3_SCHEMA.items()
+    if field not in {"plugin_details", "instances"}
+}
+V1_SCHEMA["cvss"] = (list,)  # 7-position array
+V1_SCHEMA["plugin"] = (list,)  # always empty in V1
+V1_SCHEMA["identification"] = (list,)
+V1_SCHEMA["http_info"] = (list,)
+
 
 # ---------------------------------------------------------------------------
 # Pure functions — no I/O, easy to test.
 # ---------------------------------------------------------------------------
 
-def _validate_record(record: dict) -> tuple[list[str], list[str]]:
-    """Return ``(missing_fields, type_errors)`` for one record vs. V3 schema."""
+def _validate_record(record: dict, schema: dict[str, tuple[type, ...]]) -> tuple[list[str], list[str]]:
+    """Return ``(missing_fields, type_errors)`` for one record vs. ``schema``."""
     missing: list[str] = []
     type_errors: list[str] = []
-    for field, allowed in V3_SCHEMA.items():
+    for field, allowed in schema.items():
         if field not in record:
             missing.append(field)
             continue
@@ -96,16 +145,27 @@ def _validate_record(record: dict) -> tuple[list[str], list[str]]:
     return missing, type_errors
 
 
-def _extra_fields(record: dict) -> list[str]:
-    return [k for k in record if k not in V3_SCHEMA]
+def _extra_fields(record: dict, schema: dict[str, tuple[type, ...]],
+                  ignore: set[str] | None = None) -> list[str]:
+    """Fields present in the record but not in the schema. ``ignore`` lists
+    fields known to have been added post-hoc (outside the prompt) — those
+    are not really "extras" the LLM invented, just artefacts of later
+    pipeline steps. Excluding them keeps ``extra_fields_rate`` honest.
+    """
+    ignored = ignore or set()
+    return [k for k in record if k not in schema and k not in ignored]
 
 
 def detect_version(records: list[dict]) -> str:
     """Auto-detect pipeline version from raw records.
 
-    Returns ``"v2"`` if any record exhibits the V2 type signatures
-    (``cvss`` as list, ``plugin_details`` as list); otherwise ``"v3"``.
+    Priority: V1 wins over V2 if V1-only fields are present (``identification``
+    or ``http_info``), since V1 also has ``cvss`` as a list. V2 wins over V3
+    if ``cvss`` is list or ``plugin_details`` is list. Default: V3.
     """
+    has_v1_marker = any(("identification" in r) or ("http_info" in r) for r in records)
+    if has_v1_marker:
+        return "v1"
     for r in records:
         if isinstance(r.get("cvss"), list) or isinstance(r.get("plugin_details"), list):
             return "v2"
@@ -113,11 +173,26 @@ def detect_version(records: list[dict]) -> str:
 
 
 def assess(json_path: Path, version: str | None = None) -> dict[str, Any]:
-    """Compute schema-level metrics for one run file.
+    """Compute schema-level metrics for one run file (native-only).
 
-    Args:
-        json_path: path to raw run JSON.
-        version: pipeline label. ``None`` triggers auto-detection.
+    The function auto-detects the pipeline version of the file (V1/V2/V3)
+    and validates the raw records against the SCHEMA OF THAT VERSION — i.e.,
+    "did the LLM follow the prompt it received?". Output metrics:
+
+        - ``json_valid``                     — file parses as JSON
+        - ``schema_conformance_rate``        — record-level binary (all fields ok)
+        - ``schema_field_conformance_rate``  — field-level fraction
+        - ``missing_field_counts``           — per-field missing counts
+        - ``type_error_field_counts``        — per-field type-error counts
+        - ``extra_fields_rate``              — records carrying keys outside the
+          native schema (penalises LLM-invented fields, ignoring known
+          post-hoc additions like V2's ``plugin_details``/``instances``).
+
+    Cross-version "canonicalised-to-V3" metrics (type-coercion rate, canon
+    conformance) were removed as tautological: they reward V3 by definition.
+    The canonicaliser itself still exists as a preprocessor for downstream
+    scoring (see ``metrics/common/schema_canonicalizer.py`` /
+    ``metrics/pipelines/coverage.py``); it is just no longer reported here.
     """
     raw = json_path.read_text(encoding="utf-8")
     try:
@@ -135,37 +210,64 @@ def assess(json_path: Path, version: str | None = None) -> dict[str, Any]:
     if version is None:
         version = detect_version(records)
 
-    canonical, coercion_stats = canonicalize_records(records)
+    if version == "v1":
+        schema = V1_SCHEMA
+    elif version == "v2":
+        schema = V2_SCHEMA
+    else:
+        schema = V3_SCHEMA
+    records_to_check = records
 
     missing_total: list[str] = []
     type_error_total: list[str] = []
+    type_error_field_counts: Counter = Counter()
     extra_total: list[str] = []
     n_conformant = 0
     n_with_extras = 0
 
-    for record in canonical:
-        missing, type_errors = _validate_record(record)
-        extras = _extra_fields(record)
+    # When validating against V2_SCHEMA, ignore the post-hoc fields when
+    # counting "extras" — they weren't in the V2 prompt, so reporting them
+    # as "LLM invented" would be wrong.
+    extras_ignore = V2_POST_HOC_FIELDS if version == "v2" else set()
+
+    for record in records_to_check:
+        missing, type_errors = _validate_record(record, schema)
+        extras = _extra_fields(record, schema, ignore=extras_ignore)
         missing_total.extend(missing)
         type_error_total.extend(type_errors)
+        for msg in type_errors:
+            # "field: expected X, got Y" — split off the field name.
+            type_error_field_counts[msg.split(":", 1)[0]] += 1
         extra_total.extend(extras)
         if not missing and not type_errors:
             n_conformant += 1
         if extras:
             n_with_extras += 1
 
-    n = max(1, len(canonical))
+    n = max(1, len(records_to_check))
+    missing_counts = dict(Counter(missing_total))
+    # Per-field conformance: # field-checks passing / total field-checks.
+    # Softer than record-level all-or-nothing — one bad field across all records
+    # (e.g. V2's plugin_details) doesn't collapse the metric to 0%.
+    field_failures = sum(missing_counts.values()) + sum(type_error_field_counts.values())
+    field_checks = n * len(schema)
+    field_conformance = 1 - (field_failures / field_checks) if field_checks else 0.0
+    field_failure_counts = {
+        f: missing_counts.get(f, 0) + type_error_field_counts.get(f, 0)
+        for f in set(missing_counts) | set(type_error_field_counts)
+    }
     return {
         "version": version,
         "file": str(json_path),
         "json_valid": True,
-        "n_records": len(canonical),
+        "n_records": len(records_to_check),
         "schema_conformance_rate": n_conformant / n,
-        "type_coercion_rate": coercion_stats["type_coercion_rate"],
-        "coercion_breakdown": coercion_stats["coercion_breakdown"],
+        "schema_field_conformance_rate": field_conformance,
         "extra_fields_rate": n_with_extras / n,
-        "missing_field_counts": dict(Counter(missing_total)),
+        "missing_field_counts": missing_counts,
         "type_error_examples": type_error_total[:20],
+        "type_error_field_counts": dict(type_error_field_counts),
+        "field_failure_counts": field_failure_counts,
         "extra_field_counts": dict(Counter(extra_total)),
     }
 
@@ -201,11 +303,9 @@ def _print_summary(report: dict) -> None:
         f"[SCHEMA] {name} ({report['version']}): "
         f"n={report['n_records']}, "
         f"conformance={report['schema_conformance_rate']:.3f}, "
-        f"coercion={report['type_coercion_rate']:.3f}, "
+        f"field_conformance={report['schema_field_conformance_rate']:.3f}, "
         f"extras={report['extra_fields_rate']:.3f}"
     )
-    for label, count in sorted(report["coercion_breakdown"].items()):
-        print(f"          coercion {label}: {count}")
 
 
 def main() -> None:

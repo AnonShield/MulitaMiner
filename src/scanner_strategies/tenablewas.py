@@ -12,13 +12,16 @@ class TenableWASStrategy(ScannerStrategy):
         """Custom consolidation activates when allow_duplicates=False"""
         return False
     
-    # Constantes para Tenable
+    # Header detection — accepts optional markdown heading prefix (`#+ `) and
+    # section-number prefix (`2.1.1 `) so reports rendered via the markdown
+    # extractor still match. Tenable's "VULNERABILITY ... PLUGIN ID" phrase
+    # is distinctive enough that we don't need an alt-order regex like OpenVAS.
     HEADER_PATTERN = re.compile(
-        r'VULNERABILITY\s+(CRITICAL|HIGH|MEDIUM|LOW|INFO)\s+PLUGIN\s+ID\s+\d+',
+        r'(?:#+\s+)?(?:\d+(?:\.\d+)*\s+)?VULNERABILITY\s+(CRITICAL|HIGH|MEDIUM|LOW|INFO)\s+PLUGIN\s+ID\s+\d+',
         re.IGNORECASE
     )
     SEVERITY_FIELD_PATTERN = re.compile(
-        r'^\s*SEVERITY\s+(CRITICAL|HIGH|MEDIUM|LOW|INFO)\s*$',
+        r'^\s*(?:#+\s+)?SEVERITY\s+(CRITICAL|HIGH|MEDIUM|LOW|INFO)\s*$',
         re.IGNORECASE
     )
     

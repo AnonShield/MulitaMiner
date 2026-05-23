@@ -1,0 +1,770 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MulitaMiner — Pipeline Comparison ({{ versions | join(' vs ') }})</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0A0A0E; --bg-2:#13131B;
+  --surface-1:#17171F; --surface-2:#1F1F2A; --surface-3:#28283A;
+  --border:#2A2A3A; --border-strong:#3A3A4A;
+  --orange:#F97316; --purple:#8B5CF6; --green:#10B981; --blue:#0EA5E9;
+  --yellow:#F59E0B; --red:#EF4444; --cyan:#06B6D4; --pink:#EC4899;
+  --text:#F5F5FA; --text-2:#C7C7D0; --text-3:#8B8BA3; --text-muted:#5A5A6F;
+  --font-sans:'Inter',system-ui,-apple-system,sans-serif;
+  --font-mono:'JetBrains Mono',monospace;
+  --radius:12px;
+  --t:150ms cubic-bezier(.2,.8,.2,1);
+  --alpha:B3;
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased;}
+body{
+  background:var(--bg);color:var(--text);font-family:var(--font-sans);font-size:14px;line-height:1.6;
+  min-height:100vh;display:grid;grid-template-columns:240px 1fr;grid-template-rows:64px 1fr;overflow-x:hidden;
+}
+
+/* Sidebar */
+.sidebar{
+  grid-row:1/-1;grid-column:1;background:linear-gradient(180deg,#0F0F1A,#1A1A28);
+  border-right:1px solid var(--border);padding:24px 16px;
+  position:fixed;height:100vh;width:240px;top:0;left:0;z-index:1000;overflow-y:auto;
+  display:flex;flex-direction:column;gap:24px;
+}
+.brand{display:flex;align-items:center;gap:12px;padding:18px;
+  background:linear-gradient(135deg,rgba(249,115,22,.10),rgba(139,92,246,.10));
+  border:1px solid rgba(249,115,22,.2);border-radius:var(--radius);}
+.brand-icon{width:42px;height:42px;border-radius:8px;background:var(--surface-3);
+  display:flex;align-items:center;justify-content:center;font-weight:700;font-size:18px;}
+.brand-text{font-size:14px;font-weight:800;line-height:1.2;}
+.brand-text .a{color:var(--orange);}
+.brand-text .sub{display:block;font-size:10px;color:var(--text-3);font-weight:600;text-transform:uppercase;letter-spacing:.08em;margin-top:3px;}
+.nav-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--text-muted);padding:12px 8px 8px;}
+.nav-item{display:flex;align-items:center;gap:14px;padding:12px 14px;border-radius:var(--radius);
+  border:1.5px solid transparent;color:var(--text-3);font-size:13px;font-weight:600;
+  text-decoration:none;cursor:pointer;transition:all var(--t);background:transparent;}
+.nav-item:hover{background:var(--surface-2);color:var(--text-2);border-color:var(--orange);transform:translateX(3px);}
+.nav-item.active{background:linear-gradient(135deg,rgba(249,115,22,.18),rgba(139,92,246,.10));
+  border-color:var(--orange);color:var(--orange);}
+.nav-dot{width:10px;height:10px;border-radius:50%;background:currentColor;opacity:.5;flex-shrink:0;}
+.nav-item.active .nav-dot{opacity:1;box-shadow:0 0 10px rgba(249,115,22,.5);}
+
+/* Header */
+header{
+  grid-column:2;grid-row:1;background:linear-gradient(180deg,#0F0F1A,#1A1A28);
+  border-bottom:1px solid var(--border);padding:0 32px;
+  display:flex;align-items:center;justify-content:space-between;z-index:100;
+}
+.h-title{font-size:16px;font-weight:700;}
+.h-sub{font-size:11px;font-family:var(--font-mono);color:var(--text-muted);}
+.badges{display:flex;gap:8px;flex-wrap:wrap;}
+.badge{display:inline-flex;align-items:center;gap:6px;padding:4px 12px;border-radius:12px;
+  font-size:11px;font-weight:600;border:1px solid;text-transform:uppercase;letter-spacing:.05em;}
+.badge::before{content:'';width:5px;height:5px;border-radius:50%;background:currentColor;}
+.b-orange{background:rgba(249,115,22,.10);border-color:rgba(249,115,22,.3);color:var(--orange);}
+.b-purple{background:rgba(139,92,246,.10);border-color:rgba(139,92,246,.3);color:var(--purple);}
+
+/* Main */
+main{grid-column:2;grid-row:2;overflow-y:auto;}
+.content{padding:32px;max-width:1600px;}
+.view{display:none;}
+.view.active{display:block;animation:fade .25s ease-out;}
+@keyframes fade{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:none;}}
+
+/* Hero */
+.hero{margin-bottom:32px;padding:40px;background:linear-gradient(180deg,#0F0F1A,#1A1A28);
+  border:1px solid var(--border);border-radius:16px;position:relative;overflow:hidden;}
+.hero::before{content:'';position:absolute;top:-50%;right:-10%;width:600px;height:600px;
+  background:radial-gradient(circle,rgba(249,115,22,.10),transparent 70%);border-radius:50%;}
+.hero-eye{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--orange);margin-bottom:12px;position:relative;}
+.hero h1{font-size:32px;font-weight:800;letter-spacing:-.02em;line-height:1.15;margin-bottom:14px;position:relative;
+  background:linear-gradient(135deg,var(--text),var(--text-2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.hero p{font-size:14px;color:var(--text-3);max-width:760px;margin-bottom:32px;position:relative;}
+
+/* KPI grid — N versions × M metrics */
+.kpi-versioned{position:relative;display:grid;gap:20px;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));}
+.kpi-block{background:var(--surface-2);border:1.5px solid var(--surface-3);border-radius:14px;padding:18px 20px;}
+.kpi-block .label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--text-muted);margin-bottom:14px;}
+.kpi-version-row{display:flex;justify-content:space-between;align-items:baseline;padding:8px 0;border-bottom:1px solid var(--border);}
+.kpi-version-row:last-child{border-bottom:none;}
+.kpi-version-row .v-name{font-family:var(--font-mono);font-size:11px;color:var(--text-3);text-transform:uppercase;letter-spacing:.04em;}
+.kpi-version-row .v-val{font:700 22px var(--font-mono);color:var(--text);font-variant-numeric:tabular-nums;}
+.kpi-delta{margin-top:10px;display:flex;align-items:center;gap:8px;padding:8px 12px;border-radius:8px;background:var(--surface-1);font-size:12px;font-family:var(--font-mono);}
+.kpi-delta.pos{color:var(--green);background:rgba(16,185,129,.1);}
+.kpi-delta.neg{color:var(--red);background:rgba(239,68,68,.1);}
+.kpi-delta.zero{color:var(--text-3);}
+
+/* Sections + cards (reused tokens) */
+.section-head{display:flex;align-items:baseline;gap:14px;margin-bottom:8px;}
+.section-eye{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--text-muted);}
+.section-title{font-size:22px;font-weight:700;letter-spacing:-.01em;}
+.section-desc{color:var(--text-3);margin-bottom:20px;max-width:760px;}
+.grid{display:grid;gap:20px;}
+.grid.two{grid-template-columns:1fr 1fr;}
+@media(max-width:1300px){.grid.two{grid-template-columns:1fr;}}
+.card{background:var(--surface-2);border:1.5px solid var(--surface-3);border-radius:14px;overflow:hidden;}
+.card-h{padding:18px 20px;display:flex;align-items:center;gap:14px;border-bottom:1px solid var(--border);}
+.card-h-bar{width:4px;height:18px;border-radius:2px;background:var(--c,var(--orange));}
+.card-h-t{font-size:14px;font-weight:700;}
+.card-h-t[title]{cursor:help;border-bottom:1px dotted rgba(255,255,255,.35);}
+.card-d{padding:0 20px 12px;color:var(--text-3);font-size:13px;}
+.chart-box{padding:16px;height:480px;position:relative;}
+.chart-box.tall{height:600px;}
+
+/* Wide leaderboard */
+.lb-wrap{padding:6px 18px 18px;overflow-x:auto;}
+.lb{width:100%;border-collapse:separate;border-spacing:0;font-size:12.5px;min-width:max-content;}
+.lb thead th{padding:10px 12px;font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;
+  color:var(--text-muted);border-bottom:1px solid var(--border);text-align:right;background:transparent;white-space:nowrap;}
+.lb thead th.lb-rank{width:36px;text-align:center;}
+.lb thead th.lb-model,.lb thead th.lb-group-h{text-align:left;}
+.lb thead th.lb-group-h{padding-bottom:4px;color:var(--text-2);font-size:11px;border-bottom:none;}
+.lb thead .lb-sub{padding-top:0;color:var(--text-3);font-size:10px;font-family:var(--font-mono);text-transform:none;letter-spacing:0;}
+.lb tbody td{padding:10px 12px;border-bottom:1px solid var(--border);font-variant-numeric:tabular-nums;text-align:right;color:var(--text-2);font-family:var(--font-mono);}
+.lb tbody tr:last-child td{border-bottom:none;}
+.lb tbody tr:hover td{background:var(--surface-1);}
+.lb td.lb-rank{font-family:var(--font-mono);color:var(--text-muted);font-size:11px;text-align:center;}
+.lb td.lb-model{text-align:left;color:var(--text);font-weight:600;font-family:var(--font-sans);display:flex;align-items:center;gap:10px;}
+.lb-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;background:var(--orange);}
+.lb td.delta-pos{color:var(--green);font-weight:600;}
+.lb td.delta-neg{color:var(--red);font-weight:600;}
+.lb td.delta-zero{color:var(--text-muted);}
+.lb td.lb-group-sep{border-left:2px solid var(--border-strong);}
+
+/* Wilcoxon table */
+.wx{display:grid;gap:1px;background:var(--border);border:1px solid var(--border);border-radius:6px;overflow:hidden;}
+.wx-row{display:grid;grid-template-columns:minmax(140px,1.5fr) repeat(3, 1fr);gap:1px;}
+.wx-cell{background:var(--surface-2);padding:10px 12px;font-size:13px;font-variant-numeric:tabular-nums;text-align:right;font-family:var(--font-mono);}
+.wx-cell.hd{background:var(--surface-3);font-weight:700;color:var(--text-2);font-size:11px;text-transform:uppercase;letter-spacing:.05em;font-family:var(--font-sans);text-align:center;}
+.wx-cell.row-h{background:var(--surface-3);text-align:left;color:var(--text);font-weight:600;font-family:var(--font-sans);}
+.wx-cell.sig{background:rgba(16,185,129,.18);color:var(--green);font-weight:700;}
+.wx-cell.notsig{background:var(--surface-2);color:var(--text-3);}
+.wx-cell .arrow{font-size:11px;margin-right:4px;font-family:var(--font-sans);}
+
+/* Baseline selector */
+.bl-select-row{display:flex;align-items:center;gap:12px;padding:14px 18px 0;}
+.bl-select-label{font-size:11px;color:var(--text-3);font-weight:600;text-transform:uppercase;letter-spacing:.06em;}
+.bl-select{background:var(--surface-1);color:var(--text);border:1px solid var(--border-strong);
+  border-radius:8px;padding:6px 12px;font:13px var(--font-mono);cursor:pointer;outline:none;transition:border-color var(--t);}
+.bl-select:focus,.bl-select:hover{border-color:var(--orange);}
+
+.empty{padding:48px 24px;text-align:center;color:var(--text-muted);font-size:13px;font-style:italic;}
+
+/* Similarity controls — baseline select + scorer toggle on one row */
+.sim-controls{display:flex;align-items:center;gap:24px;padding:14px 18px 0;flex-wrap:wrap;}
+.seg{display:inline-flex;background:var(--surface-1);border:1px solid var(--border-strong);border-radius:8px;padding:3px;}
+.seg-btn{padding:6px 14px;border:0;background:transparent;color:var(--text-3);font:600 12px var(--font-sans);
+  text-transform:uppercase;letter-spacing:.04em;cursor:pointer;border-radius:6px;transition:all var(--t);}
+.seg-btn:hover{color:var(--text-2);}
+.seg-btn.active{background:var(--orange);color:var(--bg);}
+</style>
+</head>
+<body>
+
+<aside class="sidebar">
+  <div class="brand">
+    <div class="brand-icon">Δ</div>
+    <div class="brand-text">Mulita<span class="a">Miner</span><span class="sub">Comparison</span></div>
+  </div>
+  <div>
+    <div class="nav-label">Sections</div>
+    <button class="nav-item active" data-view="summary"><span class="nav-dot"></span>Summary</button>
+    <button class="nav-item" data-view="headline"><span class="nav-dot"></span>Headline</button>
+    <button class="nav-item" data-view="schema"><span class="nav-dot"></span>Schema</button>
+    <button class="nav-item" data-view="similarity"><span class="nav-dot"></span>Similarity</button>
+    <button class="nav-item" data-view="stats"><span class="nav-dot"></span>Statistics</button>
+  </div>
+</aside>
+
+<header>
+  <div>
+    <div class="h-title">Pipeline Comparison</div>
+    <div class="h-sub">{{ report_date }} · {{ versions | length }} versions · {{ models | length }} models</div>
+  </div>
+  <div class="badges">
+    {% for v in versions %}<span class="badge {% if loop.first %}b-purple{% else %}b-orange{% endif %}">{{ v }}</span>{% endfor %}
+  </div>
+</header>
+
+<main><div class="content">
+
+  {# ── Summary ── #}
+  <section class="view active" data-view="summary">
+    <div class="hero">
+      <div class="hero-eye">Pipeline Comparison</div>
+      <h1>{{ versions | join(' vs ') }}</h1>
+      <p>Side-by-side view of {{ models | length }} model{{ '' if models|length == 1 else 's' }} under each pipeline version. KPIs show the mean across all models per version, with the delta of the canonical version vs the baseline. Use the sidebar to drill into headline metrics, schema fidelity, similarity distribution, or paired statistical tests.</p>
+      <div class="kpi-versioned">
+        {% if kpis.empty %}
+        <div class="empty">No comparable metrics yet — run both versions through the pipeline first.</div>
+        {% else %}
+        {% for block in kpis.metrics %}
+        {% set tip = (
+          'Recall × per-match F1 — coverage-aware. Penalises pipelines that silently skip hard vulnerabilities. Use this for honest cross-version comparison. See metrics.md §4.1.'
+            if block.metric == 'effective_f1' else
+          'Macro-averaged F1 over the severity classes (CRITICAL/HIGH/MEDIUM/LOW/LOG). Coverage-aware: omitted baseline records count as FN for their class, hallucinated extractions count as FP — so a pipeline that silently skips findings is penalised, unlike the legacy matched-only macro-F1. Treats each class equally regardless of population.'
+            if block.metric == 'coverage_aware_macro_F1' else
+          'Fraction of matched extraction↔baseline pairs in which ALL five deterministic fields (cvss, port, protocol, severity, source) are byte-identical after canonicalisation. The strictest single number — one wrong field in any record fails the whole pair. Drops sharply when ANY single field regresses (see per-field coverage tables in the regular report).'
+            if block.metric == 'exact_record_match' else
+          'Per-field pass rate against the version-native schema (V2 vs V2_SCHEMA, V3 vs V3_SCHEMA). Soft: averages over all field × record checks rather than demanding 100% per record. Detects which fields the LLM struggled with — see breakdown below.'
+            if block.metric == 'schema_field_conformance_rate_native' else ''
+        ) %}
+        <div class="kpi-block">
+          <div class="label"{% if tip %} title="{{ tip }}" style="cursor:help;border-bottom:1px dotted currentColor;display:inline-block;"{% endif %}>{{ block.label }}</div>
+          {% for v, val in block['values'].items() %}
+          <div class="kpi-version-row">
+            <span class="v-name">{{ v }}</span>
+            <span class="v-val">{% if block.is_pct %}{{ "%.2f"|format(val) }}%{% else %}{{ "%.3f"|format(val) }}{% endif %}</span>
+          </div>
+          {% endfor %}
+          {% for v, delta in block['deltas'].items() %}
+          <div class="kpi-delta {% if delta > 0 %}pos{% elif delta < 0 %}neg{% else %}zero{% endif %}">
+            <span>Δ {{ v }} − {{ block.baseline_version }}</span>
+            <span style="margin-left:auto;font-weight:700;">{% if delta >= 0 %}+{% endif %}{% if block.is_pct %}{{ "%.2f"|format(delta) }}pp{% else %}{{ "%.3f"|format(delta) }}{% endif %}</span>
+          </div>
+          {% endfor %}
+        </div>
+        {% endfor %}
+        {% endif %}
+      </div>
+    </div>
+
+    {# Leaderboard wide #}
+    <div class="card" style="--c:var(--orange);">
+      <div class="card-h"><div class="card-h-bar"></div><div class="card-h-t" title="Wide table: rows = model, columns = (metric × version + Δ). One cell per version per metric, with a Δ column showing canonical − baseline. Models sorted by F1 (coverage-aware) of the canonical (last) version. Dashes mean the metric isn't available for that model.">Per-model leaderboard — {{ versions | join(' vs ') }}</div></div>
+      <div class="card-d">All headline metrics × all versions in one place. Δ column compares the last version (right) against the first (left). Models sorted by F1 of the canonical (last) version.</div>
+      {% if leaderboard.empty %}
+      <div class="empty">No comparable metrics yet.</div>
+      {% else %}
+      <div class="lb-wrap">
+        <table class="lb">
+          <thead>
+            <tr>
+              <th class="lb-rank" rowspan="2">#</th>
+              <th class="lb-model" rowspan="2">Model</th>
+              {% for spec in leaderboard.metrics %}
+              <th class="lb-group-h" colspan="{{ leaderboard.versions | length + 1 }}">{{ spec.label }}</th>
+              {% endfor %}
+            </tr>
+            <tr>
+              {% for spec in leaderboard.metrics %}
+                {% for v in leaderboard.versions %}<th class="lb-sub{% if loop.first %} lb-group-sep{% endif %}">{{ v }}</th>{% endfor %}
+                <th class="lb-sub">Δ</th>
+              {% endfor %}
+            </tr>
+          </thead>
+          <tbody>
+            {% for m in leaderboard.models %}
+            <tr>
+              <td class="lb-rank">{{ loop.index }}</td>
+              <td class="lb-model"><span class="lb-dot"></span>{{ m }}</td>
+              {% for spec in leaderboard.metrics %}
+                {% set row = leaderboard.cells[m][spec.metric_key] %}
+                {% for v in leaderboard.versions %}
+                  <td{% if loop.first %} class="lb-group-sep"{% endif %}>{% if row[v] is none %}—{% elif spec.is_pct %}{{ "%.2f"|format(row[v]) }}%{% else %}{{ "%.3f"|format(row[v]) }}{% endif %}</td>
+                {% endfor %}
+                {% set d = row['delta'] %}
+                <td class="{% if d is none %}delta-zero{% elif d > 0 %}delta-pos{% elif d < 0 %}delta-neg{% else %}delta-zero{% endif %}">{% if d is none %}—{% elif d >= 0 %}+{{ "%.2f"|format(d) }}{% else %}{{ "%.2f"|format(d) }}{% endif %}{% if spec.is_pct %}pp{% endif %}</td>
+              {% endfor %}
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      {% endif %}
+    </div>
+  </section>
+
+  {# ── Headline ── #}
+  <section class="view" data-view="headline">
+    <div class="section-head"><span class="section-eye">02</span><h2 class="section-title">Headline metrics — version vs version</h2></div>
+    <p class="section-desc">Grouped bars: each model has one bar per version. Shows where the version delta lives — uniformly across models, or concentrated on a few.</p>
+
+    {# Recall × F1 scatter — visualises the Pareto move per model. #}
+    <div class="card" style="--c:var(--orange);margin-bottom:20px;">
+      <div class="card-h"><div class="card-h-bar"></div><div class="card-h-t" title="Scatter of per-model points across versions. X = recall (1 − omission_rate); Y = per-match F1. Arrows connect the same model V→Vnext. Dashed diagonals are iso-F1-coverage-aware contours. Top-right is ideal. Move down-right + crossing a higher contour = real improvement (typical V2→V3).">Coverage trade-off — Recall × per-match F1</div></div>
+      <div class="card-d">Each point = one (model, version). <strong>Colour encodes the model; shape encodes the version</strong> — triangles = first version (baseline), circles = last version (canonical). Arrows connect the same model across versions (tail = older, head = newer). <strong>Top-right is ideal</strong> (high recall + high F1). A move down-right is the typical V2→V3 pattern when the new pipeline matches harder vulns. Dashed diagonals are iso-Effective-F1 contours: points on the same curve have the same recall × F1.</div>
+      <div class="chart-box tall"><canvas id="ch-recall_vs_f1"></canvas></div>
+    </div>
+
+    <div class="grid two">
+      {% set _accent = ['var(--green)', 'var(--blue)', 'var(--yellow)', 'var(--purple)', 'var(--cyan)', 'var(--magenta)'] %}
+      {% for block in chart_data_headline.metrics %}
+      <div class="card" style="--c:{{ _accent[loop.index0 % _accent|length] }};">
+        <div class="card-h"><div class="card-h-bar"></div><div class="card-h-t" title="Grouped bars per model, one bar per version. Shows where the version delta lives — uniform across models or concentrated on a few. Same metric as the matching KPI card up top.">{{ block.label }}</div></div>
+        <div class="chart-box"><canvas id="ch-headline_{{ block.metric }}"></canvas></div>
+      </div>
+      {% endfor %}
+    </div>
+  </section>
+
+  {# ── Schema ── #}
+  <section class="view" data-view="schema">
+    <div class="section-head"><span class="section-eye">03</span><h2 class="section-title">Schema fidelity — JSON validity + native conformance</h2></div>
+    <p class="section-desc">Cada versão é julgada pelo próprio schema (LLM compliance com seu próprio prompt). Métricas que tratam V3 como referência foram removidas por serem tautológicas — V3 sempre vence elas por definição.</p>
+    <div class="card" style="--c:var(--green);">
+      <div class="card-h"><div class="card-h-bar"></div><div class="card-h-t" title="Per (model, version), % of records whose raw LLM output was parseable JSON without repair. Floor metric — 100% is expected. <100% indicates the LLM emits preamble, markdown fences, mid-response truncation, or quote-escape issues.">JSON validity rate per model</div></div>
+      <div class="chart-box"><canvas id="ch-jsonvalid"></canvas></div>
+    </div>
+    {% if not schema_field_failures.empty %}
+    <div class="card" style="--c:var(--magenta);margin-top:20px;">
+      <div class="card-h"><div class="card-h-bar"></div><div class="card-h-t" title="For each schema field × (version, model), fraction of records where the field failed the version-native schema (wrong type or missing). Lower is better. Sorted with biggest offenders first. A field at 100% means the LLM emitted the wrong type for every record (e.g. V2's plugin_details as list).">Per-field failure rate — version-native schema</div></div>
+      <div class="card-d">Fraction of records where each field violated the version's own schema (type mismatch or missing). Lower is better. Sorted with biggest offenders first — these are what drag the per-field LLM-compliance KPI down. <strong>A field at 100% means the LLM emitted the wrong type for it on every single record</strong> (e.g. V2's <code>plugin_details</code> as list when the prompt asked for dict).</div>
+      <div class="lb-wrap">
+        <table class="lb">
+          <thead>
+            <tr>
+              <th style="text-align:left;">Field</th>
+              {% for v in schema_field_failures.versions %}
+                {% for m in schema_field_failures.models %}
+                <th>{{ v }} · {{ m }}</th>
+                {% endfor %}
+              {% endfor %}
+            </tr>
+          </thead>
+          <tbody>
+            {% for f in schema_field_failures.fields %}
+            <tr>
+              <td style="text-align:left;font-weight:600;"><code>{{ f }}</code></td>
+              {% for v in schema_field_failures.versions %}
+                {% for m in schema_field_failures.models %}
+                {% set r = schema_field_failures.rates[v][m][f] %}
+                <td class="{% if r >= 0.5 %}neg{% elif r >= 0.05 %}zero{% elif r > 0 %}pos{% endif %}">
+                  {% if r > 0 %}{{ "%.2f"|format(r * 100) }}%{% else %}·{% endif %}
+                </td>
+                {% endfor %}
+              {% endfor %}
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+    {% endif %}
+  </section>
+
+  {# ── Similarity ── #}
+  <section class="view" data-view="similarity">
+    <div class="section-head"><span class="section-eye">04</span><h2 class="section-title">Similarity distribution</h2></div>
+    <p class="section-desc">Stacked share of vulnerabilities falling in each similarity bucket per model. Use the baseline selector to drill in. <em>Non-existent</em> excluded — it isn't a similarity score.</p>
+    <div class="card" style="--c:var(--orange);">
+      <div class="card-h"><div class="card-h-bar"></div><div class="card-h-t" id="sim_card_title" title="Stacked-bar share of vulnerabilities falling into each similarity bucket (Highly/Moderately/Slightly Similar, Divergent, Absent) per (model, version) under the selected baseline. Switch the scorer with the toggle (BERTScore = semantic, ROUGE-L = lexical). Non-existent excluded — that's LLM invention, not similarity.">Similarity per version</div></div>
+      <div class="sim-controls">
+        <div class="bl-select-row" style="padding:0;">
+          <label for="sim_baseline" class="bl-select-label">Baseline</label>
+          <select id="sim_baseline" class="bl-select"></select>
+        </div>
+        <div class="seg" role="tablist" id="sim_scorer_toggle">
+          <button type="button" class="seg-btn active" data-scorer="bert"  role="tab" aria-selected="true">BERTScore</button>
+          <button type="button" class="seg-btn"        data-scorer="rouge" role="tab" aria-selected="false">ROUGE-L</button>
+        </div>
+      </div>
+      <div class="chart-box tall"><canvas id="ch-sim"></canvas></div>
+    </div>
+  </section>
+
+  {# ── Statistics ── #}
+  <section class="view" data-view="stats">
+    <div class="section-head"><span class="section-eye">05</span><h2 class="section-title">Paired statistics — Wilcoxon</h2></div>
+    <p class="section-desc">Per-model paired Wilcoxon between {{ wilcoxon.versions[0] }} and {{ wilcoxon.versions[1] }} on F1 (paired by target × run). Bonferroni-adjusted across the model family. Green = significant difference (p &lt; 0.05).</p>
+    <div class="card" style="--c:var(--red);">
+      <div class="card-h"><div class="card-h-bar"></div><div class="card-h-t" title="Paired Wilcoxon signed-rank test per model on F1, paired by (target, run). Bonferroni-corrected p-values across the model family. p < 0.05 + positive Δ direction = canonical version is significantly better. Non-significant = can't tell with this many runs.">{{ wilcoxon.versions[0] }} vs {{ wilcoxon.versions[1] }} — F1 paired test</div></div>
+      <div class="card-d">Direction tells which version scored higher on average (positive Δ means {{ wilcoxon.versions[1] }} &gt; {{ wilcoxon.versions[0] }}).</div>
+      {% if wilcoxon.empty %}
+      <div class="empty">{{ wilcoxon.reason or 'Need both versions with paired (target, run) samples.' }}</div>
+      {% else %}
+      <div class="lb-wrap">
+        <div class="wx">
+          <div class="wx-row">
+            <div class="wx-cell hd">Model</div>
+            <div class="wx-cell hd">p (Bonferroni)</div>
+            <div class="wx-cell hd">Significant?</div>
+            <div class="wx-cell hd">Δ direction</div>
+          </div>
+          {% for m in wilcoxon.models %}
+          {% set p = wilcoxon.p_values[m] %}
+          {% set sig = wilcoxon.significant.get(m, False) %}
+          {% set d = wilcoxon.direction[m] %}
+          <div class="wx-row">
+            <div class="wx-cell row-h">{{ m }}</div>
+            <div class="wx-cell">{% if p is none %}—{% else %}{{ "%.4f"|format(p) }}{% endif %}</div>
+            <div class="wx-cell {% if sig %}sig{% else %}notsig{% endif %}">{% if p is none %}n/a{% elif sig %}yes{% else %}no{% endif %}</div>
+            <div class="wx-cell"><span class="arrow">{% if d > 0 %}↑{% elif d < 0 %}↓{% else %}={% endif %}</span>{% if d >= 0 %}+{% endif %}{{ "%.3f"|format(d) }}</div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+      {% endif %}
+    </div>
+
+    {# ── Δ CV per model — did the new version make the LLM more reproducible? ── #}
+    <div class="card" style="--c:var(--cyan); margin-top:20px;">
+      <div class="card-h"><div class="card-h-bar"></div><div class="card-h-t" title="Coefficient of Variation (CV = σ/μ) of F1 across runs, computed per (version, model). Δ CV = canonical − baseline. Negative Δ (green) = canonical version is more reproducible (less run-to-run noise). Answers: did the new pipeline make the LLM behave more consistently?">Δ CV per model — reproducibility shift</div></div>
+      <div class="card-d">CV (= σ/μ on F1 across runs) compared between versions. <strong>Negative Δ = improvement</strong> (the canonical version is more reproducible). Bands at ±2pp / ±5pp roughly map to the qualitative bands in metrics.md §5.1.</div>
+      {% if cv.empty %}
+      <div class="empty">{{ cv.reason or 'Need entity F1 in both versions.' }}</div>
+      {% else %}
+      <div class="lb-wrap">
+        <div class="wx">
+          <div class="wx-row">
+            <div class="wx-cell hd">Model</div>
+            <div class="wx-cell hd">CV {{ cv.baseline_version }}</div>
+            <div class="wx-cell hd">CV {{ cv.canonical_version }}</div>
+            <div class="wx-cell hd">Δ CV</div>
+          </div>
+          {% for m in cv.models %}
+          {% set a = cv.cv[cv.baseline_version].get(m) %}
+          {% set b = cv.cv[cv.canonical_version].get(m) %}
+          {% set d = cv.delta.get(m) %}
+          <div class="wx-row">
+            <div class="wx-cell row-h">{{ m }}</div>
+            <div class="wx-cell">{% if a is none %}—{% else %}{{ "%.2f%%"|format(a*100) }}{% endif %}</div>
+            <div class="wx-cell">{% if b is none %}—{% else %}{{ "%.2f%%"|format(b*100) }}{% endif %}</div>
+            <div class="wx-cell {% if d is none %}notsig{% elif d < 0 %}sig{% else %}notsig{% endif %}">
+              {% if d is none %}—
+              {% elif d > 0 %}↑ +{{ "%.2fpp"|format(d*100) }}
+              {% elif d < 0 %}↓ {{ "%.2fpp"|format(d*100) }}
+              {% else %}= 0
+              {% endif %}
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+      {% endif %}
+    </div>
+  </section>
+
+</div></main>
+
+<script>
+const CHART_DATA   = {{ chart_data_json | safe }};
+const VERSIONS     = {{ versions_json | safe }};
+const PALETTE      = {{ palette_json | safe }};
+const SIMILARITY_COLORS = {{ similarity_colors_json | safe }};
+const THEME        = {{ theme_tokens_json | safe }};
+const ALPHA = 'B3';
+
+/* View switching */
+const navs = document.querySelectorAll('.nav-item[data-view]');
+const views = document.querySelectorAll('.view[data-view]');
+function show(id){
+  views.forEach(v => v.classList.toggle('active', v.dataset.view === id));
+  navs.forEach(n => n.classList.toggle('active', n.dataset.view === id));
+  Object.values(window._charts || {}).forEach(c => c && c.resize());
+}
+navs.forEach(n => n.addEventListener('click', () => show(n.dataset.view)));
+
+/* Chart.js defaults */
+Chart.defaults.font.family = "'Inter', system-ui, sans-serif";
+Chart.defaults.color = THEME.text_2;
+Chart.defaults.borderColor = THEME.border;
+Chart.defaults.plugins.legend.labels.color = THEME.text;
+Chart.defaults.plugins.tooltip.backgroundColor = THEME.surface_3;
+Chart.defaults.plugins.tooltip.titleColor = THEME.text;
+Chart.defaults.plugins.tooltip.bodyColor = THEME.text_2;
+Chart.defaults.plugins.tooltip.borderColor = THEME.border_strong;
+Chart.defaults.plugins.tooltip.borderWidth = 1;
+const grid = { color: 'rgba(58,58,74,.4)', drawBorder: false };
+
+window._charts = {};
+function escapeHtml(s){ return String(s).replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch])); }
+const VERSION_COLOR = (vi) => PALETTE[vi % PALETTE.length];
+
+/* Headline grouped bars — one canvas per metric */
+function buildHeadlineChart(canvasId, metricKey){
+  const block = (CHART_DATA.headline.metrics || []).find(b => b.metric === metricKey);
+  const cv = document.getElementById(canvasId);
+  if(!cv) return;
+  if(!block){
+    cv.parentElement.innerHTML = '<div class="empty">No data for this metric yet</div>';
+    return;
+  }
+  const versions = Object.keys(block.values_by_model[Object.keys(block.values_by_model)[0]] || {});
+  const models = Object.keys(block.values_by_model);
+  const datasets = versions.map((v, vi) => ({
+    label: v,
+    data: models.map(m => block.values_by_model[m][v] ?? 0),
+    backgroundColor: VERSION_COLOR(vi) + ALPHA,
+    borderColor: VERSION_COLOR(vi),
+    borderWidth: 1,
+    borderRadius: 4,
+  }));
+  window._charts[canvasId] = new Chart(cv, {
+    type:'bar',
+    data:{ labels: models, datasets },
+    options:{
+      responsive:true, maintainAspectRatio:false,
+      scales:{
+        y:{ min:0, max: block.is_pct ? 100 : 1, grid,
+            ticks:{ callback: v => block.is_pct ? v+'%' : v } },
+        x:{ grid:{display:false}, ticks:{autoSkip:false, font:{size:12}} },
+      },
+      plugins:{ legend:{position:'top'} },
+    }
+  });
+}
+
+(CHART_DATA.headline.metrics || [])
+  .forEach(b => buildHeadlineChart(`ch-headline_${b.metric}`, b.metric));
+
+/* Recall × F1 scatter with version-arrows per model. */
+(function(){
+  const d = CHART_DATA.recall_vs_f1;
+  const cv = document.getElementById('ch-recall_vs_f1');
+  if(!cv) return;
+  if(d.empty){
+    cv.parentElement.innerHTML = `<div class="empty">${d.reason || 'No coverage / F1 data yet'}</div>`;
+    return;
+  }
+  // One scatter dataset per version (color-coded), plus iso-Effective-F1 diagonals.
+  const sortedModels = [...new Set(d.points.map(p => p.model))].sort();
+  const modelColor = m => PALETTE[sortedModels.indexOf(m) % PALETTE.length];
+
+  const datasets = d.versions.map((v, vi) => ({
+    label: v,
+    data: d.points.filter(p => p.version === v).map(p => ({
+      x: p.recall, y: p.f1, model: p.model, version: p.version, eff: p.effective,
+    })),
+    backgroundColor: d.points.filter(p => p.version === v).map(p => modelColor(p.model) + ALPHA),
+    borderColor: d.points.filter(p => p.version === v).map(p => modelColor(p.model)),
+    borderWidth: vi === d.versions.length - 1 ? 2.5 : 1.5,
+    pointRadius: vi === d.versions.length - 1 ? 9 : 7,
+    pointStyle: vi === d.versions.length - 1 ? 'circle' : 'triangle',
+    pointHoverRadius: 12,
+  }));
+
+  // Iso-Effective-F1 contours: curves where recall * f1 = const.
+  // Plotted as line datasets at eff = 0.5, 0.7, 0.85.
+  const isoContours = [0.5, 0.7, 0.85].map(eff => {
+    const pts = [];
+    for(let r = eff; r <= 1.001; r += 0.01){
+      pts.push({x: r, y: eff / r});
+    }
+    return {
+      label: `Eff = ${eff}`, data: pts, type: 'line',
+      borderColor: THEME.border_strong, borderWidth: 1, borderDash: [3, 3],
+      pointRadius: 0, fill: false, showLine: true, tension: 0.1,
+    };
+  });
+
+  // Per-model arrows: custom plugin draws lines from v0→v1 for each model.
+  const arrowPlugin = {
+    id: 'modelArrows',
+    afterDatasetsDraw(chart){
+      if(d.versions.length < 2) return;
+      const {ctx, scales} = chart;
+      const xS = scales.x, yS = scales.y;
+      const byModel = {};
+      d.points.forEach(p => (byModel[p.model] ||= {})[p.version] = p);
+      const v0 = d.versions[0], v1 = d.versions[d.versions.length - 1];
+      ctx.save();
+      Object.entries(byModel).forEach(([m, pts]) => {
+        const a = pts[v0], b = pts[v1];
+        if(!a || !b) return;
+        const x1 = xS.getPixelForValue(a.x), y1 = yS.getPixelForValue(a.y);
+        const x2 = xS.getPixelForValue(b.x), y2 = yS.getPixelForValue(b.y);
+        ctx.strokeStyle = modelColor(m);
+        ctx.fillStyle = modelColor(m);
+        ctx.lineWidth = 1.6;
+        ctx.globalAlpha = 0.55;
+        ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2, y2); ctx.stroke();
+        // Arrowhead.
+        const ang = Math.atan2(y2 - y1, x2 - x1);
+        const ah = 8;
+        ctx.beginPath();
+        ctx.moveTo(x2, y2);
+        ctx.lineTo(x2 - ah * Math.cos(ang - Math.PI/6), y2 - ah * Math.sin(ang - Math.PI/6));
+        ctx.lineTo(x2 - ah * Math.cos(ang + Math.PI/6), y2 - ah * Math.sin(ang + Math.PI/6));
+        ctx.closePath(); ctx.fill();
+      });
+      ctx.restore();
+    }
+  };
+
+  window._charts['recall_vs_f1'] = new Chart(cv, {
+    type: 'scatter',
+    data: { datasets: [...isoContours, ...datasets] },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      scales: {
+        x: { min: 0, max: 1, title: {display:true, text: 'Recall (1 − omission_rate)'},
+             ticks: {callback: v => (v*100).toFixed(0)+'%'}, grid },
+        y: { min: 0, max: 1, title: {display:true, text: 'Per-match F1 score'},
+             ticks: {callback: v => v.toFixed(2)}, grid },
+      },
+      plugins: {
+        legend: {
+          position: 'top',
+          labels: {
+            usePointStyle: true,   // show shape (triangle/circle) instead of colored square
+            color: THEME.text,
+            // Hide the iso-contour entries; show only versions.
+            filter: item => !item.text.startsWith('Eff ='),
+            generateLabels(chart){
+              // Default would use the dataset's first colour, which is per-model;
+              // override with a neutral token so the legend communicates "shape =
+              // version, colour-per-point = model" without lying.
+              const items = Chart.defaults.plugins.legend.labels.generateLabels(chart);
+              return items
+                .filter(it => !it.text.startsWith('Eff ='))
+                .map(it => {
+                  const ds = chart.data.datasets[it.datasetIndex];
+                  return {
+                    ...it,
+                    fillStyle: THEME.text_2,
+                    strokeStyle: THEME.text_2,
+                    lineWidth: 1,
+                    pointStyle: ds.pointStyle || 'circle',
+                  };
+                });
+            },
+          },
+        },
+        tooltip: {
+          callbacks: {
+            label: ctx => {
+              const p = ctx.raw;
+              if(p.model === undefined) return null;  // iso line
+              return `${p.model} (${p.version}): recall=${(p.x*100).toFixed(1)}%, F1=${p.y.toFixed(3)}, eff=${p.eff.toFixed(3)}`;
+            },
+          },
+        },
+      },
+    },
+    plugins: [arrowPlugin],
+  });
+})();
+
+
+/* JSON validity bar */
+(function(){
+  const d = CHART_DATA.json_validity;
+  const cv = document.getElementById('ch-jsonvalid');
+  if(!cv) return;
+  if(d.empty){
+    cv.parentElement.innerHTML = '<div class="empty">No json_valid rows yet</div>';
+    return;
+  }
+  const datasets = d.versions.map((v, vi) => ({
+    label: v,
+    data: d.values[v].map(x => x ?? 0),
+    backgroundColor: VERSION_COLOR(vi) + ALPHA,
+    borderColor: VERSION_COLOR(vi),
+    borderWidth: 1, borderRadius: 4,
+  }));
+  window._charts['jsonvalid'] = new Chart(cv, {
+    type:'bar',
+    data:{ labels: d.models, datasets },
+    options:{
+      responsive:true, maintainAspectRatio:false,
+      scales:{ y:{min:0, max:100, grid, ticks:{callback:v=>v+'%'}},
+               x:{grid:{display:false}, ticks:{autoSkip:false}} },
+      plugins:{ legend:{position:'top'} },
+    }
+  });
+})();
+
+/* Similarity per-baseline per-version — single canvas, V vs V grouped per
+   model (Chart.js `stack` per version). Toggle switches BERT ↔ ROUGE. */
+(function(){
+  const d = CHART_DATA.similarity;
+  const sel    = document.getElementById('sim_baseline');
+  const cv     = document.getElementById('ch-sim');
+  const toggle = document.getElementById('sim_scorer_toggle');
+  const title  = document.getElementById('sim_card_title');
+  if(!sel || !cv || !toggle) return;
+  if(d.empty){
+    cv.parentElement.innerHTML = '<div class="empty">No bert/rouge categorization yet</div>';
+    document.querySelector('.sim-controls').style.display = 'none';
+    return;
+  }
+  sel.innerHTML = d.baselines.map(b => `<option value="${escapeHtml(b)}">${escapeHtml(b)}</option>`).join('');
+
+  let activeScorer = 'bert';
+  let chart = null;
+  const SCORER_LABELS = { bert: 'BERTScore', rouge: 'ROUGE-L' };
+
+  function build(){
+    if(chart) chart.destroy();
+    const perVersion = activeScorer === 'bert' ? d.bert : d.rouge;
+    const baseline = sel.value;
+    // x-axis: one tick per model. Each version has its own stack (Chart.js
+    // groups stacks side by side automatically). 5 categories per stack.
+    const labels = d.models;
+    const datasets = [];
+    d.versions.forEach((v, vi) => {
+      d.categories.forEach((cat, ci) => {
+        datasets.push({
+          label: `${cat} — ${v}`,
+          categoryName: cat, versionName: v,
+          stack: v,  // <-- key: separate stack per version
+          data: d.models.map(m => (perVersion[v][baseline]?.[m] || [0,0,0,0,0])[ci]),
+          backgroundColor: SIMILARITY_COLORS[cat] + ALPHA,
+          borderColor: SIMILARITY_COLORS[cat],
+          borderWidth: 0,
+        });
+      });
+    });
+    chart = new Chart(cv, {
+      type:'bar',
+      data:{ labels, datasets },
+      options:{
+        responsive:true, maintainAspectRatio:false,
+        scales:{
+          x:{ stacked:true, grid:{display:false}, ticks:{autoSkip:false, font:{size:12}} },
+          y:{ stacked:true, min:0, max:100, grid, ticks:{callback:v=>v+'%'} },
+        },
+        plugins:{
+          legend:{
+            position:'bottom',
+            // Collapse to one chip per category (5 entries) instead of 5×N.
+            labels:{
+              boxWidth:12, padding:8, font:{size:11}, color: THEME.text,
+              generateLabels(chart){
+                const seen = new Set();
+                return chart.data.datasets.filter(ds => {
+                  if(seen.has(ds.categoryName)) return false;
+                  seen.add(ds.categoryName); return true;
+                }).map(ds => ({
+                  text: ds.categoryName,
+                  fillStyle: SIMILARITY_COLORS[ds.categoryName],
+                  strokeStyle: SIMILARITY_COLORS[ds.categoryName],
+                  fontColor: THEME.text,
+                  lineWidth: 0, hidden: false,
+                }));
+              },
+            },
+          },
+          tooltip:{ callbacks:{
+            title: items => `${items[0].label} · ${items[0].dataset.versionName}`,
+            label: ctx => `${ctx.dataset.categoryName}: ${ctx.parsed.y.toFixed(1)}%`,
+          }},
+        },
+      }
+    });
+  }
+
+  function setScorer(s){
+    activeScorer = s;
+    toggle.querySelectorAll('.seg-btn').forEach(b => {
+      const on = b.dataset.scorer === s;
+      b.classList.toggle('active', on);
+      b.setAttribute('aria-selected', on ? 'true' : 'false');
+    });
+    if(title) title.textContent = `Similarity per version — ${SCORER_LABELS[s]}`;
+    build();
+  }
+  toggle.querySelectorAll('.seg-btn').forEach(b =>
+    b.addEventListener('click', () => setScorer(b.dataset.scorer))
+  );
+  sel.addEventListener('change', build);
+
+  setScorer('bert');
+})();
+</script>
+</body>
+</html>

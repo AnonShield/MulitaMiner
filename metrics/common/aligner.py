@@ -38,6 +38,22 @@ from metrics.common.normalization import normalize_name
 # Scanner detection + composite key construction
 # ---------------------------------------------------------------------------
 
+def _scalar_notnull(v) -> bool:
+    """Scalar version of ``pd.notnull`` — handles ndarrays and lists safely.
+
+    ``pd.notnull(np_array)`` returns an *array* of bools, which crashes any
+    direct truthiness check (``if pd.notnull(x): ...``) with a
+    ``ValueError: truth value of an array is ambiguous``. We treat any
+    non-empty array-like as "present" and delegate to ``pd.notnull`` only
+    for scalars.
+    """
+    if isinstance(v, np.ndarray):
+        return v.size > 0
+    if isinstance(v, (list, tuple, set, dict)):
+        return len(v) > 0
+    return bool(pd.notnull(v))
+
+
 def detect_scanner_type(df: pd.DataFrame) -> str:
     """Detect scanner type from the ``source`` column or column shape."""
     if "source" in df.columns:
@@ -55,7 +71,22 @@ def detect_scanner_type(df: pd.DataFrame) -> str:
 
 def normalize_port(port_value) -> str:
     """Strip thousands separators; return ``'*'`` for non-numeric values
-    (except the literal string ``'general'`` which OpenVAS emits)."""
+    (except the literal string ``'general'`` which OpenVAS emits).
+
+    Float guard: pandas coerces an int column to float64 the moment a
+    single ``None`` shows up in the JSON (NaN is float-only). After that,
+    ``8019`` arrives here as ``8019.0`` — naïvely stripping the decimal
+    point would produce ``"80190"``, silently breaking every composite
+    key. Cast back to int first when the float is an integer value.
+    Caught when V1 extractions (which DO emit ``null`` ports for "general"
+    services) showed 100% MATCHED_NAME_ONLY fallback while V2/V3 (no nulls,
+    column stayed dtype=object) matched via composite cleanly.
+    """
+    if isinstance(port_value, float):
+        if pd.isna(port_value):
+            return "*"
+        if port_value.is_integer():
+            port_value = int(port_value)
     s = str(port_value).strip().replace(",", "").replace(".", "")
     if not s or (not s.isdigit() and s.lower() != "general"):
         return "*"
@@ -78,7 +109,10 @@ def build_composite_key(row: pd.Series, scanner_type: str) -> str:
 
     if scanner_type == "openvas":
         if name == "services":
-            row_dict = {k: v for k, v in row.items() if pd.notnull(v)}
+            # ``pd.notnull`` returns an array (not a bool) when ``v`` is a list
+            # or ndarray — guard with the scalar helper so the dict comprehension
+            # never tries to bool-cast an array.
+            row_dict = {k: v for k, v in row.items() if _scalar_notnull(v)}
             return f"services_exact|{hash(json.dumps(row_dict, sort_keys=True, default=str))}"
         port = normalize_port(row.get("port", ""))
         protocol = str(row.get("protocol", "")).strip().lower() or "*"
@@ -177,6 +211,21 @@ def align(
 # Internals — small, composable phases.
 # ---------------------------------------------------------------------------
 
+def _normalize_name_column(df: pd.DataFrame) -> pd.DataFrame:
+    """Tolerate case variants of the ``Name`` column ("name", "NAME", etc.).
+
+    Some malformed extractions store the column as lower-case. The aligner
+    expects the canonical capitalised form; this rename keeps downstream
+    code unchanged when the casing slipped.
+    """
+    if "Name" in df.columns:
+        return df
+    for variant in ("name", "NAME", "Name "):
+        if variant in df.columns:
+            return df.rename(columns={variant: "Name"})
+    return df
+
+
 def _prepare(
     baseline_df: pd.DataFrame,
     extraction_df: pd.DataFrame,
@@ -187,13 +236,28 @@ def _prepare(
 
     The baseline carries ``_baseline_row_id`` = its original positional index
     so downstream consumers can recover the exact row even after dedup.
+
+    If the extraction is malformed (no ``Name`` column at all — typically a
+    truncated/empty LLM output saved as a degenerate sheet), return an
+    empty extraction frame instead of raising. Callers downstream emit
+    zero-pair summaries and the run is reported as "no matches" rather
+    than crashing the whole pipeline.
     """
-    base = baseline_df.copy()
-    ext = extraction_df.copy()
+    base = _normalize_name_column(baseline_df).copy()
+    ext = _normalize_name_column(extraction_df).copy()
+
+    if "Name" not in ext.columns:
+        # Malformed extraction — synthesize an empty frame matching the
+        # columns _resolve_matches expects to find.
+        ext = pd.DataFrame(columns=list(extraction_df.columns) + ["Name"])
+        ext["_Name_norm"] = []
+        ext["_composite_key"] = []
+    else:
+        ext["_Name_norm"] = ext["Name"].map(normalize_name)
+        ext["_composite_key"] = ext.apply(lambda r: build_composite_key(r, scanner_type), axis=1)
+
     base["_Name_norm"] = base["Name"].map(normalize_name)
-    ext["_Name_norm"] = ext["Name"].map(normalize_name)
     base["_composite_key"] = base.apply(lambda r: build_composite_key(r, scanner_type), axis=1)
-    ext["_composite_key"] = ext.apply(lambda r: build_composite_key(r, scanner_type), axis=1)
 
     if not allow_duplicates:
         deduped = base.drop_duplicates(subset=["_Name_norm"], keep="first")

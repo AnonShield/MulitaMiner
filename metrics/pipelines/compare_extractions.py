@@ -243,46 +243,66 @@ def _parse_args(default_scorer: str = "bertscore") -> argparse.Namespace:
     return parser.parse_args()
 
 
-def main(default_scorer: str = "bertscore") -> None:
-    """Run the unified pipeline.
+def run_pipeline(
+    baseline_file: Path,
+    extraction_file: Path,
+    output_dir: Path,
+    scorer_name: str,
+    llm: str | None = None,
+    allow_duplicates: bool = False,
+    method: str = "greedy",
+    quiet: bool = False,
+) -> Path:
+    """Reusable in-process entry point.
 
-    ``default_scorer`` is the value used when ``--scorer`` is omitted on the
-    command line. Legacy wrappers (``bert/compare_extractions_bert.py``,
-    ``rouge/compare_extractions_rouge.py``) call this with the appropriate
-    default so they retain their historical behavior.
+    Identical behavior to the CLI ``main()`` but importable, so tools that
+    need to score many runs in one process (avoiding repeated BERTScore model
+    loads) can call this directly.
     """
-    args = _parse_args(default_scorer)
-    output_dir: Path = args.output_dir
+    output_dir = Path(output_dir)
     output_dir.mkdir(parents=True, exist_ok=True)
 
-    if str(args.extraction_file).endswith(".json"):
-        from src.converters import convert_json_to_xlsx  # lazy: heavy import path
-        converted = convert_json_to_xlsx(str(args.extraction_file))
-        extraction_path = Path(converted)
-    else:
-        extraction_path = args.extraction_file
-
-    baseline = load_baseline(args.baseline_file)
-    extraction = load_extraction(extraction_path)
+    baseline = load_baseline(baseline_file)
+    extraction = load_extraction(extraction_file)
 
     sheets = score_run(
-        baseline, extraction, args.scorer,
-        allow_duplicates=args.allow_duplicates, method=args.method,
+        baseline, extraction, scorer_name,
+        allow_duplicates=allow_duplicates, method=method,
     )
 
-    cfg = _CONFIG.get(args.scorer, {"file_prefix": f"{args.scorer}_comparison"})
-    model = args.llm or "model"
+    cfg = _CONFIG.get(scorer_name, {"file_prefix": f"{scorer_name}_comparison"})
+    model = llm or "model"
     output = output_dir / f"{cfg['file_prefix']}_vulnerabilities_{model}.xlsx"
     write_xlsx(output, sheets)
 
-    summary = sheets["Summary"]
-    n_matched = int((sheets["Per_Vulnerability"]["_status"] == "OK").sum())
-    n_total = len(sheets["Per_Vulnerability"])
-    print(
-        f"[{args.scorer.upper()}] matched={n_matched}/{n_total}, "
-        f"fields scored={len(summary)}"
+    if not quiet:
+        n_matched = int((sheets["Per_Vulnerability"]["_status"] == "OK").sum())
+        n_total = len(sheets["Per_Vulnerability"])
+        print(
+            f"[{scorer_name.upper()}] matched={n_matched}/{n_total}, "
+            f"fields scored={len(sheets['Summary'])}"
+        )
+        print(f"[{scorer_name.upper()}] saved → {output}")
+    return output
+
+
+def main(default_scorer: str = "bertscore") -> None:
+    """CLI entry point — thin wrapper around :func:`run_pipeline`.
+
+    ``default_scorer`` is the value used when ``--scorer`` is omitted on the
+    command line. Legacy wrappers call this with the appropriate default so
+    they retain their historical behavior.
+    """
+    args = _parse_args(default_scorer)
+    run_pipeline(
+        baseline_file=args.baseline_file,
+        extraction_file=args.extraction_file,
+        output_dir=args.output_dir,
+        scorer_name=args.scorer,
+        llm=args.llm,
+        allow_duplicates=args.allow_duplicates,
+        method=args.method,
     )
-    print(f"[{args.scorer.upper()}] saved → {output}")
 
 
 if __name__ == "__main__":

@@ -2,11 +2,18 @@ import argparse
 import os
 from pathlib import Path
 
-def parse_arguments_common(require_model: bool = False):
+def parse_arguments_common(require_model: bool = False, extra_args: list | None = None):
     """
     Standard parser for metric scripts (bert, rouge, etc).
     Args:
         require_model: if True, require the --model argument.
+        extra_args: optional list of (args_tuple, kwargs_dict) to add additional
+            metric-specific flags. Example::
+
+                parse_arguments_common(extra_args=[
+                    (("--schema-mode",), {"choices": ["auto","v2","v3"], "default": "auto"}),
+                ])
+
     Returns:
         argparse.Namespace with the arguments.
     """
@@ -23,6 +30,8 @@ def parse_arguments_common(require_model: bool = False):
                        help='LLM model name used (optional, but recommended for naming output file)')
     parser.add_argument('--allow-duplicates', dest='allow_duplicates', action='store_true',
                        help='Allow legitimate duplicates in baseline during evaluation')
+    for args_tuple, kwargs in (extra_args or []):
+        parser.add_argument(*args_tuple, **kwargs)
     args = parser.parse_args()
     # Basic validation
     if not os.path.isfile(args.baseline_file):

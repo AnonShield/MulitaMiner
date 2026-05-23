@@ -2,10 +2,13 @@
 
 Two contrasts of interest:
 
-    pairwise_models  — for each (version, target, source, field, metric),
+    pairwise_models    — for each (version, target, source, field, metric),
         Wilcoxon between every pair of models, paired by ``run`` index.
-    v2_vs_v3         — for each (target, model, source, field, metric),
-        Wilcoxon between V2 and V3 paired by ``run`` index.
+    pairwise_versions  — for each (target, model, source, field, metric),
+        Wilcoxon between every pair of versions (root folder names),
+        paired by ``run`` index. Used for cross-root comparisons (e.g.
+        running the pipeline against ``results_runs_v2/`` vs
+        ``results_runs_v3/``).
 
 Wilcoxon signed-rank is non-parametric and pairs samples — appropriate
 when run-to-run noise is correlated within (target, model) and we are
@@ -35,6 +38,7 @@ sys.path.insert(0, str(Path(__file__).parents[2]))
 import pandas as pd  # noqa: E402
 from scipy.stats import wilcoxon  # noqa: E402
 
+from metrics.aggregators.bootstrap_ci import derive_vuln_rates  # noqa: E402
 from metrics.aggregators.multi_run import gather_long  # noqa: E402
 
 # Columns that identify a single observation in long-format. Wilcoxon will
@@ -123,33 +127,42 @@ def pairwise_models(long_df: pd.DataFrame) -> pd.DataFrame:
 
 
 # ---------------------------------------------------------------------------
-# V2 vs V3 contrast.
+# Pairwise version contrasts.
 # ---------------------------------------------------------------------------
 
-def v2_vs_v3(long_df: pd.DataFrame) -> pd.DataFrame:
-    """For each (target, model, source, field, metric), Wilcoxon V2 vs V3."""
+def pairwise_versions(long_df: pd.DataFrame) -> pd.DataFrame:
+    """For each (target, model, *_PAIR_KEYS[1:]), Wilcoxon between every
+    pair of versions (root folder labels), paired by ``run`` index.
+
+    Mirrors :func:`pairwise_models`: with N versions present, emits N choose 2
+    rows per group. Returns empty when only one version is loaded (nothing
+    to contrast).
+    """
     rows: list[dict] = []
     if long_df.empty:
         return pd.DataFrame(rows)
 
-    group_cols = ["target", "model", *_PAIR_KEYS[1:]]  # drop the per-version "target" duplicate
+    group_cols = ["target", "model", *_PAIR_KEYS[1:]]  # drop "target" duplicate
     for keys, sub in long_df.groupby(group_cols, dropna=False):
-        versions = set(sub["version"].unique())
-        if not {"v2", "v3"}.issubset(versions):
+        versions = sorted(sub["version"].unique())
+        if len(versions) < 2:
             continue
-        v2 = sub[sub["version"] == "v2"].set_index("run")["value"]
-        v3 = sub[sub["version"] == "v3"].set_index("run")["value"]
-        common = v2.index.intersection(v3.index)
-        a, b = v2.loc[common].tolist(), v3.loc[common].tolist()
-        stat, p = _safe_wilcoxon(a, b)
-        rows.append({
-            **dict(zip(group_cols, keys)),
-            "n": len(common),
-            "mean_v2": (sum(a) / len(a)) if a else None,
-            "mean_v3": (sum(b) / len(b)) if b else None,
-            "delta_v3_minus_v2": ((sum(b) / len(b)) - (sum(a) / len(a))) if a and b else None,
-            "statistic": stat, "p_value": p,
-        })
+        per_version = {v: sub[sub["version"] == v].set_index("run")["value"] for v in versions}
+        for v_a, v_b in combinations(versions, 2):
+            common = per_version[v_a].index.intersection(per_version[v_b].index)
+            a = per_version[v_a].loc[common].tolist()
+            b = per_version[v_b].loc[common].tolist()
+            stat, p = _safe_wilcoxon(a, b)
+            mean_a = (sum(a) / len(a)) if a else None
+            mean_b = (sum(b) / len(b)) if b else None
+            rows.append({
+                **dict(zip(group_cols, keys)),
+                "version_a": v_a, "version_b": v_b,
+                "n": len(common),
+                "mean_a": mean_a, "mean_b": mean_b,
+                "delta_b_minus_a": (mean_b - mean_a) if mean_a is not None and mean_b is not None else None,
+                "statistic": stat, "p_value": p,
+            })
 
     df = pd.DataFrame(rows)
     if df.empty:
@@ -174,24 +187,35 @@ def main() -> None:
     parser.add_argument("--output", type=Path, required=True, help="Output XLSX path")
     args = parser.parse_args()
 
-    long_df = gather_long(args.root)
+    # Prefer pre-aggregated Long sheets (sbseg-tp/v*) over re-scanning raw runs;
+    # fall back to gather_long when the aggregate isn't there.
+    frames: list[pd.DataFrame] = []
+    for root in args.root:
+        agg_path = root / "aggregated_metrics.xlsx"
+        if agg_path.exists():
+            frames.append(pd.read_excel(agg_path, sheet_name="Long", engine="openpyxl"))
+        else:
+            frames.append(gather_long([root]))
+    long_df = pd.concat(frames, ignore_index=True) if frames else pd.DataFrame()
     if long_df.empty:
         print("[STATS] No artifacts found.")
         return
 
+    long_df = derive_vuln_rates(long_df)
+
     pairwise_df = pairwise_models(long_df)
-    version_df = v2_vs_v3(long_df)
+    version_df = pairwise_versions(long_df)
 
     args.output.parent.mkdir(parents=True, exist_ok=True)
     with pd.ExcelWriter(args.output) as writer:
         pairwise_df.to_excel(writer, sheet_name="Pairwise_Models", index=False)
-        version_df.to_excel(writer, sheet_name="V2_vs_V3", index=False)
+        version_df.to_excel(writer, sheet_name="Pairwise_Versions", index=False)
 
-    print(f"[STATS] pairwise model rows: {len(pairwise_df)}")
-    print(f"[STATS] V2 vs V3 rows      : {len(version_df)}")
+    print(f"[STATS] pairwise model rows  : {len(pairwise_df)}")
+    print(f"[STATS] pairwise version rows: {len(version_df)}")
     if not version_df.empty:
         sig = version_df[version_df["p_bonferroni"].fillna(1.0) < 0.05]
-        print(f"[STATS] V2 vs V3 significant (Bonferroni p<0.05): {len(sig)} of {len(version_df)}")
+        print(f"[STATS] versions significant (Bonferroni p<0.05): {len(sig)} of {len(version_df)}")
     print(f"[STATS] saved → {args.output}")
 
 

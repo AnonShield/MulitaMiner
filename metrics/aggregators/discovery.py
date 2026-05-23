@@ -31,6 +31,7 @@ _ARTIFACT_GLOBS: dict[str, str] = {
     "extraction_xlsx": "*_run*.xlsx",
     "bert": "bert_comparison_*.xlsx",
     "rouge": "rouge_comparison_*.xlsx",
+    "token_f1": "token_f1_comparison_*.xlsx",
     "entity": "entity_metrics_*.xlsx",
     "schema": "schema_report_*.json",
     "severity": "severity_confusion_*.xlsx",
@@ -43,7 +44,7 @@ _RUN_DIR_RE = re.compile(r"^run\d+$", re.IGNORECASE)
 @dataclass
 class RunArtifacts:
     """All artifacts located inside a single ``runN/`` directory."""
-    version: str          # "v2" or "v3"
+    version: str          # root folder basename (e.g. "results_runs", "results_runs_v2")
     target: str           # e.g. "OpenVAS_JuiceShop"
     model: str            # e.g. "llama4"
     run: str              # e.g. "run1"
@@ -60,13 +61,13 @@ class RunArtifacts:
 
 
 def _infer_version(root: Path) -> str:
-    """Infer pipeline version from the root path.
+    """Use the root directory's basename as the version label.
 
-    Matches case-insensitively on the literal segment ``_v2`` (so
-    ``results_runs_V2`` and ``results_runs_v2`` both resolve to ``"v2"``).
-    Anything else defaults to ``"v3"``.
+    Lets multi-root sweeps (cross-version paper experiments) and single-root
+    runs share the same column without hardcoded special cases — the user
+    sees the actual folder name, e.g. ``results_runs`` or ``results_runs_v2``.
     """
-    return "v2" if any("_v2" in part.lower() for part in root.parts) else "v3"
+    return root.name or str(root)
 
 
 def _collect_files(run_dir: Path) -> dict[str, list[Path]]:

@@ -9,6 +9,43 @@ import os
 from tqdm import tqdm
 
 
+# Substrings (case-insensitive) that mark an exception as a fatal API
+# condition — quota exhausted, rate-limited, bad auth, etc. The chunk-level
+# try/except swallows everything by design (parse failures, validation
+# failures, transient JSON garbage) and returns []. That semantic is fine
+# for code bugs, but DISASTROUS for billing errors: the run finishes with
+# 0 vulnerabilities and exit code 0, which run_experiments then marks as
+# "ok". This list lets ``_is_fatal_api_error`` re-raise those so the
+# process exits != 0 and the orchestrator records the run as failed.
+_FATAL_API_ERROR_HINTS = (
+    "quota",
+    "insufficient_quota",
+    "rate limit",
+    "ratelimit",
+    "429",
+    "401",
+    "403",
+    "authentication",
+    "invalid_api_key",
+    "incorrect api key",
+    "permission denied",
+    "you exceeded your current quota",
+)
+
+
+def _is_fatal_api_error(exc: BaseException) -> bool:
+    """True if ``exc`` looks like a billing / auth / quota error from any
+    LLM provider. Pattern-matches the exception type name and message —
+    works across openai, anthropic, langchain wrappers, etc., without
+    importing each SDK.
+    """
+    type_name = type(exc).__name__.lower()
+    if any(tag in type_name for tag in ("ratelimit", "quota", "authentication", "permission")):
+        return True
+    msg = str(exc).lower()
+    return any(hint in msg for hint in _FATAL_API_ERROR_HINTS)
+
+
 class TokenChunk:
     """Simple wrapper for text chunk with content."""
     def __init__(self, page_content: str):
@@ -85,7 +122,10 @@ def detect_scanner_pattern(text: str, profile_config: dict = None) -> dict:
     if nvt_matches:
         return {
             'scanner_type': 'openvas',
-            'marker_pattern': r'^\s*NVT:\s',
+            # Match the severity/CVSS header that sits one line above NVT — keeps
+            # the `Severity (CVSS: X.Y)` context inside the chunk that owns the
+            # NVT. Detection still uses NVT: as the fingerprint above.
+            'marker_pattern': r'^\s*(?:Critical|High|Medium|Low|Log)\s+\(CVSS:',
             'markers_found': len(nvt_matches),
             'force_break_at_markers': True,
             'max_vulnerabilities_per_chunk': 5
@@ -730,12 +770,16 @@ def robust_chunk_processing(doc_chunk: TokenChunk, llm, profile_config: Dict[str
                 else:
                     tqdm.write(f"[CHUNK] Subchunk {idx + 1} did not return valid JSON.")
             except Exception as e:
+                if _is_fatal_api_error(e):
+                    raise
                 tqdm.write(f"[CHUNK] Error in subchunk {idx + 1}: {e}")
                 continue
 
         return {'vulnerabilities': all_vulnerabilities, 'tokens_output': total_tokens_output}
 
     except Exception as e:
+        if _is_fatal_api_error(e):
+            raise
         tqdm.write(f"[CHUNK] Unexpected error: {e}")
         return {'vulnerabilities': [], 'tokens_output': 0}
 

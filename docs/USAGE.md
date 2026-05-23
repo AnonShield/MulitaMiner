@@ -38,11 +38,11 @@ python3 main.py --input <pdf_path> [options]
 
 ### Evaluation Options
 
-| Parameter              | Description                              | Default |
-| ---------------------- | ---------------------------------------- | ------- |
-| `--baseline-path`      | Ground truth file (.xlsx or .json)       | none    |
-| `--evaluation-methods` | Methods: `bert`, `rouge` (space-separated) | none  |
-| `--allow-duplicates`   | Allow legitimate duplicates              | `false` |
+| Parameter              | Description                                | Default |
+| ---------------------- | ------------------------------------------ | ------- |
+| `--baseline-path`      | Ground truth file (.xlsx)                  | none    |
+| `--metrics`            | Methods: `bert`, `rouge`, `entity`, `schema`, `severity`, `coverage`, or `all` (space-separated) | none    |
+| `--allow-duplicates`   | Allow legitimate duplicates                | `false` |
 
 ## Usage Examples
 
@@ -142,50 +142,50 @@ python3 main.py --input cais_tenable.pdf --scanner cais_tenable --llm gpt4 --con
 # Syntax: Extract and evaluate with BERT
 
 # Windows
-python main.py --input <pdf_path> --scanner <scanner> --llm <llm> --baseline-path <baseline_file> --evaluation-methods bert [--allow-duplicates]
+python main.py --input <pdf_path> --scanner <scanner> --llm <llm> --baseline-path <baseline_file> --metrics bert [--allow-duplicates]
 
 # Linux/macOS
-python3 main.py --input <pdf_path> --scanner <scanner> --llm <llm> --baseline-path <baseline_file> --evaluation-methods bert [--allow-duplicates]
+python3 main.py --input <pdf_path> --scanner <scanner> --llm <llm> --baseline-path <baseline_file> --metrics bert [--allow-duplicates]
 
 # Example: OpenVAS extraction with BERT evaluation (xlsx)
 
 # Windows
-python main.py --input openvas_report.pdf --scanner openvas --llm deepseek --baseline-path openvas_report.xlsx --evaluation-methods bert --allow-duplicates
+python main.py --input openvas_report.pdf --scanner openvas --llm deepseek --baseline-path openvas_report.xlsx --metrics bert --allow-duplicates
 
 # Linux/macOS
-python3 main.py --input openvas_report.pdf --scanner openvas --llm deepseek --baseline-path openvas_report.xlsx --evaluation-methods bert --allow-duplicates
+python3 main.py --input openvas_report.pdf --scanner openvas --llm deepseek --baseline-path openvas_report.xlsx --metrics bert --allow-duplicates
 
 # Example: OpenVAS extraction with BERT evaluation (json)
 
 # Windows
-python main.py --input openvas_report.pdf --scanner openvas --llm deepseek --baseline-path openvas_report.json --evaluation-methods bert --allow-duplicates
+python main.py --input openvas_report.pdf --scanner openvas --llm deepseek --baseline-path openvas_report.json --metrics bert --allow-duplicates
 
 # Linux/macOS
-python3 main.py --input openvas_report.pdf --scanner openvas --llm deepseek --baseline-path openvas_report.json --evaluation-methods bert --allow-duplicates
+python3 main.py --input openvas_report.pdf --scanner openvas --llm deepseek --baseline-path openvas_report.json --metrics bert --allow-duplicates
 
 # Syntax: Extract and evaluate with ROUGE-L
 
 # Windows
-python main.py --input <pdf_path> --scanner <scanner> --llm <llm> --baseline-path <baseline_file> --evaluation-methods rouge [--allow-duplicates]
+python main.py --input <pdf_path> --scanner <scanner> --llm <llm> --baseline-path <baseline_file> --metrics rouge [--allow-duplicates]
 
 # Linux/macOS
-python3 main.py --input <pdf_path> --scanner <scanner> --llm <llm> --baseline-path <baseline_file> --evaluation-methods rouge [--allow-duplicates]
+python3 main.py --input <pdf_path> --scanner <scanner> --llm <llm> --baseline-path <baseline_file> --metrics rouge [--allow-duplicates]
 
 # Example: Tenable extraction with ROUGE-L evaluation (xlsx)
 
 # Windows
-python main.py --input tenable_report.pdf --scanner tenable --llm deepseek --baseline-path tenable_report.xlsx --evaluation-methods rouge
+python main.py --input tenable_report.pdf --scanner tenable --llm deepseek --baseline-path tenable_report.xlsx --metrics rouge
 
 # Linux/macOS
-python3 main.py --input tenable_report.pdf --scanner tenable --llm deepseek --baseline-path tenable_report.xlsx --evaluation-methods rouge
+python3 main.py --input tenable_report.pdf --scanner tenable --llm deepseek --baseline-path tenable_report.xlsx --metrics rouge
 
 # Example: Tenable extraction with both BERT and ROUGE (json baseline)
 
 # Windows
-python main.py --input tenable_report.pdf --scanner tenable --llm deepseek --baseline-path tenable_report.json --evaluation-methods bert rouge
+python main.py --input tenable_report.pdf --scanner tenable --llm deepseek --baseline-path tenable_report.json --metrics bert rouge
 
 # Linux/macOS
-python3 main.py --input tenable_report.pdf --scanner tenable --llm deepseek --baseline-path tenable_report.json --evaluation-methods bert rouge
+python3 main.py --input tenable_report.pdf --scanner tenable --llm deepseek --baseline-path tenable_report.json --metrics bert rouge
 ```
 
 ## Output Files and Logs
@@ -198,7 +198,7 @@ Each extraction generates multiple files in the output directory:
 | `*_deduplication_log.txt`        | **Consolidation report:** Details on how vulnerabilities were consolidated/deduplicated |
 | `*_removed_log.txt`              | **Removed items log:** Vulnerabilities that were filtered out (invalid descriptions)    |
 | `*_merge_log.txt`                | **Merge log:** Generated only for strategies with complex merge logic (e.g., Tenable)   |
-| `final_report_*.txt`             | **Execution summary:** Timing, token usage, and overall statistics                      |
+| `final_report_*.md`             | **Execution summary:** Timing, token usage, and overall statistics                      |
 
 ### Understanding the Consolidation Log
 
@@ -255,7 +255,7 @@ When running with `--output-file openvas_test`, you'll get:
 ./openvas_test.json                          # Main output
 ./openvas_test_deduplication_log.txt         # Consolidation details
 ./openvas_test_removed_log.txt               # Filtered vulnerabilities
-./final_report_20260320_210550_*.txt         # Execution summary
+./final_report_20260320_210550_*.md          # Execution summary (Markdown)
 results_tokens/openvas_test_*_tokens.json    # Token usage statistics
 ```
 
@@ -591,26 +591,26 @@ Automates large-scale experiments with checkpoint support, automatic evaluation 
 # Syntax: Run experiments with specified configurations
 
 # Windows
-python tools/run_experiments.py --input-dir <input_directory> --llms <llm1> <llm2> ... --scanner <scanner> --evaluation-methods <method1> <method2> ... --runs-per-model <number> [--allow-duplicates]
+python tools/run_experiments.py --input-dir <input_directory> --llm <llm1> <llm2> ... --scanner <scanner> --metrics <method1> <method2> ... --runs-per-model <number> [--allow-duplicates]
 
 # Linux/macOS
-python3 tools/run_experiments.py --input-dir <input_directory> --llms <llm1> <llm2> ... --scanner <scanner> --evaluation-methods <method1> <method2> ... --runs-per-model <number> [--allow-duplicates]
+python3 tools/run_experiments.py --input-dir <input_directory> --llm <llm1> <llm2> ... --scanner <scanner> --metrics <method1> <method2> ... --runs-per-model <number> [--allow-duplicates]
 
 # Example: Run with DeepSeek and GPT-4 on OpenVAS (with allow-duplicates)
 
 # Windows
-python tools/run_experiments.py --input-dir test\openvas --llms deepseek gpt4 --scanner openvas --evaluation-methods bert rouge --runs-per-model 5 --allow-duplicates
+python tools/run_experiments.py --input-dir test\openvas --llm deepseek gpt4 --scanner openvas --metrics bert rouge --runs-per-model 5 --allow-duplicates
 
 # Linux/macOS
-python3 tools/run_experiments.py --input-dir test/openvas --llms deepseek gpt4 --scanner openvas --evaluation-methods bert rouge --runs-per-model 5 --allow-duplicates
+python3 tools/run_experiments.py --input-dir test/openvas --llm deepseek gpt4 --scanner openvas --metrics bert rouge --runs-per-model 5 --allow-duplicates
 
 # Example: Run on Tenable (no --allow-duplicates)
 
 # Windows
-python tools/run_experiments.py --input-dir test\tenable --llms deepseek gpt4 --scanner tenable --evaluation-methods bert rouge --runs-per-model 5
+python tools/run_experiments.py --input-dir test\tenable --llm deepseek gpt4 --scanner tenable --metrics bert rouge --runs-per-model 5
 
 # Linux/macOS
-python3 tools/run_experiments.py --input-dir test/tenable --llms deepseek gpt4 --scanner tenable --evaluation-methods bert rouge --runs-per-model 5
+python3 tools/run_experiments.py --input-dir test/tenable --llm deepseek gpt4 --scanner tenable --metrics bert rouge --runs-per-model 5
 
 # Syntax: Resume from checkpoint
 
@@ -635,18 +635,21 @@ python3 tools/run_experiments.py --checkpoint-file run_checkpoints_2026-03-16T12
 - **Checkpoint support**: Resume interrupted experiments from checkpoint files
 - **Timing reports**: Tracks and sums execution time across all runs
 - **Token cost analysis**: Integrates with `results_tokens/` directory
-- **Automatic reporting**: Generates comprehensive final report with `reporting.py`
-- **Chart generation**: Automatically calls `process_results.py` at the end
-- **Organized results**: Stores outputs in `results_runs/` → `resultados_bert/` and `resultados_rouge/`
+- **Single Markdown final report**: One `final_report_*.md` per orchestrator run; per-run reports are suppressed
+- **Post-extraction metrics pass**: Extracts first, then runs all metrics in parallel via `tools/run_metrics.py` (transformer models load once instead of once per run)
+- **Organized results**: Per-run subdirs under `--output-dir` (default `results_runs/`), each containing the JSON/XLSX extraction + per-metric output
 
 **Parameters:**
 
 - `--input-dir`: Directory with paired .xlsx (baseline) and .pdf (report) files
-- `--llms`: Space-separated list of LLMs (e.g., `deepseek gpt4 llama3`)
+- `--llm`: Space-separated list of LLMs (e.g., `deepseek gpt4 llama3`)
 - `--scanner`: Scanner to use (`openvas` or `tenable`)
-- `--evaluation-methods`: Evaluation methods (default: `bert`, can add `rouge`)
+- `--metrics`: Methods to run (`bert`, `rouge`, `entity`, `schema`, `severity`, `coverage`, or `all`). Producer/consumer dependencies auto-resolved.
 - `--runs-per-model`: Number of runs per model combination (default: 10)
 - `--allow-duplicates`: Flag to allow duplicates (recommended for OpenVAS; omit for Tenable)
+- `--output-dir`: Results root directory (default: `results_runs`)
+- `--metrics-workers`: Parallel workers for the post-extraction metrics pass (default: 4)
+- `--skip-metrics`: Skip the metrics + aggregator post-pass
 - `--checkpoint-file`: Optional checkpoint file to resume execution
 
 ### `tools/process_results.py` — Chart and Statistics Generation

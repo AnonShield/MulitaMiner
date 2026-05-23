@@ -91,7 +91,7 @@ Current JSON files use a simplified, provider-aware structure:
 
 ```json
 {
-  "provider": "llm_studio",
+  "provider": "lm_studio",
   "model": "ibm/granite-4-h-tiny",
   "endpoint": "http://localhost:1234/v1",
   "temperature": 0.0,
@@ -131,7 +131,7 @@ Current JSON files use a simplified, provider-aware structure:
 - **`provider`** _(optional)_: Auto-detected from endpoint if not specified
   - `"openai"` for api.openai.com
   - `"ollama"` for localhost:11434
-  - `"llm_studio"` for localhost:1234
+  - `"lm_studio"` for localhost:1234
 - **`endpoint`**: Service URL
 - **`model`**: Model identifier
 - **`temperature`**: 0.0 for deterministic (recommended), higher for creative
@@ -151,7 +151,7 @@ Provider is auto-detected from endpoint if `"provider"` field is omitted:
 if "localhost" in endpoint and "11434" in endpoint:
     provider = "ollama"
 elif "localhost" in endpoint and "1234" in endpoint:
-    provider = "llm_studio"
+    provider = "lm_studio"
 elif "openai" in endpoint:
     provider = "openai"
 else:
@@ -178,7 +178,7 @@ The system supports multiple provider types with auto-detection:
 | ------------- | ------------ | ---------------------------- | -------- | -------------------------------- |
 | `openai`      | Remote API   | api.openai.com               | Cloud    | `openai.com/*`                   |
 | `ollama`      | Local        | localhost:11434              | Local    | `localhost:11434/*`              |
-| `llm_studio`  | Local        | localhost:1234 (default)     | Local    | `localhost:1234/*`               |
+| `lm_studio`   | Local        | localhost:1234 (default)     | Local    | `localhost:1234/*`               |
 | `huggingface` | Remote/Local | api-inference.huggingface.co | Variable | `huggingface.co/*` or local mode |
 
 ### Tested Models

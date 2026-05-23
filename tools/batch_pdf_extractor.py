@@ -35,6 +35,8 @@ def batch_extract_vulnerabilities(input_dir, output_dir=None, marker='_batch', s
     print(f"Processing {len(pdf_files)} PDFs to {output_dir} ...")
     real_start_time = time.time()
     metric_duration = 0
+    failures: list[dict] = []
+    timing_report: list[dict] = []
     for pdf_file in tqdm(pdf_files, desc="Extracting vulnerabilities"):
         pdf_path = os.path.join(input_dir, pdf_file)
         base_name = os.path.splitext(pdf_file)[0]
@@ -44,7 +46,8 @@ def batch_extract_vulnerabilities(input_dir, output_dir=None, marker='_batch', s
             sys.executable, 'main.py',
             '--input', pdf_path,
             '--output-file', os.path.splitext(os.path.basename(pdf_file))[0],
-            '--output-dir', output_dir
+            '--output-dir', output_dir,
+            '--run-experiments',  # suppresses per-run final_report; batch writes one at the end
         ]
         if scanner:
             cmd += ['--scanner', scanner]
@@ -55,11 +58,14 @@ def batch_extract_vulnerabilities(input_dir, output_dir=None, marker='_batch', s
         if extra_args:
             cmd += extra_args
 
+        run_started = time.time()
         try:
             print(f"\n[INFO] Processing: {pdf_file}")
             subprocess.run(cmd, check=True)
+            timing_report.append({"run_id": base_name, "total_time": time.time() - run_started})
         except subprocess.CalledProcessError as e:
             print(f"[ERROR] Failed to process {pdf_file}: {e}")
+            failures.append({"run_id": base_name, "error": str(e)})
     real_end_time = time.time()
     # Generate final modular report
     # Add project root to path for imports
@@ -73,13 +79,7 @@ def batch_extract_vulnerabilities(input_dir, output_dir=None, marker='_batch', s
         'total_pdfs': len(pdf_files),
         'metric_duration': metric_duration,
     }
-    timing_report = [
-        {
-            'pdfs': len(pdf_files),
-            'metric_time': metric_duration,
-            'total_time': real_end_time - real_start_time,
-        }
-    ]
+    run_stats['total_runs'] = len(pdf_files)
     generate_final_report(
         start_time=real_start_time,
         end_time=real_end_time,
@@ -87,7 +87,8 @@ def batch_extract_vulnerabilities(input_dir, output_dir=None, marker='_batch', s
         tokens_dir='results_tokens',
         report_dir=output_dir,
         include_metrics_time=True,
-        timing_report=timing_report
+        timing_report=timing_report,
+        failures=failures,
     )
 
 if __name__ == "__main__":
@@ -97,7 +98,7 @@ if __name__ == "__main__":
     parser.add_argument('--output-dir', help="Output directory (optional)")
     parser.add_argument('--scanner', help="Name of the scanner (e.g., tenable, openvas, etc)")
     parser.add_argument('--llm', help="Name of the LLM to use (e.g., gpt4, deepseek, etc)")
-    parser.add_argument('--convert', choices=['csv', 'xlsx', 'tsv', 'all', 'none'], help="Convert output to specific format")
+    parser.add_argument('--convert', choices=['csv', 'xlsx', 'tsv', 'all'], help="Optionally convert output to a specific format")
     parser.add_argument('--allow-duplicates', action='store_true', help="Allow duplicate vulnerabilities in the output (default: False)")
     parser.add_argument('--debug', action='store_true', help="Enable debug logging of raw LLM responses.")
     parser.add_argument('--debug-dir', type=str, default='llm_debug_responses', help="Directory for debug logs.")

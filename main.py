@@ -53,7 +53,20 @@ def get_validator(profile_config: dict):
 
 def validate_inputs(args: argparse.Namespace) -> bool:
     """Validate user input arguments and required files."""
-    if not os.path.isfile(args.input):
+    if getattr(args, 'metrics_only', False):
+        # In metrics-only mode the PDF is irrelevant — we never read it. The
+        # output dir + baseline are the only hard requirements.
+        if not args.output_dir or not os.path.isdir(args.output_dir):
+            print(f"Error: --metrics-only requires an existing --output-dir; got: {args.output_dir}")
+            return False
+        if not args.evaluation_methods:
+            print("Error: --metrics-only requires --metrics ... to know what to evaluate.")
+            return False
+        if not args.baseline_path or not os.path.isfile(args.baseline_path):
+            print(f"Error: --metrics-only requires a valid --baseline-path; got: {args.baseline_path}")
+            return False
+        return True
+    if not args.input or not os.path.isfile(args.input):
         print(f"Error: PDF file not found: {args.input}")
         return False
     # If evaluation methods are specified, baseline is required
@@ -187,6 +200,7 @@ _UNIFIED = os.path.join('metrics', 'pipelines', 'compare_extractions.py')
 METRIC_SCRIPTS: dict[str, list[str]] = {
     'bert':     [_UNIFIED, '--scorer', 'bertscore'],
     'rouge':    [_UNIFIED, '--scorer', 'rouge_l'],
+    'token_f1': [_UNIFIED, '--scorer', 'token_f1'],
     'entity':   [os.path.join('metrics', 'entity',    'compare_extractions_entity.py')],
     'schema':   [os.path.join('metrics', 'pipelines', 'schema_check.py')],
     'severity': [os.path.join('metrics', 'pipelines', 'confusion_severity.py')],
@@ -194,9 +208,9 @@ METRIC_SCRIPTS: dict[str, list[str]] = {
 }
 
 # Order used when the user requests ``all``. Schema runs first (operates on
-# the raw JSON, no dependencies); bert/rouge produce the matched pairs that
-# entity, severity and coverage metrics consume.
-ALL_METHODS_ORDER: list[str] = ['schema', 'bert', 'rouge', 'entity', 'severity', 'coverage']
+# the raw JSON, no dependencies); bert/rouge/token_f1 produce the matched
+# pairs that entity, severity and coverage metrics consume.
+ALL_METHODS_ORDER: list[str] = ['schema', 'bert', 'rouge', 'token_f1', 'entity', 'severity', 'coverage']
 
 # Methods that need a bert_comparison_*.xlsx or rouge_comparison_*.xlsx
 # already in the run directory before they execute.
@@ -291,6 +305,45 @@ def run_evaluation_method(args: argparse.Namespace, extraction_output_path: str,
         print(f"  Exit Code: {e.returncode}")
 
 
+def _run_metrics_only(args: argparse.Namespace) -> None:
+    """Re-run the metrics suite on an existing extraction without calling the LLM.
+
+    Locates the JSON output produced by a previous ``main.py`` run in
+    ``--output-dir``, derives or converts a sibling XLSX (needed by the
+    metric scripts), and dispatches the same evaluation loop as the full
+    pipeline. Idempotent — metric scripts will overwrite their own outputs.
+    """
+    out_dir = args.output_dir
+    # Find candidate JSONs in output_dir (top-level only — metric reports
+    # like schema_report_*.json live in subdirs in some layouts but here
+    # they are flat; filter them out by name prefix).
+    jsons = [
+        p for p in glob.glob(os.path.join(out_dir, '*.json'))
+        if not os.path.basename(p).startswith(('schema_report', 'coverage_'))
+    ]
+    if not jsons:
+        print(f"[ERROR] --metrics-only: no extraction JSON found in {out_dir}.")
+        return
+    if len(jsons) > 1:
+        print(f"[ERROR] --metrics-only: multiple JSONs in {out_dir}, can't pick one:")
+        for p in jsons:
+            print(f"  - {p}")
+        print("  Tip: keep exactly one, or pass --output-file to disambiguate.")
+        return
+    json_path = jsons[0]
+    print(f"[METRICS-ONLY] Using extraction JSON: {json_path}")
+
+    # Metric scripts read JSON natively (same contract as run_metrics.py).
+    methods = expand_evaluation_methods(args.evaluation_methods)
+    if 'entity' not in methods:
+        methods.append('entity')
+    methods = [m for m in ALL_METHODS_ORDER if m in methods]
+    metric_start = time.time()
+    for method in methods:
+        run_evaluation_method(args, json_path, method)
+    print(f"\n[METRICS-ONLY] Done in {time.time() - metric_start:.1f}s")
+
+
 def main():
     """Main extraction pipeline entry point."""
     parser = argparse.ArgumentParser(add_help=False)
@@ -302,11 +355,20 @@ def main():
     if not validate_inputs(args):
         return
     real_start_time = time.time()
-    
+
+    # ────────────────────────────────────────────────────────────────────
+    # --metrics-only short-circuit: skip extraction, run metrics on the
+    # existing JSON in --output-dir. Used after fixing a baseline or
+    # changing a metric pipeline — no LLM call, no API cost.
+    # ────────────────────────────────────────────────────────────────────
+    if getattr(args, 'metrics_only', False):
+        _run_metrics_only(args)
+        return
+
     profile_config, llm_config = load_configs(args)
     if not profile_config or not llm_config:
         return
-    
+
     llm = init_llm(llm_config)
     
     if 'max_completion_tokens' in llm_config:
@@ -344,22 +406,31 @@ def main():
 
     output_ext = result.output_ext
 
-    # Salvar layout visual a partir do sumário
-    # Visual layout é independente do LLM - reutilizável para todos
-    visual_file = save_visual_layout(result.summary.page_content, args.input, output_ext=output_ext)
-    print(f"[LAYOUT] Visual layout saved: {visual_file}")
+    # Salvar layout visual a partir do sumário (necessário para estratégias
+    # que requerem contexto visual, como OpenVAS). Lives in output_dir so it
+    # doesn't pollute the project root.
+    # Cached at the project root (visual_layouts/<baseline>.<ext>) — same PDF
+    # gives the same layout, so we share across runs.
+    visual_file = save_visual_layout(
+        result.summary.page_content, args.input,
+        output_ext=output_ext, output_dir=args.output_dir,
+    )
+    print(f"[LAYOUT] Visual layout: {visual_file}")
 
     extraction_text = result.extraction.page_content
 
-    # Salvar texto completo de extração em arquivo
-    pdf_base_name = os.path.splitext(os.path.basename(args.input))[0]
-    extraction_file = f"extraction_{pdf_base_name}.{output_ext}"
-    try:
-        with open(extraction_file, 'w', encoding='utf-8') as f:
-            f.write(extraction_text)
-        print(f"[EXTRACTION] Full extraction saved: {extraction_file}")
-    except Exception as e:
-        print(f"[WARN] Could not save extraction file: {e}")
+    # Texto bruto da extração — útil para inspeção, mas só persiste com --debug
+    # para não criar lixo na raiz do projeto em runs normais.
+    if args.debug:
+        pdf_base_name = os.path.splitext(os.path.basename(args.input))[0]
+        extraction_file = os.path.join(args.output_dir, f"extraction_{pdf_base_name}.{output_ext}")
+        try:
+            os.makedirs(args.output_dir, exist_ok=True)
+            with open(extraction_file, 'w', encoding='utf-8') as f:
+                f.write(extraction_text)
+            print(f"[EXTRACTION] Full extraction saved: {extraction_file}")
+        except Exception as e:
+            print(f"[WARN] Could not save extraction file: {e}")
 
     # Criação de blocos de sessão com nome único para paralelismo (PRECISA do LLM)
     unique_process_id = args.llm
@@ -438,10 +509,10 @@ def main():
             shutil.move(tokens_candidates[0], tokens_final_path)
             print(f"[TOKENS] Token file saved at: {tokens_final_path}")
 
-        # Handle conversions (always convert to xlsx for evaluation)
+        # Handle conversions — JSON is the native output and metrics consume
+        # it directly, so we no longer force xlsx. Honor exactly what the
+        # user asked for via --convert (default: none).
         try:
-            # Force xlsx conversion for evaluation capability
-            args.convert = 'all' if args.convert in ['all', 'none'] else args.convert
             converted_files = execute_conversions(output_file, args)
             if converted_files:
                 print(f"\n[CONVERSIONS] Generated {len(converted_files)} format(s):")
@@ -452,24 +523,24 @@ def main():
         except Exception as e:
             print(f"[ERROR] Conversion failed: {e}")
 
-        # Handle evaluation(s) - Entity metrics are automatically included
+        # Handle evaluation(s). Metric scripts read JSON natively (same
+        # contract as ``tools/run_metrics.py``), so we always have an
+        # extraction file to feed them — no XLSX gate. Prefer xlsx when the
+        # user converted to it (legacy paths still work); otherwise pass
+        # the JSON we just wrote.
         metric_start = time.time()
         metric_duration = 0
         if args.evaluation_methods and args.baseline_path:
-            if xlsx_output_path and os.path.isfile(xlsx_output_path):
-                # Expand 'all', dedupe, auto-add producer dependencies, and
-                # always include 'entity' (legacy default — runs alongside
-                # any explicit list). The final list is reordered by
-                # ALL_METHODS_ORDER so producers always run before consumers.
-                methods = expand_evaluation_methods(args.evaluation_methods)
-                if 'entity' not in methods:
-                    methods.append('entity')
-                methods = [m for m in ALL_METHODS_ORDER if m in methods]
-                for method in methods:
-                    run_evaluation_method(args, xlsx_output_path, method)
-                metric_duration = time.time() - metric_start
-            else:
-                print("[ERROR] Evaluation requested, but no .xlsx file was generated for evaluation.")
+            extraction_path = (xlsx_output_path
+                               if xlsx_output_path and os.path.isfile(xlsx_output_path)
+                               else output_file)
+            methods = expand_evaluation_methods(args.evaluation_methods)
+            if 'entity' not in methods:
+                methods.append('entity')
+            methods = [m for m in ALL_METHODS_ORDER if m in methods]
+            for method in methods:
+                run_evaluation_method(args, extraction_path, method)
+            metric_duration = time.time() - metric_start
 
 
         real_end_time = time.time()

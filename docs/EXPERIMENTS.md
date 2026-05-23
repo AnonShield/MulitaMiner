@@ -93,13 +93,13 @@ Comparison against OpenVAS CSV baseline (6,343 vulnerabilities) using fuzzy matc
 # Run experiments with specified configurations
 
 # Windows
-python tools/run_experiments.py --input-dir test\openvas --llms deepseek gpt4 --scanner openvas --evaluation-methods bert rouge --runs-per-model 5
+python tools/run_experiments.py --input-dir test\openvas --llm deepseek gpt4 --scanner openvas --metrics bert rouge --runs-per-model 5
 
 # Linux/macOS
-python3 tools/run_experiments.py --input-dir test/openvas --llms deepseek gpt4 --scanner openvas --evaluation-methods bert rouge --runs-per-model 5
+python3 tools/run_experiments.py --input-dir test/openvas --llm deepseek gpt4 --scanner openvas --metrics bert rouge --runs-per-model 5
 
 # With allow-duplicates (OpenVAS recommended)
-python tools/run_experiments.py --input-dir test\openvas --llms deepseek gpt4 --scanner openvas --evaluation-methods bert rouge --runs-per-model 5 --allow-duplicates
+python tools/run_experiments.py --input-dir test\openvas --llm deepseek gpt4 --scanner openvas --metrics bert rouge --runs-per-model 5 --allow-duplicates
 
 # Resume from checkpoint if interrupted
 
@@ -112,31 +112,40 @@ python3 tools/run_experiments.py --checkpoint-file run_checkpoints_2026-03-16T12
 
 **Key Features:**
 
-- Runs extraction, export, and evaluation for all pairs (report, LLM, run)
+- Runs extraction for every (report, LLM, run) combination, then runs all metrics in a parallel post-pass via `tools/run_metrics.py`
 - One scanner per invocation — run twice for different scanners
 - Checkpoint support: resumes interrupted executions via `--checkpoint-file`
-- Generates detailed logs, output files, metrics, and automatic summaries
-- **Automatic reporting**: Generates comprehensive final report with timing and token cost analysis
-- **Automatic chart generation**: Calls `process_results.py` automatically at the end
-- Outputs organized in respective evaluation directories based on metrics
+- **Single Markdown final report**: One `final_report_*.md` per orchestrator run; per-run reports are suppressed
+- BERT/ROUGE run in-process during the metrics pass so the transformer model loads once instead of once per run
 
 **Parameters:**
 
 - `--input-dir`: Directory containing paired .xlsx (baseline) and .pdf (report) files
-- `--llms`: Space-separated LLMs to test (e.g., `deepseek gpt4 llama3`)
+- `--llm`: Space-separated LLMs to test (e.g., `deepseek gpt4 llama3`)
 - `--scanner`: Scanner to use (`openvas` or `tenable`)
-- `--evaluation-methods`: Evaluation methods (default: `bert`, can add `rouge`)
+- `--metrics`: Methods to run (`bert`, `rouge`, `entity`, `schema`, `severity`, `coverage`, or `all`). Producer/consumer dependencies auto-resolved.
 - `--runs-per-model`: Number of runs per combination (default: 10)
 - `--allow-duplicates`: Flag to allow duplicates (recommended for OpenVAS; omit for Tenable)
+- `--output-dir`: Results root directory (default: `results_runs`)
+- `--metrics-workers`: Parallel workers for the post-extraction metrics pass (default: 4)
+- `--skip-metrics`: Skip the metrics + aggregator post-pass
 - `--checkpoint-file`: Checkpoint file to resume from
 
 ### Output Structure
 
-Results are automatically organized by:
-
-- `results_runs/` → `<baseline>/<llm>/run<N>/` (extraction and metrics outputs)
-- `resultados_bert/` (when BERT evaluation enabled)
-- `resultados_rouge/` (when ROUGE evaluation enabled)
+```
+<output-dir>/
+├── <baseline>/<llm>/run<N>/
+│   ├── <baseline>_<llm>_run<N>.json     # extraction (native; xlsx only if --convert xlsx)
+│   ├── bert_comparison_*.xlsx
+│   ├── rouge_comparison_*.xlsx
+│   ├── entity_metrics_*.xlsx
+│   ├── coverage_*.xlsx
+│   ├── severity_confusion_*.xlsx
+│   └── schema_report_*.json
+├── aggregated_metrics.xlsx              # mean ± std across runs
+└── final_report_*.md                    # single summary
+```
 - Final report with timing and token cost analysis
 - Checkpoint files for resuming interrupted runs
 

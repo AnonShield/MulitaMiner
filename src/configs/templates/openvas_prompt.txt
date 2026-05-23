@@ -39,8 +39,32 @@ EXTRACTION RULES:
    - insight: from "Vulnerability Insight" (each line as an array element).
    - log_method: from "Log Method" (each line as an array element).
    - references: from "References" (each reference as an array element).
-   - cvss: extract the numeric score from the severity header (e.g., "High (CVSS: 7.5)" → 7.5). If not present, look for "CVSS Score", "Base Score", or CVSS vector score. If still not found, use the default by severity: CRITICAL=9.0, HIGH=7.0, MEDIUM=5.0, LOW=2.0, LOG=0.0. Return as a single number (not a list, not a string).
-   - severity: from the header (e.g., "High (CVSS: 7.5)" → "HIGH"). Always uppercase. Use LOG for purely informational NVTs (service/version detection, fingerprinting, cipher suite reports, CPE inventory, OS detection, traceroute — anything that reports facts without flagging a vulnerability). NEVER map "Log" to "LOW" — they are distinct categories; "Log" in the header ALWAYS becomes "LOG", never "LOW".
+   - cvss: extract the numeric score from the severity header that appears
+     IMMEDIATELY ABOVE the "NVT:" line. The pattern is always:
+       <Severity> (CVSS: <number>)
+     Examples (the number after "CVSS:" is the answer — ALL must extract it):
+       "Critical (CVSS: 9.8)"   → 9.8
+       "High (CVSS: 7.5)"       → 7.5
+       "Medium (CVSS: 5.3)"     → 5.3
+       "Low (CVSS: 3.1)"        → 3.1
+       "Log (CVSS: 0.0)"        → 0.0   (informational findings always 0.0)
+     This header is present for every OpenVAS finding. Whenever you see it
+     in the lines preceding "NVT:", you MUST extract the number — NEVER
+     return null in that case. Zero (0.0) is a valid value, not null.
+     Return null ONLY in the rare case where the header line genuinely
+     lacks the "(CVSS: ...)" parenthesised section.
+     Never derive cvss from the severity class — extracting an inferred
+     value systematically biases the field away from the source PDF.
+     Return a single number or null (not a list, not a string).
+     COMMON MISTAKE: returning null while "Critical (CVSS: 9.8)" sits
+     two lines above the NVT. The CVSS IS present — extract it.
+   - severity: from the header. Always UPPERCASE. Map exactly:
+     "Critical (CVSS: ...)"  → "CRITICAL"
+     "High (CVSS: ...)"      → "HIGH"
+     "Medium (CVSS: ...)"    → "MEDIUM"
+     "Low (CVSS: ...)"       → "LOW"
+     "Log (CVSS: ...)"       → "LOG"
+     Never derive severity from your own judgement of the description text — only the header word counts. NEVER map "Log" to "LOW"; they are distinct categories ("Log" is purely informational: service/version detection, fingerprinting, cipher suite reports, CPE inventory, OS detection, traceroute).
    - port/protocol: prefer values that appear INSIDE this NVT's text (e.g., a line like "path / port: 80/tcp", "Service: 443/tcp", or any explicit `<number>/<tcp|udp>` reference within Detection Result, Product Detection Result, Detection Method, Insight, or other sections of THIS NVT). If no such value exists in the NVT body, fall back to the section header above (e.g., "High 443/tcp"); if not present directly above, inherit from the last valid header above in the block. Never use a port/protocol that does not appear in this NVT's text or in a header above it.
    - plugin: null
    - plugin_details: {}
@@ -57,7 +81,7 @@ EXTRACTION RULES:
 
 5. Fill missing fields by type:
    - Arrays: use [] when unknown (description, detection_result, detection_method, impact, solution, insight, product_detection_result, log_method, references).
-   - cvss: use the severity default (see rule 2) or null if severity is unknown.
+   - cvss: null if no numeric score appears in the source.
    - port/protocol: null if unknown.
    - plugin: null; plugin_details: {}; instances: [].
 
@@ -90,6 +114,30 @@ https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2024-0001
 
 Expected output:
 [{"Name":"SSL/TLS: Certificate Expired","description":["The SSL/TLS certificate of the remote service has expired."],"detection_result":["The certificate expired on 2024-01-15T00:00:00+00:00"],"detection_method":["Check the expiration date of the SSL/TLS certificate.","OID: 1.3.6.1.4.1.25623.1.0.103955"],"product_detection_result":[],"impact":["Users will receive warnings when accessing the service, potentially leading to loss of trust."],"solution":["Replace the SSL/TLS certificate with a valid one."],"insight":[],"log_method":[],"cvss":7.5,"port":443,"protocol":"tcp","severity":"HIGH","references":["https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2024-0001"],"plugin":null,"plugin_details":{},"instances":[],"source":"OPENVAS"}]
+
+SECOND EXAMPLE (CRITICAL with multi-line NVT name — CVSS comes from the
+header above; port/protocol come from the NVT body, since there is no
+"<port>/<proto>" header line in this case):
+
+Input:
+---
+Critical (CVSS: 9.8)
+NVT: PHP 5.x < 5.6.34, 7.x < 7.0.28, 7.1.x < 7.1.15, 7.2.x < 7.2.3 Stack Buffer Overflow
+Vulnerability (Mar 2018) - Linux
+Summary:
+A stack-based buffer overflow flaw was found in PHP versions prior to the listed releases.
+Vulnerability Detection Result:
+path / port: 80/tcp
+Impact:
+Successful exploitation may allow arbitrary code execution.
+Solution:
+Update PHP to a patched version.
+References:
+https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2018-7584
+---
+
+Expected output:
+[{"Name":"PHP 5.x < 5.6.34, 7.x < 7.0.28, 7.1.x < 7.1.15, 7.2.x < 7.2.3 Stack Buffer Overflow Vulnerability (Mar 2018) - Linux","description":["A stack-based buffer overflow flaw was found in PHP versions prior to the listed releases."],"detection_result":["path / port: 80/tcp"],"detection_method":[],"product_detection_result":[],"impact":["Successful exploitation may allow arbitrary code execution."],"solution":["Update PHP to a patched version."],"insight":[],"log_method":[],"cvss":9.8,"port":80,"protocol":"tcp","severity":"CRITICAL","references":["https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2018-7584"],"plugin":null,"plugin_details":{},"instances":[],"source":"OPENVAS"}]
 
 INVALID OUTPUTS (never produce any of these):
 - `Based on the rules, here is the JSON: [...]`        (no preamble)

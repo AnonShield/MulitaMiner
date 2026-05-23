@@ -55,7 +55,7 @@ def execute_run(run_id, run_info, group_key, checkpoints, checkpoint_path,
         baseline_name = get_base(baseline_path)
         run_label = f"{llm} run{run_num} | {baseline_name}"
 
-        subdir = os.path.join("results_runs", get_base(baseline_path), llm, f"run{run_num}")
+        subdir = os.path.join(args.output_dir, get_base(baseline_path), llm, f"run{run_num}")
         os.makedirs(subdir, exist_ok=True)
 
         run_prefix = f"{get_base(baseline_path)}_{llm}_run{run_num}"
@@ -69,12 +69,14 @@ def execute_run(run_id, run_info, group_key, checkpoints, checkpoint_path,
             '--llm', llm,
             '--output-file', run_prefix,
             '--output-dir', subdir,
-            '--convert', 'xlsx',
             '--baseline-path', baseline_path,
+            '--run-experiments',  # suppresses per-run final_report; orchestrator writes one at the end
         ]
 
-        if evaluation_methods:
-            cmd += ['--evaluation-methods'] + evaluation_methods
+        # Metrics are NOT run per-run anymore: a single parallel pass at the end
+        # of run_experiments (via run_metrics.py) is faster and avoids reloading
+        # transformer models 10× per LLM. evaluation_methods is forwarded to
+        # that post-pass instead of being injected here.
 
         if allow_duplicates:
             cmd.append('--allow-duplicates')
@@ -184,15 +186,16 @@ def main():
     parser = argparse.ArgumentParser(description="Run extraction and evaluation experiments.")
     parser.add_argument('--input-dir', type=str, default=None,
                         help='Directory containing .xlsx (baseline) and .pdf (report) files. Both must have the same name, except for the extension.')
-    parser.add_argument('--llms', type=str, nargs='+', default=None,
-                        help='List of LLMs to test.')
+    parser.add_argument('--llm', '--llms', dest='llms', type=str, nargs='+', default=None,
+                        help='List of LLMs to test (accepts multiple values).')
     parser.add_argument('--scanner', type=str, default=None,
                         help='Scanner to use (e.g., openvas, tenable).')
-    parser.add_argument('--evaluation-methods', type=str, nargs='+', default=None,
-                        help=('List of evaluation methods. Available: bert, rouge, entity, '
-                              'schema, severity, coverage. Use "all" to run every method '
-                              '(recommended). Producer/consumer dependencies are resolved '
-                              'automatically (e.g. requesting only "coverage" auto-adds "bert").'))
+    parser.add_argument('--metrics', dest='evaluation_methods',
+                        type=str, nargs='+', default=None,
+                        help=('Metrics to run. Available: bert, rouge, entity, schema, severity, '
+                              'coverage. Use "all" for every method (recommended). Producer/consumer '
+                              'dependencies are auto-resolved (e.g. requesting only "coverage" '
+                              'auto-adds "bert").'))
     parser.add_argument('--runs-per-model', type=int, default=None,
                         help='Number of runs per model.')
     parser.add_argument('--allow-duplicates', action='store_true',
@@ -203,6 +206,13 @@ def main():
                         help='Enable debug logging of raw LLM responses.')
     parser.add_argument('--debug-dir', type=str, default='llm_debug_responses',
                         help='Directory for debug logs.')
+    parser.add_argument('--output-dir', dest='output_dir', type=str, default='results_runs',
+                        help='Results root directory where per-run subdirs are created '
+                             '(default: results_runs).')
+    parser.add_argument('--metrics-workers', type=int, default=4,
+                        help='Parallel workers for the post-experiment metrics pass (default: 4).')
+    parser.add_argument('--skip-metrics', action='store_true',
+                        help='Skip the post-experiment metrics + aggregator pass.')
     args, unknown = parser.parse_known_args()
 
     if unknown:
@@ -271,7 +281,7 @@ def main():
 
         print(f"[INFO] Total pairs found: {len(matched_pairs)}")
 
-        os.makedirs("results_runs", exist_ok=True)
+        os.makedirs(args.output_dir, exist_ok=True)
 
         all_run_ids = []
         for baseline_path, extractor_path in matched_pairs:
@@ -363,7 +373,27 @@ def main():
     print(f"[INFO] Total experiment time (sum of all runs): {h:02d}:{m:02d}:{s:05.2f}")
 
     print("[INFO] Execution finished. Generating final report...")
-    report_dir = os.path.abspath('results_runs')
+    report_dir = os.path.abspath(args.output_dir)
+
+    # Per-run timing + failure list straight from the checkpoint.
+    timing_report = []
+    failures = []
+    baseline_counts: dict = {}
+    for rid, r in checkpoints.items():
+        if r.get("status") == "ok":
+            timing_report.append({
+                "run_id": rid,
+                "llm": r.get("llm"),
+                "total_time": r.get("elapsed_time", 0),
+            })
+        elif r.get("status") not in ("ok", "pending"):
+            failures.append({"run_id": rid, "error": str(r.get("erro") or r.get("status"))})
+        baseline = os.path.splitext(os.path.basename(r.get("baseline", "")))[0]
+        if baseline:
+            baseline_counts[baseline] = baseline_counts.get(baseline, 0) + 1
+    run_stats["baseline_counts"] = baseline_counts
+    run_stats["total_runs"] = len(checkpoints)
+
     generate_final_report(
         start_time=start_time,
         end_time=end_time,
@@ -371,9 +401,32 @@ def main():
         tokens_dir='results_tokens',
         report_dir=report_dir,
         include_metrics_time=True,
-        timing_report=[{"total_time": total_runs_time}]
+        timing_report=timing_report,
+        failures=failures,
     )
     print("[INFO] Final report generated.")
+
+    # ─────────────────────────────────────────────────────────────
+    # Post-extraction metrics pass: parallel run-level evaluation
+    # plus aggregator. Faster than running metrics inside each
+    # main.py invocation because transformer models load once per
+    # worker instead of once per run.
+    # ─────────────────────────────────────────────────────────────
+    if not args.skip_metrics and evaluation_methods:
+        print("\n[INFO] Running post-extraction metrics pass...")
+        metrics_cmd = [
+            sys.executable,
+            os.path.join(os.path.dirname(__file__), "run_metrics.py"),
+            "--root", args.output_dir,
+            "--methods", *evaluation_methods,
+            "--workers", str(args.metrics_workers),
+        ]
+        if allow_duplicates:
+            metrics_cmd.append("--allow-duplicates")
+        try:
+            subprocess.run(metrics_cmd, check=True)
+        except subprocess.CalledProcessError as e:
+            print(f"[WARNING] Metrics pass exited with {e.returncode}")
 
     # ─────────────────────────────────────────────────────────────
     # Generate interactive metrics report with PNG export
@@ -381,8 +434,8 @@ def main():
     print("\n[INFO] Generating interactive metrics dashboard and PNG charts...")
     try:
         subprocess.run([
-            sys.executable,
-            os.path.join(os.path.dirname(__file__), "../metrics/plot/metrics.py")
+            sys.executable, "-m", "metrics.plot.metrics",
+            "--root", args.output_dir,
         ], check=True)
 
         plot_dir = os.path.abspath('plot_runs')

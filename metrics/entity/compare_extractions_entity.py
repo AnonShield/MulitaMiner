@@ -38,7 +38,7 @@ from metrics.common.field_mapper import (
     build_field_map,
     get_actual_column_name
 )
-from metrics.common.sheet_resolver import resolve_baseline_sheet
+from metrics.common.io import load_baseline, load_extraction
 
 def find_metric_comparison_file(output_dir: Path, model_name: str) -> Tuple[Optional[Path], str]:
     """
@@ -165,17 +165,9 @@ def main():
             print(f"[ENTITY] Warning: Could not read Mapping_Debug sheet: {e}")
             mapping_df = None
         
-        # Load baseline and extraction data to get field values (accepts "Vulnerabilities" or "Sheet1")
-        baseline_df = pd.read_excel(
-            baseline_file,
-            sheet_name=resolve_baseline_sheet(pd.ExcelFile(baseline_file, engine="openpyxl")),
-            engine="openpyxl",
-        )
-        extraction_df = pd.read_excel(
-            extraction_file,
-            sheet_name=resolve_baseline_sheet(pd.ExcelFile(extraction_file, engine="openpyxl")),
-            engine="openpyxl",
-        )
+        # Baseline is always XLSX (curated ground truth); extraction may be JSON or XLSX.
+        baseline_df = load_baseline(baseline_file)
+        extraction_df = load_extraction(extraction_file)
         
         # Get deterministic fields from field mapper
         deterministic_fields = sorted(get_deterministic_fields(baseline_df.columns))
