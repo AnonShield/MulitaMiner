@@ -1,0 +1,64 @@
+=== Comparacao de Multiplas Extracoes com Baseline (ROUGE-L) ===
+
+[OK] Modo CLI: duplicatas legítimas permitidas
+
+Carregando arquivo: metrics/baselines/openvas/openvas_docker.bintray.io_jfrog_artifactory-oss_5.11.0.xlsx
+Carregando aba baseline: Vulnerabilities
+Baseline carregado - Shape: (125, 18)
+Colunas baseline: ['Name', 'description', 'detection_result', 'detection_method', 'product_detection_result', 'impact', 'solution', 'insight', 'log_method', 'cvss', 'port', 'protocol', 'severity', 'references', 'plugin', 'identification', 'http_info', 'source']
+Arquivo de extração simples detectado - usando aba 'Vulnerabilities'
+
+Abas de extracao encontradas: ['Vulnerabilities']
+
+============================================================
+Processando: Vulnerabilities
+============================================================
+Shape da extração: (119, 18)
+Processando Vulnerabilities...
+   Exemplo de normalização (description):
+     Baseline original: Apache Tomcat is prone to a remote code execution (RCE) vulnerability in the AJP connector dubbed 'G...
+     Baseline normalizado: Apache Tomcat is prone to a remote code execution (RCE) vulnerability in the AJP connector dubbed 'G...
+     Extração original: Apache Tomcat is prone to a remote code execution (RCE) vulnerability in the AJP connector dubbed 'G...
+     Extração normalizado: Apache Tomcat is prone to a remote code execution (RCE) vulnerability in the AJP connector dubbed 'G...
+   🔧 Scanner detectado: openvas
+   ℹ️ Mantendo 125 instâncias da baseline (duplicatas legítimas)
+   🔍 Fuzzy matching: 1 vulnerabilidades...
+Colunas comparáveis encontradas: 17
+Colunas: ['description', 'detection_result', 'detection_method', 'product_detection_result', 'impact', 'solution', 'insight', 'log_method', 'cvss', 'port', 'protocol', 'severity', 'references', 'plugin', 'identification', 'http_info', 'source']
+   📊 Calculando scores ROUGE-L...
+✅ Comparação concluída!
+   → Arquivo: metrics\rouge\results\openvas_docker.bintray.io_jfrog_artifactory-oss_5.11.0\rouge_comparison_vulnerabilities_deepseek.xlsx
+
+   📊 Resumo da Comparação:
+      • Instâncias da baseline pareadas: 111/125
+      • Vulnerabilidades não extraídas (Absent): 14
+      • Vulnerabilidades inventadas (Non-existent): 8
+        ↳ Duplicatas excedentes: 8
+        ↳ Invenções sem match: 0
+
+   📊 Categorização de Similaridade:
+      • Highly Similar (>0.7): 103
+      • Moderately Similar (0.6-0.7): 7
+      • Slightly Similar (0.4-0.6): 1
+      • Divergent (≤0.4): 0
+      • Non-existent (inventadas): 8
+      • Absent (não extraídas): 14
+
+   Estatísticas por campo:
+   → description: ROUGE-L=0.888
+   → impact: ROUGE-L=0.469
+   → solution: ROUGE-L=0.763
+   → Média geral de todos os 17 campos: 0.857
+
+📊 Resumo geral salvo em: metrics\rouge\results\openvas_docker.bintray.io_jfrog_artifactory-oss_5.11.0\summary_all_extractions_rouge_openvas_docker.bintray.io_jfrog_artifactory-oss_5.11.0_deepseek.xlsx
+
+============================================================
+Todas as comparacoes concluidas!
+
+📊 Arquivos gerados:
+   - metrics\rouge\results\openvas_docker.bintray.io_jfrog_artifactory-oss_5.11.0\rouge_comparison_vulnerabilities_deepseek.xlsx
+       • Per_Vulnerability: Scores ROUGE-L detalhados por campo
+       • Summary: Estatísticas agregadas (média, desvio, min, max, mediana)
+       • Categorization: Classificação completa (Similarity + Absent + Non-existent)
+       • Mapping_Debug: Debug do pareamento de nomes
+   - metrics\rouge\results\openvas_docker.bintray.io_jfrog_artifactory-oss_5.11.0\summary_all_extractions.xlsx (comparação consolidada entre todos os modelos)

@@ -1,0 +1,99 @@
+
+============================================================
+[CONFIG] LLM: gpt-5-mini-2025-08-07
+[CONFIG] Max tokens: 16000
+[CONFIG] Reserve for response: 7000
+============================================================
+
+[PDF] Loading PDF from: baselines/openvas/OpenVAS_bBWA.pdf
+[PDF] Using extractor: PdfplumberExtractor
+Extracting visual layout from PDF: OpenVAS_bBWA.pdf
+Total pages found: 58
+[VISUAL] Table of contents extracted up to 5208 characters using marker '^\s*NVT:'.
+[LAYOUT] Visual layout: C:\Users\Bia\Documents\GitHub\Projetos\MulitaMiner\results_runs\visual_layouts\OpenVAS_bBWA.txt
+[BLOCKS] 28 session blocks created
+[DEBUG] Attempting to load tokenizer with config: {'type': 'tiktoken', 'model': 'o200k_base'}
+[DEBUG] Loading tiktoken with encoding: o200k_base
+[DEBUG] Successfully loaded tokenizer object: <class 'tiktoken.core.Encoding'>
+
+Processing blocks:   0%|                              | 0/41 [00:00<?, ?chunk/s]
+Processing blocks:   2%|▌                     | 1/41 [01:22<54:42, 82.07s/chunk]
+Processing blocks:   5%|▉                   | 2/41 [03:06<1:01:45, 95.02s/chunk]
+Processing blocks:   7%|█▌                    | 3/41 [04:38<59:29, 93.94s/chunk]
+Processing blocks:  10%|██▏                   | 4/41 [05:30<47:39, 77.30s/chunk]
+Processing blocks:  12%|██▋                   | 5/41 [06:38<44:26, 74.06s/chunk]
+Processing blocks:  15%|███▏                  | 6/41 [06:54<31:42, 54.34s/chunk]
+Processing blocks:  17%|███▊                  | 7/41 [07:29<27:03, 47.75s/chunk]
+Processing blocks:  20%|████▎                 | 8/41 [08:18<26:36, 48.39s/chunk]
+Processing blocks:  22%|████▊                 | 9/41 [08:44<21:55, 41.11s/chunk]
+Processing blocks:  24%|█████                | 10/41 [09:11<19:00, 36.78s/chunk]
+Processing blocks:  27%|█████▋               | 11/41 [09:55<19:36, 39.22s/chunk]
+Processing blocks:  29%|██████▏              | 12/41 [10:47<20:48, 43.05s/chunk]
+Processing blocks:  32%|██████▋              | 13/41 [11:41<21:34, 46.23s/chunk]
+Processing blocks:  34%|███████▏             | 14/41 [11:59<17:01, 37.84s/chunk]
+Processing blocks:  37%|███████▋             | 15/41 [12:52<18:25, 42.50s/chunk]
+Processing blocks:  39%|████████▏            | 16/41 [13:49<19:30, 46.83s/chunk]
+Processing blocks:  41%|████████▋            | 17/41 [14:55<20:57, 52.38s/chunk]
+                                                                                
+
+Processing blocks:  41%|████████▋            | 17/41 [20:56<20:57, 52.38s/chunk]
+Processing blocks:  44%|████████▊           | 18/41 [20:56<55:41, 145.26s/chunk]
+                                                                                
+
+Processing blocks:  44%|████████▊           | 18/41 [24:50<55:41, 145.26s/chunk]
+Processing blocks:  46%|████████▎         | 19/41 [27:21<1:19:42, 217.37s/chunk]
+Processing blocks:  49%|████████▊         | 20/41 [28:53<1:02:49, 179.51s/chunk]
+Processing blocks:  51%|██████████▏         | 21/41 [30:39<52:28, 157.45s/chunk]
+Processing blocks:  54%|██████████▋         | 22/41 [31:28<39:33, 124.94s/chunk]
+Processing blocks:  56%|███████████▏        | 23/41 [32:32<32:00, 106.71s/chunk]
+Processing blocks:  59%|████████████▎        | 24/41 [33:04<23:50, 84.14s/chunk]
+Processing blocks:  61%|████████████▊        | 25/41 [34:15<21:23, 80.24s/chunk]
+Processing blocks:  63%|█████████████▎       | 26/41 [35:48<21:01, 84.13s/chunk]
+Processing blocks:  66%|█████████████▊       | 27/41 [37:19<20:07, 86.22s/chunk]
+Processing blocks:  68%|██████████████▎      | 28/41 [38:43<18:31, 85.51s/chunk]
+Processing blocks:  71%|██████████████▊      | 29/41 [39:42<15:32, 77.69s/chunk]
+Processing blocks:  73%|███████████████▎     | 30/41 [41:08<14:40, 80.09s/chunk]
+Processing blocks:  76%|███████████████▉     | 31/41 [42:04<12:07, 72.76s/chunk]
+Processing blocks:  78%|████████████████▍    | 32/41 [43:22<11:09, 74.38s/chunk]
+Processing blocks:  80%|████████████████▉    | 33/41 [44:37<09:56, 74.62s/chunk]
+Processing blocks:  83%|█████████████████▍   | 34/41 [46:01<09:01, 77.31s/chunk]
+Processing blocks:  85%|█████████████████▉   | 35/41 [47:31<08:07, 81.31s/chunk]
+Processing blocks:  88%|██████████████████▍  | 36/41 [48:18<05:55, 71.08s/chunk]
+Processing blocks:  90%|██████████████████▉  | 37/41 [48:36<03:40, 55.09s/chunk]
+Processing blocks:  93%|███████████████████▍ | 38/41 [49:00<02:17, 45.84s/chunk]
+Processing blocks:  95%|███████████████████▉ | 39/41 [50:17<01:49, 55.00s/chunk]
+Processing blocks:  98%|████████████████████▍| 40/41 [51:02<00:51, 51.94s/chunk]
+Processing blocks: 100%|█████████████████████| 41/41 [51:40<00:00, 47.73s/chunk]
+Processing blocks: 100%|█████████████████████| 41/41 [51:40<00:00, 75.61s/chunk]
+[CHUNK] Unexpected error: Request timed out.
+[CHUNK] Performing intelligent redivision...
+
+------------------------------------------------------------
+[EXTRACTION] Total blocks processed: 28
+------------------------------------------------------------
+
+[PROCESSING] Consolidating vulnerabilities (allow_duplicates=True)
+[DEDUPLICATION] Custom mode: allow_duplicates=True (scanner: OPENVAS)
+[DEDUPLICATION] Consolidation log saved to: results_runs\OpenVAS_bBWA\gpt5\run2\OpenVAS_bBWA_gpt5_run2_deduplication_log.txt
+
+============================================================
+[SUMMARY] EXTRACTION COMPLETE
+============================================================
+Output file: results_runs\OpenVAS_bBWA\gpt5\run2\OpenVAS_bBWA_gpt5_run2.json
+Final vulnerabilities: 58
+============================================================
+
+[TOKENS] Token file saved at: results_tokens\OpenVAS_bBWA_gpt5_run2_gpt-5-mini-2025-08-07_tokens.json
+
+============================================================
+[PERFORMANCE] EXECUTION SUMMARY
+============================================================
+Total execution time: 3107.10s
+LLM: gpt-5-mini-2025-08-07
+Chunks processed: 28
+Vulnerability pipeline:
+  Extracted: 84 vulns
+  After deduplication: 58 vulns
+  Final (valid & saved): 58 vulns
+============================================================
+

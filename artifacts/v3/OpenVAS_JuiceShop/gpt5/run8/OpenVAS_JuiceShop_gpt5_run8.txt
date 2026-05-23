@@ -1,0 +1,70 @@
+
+============================================================
+[CONFIG] LLM: gpt-5-mini-2025-08-07
+[CONFIG] Max tokens: 16000
+[CONFIG] Reserve for response: 7000
+============================================================
+
+[PDF] Loading PDF from: baselines/openvas/OpenVAS_JuiceShop.pdf
+[PDF] Using extractor: PdfplumberExtractor
+Extracting visual layout from PDF: OpenVAS_JuiceShop.pdf
+Total pages found: 24
+[VISUAL] Table of contents extracted up to 2594 characters using marker '^\s*NVT:'.
+[LAYOUT] Visual layout: C:\Users\Bia\Documents\GitHub\Projetos\MulitaMiner\results_runs\visual_layouts\OpenVAS_JuiceShop.txt
+[EXTRACTION] Full extraction saved: results_runs\OpenVAS_JuiceShop\gpt5\run8\extraction_OpenVAS_JuiceShop.txt
+[BLOCKS] 10 session blocks created
+[DEBUG] Attempting to load tokenizer with config: {'type': 'tiktoken', 'model': 'o200k_base'}
+[DEBUG] Loading tiktoken with encoding: o200k_base
+[DEBUG] Successfully loaded tokenizer object: <class 'tiktoken.core.Encoding'>
+
+Processing blocks:   0%|                              | 0/15 [00:00<?, ?chunk/s]
+Processing blocks:   7%|█▍                    | 1/15 [00:36<08:35, 36.82s/chunk]
+Processing blocks:  13%|██▉                   | 2/15 [01:22<09:07, 42.11s/chunk]
+Processing blocks:  20%|████▍                 | 3/15 [01:58<07:51, 39.32s/chunk]
+Processing blocks:  27%|█████▊                | 4/15 [02:15<05:35, 30.48s/chunk]
+Processing blocks:  33%|███████▎              | 5/15 [02:36<04:31, 27.17s/chunk]
+Processing blocks:  40%|████████▊             | 6/15 [03:43<06:05, 40.62s/chunk]
+                                                                                
+
+Processing blocks:  40%|████████▊             | 6/15 [05:08<06:05, 40.62s/chunk]
+Processing blocks:  47%|█████████▊           | 7/15 [07:47<14:17, 107.14s/chunk]
+Processing blocks:  53%|███████████▋          | 8/15 [08:56<11:04, 94.92s/chunk]
+Processing blocks:  60%|█████████████▏        | 9/15 [09:43<07:59, 79.84s/chunk]
+Processing blocks:  67%|██████████████       | 10/15 [11:05<06:42, 80.52s/chunk]
+Processing blocks:  73%|███████████████▍     | 11/15 [11:44<04:31, 67.98s/chunk]
+Processing blocks:  80%|████████████████▊    | 12/15 [12:38<03:10, 63.63s/chunk]
+Processing blocks:  87%|██████████████████▏  | 13/15 [13:59<02:17, 68.87s/chunk]
+Processing blocks:  93%|███████████████████▌ | 14/15 [14:20<00:54, 54.43s/chunk]
+Processing blocks: 100%|█████████████████████| 15/15 [15:23<00:00, 56.91s/chunk]
+Processing blocks: 100%|█████████████████████| 15/15 [15:23<00:00, 61.54s/chunk]
+[CHUNK] Performing intelligent redivision...
+
+------------------------------------------------------------
+[EXTRACTION] Total blocks processed: 10
+------------------------------------------------------------
+
+[PROCESSING] Consolidating vulnerabilities (allow_duplicates=True)
+[DEDUPLICATION] Custom mode: allow_duplicates=True (scanner: OPENVAS)
+[DEDUPLICATION] Consolidation log saved to: results_runs\OpenVAS_JuiceShop\gpt5\run8\OpenVAS_JuiceShop_gpt5_run8_deduplication_log.txt
+
+============================================================
+[SUMMARY] EXTRACTION COMPLETE
+============================================================
+Output file: results_runs\OpenVAS_JuiceShop\gpt5\run8\OpenVAS_JuiceShop_gpt5_run8.json
+Final vulnerabilities: 36
+============================================================
+
+[TOKENS] Token file saved at: results_tokens\OpenVAS_JuiceShop_gpt5_run8_gpt-5-mini-2025-08-07_tokens.json
+
+============================================================
+[PERFORMANCE] EXECUTION SUMMARY
+============================================================
+Total execution time: 926.22s
+LLM: gpt-5-mini-2025-08-07
+Chunks processed: 10
+Vulnerability pipeline:
+  Extracted: 49 vulns
+  After deduplication: 36 vulns
+  Final (valid & saved): 36 vulns
+============================================================
+

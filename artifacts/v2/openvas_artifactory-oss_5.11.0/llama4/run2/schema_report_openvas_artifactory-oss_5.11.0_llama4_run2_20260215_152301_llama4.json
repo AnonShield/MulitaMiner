@@ -1,0 +1,49 @@
+{
+  "version": "v2",
+  "schema_mode": "auto",
+  "file": "v2\\openvas_artifactory-oss_5.11.0\\llama4\\run2\\openvas_artifactory-oss_5.11.0_llama4_run2_20260215_152301.json",
+  "json_valid": true,
+  "n_records": 83,
+  "schema_conformance_rate": 0.9879518072289156,
+  "schema_field_conformance_rate": 0.9979919678714859,
+  "type_coercion_rate": 0.5030120481927711,
+  "coercion_breakdown": {
+    "cvss:list→float": 83,
+    "plugin_details:list→dict": 83,
+    "severity:case": 1
+  },
+  "extra_fields_rate": 0.024096385542168676,
+  "missing_field_counts": {
+    "impact": 1,
+    "solution": 1,
+    "insight": 1
+  },
+  "type_error_examples": [],
+  "type_error_field_counts": {},
+  "field_failure_counts": {
+    "solution": 1,
+    "impact": 1,
+    "insight": 1
+  },
+  "extra_field_counts": {
+    "": 1,
+    "name": 1
+  },
+  "native": {
+    "schema_mode": "v2",
+    "schema_conformance_rate": 0.9879518072289156,
+    "schema_field_conformance_rate": 0.9977409638554217,
+    "missing_field_counts": {
+      "impact": 1,
+      "solution": 1,
+      "insight": 1
+    },
+    "type_error_examples": [],
+    "type_error_field_counts": {},
+    "field_failure_counts": {
+      "solution": 1,
+      "impact": 1,
+      "insight": 1
+    }
+  }
+}

@@ -1,0 +1,108 @@
+
+============================================================
+[CONFIG] LLM: meta-llama/llama-4-scout-17b-16e-instruct
+[CONFIG] Max tokens: 8192
+[CONFIG] Reserve for response: 3500
+============================================================
+
+[PDF] Loading PDF from: baselines/openvas/OpenVAS_bBWA.pdf
+[PDF] Using extractor: PdfplumberExtractor
+Extracting visual layout from PDF: OpenVAS_bBWA.pdf
+Total pages found: 58
+[VISUAL] Table of contents extracted up to 5208 characters using marker '^\s*NVT:'.
+[LAYOUT] Visual layout: C:\Users\Bia\Documents\GitHub\Projetos\MulitaMiner\results_runs\visual_layouts\OpenVAS_bBWA.txt
+[EXTRACTION] Full extraction saved: results_runs\OpenVAS_bBWA\llama4\run2\extraction_OpenVAS_bBWA.txt
+[BLOCKS] 28 session blocks created
+[DEBUG] Attempting to load tokenizer with config: {'type': 'huggingface', 'model': 'meta-llama/llama-4-scout-17b-16e-instruct'}
+[DEBUG] Loading Hugging Face tokenizer: meta-llama/llama-4-scout-17b-16e-instruct
+[DEBUG] Successfully loaded tokenizer object: <class 'transformers.tokenization_utils_fast.PreTrainedTokenizerFast'>
+
+Processing blocks:   0%|                              | 0/32 [00:00<?, ?chunk/s]
+Processing blocks:   3%|▋                     | 1/32 [00:03<01:38,  3.19s/chunk]
+                                                                                
+
+Processing blocks:   3%|▋                     | 1/32 [00:10<01:38,  3.19s/chunk]
+Processing blocks:   6%|█▍                    | 2/32 [00:18<05:07, 10.26s/chunk]
+Processing blocks:   9%|██                    | 3/32 [00:20<03:09,  6.53s/chunk]
+Processing blocks:  12%|██▊                   | 4/32 [00:21<02:00,  4.29s/chunk]
+Processing blocks:  16%|███▍                  | 5/32 [00:23<01:31,  3.41s/chunk]
+Processing blocks:  19%|████▏                 | 6/32 [00:24<01:12,  2.79s/chunk]
+Processing blocks:  22%|████▊                 | 7/32 [00:25<00:55,  2.21s/chunk]
+Processing blocks:  25%|█████▌                | 8/32 [00:26<00:44,  1.87s/chunk]
+Processing blocks:  28%|██████▏               | 9/32 [00:28<00:41,  1.80s/chunk]
+Processing blocks:  31%|██████▌              | 10/32 [00:30<00:40,  1.82s/chunk]
+Processing blocks:  34%|███████▏             | 11/32 [00:32<00:41,  1.96s/chunk]
+Processing blocks:  38%|███████▉             | 12/32 [00:33<00:33,  1.65s/chunk]
+Processing blocks:  41%|████████▌            | 13/32 [00:35<00:31,  1.66s/chunk]
+Processing blocks:  44%|█████████▏           | 14/32 [00:37<00:32,  1.82s/chunk]
+Processing blocks:  47%|█████████▊           | 15/32 [00:39<00:32,  1.90s/chunk]
+                                                                                
+
+Processing blocks:  47%|█████████▊           | 15/32 [00:47<00:32,  1.90s/chunk]
+Processing blocks:  50%|██████████▌          | 16/32 [00:55<01:38,  6.17s/chunk]
+                                                                                
+
+Processing blocks:  50%|██████████▌          | 16/32 [01:01<01:38,  6.17s/chunk]
+Processing blocks:  53%|███████████▏         | 17/32 [01:08<02:02,  8.16s/chunk]
+Processing blocks:  56%|███████████▊         | 18/32 [01:12<01:38,  7.02s/chunk]
+Processing blocks:  59%|████████████▍        | 19/32 [01:15<01:14,  5.71s/chunk]
+Processing blocks:  62%|█████████████▏       | 20/32 [01:16<00:52,  4.39s/chunk]
+Processing blocks:  66%|█████████████▊       | 21/32 [01:18<00:37,  3.42s/chunk]
+Processing blocks:  69%|██████████████▍      | 22/32 [01:20<00:31,  3.16s/chunk]
+                                                                                
+
+Processing blocks:  69%|██████████████▍      | 22/32 [01:26<00:31,  3.16s/chunk]
+Processing blocks:  72%|███████████████      | 23/32 [01:37<01:04,  7.20s/chunk]
+                                                                                
+
+Processing blocks:  72%|███████████████      | 23/32 [01:42<01:04,  7.20s/chunk]
+Processing blocks:  75%|███████████████▊     | 24/32 [01:50<01:13,  9.17s/chunk]
+                                                                                
+
+Processing blocks:  75%|███████████████▊     | 24/32 [01:56<01:13,  9.17s/chunk]
+Processing blocks:  78%|████████████████▍    | 25/32 [02:05<01:16, 10.92s/chunk]
+Processing blocks:  81%|█████████████████    | 26/32 [02:09<00:51,  8.64s/chunk]
+Processing blocks:  84%|█████████████████▋   | 27/32 [02:11<00:33,  6.76s/chunk]
+Processing blocks:  88%|██████████████████▍  | 28/32 [02:12<00:20,  5.07s/chunk]
+Processing blocks:  91%|███████████████████  | 29/32 [02:13<00:11,  3.89s/chunk]
+Processing blocks:  94%|███████████████████▋ | 30/32 [02:15<00:06,  3.31s/chunk]
+Processing blocks:  97%|████████████████████▎| 31/32 [02:17<00:02,  2.93s/chunk]
+Processing blocks: 100%|█████████████████████| 32/32 [02:19<00:00,  2.60s/chunk]
+Processing blocks: 100%|█████████████████████| 32/32 [02:19<00:00,  4.37s/chunk]
+[CHUNK] Performing intelligent redivision...
+[CHUNK] Performing intelligent redivision...
+[CHUNK] Performing intelligent redivision...
+[CHUNK] Performing intelligent redivision...
+[CHUNK] Performing intelligent redivision...
+[CHUNK] Performing intelligent redivision...
+
+------------------------------------------------------------
+[EXTRACTION] Total blocks processed: 28
+------------------------------------------------------------
+
+[PROCESSING] Consolidating vulnerabilities (allow_duplicates=True)
+[DEDUPLICATION] Custom mode: allow_duplicates=True (scanner: OPENVAS)
+[DEDUPLICATION] Removed items log: results_runs\OpenVAS_bBWA\llama4\run2\OpenVAS_bBWA_llama4_run2_removed_log.txt
+[DEDUPLICATION] Consolidation log saved to: results_runs\OpenVAS_bBWA\llama4\run2\OpenVAS_bBWA_llama4_run2_deduplication_log.txt
+
+============================================================
+[SUMMARY] EXTRACTION COMPLETE
+============================================================
+Output file: results_runs\OpenVAS_bBWA\llama4\run2\OpenVAS_bBWA_llama4_run2.json
+Final vulnerabilities: 65
+============================================================
+
+[TOKENS] Token file saved at: results_tokens\OpenVAS_bBWA_llama4_run2_meta-llama_llama-4-scout-17b-16e-instruct_tokens.json
+
+============================================================
+[PERFORMANCE] EXECUTION SUMMARY
+============================================================
+Total execution time: 152.61s
+LLM: meta-llama/llama-4-scout-17b-16e-instruct
+Chunks processed: 28
+Vulnerability pipeline:
+  Extracted: 94 vulns
+  After deduplication: 65 vulns
+  Final (valid & saved): 65 vulns
+============================================================
+

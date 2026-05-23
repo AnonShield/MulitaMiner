@@ -1,0 +1,67 @@
+=== Comparacao de Multiplas Extracoes com Baseline (BERTScore) ===
+
+[OK] Modo CLI: duplicatas legítimas permitidas
+
+Carregando arquivo: metrics/baselines/openvas/openvas_docker.bintray.io_jfrog_artifactory-oss_5.11.0.xlsx
+Carregando aba baseline: Vulnerabilities
+Baseline carregado - Shape: (125, 18)
+Colunas baseline: ['Name', 'description', 'detection_result', 'detection_method', 'product_detection_result', 'impact', 'solution', 'insight', 'log_method', 'cvss', 'port', 'protocol', 'severity', 'references', 'plugin', 'identification', 'http_info', 'source']
+Arquivo de extracao simples detectado - usando aba 'Vulnerabilities'
+
+Abas de extracao encontradas: ['Vulnerabilities']
+
+============================================================
+Processando (BERT): Vulnerabilities
+============================================================
+Shape da extração: (120, 18)
+Processando BERTScore Vulnerabilities...
+   🔧 Scanner detectado: openvas
+   ℹ️ Mantendo 125 instâncias da baseline (modo com duplicatas legítimas)
+   🔍 Fuzzy matching: 1 vulnerabilidades...
+Colunas comparáveis encontradas (BERTScore): 17
+   📊 Calculando scores BERTScore...
+Carregando modelo BERTScore: distilbert-base-uncased...
+Modelo BERTScore carregado com sucesso!
+[DEBUG] baseline_dedup shape: (125, 21)
+[DEBUG] baseline_dedup _baseline_row_id:
+[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119, 120, 121, 122, 123, 124]
+[DEBUG] used_baseline_rowids (pareados):
+[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 19, 20, 23, 24, 26, np.int64(27), 28, 29, np.int64(30), 31, 32, 33, 34, 35, 37, 38, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 55, 56, 57, 58, 60, 61, 62, 63, 64, 67, 68, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100, 101, 102, 103, 104, 105, np.int64(106), 107, np.int64(108), 109, 110, 112, 113, 114, np.int64(115), np.int64(116), np.int64(117), np.int64(118), np.int64(119), np.int64(120), np.int64(121), np.int64(122), 124]
+[DEBUG] absent_rowids (serão marcados como ausentes):
+[65, 66, 36, 69, 39, 123, 111, 18, 21, 22, 54, 87, 25, 59]
+✅ Comparação BERT concluída!
+   → Arquivo: metrics\bert\results\openvas_docker.bintray.io_jfrog_artifactory-oss_5.11.0\bert_comparison_vulnerabilities_llama3.xlsx
+
+   📊 Resumo da Comparação:
+      • Instâncias da baseline pareadas: 111/125
+      • Vulnerabilidades não extraídas (Absent): 14
+      • Vulnerabilidades inventadas (Non-existent): 9
+        ↳ Duplicatas excedentes: 9
+        ↳ Invenções sem match: 0
+
+   Categorização de Similaridade:
+      • Highly Similar (>0.7): 107
+      • Moderately Similar (0.6-0.7): 4
+      • Slightly Similar (0.4-0.6): 0
+      • Divergent (≤0.4): 0
+      • Non-existent (inventadas): 9
+      • Absent (não extraídas): 14
+
+   Estatísticas por campo (exemplo):
+   → description: BERTScore F1=0.841
+   → impact: BERTScore F1=0.312
+   → solution: BERTScore F1=0.868
+   → Média geral de todos os 17 campos: 0.853
+
+📊 Resumo geral salvo em: metrics\bert\results\summary_all_extractions_bert_openvas_docker.bintray.io_jfrog_artifactory-oss_5.11.0_llama3.xlsx
+
+============================================================
+✅ Todas as comparações BERT concluídas!
+
+📊 Arquivos gerados:
+   - metrics\bert\results\bert_comparison_vulnerabilities.xlsx
+       • Per_Vulnerability: Scores BERTScore F1 detalhados por campo
+       • Summary: Estatísticas agregadas (média, desvio, min, max, mediana)
+       • Categorization: Classificação completa (Similarity + Absent + Non-existent)
+       • Mapping_Debug: Debug do pareamento de nomes
+   - metrics\bert\results\summary_all_extractions_bert.xlsx (comparação consolidada entre todos os modelos)

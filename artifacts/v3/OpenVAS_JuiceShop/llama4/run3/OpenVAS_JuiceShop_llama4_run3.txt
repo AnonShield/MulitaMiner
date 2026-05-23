@@ -1,0 +1,72 @@
+
+============================================================
+[CONFIG] LLM: meta-llama/llama-4-scout-17b-16e-instruct
+[CONFIG] Max tokens: 8192
+[CONFIG] Reserve for response: 3500
+============================================================
+
+[PDF] Loading PDF from: baselines/openvas/OpenVAS_JuiceShop.pdf
+[PDF] Using extractor: PdfplumberExtractor
+Extracting visual layout from PDF: OpenVAS_JuiceShop.pdf
+Total pages found: 24
+[VISUAL] Table of contents extracted up to 2594 characters using marker '^\s*NVT:'.
+[LAYOUT] Visual layout: C:\Users\Bia\Documents\GitHub\Projetos\MulitaMiner\results_runs\visual_layouts\OpenVAS_JuiceShop.txt
+[EXTRACTION] Full extraction saved: results_runs\OpenVAS_JuiceShop\llama4\run3\extraction_OpenVAS_JuiceShop.txt
+[BLOCKS] 10 session blocks created
+[DEBUG] Attempting to load tokenizer with config: {'type': 'huggingface', 'model': 'meta-llama/llama-4-scout-17b-16e-instruct'}
+[DEBUG] Loading Hugging Face tokenizer: meta-llama/llama-4-scout-17b-16e-instruct
+[DEBUG] Successfully loaded tokenizer object: <class 'transformers.tokenization_utils_fast.PreTrainedTokenizerFast'>
+
+Processing blocks:   0%|                              | 0/13 [00:00<?, ?chunk/s]
+Processing blocks:   8%|█▋                    | 1/13 [00:01<00:21,  1.82s/chunk]
+Processing blocks:  15%|███▍                  | 2/13 [00:04<00:23,  2.18s/chunk]
+Processing blocks:  23%|█████                 | 3/13 [00:07<00:24,  2.50s/chunk]
+Processing blocks:  31%|██████▊               | 4/13 [00:08<00:18,  2.03s/chunk]
+Processing blocks:  38%|████████▍             | 5/13 [00:09<00:14,  1.76s/chunk]
+Processing blocks:  46%|██████████▏           | 6/13 [00:15<00:20,  2.96s/chunk]
+                                                                                
+
+Processing blocks:  46%|██████████▏           | 6/13 [00:21<00:20,  2.96s/chunk]
+Processing blocks:  54%|███████████▊          | 7/13 [00:31<00:43,  7.23s/chunk]
+Processing blocks:  62%|█████████████▌        | 8/13 [00:35<00:32,  6.47s/chunk]
+Processing blocks:  69%|███████████████▏      | 9/13 [00:39<00:22,  5.51s/chunk]
+Processing blocks:  77%|████████████████▏    | 10/13 [00:42<00:14,  4.84s/chunk]
+                                                                                
+
+Processing blocks:  77%|████████████████▏    | 10/13 [00:49<00:14,  4.84s/chunk]
+Processing blocks:  85%|█████████████████▊   | 11/13 [01:01<00:18,  9.04s/chunk]
+Processing blocks:  92%|███████████████████▍ | 12/13 [01:02<00:06,  6.59s/chunk]
+Processing blocks: 100%|█████████████████████| 13/13 [01:04<00:00,  5.26s/chunk]
+Processing blocks: 100%|█████████████████████| 13/13 [01:04<00:00,  4.95s/chunk]
+[CHUNK] Performing intelligent redivision...
+[CHUNK] Performing intelligent redivision...
+
+------------------------------------------------------------
+[EXTRACTION] Total blocks processed: 10
+------------------------------------------------------------
+
+[PROCESSING] Consolidating vulnerabilities (allow_duplicates=True)
+[DEDUPLICATION] Custom mode: allow_duplicates=True (scanner: OPENVAS)
+[DEDUPLICATION] Consolidation log saved to: results_runs\OpenVAS_JuiceShop\llama4\run3\OpenVAS_JuiceShop_llama4_run3_deduplication_log.txt
+
+============================================================
+[SUMMARY] EXTRACTION COMPLETE
+============================================================
+Output file: results_runs\OpenVAS_JuiceShop\llama4\run3\OpenVAS_JuiceShop_llama4_run3.json
+Final vulnerabilities: 40
+============================================================
+
+[TOKENS] Token file saved at: results_tokens\OpenVAS_JuiceShop_llama4_run3_meta-llama_llama-4-scout-17b-16e-instruct_tokens.json
+
+============================================================
+[PERFORMANCE] EXECUTION SUMMARY
+============================================================
+Total execution time: 73.46s
+LLM: meta-llama/llama-4-scout-17b-16e-instruct
+Chunks processed: 10
+Vulnerability pipeline:
+  Extracted: 50 vulns
+  After deduplication: 40 vulns
+  Final (valid & saved): 40 vulns
+============================================================
+

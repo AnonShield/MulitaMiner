@@ -1,0 +1,2 @@
+# Vulnerabilidades removidas por falta de descrição válida:
+- ICMP Timestamp Reply Information Disclosure | port: 8081 | protocol: icmp | severity: LOW

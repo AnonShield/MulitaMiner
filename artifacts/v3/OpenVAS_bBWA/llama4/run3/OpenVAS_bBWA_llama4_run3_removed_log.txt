@@ -1,0 +1,36 @@
+# LOG OF REMOVED VULNERABILITIES (missing valid Name or description)
+
+Removed 1:
+{
+  "Name": "UnrealIRCd Authentication Spoofing Vulnerability",
+  "description": [],
+  "detection_result": [
+    "Installed version: 3.2.8.1"
+  ],
+  "detection_method": [
+    "Checks if a vulnerable version is present on the target host."
+  ],
+  "product_detection_result": [
+    "cpe:/a:unrealircd:unrealircd:3.2.8.1"
+  ],
+  "impact": [
+    "Successful exploitation of this vulnerability will allows remote attackers to spoof certificate fingerprints and consequently log in as another user."
+  ],
+  "solution": [
+    "Upgrade to UnrealIRCd 3.2.10.7, or 4.0.6, or later."
+  ],
+  "insight": [
+    "The flaw exists due to an error in the 'm_authenticate' function in 'modules/m_sasl.c' script."
+  ],
+  "log_method": [],
+  "cvss": 6.8,
+  "port": 6667,
+  "protocol": "tcp",
+  "severity": "MEDIUM",
+  "references": [],
+  "plugin": null,
+  "plugin_details": {},
+  "instances": [],
+  "source": "OPENVAS"
+}
+---

@@ -1,0 +1,876 @@
+[
+  {
+    "Name": "Distributed Ruby (dRuby/DRb) Multiple Remote Code Execution Vulnerabilities",
+    "description": [
+      "Systems using Distributed Ruby (dRuby/DRb), which is available in Ruby versions 1.6 and later, may permit unauthorized systems to execute distributed commands."
+    ],
+    "detection_result": [
+      "The service is running in $SAFE >= 1 mode. However it is still possible to run arbitrary syscall commands on the remote host. Sending an invalid syscall the service returned the following response: Flo:Errno::ENOSYS:bt[\"3/usr/lib/ruby/1.8/drb/drb.rb:1555:in 'syscall'\"0/usr/lib/ ->ruby/1.8/drb/drb.rb:1555:in 'send'\"4/usr/lib/ruby/1.8/drb/drb.rb:1555:in '__se ->nd__'\"A/usr/lib/ruby/1.8/drb/drb.rb:1555:in 'perform_without_block'\"3/usr/lib/ ->ruby/1.8/drb/drb.rb:1515:in 'perform'\"5/usr/lib/ruby/1.8/drb/drb.rb:1589:in 'm ->ain_loop'\"0/usr/lib/ruby/1.8/drb/drb.rb:1585:in 'loop'\"5/usr/lib/ruby/1.8/drb/ ->drb.rb:1585:in 'main_loop'\"1/usr/lib/ruby/1.8/drb/drb.rb:1581:in 'start'\"5/usr ->/lib/ruby/1.8/drb/drb.rb:1581:in 'main_loop'\"//usr/lib/ruby/1.8/drb/drb.rb:143 ->0:in 'run'\"1/usr/lib/ruby/1.8/drb/drb.rb:1427:in 'start'\"//usr/lib/ruby/1.8/dr ->b/drb.rb:1427:in 'run'\"6/usr/lib/ruby/1.8/drb/drb.rb:1347:in 'initialize'\"//us ->r/lib/ruby/1.8/drb/drb.rb:1627:in 'new'\"9/usr/lib/ruby/1.8/drb/drb.rb:1627:in ->'start_service'\"%/usr/sbin/druby_timeserver.rb:12:errnoi+:mesg\"Function not implemented"
+    ],
+    "detection_method": [
+      "Send a crafted command to the service and check for a remote command execution via the instance_eval or syscall requests.",
+      "Details: Distributed Ruby (dRuby/DRb) Multiple Remote Code Execution Vulnerabilities OID:1.3.6.1.4.1.25623.1.0.108010 Version used: $Revision: 12338 $"
+    ],
+    "impact": [
+      "By default, Distributed Ruby does not impose restrictions on allowed hosts or set the $SAFE environment variable to prevent privileged activities. If other controls are not in place, especially if the Distributed Ruby process runs with elevated privileges, an attacker could execute arbitrary system commands or Ruby scripts on the Distributed Ruby server. An attacker may need to know only the URI of the listening Distributed Ruby server to submit Ruby commands."
+    ],
+    "solution": [
+      "Solution type: Mitigation",
+      "Administrators of environments that rely on Distributed Ruby should ensure that appropriate controls are in place.",
+      "Code-level controls may include:",
+      "- Implementing taint on untrusted input",
+      "- Setting $SAFE levels appropriately (>=2 is recommended if untrusted hosts are allowed to submit Ruby commands, and >=3 may be appropriate)",
+      "- Including drb/acl.rb to set ACLEntry to restrict access to trusted hosts"
+    ],
+    "insight": [],
+    "product_detection_result": [
+      "Details: Distributed Ruby (dRuby/DRb) Multiple Remote Code Execution Vulnerabilities",
+      "OID:1.3.6.1.4.1.25623.1.0.108010",
+      "Version used: $Revision: 12338 $"
+    ],
+    "log_method": [],
+    "cvss": [
+      10.0,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "port": 8787,
+    "protocol": "tcp",
+    "severity": "HIGH",
+    "references": [
+      "BID:47071",
+      "https://tools.cisco.com/security/center/viewAlert.x?alertId=22750",
+      "http://www.securityfocus.com/bid/47071",
+      "http://blog.recurity-labs.com/archives/2011/05/12/druby_for_penetration_t",
+      "http://www.ruby-doc.org/stdlib-1.9.3/libdoc/drb/rdoc/DRb.html"
+    ],
+    "plugin": [],
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "PHP-CGI-based setups vulnerability when parsing query string parameters from php les.",
+    "description": [
+      "PHP is prone to an information-disclosure vulnerability."
+    ],
+    "detection_result": [
+      "Vulnerable url: http://172.17.0.3/cgi-bin/php"
+    ],
+    "detection_method": [
+      "Details: PHP-CGI-based setups vulnerability when parsing query string parameters from ph.",
+      "OID:1.3.6.1.4.1.25623.1.0.103482",
+      "Version used: $Revision: 13679 $"
+    ],
+    "impact": [
+      "Exploiting this issue allows remote attackers to view the source code of les in the context of the server process. This may allow the attacker to obtain sensitive information and to run arbitrary PHP code on the aected computer. Other attacks are also possible."
+    ],
+    "solution": [
+      "Solution type: VendorFix PHP has released version 5.4.3 and 5.3.13 to address this vulnerability. PHP is recommending that users upgrade to the latest version of PHP."
+    ],
+    "insight": [
+      "When PHP is used in a CGI-based setup (such as Apache's mod_cgid), the php-cgi receives a processed query string parameter as command line arguments which allows command-line switches, such as -s, -d or -c to be passed to the php-cgi binary, which can be exploited to disclose source code and obtain arbitrary code execution.",
+      "An example of the -s command, allowing an attacker to view the source code of index.php is below: http://example.com/index.php?-s"
+    ],
+    "product_detection_result": [],
+    "log_method": [],
+    "cvss": [
+      7.5,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "port": null,
+    "protocol": null,
+    "severity": "HIGH",
+    "references": [
+      "CVE-2012-1823",
+      "CVE-2012-2311",
+      "CVE-2012-2336",
+      "CVE-2012-2335",
+      "BID:53388",
+      "http://www.h-online.com/open/news/item/Critical-open-hole-in-PHP-creates-r",
+      "http://www.kb.cert.org/vuls/id/520827",
+      "http://eindbazen.net/2012/05/php-cgi-advisory-cve-2012-1823/",
+      "https://bugs.php.net/bug.php?id=61910",
+      "http://www.php.net/manual/en/security.cgi-bin.php",
+      "http://www.securityfocus.com/bid/53388"
+    ],
+    "plugin": [],
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Test HTTP dangerous methods",
+    "description": [
+      "Miscongured web servers allows remote clients to perform dangerous HTTP methods such as PUT and DELETE. This script checks if they are enabled and can be misused to upload or delete les."
+    ],
+    "detection_result": [
+      "We could upload the following files via the PUT method at this web server: http://172.17.0.3/dav/puttest214012487.html",
+      "We could delete the following files via the DELETE method at this web server: http://172.17.0.3/dav/puttest214012487.html"
+    ],
+    "detection_method": [
+      "Details: Test HTTP dangerous methods",
+      "OID:1.3.6.1.4.1.25623.1.0.10498",
+      "Version used: $Revision: 9335 $"
+    ],
+    "impact": [
+      "Enabled PUT method: This might allow an attacker to upload and run arbitrary code on this web server.",
+      "Enabled DELETE method: This might allow an attacker to delete additional les on this web server."
+    ],
+    "solution": [
+      "Solution type: Mitigation Use access restrictions to these dangerous HTTP methods or disable them completely."
+    ],
+    "insight": [],
+    "product_detection_result": [],
+    "log_method": [],
+    "cvss": [
+      7.5,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "port": null,
+    "protocol": null,
+    "severity": "HIGH",
+    "references": [
+      "BID:12141",
+      "OWASP:OWASP-CM-001"
+    ],
+    "plugin": [],
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "SSH Brute Force Logins With Default Credentials Reporting",
+    "description": [
+      "It was possible to login into the remote SSH server using default credentials.",
+      "As the NVT 'SSH Brute Force Logins with default Credentials' (OID: 1.3.6.1.4.1.25623.1.0.108013) might run into a timeout the actual reporting of this vulner- ability takes place in this NVT instead. The script preference 'Report timeout' allows you to congure if such an timeout is reported."
+    ],
+    "detection_result": [
+      "It was possible to login with the following credentials <User>:<Password> msfadmin:msfadmin user:user"
+    ],
+    "detection_method": [
+      "Try to login with a number of known default credentials via the SSH protocol.",
+      "Details: SSH Brute Force Logins With Default Credentials Reporting",
+      "OID:1.3.6.1.4.1.25623.1.0.103239",
+      "Version used: $Revision: 13568 $"
+    ],
+    "impact": [
+      "Successful login with default credentials allows unauthorized access to the system using those accounts."
+    ],
+    "solution": [
+      "Solution type: Mitigation Change the password as soon as possible."
+    ],
+    "insight": [],
+    "product_detection_result": [],
+    "log_method": [],
+    "cvss": [
+      7.5,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "port": 22,
+    "protocol": "tcp",
+    "severity": "HIGH",
+    "references": [],
+    "plugin": [],
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "OS End Of Life Detection",
+    "description": [
+      "OS End Of Life Detection",
+      "The Operating System on the remote host has reached the end of life and should not be used anymore."
+    ],
+    "detection_result": [
+      "The \"Ubuntu\" Operating System on the remote host has reached the end of life. CPE: cpe:/o:canonical:ubuntu_linux:8.04 Installed version, build or SP: 8.04 EOL date: 2013-05-09 EOL info: https://wiki.ubuntu.com/Releases"
+    ],
+    "detection_method": [
+      "Details: OS End Of Life Detection OID:1.3.6.1.4.1.25623.1.0.103674 Version used: $Revision: 8927 $"
+    ],
+    "impact": [],
+    "solution": [
+      "Solution type: Mitigation"
+    ],
+    "insight": [],
+    "product_detection_result": [
+      "cpe:/o:canonical:ubuntu_linux:8.04 Detected by OS Detection Consolidation and Reporting (OID: 1.3.6.1.4.1.25623.1.0 ->.105937)",
+      "Product: cpe:/o:canonical:ubuntu_linux:8.04 Method: OS Detection Consolidation and Reporting OID: 1.3.6.1.4.1.25623.1.0.105937"
+    ],
+    "log_method": [],
+    "cvss": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "port": null,
+    "protocol": null,
+    "severity": "LOG",
+    "references": [
+      "https://wiki.ubuntu.com/Releases"
+    ],
+    "plugin": [],
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "DistCC Remote Code Execution Vulnerability",
+    "description": [
+      "DistCC 2.x, as used in XCode 1.5 and others, when not congured to restrict access to the server port, allows remote attackers to execute arbitrary commands via compilation jobs, which are executed by the server without authorization checks."
+    ],
+    "detection_result": [
+      "It was possible to execute the \"id\" command. Result: uid=1(daemon) gid=1(daemon)"
+    ],
+    "detection_method": [
+      "Details: DistCC Remote Code Execution Vulnerability OID:1.3.6.1.4.1.25623.1.0.103553 Version used: $Revision: 12032 $"
+    ],
+    "impact": [
+      "DistCC by default trusts its clients completely that in turn could allow a malicious client to execute arbitrary commands on the server."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Vendor updates are available. Please see the references for more information.",
+      "For more information about DistCC's security see the references."
+    ],
+    "insight": [],
+    "product_detection_result": [],
+    "log_method": [],
+    "cvss": [
+      9.3,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "port": 3632,
+    "protocol": "tcp",
+    "severity": "HIGH",
+    "references": [
+      "CVE-2004-2687",
+      "https://distcc.github.io/security.html",
+      "https://web.archive.org/web/20150511045306/http://archives.neohapsis.com:80/archives/bugtraq/2005-03/0183.html"
+    ],
+    "plugin": [],
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "VNC Brute Force Login",
+    "description": [
+      "Try to log in with given passwords via VNC protocol."
+    ],
+    "detection_result": [
+      "It was possible to connect to the VNC server with the password: password"
+    ],
+    "detection_method": [
+      "Details: VNC Brute Force Login OID:1.3.6.1.4.1.25623.1.0.106056 Version used: $Revision: 13328 $"
+    ],
+    "impact": [],
+    "solution": [
+      "Solution type: Mitigation",
+      "Change the password to something hard to guess or enable password protection at all."
+    ],
+    "insight": [
+      "This script tries to authenticate to a VNC server with the passwords set in the password preference. It will also test and report if no authentication / password is required at all.",
+      "Note: Some VNC servers have a blacklisting scheme that blocks IP addresses after ve unsuccessful connection attempts for a period of time. The script will abort the brute force attack if it encounters that it gets blocked.",
+      "Note as well that passwords can be max. 8 characters long."
+    ],
+    "product_detection_result": [],
+    "log_method": [],
+    "cvss": [
+      9.0,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "port": 5900,
+    "protocol": "tcp",
+    "severity": "HIGH",
+    "references": [],
+    "plugin": [],
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "TWiki Cross-Site Request Forgery Vulnerability - Sep10",
+    "description": [
+      "The host is running TWiki and is prone to Cross-Site Request Forgery vulnerability."
+    ],
+    "detection_result": [
+      "Installed version: 01.Feb.2003 Fixed version: 4.3.2"
+    ],
+    "detection_method": [
+      "Details: TWiki Cross-Site Request Forgery Vulnerability - Sep10 OID:1.3.6.1.4.1.25623.1.0.801281 Version used: $Revision: 12952 $"
+    ],
+    "impact": [
+      "Successful exploitation will allow attacker to gain administrative privileges on the target application and can cause CSRF attack."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Upgrade to TWiki version 4.3.2 or later."
+    ],
+    "insight": [
+      "Attack can be done by tricking an authenticated TWiki user into visiting a static HTML page on another side, where a Javascript enabled browser will send an HTTP POST request to TWiki, which in turn will process the request as the TWiki user."
+    ],
+    "product_detection_result": [
+      "cpe:/a:twiki:twiki:01.Feb.2003 Detected by TWiki Version Detection (OID: 1.3.6.1.4.1.25623.1.0.800399)",
+      "Product: cpe:/a:twiki:twiki:01.Feb.2003 Method: TWiki Version Detection OID: 1.3.6.1.4.1.25623.1.0.800399"
+    ],
+    "log_method": [],
+    "cvss": [
+      6.8,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "port": 80,
+    "protocol": "tcp",
+    "severity": "MEDIUM",
+    "references": [],
+    "plugin": [],
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Cleartext Transmission of Sensitive Information via HTTP",
+    "description": [
+      "The host / application transmits sensitive information (username, passwords) in cleartext via HTTP."
+    ],
+    "detection_result": [
+      "The following input fields where identified (URL:input name): http://172.17.0.3/phpMyAdmin/:pma_password http://172.17.0.3/phpMyAdmin/?D=A:pma_password ... . . . continued from previous page . . . http://172.17.0.3/tikiwiki/tiki-install.php:pass http://172.17.0.3/twiki/bin/view/TWiki/TWikiUserAuthentication:oldpassword"
+    ],
+    "detection_method": [
+      "Evaluate previous collected information and check if the host / application is not enforcing the transmission of sensitive data via an encrypted SSL/TLS connection. The script is currently checking the following: - HTTP Basic Authentication (Basic Auth) - HTTP Forms (e.g. Login) with input eld of type 'password'"
+    ],
+    "impact": [
+      "An attacker could use this situation to compromise or eavesdrop on the HTTP communication between the client and the server using a man-in-the-middle attack to get access to sensitive data like usernames or passwords."
+    ],
+    "solution": [
+      "Solution type: Workaround Enforce the transmission of sensitive data via an encrypted SSL/TLS connection. Additionally make sure the host / application is redirecting all users to the secured SSL/TLS connection before allowing to input sensitive data into the mentioned functions."
+    ],
+    "insight": [],
+    "product_detection_result": [
+      "Hosts / applications which doesn't enforce the transmission of sensitive data via an encrypted SSL/TLS connection."
+    ],
+    "log_method": [],
+    "cvss": [
+      4.8,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "port": null,
+    "protocol": "null",
+    "severity": "MEDIUM",
+    "references": [
+      "BID:49187",
+      "https://www.exploit-db.com/exploits/36047/",
+      "http://www.securityfocus.com/bid/49187",
+      "http://www.kobaonline.com/awiki/"
+    ],
+    "plugin": [],
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "TWiki < 6.1.0 XSS Vulnerability",
+    "description": [
+      "bin/statistics in TWiki 6.0.2 allows XSS via the webs parameter."
+    ],
+    "detection_result": [
+      "Installed version: 01.Feb.2003 Fixed version: 6.1.0"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host."
+    ],
+    "impact": [],
+    "solution": [
+      "Solution type: VendorFix Update to version 6.1.0 or later."
+    ],
+    "insight": [
+      "TWiki version 6.0.2 and probably prior."
+    ],
+    "product_detection_result": [
+      "Product: cpe:/a:twiki:twiki:01.Feb.2003",
+      "Detected by TWiki Version Detection (OID: 1.3.6.1.4.1.25623.1.0.800399)"
+    ],
+    "log_method": [],
+    "cvss": [
+      4.3,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "port": null,
+    "protocol": "null",
+    "severity": "MEDIUM",
+    "references": [
+      "CVE-2018-20212",
+      "https://seclists.org/fulldisclosure/2019/Jan/7",
+      "http://twiki.org/cgi-bin/view/Codev/DownloadTWiki"
+    ],
+    "plugin": [],
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Apache HTTP Server 'httpOnly' Cookie Information Disclosure Vulnerability",
+    "description": [
+      "This host is running Apache HTTP Server and is prone to cookie information disclosure vulnerability."
+    ],
+    "detection_result": [
+      "Vulnerability was detected according to the Vulnerability Detection Method."
+    ],
+    "detection_method": [
+      "Details: Apache HTTP Server 'httpOnly' Cookie Information Disclosure Vulnerability"
+    ],
+    "impact": [
+      "Successful exploitation will allow attackers to obtain sensitive information that may aid in further attacks."
+    ],
+    "solution": [
+      "Solution type: VendorFix Upgrade to Apache HTTP Server version 2.2.22 or later."
+    ],
+    "insight": [
+      "The aw is due to an error within the default error response for status code 400 when no custom ErrorDocument is congured, which can be exploited to expose 'httpOnly' cookies."
+    ],
+    "product_detection_result": [
+      "Apache HTTP Server versions 2.2.0 through 2.2.21"
+    ],
+    "log_method": [],
+    "cvss": [
+      4.3,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "port": null,
+    "protocol": "null",
+    "severity": "MEDIUM",
+    "references": [
+      "CVE-2012-0053",
+      "BID:51706",
+      "http://secunia.com/advisories/47779",
+      "http://www.exploit-db.com/exploits/18442",
+      "http://rhn.redhat.com/errata/RHSA-2012-0128.html",
+      "http://httpd.apache.org/security/vulnerabilities_22.html",
+      "http://svn.apache.org/viewvc?view=revision&revision=1235454",
+      "http://lists.opensuse.org/opensuse-security-announce/2012-02/msg00026.html"
+    ],
+    "plugin": [],
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "SSL/TLS: RSA Temporary Key Handling 'RSA_EXPORT' Downgrade Issue (FREAK)",
+    "description": [
+      "This host is accepting 'RSA_EXPORT' cipher suites and is prone to man in the middle attack."
+    ],
+    "detection_result": [
+      "'RSA_EXPORT' cipher suites accepted by this service via the SSLv3 protocol:\nTLS_DHE_RSA_EXPORT_WITH_DES40_CBC_SHA\nTLS_RSA_EXPORT_WITH_DES40_CBC_SHA\nTLS_RSA_EXPORT_WITH_RC2_CBC_40_MD5\nTLS_RSA_EXPORT_WITH_RC4_40_MD5\n'RSA_EXPORT' cipher suites accepted by this service via the TLSv1.0 protocol:\nTLS_DHE_RSA_EXPORT_WITH_DES40_CBC_SHA\nTLS_RSA_EXPORT_WITH_DES40_CBC_SHA\nTLS_RSA_EXPORT_WITH_RC2_CBC_40_MD5\nTLS_RSA_EXPORT_WITH_RC4_40_MD5"
+    ],
+    "detection_method": [
+      "Check previous collected cipher suites saved in the KB."
+    ],
+    "impact": [
+      "Successful exploitation will allow remote attacker to downgrade the security of a session to use 'RSA_EXPORT' cipher suites, which are signicantly weaker than non-export cipher suites.",
+      "This may allow a man-in-the-middle attacker to more easily break the encryption and monitor or tamper with the encrypted stream."
+    ],
+    "solution": [
+      "Solution type: VendorFix - Remove support for 'RSA_EXPORT' cipher suites from the service. - If running OpenSSL update to version 0.9.8zd or 1.0.0p or 1.0.1k or later."
+    ],
+    "insight": [
+      "Flaw is due to improper handling RSA temporary keys in a non-export RSA key exchange cipher suite."
+    ],
+    "product_detection_result": [],
+    "log_method": [],
+    "cvss": [
+      4.3,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "port": null,
+    "protocol": "null",
+    "severity": "MEDIUM",
+    "references": [
+      "CVE-2015-0204",
+      "BID:71936",
+      "https://freakattack.com",
+      "http://secpod.org/blog/?p=3818",
+      "http://blog.cryptographyengineering.com/2015/03/attack-of-week-freak-or-factoring-nsa.html",
+      "https://www.openssl.org"
+    ],
+    "plugin": [],
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "SSL/TLS: SSLv3 Protocol CBC Cipher Suites Information Disclosure Vulnerability (POO-DLE)",
+    "description": [
+      "This host is prone to an information disclosure vulnerability."
+    ],
+    "detection_result": [
+      "Vulnerability was detected according to the Vulnerability Detection Method."
+    ],
+    "detection_method": [
+      "Evaluate previous collected information about this service."
+    ],
+    "impact": [
+      "Successful exploitation will allow a man-in-the-middle attackers gain access to the plain text data stream."
+    ],
+    "solution": [
+      "Solution type: Mitigation Possible Mitigations are: - Disable SSLv3 - Disable cipher suites supporting CBC cipher modes - Enable TLS_FALLBACK_SCSV if the service is providing TLSv1.0+"
+    ],
+    "insight": [
+      "The aw is due to the block cipher padding not being deterministic and not covered by the Message Authentication Code"
+    ],
+    "product_detection_result": [],
+    "log_method": [],
+    "cvss": [
+      4.0,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "port": null,
+    "protocol": "null",
+    "severity": "MEDIUM",
+    "references": [
+      "CVE-2014-3566",
+      "BID:70574",
+      "https://www.openssl.org/~bodo/ssl-poodle.pdf",
+      "https://www.imperialviolet.org/2014/10/14/poodle.html",
+      "https://www.dfranke.us/posts/2014-10-14-how-poodle-happened.html",
+      "http://googleonlinesecurity.blogspot.in/2014/10/this-poodle-bites-exploiting-ssl-30.html"
+    ],
+    "plugin": [],
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "SSL/TLS: Certicate Signed Using A Weak Signature Algorithm",
+    "description": [
+      "The remote service is using a SSL/TLS certicate in the certicate chain that has been signed using a cryptographically weak hashing algorithm."
+    ],
+    "detection_result": [
+      "The following certificates are part of the certificate chain but using insecure signature algorithms: Subject: 1.2.840.113549.1.9.1=#726F6F74407562756E74753830342D626173652E6C6F63616C646F6D61696E,CN=ubuntu804-base.localdomain,OU=Office for Complication of Otherwise Simple Affairs,O=OCOSA,L=Everywhere,ST=There is no such thing outside US,C=XX\nSignature Algorithm: sha1WithRSAEncryption"
+    ],
+    "detection_method": [],
+    "impact": [],
+    "solution": [
+      "Solution type: Mitigation Servers that use SSL/TLS certicates signed with a weak SHA-1, MD5, MD4 or MD2 hashing algorithm will need to obtain new SHA-2 signed SSL/TLS certicates to avoid web browser SSL/TLS certicate warnings."
+    ],
+    "insight": [
+      "The following hashing algorithms used for signing SSL/TLS certicates are considered cryptographically weak and not secure enough for ongoing use: - Secure Hash Algorithm 1 (SHA-1) - Message Digest 5 (MD5) - Message Digest 4 (MD4) - Message Digest 2 (MD2) Beginning as late as January 2017 and as early as June 2016, browser developers such as Microsoft and Google will begin warning users when visiting web sites that use SHA-1 signed Secure Socket Layer (SSL) certicates. NOTE: The script preference allows to set one or more custom SHA-1 ngerprints of CA certicates which are trusted by this routine. The ngerprints needs to be passed comma-separated"
+    ],
+    "product_detection_result": [],
+    "log_method": [],
+    "cvss": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "port": null,
+    "protocol": "null",
+    "severity": "MEDIUM",
+    "references": [],
+    "plugin": [],
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "SSL/TLS: Deprecated SSLv2 and SSLv3 Protocol Detection",
+    "description": [
+      "It was possible to detect the usage of the deprecated SSLv2 and/or SSLv3 protocol on this system."
+    ],
+    "detection_result": [
+      "In addition to TLSv1.0+ the service is also providing the deprecated SSLv3 proto ->col and supports one or more ciphers. Those supported ciphers can be found in ->the 'SSL/TLS: Report Weak and Supported Ciphers' (OID: 1.3.6.1.4.1.25623.1.0.8 ->02067) NVT."
+    ],
+    "detection_method": [
+      "Check the used protocols of the services provided by this system. Details: SSL/TLS: Deprecated SSLv2 and SSLv3 Protocol Detection OID:1.3.6.1.4.1.25623.1.0.111012 Version used: $Revision: 5547 $"
+    ],
+    "impact": [
+      "An attacker might be able to use the known cryptographic aws to eavesdrop the connection between clients and the service to get access to sensitive data transferred within the secured connection."
+    ],
+    "solution": [
+      "Solution type: Mitigation It is recommended to disable the deprecated SSLv2 and/or SSLv3 protocols in favor of the TLSv1+ protocols. Please see the references for more information."
+    ],
+    "insight": [
+      "The SSLv2 and SSLv3 protocols containing known cryptographic aws like: - Padding Oracle On Downgraded Legacy Encryption (POODLE, CVE-2014-3566) - Decrypting RSA with Obsolete and Weakened eNcryption (DROWN, CVE-2016-0800) . . . continues on next page . . ."
+    ],
+    "product_detection_result": [],
+    "log_method": [],
+    "cvss": [
+      4.3,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "port": null,
+    "protocol": null,
+    "severity": "MEDIUM",
+    "references": [
+      "CVE-2016-0800",
+      "CVE-2014-3566",
+      "https://www.enisa.europa.eu/activities/identity-and-trust/library/deliverables/algorithms-key-sizes-and-parameters-report",
+      "https://bettercrypto.org/",
+      "https://mozilla.github.io/server-side-tls/ssl-config-generator/",
+      "https://drownattack.com/",
+      "https://www.imperialviolet.org/2014/10/14/poodle.html"
+    ],
+    "plugin": [],
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "SSL/TLS: Report Weak Cipher Suites",
+    "description": [
+      "This routine reports all Weak SSL/TLS cipher suites accepted by a service.",
+      "NOTE: No severity for SMTP services with 'Opportunistic TLS' and weak cipher suites on port 25/tcp is reported. If too strong cipher suites are congured for this service the alternative would be to fall back to an even more insecure cleartext communication."
+    ],
+    "detection_result": [
+      "'Weak' cipher suites accepted by this service via the SSLv3 protocol: TLS_RSA_WITH_RC4_128_SHA",
+      "'Weak' cipher suites accepted by this service via the TLSv1.0 protocol: TLS_RSA_WITH_RC4_128_SHA"
+    ],
+    "detection_method": [
+      "Details: SSL/TLS: Report Weak Cipher Suites OID:1.3.6.1.4.1.25623.1.0.103440 Version used: $Revision: 11135 $"
+    ],
+    "impact": [],
+    "solution": [
+      "Solution type: Mitigation The conguration of this services should be changed so that it does not accept the listed weak cipher suites anymore. Please see the references for more resources supporting you with this task."
+    ],
+    "insight": [
+      "These rules are applied for the evaluation of the cryptographic strength: - RC4 is considered to be weak (CVE-2013-2566, CVE-2015-2808). - Ciphers using 64 bit or less are considered to be vulnerable to brute force methods and therefore considered as weak (CVE-2015-4000). - 1024 bit RSA authentication is considered to be insecure and therefore as weak. - Any cipher considered to be secure for only the next 10 years is considered as medium - Any other cipher is considered as strong . . . continues on next page . . ."
+    ],
+    "product_detection_result": [],
+    "log_method": [],
+    "cvss": [
+      4.3,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "port": null,
+    "protocol": null,
+    "severity": "MEDIUM",
+    "references": [
+      "CVE-2013-2566",
+      "CVE-2015-2808",
+      "CVE-2015-4000",
+      "https://www.bsi.bund.de/SharedDocs/Warnmeldungen/DE/CB/warnmeldung_cb-k16-1465_update_6.html",
+      "https://bettercrypto.org/",
+      "https://mozilla.github.io/server-side-tls/ssl-config-generator/"
+    ],
+    "plugin": [],
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "SSL/TLS: SSLv3 Protocol CBC Cipher Suites Information Disclosure Vulnerability (POODLE)",
+    "description": [
+      "This host is prone to an information disclosure vulnerability."
+    ],
+    "detection_result": [
+      "Vulnerability was detected according to the Vulnerability Detection Method."
+    ],
+    "detection_method": [
+      "Evaluate previous collected information about this service. Details: SSL/TLS: SSLv3 Protocol CBC Cipher Suites Information Disclosure Vulnerability .. OID:1.3.6.1.4.1.25623.1.0.802087 Version used: $Revision: 11402 $"
+    ],
+    "impact": [
+      "Successful exploitation will allow a man-in-the-middle attackers gain access to the plain text data stream."
+    ],
+    "solution": [
+      "Solution type: Mitigation Possible Mitigations are: - Disable SSLv3 - Disable cipher suites supporting CBC cipher modes - Enable TLS_FALLBACK_SCSV if the service is providing TLSv1.0+"
+    ],
+    "insight": [
+      "The aw is due to the block cipher padding not being deterministic and not covered by the Message Authentication Code"
+    ],
+    "product_detection_result": [],
+    "log_method": [],
+    "cvss": [
+      4.0,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "port": null,
+    "protocol": null,
+    "severity": "MEDIUM",
+    "references": [
+      "CVE-2014-3566",
+      "BID:70574",
+      "https://www.openssl.org/~bodo/ssl-poodle.pdf",
+      "https://www.imperialviolet.org/2014/10/14/poodle.html",
+      "https://www.dfranke.us/posts/2014-10-14-how-poodle-happened.html",
+      "http://googleonlinesecurity.blogspot.in/2014/10/this-poodle-bites-exploit->ing-ssl-30.html"
+    ],
+    "plugin": [],
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "SSH Weak MAC Algorithms Supported",
+    "description": [
+      "The remote SSH server is congured to allow weak MD5 and/or 96-bit MAC algorithms."
+    ],
+    "detection_result": [
+      "The following weak client-to-server MAC algorithms are supported by the remote service: hmac-md5, hmac-md5-96, hmac-sha1-96",
+      "The following weak server-to-client MAC algorithms are supported by the remote service: hmac-md5, hmac-md5-96, hmac-sha1-96"
+    ],
+    "detection_method": [
+      "Details: SSH Weak MAC Algorithms Supported",
+      "OID: 1.3.6.1.4.1.25623.1.0.105610",
+      "Version used: $Revision: 13581 $"
+    ],
+    "impact": [],
+    "solution": [
+      "Solution type: Mitigation",
+      "Disable the weak MAC algorithms."
+    ],
+    "insight": [],
+    "product_detection_result": [],
+    "log_method": [],
+    "cvss": [
+      2.6,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "port": 22,
+    "protocol": "tcp",
+    "severity": "LOW",
+    "references": [
+      "CVE-2018-7188",
+      "http://openwall.com/lists/oss-security/2018/02/16/1"
+    ],
+    "plugin": [],
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "TCP timestamps",
+    "description": [
+      "The remote host implements TCP timestamps and therefore allows to compute the uptime."
+    ],
+    "detection_result": [
+      "It was detected that the host implements RFC1323.",
+      "The following timestamps were retrieved with a delay of 1 seconds in-between: Packet 1: 246103389 Packet 2: 246104428"
+    ],
+    "detection_method": [
+      "Special IP packets are forged and sent with a little delay in between to the target IP. The responses are searched for a timestamps. If found, the timestamps are reported.",
+      "Details: TCP timestamps",
+      "OID: 1.3.6.1.4.1.25623.1.0.80091",
+      "Version used: $Revision: 14310 $"
+    ],
+    "impact": [
+      "A side eect of this feature is that the uptime of the remote host can sometimes be computed."
+    ],
+    "solution": [
+      "Solution type: Mitigation",
+      "To disable TCP timestamps on linux add the line 'net.ipv4.tcp_timestamps = 0' to /etc/sysctl.conf. Execute 'sysctl -p' to apply the settings at runtime.",
+      "To disable TCP timestamps on Windows execute 'netsh int tcp set global timestamps=disabled'",
+      "Starting with Windows Server 2008 and Vista, the timestamp can not be completely disabled. The default behavior of the TCP/IP stack on this Systems is to not use the Timestamp options when initiating TCP connections, but use them if the TCP peer that is initiating communication includes them in their synchronize (SYN) segment. See the references for more information."
+    ],
+    "insight": [
+      "The remote host implements TCP timestamps, as dened by RFC1323."
+    ],
+    "product_detection_result": [],
+    "log_method": [],
+    "cvss": [
+      2.6,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "port": null,
+    "protocol": "tcp",
+    "severity": "LOW",
+    "references": [
+      "http://www.ietf.org/rfc/rfc1323.txt",
+      "http://www.microsoft.com/en-us/download/details.aspx?id=9152"
+    ],
+    "plugin": [],
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  }
+]

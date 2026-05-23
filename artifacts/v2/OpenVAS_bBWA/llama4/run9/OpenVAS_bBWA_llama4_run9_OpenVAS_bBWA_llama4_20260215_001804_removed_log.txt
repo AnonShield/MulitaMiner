@@ -1,0 +1,3 @@
+# Vulnerabilidades removidas por falta de descrição válida:
+- TWiki XSS and Command Execution Vulnerabilities | port: 80 | protocol: tcp | severity: HIGH
+- OS End Of Life Detection | port: 6200 | protocol: tcp | severity: HIGH

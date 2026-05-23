@@ -1,0 +1,1553 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MulitaMiner · V1 × V2 × V3</title>
+<style>
+/* ============================================================
+   Design tokens — single source of truth.
+   ============================================================ */
+:root {
+  --bg-0: #0b0e14; --bg-1: #141923; --bg-2: #1d2330; --bg-3: #2a3142;
+  --border: #232a37; --border-strong: #303a4d;
+  --text-0: #f2f5fb; --text-1: #b6becc; --text-2: #7a8497; --text-3: #525c70;
+  --v1: #f47174; --v2: #e6b800; --v3: #4fb6e4;
+  --pos: #58d491; --neg: #ff6b6b; --neu: #6b7589;
+  --r-sm: 6px; --r-md: 10px; --r-lg: 14px;
+  --s-1:4px; --s-2:8px; --s-3:12px; --s-4:16px; --s-5:24px; --s-6:32px; --s-7:48px;
+  --ease: cubic-bezier(.2,.7,.2,1);
+  --dur: 180ms; --dur-bar: 480ms;
+  --max-w: 1280px;
+}
+@media (prefers-color-scheme: light) {
+  :root {
+    --bg-0:#f7f8fb; --bg-1:#ffffff; --bg-2:#eef1f6; --bg-3:#e1e6ee;
+    --border:#dde2eb; --border-strong:#c6cdda;
+    --text-0:#0e1320; --text-1:#42495a; --text-2:#6b7589; --text-3:#a0a9bb;
+  }
+}
+*, *::before, *::after { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  background: var(--bg-0); color: var(--text-0);
+  font: 15px/1.55 -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+  font-feature-settings: "tnum" 1, "ss01" 1;
+  -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility;
+}
+.container { max-width: var(--max-w); margin: 0 auto; padding: var(--s-6) var(--s-5) var(--s-7); }
+
+/* Header */
+header { display: flex; flex-direction: column; gap: var(--s-3); margin-bottom: var(--s-6); }
+.eyebrow { color: var(--text-2); font-size: 12px; text-transform: uppercase; letter-spacing: .1em; }
+h1 { margin: 0; font-size: clamp(26px, 3.2vw, 38px); letter-spacing: -0.015em; line-height: 1.15; }
+.meta { color: var(--text-2); font-size: 13px; }
+.meta strong { color: var(--text-1); font-weight: 600; }
+.legend { display: flex; gap: var(--s-4); flex-wrap: wrap; margin-top: var(--s-2); }
+.legend-chip { display: inline-flex; align-items: center; gap: var(--s-2); font-size: 13px; color: var(--text-1); }
+.legend-chip .dot { width: 10px; height: 10px; border-radius: 50%; flex: 0 0 auto; }
+.legend-chip .v1 { background: var(--v1); }
+.legend-chip .v2 { background: var(--v2); }
+.legend-chip .v3 { background: var(--v3); }
+
+/* KPI cards */
+.kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: var(--s-4); margin-bottom: var(--s-7); }
+.kpi-card { background: var(--bg-1); border: 1px solid var(--border); border-radius: var(--r-lg); padding: var(--s-5); transition: transform var(--dur) var(--ease), border-color var(--dur) var(--ease); }
+.kpi-card:hover { transform: translateY(-2px); border-color: var(--border-strong); }
+.kpi-card .head { display: flex; align-items: center; justify-content: space-between; gap: var(--s-2); }
+.kpi-card .label { color: var(--text-2); font-size: 11px; text-transform: uppercase; letter-spacing: .08em; font-weight: 600; }
+.kpi-card .help { width: 18px; height: 18px; border-radius: 50%; border: 1px solid var(--border-strong); display: inline-flex; align-items: center; justify-content: center; font-size: 11px; color: var(--text-2); cursor: help; user-select: none; transition: background var(--dur) var(--ease), color var(--dur) var(--ease); }
+.kpi-card .help:hover, .kpi-card .help:focus-visible { background: var(--bg-3); color: var(--text-0); outline: none; }
+.kpi-card .rows { display: grid; grid-template-columns: auto 1fr auto; gap: var(--s-2) var(--s-3); margin-top: var(--s-4); align-items: center; }
+.kpi-card .ver { font-weight: 700; font-size: 13px; letter-spacing: .02em; }
+.kpi-card .ver.v1 { color: var(--v1); }
+.kpi-card .ver.v2 { color: var(--v2); }
+.kpi-card .ver.v3 { color: var(--v3); }
+.kpi-card .bar { height: 6px; background: var(--bg-2); border-radius: 3px; overflow: hidden; min-width: 60px; }
+.kpi-card .bar > span { display: block; height: 100%; border-radius: 3px; transform-origin: left; transform: scaleX(0); transition: transform var(--dur-bar) var(--ease); }
+.kpi-card .bar > .v1 { background: var(--v1); }
+.kpi-card .bar > .v2 { background: var(--v2); }
+.kpi-card .bar > .v3 { background: var(--v3); }
+.kpi-card .val { font-variant-numeric: tabular-nums; font-size: 14px; min-width: 4ch; text-align: right; color: var(--text-0); font-weight: 600; }
+.kpi-card .val.na { color: var(--text-3); font-weight: 400; }
+.ci { display: inline-block; margin-left: 6px; font-size: 11px; font-weight: 400; color: var(--text-3); font-variant-numeric: tabular-nums; letter-spacing: 0; }
+td.num .ci { display: block; margin-left: 0; margin-top: 2px; }
+
+/* Sections */
+section { margin-bottom: var(--s-7); scroll-margin-top: var(--s-5); }
+section h2 { font-size: 20px; margin: 0 0 var(--s-3); letter-spacing: -0.01em; display: flex; align-items: baseline; gap: var(--s-2); }
+section h2 .ord { color: var(--text-2); font-weight: 400; font-size: 14px; }
+section .sub { color: var(--text-2); font-size: 14px; margin: -4px 0 var(--s-4); }
+
+/* Tables */
+.table-wrap { background: var(--bg-1); border: 1px solid var(--border); border-radius: var(--r-md); overflow: hidden; }
+.scroll { overflow-x: auto; max-height: 70vh; overflow-y: auto; }
+table { width: 100%; border-collapse: collapse; font-size: 14px; }
+th, td { padding: var(--s-3) var(--s-4); text-align: left; vertical-align: middle; }
+thead th { background: var(--bg-2); color: var(--text-1); font-weight: 600; font-size: 11px; text-transform: uppercase; letter-spacing: .07em; position: sticky; top: 0; z-index: 2; border-bottom: 1px solid var(--border-strong); }
+tbody tr { border-top: 1px solid var(--border); transition: background var(--dur) var(--ease); }
+tbody tr:hover { background: var(--bg-2); }
+td.num { font-variant-numeric: tabular-nums; text-align: right; min-width: 6.5ch; }
+td.na { color: var(--text-3); }
+td .delta { font-variant-numeric: tabular-nums; font-size: 11px; margin-left: 6px; padding: 2px 6px; border-radius: 4px; font-weight: 600; letter-spacing: .02em; }
+td .delta.pos { color: var(--pos); background: color-mix(in srgb, var(--pos) 14%, transparent); }
+td .delta.neg { color: var(--neg); background: color-mix(in srgb, var(--neg) 14%, transparent); }
+td .delta.neu { color: var(--neu); background: color-mix(in srgb, var(--neu) 14%, transparent); }
+td.tip { color: var(--text-2); font-size: 12px; }
+th.col-v1, td.col-v1 { border-left: 3px solid color-mix(in srgb, var(--v1) 70%, transparent); }
+th.col-v2, td.col-v2 { border-left: 3px solid color-mix(in srgb, var(--v2) 70%, transparent); }
+th.col-v3, td.col-v3 { border-left: 3px solid color-mix(in srgb, var(--v3) 70%, transparent); }
+.key-cell strong { font-weight: 600; }
+
+/* Filter chips */
+.filters { display: flex; flex-wrap: wrap; gap: var(--s-2); margin-bottom: var(--s-3); align-items: center; }
+.filters .filter-label { color: var(--text-2); font-size: 11px; text-transform: uppercase; letter-spacing: .07em; margin-right: var(--s-3); font-weight: 600; }
+.filters button { background: var(--bg-2); color: var(--text-1); border: 1px solid var(--border); font: inherit; font-size: 13px; padding: 7px 14px; border-radius: 999px; cursor: pointer; transition: background var(--dur) var(--ease), border-color var(--dur) var(--ease), color var(--dur) var(--ease); }
+.filters button:hover { background: var(--bg-3); color: var(--text-0); }
+.filters button[aria-pressed="true"] { background: color-mix(in srgb, var(--v3) 22%, var(--bg-2)); border-color: color-mix(in srgb, var(--v3) 60%, var(--border)); color: var(--text-0); }
+.filters button:focus-visible { outline: 2px solid var(--v3); outline-offset: 2px; }
+
+/* Callout + footer */
+.callout { background: var(--bg-1); border: 1px solid var(--border); border-left: 3px solid var(--v2); border-radius: var(--r-md); padding: var(--s-4) var(--s-5); margin-bottom: var(--s-6); color: var(--text-1); font-size: 14px; line-height: 1.65; }
+.callout strong { color: var(--text-0); }
+footer { margin-top: var(--s-7); padding-top: var(--s-5); border-top: 1px solid var(--border); color: var(--text-2); font-size: 12px; line-height: 1.7; }
+footer p { margin: 0 0 var(--s-3); }
+footer code { background: var(--bg-2); padding: 1px 6px; border-radius: 4px; color: var(--text-1); font-size: 12px; }
+
+/* A11y */
+.skip-link { position: absolute; left: -9999px; top: 8px; padding: 8px 16px; background: var(--v3); color: var(--bg-0); border-radius: var(--r-sm); font-weight: 600; z-index: 1000; }
+.skip-link:focus { left: 8px; }
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { transition: none !important; animation: none !important; }
+  .kpi-card .bar > span { transform: scaleX(1) !important; }
+}
+
+/* Nav */
+.nav { position: sticky; top: 0; z-index: 5; background: rgba(11,14,20,0.85); backdrop-filter: blur(12px) saturate(140%); -webkit-backdrop-filter: blur(12px) saturate(140%); border-bottom: 1px solid var(--border); margin: -32px -24px var(--s-6); padding: var(--s-3) var(--s-5); display: flex; gap: var(--s-2); flex-wrap: wrap; align-items: center; }
+@media (prefers-color-scheme: light) { .nav { background: rgba(247,248,251,0.85); } }
+.nav a { color: var(--text-1); text-decoration: none; font-size: 12px; padding: 6px 10px; border-radius: var(--r-sm); transition: background var(--dur) var(--ease), color var(--dur) var(--ease); }
+.nav a:hover, .nav a:focus-visible { background: var(--bg-2); color: var(--text-0); outline: none; }
+
+/* ============================================================
+   Charts — SVG puro. Cores via tokens; tipografia via fill/font-size.
+   Tooltip flutuante compartilhado entre os charts.
+   ============================================================ */
+.chart-card { background: var(--bg-1); border: 1px solid var(--border); border-radius: var(--r-md); padding: var(--s-5); }
+.chart-card svg { width: 100%; height: auto; display: block; }
+.chart-card .grid line { stroke: var(--border); stroke-width: 1; }
+.chart-card .axis text { fill: var(--text-2); font-size: 11px; font-variant-numeric: tabular-nums; }
+.chart-card .axis path,
+.chart-card .axis line { stroke: var(--border); }
+.chart-card .axis-label { fill: var(--text-1); font-size: 12px; font-weight: 600; }
+.chart-card .pt { transition: stroke-width var(--dur) var(--ease); cursor: pointer; }
+.chart-card .pt:hover { stroke-width: 2.5; }
+.chart-card .bar-rect { transition: opacity var(--dur) var(--ease); cursor: pointer; }
+.chart-card .bar-rect:hover { opacity: 0.85; }
+.chart-card .target-zone { fill: color-mix(in srgb, var(--pos) 7%, transparent); stroke: color-mix(in srgb, var(--pos) 30%, transparent); stroke-dasharray: 4 4; }
+.chart-card .target-zone-label { fill: var(--pos); font-size: 10px; font-weight: 600; opacity: 0.8; }
+
+.tooltip { position: fixed; pointer-events: none; background: var(--bg-3); color: var(--text-0); padding: 8px 12px; border-radius: var(--r-sm); border: 1px solid var(--border-strong); font-size: 12px; line-height: 1.4; box-shadow: 0 8px 24px rgba(0,0,0,0.35); transform: translate(-50%, -110%); opacity: 0; transition: opacity var(--dur) var(--ease); z-index: 100; min-width: 140px; }
+.tooltip.visible { opacity: 1; }
+.tooltip .tt-title { font-weight: 700; margin-bottom: 4px; color: var(--text-0); font-size: 13px; }
+.tooltip .tt-row { display: flex; justify-content: space-between; gap: var(--s-3); font-variant-numeric: tabular-nums; }
+.tooltip .tt-row .tt-key { color: var(--text-2); }
+
+@media (max-width: 720px) {
+  .nav { margin: -16px -16px var(--s-5); padding: var(--s-2) var(--s-3); }
+  .container { padding: var(--s-4) var(--s-3) var(--s-6); }
+  th, td { padding: var(--s-2) var(--s-3); font-size: 13px; }
+}
+
+/* Category palette — green→amber→rose→muted, perceptually ordered
+   from "best match" (top of stack) to "absent" (bottom). */
+.cat-color-0 { fill: #58d491; }   /* Highly Similar */
+.cat-color-1 { fill: #5fb6e0; }   /* Moderately Similar */
+.cat-color-2 { fill: #e6b800; }   /* Slightly Similar */
+.cat-color-3 { fill: #d94a4a; }   /* Divergent */
+.cat-color-4 { fill: #6b7589; }   /* Absent (omission, grey) */
+
+/* Heatmap — sequential colour scale (green→amber→red).
+   Each cell is fill via inline style; class handles only the stroke / focus. */
+.heatmap-cell { stroke: var(--bg-0); stroke-width: 1; transition: stroke var(--dur) var(--ease); cursor: pointer; }
+.heatmap-cell:hover { stroke: var(--text-0); stroke-width: 2; }
+.heatmap-cell:focus { outline: none; stroke: var(--v3); stroke-width: 2; }
+.heatmap-axis { fill: var(--text-1); font-size: 11px; }
+.heatmap-axis.v1 { fill: var(--v1); font-weight: 600; }
+.heatmap-axis.v2 { fill: var(--v2); font-weight: 600; }
+.heatmap-axis.v3 { fill: var(--v3); font-weight: 600; }
+.heatmap-scale-stop { font-size: 10px; fill: var(--text-2); font-variant-numeric: tabular-nums; }
+
+/* Findings section — observation cards.
+   Atom: .finding-card. Composition: 2-col grid >= 720px, 1-col mobile. */
+.findings-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: var(--s-4);
+}
+.finding-card {
+  background: var(--bg-1); border: 1px solid var(--border);
+  border-left: 3px solid var(--v3); border-radius: var(--r-md);
+  padding: var(--s-4) var(--s-5);
+  transition: border-color var(--dur) var(--ease), transform var(--dur) var(--ease);
+}
+.finding-card:hover { border-color: var(--border-strong); transform: translateY(-1px); }
+.finding-card.win { border-left-color: var(--pos); }
+.finding-card.warn { border-left-color: var(--v2); }
+.finding-card.caveat { border-left-color: var(--neg); }
+.finding-card h3 {
+  margin: 0 0 var(--s-2); font-size: 14px; letter-spacing: 0;
+  display: flex; align-items: center; gap: var(--s-2);
+}
+.finding-card .tag {
+  font-size: 10px; text-transform: uppercase; letter-spacing: .08em;
+  padding: 2px 8px; border-radius: 4px; font-weight: 700;
+  background: var(--bg-2); color: var(--text-2);
+}
+.finding-card.win .tag { color: var(--pos); background: color-mix(in srgb, var(--pos) 14%, transparent); }
+.finding-card.warn .tag { color: var(--v2); background: color-mix(in srgb, var(--v2) 14%, transparent); }
+.finding-card.caveat .tag { color: var(--neg); background: color-mix(in srgb, var(--neg) 14%, transparent); }
+.finding-card p {
+  margin: 0; color: var(--text-1); font-size: 13.5px; line-height: 1.6;
+}
+.finding-card .num {
+  font-variant-numeric: tabular-nums; font-weight: 700; color: var(--text-0);
+}
+.finding-card a.ref {
+  color: var(--v3); text-decoration: none; border-bottom: 1px dotted var(--v3);
+  transition: color var(--dur) var(--ease);
+}
+.finding-card a.ref:hover { color: var(--text-0); border-bottom-color: var(--text-0); }
+/* Subhead separator — small uppercase label + thin colored bar.
+   Subtle "section feel" between win / warn / caveat groups
+   without screaming. Gestalt: common region via background hint. */
+.findings-subhead {
+  display: flex; align-items: center; gap: var(--s-3);
+  margin: var(--s-6) 0 var(--s-3); padding: 0;
+  font-size: 11px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: .1em; color: var(--text-2);
+}
+.findings-subhead:first-of-type { margin-top: 0; }
+.findings-subhead .bar {
+  display: inline-block; height: 2px; flex: 1; border-radius: 1px;
+  background: var(--border);
+}
+.findings-subhead.win    { color: var(--pos); }
+.findings-subhead.win    .bar { background: color-mix(in srgb, var(--pos) 40%, transparent); }
+.findings-subhead.warn   { color: var(--v2); }
+.findings-subhead.warn   .bar { background: color-mix(in srgb, var(--v2) 40%, transparent); }
+.findings-subhead.caveat { color: var(--neg); }
+.findings-subhead.caveat .bar { background: color-mix(in srgb, var(--neg) 40%, transparent); }
+.cat-legend-swatch { width: 12px; height: 12px; border-radius: 2px; display: inline-block; flex: 0 0 auto; }
+.cat-legend { display: flex; gap: var(--s-4); flex-wrap: wrap; margin-top: var(--s-3); font-size: 11px; color: var(--text-1); }
+.cat-legend-item { display: inline-flex; align-items: center; gap: 6px; }
+</style>
+</head>
+<body>
+<a class="skip-link" href="#main">Pular para conteúdo</a>
+
+<div class="container">
+<nav class="nav" aria-label="Navegação por seção">
+  <a href="#kpi">KPIs</a>
+  <a href="#schema">Schema</a>
+  <a href="#coverage">Cobertura</a>
+  <a href="#tradeoff">Halluc × Omiss</a>
+  <a href="#field-heatmap">Heatmap campos</a>
+  <a href="#severity">Severidade</a>
+  <a href="#entity">Campos exatos</a>
+  <a href="#text">Texto livre</a>
+  <a href="#text-bars">Bars × modelo</a>
+  <a href="#text-categories">Categorias</a>
+  <a href="#by-model">Por modelo</a>
+  <a href="#by-target">Por target</a>
+  <a href="#findings">Observações</a>
+  <a href="#notes">Notas</a>
+</nav>
+
+<header id="main">
+  <div class="eyebrow">MulitaMiner · cross-version evaluation</div>
+  <h1>V1 × V2 × V3 — pipeline de extração de vulnerabilidades</h1>
+  <div class="meta">
+    Gerado em <strong id="gen-at">—</strong> · 3 baselines (JuiceShop · bBWA · artifactory) ·
+    5 modelos · 10 runs por (target, modelo)
+  </div>
+  <div class="legend" role="list" aria-label="Legenda de versões">
+    <span class="legend-chip" role="listitem"><span class="dot v1"></span>V1 — schema legacy (cvss[7], sem plugin_details/instances)</span>
+    <span class="legend-chip" role="listitem"><span class="dot v2"></span>V2 — schema intermediário (cvss list[str], plugin_details list)</span>
+    <span class="legend-chip" role="listitem"><span class="dot v3"></span>V3 — schema canônico (referência)</span>
+  </div>
+</header>
+
+<aside class="callout" role="note">
+  <strong>Leia antes:</strong> deltas comparam V1/V2 contra <strong>V3</strong> (referência).
+  Setas (↑/↓) indicam direção <em>de bom</em>. Métricas tautológicas (que usam V3 como schema
+  de referência e por isso dariam V3=ótimo por definição) foram removidas — tudo aqui compara
+  contra o <strong>baseline humano</strong>, refletindo qualidade extrativa, não similaridade
+  estrutural com V3.
+</aside>
+
+<section id="kpi" aria-labelledby="kpi-h">
+  <h2 id="kpi-h"><span class="ord">·</span> Headline</h2>
+  <p class="sub">Os 4 números do paper. Detalhes nas seções abaixo. Valores entre colchetes
+  (ex.: <span class="ci">[89.3%, 91.5%]</span>) são <strong>intervalos de confiança 95%</strong>
+  obtidos por bootstrap (10.000 reamostragens) sobre as 150 observações (5 modelos × 3 baselines × 10 runs)
+  que compõem cada número da versão. Sem IC marcado: métrica não é agregada via média simples
+  e bootstrap pooled não se aplica diretamente.</p>
+  <div id="kpi-grid" class="kpi-grid" role="list"></div>
+</section>
+
+<section id="schema">
+  <h2><span class="ord">1 ·</span> Fidelidade de Schema</h2>
+  <p class="sub">O LLM emite o JSON contratado? Quanto precisa ser coagido pro canônico?</p>
+  <div class="table-wrap scroll"><table id="t-schema" aria-label="Schema por versão"></table></div>
+</section>
+
+<section id="coverage">
+  <h2><span class="ord">2 ·</span> Cobertura & Alinhamento</h2>
+  <p class="sub">Quanto do baseline foi recuperado, sem alucinar nem omitir.</p>
+  <div class="table-wrap scroll"><table id="t-coverage" aria-label="Cobertura e alinhamento por versão"></table></div>
+</section>
+
+<section id="tradeoff">
+  <h2><span class="ord">2.1 ·</span> Trade-off Hallucination × Omission (per vulnerability)</h2>
+  <p class="sub"><strong>Vuln-level</strong>: hallucination = vulns extraídas sem par no baseline / total extraído; omission = vulns do baseline não recuperadas / tamanho do baseline. Ideal = canto inferior-esquerdo. Para omission a nível de <em>campo</em>, ver heatmap §2.2.</p>
+  <div class="filters" role="radiogroup" aria-label="Filtrar scatter por target">
+    <span class="filter-label">Target</span>
+    <button type="button" data-scatter-target="__all__" role="radio" aria-pressed="true">Todos</button>
+    <span id="scatter-target-chips" style="display:contents"></span>
+  </div>
+  <div class="filters" aria-label="Definir zona ideal">
+    <span class="filter-label">Zona ideal</span>
+    <label style="display:flex; align-items:center; gap:6px; font-size:13px; color:var(--text-1);">
+      Halluc ≤
+      <input id="ideal-halluc" type="number" min="0" max="100" step="0.5" value="5"
+             style="width:64px; background:var(--bg-2); color:var(--text-0); border:1px solid var(--border); border-radius:6px; padding:4px 6px; font:inherit; font-size:13px;" />
+      <span style="color:var(--text-2);">%</span>
+    </label>
+    <label style="display:flex; align-items:center; gap:6px; font-size:13px; color:var(--text-1);">
+      Omission ≤
+      <input id="ideal-omission" type="number" min="0" max="100" step="0.5" value="5"
+             style="width:64px; background:var(--bg-2); color:var(--text-0); border:1px solid var(--border); border-radius:6px; padding:4px 6px; font:inherit; font-size:13px;" />
+      <span style="color:var(--text-2);">%</span>
+    </label>
+  </div>
+  <div class="chart-card">
+    <svg id="chart-scatter" viewBox="0 0 760 460" role="img" aria-label="Scatter plot hallucination vs omission"></svg>
+  </div>
+</section>
+
+<section id="field-heatmap">
+  <h2><span class="ord">2.2 ·</span> Omission per field</h2>
+  <p class="sub"><strong>Field-level</strong>: fração de campos vazios na extração onde o baseline tem conteúdo, por (modelo, versão) e campo. Quanto mais escuro/vermelho, mais o modelo deixou esse campo sem preencher. Média entre runs e targets.</p>
+  <div class="chart-card">
+    <svg id="chart-heatmap" viewBox="0 0 760 615" role="img" aria-label="Heatmap de omission rate por campo"></svg>
+  </div>
+</section>
+
+<section id="severity">
+  <h2><span class="ord">3 ·</span> Classificação de Severidade</h2>
+  <p class="sub">Macro-F1 entre classes (LOG/LOW/MEDIUM/HIGH/CRITICAL) e variantes.</p>
+  <div class="table-wrap scroll"><table id="t-severity" aria-label="Severidade por versão"></table></div>
+</section>
+
+<section id="entity">
+  <h2><span class="ord">4 ·</span> Campos Determinísticos (P/R/F1 exato)</h2>
+  <p class="sub">Comparação exata por campo escalar: cvss, port, protocol, severity, plugin.</p>
+  <div class="table-wrap scroll"><table id="t-entity" aria-label="Entity P/R/F1 por campo e versão"></table></div>
+</section>
+
+<section id="text">
+  <h2><span class="ord">5 ·</span> Similaridade Textual (tabela)</h2>
+  <p class="sub">Campos livres — semântico (BERTScore), subsequência (ROUGE-L), token-level (Token-F1).</p>
+  <div class="filters" role="radiogroup" aria-label="Métrica textual da tabela">
+    <span class="filter-label">Métrica</span>
+    <button type="button" data-text="BERTScore F1" role="radio" aria-pressed="true">BERTScore F1</button>
+    <button type="button" data-text="ROUGE-L" role="radio" aria-pressed="false">ROUGE-L</button>
+    <button type="button" data-text="Token-F1" role="radio" aria-pressed="false">Token-F1</button>
+  </div>
+  <div class="table-wrap scroll"><table id="t-text" aria-label="Similaridade textual por campo e versão"></table></div>
+</section>
+
+<section id="text-bars">
+  <h2><span class="ord">5.1 ·</span> Similaridade por Modelo (clustered bars)</h2>
+  <p class="sub">Média entre campos textuais. 1 grupo por modelo, 3 barras por grupo (V1/V2/V3). Escolha baseline e métrica.</p>
+  <div class="filters" role="radiogroup" aria-label="Filtrar bars por baseline">
+    <span class="filter-label">Baseline</span>
+    <span id="bars-target-chips" style="display:contents"></span>
+  </div>
+  <div class="filters" role="radiogroup" aria-label="Métrica das bars">
+    <span class="filter-label">Métrica</span>
+    <button type="button" data-bars-metric="BERTScore F1" role="radio" aria-pressed="true">BERTScore F1</button>
+    <button type="button" data-bars-metric="ROUGE-L" role="radio" aria-pressed="false">ROUGE-L</button>
+    <button type="button" data-bars-metric="Token-F1" role="radio" aria-pressed="false">Token-F1</button>
+  </div>
+  <div class="chart-card">
+    <svg id="chart-bars" viewBox="0 0 760 420" role="img" aria-label="Clustered bars de similaridade por modelo e versão"></svg>
+  </div>
+</section>
+
+
+<section id="text-categories">
+  <h2><span class="ord">5.2 ·</span> Distribuição de Similaridade (categorias)</h2>
+  <p class="sub">Denominador = <strong>tamanho do baseline</strong>. Cada barra mostra como o modelo classificou as vulnerabilidades do baseline: alinhadas (Highly/Moder./Slight./Diverg.) ou ausentes (Absent = omissão). Alucinações (extras sem par no baseline) ficam no scatter §2.1, não aqui.</p>
+  <div class="filters" role="radiogroup" aria-label="Filtrar categorias por baseline">
+    <span class="filter-label">Baseline</span>
+    <span id="cat-target-chips" style="display:contents"></span>
+  </div>
+  <div class="filters" role="radiogroup" aria-label="Métrica para categorização">
+    <span class="filter-label">Métrica</span>
+    <button type="button" data-cat-metric="BERTScore F1" role="radio" aria-pressed="true">BERTScore F1</button>
+    <button type="button" data-cat-metric="ROUGE-L" role="radio" aria-pressed="false">ROUGE-L</button>
+    <button type="button" data-cat-metric="Token-F1" role="radio" aria-pressed="false">Token-F1</button>
+  </div>
+  <div class="chart-card">
+    <svg id="chart-cat" viewBox="0 0 760 482" role="img" aria-label="Stacked bars de categorias de similaridade"></svg>
+  </div>
+</section>
+
+<section id="by-model">
+  <h2><span class="ord">6 ·</span> Breakdown por Modelo</h2>
+  <p class="sub">Média entre targets/runs. Filtre pra isolar um modelo.</p>
+  <div class="filters" role="radiogroup" aria-label="Filtrar por modelo">
+    <span class="filter-label">Modelo</span>
+    <button type="button" data-model="__all__" role="radio" aria-pressed="true">Todos</button>
+    <span id="model-chips" style="display:contents"></span>
+  </div>
+  <div class="table-wrap scroll"><table id="t-model" aria-label="Headline por modelo e versão"></table></div>
+</section>
+
+<section id="by-target">
+  <h2><span class="ord">7 ·</span> Breakdown por Target</h2>
+  <p class="sub">Por relatório/baseline. Verifica se o ganho de versão é uniforme.</p>
+  <div class="filters" role="radiogroup" aria-label="Filtrar por target">
+    <span class="filter-label">Target</span>
+    <button type="button" data-target="__all__" role="radio" aria-pressed="true">Todos</button>
+    <span id="target-chips" style="display:contents"></span>
+  </div>
+  <div class="table-wrap scroll"><table id="t-target" aria-label="Headline por target e versão"></table></div>
+</section>
+
+<section id="findings">
+  <h2><span class="ord">8 ·</span> Observações</h2>
+  <p class="sub">Síntese do que os números deste relatório mostram. Cores: <span style="color:var(--pos)">verde</span> = ganho de V3, <span style="color:var(--v2)">amarelo</span> = atenção / leitura ambígua, <span style="color:var(--neg)">vermelho</span> = limitação estrutural.</p>
+
+  <h3 class="findings-subhead win">Ganhos<span class="bar"></span></h3>
+  <div class="findings-grid">
+
+    <article class="finding-card win">
+      <h3><span class="tag">Cobertura · ganho</span></h3>
+      <p>
+        ERM sobe de <span class="num">37.5%</span> (V1) → <span class="num">88%</span> (V2) →
+        <span class="num">90.4%</span> (V3). Omission cai pela metade entre V1 e V3 em
+        <em>field-level</em> (<span class="num">25.1% → 8.3%</span>, <a href="#coverage" class="ref">§2</a>).
+        Em <em>vuln-level</em> a melhora é ainda mais drástica
+        (<a href="#tradeoff" class="ref">§2.1</a>): cluster V3 fica em <span class="num">3–15%</span> halluc /
+        <span class="num">0–6%</span> omiss; V1 espalha pelo plano com outliers até
+        <span class="num">81%</span> de omiss. O heatmap §2.2 detalha quais
+        campos ainda saem vazios mesmo no V3 (notavelmente <code>impact</code> e <code>references</code>
+        em bBWA).
+      </p>
+    </article>
+
+    <article class="finding-card win">
+      <h3><span class="tag">Recuperação vuln-level</span></h3>
+      <p>
+        Em contagem absoluta (<code>n_baseline_unmatched</code>,
+        <a href="#coverage" class="ref">§2</a>): V1 = <span class="num">15.3</span>,
+        V2 = <span class="num">5.6</span>, V3 = <span class="num">1.5</span> vulns/run
+        (V3 perde ~10× menos que V1, ~3.7× menos que V2).
+        Em <strong>taxa normalizada por baseline</strong>: V1 = <span class="num">20.5%</span>,
+        V2 = <span class="num">8.2%</span>, V3 = <span class="num">1.7%</span> —
+        V3 perde <strong>~12× menos</strong> que V1 e <strong>~4.8× menos</strong> que V2.
+        A taxa amplia o gap porque V1 omitia desproporcionalmente mais em baselines pequenos.
+      </p>
+    </article>
+
+    <article class="finding-card win">
+      <h3><span class="tag">Texto · maior ganho em &lt;impact&gt;</span></h3>
+      <p>
+        BERTScore por campo (<a href="#text" class="ref">§5</a>): maior salto V1 → V3 em
+        <code>impact</code> (<span class="num">0.77 → 0.92</span>, +15pp),
+        <code>detection_method</code> (<span class="num">0.62 → 0.82</span>),
+        <code>insight</code> (<span class="num">0.81 → 0.89</span>) e
+        <code>references</code> (<span class="num">0.84 → 0.91</span>).
+        Campos onde V1 já era forte (<code>description</code>, <code>source</code>) mostram
+        delta marginal — V3 consolida o ganho, não revoluciona o que já funcionava.
+      </p>
+    </article>
+
+    <article class="finding-card win">
+      <h3><span class="tag">Categorias · qualidade do match</span></h3>
+      <p>
+        Fração média de vulnerabilidades do baseline em <strong>Highly Similar</strong>
+        (<a href="#text-categories" class="ref">§5.2</a>, média entre os 3 targets × 5 modelos × 10 runs):
+        <br><br>
+        <strong>BERTScore</strong>: <span class="num">65.8%</span> (V1) →
+        <span class="num">72.7%</span> (V2) → <span class="num">94.4%</span> (V3) — <strong>+28.6pp</strong> vs V1, <strong>+21.7pp</strong> vs V2.<br>
+        <strong>ROUGE-L</strong>: <span class="num">55.1%</span> →
+        <span class="num">57.0%</span> → <span class="num">91.7%</span> — <strong>+36.6pp</strong> vs V1, <strong>+34.8pp</strong> vs V2.<br>
+        <strong>Token-F1</strong>: <span class="num">61.3%</span> →
+        <span class="num">71.2%</span> → <span class="num">93.9%</span> — <strong>+32.6pp</strong> vs V1, <strong>+22.7pp</strong> vs V2.
+        <br><br>
+        V3 salta de uma faixa de 55–73% pra 92–94% em todas as 3 métricas. ROUGE-L revela o ganho
+        mais agressivo (+35pp vs V2) — V2 produzia paráfrases lexicalmente distantes; V3 fica
+        próximo do baseline. V1 mantém alta proporção em Highly mas perde no eixo cobertura
+        (cresce o segmento <strong>Absent</strong>).
+      </p>
+    </article>
+
+    <article class="finding-card win">
+      <h3><span class="tag">Heatmap · V3 melhora em quase tudo</span></h3>
+      <p>
+        Comparando linhas V3 contra V1/V2 no <a href="#field-heatmap" class="ref">heatmap §2.2</a>:
+        omission média cai de <span class="num">25.1%</span> (V1) para <span class="num">12.5%</span> (V2)
+        e <span class="num">8.3%</span> (V3) — V3 é cerca de <strong>1/3 da V1</strong> e
+        <strong>~1.5× melhor que V2</strong>.
+        Visualmente: V3 não tem nenhuma linha predominantemente vermelha (V1 tinha gpt5 inteira);
+        nenhuma célula extrema; e a variância entre modelos some — os 5 modelos no V3 ficam
+        parecidos entre si. Ganhos mais visíveis em <code>port</code>, <code>plugin_details</code>,
+        <code>cvss</code> e na linha inteira do <code>gpt5</code>.
+        V3 baixa <strong>média, teto e variância</strong> simultaneamente.
+      </p>
+    </article>
+
+  </div>
+
+  <h3 class="findings-subhead warn">Atenção<span class="bar"></span></h3>
+  <div class="findings-grid">
+
+    <article class="finding-card warn">
+      <h3><span class="tag">Severidade · convergência</span></h3>
+      <p>
+        Macro-F1 fica entre <span class="num">94.8%</span> (V1) e <span class="num">97.7%</span> (V2) —
+        a categorização de severidade é tarefa "fácil" para o LLM independente da versão. <strong>Porém</strong>,
+        a Coverage-aware Macro-F1 (que penaliza omissão) revela o gap real:
+        <span class="num">79.6%</span> (V1) vs <span class="num">91.3%</span> (V3), <span class="num">+11.7pp</span>
+        — confirmando que o ganho de V3 está na cobertura, não na classificação per se.
+      </p>
+    </article>
+
+    <article class="finding-card warn">
+      <h3><span class="tag">Por modelo · convergência V3</span></h3>
+      <p>
+        Em V1 os 5 modelos divergem muito: <code>gpt5</code> chega a
+        <span class="num">81%</span> de omission vuln-level em JuiceShop (extraiu só ~19% do baseline)
+        e <span class="num">72%</span> em bBWA; <code>gpt4</code> e <code>llama4</code> alucinam mais
+        de <span class="num">28%</span> em artifactory. Em V3 todos convergem pra
+        <span class="num">3–15%</span> halluc e <span class="num">0–6%</span> omission —
+        V3 reduz a variância <strong>entre modelos</strong>,
+        não só a média. Visível no <a href="#tradeoff" class="ref">scatter §2.1</a>.
+      </p>
+    </article>
+
+    <article class="finding-card warn">
+      <h3><span class="tag">Por target · ganho assimétrico</span></h3>
+      <p>
+        Ganho de ERM de V1 pra V3 não é uniforme entre baselines:
+        <strong>bBWA +70pp</strong> (<span class="num">27% → 97%</span>),
+        <strong>JuiceShop +69pp</strong> (<span class="num">23% → 92%</span>),
+        <strong>artifactory +19pp</strong> (<span class="num">62% → 81%</span>).
+        Os 2 baselines pequenos (34 e 58 vulns) saltam dramaticamente; artifactory (116 vulns, mais denso)
+        ganha menos — efeito de teto. V3 fecha a folga onde havia mais espaço pra fechar.
+      </p>
+    </article>
+
+    <article class="finding-card warn">
+      <h3><span class="tag">Heatmap · campos crônicos</span></h3>
+      <p>
+        Mesmo em V3, alguns campos ficam amarelos/laranjas no
+        <a href="#field-heatmap" class="ref">heatmap §2.2</a> em quase todos os modelos:
+        <code>detection_method</code>, <code>log_method</code>, <code>product_detection_result</code>
+        e <code>references</code> mantêm omission <span class="num">10–25%</span>.
+        São campos cujo conteúdo no baseline costuma vir de seções específicas do PDF
+        (footers de "Detection Method", listas externas) — o modelo não os captura
+        consistentemente, independente do pipeline.
+      </p>
+    </article>
+
+    <article class="finding-card warn">
+      <h3><span class="tag">Heatmap · llama4 V2 anômalo</span></h3>
+      <p>
+        A linha <strong>llama4 · V2</strong> é a única que mostra omission uniformemente moderada
+        (<span class="num">~20–30%</span>) <em>distribuída em quase todos os campos</em>, em vez de
+        concentrada em poucos. Padrão atípico — sugere uma regressão sistemática específica
+        do V2 com esse modelo (não vista em llama3 V2 nem em llama4 V1/V3). Vale investigar
+        antes de tirar conclusões sobre llama4 baseadas só em V2.
+      </p>
+    </article>
+
+  </div>
+
+  <h3 class="findings-subhead caveat">Limitações estruturais<span class="bar"></span></h3>
+  <div class="findings-grid">
+
+    <article class="finding-card caveat">
+      <h3><span class="tag">Entity · zeros estruturais</span></h3>
+      <p>
+        V1 tem F1 ≈ <span class="num">0%</span> em <code>cvss</code>, <code>plugin</code> e <code>port</code>
+        (<a href="#entity" class="ref">§4</a>). Não é falha do LLM — é divergência de schema: V1 emite
+        <code>cvss</code> como array de 7 posições, baseline é <code>float</code>; <code>plugin</code>
+        sempre <code>[]</code>; <code>port</code> sai como float coercionado. Por isso a comparação
+        cross-version para esses campos só faz sentido a partir de V2.
+        Em campos com formato uniforme (<code>severity</code>), V1 mantém ≈ <span class="num">98%</span>.
+      </p>
+    </article>
+
+    <article class="finding-card caveat">
+      <h3><span class="tag">Heatmap · gpt5 V1 colapso total</span></h3>
+      <p>
+        A linha <strong>gpt5 · V1</strong> no heatmap §2.2 é a única quase inteiramente vermelha
+        (<span class="num">≥50%</span> em quase todos os campos). Combina com a omission vuln-level
+        de até <span class="num">81%</span> no scatter §2.1 — gpt5 sob configuração V1 simplesmente
+        deixou de extrair ~2/3 do conteúdo. V2/V3 do gpt5 recuperam totalmente
+        (linhas predominantemente verdes).
+      </p>
+    </article>
+
+  </div>
+</section>
+
+<footer id="notes">
+  <p>
+    <strong>Como ler:</strong> cada célula numérica é a <strong>média entre runs</strong> agregada
+    em <code>v{1,2,3}/aggregated_metrics.xlsx</code>. Deltas usam
+    <span class="delta pos">↑</span> / <span class="delta neg">↓</span> contra V3, respeitando
+    a direção <em>de bom</em> da métrica.
+  </p>
+  <p>
+    BERTScore: <code>distilbert-base-uncased</code>. Matching: composite-key
+    <code>(name, port, protocol)</code> com fallback fuzzy.
+  </p>
+</footer>
+</div>
+
+<div class="tooltip" id="tooltip" role="tooltip" aria-hidden="true"></div>
+
+<script>
+"use strict";
+const DATA = {"generated_at": "2026-05-16 20:51", "run_counts": {"v1": 150, "v2": 150, "v3": 150}, "kpi": [{"id": "erm", "label": "Exact Record Match", "tip": "% de vulnerabilidades em que todos os campos batem exatamente com o baseline. Maior é melhor.", "values": {"v1": 0.3750780362447967, "v2": 0.8799960023488519, "v3": 0.9042874383320008}, "fmt": "pct", "direction": 1}, {"id": "sev", "label": "Severity Macro-F1", "tip": "F1 médio entre classes LOG/LOW/MEDIUM/HIGH/CRITICAL. Maior é melhor.", "values": {"v1": 0.9479453172967711, "v2": 0.977486230406843, "v3": 0.9702768007304142}, "fmt": "pct", "direction": 1}, {"id": "rec", "label": "Vulns perdidas por run", "tip": "Média de vulnerabilidades do baseline que o modelo NÃO recuperou em cada run. Quanto menor, mais cobertura.", "values": {"v1": 15.286666666666667, "v2": 5.630370370370371, "v3": 1.5}, "fmt": "num", "direction": -1}, {"id": "bert", "label": "BERTScore médio (texto livre)", "tip": "BERTScore F1 médio entre todos os campos textuais. Maior é melhor.", "values": {"v1": 0.8341538839982512, "v2": 0.8146162615760134, "v3": 0.9290256237268942}, "fmt": "pct", "direction": 1}], "schema_rows": [{"label": "JSON Validity", "tip": "Fração de runs cujo output parseia como JSON.", "values": {"v1": 1.0, "v2": 1.0, "v3": 1.0}, "direction": 1, "fmt": "pct"}, {"label": "Conformance (nativo)", "tip": "% conforme ao schema da própria versão — LLM compliance com seu próprio prompt.", "values": {"v1": 1.0, "v2": 0.9928951392446679, "v3": 0.999486064435169}, "direction": 1, "fmt": "pct"}], "coverage_rows": [{"label": "Exact Record Match", "tip": "Registros 100% corretos.", "values": {"v1": 0.3750780362447967, "v2": 0.8799960023488519, "v3": 0.9042874383320008}, "direction": 1, "fmt": "pct"}, {"label": "Hallucination Rate (per field)", "tip": "Campos preenchidos onde o baseline está vazio.", "values": {"v1": 0.0681655340913357, "v2": 0.04894088975413281, "v3": 0.04538797992899325}, "direction": -1, "fmt": "pct"}, {"label": "Omission Rate (per field)", "tip": "Campos vazios onde o baseline tem conteúdo.", "values": {"v1": 0.2507377357073097, "v2": 0.12531312865716743, "v3": 0.08272030651340997}, "direction": -1, "fmt": "pct"}, {"label": "Matched Pairs (média)", "tip": "Pares baseline↔modelo alinhados por run.", "values": {"v1": 54.04666666666667, "v2": 63.702962962962964, "v3": 67.83333333333333}, "direction": 1, "fmt": "num"}, {"label": "Hallucination Rate (per vulnerability)", "tip": "Fração de vulnerabilidades extraídas sem par no baseline. Normalizada por target (média das taxas por modelo × target), evitando viés de baselines de tamanhos diferentes.", "values": {"v1": 0.07421381792906155, "v2": 0.05688782284850492, "v3": 0.06827238243316551}, "direction": -1, "fmt": "pct"}, {"label": "Omission Rate (per vulnerability)", "tip": "Fração de vulnerabilidades do baseline não recuperadas. Normalizada por target (média das taxas por modelo × target), evitando viés de baselines de tamanhos diferentes.", "values": {"v1": 0.20539553752535497, "v2": 0.08150927804071821, "v3": 0.017106152805949966}, "direction": -1, "fmt": "pct"}], "sev_rows": [{"label": "Accuracy", "tip": "Acerto exato (todas as classes).", "values": {"v1": 0.9707198123956077, "v2": 0.9874159169213036, "v3": 0.9848302407276186}, "direction": 1, "fmt": "pct"}, {"label": "Macro F1", "tip": "F1 médio não-ponderado entre classes.", "values": {"v1": 0.9479453172967711, "v2": 0.977486230406843, "v3": 0.9702768007304142}, "direction": 1, "fmt": "pct"}, {"label": "Coverage-aware Macro F1", "tip": "Macro F1 ponderado pela cobertura (penaliza omissão).", "values": {"v1": 0.7961566525691286, "v2": 0.9043077932275946, "v3": 0.9130938343040763}, "direction": 1, "fmt": "pct"}], "entity_rows": [{"field": "cvss", "Precision": {"v1": 0.2, "v2": 0.29333333333333333, "v3": 0.9594404032604367}, "Recall": {"v1": 0.00592394533571004, "v2": 0.009362260046447364, "v3": 0.9968120741015871}, "F1_Score": {"v1": 0.011507002801120448, "v2": 0.018135158031932226, "v3": 0.9773974281750526}}, {"field": "plugin", "Precision": {"v1": 0.0, "v2": 1.0, "v3": 1.0}, "Recall": {"v1": 0.0, "v2": 1.0, "v3": 1.0}, "F1_Score": {"v1": 0.0, "v2": 1.0, "v3": 1.0}}, {"field": "port", "Precision": {"v1": 0.0008611738298012807, "v2": 0.9402700029800319, "v3": 0.9493406020150131}, "Recall": {"v1": 0.0029978354978354976, "v2": 1.0, "v3": 1.0}, "F1_Score": {"v1": 0.0013152337858220212, "v2": 0.9688786471041458, "v3": 0.9737435240777014}}, {"field": "protocol", "Precision": {"v1": 0.9420230764542575, "v2": 0.9893760982231473, "v3": 0.9897848783237956}, "Recall": {"v1": 0.5479508304247596, "v2": 1.0, "v3": 1.0}, "F1_Score": {"v1": 0.6430243013138456, "v2": 0.9945988506697375, "v3": 0.9948102282637649}}, {"field": "severity", "Precision": {"v1": 0.9707198123956077, "v2": 0.9874159169213036, "v3": 0.9848302407276186}, "Recall": {"v1": 1.0, "v2": 1.0, "v3": 1.0}, "F1_Score": {"v1": 0.9848886322739474, "v2": 0.9935786138941347, "v3": 0.9922876031841826}}], "text_rows": [{"field": "description", "BERTScore F1": {"v1": 0.9356638455185212, "v2": 0.9432048255388454, "v3": 0.9653873855118569}, "ROUGE-L": {"v1": 0.9169353071583941, "v2": 0.9286578704022059, "v3": 0.9574461166365936}, "Token-F1": {"v1": 0.9229249402930376, "v2": 0.9389966152700561, "v3": 0.964238525840819}}, {"field": "detection_method", "BERTScore F1": {"v1": 0.6241950592447855, "v2": 0.7933197357605363, "v3": 0.8167195291661781}, "ROUGE-L": {"v1": 0.6289051540175649, "v2": 0.7862216864112456, "v3": 0.8104029054346162}, "Token-F1": {"v1": 0.6291710283499873, "v2": 0.8027863900259654, "v3": 0.8276911891694951}}, {"field": "detection_result", "BERTScore F1": {"v1": 0.8081853192881016, "v2": 0.8479690870872417, "v3": 0.8727490385318009}, "ROUGE-L": {"v1": 0.711513229927316, "v2": 0.7417521784060858, "v3": 0.7597458747767124}, "Token-F1": {"v1": 0.816334730286718, "v2": 0.8668122396487041, "v3": 0.8948495310533586}}, {"field": "impact", "BERTScore F1": {"v1": 0.7733587239431201, "v2": 0.7587041011178837, "v3": 0.921649615837067}, "ROUGE-L": {"v1": 0.7711021413713972, "v2": 0.7576924317039821, "v3": 0.9221648074005822}, "Token-F1": {"v1": 0.7726601541195088, "v2": 0.7587365111585483, "v3": 0.9227325927953903}}, {"field": "insight", "BERTScore F1": {"v1": 0.8094936299865755, "v2": 0.8346383860563069, "v3": 0.8899940923054405}, "ROUGE-L": {"v1": 0.7868873725287592, "v2": 0.8231909111999749, "v3": 0.8822314078237959}, "Token-F1": {"v1": 0.7978195894540845, "v2": 0.832437788116995, "v3": 0.891616453987173}}, {"field": "instances", "BERTScore F1": {"v1": null, "v2": 1.0, "v3": 1.0}, "ROUGE-L": {"v1": null, "v2": 1.0, "v3": 1.0}, "Token-F1": {"v1": null, "v2": 1.0, "v3": 1.0}}, {"field": "log_method", "BERTScore F1": {"v1": 0.8542804343420887, "v2": 0.9378517124103979, "v3": 0.9470596130298292}, "ROUGE-L": {"v1": 0.8434466394752762, "v2": 0.8973325471331971, "v3": 0.9071254729678291}, "Token-F1": {"v1": 0.8533068979405248, "v2": 0.9444221093902437, "v3": 0.9536785396514669}}, {"field": "plugin_details", "BERTScore F1": {"v1": null, "v2": 0.0, "v3": 0.9994667723029792}, "ROUGE-L": {"v1": null, "v2": 0.0, "v3": 0.9994667723029792}, "Token-F1": {"v1": null, "v2": 0.0, "v3": 0.9994667723029792}}, {"field": "product_detection_result", "BERTScore F1": {"v1": 0.8382402879802565, "v2": 0.9281265806327325, "v3": 0.9357811042596788}, "ROUGE-L": {"v1": 0.7108635557509425, "v2": 0.8378118973019802, "v3": 0.8369381031151452}, "Token-F1": {"v1": 0.7976592932023501, "v2": 0.9160260423907265, "v3": 0.9245844429716229}}, {"field": "references", "BERTScore F1": {"v1": 0.8358060103371153, "v2": 0.8471822336727443, "v3": 0.9060786503655668}, "ROUGE-L": {"v1": 0.5953771966932941, "v2": 0.5476241253428743, "v3": 0.5965565011496957}, "Token-F1": {"v1": 0.7961563928363423, "v2": 0.8291488647452129, "v3": 0.9010290659388798}}, {"field": "solution", "BERTScore F1": {"v1": 0.862315529341948, "v2": 0.8843984766354718, "v3": 0.8939549111093557}, "ROUGE-L": {"v1": 0.8528744734611722, "v2": 0.8776530033318085, "v3": 0.8892165101507491}, "Token-F1": {"v1": 0.8740623475503225, "v2": 0.8960379442290112, "v3": 0.9065338384415352}}, {"field": "source", "BERTScore F1": {"v1": 1.0, "v2": 1.0, "v3": 0.9994667723029792}, "ROUGE-L": {"v1": 1.0, "v2": 1.0, "v3": 0.9994667723029792}, "Token-F1": {"v1": 1.0, "v2": 1.0, "v3": 0.9994667723029792}}], "by_model": {"Exact Record Match": {"deepseek": {"v1": 0.40569641649763355, "v2": 0.8947664970404375, "v3": 0.9119847559986685}, "gpt4": {"v1": 0.32781774805476555, "v2": 0.8575254620422603, "v3": 0.8774981868984003}, "gpt5": {"v1": 0.46945747074423555, "v2": 0.8935394148144441, "v3": 0.9164917464129488}, "llama3": {"v1": 0.30263945098470557, "v2": 0.885827313381493, "v3": 0.920904643517462}, "llama4": {"v1": 0.36977909494264316, "v2": 0.8683213244656244, "v3": 0.8945578588325244}}, "Hallucination rate (field)": {"deepseek": {"v1": 0.008552487492821663, "v2": 0.0433169891849318, "v3": 0.03120498450065305}, "gpt4": {"v1": 0.1289120474279947, "v2": 0.05905545505963586, "v3": 0.053968187738204075}, "gpt5": {"v1": 0.019344527898349465, "v2": 0.039191646853479346, "v3": 0.029973264639935132}, "llama3": {"v1": 0.09260796011459986, "v2": 0.05401640146804171, "v3": 0.04788081288444418}, "llama4": {"v1": 0.09141064752291284, "v2": 0.049123956204575346, "v3": 0.06391264988172984}}, "Omission rate (field)": {"deepseek": {"v1": 0.1209835850048832, "v2": 0.0781656149049658, "v3": 0.07279787393884758}, "gpt4": {"v1": 0.23167774772744343, "v2": 0.09852471639996994, "v3": 0.1021767710915784}, "gpt5": {"v1": 0.539146194876418, "v2": 0.15494912311455022, "v3": 0.07815622417549396}, "llama3": {"v1": 0.15074844113890765, "v2": 0.07404871910450005, "v3": 0.07638982796183606}, "llama4": {"v1": 0.21113270978889642, "v2": 0.22087746976185105, "v3": 0.08408083539929383}}, "Severity macro-F1": {"deepseek": {"v1": 0.9421110422412063, "v2": 0.9789048132737452, "v3": 0.9789013437620792}, "gpt4": {"v1": 0.919386608774062, "v2": 0.9778725288215823, "v3": 0.9539068794270386}, "gpt5": {"v1": 0.9739857281683565, "v2": 0.9785846847630998, "v3": 0.9788636443811575}, "llama3": {"v1": 0.9593010410821442, "v2": 0.9811133335405393, "v3": 0.9805818860877684}, "llama4": {"v1": 0.944942166218086, "v2": 0.9709557916352486, "v3": 0.9591302499940276}}, "Vulns perdidas / run": {"deepseek": {"v1": 0.0, "v2": 0.6666666666666666, "v3": 0.7000000000000001}, "gpt4": {"v1": 15.866666666666665, "v2": 1.0666666666666667, "v3": 2.466666666666667}, "gpt5": {"v1": 48.43333333333334, "v2": 8.985185185185186, "v3": 1.2333333333333334}, "llama3": {"v1": 2.3333333333333335, "v2": 0.8666666666666667, "v3": 1.2}, "llama4": {"v1": 9.8, "v2": 16.566666666666666, "v3": 1.8999999999999997}}}, "by_target": {"Exact Record Match": {"OpenVAS_JuiceShop": {"v1": 0.22917343223225578, "v2": 0.9078220322845587, "v3": 0.9249193548387098}, "OpenVAS_bBWA": {"v1": 0.2717420294214759, "v2": 0.9381264136433517, "v3": 0.9741889205773054}, "openvas_artifactory-oss_5.11.0": {"v1": 0.6243186470806583, "v2": 0.7940395611186453, "v3": 0.813754039579987}}, "Hallucination rate (field)": {"OpenVAS_JuiceShop": {"v1": 0.050065667145732504, "v2": 0.039326962022544064, "v3": 0.05235643449730136}, "OpenVAS_bBWA": {"v1": 0.03185889135561721, "v2": 0.03705817331972009, "v3": 0.04396455054119536}, "openvas_artifactory-oss_5.11.0": {"v1": 0.1225720437726574, "v2": 0.07043753392013427, "v3": 0.03984295474848303}}, "Omission rate (field)": {"OpenVAS_JuiceShop": {"v1": 0.23460784313725486, "v2": 0.09637254901960783, "v3": 0.05166666666666667}, "OpenVAS_bBWA": {"v1": 0.31099616858237544, "v2": 0.19704980842911876, "v3": 0.15996168582375475}, "openvas_artifactory-oss_5.11.0": {"v1": 0.20660919540229883, "v2": 0.08251702852277565, "v3": 0.03653256704980843}}, "Severity macro-F1": {"OpenVAS_JuiceShop": {"v1": 0.9546592697388292, "v2": 1.0, "v3": 0.9738015330594336}, "OpenVAS_bBWA": {"v1": 0.9660667569957008, "v2": 1.0, "v3": 0.9996396396396395}, "openvas_artifactory-oss_5.11.0": {"v1": 0.923109925155783, "v2": 0.9324586912205293, "v3": 0.9373892294921692}}, "Vulns perdidas / run": {"OpenVAS_JuiceShop": {"v1": 6.94, "v2": 3.2399999999999998, "v3": 0.42000000000000004}, "OpenVAS_bBWA": {"v1": 8.879999999999999, "v2": 3.6599999999999993, "v3": 0.44000000000000006}, "openvas_artifactory-oss_5.11.0": {"v1": 30.04, "v2": 9.991111111111113, "v3": 3.6399999999999997}}}, "headline_labels": ["Exact Record Match", "Hallucination rate (field)", "Omission rate (field)", "Severity macro-F1", "Vulns perdidas / run"], "headline_dir": {"Exact Record Match": 1, "Hallucination rate (field)": -1, "Omission rate (field)": -1, "Severity macro-F1": 1, "Vulns perdidas / run": -1}, "headline_fmt": {"Exact Record Match": "pct", "Hallucination rate (field)": "pct", "Omission rate (field)": "pct", "Severity macro-F1": "pct", "Vulns perdidas / run": "num"}, "versions": ["v1", "v2", "v3"], "scatter_points": [{"target": "OpenVAS_JuiceShop", "model": "deepseek", "version": "v1", "halluc": 0.0, "omission": 0.0, "n_ext_unm": 0.0, "n_bl_unm": 0.0, "n_matched": 34.0}, {"target": "OpenVAS_JuiceShop", "model": "deepseek", "version": "v2", "halluc": 0.08108108108108109, "omission": 0.0, "n_ext_unm": 3.0, "n_bl_unm": 0.0, "n_matched": 34.0}, {"target": "OpenVAS_JuiceShop", "model": "deepseek", "version": "v3", "halluc": 0.08108108108108109, "omission": 0.0, "n_ext_unm": 3.0, "n_bl_unm": 0.0, "n_matched": 34.0}, {"target": "OpenVAS_JuiceShop", "model": "gpt4", "version": "v1", "halluc": 0.0, "omission": 0.18823529411764706, "n_ext_unm": 0.0, "n_bl_unm": 6.4, "n_matched": 27.6}, {"target": "OpenVAS_JuiceShop", "model": "gpt4", "version": "v2", "halluc": 0.05714285714285714, "omission": 0.029411764705882353, "n_ext_unm": 2.0, "n_bl_unm": 1.0, "n_matched": 33.0}, {"target": "OpenVAS_JuiceShop", "model": "gpt4", "version": "v3", "halluc": 0.08595988538681949, "omission": 0.061764705882352944, "n_ext_unm": 3.0, "n_bl_unm": 2.1, "n_matched": 31.9}, {"target": "OpenVAS_JuiceShop", "model": "gpt5", "version": "v1", "halluc": 0.0, "omission": 0.8117647058823529, "n_ext_unm": 0.0, "n_bl_unm": 27.6, "n_matched": 6.4}, {"target": "OpenVAS_JuiceShop", "model": "gpt5", "version": "v2", "halluc": 0.05460750853242321, "omission": 0.18529411764705883, "n_ext_unm": 1.6, "n_bl_unm": 6.3, "n_matched": 27.7}, {"target": "OpenVAS_JuiceShop", "model": "gpt5", "version": "v3", "halluc": 0.06336088154269973, "omission": 0.0, "n_ext_unm": 2.3, "n_bl_unm": 0.0, "n_matched": 34.0}, {"target": "OpenVAS_JuiceShop", "model": "llama3", "version": "v1", "halluc": 0.0, "omission": 0.020588235294117647, "n_ext_unm": 0.0, "n_bl_unm": 0.7, "n_matched": 33.3}, {"target": "OpenVAS_JuiceShop", "model": "llama3", "version": "v2", "halluc": 0.07202216066481995, "omission": 0.014705882352941176, "n_ext_unm": 2.6, "n_bl_unm": 0.5, "n_matched": 33.5}, {"target": "OpenVAS_JuiceShop", "model": "llama3", "version": "v3", "halluc": 0.08847184986595175, "omission": 0.0, "n_ext_unm": 3.3, "n_bl_unm": 0.0, "n_matched": 34.0}, {"target": "OpenVAS_JuiceShop", "model": "llama4", "version": "v1", "halluc": 0.0, "omission": 0.0, "n_ext_unm": 0.0, "n_bl_unm": 0.0, "n_matched": 34.0}, {"target": "OpenVAS_JuiceShop", "model": "llama4", "version": "v2", "halluc": 0.055350553505535055, "omission": 0.24705882352941178, "n_ext_unm": 1.5, "n_bl_unm": 8.4, "n_matched": 25.6}, {"target": "OpenVAS_JuiceShop", "model": "llama4", "version": "v3", "halluc": 0.15, "omission": 0.0, "n_ext_unm": 6.0, "n_bl_unm": 0.0, "n_matched": 34.0}, {"target": "OpenVAS_bBWA", "model": "deepseek", "version": "v1", "halluc": 0.01694915254237288, "omission": 0.0, "n_ext_unm": 1.0, "n_bl_unm": 0.0, "n_matched": 58.0}, {"target": "OpenVAS_bBWA", "model": "deepseek", "version": "v2", "halluc": 0.03494176372712147, "omission": 0.0, "n_ext_unm": 2.1, "n_bl_unm": 0.0, "n_matched": 58.0}, {"target": "OpenVAS_bBWA", "model": "deepseek", "version": "v3", "halluc": 0.03333333333333333, "omission": 0.0, "n_ext_unm": 2.0, "n_bl_unm": 0.0, "n_matched": 58.0}, {"target": "OpenVAS_bBWA", "model": "gpt4", "version": "v1", "halluc": 0.09149277688603531, "omission": 0.02413793103448276, "n_ext_unm": 5.7, "n_bl_unm": 1.4, "n_matched": 56.6}, {"target": "OpenVAS_bBWA", "model": "gpt4", "version": "v2", "halluc": 0.08240887480190175, "omission": 0.001724137931034483, "n_ext_unm": 5.2, "n_bl_unm": 0.1, "n_matched": 57.9}, {"target": "OpenVAS_bBWA", "model": "gpt4", "version": "v3", "halluc": 0.1060126582278481, "omission": 0.02586206896551724, "n_ext_unm": 6.7, "n_bl_unm": 1.5, "n_matched": 56.5}, {"target": "OpenVAS_bBWA", "model": "gpt5", "version": "v1", "halluc": 0.0, "omission": 0.7172413793103448, "n_ext_unm": 0.0, "n_bl_unm": 41.6, "n_matched": 16.4}, {"target": "OpenVAS_bBWA", "model": "gpt5", "version": "v2", "halluc": 0.04143126177024482, "omission": 0.12241379310344827, "n_ext_unm": 2.2, "n_bl_unm": 7.1, "n_matched": 50.9}, {"target": "OpenVAS_bBWA", "model": "gpt5", "version": "v3", "halluc": 0.03367003367003367, "omission": 0.010344827586206896, "n_ext_unm": 2.0, "n_bl_unm": 0.6, "n_matched": 57.4}, {"target": "OpenVAS_bBWA", "model": "llama3", "version": "v1", "halluc": 0.2387862796833773, "omission": 0.005172413793103448, "n_ext_unm": 18.1, "n_bl_unm": 0.3, "n_matched": 57.7}, {"target": "OpenVAS_bBWA", "model": "llama3", "version": "v2", "halluc": 0.06462035541195477, "omission": 0.001724137931034483, "n_ext_unm": 4.0, "n_bl_unm": 0.1, "n_matched": 57.9}, {"target": "OpenVAS_bBWA", "model": "llama3", "version": "v3", "halluc": 0.0880503144654088, "omission": 0.0, "n_ext_unm": 5.6, "n_bl_unm": 0.0, "n_matched": 58.0}, {"target": "OpenVAS_bBWA", "model": "llama4", "version": "v1", "halluc": 0.11782945736434108, "omission": 0.018965517241379314, "n_ext_unm": 7.6, "n_bl_unm": 1.1, "n_matched": 56.9}, {"target": "OpenVAS_bBWA", "model": "llama4", "version": "v2", "halluc": 0.06560636182902585, "omission": 0.1896551724137931, "n_ext_unm": 3.3, "n_bl_unm": 11.0, "n_matched": 47.0}, {"target": "OpenVAS_bBWA", "model": "llama4", "version": "v3", "halluc": 0.09672386895475821, "omission": 0.001724137931034483, "n_ext_unm": 6.2, "n_bl_unm": 0.1, "n_matched": 57.9}, {"target": "openvas_artifactory-oss_5.11.0", "model": "deepseek", "version": "v1", "halluc": 0.0, "omission": 0.0, "n_ext_unm": 0.0, "n_bl_unm": 0.0, "n_matched": 116.0}, {"target": "openvas_artifactory-oss_5.11.0", "model": "deepseek", "version": "v2", "halluc": 0.04522613065326633, "omission": 0.017241379310344827, "n_ext_unm": 5.4, "n_bl_unm": 2.0, "n_matched": 114.0}, {"target": "openvas_artifactory-oss_5.11.0", "model": "deepseek", "version": "v3", "halluc": 0.030638297872340427, "omission": 0.01810344827586207, "n_ext_unm": 3.6, "n_bl_unm": 2.1, "n_matched": 113.9}, {"target": "openvas_artifactory-oss_5.11.0", "model": "gpt4", "version": "v1", "halluc": 0.3184257602862254, "omission": 0.34310344827586203, "n_ext_unm": 35.6, "n_bl_unm": 39.8, "n_matched": 76.2}, {"target": "openvas_artifactory-oss_5.11.0", "model": "gpt4", "version": "v2", "halluc": 0.06639344262295081, "omission": 0.01810344827586207, "n_ext_unm": 8.1, "n_bl_unm": 2.1, "n_matched": 113.9}, {"target": "openvas_artifactory-oss_5.11.0", "model": "gpt4", "version": "v3", "halluc": 0.033591731266149866, "omission": 0.03275862068965517, "n_ext_unm": 3.9, "n_bl_unm": 3.8, "n_matched": 112.2}, {"target": "openvas_artifactory-oss_5.11.0", "model": "gpt5", "version": "v1", "halluc": 0.00746268656716418, "omission": 0.6560344827586206, "n_ext_unm": 0.3, "n_bl_unm": 76.1, "n_matched": 39.9}, {"target": "openvas_artifactory-oss_5.11.0", "model": "gpt5", "version": "v2", "halluc": 0.03049421661409044, "omission": 0.1168582375478928, "n_ext_unm": 3.2, "n_bl_unm": 13.6, "n_matched": 102.4}, {"target": "openvas_artifactory-oss_5.11.0", "model": "gpt5", "version": "v3", "halluc": 0.03504273504273504, "omission": 0.026724137931034484, "n_ext_unm": 4.1, "n_bl_unm": 3.1, "n_matched": 112.9}, {"target": "openvas_artifactory-oss_5.11.0", "model": "llama3", "version": "v1", "halluc": 0.043478260869565216, "omission": 0.05172413793103448, "n_ext_unm": 5.0, "n_bl_unm": 6.0, "n_matched": 110.0}, {"target": "openvas_artifactory-oss_5.11.0", "model": "llama3", "version": "v2", "halluc": 0.053156146179401995, "omission": 0.017241379310344827, "n_ext_unm": 6.4, "n_bl_unm": 2.0, "n_matched": 114.0}, {"target": "openvas_artifactory-oss_5.11.0", "model": "llama3", "version": "v3", "halluc": 0.049873203719357564, "omission": 0.03103448275862069, "n_ext_unm": 5.9, "n_bl_unm": 3.6, "n_matched": 112.4}, {"target": "openvas_artifactory-oss_5.11.0", "model": "llama4", "version": "v1", "halluc": 0.2787828947368421, "omission": 0.24396551724137933, "n_ext_unm": 33.9, "n_bl_unm": 28.3, "n_matched": 87.7}, {"target": "openvas_artifactory-oss_5.11.0", "model": "llama4", "version": "v2", "halluc": 0.048834628190899, "omission": 0.26120689655172413, "n_ext_unm": 4.4, "n_bl_unm": 30.3, "n_matched": 85.7}, {"target": "openvas_artifactory-oss_5.11.0", "model": "llama4", "version": "v3", "halluc": 0.04827586206896552, "omission": 0.04827586206896552, "n_ext_unm": 5.6, "n_bl_unm": 5.6, "n_matched": 110.4}], "bars_by_target": {"OpenVAS_JuiceShop": {"BERTScore F1": {"deepseek": {"v1": 0.9801718370353474, "v2": 0.892515445690529, "v3": 0.9791024293239209}, "gpt4": {"v1": 0.7769197556362053, "v2": 0.8513093305365048, "v3": 0.9530413902447289}, "gpt5": {"v1": 0.888569150449501, "v2": 0.8911683613745417, "v3": 0.9761684517138729}, "llama3": {"v1": 0.6227994319919742, "v2": 0.8949775616209538, "v3": 0.9740422381635975}, "llama4": {"v1": 0.9029462261717109, "v2": 0.8770778546217132, "v3": 0.9811814629271917}}, "ROUGE-L": {"deepseek": {"v1": 0.9377638131728828, "v2": 0.8602917813130967, "v3": 0.9478723299013666}, "gpt4": {"v1": 0.7466534794097626, "v2": 0.8221357760115172, "v3": 0.9234475696252841}, "gpt5": {"v1": 0.8622923387702347, "v2": 0.8576963329798891, "v3": 0.9439016627852962}, "llama3": {"v1": 0.5911275836550611, "v2": 0.8623470294724975, "v3": 0.9394468972573883}, "llama4": {"v1": 0.8777463574321596, "v2": 0.8484817590515424, "v3": 0.9595835044282112}}, "Token-F1": {"deepseek": {"v1": 0.987671956317951, "v2": 0.8976383241567859, "v3": 0.9835228680677931}, "gpt4": {"v1": 0.7743303877033251, "v2": 0.8536740584079466, "v3": 0.9568412100209387}, "gpt5": {"v1": 0.8947260090932165, "v2": 0.8946933168315968, "v3": 0.9793367668690545}, "llama3": {"v1": 0.6054064937760673, "v2": 0.89842459229628, "v3": 0.9784737790416904}, "llama4": {"v1": 0.8973464904205841, "v2": 0.8788652074671576, "v3": 0.983652656858555}}}, "OpenVAS_bBWA": {"BERTScore F1": {"deepseek": {"v1": 0.9280602680043927, "v2": 0.8493828251872254, "v3": 0.9455833932491897}, "gpt4": {"v1": 0.8289336614489231, "v2": 0.7856353458193834, "v3": 0.9044912114434034}, "gpt5": {"v1": 0.9210186483840719, "v2": 0.8345534897587322, "v3": 0.9398921769786756}, "llama3": {"v1": 0.8413660060240241, "v2": 0.82676418633989, "v3": 0.9321747852724859}, "llama4": {"v1": 0.8726285655925888, "v2": 0.8386785027368094, "v3": 0.92888985072398}}, "ROUGE-L": {"deepseek": {"v1": 0.8585137517026362, "v2": 0.7965070142390088, "v3": 0.8887756206432643}, "gpt4": {"v1": 0.7934266240781773, "v2": 0.7422496664253136, "v3": 0.8606720676076011}, "gpt5": {"v1": 0.8981222168543266, "v2": 0.7817381928130175, "v3": 0.8859653218940066}, "llama3": {"v1": 0.7988906254758621, "v2": 0.7755014951401872, "v3": 0.8885940706619765}, "llama4": {"v1": 0.8214797547978374, "v2": 0.7922493291435543, "v3": 0.8792274332630208}}, "Token-F1": {"deepseek": {"v1": 0.9378903343200063, "v2": 0.8525391724268386, "v3": 0.9512028771666422}, "gpt4": {"v1": 0.815077533290834, "v2": 0.7854470600108076, "v3": 0.9086392386669114}, "gpt5": {"v1": 0.9276715151637367, "v2": 0.8362042494062125, "v3": 0.9436045650591622}, "llama3": {"v1": 0.8270763811663461, "v2": 0.8277159268323316, "v3": 0.9368245012819728}, "llama4": {"v1": 0.8620537462294025, "v2": 0.8404167799841981, "v3": 0.9332007441208741}}}, "openvas_artifactory-oss_5.11.0": {"BERTScore F1": {"deepseek": {"v1": 0.9008127388573286, "v2": 0.7493728182850438, "v3": 0.9111931366626792}, "gpt4": {"v1": 0.7435541934185446, "v2": 0.7045824417231564, "v3": 0.848418971162952}, "gpt5": {"v1": 0.8065026991993907, "v2": 0.763016584560036, "v3": 0.8942436938819079}, "llama3": {"v1": 0.7610636797042732, "v2": 0.7169839023917435, "v3": 0.8922939970680842}, "llama4": {"v1": 0.7369613980554918, "v2": 0.7432252729939389, "v3": 0.8746671670867449}}, "ROUGE-L": {"deepseek": {"v1": 0.8172142777085109, "v2": 0.6838667602352376, "v3": 0.8388761630494566}, "gpt4": {"v1": 0.6657096502110516, "v2": 0.6496594662907912, "v3": 0.790178825848875}, "gpt5": {"v1": 0.7036871600047683, "v2": 0.6900106852034974, "v3": 0.8182993256014434}, "llama3": {"v1": 0.7021644615507323, "v2": 0.653775972005335, "v3": 0.8310185810393369}, "llama4": {"v1": 0.6520655107521721, "v2": 0.6809095537172075, "v3": 0.8050921814705698}}, "Token-F1": {"deepseek": {"v1": 0.9137901991931127, "v2": 0.7553560076225624, "v3": 0.9214052969162297}, "gpt4": {"v1": 0.7155480220039847, "v2": 0.6995358356562719, "v3": 0.8498047638246202}, "gpt5": {"v1": 0.7976967345866799, "v2": 0.7642499916881089, "v3": 0.8935951762952525}, "llama3": {"v1": 0.7297818582506462, "v2": 0.7100005648505072, "v3": 0.8949313481306707}, "llama4": {"v1": 0.7040753995334212, "v2": 0.7369945435817238, "v3": 0.8673238632492569}}}}, "targets": ["OpenVAS_JuiceShop", "OpenVAS_bBWA", "openvas_artifactory-oss_5.11.0"], "models": ["deepseek", "gpt4", "gpt5", "llama3", "llama4"], "cat_categories": ["Highly Similar", "Moderately Similar", "Slightly Similar", "Divergent", "Absent"], "cat_by_target": {"OpenVAS_JuiceShop": {"BERTScore F1": {"deepseek": {"v1": {"Highly Similar": 1.0, "Moderately Similar": 0.0, "Slightly Similar": 0.0, "Divergent": 0.0, "Absent": 0.0}, "v2": {"Highly Similar": 1.0, "Moderately Similar": 0.0, "Slightly Similar": 0.0, "Divergent": 0.0, "Absent": 0.0}, "v3": {"Highly Similar": 1.0, "Moderately Similar": 0.0, "Slightly Similar": 0.0, "Divergent": 0.0, "Absent": 0.0}}, "gpt4": {"v1": {"Highly Similar": 0.6147058823529412, "Moderately Similar": 0.06470588235294118, "Slightly Similar": 0.1, "Divergent": 0.03235294117647059, "Absent": 0.18823529411764706}, "v2": {"Highly Similar": 0.961764705882353, "Moderately Similar": 0.008823529411764706, "Slightly Similar": 0.0, "Divergent": 0.0, "Absent": 0.029411764705882353}, "v3": {"Highly Similar": 0.9294117647058824, "Moderately Similar": 0.008823529411764706, "Slightly Similar": 0.0, "Divergent": 0.0, "Absent": 0.061764705882352944}}, "gpt5": {"v1": {"Highly Similar": 0.17941176470588235, "Moderately Similar": 0.008823529411764706, "Slightly Similar": 0.0, "Divergent": 0.0, "Absent": 0.8117647058823529}, "v2": {"Highly Similar": 0.8147058823529412, "Moderately Similar": 0.0, "Slightly Similar": 0.0, "Divergent": 0.0, "Absent": 0.18529411764705883}, "v3": {"Highly Similar": 1.0, "Moderately Similar": 0.0, "Slightly Similar": 0.0, "Divergent": 0.0, "Absent": 0.0}}, "llama3": {"v1": {"Highly Similar": 0.4647058823529412, "Moderately Similar": 0.058823529411764705, "Slightly Similar": 0.20588235294117646, "Divergent": 0.25, "Absent": 0.020588235294117647}, "v2": {"Highly Similar": 0.9852941176470589, "Moderately Similar": 0.0, "Slightly Similar": 0.0, "Divergent": 0.0, "Absent": 0.014705882352941176}, "v3": {"Highly Similar": 1.0, "Moderately Similar": 0.0, "Slightly Similar": 0.0, "Divergent": 0.0, "Absent": 0.0}}, "llama4": {"v1": {"Highly Similar": 0.9970588235294118, "Moderately Similar": 0.0029411764705882353, "Slightly Similar": 0.0, "Divergent": 0.0, "Absent": 0.0}, "v2": {"Highly Similar": 0.7529411764705882, "Moderately Similar": 0.0, "Slightly Similar": 0.0, "Divergent": 0.0, "Absent": 0.24705882352941178}, "v3": {"Highly Similar": 1.0, "Moderately Similar": 0.0, "Slightly Similar": 0.0, "Divergent": 0.0, "Absent": 0.0}}}, "ROUGE-L": {"deepseek": {"v1": {"Highly Similar": 1.0, "Moderately Similar": 0.0, "Slightly Similar": 0.0, "Divergent": 0.0, "Absent": 0.0}, "v2": {"Highly Similar": 1.0, "Moderately Similar": 0.0, "Slightly Similar": 0.0, "Divergent": 0.0, "Absent": 0.0}, "v3": {"Highly Similar": 1.0, "Moderately Similar": 0.0, "Slightly Similar": 0.0, "Divergent": 0.0, "Absent": 0.0}}, "gpt4": {"v1": {"Highly Similar": 0.6147058823529412, "Moderately Similar": 0.029411764705882353, "Slightly Similar": 0.12058823529411765, "Divergent": 0.047058823529411764, "Absent": 0.18823529411764706}, "v2": {"Highly Similar": 0.9558823529411765, "Moderately Similar": 0.014705882352941176, "Slightly Similar": 0.0, "Divergent": 0.0, "Absent": 0.029411764705882353}, "v3": {"Highly Similar": 0.9294117647058824, "Moderately Similar": 0.008823529411764706, "Slightly Similar": 0.0, "Divergent": 0.0, "Absent": 0.061764705882352944}}, "gpt5": {"v1": {"Highly Similar": 0.17941176470588235, "Moderately Similar": 0.008823529411764706, "Slightly Similar": 0.0, "Divergent": 0.0, "Absent": 0.8117647058823529}, "v2": {"Highly Similar": 0.8147058823529412, "Moderately Similar": 0.0, "Slightly Similar": 0.0, "Divergent": 0.0, "Absent": 0.18529411764705883}, "v3": {"Highly Similar": 1.0, "Moderately Similar": 0.0, "Slightly Similar": 0.0, "Divergent": 0.0, "Absent": 0.0}}, "llama3": {"v1": {"Highly Similar": 0.43529411764705883, "Moderately Similar": 0.08529411764705883, "Slightly Similar": 0.15294117647058825, "Divergent": 0.3058823529411765, "Absent": 0.020588235294117647}, "v2": {"Highly Similar": 0.9852941176470589, "Moderately Similar": 0.0, "Slightly Similar": 0.0, "Divergent": 0.0, "Absent": 0.014705882352941176}, "v3": {"Highly Similar": 1.0, "Moderately Similar": 0.0, "Slightly Similar": 0.0, "Divergent": 0.0, "Absent": 0.0}}, "llama4": {"v1": {"Highly Similar": 0.9852941176470589, "Moderately Similar": 0.014705882352941176, "Slightly Similar": 0.0, "Divergent": 0.0, "Absent": 0.0}, "v2": {"Highly Similar": 0.7441176470588236, "Moderately Similar": 0.008823529411764706, "Slightly Similar": 0.0, "Divergent": 0.0, "Absent": 0.24705882352941178}, "v3": {"Highly Similar": 1.0, "Moderately Similar": 0.0, "Slightly Similar": 0.0, "Divergent": 0.0, "Absent": 0.0}}}, "Token-F1": {"deepseek": {"v1": {"Highly Similar": 1.0, "Moderately Similar": 0.0, "Slightly Similar": 0.0, "Divergent": 0.0, "Absent": 0.0}, "v2": {"Highly Similar": 1.0, "Moderately Similar": 0.0, "Slightly Similar": 0.0, "Divergent": 0.0, "Absent": 0.0}, "v3": {"Highly Similar": 1.0, "Moderately Similar": 0.0, "Slightly Similar": 0.0, "Divergent": 0.0, "Absent": 0.0}}, "gpt4": {"v1": {"Highly Similar": 0.6147058823529412, "Moderately Similar": 0.047058823529411764, "Slightly Similar": 0.10588235294117647, "Divergent": 0.04411764705882353, "Absent": 0.18823529411764706}, "v2": {"Highly Similar": 0.961764705882353, "Moderately Similar": 0.008823529411764706, "Slightly Similar": 0.0, "Divergent": 0.0, "Absent": 0.029411764705882353}, "v3": {"Highly Similar": 0.9294117647058824, "Moderately Similar": 0.008823529411764706, "Slightly Similar": 0.0, "Divergent": 0.0, "Absent": 0.061764705882352944}}, "gpt5": {"v1": {"Highly Similar": 0.17941176470588235, "Moderately Similar": 0.008823529411764706, "Slightly Similar": 0.0, "Divergent": 0.0, "Absent": 0.8117647058823529}, "v2": {"Highly Similar": 0.8147058823529412, "Moderately Similar": 0.0, "Slightly Similar": 0.0, "Divergent": 0.0, "Absent": 0.18529411764705883}, "v3": {"Highly Similar": 1.0, "Moderately Similar": 0.0, "Slightly Similar": 0.0, "Divergent": 0.0, "Absent": 0.0}}, "llama3": {"v1": {"Highly Similar": 0.45, "Moderately Similar": 0.047058823529411764, "Slightly Similar": 0.17941176470588235, "Divergent": 0.3029411764705882, "Absent": 0.020588235294117647}, "v2": {"Highly Similar": 0.9852941176470589, "Moderately Similar": 0.0, "Slightly Similar": 0.0, "Divergent": 0.0, "Absent": 0.014705882352941176}, "v3": {"Highly Similar": 1.0, "Moderately Similar": 0.0, "Slightly Similar": 0.0, "Divergent": 0.0, "Absent": 0.0}}, "llama4": {"v1": {"Highly Similar": 0.9970588235294118, "Moderately Similar": 0.0029411764705882353, "Slightly Similar": 0.0, "Divergent": 0.0, "Absent": 0.0}, "v2": {"Highly Similar": 0.7529411764705882, "Moderately Similar": 0.0, "Slightly Similar": 0.0, "Divergent": 0.0, "Absent": 0.24705882352941178}, "v3": {"Highly Similar": 1.0, "Moderately Similar": 0.0, "Slightly Similar": 0.0, "Divergent": 0.0, "Absent": 0.0}}}}, "OpenVAS_bBWA": {"BERTScore F1": {"deepseek": {"v1": {"Highly Similar": 0.9775862068965517, "Moderately Similar": 0.022413793103448276, "Slightly Similar": 0.0, "Divergent": 0.0, "Absent": 0.0}, "v2": {"Highly Similar": 0.9482758620689655, "Moderately Similar": 0.017241379310344827, "Slightly Similar": 0.034482758620689655, "Divergent": 0.0, "Absent": 0.0}, "v3": {"Highly Similar": 0.9827586206896551, "Moderately Similar": 0.017241379310344827, "Slightly Similar": 0.0, "Divergent": 0.0, "Absent": 0.0}}, "gpt4": {"v1": {"Highly Similar": 0.9086206896551724, "Moderately Similar": 0.032758620689655175, "Slightly Similar": 0.034482758620689655, "Divergent": 0.0, "Absent": 0.02413793103448276}, "v2": {"Highly Similar": 0.8103448275862069, "Moderately Similar": 0.1396551724137931, "Slightly Similar": 0.04827586206896552, "Divergent": 0.0, "Absent": 0.0017241379310344827}, "v3": {"Highly Similar": 0.9224137931034483, "Moderately Similar": 0.041379310344827586, "Slightly Similar": 0.010344827586206896, "Divergent": 0.0, "Absent": 0.02586206896551724}}, "gpt5": {"v1": {"Highly Similar": 0.2810344827586207, "Moderately Similar": 0.0017241379310344827, "Slightly Similar": 0.0, "Divergent": 0.0, "Absent": 0.7172413793103448}, "v2": {"Highly Similar": 0.7862068965517242, "Moderately Similar": 0.05, "Slightly Similar": 0.041379310344827586, "Divergent": 0.0, "Absent": 0.12241379310344827}, "v3": {"Highly Similar": 0.9689655172413794, "Moderately Similar": 0.017241379310344827, "Slightly Similar": 0.0034482758620689655, "Divergent": 0.0, "Absent": 0.010344827586206896}}, "llama3": {"v1": {"Highly Similar": 0.8948275862068965, "Moderately Similar": 0.06551724137931035, "Slightly Similar": 0.02413793103448276, "Divergent": 0.010344827586206896, "Absent": 0.005172413793103448}, "v2": {"Highly Similar": 0.8982758620689655, "Moderately Similar": 0.08275862068965517, "Slightly Similar": 0.017241379310344827, "Divergent": 0.0, "Absent": 0.0017241379310344827}, "v3": {"Highly Similar": 0.9827586206896551, "Moderately Similar": 0.017241379310344827, "Slightly Similar": 0.0, "Divergent": 0.0, "Absent": 0.0}}, "llama4": {"v1": {"Highly Similar": 0.9120689655172414, "Moderately Similar": 0.034482758620689655, "Slightly Similar": 0.032758620689655175, "Divergent": 0.0017241379310344827, "Absent": 0.01896551724137931}, "v2": {"Highly Similar": 0.7603448275862069, "Moderately Similar": 0.039655172413793106, "Slightly Similar": 0.010344827586206896, "Divergent": 0.0, "Absent": 0.1896551724137931}, "v3": {"Highly Similar": 0.9689655172413794, "Moderately Similar": 0.02413793103448276, "Slightly Similar": 0.005172413793103448, "Divergent": 0.0, "Absent": 0.0017241379310344827}}}, "ROUGE-L": {"deepseek": {"v1": {"Highly Similar": 0.9655172413793104, "Moderately Similar": 0.005172413793103448, "Slightly Similar": 0.029310344827586206, "Divergent": 0.0, "Absent": 0.0}, "v2": {"Highly Similar": 0.9172413793103448, "Moderately Similar": 0.03103448275862069, "Slightly Similar": 0.05172413793103448, "Divergent": 0.0, "Absent": 0.0}, "v3": {"Highly Similar": 0.9655172413793104, "Moderately Similar": 0.034482758620689655, "Slightly Similar": 0.0, "Divergent": 0.0, "Absent": 0.0}}, "gpt4": {"v1": {"Highly Similar": 0.8206896551724138, "Moderately Similar": 0.08793103448275862, "Slightly Similar": 0.06724137931034482, "Divergent": 0.0, "Absent": 0.02413793103448276}, "v2": {"Highly Similar": 0.7362068965517241, "Moderately Similar": 0.16379310344827586, "Slightly Similar": 0.08275862068965517, "Divergent": 0.015517241379310345, "Absent": 0.0017241379310344827}, "v3": {"Highly Similar": 0.9224137931034483, "Moderately Similar": 0.008620689655172414, "Slightly Similar": 0.04310344827586207, "Divergent": 0.0, "Absent": 0.02586206896551724}}, "gpt5": {"v1": {"Highly Similar": 0.2793103448275862, "Moderately Similar": 0.0017241379310344827, "Slightly Similar": 0.0017241379310344827, "Divergent": 0.0, "Absent": 0.7172413793103448}, "v2": {"Highly Similar": 0.7758620689655172, "Moderately Similar": 0.04310344827586207, "Slightly Similar": 0.05517241379310345, "Divergent": 0.0034482758620689655, "Absent": 0.12241379310344827}, "v3": {"Highly Similar": 0.9551724137931035, "Moderately Similar": 0.03103448275862069, "Slightly Similar": 0.0, "Divergent": 0.0034482758620689655, "Absent": 0.010344827586206896}}, "llama3": {"v1": {"Highly Similar": 0.8258620689655173, "Moderately Similar": 0.10172413793103448, "Slightly Similar": 0.056896551724137934, "Divergent": 0.010344827586206896, "Absent": 0.005172413793103448}, "v2": {"Highly Similar": 0.8448275862068966, "Moderately Similar": 0.11551724137931034, "Slightly Similar": 0.03793103448275862, "Divergent": 0.0, "Absent": 0.0017241379310344827}, "v3": {"Highly Similar": 0.9655172413793104, "Moderately Similar": 0.034482758620689655, "Slightly Similar": 0.0, "Divergent": 0.0, "Absent": 0.0}}, "llama4": {"v1": {"Highly Similar": 0.8724137931034482, "Moderately Similar": 0.039655172413793106, "Slightly Similar": 0.06551724137931035, "Divergent": 0.0034482758620689655, "Absent": 0.01896551724137931}, "v2": {"Highly Similar": 0.7327586206896551, "Moderately Similar": 0.06206896551724138, "Slightly Similar": 0.01206896551724138, "Divergent": 0.0034482758620689655, "Absent": 0.1896551724137931}, "v3": {"Highly Similar": 0.9568965517241379, "Moderately Similar": 0.03620689655172414, "Slightly Similar": 0.005172413793103448, "Divergent": 0.0, "Absent": 0.0017241379310344827}}}, "Token-F1": {"deepseek": {"v1": {"Highly Similar": 0.9775862068965517, "Moderately Similar": 0.022413793103448276, "Slightly Similar": 0.0, "Divergent": 0.0, "Absent": 0.0}, "v2": {"Highly Similar": 0.9482758620689655, "Moderately Similar": 0.017241379310344827, "Slightly Similar": 0.034482758620689655, "Divergent": 0.0, "Absent": 0.0}, "v3": {"Highly Similar": 0.9827586206896551, "Moderately Similar": 0.017241379310344827, "Slightly Similar": 0.0, "Divergent": 0.0, "Absent": 0.0}}, "gpt4": {"v1": {"Highly Similar": 0.8706896551724138, "Moderately Similar": 0.05344827586206897, "Slightly Similar": 0.05172413793103448, "Divergent": 0.0, "Absent": 0.02413793103448276}, "v2": {"Highly Similar": 0.8017241379310345, "Moderately Similar": 0.1482758620689655, "Slightly Similar": 0.032758620689655175, "Divergent": 0.015517241379310345, "Absent": 0.0017241379310344827}, "v3": {"Highly Similar": 0.9224137931034483, "Moderately Similar": 0.041379310344827586, "Slightly Similar": 0.010344827586206896, "Divergent": 0.0, "Absent": 0.02586206896551724}}, "gpt5": {"v1": {"Highly Similar": 0.2810344827586207, "Moderately Similar": 0.0017241379310344827, "Slightly Similar": 0.0, "Divergent": 0.0, "Absent": 0.7172413793103448}, "v2": {"Highly Similar": 0.7862068965517242, "Moderately Similar": 0.04827586206896552, "Slightly Similar": 0.04310344827586207, "Divergent": 0.0, "Absent": 0.12241379310344827}, "v3": {"Highly Similar": 0.9724137931034482, "Moderately Similar": 0.013793103448275862, "Slightly Similar": 0.0034482758620689655, "Divergent": 0.0, "Absent": 0.010344827586206896}}, "llama3": {"v1": {"Highly Similar": 0.8706896551724138, "Moderately Similar": 0.07758620689655173, "Slightly Similar": 0.03620689655172414, "Divergent": 0.010344827586206896, "Absent": 0.005172413793103448}, "v2": {"Highly Similar": 0.8758620689655172, "Moderately Similar": 0.10517241379310345, "Slightly Similar": 0.017241379310344827, "Divergent": 0.0, "Absent": 0.0017241379310344827}, "v3": {"Highly Similar": 0.9827586206896551, "Moderately Similar": 0.017241379310344827, "Slightly Similar": 0.0, "Divergent": 0.0, "Absent": 0.0}}, "llama4": {"v1": {"Highly Similar": 0.8913793103448275, "Moderately Similar": 0.04827586206896552, "Slightly Similar": 0.039655172413793106, "Divergent": 0.0017241379310344827, "Absent": 0.01896551724137931}, "v2": {"Highly Similar": 0.7586206896551724, "Moderately Similar": 0.039655172413793106, "Slightly Similar": 0.01206896551724138, "Divergent": 0.0, "Absent": 0.1896551724137931}, "v3": {"Highly Similar": 0.9741379310344828, "Moderately Similar": 0.01896551724137931, "Slightly Similar": 0.005172413793103448, "Divergent": 0.0, "Absent": 0.0017241379310344827}}}}, "openvas_artifactory-oss_5.11.0": {"BERTScore F1": {"deepseek": {"v1": {"Highly Similar": 0.9482758620689655, "Moderately Similar": 0.034482758620689655, "Slightly Similar": 0.017241379310344827, "Divergent": 0.0, "Absent": 0.0}, "v2": {"Highly Similar": 0.7224137931034482, "Moderately Similar": 0.17586206896551723, "Slightly Similar": 0.08448275862068966, "Divergent": 0.0, "Absent": 0.017241379310344827}, "v3": {"Highly Similar": 0.9517241379310345, "Moderately Similar": 0.03017241379310345, "Slightly Similar": 0.0, "Divergent": 0.0, "Absent": 0.01810344827586207}}, "gpt4": {"v1": {"Highly Similar": 0.4560344827586207, "Moderately Similar": 0.15, "Slightly Similar": 0.04224137931034483, "Divergent": 0.008620689655172414, "Absent": 0.3431034482758621}, "v2": {"Highly Similar": 0.49482758620689654, "Moderately Similar": 0.3793103448275862, "Slightly Similar": 0.10775862068965517, "Divergent": 0.0, "Absent": 0.01810344827586207}, "v3": {"Highly Similar": 0.9077586206896552, "Moderately Similar": 0.05086206896551724, "Slightly Similar": 0.008620689655172414, "Divergent": 0.0, "Absent": 0.032758620689655175}}, "gpt5": {"v1": {"Highly Similar": 0.2775862068965517, "Moderately Similar": 0.04741379310344827, "Slightly Similar": 0.01810344827586207, "Divergent": 0.0008620689655172414, "Absent": 0.6560344827586206}, "v2": {"Highly Similar": 0.7126436781609196, "Moderately Similar": 0.12260536398467432, "Slightly Similar": 0.04789272030651341, "Divergent": 0.0, "Absent": 0.11685823754789272}, "v3": {"Highly Similar": 0.9241379310344827, "Moderately Similar": 0.04741379310344827, "Slightly Similar": 0.0017241379310344827, "Divergent": 0.0, "Absent": 0.026724137931034484}}, "llama3": {"v1": {"Highly Similar": 0.718103448275862, "Moderately Similar": 0.1543103448275862, "Slightly Similar": 0.06379310344827586, "Divergent": 0.01206896551724138, "Absent": 0.05172413793103448}, "v2": {"Highly Similar": 0.6146551724137931, "Moderately Similar": 0.2525862068965517, "Slightly Similar": 0.10258620689655172, "Divergent": 0.01293103448275862, "Absent": 0.017241379310344827}, "v3": {"Highly Similar": 0.9301724137931034, "Moderately Similar": 0.03879310344827586, "Slightly Similar": 0.0, "Divergent": 0.0, "Absent": 0.03103448275862069}}, "llama4": {"v1": {"Highly Similar": 0.5560344827586207, "Moderately Similar": 0.1267241379310345, "Slightly Similar": 0.07155172413793104, "Divergent": 0.0017241379310344827, "Absent": 0.2439655172413793}, "v2": {"Highly Similar": 0.5508620689655173, "Moderately Similar": 0.1396551724137931, "Slightly Similar": 0.041379310344827586, "Divergent": 0.006896551724137931, "Absent": 0.26120689655172413}, "v3": {"Highly Similar": 0.8948275862068965, "Moderately Similar": 0.054310344827586204, "Slightly Similar": 0.002586206896551724, "Divergent": 0.0, "Absent": 0.04827586206896552}}}, "ROUGE-L": {"deepseek": {"v1": {"Highly Similar": 0.9051724137931034, "Moderately Similar": 0.0603448275862069, "Slightly Similar": 0.034482758620689655, "Divergent": 0.0, "Absent": 0.0}, "v2": {"Highly Similar": 0.4517241379310345, "Moderately Similar": 0.3482758620689655, "Slightly Similar": 0.18275862068965518, "Divergent": 0.0, "Absent": 0.017241379310344827}, "v3": {"Highly Similar": 0.9206896551724137, "Moderately Similar": 0.05, "Slightly Similar": 0.011206896551724138, "Divergent": 0.0, "Absent": 0.01810344827586207}}, "gpt4": {"v1": {"Highly Similar": 0.2413793103448276, "Moderately Similar": 0.2560344827586207, "Slightly Similar": 0.15, "Divergent": 0.009482758620689655, "Absent": 0.3431034482758621}, "v2": {"Highly Similar": 0.2663793103448276, "Moderately Similar": 0.4603448275862069, "Slightly Similar": 0.2543103448275862, "Divergent": 0.0008620689655172414, "Absent": 0.01810344827586207}, "v3": {"Highly Similar": 0.8284482758620689, "Moderately Similar": 0.09310344827586207, "Slightly Similar": 0.045689655172413794, "Divergent": 0.0, "Absent": 0.032758620689655175}}, "gpt5": {"v1": {"Highly Similar": 0.19310344827586207, "Moderately Similar": 0.1, "Slightly Similar": 0.05, "Divergent": 0.0008620689655172414, "Absent": 0.6560344827586206}, "v2": {"Highly Similar": 0.44061302681992337, "Moderately Similar": 0.33045977011494254, "Slightly Similar": 0.10632183908045977, "Divergent": 0.005747126436781609, "Absent": 0.11685823754789272}, "v3": {"Highly Similar": 0.8931034482758621, "Moderately Similar": 0.04827586206896552, "Slightly Similar": 0.03189655172413793, "Divergent": 0.0, "Absent": 0.026724137931034484}}, "llama3": {"v1": {"Highly Similar": 0.5353448275862069, "Moderately Similar": 0.2655172413793103, "Slightly Similar": 0.1310344827586207, "Divergent": 0.016379310344827588, "Absent": 0.05172413793103448}, "v2": {"Highly Similar": 0.28448275862068967, "Moderately Similar": 0.4844827586206897, "Slightly Similar": 0.19137931034482758, "Divergent": 0.022413793103448276, "Absent": 0.017241379310344827}, "v3": {"Highly Similar": 0.8991379310344828, "Moderately Similar": 0.052586206896551725, "Slightly Similar": 0.017241379310344827, "Divergent": 0.0, "Absent": 0.03103448275862069}}, "llama4": {"v1": {"Highly Similar": 0.24482758620689654, "Moderately Similar": 0.2853448275862069, "Slightly Similar": 0.2120689655172414, "Divergent": 0.013793103448275862, "Absent": 0.2439655172413793}, "v2": {"Highly Similar": 0.328448275862069, "Moderately Similar": 0.2982758620689655, "Slightly Similar": 0.10172413793103448, "Divergent": 0.010344827586206896, "Absent": 0.26120689655172413}, "v3": {"Highly Similar": 0.8560344827586207, "Moderately Similar": 0.06379310344827586, "Slightly Similar": 0.03189655172413793, "Divergent": 0.0, "Absent": 0.04827586206896552}}}, "Token-F1": {"deepseek": {"v1": {"Highly Similar": 0.9396551724137931, "Moderately Similar": 0.034482758620689655, "Slightly Similar": 0.02586206896551724, "Divergent": 0.0, "Absent": 0.0}, "v2": {"Highly Similar": 0.725, "Moderately Similar": 0.1706896551724138, "Slightly Similar": 0.08706896551724137, "Divergent": 0.0, "Absent": 0.017241379310344827}, "v3": {"Highly Similar": 0.9448275862068966, "Moderately Similar": 0.03706896551724138, "Slightly Similar": 0.0, "Divergent": 0.0, "Absent": 0.01810344827586207}}, "gpt4": {"v1": {"Highly Similar": 0.35258620689655173, "Moderately Similar": 0.2353448275862069, "Slightly Similar": 0.059482758620689656, "Divergent": 0.009482758620689655, "Absent": 0.3431034482758621}, "v2": {"Highly Similar": 0.4560344827586207, "Moderately Similar": 0.4103448275862069, "Slightly Similar": 0.11551724137931034, "Divergent": 0.0, "Absent": 0.01810344827586207}, "v3": {"Highly Similar": 0.8956896551724138, "Moderately Similar": 0.06206896551724138, "Slightly Similar": 0.009482758620689655, "Divergent": 0.0, "Absent": 0.032758620689655175}}, "gpt5": {"v1": {"Highly Similar": 0.27586206896551724, "Moderately Similar": 0.04224137931034483, "Slightly Similar": 0.025, "Divergent": 0.0008620689655172414, "Absent": 0.6560344827586206}, "v2": {"Highly Similar": 0.7126436781609196, "Moderately Similar": 0.1111111111111111, "Slightly Similar": 0.05938697318007663, "Divergent": 0.0, "Absent": 0.11685823754789272}, "v3": {"Highly Similar": 0.9172413793103448, "Moderately Similar": 0.05, "Slightly Similar": 0.00603448275862069, "Divergent": 0.0, "Absent": 0.026724137931034484}}, "llama3": {"v1": {"Highly Similar": 0.6275862068965518, "Moderately Similar": 0.21724137931034482, "Slightly Similar": 0.08706896551724137, "Divergent": 0.016379310344827588, "Absent": 0.05172413793103448}, "v2": {"Highly Similar": 0.5629310344827586, "Moderately Similar": 0.3086206896551724, "Slightly Similar": 0.09741379310344828, "Divergent": 0.013793103448275862, "Absent": 0.017241379310344827}, "v3": {"Highly Similar": 0.9172413793103448, "Moderately Similar": 0.05172413793103448, "Slightly Similar": 0.0, "Divergent": 0.0, "Absent": 0.03103448275862069}}, "llama4": {"v1": {"Highly Similar": 0.4077586206896552, "Moderately Similar": 0.25689655172413794, "Slightly Similar": 0.08620689655172414, "Divergent": 0.005172413793103448, "Absent": 0.2439655172413793}, "v2": {"Highly Similar": 0.5163793103448275, "Moderately Similar": 0.16810344827586207, "Slightly Similar": 0.04655172413793104, "Divergent": 0.007758620689655172, "Absent": 0.26120689655172413}, "v3": {"Highly Similar": 0.8836206896551724, "Moderately Similar": 0.059482758620689656, "Slightly Similar": 0.008620689655172414, "Divergent": 0.0, "Absent": 0.04827586206896552}}}}}, "cat_targets": ["OpenVAS_JuiceShop", "OpenVAS_bBWA", "openvas_artifactory-oss_5.11.0"], "cat_versions": ["v1", "v2", "v3"], "heatmap_omission": {"fields": ["Name", "cvss", "description", "detection_method", "detection_result", "impact", "insight", "instances", "log_method", "plugin", "plugin_details", "port", "product_detection_result", "protocol", "references", "severity", "solution", "source"], "versions": ["v1", "v2", "v3"], "models": ["deepseek", "gpt4", "gpt5", "llama3", "llama4"], "data": {"v1": {"deepseek": {"Name": 0.0, "cvss": 0.012931034482758619, "description": 0.0, "detection_method": 0.011494252873563216, "detection_result": 0.0, "impact": 0.12931034482758622, "insight": 0.1545977011494253, "instances": 0.0, "log_method": 0.3448275862068966, "plugin": 0.0, "plugin_details": 0.0, "port": 0.49056795131845843, "product_detection_result": 0.21551724137931036, "protocol": 0.48309668695064234, "references": 0.3324881676808654, "severity": 0.0, "solution": 0.0028735632183908046, "source": 0.0}, "gpt4": {"Name": 0.18515889114266396, "cvss": 0.2331812035158891, "description": 0.19579107505070995, "detection_method": 0.11850912778904665, "detection_result": 0.1791244083840433, "impact": 0.05833333333333335, "insight": 0.32336037863421235, "instances": 0.0, "log_method": 0.41894861392833, "plugin": 0.0, "plugin_details": 0.0, "port": 0.6251352265043949, "product_detection_result": 0.3126436781609195, "protocol": 0.6038708586883029, "references": 0.43995943204868154, "severity": 0.18515889114266396, "solution": 0.10586544962812709, "source": 0.18515889114266396}, "gpt5": {"Name": 0.7283468559837728, "cvss": 0.7506423258958757, "description": 0.7305949966193372, "detection_method": 0.4749830966869506, "detection_result": 0.7276707234617984, "impact": 0.30632183908045973, "insight": 0.5240365111561865, "instances": 0.0, "log_method": 0.6082826233941853, "plugin": 0.0, "plugin_details": 0.0, "port": 0.8424611223799866, "product_detection_result": 0.49511494252873556, "protocol": 0.7888269100743744, "references": 0.7945402298850576, "severity": 0.7283468559837728, "solution": 0.47611561866125757, "source": 0.7283468559837728}, "llama3": {"Name": 0.025828262339418526, "cvss": 0.3209432048681542, "description": 0.025828262339418526, "detection_method": 0.02873563218390805, "detection_result": 0.026402974983096687, "impact": 0.08505747126436781, "insight": 0.13620689655172416, "instances": 0.0, "log_method": 0.349391480730223, "plugin": 0.0, "plugin_details": 0.0, "port": 0.5370858688302907, "product_detection_result": 0.23103448275862068, "protocol": 0.5353617308992562, "references": 0.3432724814063557, "severity": 0.025828262339418526, "solution": 0.016666666666666666, "source": 0.025828262339418526}, "llama4": {"Name": 0.08764367816091954, "cvss": 0.40777552400270456, "description": 0.1168526031102096, "detection_method": 0.12216024340770788, "detection_result": 0.09753211629479379, "impact": 0.12241379310344828, "insight": 0.27417173766058145, "instances": 0.0, "log_method": 0.47768762677484783, "plugin": 0.0, "plugin_details": 0.0, "port": 0.5487829614604461, "product_detection_result": 0.3169540229885058, "protocol": 0.5441852603110209, "references": 0.42302231237322524, "severity": 0.08764367816091954, "solution": 0.08591954022988503, "source": 0.08764367816091954}}, "v2": {"deepseek": {"Name": 0.00574712643678161, "cvss": 0.00574712643678161, "description": 0.00574712643678161, "detection_method": 0.037643678160919535, "detection_result": 0.015804597701149423, "impact": 0.1089080459770115, "insight": 0.1931034482758621, "instances": 0.0, "log_method": 0.3641480730223124, "plugin": 0.0, "plugin_details": 0.0, "port": 0.00574712643678161, "product_detection_result": 0.24798850574712641, "protocol": 0.00574712643678161, "references": 0.3781778228532792, "severity": 0.00574712643678161, "solution": 0.020977011494252875, "source": 0.00574712643678161}, "gpt4": {"Name": 0.016413116970926303, "cvss": 0.01871196754563895, "description": 0.016413116970926303, "detection_method": 0.09166666666666667, "detection_result": 0.03825219743069642, "impact": 0.057471264367816105, "insight": 0.377789046653144, "instances": 0.0, "log_method": 0.4368492224475997, "plugin": 0.0, "plugin_details": 0.0, "port": 0.016413116970926303, "product_detection_result": 0.2433908045977012, "protocol": 0.016413116970926303, "references": 0.3904327248140635, "severity": 0.016413116970926303, "solution": 0.02040229885057471, "source": 0.016413116970926303}, "gpt5": {"Name": 0.14152204943279992, "cvss": 0.13760048080534895, "description": 0.14152204943279992, "detection_method": 0.11052888588385545, "detection_result": 0.15173916309818947, "impact": 0.09731800766283526, "insight": 0.22212080234392606, "instances": 0.0, "log_method": 0.4051123131244834, "plugin": 0.0, "plugin_details": 0.0, "port": 0.14152204943279992, "product_detection_result": 0.2734993614303959, "protocol": 0.14152204943279992, "references": 0.44710389903087666, "severity": 0.14152204943279992, "solution": 0.09492900608519272, "source": 0.14152204943279992}, "llama3": {"Name": 0.011223799864773497, "cvss": 0.016683569979716026, "description": 0.011223799864773497, "detection_method": 0.0264367816091954, "detection_result": 0.013522650439486139, "impact": 0.08448275862068966, "insight": 0.1635057471264368, "instances": 0.0, "log_method": 0.3531778228532792, "plugin": 0.0, "plugin_details": 0.0, "port": 0.011223799864773497, "product_detection_result": 0.2413793103448276, "protocol": 0.011223799864773497, "references": 0.35743745774171737, "severity": 0.011223799864773497, "solution": 0.008908045977011494, "source": 0.011223799864773497}, "llama4": {"Name": 0.23264029749830964, "cvss": 0.23067951318458416, "description": 0.23264029749830964, "detection_method": 0.1765043948613928, "detection_result": 0.23350236646382694, "impact": 0.18045977011494255, "insight": 0.2979039891818796, "instances": 0.0, "log_method": 0.438184584178499, "plugin": 0.0, "plugin_details": 0.0, "port": 0.2309161595672752, "product_detection_result": 0.3499999999999999, "protocol": 0.2309161595672752, "references": 0.5202163624070318, "severity": 0.23264029749830964, "solution": 0.15594996619337387, "source": 0.23264029749830964}}, "v3": {"deepseek": {"Name": 0.0060344827586206904, "cvss": 0.008908045977011494, "description": 0.0060344827586206904, "detection_method": 0.020402298850574714, "detection_result": 0.0060344827586206904, "impact": 0.12931034482758622, "insight": 0.16408045977011496, "instances": 0.0, "log_method": 0.3419540229885058, "plugin": 0.0, "plugin_details": 0.0, "port": 0.0060344827586206904, "product_detection_result": 0.2531609195402299, "protocol": 0.0060344827586206904, "references": 0.3413962136578769, "severity": 0.0060344827586206904, "solution": 0.008908045977011494, "source": 0.0060344827586206904}, "gpt4": {"Name": 0.040128465179175114, "cvss": 0.04759972954699121, "description": 0.040128465179175114, "detection_method": 0.052298850574712646, "detection_result": 0.04415145368492224, "impact": 0.10258620689655172, "insight": 0.23975659229208926, "instances": 0.0, "log_method": 0.44748140635564565, "plugin": 0.0, "plugin_details": 0.0, "port": 0.040128465179175114, "product_detection_result": 0.2545977011494253, "protocol": 0.040128465179175114, "references": 0.37570993914807294, "severity": 0.040128465179175114, "solution": 0.03336713995943205, "source": 0.04099053414469236}, "gpt5": {"Name": 0.012356321839080456, "cvss": 0.016379310344827588, "description": 0.012356321839080456, "detection_method": 0.027873563218390806, "detection_result": 0.013505747126436781, "impact": 0.13218390804597702, "insight": 0.16867816091954024, "instances": 0.0, "log_method": 0.3453008789722785, "plugin": 0.0, "plugin_details": 0.0, "port": 0.012356321839080456, "product_detection_result": 0.2583333333333333, "protocol": 0.012356321839080456, "references": 0.35289046653144013, "severity": 0.012356321839080456, "solution": 0.016379310344827588, "source": 0.013505747126436781}, "llama3": {"Name": 0.010344827586206896, "cvss": 0.010344827586206896, "description": 0.010344827586206896, "detection_method": 0.029597701149425285, "detection_result": 0.010344827586206896, "impact": 0.12902298850574714, "insight": 0.17011494252873563, "instances": 0.0, "log_method": 0.3529073698444895, "plugin": 0.0, "plugin_details": 0.0, "port": 0.010344827586206896, "product_detection_result": 0.2574712643678161, "protocol": 0.010344827586206896, "references": 0.33992562542258287, "severity": 0.010344827586206896, "solution": 0.013218390804597704, "source": 0.010344827586206896}, "llama4": {"Name": 0.016666666666666666, "cvss": 0.01695402298850575, "description": 0.016666666666666666, "detection_method": 0.06181541582150102, "detection_result": 0.01695402298850575, "impact": 0.12155172413793104, "insight": 0.189841108857336, "instances": 0.0, "log_method": 0.35718390804597705, "plugin": 0.0, "plugin_details": 0.0, "port": 0.016666666666666666, "product_detection_result": 0.26408045977011496, "protocol": 0.016666666666666666, "references": 0.36093644354293447, "severity": 0.016666666666666666, "solution": 0.023563218390804594, "source": 0.01724137931034483}}}}};
+const VCOLOR = { v1: getComputedStyle(document.documentElement).getPropertyValue("--v1").trim() || "#f47174",
+                 v2: getComputedStyle(document.documentElement).getPropertyValue("--v2").trim() || "#e6b800",
+                 v3: getComputedStyle(document.documentElement).getPropertyValue("--v3").trim() || "#4fb6e4" };
+
+/* -------------------- formatters -------------------- */
+const fmtPct = v => v == null ? null : (v * 100).toFixed(1) + "%";
+const fmtNum = v => v == null ? null : (Math.abs(v) >= 10 ? v.toFixed(1) : v.toFixed(2));
+
+/* Bootstrap 95% CIs (10,000 resamples) over the pooled (model, baseline, run)
+   cells that make up each headline number. Generated by
+   metrics/aggregators/bootstrap_ci.py. Keys match the .label fields of
+   DATA.kpi / DATA.coverage_rows / DATA.sev_rows. */
+const CI_LOOKUP = {
+  "Exact Record Match":                 { v1: "[34.3%, 40.7%]", v2: "[86.9%, 89.2%]", v3: "[89.3%, 91.5%]" },
+  "Hallucination Rate (per field)":     { v1: "[5.6%, 8.2%]",   v2: "[4.6%, 5.2%]",   v3: "[4.3%, 4.8%]"  },
+  "Omission Rate (per field)":          { v1: "[22.5%, 27.7%]", v2: "[11.3%, 13.9%]", v3: "[7.4%, 9.2%]"  },
+  "Matched Pairs (média)":              { v1: "[49.1, 59.1]",   v2: "[58.4, 68.8]",   v3: "[62.8, 73.2]"  },
+  /* "Hallucination Rate (per vulnerability)" / "Omission Rate (per vulnerability)" agora são
+     taxas normalizadas (média das taxas por modelo × target). CIs antigos eram para contagens
+     absolutas — não se aplicam mais. Para CI bootstrap das taxas, ver bootstrap_ci.xlsx. */
+  "Vulns perdidas por run":             { v1: "[11.9, 18.9]",   v2: "[4.3, 6.9]",     v3: "[1.2, 1.8]"    },
+  "Severity Macro-F1":                  { v1: "[94.2%, 95.4%]", v2: "[97.2%, 98.3%]", v3: "[96.5%, 97.5%]" },
+  "Accuracy":                           { v1: "[96.5%, 97.5%]", v2: "[98.4%, 99.0%]", v3: "[98.2%, 98.7%]" },
+  "Macro F1":                           { v1: "[94.2%, 95.4%]", v2: "[97.2%, 98.3%]", v3: "[96.5%, 97.5%]" },
+  "Coverage-aware Macro F1":            { v1: "[76.6%, 82.5%]", v2: "[89.4%, 91.6%]", v3: "[90.5%, 92.1%]" },
+};
+function ciFor(label, version) {
+  const row = CI_LOOKUP[label];
+  return (row && row[version]) ? `<span class="ci">${row[version]}</span>` : "";
+}
+
+function deltaPill(value, ref, direction, fmt) {
+  if (value == null || ref == null) return "";
+  const diff = value - ref;
+  const tol = 5e-5;
+  if (Math.abs(diff) <= tol) return `<span class="delta neu" aria-label="igual a V3">· 0</span>`;
+  const better = direction > 0 ? diff > 0 : diff < 0;
+  const cls = better ? "pos" : "neg";
+  const arrow = diff > 0 ? "↑" : "↓";
+  const txt = fmt === "pct"
+    ? (Math.abs(diff) * 100).toFixed(1) + "pp"
+    : (Math.abs(diff) >= 10 ? Math.abs(diff).toFixed(1) : Math.abs(diff).toFixed(2));
+  return `<span class="delta ${cls}" aria-label="${better ? 'melhor que V3' : 'pior que V3'}">${arrow} ${txt}</span>`;
+}
+
+function valueCell(value, version, ref, direction, fmt, label) {
+  if (value == null) return `<td class="num na col-${version}" aria-label="sem dado">—</td>`;
+  const formatted = fmt === "pct" ? fmtPct(value) : fmtNum(value);
+  const delta = version !== "v3" ? deltaPill(value, ref, direction, fmt) : "";
+  const ci = label ? ciFor(label, version) : "";
+  return `<td class="num col-${version}"><span>${formatted}</span>${delta}${ci}</td>`;
+}
+
+document.getElementById("gen-at").textContent = DATA.generated_at;
+
+/* -------------------- KPI hero -------------------- */
+function renderKpi() {
+  const grid = document.getElementById("kpi-grid");
+  grid.innerHTML = DATA.kpi.map(k => {
+    const vals = DATA.versions.map(v => k.values[v]).filter(x => x != null);
+    const maxv = k.fmt === "pct" ? 1 : (vals.length ? Math.max(...vals) : 1);
+    const rows = DATA.versions.map(v => {
+      const val = k.values[v];
+      if (val == null) {
+        return `<span class="ver ${v}">${v.toUpperCase()}</span>
+                <div class="bar" aria-hidden="true"><span class="${v}" style="transform:scaleX(0)"></span></div>
+                <span class="val na" aria-label="N/A">—</span>`;
+      }
+      const scale = Math.max(0, Math.min(1, maxv > 0 ? val / maxv : 0));
+      const ci = ciFor(k.label, v);
+      return `<span class="ver ${v}">${v.toUpperCase()}</span>
+              <div class="bar" aria-hidden="true"><span class="${v}" style="transform:scaleX(${scale.toFixed(3)})"></span></div>
+              <span class="val">${k.fmt === "pct" ? fmtPct(val) : fmtNum(val)}${ci}</span>`;
+    }).join("");
+    return `<article class="kpi-card" role="listitem" aria-labelledby="kpi-${k.id}">
+      <div class="head">
+        <div class="label" id="kpi-${k.id}">${k.label}</div>
+        <button type="button" class="help" aria-label="${k.tip}" title="${k.tip}" tabindex="0">?</button>
+      </div>
+      <div class="rows">${rows}</div>
+    </article>`;
+  }).join("");
+}
+
+/* -------------------- simple tables -------------------- */
+function renderSimpleTable(tableId, rows) {
+  const tbl = document.getElementById(tableId);
+  const head = `<thead><tr>
+    <th>Métrica</th><th>O que mede</th>
+    ${DATA.versions.map(v => `<th class="num col-${v}">${v.toUpperCase()}</th>`).join("")}
+  </tr></thead>`;
+  const body = "<tbody>" + rows.map(r => {
+    const ref = r.values.v3;
+    return `<tr>
+      <td class="key-cell"><strong>${r.label}</strong></td>
+      <td class="tip">${r.tip || ""}</td>
+      ${DATA.versions.map(v => valueCell(r.values[v], v, ref, r.direction, r.fmt, r.label)).join("")}
+    </tr>`;
+  }).join("") + "</tbody>";
+  tbl.innerHTML = head + body;
+}
+renderSimpleTable("t-schema", DATA.schema_rows);
+renderSimpleTable("t-coverage", DATA.coverage_rows);
+renderSimpleTable("t-severity", DATA.sev_rows);
+
+/* -------------------- entity table -------------------- */
+function renderEntityTable() {
+  const tbl = document.getElementById("t-entity");
+  const head = `<thead>
+    <tr><th rowspan="2">Campo</th>
+      ${DATA.versions.map(v => `<th class="num col-${v}" colspan="3" style="text-align:center">${v.toUpperCase()}</th>`).join("")}
+    </tr>
+    <tr>${DATA.versions.map(v => ["P","R","F1"].map(m => `<th class="num col-${v}">${m}</th>`).join("")).join("")}</tr>
+  </thead>`;
+  const body = "<tbody>" + DATA.entity_rows.map(r => {
+    let cells = "";
+    for (const v of DATA.versions) {
+      cells += valueCell(r.Precision[v], v, r.Precision.v3, +1, "pct");
+      cells += valueCell(r.Recall[v],    v, r.Recall.v3,    +1, "pct");
+      cells += valueCell(r.F1_Score[v],  v, r.F1_Score.v3,  +1, "pct");
+    }
+    return `<tr><td class="key-cell"><strong>${r.field}</strong></td>${cells}</tr>`;
+  }).join("") + "</tbody>";
+  tbl.innerHTML = head + body;
+}
+renderEntityTable();
+
+/* -------------------- text-similarity table -------------------- */
+let activeTextMetric = "BERTScore F1";
+function renderTextTable() {
+  const tbl = document.getElementById("t-text");
+  const head = `<thead><tr>
+    <th>Campo</th>
+    ${DATA.versions.map(v => `<th class="num col-${v}">${v.toUpperCase()}</th>`).join("")}
+  </tr></thead>`;
+  const body = "<tbody>" + DATA.text_rows.map(r => {
+    const vals = r[activeTextMetric] || {};
+    return `<tr>
+      <td class="key-cell"><strong>${r.field}</strong></td>
+      ${DATA.versions.map(v => valueCell(vals[v], v, vals.v3, +1, "pct")).join("")}
+    </tr>`;
+  }).join("") + "</tbody>";
+  tbl.innerHTML = head + body;
+}
+renderTextTable();
+document.querySelectorAll("button[data-text]").forEach(btn => {
+  btn.addEventListener("click", () => {
+    document.querySelectorAll("button[data-text]").forEach(b => b.setAttribute("aria-pressed","false"));
+    btn.setAttribute("aria-pressed", "true");
+    activeTextMetric = btn.dataset.text;
+    renderTextTable();
+  });
+});
+
+/* -------------------- breakdown tables -------------------- */
+function renderBreakdown(tableId, by, filterKey, axisLabel) {
+  const tbl = document.getElementById(tableId);
+  const allKeys = Object.keys(by[DATA.headline_labels[0]] || {});
+  const visible = filterKey === "__all__" ? allKeys : allKeys.filter(k => k === filterKey);
+  const head = `<thead><tr>
+    <th>${axisLabel}</th><th>Métrica</th>
+    ${DATA.versions.map(v => `<th class="num col-${v}">${v.toUpperCase()}</th>`).join("")}
+  </tr></thead>`;
+  const rows = [];
+  for (const key of visible) {
+    let first = true;
+    for (const label of DATA.headline_labels) {
+      const data = (by[label] || {})[key] || {};
+      const direction = DATA.headline_dir[label] || +1;
+      const fmt = DATA.headline_fmt[label] || "pct";
+      rows.push(`<tr>
+        <td class="key-cell">${first ? `<strong>${key}</strong>` : ""}</td>
+        <td class="tip">${label}</td>
+        ${DATA.versions.map(v => valueCell(data[v], v, data.v3, direction, fmt)).join("")}
+      </tr>`);
+      first = false;
+    }
+  }
+  tbl.innerHTML = head + "<tbody>" + rows.join("") + "</tbody>";
+}
+
+function setupBreakdown(group, axisLabel, tableId, byObj, chipsContainerId) {
+  const host = document.getElementById(chipsContainerId);
+  const keys = Object.keys(byObj[DATA.headline_labels[0]] || {});
+  host.innerHTML = keys.map(k =>
+    `<button type="button" data-${group}="${k}" role="radio" aria-pressed="false">${k}</button>`
+  ).join(" ");
+  function apply(val) {
+    document.querySelectorAll(`button[data-${group}]`).forEach(b =>
+      b.setAttribute("aria-pressed", b.dataset[group] === val ? "true" : "false")
+    );
+    renderBreakdown(tableId, byObj, val, axisLabel);
+  }
+  document.querySelectorAll(`button[data-${group}]`).forEach(b =>
+    b.addEventListener("click", () => apply(b.dataset[group]))
+  );
+  apply("__all__");
+}
+setupBreakdown("model",  "Modelo", "t-model",  DATA.by_model,  "model-chips");
+setupBreakdown("target", "Target", "t-target", DATA.by_target, "target-chips");
+
+/* ============================================================
+   Shared tooltip — used by both scatter and bars.
+   ============================================================ */
+const tooltip = document.getElementById("tooltip");
+function showTip(html, evt) {
+  tooltip.innerHTML = html;
+  tooltip.style.left = evt.clientX + "px";
+  tooltip.style.top  = evt.clientY + "px";
+  tooltip.classList.add("visible");
+  tooltip.setAttribute("aria-hidden","false");
+}
+function moveTip(evt) {
+  tooltip.style.left = evt.clientX + "px";
+  tooltip.style.top  = evt.clientY + "px";
+}
+function hideTip() {
+  tooltip.classList.remove("visible");
+  tooltip.setAttribute("aria-hidden","true");
+}
+
+/* ============================================================
+   Chart: Hallucination × Omission scatter (SVG, no deps)
+   ============================================================ */
+const SCATTER_W = 760, SCATTER_H = 460;
+const SCATTER_PAD = { top: 24, right: 24, bottom: 56, left: 64 };
+let activeScatterTarget = "__all__";
+let idealHalluc = 0.05;   /* updated via #ideal-halluc input */
+let idealOmission = 0.05; /* updated via #ideal-omission input */
+
+function renderScatter() {
+  const svg = document.getElementById("chart-scatter");
+  svg.innerHTML = "";
+
+  /* Filter + bound */
+  const pts = DATA.scatter_points.filter(p =>
+    activeScatterTarget === "__all__" || p.target === activeScatterTarget
+  );
+  if (pts.length === 0) return;
+
+  const xMax = Math.max(0.05, Math.ceil(Math.max(...pts.map(p => p.halluc)) * 20) / 20);
+  const yMax = Math.max(0.05, Math.ceil(Math.max(...pts.map(p => p.omission)) * 20) / 20);
+
+  const plotW = SCATTER_W - SCATTER_PAD.left - SCATTER_PAD.right;
+  const plotH = SCATTER_H - SCATTER_PAD.top - SCATTER_PAD.bottom;
+  const xScale = v => SCATTER_PAD.left + (v / xMax) * plotW;
+  const yScale = v => SCATTER_PAD.top  + plotH - (v / yMax) * plotH;
+
+  /* Target zone — sweet spot bottom-left, thresholds controlled by inputs */
+  const tx = Math.min(xMax, idealHalluc), ty = Math.min(yMax, idealOmission);
+  const fmtT = v => (v * 100).toFixed(v < 0.1 ? 1 : 0);
+  svg.insertAdjacentHTML("beforeend",
+    `<rect class="target-zone"
+       x="${xScale(0)}" y="${yScale(ty)}"
+       width="${xScale(tx) - xScale(0)}" height="${yScale(0) - yScale(ty)}" />
+     <text class="target-zone-label"
+       x="${xScale(0) + 6}" y="${yScale(ty) + 14}">ideal &lt;${fmtT(idealHalluc)}% / &lt;${fmtT(idealOmission)}%</text>`
+  );
+
+  /* Grid + axes */
+  const xTicks = niceTicks(0, xMax, 5);
+  const yTicks = niceTicks(0, yMax, 5);
+  let gridHtml = '<g class="grid">';
+  for (const t of xTicks) {
+    gridHtml += `<line x1="${xScale(t)}" x2="${xScale(t)}" y1="${SCATTER_PAD.top}" y2="${SCATTER_PAD.top + plotH}" />`;
+  }
+  for (const t of yTicks) {
+    gridHtml += `<line x1="${SCATTER_PAD.left}" x2="${SCATTER_PAD.left + plotW}" y1="${yScale(t)}" y2="${yScale(t)}" />`;
+  }
+  gridHtml += '</g>';
+  svg.insertAdjacentHTML("beforeend", gridHtml);
+
+  /* Axis labels (lei de Hick — só dois eixos pra ler) */
+  let axisHtml = '<g class="axis">';
+  for (const t of xTicks) {
+    axisHtml += `<text x="${xScale(t)}" y="${SCATTER_PAD.top + plotH + 18}" text-anchor="middle">${(t*100).toFixed(1)}%</text>`;
+  }
+  for (const t of yTicks) {
+    axisHtml += `<text x="${SCATTER_PAD.left - 10}" y="${yScale(t) + 4}" text-anchor="end">${(t*100).toFixed(1)}%</text>`;
+  }
+  axisHtml += `<text class="axis-label" x="${SCATTER_PAD.left + plotW/2}" y="${SCATTER_H - 12}" text-anchor="middle">Hallucination rate →</text>`;
+  axisHtml += `<text class="axis-label" x="${-SCATTER_PAD.top - plotH/2}" y="14" text-anchor="middle" transform="rotate(-90)">Omission rate →</text>`;
+  axisHtml += '</g>';
+  svg.insertAdjacentHTML("beforeend", axisHtml);
+
+  /* Version legend — top-right inside plot area */
+  const legendItems = [
+    { v: "V1", color: VCOLOR.v1 },
+    { v: "V2", color: VCOLOR.v2 },
+    { v: "V3", color: VCOLOR.v3 },
+  ];
+  const lgX = SCATTER_PAD.left + plotW - 78;
+  const lgY = SCATTER_PAD.top + 8;
+  let legendHtml = `<g class="legend">
+    <rect x="${lgX - 8}" y="${lgY - 4}" width="86" height="${legendItems.length * 16 + 8}"
+          rx="6" fill="var(--bg-1)" fill-opacity="0.85" stroke="var(--border)" />`;
+  legendItems.forEach((it, i) => {
+    const cy = lgY + 8 + i * 16;
+    legendHtml += `
+      <circle cx="${lgX + 4}" cy="${cy}" r="5" fill="${it.color}" fill-opacity="0.7" stroke="${it.color}" stroke-width="1.5"/>
+      <text x="${lgX + 16}" y="${cy + 4}" font-size="11" fill="var(--text-1)">${it.v}</text>`;
+  });
+  legendHtml += `</g>`;
+  svg.insertAdjacentHTML("beforeend", legendHtml);
+
+  /* Points — color by version */
+  for (const p of pts) {
+    const cx = xScale(p.halluc), cy = yScale(p.omission);
+    const color = VCOLOR[p.version];
+    const el = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+    el.setAttribute("class", "pt");
+    el.setAttribute("cx", cx); el.setAttribute("cy", cy);
+    el.setAttribute("r", 7);
+    el.setAttribute("fill", color);
+    el.setAttribute("fill-opacity", "0.7");
+    el.setAttribute("stroke", color);
+    el.setAttribute("stroke-width", "1.5");
+    el.setAttribute("tabindex", "0");
+    el.setAttribute("aria-label",
+      `${p.version.toUpperCase()} ${p.model} ${p.target}: halluc ${fmtPct(p.halluc)}, omiss ${fmtPct(p.omission)}`);
+    const ttHtml = `<div class="tt-title">${p.model} · ${p.version.toUpperCase()}</div>
+      <div class="tt-row"><span class="tt-key">Target</span><span>${p.target}</span></div>
+      <div class="tt-row"><span class="tt-key">Halluc</span><span>${fmtPct(p.halluc)} (${p.n_ext_unm ?? '—'})</span></div>
+      <div class="tt-row"><span class="tt-key">Omiss</span><span>${fmtPct(p.omission)} (${p.n_bl_unm ?? '—'})</span></div>
+      <div class="tt-row"><span class="tt-key">Matched</span><span>${p.n_matched ?? '—'}</span></div>`;
+    el.addEventListener("mouseenter", e => showTip(ttHtml, e));
+    el.addEventListener("mousemove", moveTip);
+    el.addEventListener("mouseleave", hideTip);
+    el.addEventListener("focus", e => {
+      const r = el.getBoundingClientRect();
+      showTip(ttHtml, { clientX: r.left + r.width/2, clientY: r.top });
+    });
+    el.addEventListener("blur", hideTip);
+    svg.appendChild(el);
+  }
+}
+
+function niceTicks(min, max, count) {
+  const step = (max - min) / count;
+  const arr = [];
+  for (let i = 0; i <= count; i++) arr.push(+(min + step * i).toFixed(4));
+  return arr;
+}
+
+/* Ideal-zone inputs (halluc/omission thresholds) */
+(function setupIdealZoneInputs() {
+  const h = document.getElementById("ideal-halluc");
+  const o = document.getElementById("ideal-omission");
+  if (!h || !o) return;
+  const clamp = v => Math.max(0, Math.min(100, isFinite(v) ? v : 0));
+  h.addEventListener("input", () => {
+    idealHalluc = clamp(parseFloat(h.value)) / 100;
+    renderScatter();
+  });
+  o.addEventListener("input", () => {
+    idealOmission = clamp(parseFloat(o.value)) / 100;
+    renderScatter();
+  });
+})();
+
+/* Scatter target chips */
+(function setupScatterTargetChips() {
+  const host = document.getElementById("scatter-target-chips");
+  host.innerHTML = DATA.targets.map(t =>
+    `<button type="button" data-scatter-target="${t}" role="radio" aria-pressed="false">${t}</button>`
+  ).join(" ");
+  document.querySelectorAll(`button[data-scatter-target]`).forEach(b => {
+    b.addEventListener("click", () => {
+      document.querySelectorAll(`button[data-scatter-target]`).forEach(x =>
+        x.setAttribute("aria-pressed", x.dataset.scatterTarget === b.dataset.scatterTarget ? "true" : "false"));
+      activeScatterTarget = b.dataset.scatterTarget;
+      renderScatter();
+    });
+  });
+})();
+
+/* ============================================================
+   Chart: Clustered bars — similarity per model × version
+   ============================================================ */
+const BARS_W = 760, BARS_H = 420;
+const BARS_PAD = { top: 24, right: 24, bottom: 70, left: 56 };
+let activeBarsTarget = DATA.targets[0];
+let activeBarsMetric = "BERTScore F1";
+
+function renderBars() {
+  const svg = document.getElementById("chart-bars");
+  svg.innerHTML = "";
+
+  const data = (DATA.bars_by_target[activeBarsTarget] || {})[activeBarsMetric] || {};
+  const models = Object.keys(data);
+  if (!models.length) return;
+
+  /* Y scale: 0..1 (bertscore-like). */
+  const plotW = BARS_W - BARS_PAD.left - BARS_PAD.right;
+  const plotH = BARS_H - BARS_PAD.top - BARS_PAD.bottom;
+
+  const yMax = 1.0;
+  const yScale = v => BARS_PAD.top + plotH - (v / yMax) * plotH;
+
+  /* Grid */
+  const yTicks = [0, 0.25, 0.5, 0.75, 1.0];
+  let html = '<g class="grid">';
+  for (const t of yTicks) {
+    html += `<line x1="${BARS_PAD.left}" x2="${BARS_PAD.left + plotW}" y1="${yScale(t)}" y2="${yScale(t)}" />`;
+  }
+  html += '</g>';
+
+  /* Y axis labels */
+  html += '<g class="axis">';
+  for (const t of yTicks) {
+    html += `<text x="${BARS_PAD.left - 8}" y="${yScale(t) + 4}" text-anchor="end">${(t*100).toFixed(0)}%</text>`;
+  }
+  html += `<text class="axis-label" x="${-BARS_PAD.top - plotH/2}" y="14" text-anchor="middle" transform="rotate(-90)">${activeBarsMetric} →</text>`;
+  html += '</g>';
+  svg.insertAdjacentHTML("beforeend", html);
+
+  /* Bars: per model, 3 bars (V1/V2/V3) */
+  const groupW = plotW / models.length;
+  const barW = Math.min(28, (groupW - 16) / 3);
+  models.forEach((model, idx) => {
+    const groupX = BARS_PAD.left + idx * groupW + groupW/2;
+    const startX = groupX - (barW * 3 + 6) / 2;
+    DATA.versions.forEach((v, vi) => {
+      const value = data[model][v];
+      if (value == null) return;
+      const x = startX + vi * (barW + 3);
+      const y = yScale(value);
+      const h = (BARS_PAD.top + plotH) - y;
+      const rect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+      rect.setAttribute("class", "bar-rect");
+      rect.setAttribute("x", x); rect.setAttribute("y", y);
+      rect.setAttribute("width", barW); rect.setAttribute("height", h);
+      rect.setAttribute("rx", 2);
+      rect.setAttribute("fill", VCOLOR[v]);
+      rect.setAttribute("tabindex", "0");
+      rect.setAttribute("aria-label", `${model} ${v.toUpperCase()} ${activeBarsMetric}: ${fmtPct(value)}`);
+      const ttHtml = `<div class="tt-title">${model} · ${v.toUpperCase()}</div>
+        <div class="tt-row"><span class="tt-key">${activeBarsMetric}</span><span>${fmtPct(value)}</span></div>
+        <div class="tt-row"><span class="tt-key">Baseline</span><span>${activeBarsTarget}</span></div>`;
+      rect.addEventListener("mouseenter", e => showTip(ttHtml, e));
+      rect.addEventListener("mousemove", moveTip);
+      rect.addEventListener("mouseleave", hideTip);
+      rect.addEventListener("focus", e => {
+        const r = rect.getBoundingClientRect();
+        showTip(ttHtml, { clientX: r.left + r.width/2, clientY: r.top });
+      });
+      rect.addEventListener("blur", hideTip);
+      svg.appendChild(rect);
+
+      /* Value label above bar (gestalt: rótulo próximo ao dado) */
+      if (h > 18) {
+        const txt = document.createElementNS("http://www.w3.org/2000/svg", "text");
+        txt.setAttribute("x", x + barW/2);
+        txt.setAttribute("y", y - 4);
+        txt.setAttribute("text-anchor", "middle");
+        txt.setAttribute("font-size", "10");
+        txt.setAttribute("fill", "var(--text-1)");
+        txt.setAttribute("font-variant-numeric", "tabular-nums");
+        txt.textContent = (value*100).toFixed(0);
+        svg.appendChild(txt);
+      }
+    });
+
+    /* Model label */
+    const lbl = document.createElementNS("http://www.w3.org/2000/svg", "text");
+    lbl.setAttribute("class", "axis-label");
+    lbl.setAttribute("x", groupX);
+    lbl.setAttribute("y", BARS_PAD.top + plotH + 20);
+    lbl.setAttribute("text-anchor", "middle");
+    lbl.setAttribute("font-size", "12");
+    lbl.textContent = model;
+    svg.appendChild(lbl);
+  });
+
+  /* Inline legend (color/version) at bottom */
+  const legendY = BARS_H - 14;
+  let lx = BARS_PAD.left;
+  for (const v of DATA.versions) {
+    svg.insertAdjacentHTML("beforeend",
+      `<g transform="translate(${lx}, ${legendY})">
+         <rect width="10" height="10" rx="2" fill="${VCOLOR[v]}" />
+         <text x="14" y="9" font-size="11" fill="var(--text-2)">${v.toUpperCase()}</text>
+       </g>`);
+    lx += 56;
+  }
+}
+
+/* Bars chips */
+(function setupBarsChips() {
+  const host = document.getElementById("bars-target-chips");
+  host.innerHTML = DATA.targets.map((t,i) =>
+    `<button type="button" data-bars-target="${t}" role="radio" aria-pressed="${i===0}">${t}</button>`
+  ).join(" ");
+  document.querySelectorAll(`button[data-bars-target]`).forEach(b => {
+    b.addEventListener("click", () => {
+      document.querySelectorAll(`button[data-bars-target]`).forEach(x =>
+        x.setAttribute("aria-pressed", x.dataset.barsTarget === b.dataset.barsTarget ? "true" : "false"));
+      activeBarsTarget = b.dataset.barsTarget;
+      renderBars();
+    });
+  });
+  document.querySelectorAll(`button[data-bars-metric]`).forEach(b => {
+    b.addEventListener("click", () => {
+      document.querySelectorAll(`button[data-bars-metric]`).forEach(x =>
+        x.setAttribute("aria-pressed", x.dataset.barsMetric === b.dataset.barsMetric ? "true" : "false"));
+      activeBarsMetric = b.dataset.barsMetric;
+      renderBars();
+    });
+  });
+})();
+
+/* ============================================================
+   Initial paint — after layout settles for cleaner animation.
+   ============================================================ */
+
+/* ============================================================
+   Chart: Stacked bars — similarity category distribution per (model, version).
+   Categories ordered worst-on-top so "Highly Similar" sits at the bottom
+   visually (largest share = strongest perceptual anchor).
+   ============================================================ */
+const CAT_W = 760, CAT_H = 482;
+const CAT_PAD = { top: 24, right: 24, bottom: 110, left: 56 };
+let activeCatTarget = DATA.cat_targets ? DATA.cat_targets[0] : null;
+let activeCatMetric = "BERTScore F1";
+const CAT_LABEL_FULL = {
+  "Highly Similar":     "Highly Similar",
+  "Moderately Similar": "Moderately Similar",
+  "Slightly Similar":   "Slightly Similar",
+  "Divergent":          "Divergent",
+  "Absent":             "Absent (omission)",
+};
+
+function renderCategorization() {
+  if (!DATA.cat_by_target) return;
+  const svg = document.getElementById("chart-cat");
+  if (!svg) return;
+  svg.innerHTML = "";
+
+  const data = (DATA.cat_by_target[activeCatTarget] || {})[activeCatMetric] || {};
+  const models = Object.keys(data);
+  if (!models.length) return;
+
+  const plotW = CAT_W - CAT_PAD.left - CAT_PAD.right;
+  const plotH = CAT_H - CAT_PAD.top - CAT_PAD.bottom;
+  const yScale = v => CAT_PAD.top + plotH - v * plotH;
+
+  /* Version patterns (V1=solid, V2=diagonal, V3=dots) — subtle overlay on top of category colors */
+  svg.insertAdjacentHTML("beforeend", `
+    <defs>
+      <pattern id="pat-v2" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+        <line x1="0" y1="0" x2="0" y2="6" stroke="#0b0e14" stroke-width="1.2" opacity="0.35"/>
+      </pattern>
+      <pattern id="pat-v3" width="5" height="5" patternUnits="userSpaceOnUse">
+        <circle cx="2.5" cy="2.5" r="1" fill="#0b0e14" opacity="0.4"/>
+      </pattern>
+    </defs>`);
+
+  /* Grid */
+  let html = '<g class="grid">';
+  for (const t of [0, 0.25, 0.5, 0.75, 1]) {
+    html += `<line x1="${CAT_PAD.left}" x2="${CAT_PAD.left + plotW}" y1="${yScale(t)}" y2="${yScale(t)}" />`;
+  }
+  html += '</g>';
+  html += '<g class="axis">';
+  for (const t of [0, 0.25, 0.5, 0.75, 1]) {
+    html += `<text x="${CAT_PAD.left - 8}" y="${yScale(t) + 4}" text-anchor="end">${(t*100).toFixed(0)}%</text>`;
+  }
+  html += `<text class="axis-label" x="${-CAT_PAD.top - plotH/2}" y="14" text-anchor="middle" transform="rotate(-90)">% de vulnerabilidades</text>`;
+  html += '</g>';
+  svg.insertAdjacentHTML("beforeend", html);
+
+  /* Bars: per model, 3 stacked bars (V1/V2/V3) */
+  const groupW = plotW / models.length;
+  const barW = Math.min(36, (groupW - 24) / 3);
+  models.forEach((model, idx) => {
+    const groupX = CAT_PAD.left + idx * groupW + groupW/2;
+    const startX = groupX - (barW * 3 + 12) / 2;
+    DATA.cat_versions.forEach((v, vi) => {
+      const dist = data[model][v];
+      const x = startX + vi * (barW + 6);
+      if (dist == null) {
+        /* Empty placeholder */
+        const rect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+        rect.setAttribute("x", x); rect.setAttribute("y", CAT_PAD.top + plotH - 2);
+        rect.setAttribute("width", barW); rect.setAttribute("height", 2);
+        rect.setAttribute("fill", "var(--text-3)"); rect.setAttribute("opacity", "0.4");
+        svg.appendChild(rect);
+      } else {
+        /* Stack from bottom: Highly first (largest = visual anchor at base) */
+        let yCursor = CAT_PAD.top + plotH;
+        DATA.cat_categories.forEach((cat, ci) => {
+          const pct = dist[cat] || 0;
+          if (pct <= 0) return;
+          const h = pct * plotH;
+          yCursor -= h;
+          const seg = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+          seg.setAttribute("class", "bar-rect cat-color-" + ci);
+          seg.setAttribute("x", x); seg.setAttribute("y", yCursor);
+          seg.setAttribute("width", barW); seg.setAttribute("height", h);
+          seg.setAttribute("tabindex", "0");
+          seg.setAttribute("aria-label", `${model} ${v.toUpperCase()} ${cat}: ${(pct*100).toFixed(1)}%`);
+          const ttRows = DATA.cat_categories.map(c =>
+            `<div class="tt-row"><span class="tt-key">${c}</span><span>${((dist[c]||0)*100).toFixed(1)}%</span></div>`
+          ).join("");
+          const ttHtml = `<div class="tt-title">${model} · ${v.toUpperCase()}</div>
+            <div class="tt-row"><span class="tt-key">Baseline</span><span>${activeCatTarget}</span></div>
+            <div style="border-top:1px solid var(--border); margin:6px 0; opacity:.6"></div>${ttRows}`;
+          seg.addEventListener("mouseenter", e => showTip(ttHtml, e));
+          seg.addEventListener("mousemove", moveTip);
+          seg.addEventListener("mouseleave", hideTip);
+          seg.addEventListener("focus", () => {
+            const r = seg.getBoundingClientRect();
+            showTip(ttHtml, { clientX: r.left + r.width/2, clientY: r.top });
+          });
+          seg.addEventListener("blur", hideTip);
+          svg.appendChild(seg);
+        });
+        /* Version pattern overlay (V2 diagonal, V3 dots; V1 stays solid) */
+        const patId = vi === 1 ? "pat-v2" : vi === 2 ? "pat-v3" : null;
+        if (patId) {
+          const total = DATA.cat_categories.reduce((s, c) => s + (dist[c] || 0), 0);
+          if (total > 0) {
+            const overlay = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+            overlay.setAttribute("x", x);
+            overlay.setAttribute("y", CAT_PAD.top + plotH - total * plotH);
+            overlay.setAttribute("width", barW);
+            overlay.setAttribute("height", total * plotH);
+            overlay.setAttribute("fill", `url(#${patId})`);
+            overlay.setAttribute("pointer-events", "none");
+            svg.appendChild(overlay);
+          }
+        }
+      }
+      /* Version label below the bar */
+      const vlbl = document.createElementNS("http://www.w3.org/2000/svg", "text");
+      vlbl.setAttribute("x", x + barW/2);
+      vlbl.setAttribute("y", CAT_PAD.top + plotH + 14);
+      vlbl.setAttribute("text-anchor", "middle");
+      vlbl.setAttribute("font-size", "10");
+      vlbl.setAttribute("fill", "var(--text-2)");
+      vlbl.textContent = v.toUpperCase();
+      svg.appendChild(vlbl);
+    });
+    /* Model label */
+    const lbl = document.createElementNS("http://www.w3.org/2000/svg", "text");
+    lbl.setAttribute("x", groupX);
+    lbl.setAttribute("y", CAT_PAD.top + plotH + 34);
+    lbl.setAttribute("text-anchor", "middle");
+    lbl.setAttribute("font-size", "12");
+    lbl.setAttribute("fill", "var(--text-1)");
+    lbl.setAttribute("font-weight", "600");
+    lbl.textContent = model;
+    svg.appendChild(lbl);
+  });
+
+  /* Legend (SVG inline) */
+  let lx = CAT_PAD.left;
+  const ly = CAT_H - 32;
+  DATA.cat_categories.forEach((cat, ci) => {
+    const swatch = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+    swatch.setAttribute("x", lx); swatch.setAttribute("y", ly - 9);
+    swatch.setAttribute("width", 10); swatch.setAttribute("height", 10);
+    swatch.setAttribute("rx", 2);
+    swatch.setAttribute("class", "cat-color-" + ci);
+    svg.appendChild(swatch);
+    const txt = document.createElementNS("http://www.w3.org/2000/svg", "text");
+    txt.setAttribute("x", lx + 14); txt.setAttribute("y", ly);
+    txt.setAttribute("font-size", "11"); txt.setAttribute("fill", "var(--text-2)");
+    const label = CAT_LABEL_FULL[cat] || cat;
+    txt.textContent = label;
+    svg.appendChild(txt);
+    /* Width budget: swatch (10) + gap (4) + text (~6.5px/char) + breathing room (24) */
+    lx += 14 + label.length * 6.5 + 24;
+  });
+
+  /* Version pattern legend (second row, below category legend) */
+  const vly = ly + 18;
+  let vlx = CAT_PAD.left;
+  const versionLegend = [
+    { v: "V1", fill: "var(--text-3)", pat: null },
+    { v: "V2", fill: "var(--text-3)", pat: "pat-v2" },
+    { v: "V3", fill: "var(--text-3)", pat: "pat-v3" },
+  ];
+  versionLegend.forEach(({ v, fill, pat }) => {
+    const base = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+    base.setAttribute("x", vlx); base.setAttribute("y", vly - 9);
+    base.setAttribute("width", 10); base.setAttribute("height", 10);
+    base.setAttribute("rx", 2); base.setAttribute("fill", fill);
+    base.setAttribute("opacity", "0.5");
+    svg.appendChild(base);
+    if (pat) {
+      const ov = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+      ov.setAttribute("x", vlx); ov.setAttribute("y", vly - 9);
+      ov.setAttribute("width", 10); ov.setAttribute("height", 10);
+      ov.setAttribute("rx", 2); ov.setAttribute("fill", `url(#${pat})`);
+      svg.appendChild(ov);
+    }
+    const txt = document.createElementNS("http://www.w3.org/2000/svg", "text");
+    txt.setAttribute("x", vlx + 14); txt.setAttribute("y", vly);
+    txt.setAttribute("font-size", "11"); txt.setAttribute("fill", "var(--text-2)");
+    txt.textContent = v;
+    svg.appendChild(txt);
+    vlx += 14 + 16 + 18;
+  });
+}
+
+(function setupCatChips() {
+  if (!DATA.cat_targets) return;
+  const host = document.getElementById("cat-target-chips");
+  if (!host) return;
+  host.innerHTML = DATA.cat_targets.map((t, i) =>
+    `<button type="button" data-cat-target="${t}" role="radio" aria-pressed="${i===0}">${t}</button>`
+  ).join(" ");
+  document.querySelectorAll(`button[data-cat-target]`).forEach(b => {
+    b.addEventListener("click", () => {
+      document.querySelectorAll(`button[data-cat-target]`).forEach(x =>
+        x.setAttribute("aria-pressed", x.dataset.catTarget === b.dataset.catTarget ? "true" : "false"));
+      activeCatTarget = b.dataset.catTarget;
+      renderCategorization();
+    });
+  });
+  document.querySelectorAll(`button[data-cat-metric]`).forEach(b => {
+    b.addEventListener("click", () => {
+      document.querySelectorAll(`button[data-cat-metric]`).forEach(x =>
+        x.setAttribute("aria-pressed", x.dataset.catMetric === b.dataset.catMetric ? "true" : "false"));
+      activeCatMetric = b.dataset.catMetric;
+      renderCategorization();
+    });
+  });
+})();
+
+/* ============================================================
+   Chart: Field-level omission heatmap.
+   Rows = (model × version); Cols = fields. Cell = mean omission_rate.
+   Sequential palette: 0% → green, 50%+ → red. Linear in [0, 0.5] clamped.
+   ============================================================ */
+function omissionColor(v) {
+  if (v == null) return "var(--bg-2)";
+  // Map v ∈ [0, 0.5+] to green→amber→red gradient.
+  const t = Math.max(0, Math.min(1, v / 0.5));
+  // Interpolate: 0→#1f6644 (deep green), 0.5→#e6b800 (amber), 1→#9a2424 (deep red).
+  const stops = [
+    [0.0, [31, 102, 68]],
+    [0.5, [230, 184, 0]],
+    [1.0, [154, 36, 36]],
+  ];
+  let lo = stops[0], hi = stops[stops.length-1];
+  for (let i=0; i<stops.length-1; i++) {
+    if (t >= stops[i][0] && t <= stops[i+1][0]) { lo = stops[i]; hi = stops[i+1]; break; }
+  }
+  const span = hi[0] - lo[0] || 1;
+  const k = (t - lo[0]) / span;
+  const rgb = lo[1].map((c, i) => Math.round(c + (hi[1][i] - c) * k));
+  return `rgb(${rgb.join(",")})`;
+}
+
+const HM_W = 760, HM_H = 580;
+const HM_PAD = { top: 24, right: 80, bottom: 90, left: 140 };
+const HM_GROUP_GAP = 10;  /* vertical space between model groups */
+
+function renderHeatmap() {
+  if (!DATA.heatmap_omission) return;
+  const svg = document.getElementById("chart-heatmap");
+  if (!svg) return;
+  svg.innerHTML = "";
+
+  const hm = DATA.heatmap_omission;
+  const fields = hm.fields;
+  const models = hm.models;
+  const versions = hm.versions;
+
+  /* Rows are (model, version) pairs ordered: model1-v1, model1-v2, model1-v3, model2-v1, ... */
+  const rows = [];
+  for (const m of models) for (const v of versions) rows.push({model: m, version: v});
+
+  const plotW = HM_W - HM_PAD.left - HM_PAD.right;
+  /* Reserve vertical gaps between model groups (one less gap than groups). */
+  const totalGaps = (models.length - 1) * HM_GROUP_GAP;
+  const plotH = HM_H - HM_PAD.top - HM_PAD.bottom - totalGaps;
+  const cellW = plotW / fields.length;
+  const cellH = plotH / rows.length;
+  /* yOffset(ri) = ri * cellH + (model_index * HM_GROUP_GAP) */
+  const rowY = ri => HM_PAD.top + ri * cellH + Math.floor(ri / versions.length) * HM_GROUP_GAP;
+
+  /* Cells */
+  rows.forEach((r, ri) => {
+    fields.forEach((f, fi) => {
+      const value = hm.data?.[r.version]?.[r.model]?.[f] ?? null;
+      const x = HM_PAD.left + fi * cellW;
+      const y = rowY(ri);
+      const rect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+      rect.setAttribute("class", "heatmap-cell");
+      rect.setAttribute("x", x); rect.setAttribute("y", y);
+      rect.setAttribute("width", cellW); rect.setAttribute("height", cellH);
+      rect.setAttribute("fill", omissionColor(value));
+      rect.setAttribute("tabindex", "0");
+      const display = value == null ? "N/A" : (value * 100).toFixed(1) + "%";
+      rect.setAttribute("aria-label", `${r.model} ${r.version.toUpperCase()} ${f}: omission ${display}`);
+      const ttHtml = `<div class="tt-title">${r.model} · ${r.version.toUpperCase()}</div>
+        <div class="tt-row"><span class="tt-key">Campo</span><span>${f}</span></div>
+        <div class="tt-row"><span class="tt-key">Omission</span><span>${display}</span></div>`;
+      rect.addEventListener("mouseenter", e => showTip(ttHtml, e));
+      rect.addEventListener("mousemove", moveTip);
+      rect.addEventListener("mouseleave", hideTip);
+      rect.addEventListener("focus", () => {
+        const b = rect.getBoundingClientRect();
+        showTip(ttHtml, { clientX: b.left + b.width/2, clientY: b.top });
+      });
+      rect.addEventListener("blur", hideTip);
+      svg.appendChild(rect);
+
+      /* Value text overlay when cell is large enough */
+      if (cellW >= 40 && value != null) {
+        const txt = document.createElementNS("http://www.w3.org/2000/svg", "text");
+        txt.setAttribute("x", x + cellW/2);
+        txt.setAttribute("y", y + cellH/2 + 3);
+        txt.setAttribute("text-anchor", "middle");
+        txt.setAttribute("font-size", "9");
+        txt.setAttribute("font-variant-numeric", "tabular-nums");
+        txt.setAttribute("fill", value > 0.25 ? "#fff" : "#0b0e14");
+        txt.setAttribute("pointer-events", "none");
+        txt.textContent = (value * 100).toFixed(0);
+        svg.appendChild(txt);
+      }
+    });
+  });
+
+  /* Row labels (left): only version label per row + model name grouped + colored swatch.
+     Reduces repetition (Hick: less cognitive load) and reinforces grouping (Gestalt). */
+  rows.forEach((r, ri) => {
+    const y = rowY(ri) + cellH/2 + 4;
+    const t = document.createElementNS("http://www.w3.org/2000/svg", "text");
+    t.setAttribute("class", "heatmap-axis " + r.version);
+    t.setAttribute("x", HM_PAD.left - 8);
+    t.setAttribute("y", y);
+    t.setAttribute("text-anchor", "end");
+    t.setAttribute("font-size", "11");
+    t.textContent = r.version.toUpperCase();
+    svg.appendChild(t);
+  });
+
+  /* Model labels — one per group, centered vertically on its 3 rows */
+  models.forEach((m, mi) => {
+    const firstRow = mi * versions.length;
+    const yTop = rowY(firstRow);
+    const yBot = rowY(firstRow + versions.length - 1) + cellH;
+    const yMid = (yTop + yBot) / 2 + 4;
+    const t = document.createElementNS("http://www.w3.org/2000/svg", "text");
+    t.setAttribute("class", "heatmap-axis");
+    t.setAttribute("x", HM_PAD.left - 44);
+    t.setAttribute("y", yMid);
+    t.setAttribute("text-anchor", "end");
+    t.setAttribute("font-size", "12");
+    t.setAttribute("font-weight", "700");
+    t.setAttribute("fill", "var(--text-0)");
+    t.textContent = m;
+    svg.appendChild(t);
+    /* Group separator: thin tick to the left, visually anchoring the group */
+    const tick = document.createElementNS("http://www.w3.org/2000/svg", "line");
+    tick.setAttribute("x1", HM_PAD.left - 38);
+    tick.setAttribute("x2", HM_PAD.left - 38);
+    tick.setAttribute("y1", yTop + 2);
+    tick.setAttribute("y2", yBot - 2);
+    tick.setAttribute("stroke", "var(--border-strong)");
+    tick.setAttribute("stroke-width", "2");
+    tick.setAttribute("stroke-linecap", "round");
+    svg.appendChild(tick);
+  });
+
+  /* Column labels (bottom): rotated 45° */
+  const yColLabel = rowY(rows.length - 1) + cellH + 12;
+  fields.forEach((f, fi) => {
+    const x = HM_PAD.left + fi * cellW + cellW/2;
+    const t = document.createElementNS("http://www.w3.org/2000/svg", "text");
+    t.setAttribute("class", "heatmap-axis");
+    t.setAttribute("x", x);
+    t.setAttribute("y", yColLabel);
+    t.setAttribute("text-anchor", "end");
+    t.setAttribute("transform", `rotate(-45 ${x} ${yColLabel})`);
+    t.textContent = f;
+    svg.appendChild(t);
+  });
+
+  /* Scale on the right — height matches heatmap end */
+  const scaleX = HM_PAD.left + plotW + 18;
+  const scaleW = 14;
+  const scaleYTop = HM_PAD.top;
+  const scaleYBot = rowY(rows.length - 1) + cellH;
+  const scaleH = scaleYBot - scaleYTop;
+  for (let i = 0; i < 50; i++) {
+    const y0 = scaleYTop + (i / 50) * scaleH;
+    const y1 = scaleYTop + ((i + 1) / 50) * scaleH;
+    const tv = 0.5 - (i / 49) * 0.5;
+    const rect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+    rect.setAttribute("x", scaleX); rect.setAttribute("y", y0);
+    rect.setAttribute("width", scaleW); rect.setAttribute("height", y1 - y0 + 0.5);
+    rect.setAttribute("fill", omissionColor(tv));
+    svg.appendChild(rect);
+  }
+  [["0%", scaleYBot], ["25%", (scaleYTop + scaleYBot) / 2], ["≥50%", scaleYTop]]
+    .forEach(([txt, y]) => {
+      const t = document.createElementNS("http://www.w3.org/2000/svg", "text");
+      t.setAttribute("class", "heatmap-scale-stop");
+      t.setAttribute("x", scaleX + scaleW + 4);
+      t.setAttribute("y", y + 4);
+      t.textContent = txt;
+      svg.appendChild(t);
+    });
+}
+
+requestAnimationFrame(() => {
+  renderKpi();
+  renderScatter();
+  renderBars();
+  renderCategorization();
+  renderHeatmap();
+});
+
+/* Re-render charts on resize (debounced — preserva animação interna). */
+let resizeT;
+window.addEventListener("resize", () => {
+  clearTimeout(resizeT);
+  resizeT = setTimeout(() => { renderScatter(); renderBars(); renderCategorization(); renderHeatmap(); }, 150);
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,215 @@
+CMD: C:\Users\Bia\Desktop\Vulnerability_Extractor\venv\Scripts\python.exe main.py C:\Users\Bia\Desktop\Vulnerability_Extractor\baselines\openvas\OpenVAS_JuiceShop.pdf --profile _tmp_grp_openai --LLM gpt5
+START: 2026-05-15T02:10:32.277723
+
+C:\Users\Bia\Desktop\Vulnerability_Extractor\venv\Lib\site-packages\langchain_core\_api\deprecation.py:26: UserWarning: Core Pydantic V1 functionality isn't compatible with Python 3.14 or greater.
+  from pydantic.v1.fields import FieldInfo as FieldInfoV1
+C:\Users\Bia\Desktop\Vulnerability_Extractor\main.py:364: UserWarning: Parameters {'max_completion_tokens'} should be specified explicitly. Instead they were passed in as part of `model_kwargs` parameter.
+  main()
+
+============================================================
+[CONFIG] LLM: gpt-5-mini-2025-08-07
+[CONFIG] Max tokens: 4096
+[CONFIG] Reserve para resposta: 1000
+============================================================
+
+Extraindo layout visual do PDF: OpenVAS_JuiceShop.pdf
+Total de páginas encontradas: 24
+Layout visual salvo em: visual_layout_extracted_OpenVAS_JuiceShop.txt
+Layout visual salvo em: visual_layout_extracted_OpenVAS_JuiceShop.txt
+
+[TOKEN CALC] Max tokens do modelo: 4096
+[TOKEN CALC] Overhead do prompt: ~500 tokens
+[TOKEN CALC] Reserve para resposta: ~1000 tokens
+[TOKEN CALC] Tokens disponíveis para conteúdo: ~2596 tokens
+[TOKEN CALC] Total de chunks criados (respeitando blocos): 5
+Total de chunks: 5
+
+Processando chunks:   0%|          | 0/5 [00:00<?, ?chunk/s]Processando chunks:  20%|██        | 1/5 [02:07<08:29, 127.44s/chunk]Processando chunks:  40%|████      | 2/5 [07:38<12:20, 246.94s/chunk]Processando chunks:  60%|██████    | 3/5 [12:59<09:22, 281.13s/chunk]Processando chunks:  80%|████████  | 4/5 [18:39<05:04, 304.43s/chunk]Processando chunks: 100%|██████████| 5/5 [19:21<00:00, 209.58s/chunk]Processando chunks: 100%|██████████| 5/5 [19:21<00:00, 232.28s/chunk]
+
+============================================================
+Processando chunk 1/5
+============================================================
+[SCANNER] Detectado: OPENVAS (5 blocos)
+[ATTEMPT 1/4] Processando chunk completo (8658 chars)...
+[WARN attempt 1] Nenhuma estratégia de parse conseguiu extrair JSON válido
+[ATTEMPT 1] ✗ Falha no chunk completo - iniciando subdivisão
+[INFO] Próxima tentativa com subchunks de 2000 chars
+
+[ATTEMPT 2/4] Erro lógico detectado - subdividindo chunk pela metade...
+[ATTEMPT 2] Chunk dividido em 2 partes pela metade
+  [Subchunk 1/2] Tamanho: 4341 chars...
+  [Subchunk 1] ✓ 2 vulnerabilidades extraídas
+  [Subchunk 2/2] Tamanho: 4317 chars...
+[WARN subchunk 2] Nenhuma estratégia de parse conseguiu extrair JSON válido
+  [Subchunk 2] ✗ JSON inválido
+[ATTEMPT 2] ✓ Sucesso na subdivisão: 2 vulnerabilidades
+[LOG] Chunk 1/5: 2/2 válidas
+[NOMES] 2:
+   1. SMTP too long line
+   2. OpenVAS / Greenbone Vulnerability Manager Default Credentials
+
+============================================================
+Processando chunk 2/5
+============================================================
+[SCANNER] Detectado: OPENVAS (8 blocos)
+[ATTEMPT 1/4] Processando chunk completo (9280 chars)...
+[WARN attempt 1] Nenhuma estratégia de parse conseguiu extrair JSON válido
+[ATTEMPT 1] ✗ Falha no chunk completo - iniciando subdivisão
+[INFO] Próxima tentativa com subchunks de 2000 chars
+
+[ATTEMPT 2/4] Erro lógico detectado - subdividindo chunk pela metade...
+[ATTEMPT 2] Chunk dividido em 2 partes pela metade
+  [Subchunk 1/2] Tamanho: 4655 chars...
+[WARN subchunk 1] Nenhuma estratégia de parse conseguiu extrair JSON válido
+  [Subchunk 1] ✗ JSON inválido
+  [Subchunk 2/2] Tamanho: 4625 chars...
+[WARN subchunk 2] Nenhuma estratégia de parse conseguiu extrair JSON válido
+  [Subchunk 2] ✗ JSON inválido
+[ATTEMPT 2] ✗ Nenhuma vulnerabilidade válida em qualquer subchunk
+[INFO] Próxima tentativa com subchunks de 1000 chars
+
+[ATTEMPT 3/4] Erro lógico detectado - subdividindo chunk pela metade...
+[ATTEMPT 3] Chunk dividido em 2 partes pela metade
+  [Subchunk 1/2] Tamanho: 4655 chars...
+[WARN subchunk 1] Nenhuma estratégia de parse conseguiu extrair JSON válido
+  [Subchunk 1] ✗ JSON inválido
+  [Subchunk 2/2] Tamanho: 4625 chars...
+[WARN subchunk 2] Nenhuma estratégia de parse conseguiu extrair JSON válido
+  [Subchunk 2] ✗ JSON inválido
+[ATTEMPT 3] ✗ Nenhuma vulnerabilidade válida em qualquer subchunk
+[INFO] Próxima tentativa com subchunks de 1000 chars
+
+[ATTEMPT 4/4] Erro lógico detectado - subdividindo chunk pela metade...
+[ATTEMPT 4] Chunk dividido em 2 partes pela metade
+  [Subchunk 1/2] Tamanho: 4655 chars...
+[WARN subchunk 1] Nenhuma estratégia de parse conseguiu extrair JSON válido
+  [Subchunk 1] ✗ JSON inválido
+  [Subchunk 2/2] Tamanho: 4625 chars...
+[WARN subchunk 2] Nenhuma estratégia de parse conseguiu extrair JSON válido
+  [Subchunk 2] ✗ JSON inválido
+[ATTEMPT 4] ✗ Nenhuma vulnerabilidade válida em qualquer subchunk
+[ERRO] Máximo de 3 tentativas excedidas - retornando lista vazia
+[LOG] Chunk 2/5: 0 extraídas
+
+============================================================
+Processando chunk 3/5
+============================================================
+[SCANNER] Detectado: OPENVAS (11 blocos)
+[ATTEMPT 1/4] Processando chunk completo (9181 chars)...
+[WARN attempt 1] Nenhuma estratégia de parse conseguiu extrair JSON válido
+[ATTEMPT 1] ✗ Falha no chunk completo - iniciando subdivisão
+[INFO] Próxima tentativa com subchunks de 2000 chars
+
+[ATTEMPT 2/4] Erro lógico detectado - subdividindo chunk pela metade...
+[ATTEMPT 2] Chunk dividido em 2 partes pela metade
+  [Subchunk 1/2] Tamanho: 4615 chars...
+[WARN subchunk 1] Nenhuma estratégia de parse conseguiu extrair JSON válido
+  [Subchunk 1] ✗ JSON inválido
+  [Subchunk 2/2] Tamanho: 4566 chars...
+[WARN subchunk 2] Nenhuma estratégia de parse conseguiu extrair JSON válido
+  [Subchunk 2] ✗ JSON inválido
+[ATTEMPT 2] ✗ Nenhuma vulnerabilidade válida em qualquer subchunk
+[INFO] Próxima tentativa com subchunks de 1000 chars
+
+[ATTEMPT 3/4] Erro lógico detectado - subdividindo chunk pela metade...
+[ATTEMPT 3] Chunk dividido em 2 partes pela metade
+  [Subchunk 1/2] Tamanho: 4615 chars...
+[WARN subchunk 1] Nenhuma estratégia de parse conseguiu extrair JSON válido
+  [Subchunk 1] ✗ JSON inválido
+  [Subchunk 2/2] Tamanho: 4566 chars...
+[WARN subchunk 2] Nenhuma estratégia de parse conseguiu extrair JSON válido
+  [Subchunk 2] ✗ JSON inválido
+[ATTEMPT 3] ✗ Nenhuma vulnerabilidade válida em qualquer subchunk
+[INFO] Próxima tentativa com subchunks de 1000 chars
+
+[ATTEMPT 4/4] Erro lógico detectado - subdividindo chunk pela metade...
+[ATTEMPT 4] Chunk dividido em 2 partes pela metade
+  [Subchunk 1/2] Tamanho: 4615 chars...
+  [Subchunk 1] ✓ 5 vulnerabilidades extraídas
+  [Subchunk 2/2] Tamanho: 4566 chars...
+[WARN subchunk 2] Nenhuma estratégia de parse conseguiu extrair JSON válido
+  [Subchunk 2] ✗ JSON inválido
+[ATTEMPT 4] ✓ Sucesso na subdivisão: 5 vulnerabilidades
+[LOG] Chunk 3/5: 5/5 válidas
+[NOMES] 5:
+   1. SSL/TLS: Perfect Forward Secrecy Cipher Suites Missing
+   2. SSL/TLS: Report Medium Cipher Suites
+   3. SSL/TLS: Report Non Weak Cipher Suites
+   4. SSL/TLS: Report Supported Cipher Suites
+   5. wapiti (NASL wrapper)
+
+============================================================
+Processando chunk 4/5
+============================================================
+[SCANNER] Detectado: OPENVAS (8 blocos)
+[ATTEMPT 1/4] Processando chunk completo (9405 chars)...
+[WARN attempt 1] Nenhuma estratégia de parse conseguiu extrair JSON válido
+[ATTEMPT 1] ✗ Falha no chunk completo - iniciando subdivisão
+[INFO] Próxima tentativa com subchunks de 2000 chars
+
+[ATTEMPT 2/4] Erro lógico detectado - subdividindo chunk pela metade...
+[ATTEMPT 2] Chunk dividido em 2 partes pela metade
+  [Subchunk 1/2] Tamanho: 4712 chars...
+[WARN subchunk 1] Nenhuma estratégia de parse conseguiu extrair JSON válido
+  [Subchunk 1] ✗ JSON inválido
+  [Subchunk 2/2] Tamanho: 4693 chars...
+[WARN subchunk 2] Nenhuma estratégia de parse conseguiu extrair JSON válido
+  [Subchunk 2] ✗ JSON inválido
+[ATTEMPT 2] ✗ Nenhuma vulnerabilidade válida em qualquer subchunk
+[INFO] Próxima tentativa com subchunks de 1000 chars
+
+[ATTEMPT 3/4] Erro lógico detectado - subdividindo chunk pela metade...
+[ATTEMPT 3] Chunk dividido em 2 partes pela metade
+  [Subchunk 1/2] Tamanho: 4712 chars...
+[WARN subchunk 1] Nenhuma estratégia de parse conseguiu extrair JSON válido
+  [Subchunk 1] ✗ JSON inválido
+  [Subchunk 2/2] Tamanho: 4693 chars...
+[WARN subchunk 2] Nenhuma estratégia de parse conseguiu extrair JSON válido
+  [Subchunk 2] ✗ JSON inválido
+[ATTEMPT 3] ✗ Nenhuma vulnerabilidade válida em qualquer subchunk
+[INFO] Próxima tentativa com subchunks de 1000 chars
+
+[ATTEMPT 4/4] Erro lógico detectado - subdividindo chunk pela metade...
+[ATTEMPT 4] Chunk dividido em 2 partes pela metade
+  [Subchunk 1/2] Tamanho: 4712 chars...
+[WARN subchunk 1] Nenhuma estratégia de parse conseguiu extrair JSON válido
+  [Subchunk 1] ✗ JSON inválido
+  [Subchunk 2/2] Tamanho: 4693 chars...
+[WARN subchunk 2] Nenhuma estratégia de parse conseguiu extrair JSON válido
+  [Subchunk 2] ✗ JSON inválido
+[ATTEMPT 4] ✗ Nenhuma vulnerabilidade válida em qualquer subchunk
+[ERRO] Máximo de 3 tentativas excedidas - retornando lista vazia
+[LOG] Chunk 4/5: 0 extraídas
+
+============================================================
+Processando chunk 5/5
+============================================================
+[SCANNER] Detectado: OPENVAS (2 blocos)
+[ATTEMPT 1/4] Processando chunk completo (2199 chars)...
+[ATTEMPT 1] ✓ Sucesso: 2 vulnerabilidades extraídas
+[LOG] Chunk 5/5: 2/2 válidas
+[NOMES] 2:
+   1. OS Detection Consolidation and Reporting
+   2. Traceroute
+
+[SUMMARY] Total de vulnerabilidades extraídas: 9
+
+Sem consolidação (OpenVAS) - 9 vulnerabilidades
+
+Total de vulnerabilidades (OpenVAS): 9
+  - NOVAS: 9
+  - ATUALIZADAS: 0
+  - REPETIDAS (sem mudança): 0
+
+Vulnerabilidades NOVAS encontradas:
+    1. [NOVO     ] [HIGH    ] SMTP too long line
+    2. [NOVO     ] [HIGH    ] OpenVAS / Greenbone Vulnerability Manager Default Credentials
+    3. [NOVO     ] [LOG     ] SSL/TLS: Perfect Forward Secrecy Cipher Suites Missing
+    4. [NOVO     ] [LOG     ] SSL/TLS: Report Medium Cipher Suites
+    5. [NOVO     ] [LOG     ] SSL/TLS: Report Non Weak Cipher Suites
+    6. [NOVO     ] [LOG     ] SSL/TLS: Report Supported Cipher Suites
+    7. [NOVO     ] [LOG     ] wapiti (NASL wrapper)
+    8. [NOVO     ] [LOG     ] OS Detection Consolidation and Reporting
+    9. [NOVO     ] [LOG     ] Traceroute
+
+Vulnerabilidades salvas em: _tmp_vulns_grp_openai.json

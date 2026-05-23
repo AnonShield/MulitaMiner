@@ -1,0 +1,70 @@
+[REGISTRY] Validator registered for profile: default
+[REGISTRY] Validator registered for profile: openvas
+[REGISTRY] Validator registered for profile: tenable
+[REGISTRY] Validator registered for profile: cais
+
+============================================================
+[CONFIG] LLM: gpt-5-mini-2025-08-07
+[CONFIG] Max tokens: 16000
+[CONFIG] Reserve para resposta: 7000
+============================================================
+
+Extraindo layout visual do PDF: openvas_docker.bintray.io_jfrog_artifactory-oss_5.11.0.pdf
+Total de páginas encontradas: 178
+[VISUAL] Sumário/índice extraído até 3408 caracteres usando marker '^\s*NVT:'.
+🖼️  Layout visual salvo em: visual_layout_extracted_openvas_docker.bintray.io_jfrog_artifactory-oss_5.11.0.txt
+
+[DEBUG] Headers encontrados: 0
+[DEBUG] Severities finais: []
+[DEBUG] Total de blocos criados: 0
+📦 [INFO] 0 blocos de sessão criados em temp_blocks/
+=== Comparacao de Multiplas Extracoes com Baseline (BERTScore) ===
+
+[OK] Modo CLI: sem duplicatas legítimas
+
+Carregando arquivo: metrics/baselines/openvas/openvas_docker.bintray.io_jfrog_artifactory-oss_5.11.0.xlsx
+Carregando aba baseline: Vulnerabilities
+Baseline carregado - Shape: (125, 18)
+Colunas baseline: ['Name', 'description', 'detection_result', 'detection_method', 'product_detection_result', 'impact', 'solution', 'insight', 'log_method', 'cvss', 'port', 'protocol', 'severity', 'references', 'plugin', 'identification', 'http_info', 'source']
+Arquivo de extracao simples detectado - usando aba 'Vulnerabilities'
+
+Abas de extracao encontradas: ['Vulnerabilities']
+
+============================================================
+Processando (BERT): Vulnerabilities
+============================================================
+Shape da extração: (1, 2)
+Processando BERTScore Vulnerabilities...
+❌ Erro ao processar Vulnerabilities: 'Name'
+
+============================================================
+📊 [SUMMARY] Total de blocos: 0
+📊 [SUMMARY] Total de vulnerabilidades extraídas: 0
+============================================================
+
+🔄 Consolidando vulnerabilidades duplicadas...
+📊 Total: 0 → 0 após consolidação
+
+📋 Total de vulnerabilidades únicas: 0
+
+📋 Resumo de vulnerabilidades encontradas:
+
+💾 Vulnerabilidades salvas em: results_runs\openvas_docker.bintray.io_jfrog_artifactory-oss_5.11.0\gpt5\run10\openvas_docker.bintray.io_jfrog_artifactory-oss_5.11.0_gpt5_run10_20260216_174119.json
+[TOKENS] Arquivo de tokens salvo em: results_tokens\openvas_docker.bintray.io_jfrog_artifactory-oss_5.11.0_gpt5_run10_20260216_174119_tokens.json
+
+=== CONVERSÃO DE FORMATOS ===
+Aviso: Nenhuma vulnerabilidade encontrada no JSON
+Arquivo XLSX criado com sucesso: results_runs\openvas_docker.bintray.io_jfrog_artifactory-oss_5.11.0\gpt5\run10\openvas_docker.bintray.io_jfrog_artifactory-oss_5.11.0_gpt5_run10_20260216_174119.xlsx
+Total de vulnerabilidades: 1
+XLSX: results_runs\openvas_docker.bintray.io_jfrog_artifactory-oss_5.11.0\gpt5\run10\openvas_docker.bintray.io_jfrog_artifactory-oss_5.11.0_gpt5_run10_20260216_174119.xlsx
+
+🔄 Conversões geradas: 1
+  📄 results_runs\openvas_docker.bintray.io_jfrog_artifactory-oss_5.11.0\gpt5\run10\openvas_docker.bintray.io_jfrog_artifactory-oss_5.11.0_gpt5_run10_20260216_174119.xlsx
+
+============================================================
+📊 Iniciando avaliação de métricas com o método: 'bert'
+============================================================
+⚙️ Executando comando: C:\Users\Bia\Desktop\Vulnerability_Extractor\venv\Scripts\python.exe metrics\bert\compare_extractions_bert.py --baseline-file metrics/baselines/openvas/openvas_docker.bintray.io_jfrog_artifactory-oss_5.11.0.xlsx --extraction-file results_runs\openvas_docker.bintray.io_jfrog_artifactory-oss_5.11.0\gpt5\run10\openvas_docker.bintray.io_jfrog_artifactory-oss_5.11.0_gpt5_run10_20260216_174119.xlsx --output-dir metrics\bert\results --model gpt5
+
+✅ [SUCESSO] Avaliação de métricas concluída.
+📁 Resultados salvos no diretório: 'metrics\bert\results'

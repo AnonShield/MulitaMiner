@@ -1,0 +1,2540 @@
+[
+  {
+    "Name": "Apache Tomcat AJP RCE Vulnerability (Ghostcat) - Active Check",
+    "description": [
+      "Apache Tomcat is prone to a remote code execution (RCE) vulnerability in the AJP connector dubbed 'Ghostcat'.",
+      "Quality of Detection (QoD): 99%"
+    ],
+    "detection_result": [
+      "The returned status is '500', which should be '403' on a patched system, when trying to read a file which indicates that the installation is vulnerable."
+    ],
+    "detection_method": [
+      "Sends a crafted AJP request and checks the response.",
+      "Details: Apache Tomcat AJP RCE Vulnerability (Ghostcat) - Active Check OID:1.3.6.1.4.1.25623.1.0.143545 Version used: 2025-07-11T05:42:17Z"
+    ],
+    "impact": [],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update Apache Tomcat to version 7.0.100, 8.5.51, 9.0.31 or later",
+      "For other products using Tomcat please contact the vendor for more information on fixed versions"
+    ],
+    "insight": [
+      "Apache Tomcat server has a file containing vulnerability, which can be used by an attacker to read or include any files in all webapp directories on Tomcat, such as webapp configuration files or source code."
+    ],
+    "product_detection_result": [
+      "Apache Tomcat versions prior 7.0.100, 8.5.51 or 9.0.31 when the AJP connector is enabled.",
+      "Other products like JBoss or Wildy which are using Tomcat might be affected as well."
+    ],
+    "log_method": [],
+    "cvss": [
+      9.8,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "port": 8019,
+    "protocol": "tcp",
+    "severity": "CRITICAL",
+    "references": [
+      "CVE-2020-1938",
+      "https://lists.apache.org/thread/bnys5lvg1875dsslkkx2vmwxv833l35x",
+      "https://tomcat.apache.org/security-9.html#Fixed_in_Apache_Tomcat_9.0.31",
+      "https://tomcat.apache.org/security-8.html#Fixed_in_Apache_Tomcat_8.5.51",
+      "https://tomcat.apache.org/security-7.html#Fixed_in_Apache_Tomcat_7.0.100",
+      "https://web.archive.org/web/20250114042903/https://www.chaitin.cn/en/ghostcat",
+      "https://www.cnvd.org.cn/flaw/show/CNVD-2020-10487",
+      "https://github.com/YDHCUI/CNVD-2020-10487-Tomcat-Ajp-lfi",
+      "https://securityboulevard.com/2020/02/patch-your-tomcat-and-jboss-instances-to-protect-from-ghostcat-vulnerability-cve-2020-1938-and/",
+      "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
+      "cisa: Known Exploited Vulnerability (KEV) catalog",
+      "cert-bund: WID-SEC-2024-0528",
+      "cert-bund: WID-SEC-2023-2480",
+      "cert-bund: CB-K20/0711",
+      "cert-bund: CB-K20/0705",
+      "cert-bund: CB-K20/0693",
+      "cert-bund: CB-K20/0555",
+      "cert-bund: CB-K20/0543",
+      "cert-bund: CB-K20/0154",
+      "dfn-cert: DFN-CERT-2021-1736",
+      "dfn-cert: DFN-CERT-2020-1508",
+      "dfn-cert: DFN-CERT-2020-1413",
+      "dfn-cert: DFN-CERT-2020-1276",
+      "dfn-cert: DFN-CERT-2020-1134",
+      "dfn-cert: DFN-CERT-2020-0850",
+      "dfn-cert: DFN-CERT-2020-0835",
+      "dfn-cert: DFN-CERT-2020-0821",
+      "dfn-cert: DFN-CERT-2020-0569",
+      "dfn-cert: DFN-CERT-2020-0557",
+      "dfn-cert: DFN-CERT-2020-0501",
+      "dfn-cert: DFN-CERT-2020-0381"
+    ],
+    "plugin": [],
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Apache Tomcat End of Life (EOL) Detection - Linux",
+    "description": [
+      "The Apache Tomcat version on the remote host has reached the end of life (EOL) and should not be used anymore.",
+      "Quality of Detection (QoD): 30%"
+    ],
+    "detection_result": [
+      "The \"Apache Tomcat\" version on the remote host has reached the end of life.",
+      "CPE: cpe:/a:apache:tomcat:8.5.23",
+      "Installed version: 8.5.23",
+      "Location/URL: 8040/tcp"
+    ],
+    "detection_method": [
+      "Checks if an EOL version is present on the target host.",
+      "Details: Apache Tomcat End of Life (EOL) Detection - Linux OID:1.3.6.1.4.1.25623.1.0.108084 Version used: 2025-04-15T05:54:49Z"
+    ],
+    "impact": [
+      "An EOL version of Apache Tomcat is not receiving any security updates from the vendor. Unfixed security vulnerabilities might be leveraged by an attacker to compromise the security of this host."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update the Apache Tomcat version on the remote host to a still supported version."
+    ],
+    "insight": [],
+    "product_detection_result": [
+      "Product: cpe:/a:apache:tomcat:8.5.23",
+      "Method: Apache Tomcat Detection Consolidation",
+      "OID: 1.3.6.1.4.1.25623.1.0.107652"
+    ],
+    "log_method": [],
+    "cvss": [
+      10.0,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "port": 8040,
+    "protocol": "tcp",
+    "severity": "CRITICAL",
+    "references": [
+      "https://tomcat.apache.org/tomcat-10.0-eol.html",
+      "https://tomcat.apache.org/tomcat-85-eol.html",
+      "https://tomcat.apache.org/tomcat-80-eol.html",
+      "https://tomcat.apache.org/tomcat-70-eol.html",
+      "https://tomcat.apache.org/tomcat-60-eol.html",
+      "https://tomcat.apache.org/tomcat-55-eol.html",
+      "https://en.wikipedia.org/wiki/Apache_Tomcat#Releases",
+      "https://tomcat.apache.org/whichversion.html"
+    ],
+    "plugin": [],
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Apache Tomcat Multiple Vulnerabilities (Feb 2020) - Linux",
+    "description": [
+      "Apache Tomcat is prone to multiple vulnerabilities."
+    ],
+    "detection_result": [
+      "Installed version: 8.5.23",
+      "Fixed version: 8.5.51",
+      "Installation path / port: 8040/tcp"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host."
+    ],
+    "impact": [],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 7.0.100, 8.5.51, 9.0.31 or later."
+    ],
+    "insight": [
+      "Apache Tomcat is prone to multiple vulnerabilities:",
+      "HTTP request smuggling vulnerability (CVE-2020-1935)",
+      "AJP Request Injection and potential Remote Code Execution dubbed 'Ghostcat' (CVE-2020-1938)"
+    ],
+    "product_detection_result": [
+      "cpe:/a:apache:tomcat:8.5.23",
+      "Method: Apache Tomcat Detection Consolidation",
+      "OID: 1.3.6.1.4.1.25623.1.0.107652"
+    ],
+    "log_method": [],
+    "cvss": [
+      9.8,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "port": 8040,
+    "protocol": "tcp",
+    "severity": "CRITICAL",
+    "references": [
+      "CVE-2020-1935",
+      "CVE-2020-1938",
+      "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
+      "https://lists.apache.org/thread.html/r127f76181aceffea2bd4711b03c595d0f115f63e020348fe925a916c%40%3Cannounce.tomcat.apache.org%3E",
+      "https://lists.apache.org/thread.html/r7c6f492fbd39af34a68681dbbba0468490ff1a97a1bd79c6a53610ef%40%3Cannounce.tomcat.apache.org%3E",
+      "https://www.chaitin.cn/en/ghostcat",
+      "https://www.cnvd.org.cn/flaw/show/CNVD-2020-10487",
+      "https://github.com/YDHCUI/CNVD-2020-10487-Tomcat-Ajp-lfi",
+      "https://tomcat.apache.org/tomcat-7.0-doc/changelog.html",
+      "https://tomcat.apache.org/tomcat-8.5-doc/changelog.html",
+      "https://tomcat.apache.org/tomcat-9.0-doc/changelog.html"
+    ],
+    "plugin": [],
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Apache Tomcat Rewrite Rule Bypass Vulnerability (Apr 2025) - Linux",
+    "description": [
+      "Apache Tomcat is prone to a rewrite rule bypass vulnerability."
+    ],
+    "detection_result": [
+      "Installed version: 8.5.23\nFixed version: 9.0.104\nInstallation path / port: 8081/tcp\nSolution: Solution type: VendorFix\nUpdate to version 9.0.104, 10.1.40, 11.0.6 or later.\n... continues on next page ..."
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.\nDetails: Apache Tomcat Rewrite Rule Bypass Vulnerability (Apr 2025) - Linux\nOID:1.3.6.1.4.1.25623.1.0.154399\nVersion used: 2025-05-06T05:40:10Z\nProduct Detection Result Product: cpe:/a:apache:tomcat:8.5.23\nMethod: Apache Tomcat Detection Consolidation\nOID: 1.3.6.1.4.1.25623.1.0.107652"
+    ],
+    "impact": [],
+    "solution": [
+      "Solution type: VendorFix\nUpdate to version 9.0.104, 10.1.40, 11.0.6 or later."
+    ],
+    "insight": [
+      "For a subset of unlikely rewrite rule configurations, it is possible for a specially crafted request to bypass some rewrite rules. If those rewrite rules effectively enforced security constraints, those constraints could be bypassed."
+    ],
+    "product_detection_result": [
+      "Product detection result: cpe:/a:apache:tomcat:8.5.23\nDetected by Apache Tomcat Detection Consolidation (OID: 1.3.6.1.4.1.25623.1.0.10 ->7652)"
+    ],
+    "log_method": [],
+    "cvss": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "port": 8081,
+    "protocol": "tcp",
+    "severity": "HIGH",
+    "references": [
+      "CVE-2025-31651",
+      "https://lists.apache.org/thread/cpklvqwvdrp4k9hmd2l3q33j0gzy4fox",
+      "WID-SEC-2025-2372",
+      "WID-SEC-2025-1850",
+      "WID-SEC-2025-1572",
+      "WID-SEC-2025-1565",
+      "WID-SEC-2025-1563",
+      "WID-SEC-2025-1439",
+      "WID-SEC-2025-1365",
+      "WID-SEC-2025-0895",
+      "DFN-CERT-2025-3462",
+      "DFN-CERT-2025-3454",
+      "DFN-CERT-2025-3431",
+      "DFN-CERT-2025-3113",
+      "DFN-CERT-2025-2285",
+      "DFN-CERT-2025-2098",
+      "DFN-CERT-2025-1991",
+      "DFN-CERT-2025-1905",
+      "DFN-CERT-2025-1898",
+      "DFN-CERT-2025-1557",
+      "DFN-CERT-2025-1081"
+    ],
+    "plugin": [],
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Apache Tomcat RCE Vulnerability (Mar 2025) - Linux",
+    "description": [
+      "Apache Tomcat is prone to a remote code execution (RCE) vulnerability."
+    ],
+    "detection_result": [
+      "Installed version: 8.5.23\nFixed version: 9.0.99\nInstallation path / port: 8081/tcp\nSolution: Solution type: VendorFix\nUpdate to version 9.0.99, 10.1.35, 11.0.3 or later."
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host."
+    ],
+    "impact": [],
+    "solution": [
+      "Solution type: VendorFix\nUpdate to version 9.0.99, 10.1.35, 11.0.3 or later."
+    ],
+    "insight": [
+      "The original implementation of partial PUT used a temporary file based on the user provided file name and path with the path separator replaced by '.'. If all of the following are true, a malicious user is able to view security sensitive files and/or inject content into those files:\n- writes enabled for the default servlet (disabled by default)\n- support for partial PUT (enabled by default)\n- a target URL for security sensitive uploads that is a sub-directory of a target URL for public uploads\n- attacker knowledge of the names of security sensitive files being uploaded\n- the security sensitive files also being uploaded via partial PUT\nIf all of the following are true, a malicious user is able to perform remote code execution:\n- writes enabled for the default servlet (disabled by default)"
+    ],
+    "product_detection_result": [
+      "Product detection result: cpe:/a:apache:tomcat:8.5.23\nDetected by Apache Tomcat Detection Consolidation (OID: 1.3.6.1.4.1.25623.1.0.10 ->7652)"
+    ],
+    "log_method": [],
+    "cvss": [
+      9.8,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "port": 8081,
+    "protocol": "tcp",
+    "severity": "CRITICAL",
+    "references": [],
+    "plugin": [],
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Apache Tomcat HTTP/2 Protocol DoS Vulnerability (MadeYouReset) - Linux",
+    "description": [
+      "Apache Tomcat is prone to is prone to a denial of service (DoS) vulnerability in the HTTP/2 protocol dubbed 'MadeYouReset'.",
+      "Quality of Detection (QoD): 30%"
+    ],
+    "detection_result": [
+      "Installed version: 8.5.23",
+      "Fixed version: 9.0.108",
+      "Installation path / port: 8040/tcp"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: Apache Tomcat DoS Vulnerability (Jul 2025) - Linux",
+      "OID:1.3.6.1.4.1.25623.1.0.154917",
+      "Version used: 2025-07-11T15:43:14Z"
+    ],
+    "impact": [
+      "A race condition on connection close could trigger a JVM crash when using the APR/Native connector leading to a DoS.",
+      "A mismatch caused by client-triggered server-sent stream resets may result in excessive server resource consumption leading to denial-of-service (DoS) by incorrect stream accounting."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 9.0.108, 10.1.44, 11.0.10 or later."
+    ],
+    "insight": [
+      "A race condition on connection close could trigger a JVM crash when using the APR/Native connector leading to a DoS. This was particularly noticeable with client initiated closes of HTTP/2 connections.",
+      "A mismatch caused by client-triggered server-sent stream resets between HTTP/2 specications and the internal architectures of some HTTP/2 implementations may result in excessive server resource consumption leading to denial-of-service (DoS). By opening streams and then rapidly triggering the server to reset them, using malformed frames or ow control errors, an attacker can exploit incorrect stream accounting. Streams reset by the server are considered closed at the protocol level, even though backend processing continues. This allows a client to cause the server to handle an unbounded number of concurrent streams on a single connection."
+    ],
+    "product_detection_result": [
+      "Product: cpe:/a:apache:tomcat:8.5.23",
+      "Detected by Apache Tomcat Detection Consolidation (OID: 1.3.6.1.4.1.25623.1.0.107652)"
+    ],
+    "log_method": [],
+    "cvss": [
+      7.8,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "port": null,
+    "protocol": "null",
+    "severity": "HIGH",
+    "references": [
+      "CVE-2025-52434",
+      "https://lists.apache.org/thread/gxgh65004f25y8519coth6w7vchww030",
+      "https://tomcat.apache.org/security-9.html#Fixed_in_Apache_Tomcat_9.0.107",
+      "WID-SEC-2026-0177",
+      "WID-SEC-2025-1905",
+      "WID-SEC-2025-1468",
+      "DFN-CERT-2025-2957",
+      "DFN-CERT-2025-2390",
+      "DFN-CERT-2025-2299",
+      "DFN-CERT-2025-2056",
+      "DFN-CERT-2025-1991",
+      "DFN-CERT-2025-1789"
+    ],
+    "plugin": [],
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Apache Tomcat DoS Vulnerability (Sep 2021) - Linux",
+    "description": [
+      "Apache Tomcat is prone to a denial of service (DoS) vulnerability."
+    ],
+    "detection_result": [
+      "Installed version: 8.5.23\nFixed version: 8.5.64\nInstallation path / port: 8040/tcp\nSolution:\nSolution type: VendorFix\nUpdate to version 8.5.64, 9.0.44, 10.0.4 or later."
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.\nDetails: Apache Tomcat DoS Vulnerability (Sep 2021) - Linux\nOID: 1.3.6.1.4.1.25623.1.0.146721\nVersion used: 2021-10-04T08:02:33Z"
+    ],
+    "impact": [
+      "A specially crafted packet can trigger an infinite loop when Tomcat is configured to use NIO+OpenSSL or NIO2+OpenSSL for TLS, resulting in a denial of service."
+    ],
+    "solution": [
+      "Update to version 8.5.64, 9.0.44, 10.0.4 or later. (Solution type: VendorFix)"
+    ],
+    "insight": [
+      "When Tomcat was configured to use NIO+OpenSSL or NIO2+OpenSSL for TLS, a specially crafted packet could be used to trigger an infinite loop resulting in a denial of service."
+    ],
+    "product_detection_result": [
+      "Product: cpe:/a:apache:tomcat:8.5.23\nDetected by Apache Tomcat Detection Consolidation (OID: 1.3.6.1.4.1.25623.1.0.107652)"
+    ],
+    "log_method": [],
+    "cvss": [
+      7.5,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "port": 8040,
+    "protocol": "tcp",
+    "severity": "HIGH",
+    "references": [
+      "CVE-2021-41079",
+      "https://lists.apache.org/thread.html/rccdef0349fdf4fb73a4e4403095446d7fe6264e0a58e2df5c6799434%40%3Cannounce.tomcat.apache.org%3E"
+    ],
+    "plugin": [],
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Apache Tomcat Multiple Vulnerabilities (Oct 2023) - Linux",
+    "description": [
+      "Apache Tomcat is prone to multiple vulnerabilities.",
+      "Quality of Detection (QoD): 30%"
+    ],
+    "detection_result": [
+      "Installed version: 8.5.23",
+      "Fixed version: 8.5.94",
+      "Installation path / port: 8040/tcp",
+      "Solution: Solution type: VendorFix",
+      "Update to version 8.5.94, 9.0.81, 10.1.14, 11.0.0-M12 or later."
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: Apache Tomcat Multiple Vulnerabilities (Oct 2023) - Linux",
+      "OID:1.3.6.1.4.1.25623.1.0.170597",
+      "Version used: 2023-10-17T05:05:34Z",
+      "Product Detection Result: Product: cpe:/a:apache:tomcat:8.5.23",
+      "Method: Apache Tomcat Detection Consolidation (OID: 1.3.6.1.4.1.25623.1.0.107652)"
+    ],
+    "impact": [
+      "CVE-2023-42795: recycling error could cause information leaking from the current request/response to the next.",
+      "CVE-2023-44487: HTTP/2 rapid reset attack (potential DDoS amplification/impact on availability).",
+      "CVE-2023-45648: invalid trailer header could cause Tomcat to treat a single request as multiple requests leading to possible request smuggling when behind a reverse proxy."
+    ],
+    "solution": [
+      "Update to version 8.5.94, 9.0.81, 10.1.14, 11.0.0-M12 or later.",
+      "Apply vendor fix as provided in Tomcat security advisories."
+    ],
+    "insight": [
+      "The following aws exist:",
+      "CVE-2023-42795: When recycling various internal objects, including the request and the response, prior to re-use by the next request/response, an error could cause Tomcat to skip some parts of the recycling process leading to information leaking from the current request/response to the next.",
+      "CVE-2023-44487: HTTP/2 rapid reset attack",
+      "CVE-2023-45648: A specially crafted, invalid trailer header could cause Tomcat to treat a single request as multiple requests leading to the possibility of request smuggling when behind a reverse proxy."
+    ],
+    "product_detection_result": [
+      "Product: cpe:/a:apache:tomcat:8.5.23",
+      "Detected by Apache Tomcat Detection Consolidation (OID: 1.3.6.1.4.1.25623.1.0.10 ->7652)",
+      "Product Detection Result (additional): Product: cpe:/a:apache:tomcat:8.5.23; Method: Apache Tomcat Detection Consolidation; OID: 1.3.6.1.4.1.25623.1.0.107652"
+    ],
+    "log_method": [],
+    "cvss": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "port": 8040,
+    "protocol": "tcp",
+    "severity": "HIGH",
+    "references": [
+      "CVE-2023-42795",
+      "CVE-2023-44487",
+      "CVE-2023-45648",
+      "https://lists.apache.org/thread/065jfyo583490r9j2v73nhpyxdob56lw",
+      "https://lists.apache.org/thread/3m81kt8c2gtg4nkjfwt2hvt5l9ycx6vl",
+      "https://lists.apache.org/thread/2pv8yz1pyp088tsxfb7ogltk9msk0jdp",
+      "https://tomcat.apache.org/security-11.html#Fixed_in_Apache_Tomcat_11.0.0-M1",
+      "https://tomcat.apache.org/security-10.html#Fixed_in_Apache_Tomcat_10.1.14",
+      "https://tomcat.apache.org/security-9.html#Fixed_in_Apache_Tomcat_9.0.81",
+      "https://tomcat.apache.org/security-8.html#Fixed_in_Apache_Tomcat_8.5.94",
+      "https://cloud.google.com/blog/products/identity-security/how-it-works-the-novel-http2-rapid-reset-ddos-attack",
+      "https://blog.cloudflare.com/technical-breakdown-http2-rapid-reset-ddos-attack/",
+      "https://aws.amazon.com/blogs/security/how-aws-protects-customers-from-ddos-events/",
+      "https://www.openwall.com/lists/oss-security/2023/10/10/6",
+      "https://www.cisa.gov/news-events/alerts/2023/10/10/http2-rapid-reset-vulnerability-cve-2023-44487",
+      "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
+      "Known Exploited Vulnerability (KEV) catalog",
+      "WID-SEC-2025-0225",
+      "WID-SEC-2024-3684",
+      "WID-SEC-2024-1652",
+      "WID-SEC-2024-1643",
+      "WID-SEC-2024-1642",
+      "WID-SEC-2024-1307",
+      "WID-SEC-2024-1248",
+      "WID-SEC-2024-1238",
+      "WID-SEC-2024-1228",
+      "WID-SEC-2024-0899",
+      "WID-SEC-2024-0894",
+      "WID-SEC-2024-0887",
+      "WID-SEC-2024-0874",
+      "WID-SEC-2024-0873",
+      "WID-SEC-2024-0870",
+      "WID-SEC-2024-0869",
+      "WID-SEC-2024-0794",
+      "WID-SEC-2024-0597",
+      "WID-SEC-2024-0528",
+      "WID-SEC-2024-0521",
+      "WID-SEC-2024-0519",
+      "WID-SEC-2024-0123",
+      "WID-SEC-2024-0121",
+      "WID-SEC-2024-0118",
+      "WID-SEC-2024-0117",
+      "WID-SEC-2024-0116"
+    ],
+    "plugin": [],
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Apache Tomcat Session Fixation Vulnerability (Dec 2019) - Linux",
+    "description": [
+      "Apache Tomcat is prone to a session xation vulnerability."
+    ],
+    "detection_result": [
+      "Installed version: 8.5.23",
+      "Fixed version: 8.5.50",
+      "Installation path / port: 8040/tcp",
+      "Solution type: VendorFix",
+      "Update to version 7.0.99, 8.5.50, 9.0.30 or later."
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: Apache Tomcat Session Fixation Vulnerability (Dec 2019) - Linux OID:1.3.6.1.4.1.25623.1.0.143313 Version used: 2024-02-08T05:05:59Z"
+    ],
+    "impact": [],
+    "solution": [
+      "Update to version 7.0.99, 8.5.50, 9.0.30 or later.",
+      "Solution type: VendorFix"
+    ],
+    "insight": [
+      "When using FORM authentication there was a narrow window where an attacker could perform a session xation attack.",
+      "The window was considered too narrow for an exploit to be practical but, erring on the side of caution, this issue has been treated as a security vulnerability."
+    ],
+    "product_detection_result": [
+      "cpe:/a:apache:tomcat:8.5.23",
+      "Detected by Apache Tomcat Detection Consolidation (OID: 1.3.6.1.4.1.25623.1.0.107652)"
+    ],
+    "log_method": [],
+    "cvss": [
+      7.5,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "port": 8040,
+    "protocol": "tcp",
+    "severity": "HIGH",
+    "references": [
+      "CVE-2021-25122",
+      "https://lists.apache.org/thread.html/r7b95bc248603360501f18c8eb03bb6001ec0e ->e3296205b34b07105b7@%3Cannounce.tomcat.apache.org%3E",
+      "https://tomcat.apache.org/security-10.html#Fixed_in_Apache_Tomcat_10.0.2",
+      "https://tomcat.apache.org/security-9.html#Fixed_in_Apache_Tomcat_9.0.43",
+      "https://tomcat.apache.org/security-8.html#Fixed_in_Apache_Tomcat_8.5.63",
+      "WID-SEC-2022-1375",
+      "WID-SEC-2022-1099",
+      "WID-SEC-2022-0624",
+      "WID-SEC-2022-0607",
+      "CB-K21/1094",
+      "CB-K21/1081",
+      "CB-K21/0770",
+      "CB-K21/0222",
+      "DFN-CERT-2024-1989",
+      "DFN-CERT-2022-1530",
+      "DFN-CERT-2022-0733",
+      "DFN-CERT-2021-2191",
+      "DFN-CERT-2021-1904",
+      "DFN-CERT-2021-1537",
+      "DFN-CERT-2021-1536",
+      "DFN-CERT-2021-1403",
+      "DFN-CERT-2021-0810",
+      "DFN-CERT-2021-0807",
+      "DFN-CERT-2021-0544",
+      "DFN-CERT-2021-0445"
+    ],
+    "plugin": [],
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Apache Tomcat DoS Vulnerability (Mar 2019) - Linux",
+    "description": [
+      "Apache Tomcat is prone to a denial of service vulnerability in the HTTP/2 implementation."
+    ],
+    "detection_result": [
+      "Installed version: 8.5.23",
+      "Fixed version: 8.5.38",
+      "Installation path / port: 8040/tcp",
+      "Quality of Detection (QoD): 30%"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: Apache Tomcat DoS Vulnerability (Mar 2019) - Linux OID:1.3.6.1.4.1.25623.1.0.142264",
+      "Version used: 2025-09-16T05:38:45Z",
+      "Product Detection Result Product: cpe:/a:apache:tomcat:8.5.23 Method: Apache Tomcat Detection Consolidation OID: 1.3.6.1.4.1.25623.1.0.107652"
+    ],
+    "impact": [
+      "By keeping streams open and causing server-side threads to block, attackers can trigger thread exhaustion and a denial of service."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 8.5.38, 9.0.16 or later."
+    ],
+    "insight": [
+      "The HTTP/2 implementation accepts streams with excessive numbers of SETTINGS frames and also permitts clients to keep streams open without reading/writing request/response data. By keeping streams open for requests that utilises the Servlet API's blocking I/O, clients are able to cause server-side threads to block eventually leading to thread exhaustion and a DoS."
+    ],
+    "product_detection_result": [
+      "cpe:/a:apache:tomcat:8.5.23 Detected by Apache Tomcat Detection Consolidation (OID: 1.3.6.1.4.1.25623.1.0.10 ->7652)"
+    ],
+    "log_method": [],
+    "cvss": [
+      7.5,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "port": 8040,
+    "protocol": "tcp",
+    "severity": "HIGH",
+    "references": [
+      "CVE-2019-0199",
+      "http://tomcat.apache.org/security-9.html",
+      "http://tomcat.apache.org/security-8.html",
+      "WID-SEC-2024-0528",
+      "CB-K20/0543",
+      "CB-K20/0029",
+      "CB-K19/0235",
+      "DFN-CERT-2019-2710",
+      "DFN-CERT-2019-1895",
+      "DFN-CERT-2019-1755",
+      "DFN-CERT-2019-1472",
+      "DFN-CERT-2019-1231",
+      "DFN-CERT-2019-1095",
+      "DFN-CERT-2019-0594"
+    ],
+    "plugin": [],
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Apache Tomcat DoS Vulnerability (Jun 2020) - Linux",
+    "description": [
+      "Apache Tomcat is prone to a denial of service vulnerability."
+    ],
+    "detection_result": [
+      "Installed version: 8.5.23",
+      "Fixed version: 8.5.56",
+      "Installation path / port: 8040/tcp",
+      "Quality of Detection (QoD): 30%"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: Apache Tomcat DoS Vulnerability (Jun 2020) - Linux OID:1.3.6.1.4.1.25623.1.0.144180",
+      "Version used: 2024-02-08T14:36:53Z",
+      "Product: cpe:/a:apache:tomcat:8.5.23 Method: Apache Tomcat Detection Consolidation OID: 1.3.6.1.4.1.25623.1.0.107652"
+    ],
+    "impact": [
+      "A specially crafted sequence of HTTP/2 requests could trigger high CPU usage for several seconds and, if made concurrently on a sufficient number of connections, could render the server unresponsive."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 8.5.56, 9.0.36, 10.0.0-M6 or later."
+    ],
+    "insight": [
+      "A specially crafted sequence of HTTP/2 requests sent to Apache Tomcat could trigger high CPU usage for several seconds. If a sufficient number of such requests were made on concurrent HTTP/2 connections, the server could become unresponsive."
+    ],
+    "product_detection_result": [
+      "cpe:/a:apache:tomcat:8.5.23 Detected by Apache Tomcat Detection Consolidation (OID: 1.3.6.1.4.1.25623.1.0.107652)"
+    ],
+    "log_method": [],
+    "cvss": [
+      7.5,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "port": 8040,
+    "protocol": "tcp",
+    "severity": "HIGH",
+    "references": [
+      "CVE-2020-11996",
+      "https://lists.apache.org/thread.html/r5541ef6b6b68b49f76fc4c45695940116da2b->cbe0312ef204a00a2e0%40%3Cannounce.tomcat.apache.org%3E",
+      "WID-SEC-2024-0528",
+      "WID-SEC-2022-1375",
+      "CB-K20/1017",
+      "CB-K20/0637",
+      "CB-K20/0636",
+      "DFN-CERT-2021-1736",
+      "DFN-CERT-2021-0043",
+      "DFN-CERT-2020-2006",
+      "DFN-CERT-2020-1575",
+      "DFN-CERT-2020-1490",
+      "DFN-CERT-2020-1358"
+    ],
+    "plugin": [],
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Apache Tomcat Multiple DoS Vulnerabilities (Jul 2020) - Linux",
+    "description": [
+      "Apache Tomcat is prone to multiple denial of service vulnerabilities."
+    ],
+    "detection_result": [
+      "Installed version: 8.5.23",
+      "Fixed version: 8.5.57",
+      "Installation path / port: 8040/tcp",
+      "Solution type: VendorFix",
+      "Quality of Detection (QoD): 30%"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: Apache Tomcat Multiple DoS Vulnerabilities (Jul 2020) - Linux OID:1.3.6.1.4.1.25623.1.0.144273",
+      "Version used: 2024-02-08T14:36:53Z"
+    ],
+    "impact": [],
+    "solution": [
+      "Update to version 8.5.57, 9.0.37, 10.0.0-M7 or later."
+    ],
+    "insight": [
+      "The following vulnerabilitities exist:",
+      "- HTTP/2 Denial of Service (CVE-2020-13934)",
+      "- WebSocket Denial of Service (CVE-2020-13935)"
+    ],
+    "product_detection_result": [
+      "cpe:/a:apache:tomcat:8.5.23",
+      "Detected by Apache Tomcat Detection Consolidation (OID: 1.3.6.1.4.1.25623.1.0.10 ->7652)",
+      "Product: cpe:/a:apache:tomcat:8.5.23",
+      "Method: Apache Tomcat Detection Consolidation",
+      "OID: 1.3.6.1.4.1.25623.1.0.107652)"
+    ],
+    "log_method": [],
+    "cvss": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "port": 8040,
+    "protocol": "tcp",
+    "severity": "HIGH",
+    "references": [
+      "CVE-2020-13934",
+      "CVE-2020-13935",
+      "https://lists.apache.org/thread.html/r61f411cf82488d6ec213063fc15feeeb88e31b0ca9c29652ee4f962e%40%3Cannounce.tomcat.apache.org%3E",
+      "https://lists.apache.org/thread.html/rd48c72bd3255bda87564d4da3791517c074d94f8a701f93b85752651%40%3Cannounce.tomcat.apache.org%3E",
+      "https://tomcat.apache.org/security-10.html#Fixed_in_Apache_Tomcat_10.0.0-M7",
+      "https://tomcat.apache.org/security-9.html#Fixed_in_Apache_Tomcat_9.0.37",
+      "https://tomcat.apache.org/security-8.html#Fixed_in_Apache_Tomcat_8.5.57",
+      "WID-SEC-2024-0528",
+      "WID-SEC-2023-1048",
+      "WID-SEC-2022-1375",
+      "WID-SEC-2022-0519",
+      "CB-K20/1030",
+      "CB-K20/1021",
+      "CB-K20/1017",
+      "CB-K20/0717",
+      "DFN-CERT-2022-1472",
+      "DFN-CERT-2021-1736",
+      "DFN-CERT-2021-0714",
+      "DFN-CERT-2021-0132",
+      "DFN-CERT-2020-2295",
+      "DFN-CERT-2020-2287",
+      "DFN-CERT-2020-2132",
+      "DFN-CERT-2020-2006",
+      "DFN-CERT-2020-1761",
+      "DFN-CERT-2020-1707",
+      "DFN-CERT-2020-1706",
+      "DFN-CERT-2020-1575",
+      "DFN-CERT-2020-1511"
+    ],
+    "plugin": [],
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Apache Tomcat Request Smuggling Vulnerability (Oct 2022) - Linux",
+    "description": [
+      "Apache Tomcat is prone to a request smuggling vulnerability."
+    ],
+    "detection_result": [
+      "Installed version: 8.5.23",
+      "Fixed version: 8.5.83",
+      "Installation path / port: 8040/tcp",
+      "Quality of Detection (QoD): 30%"
+    ],
+    "detection_method": [],
+    "impact": [],
+    "solution": [
+      "Update to version 8.5.83, 9.0.68, 10.0.27, 10.1.1 or later."
+    ],
+    "insight": [
+      "If Tomcat is congured to ignore invalid HTTP headers via setting rejectIllegalHeader to false (the default for 8.5.x only), Tomcat does not reject a request containing an invalid Content-Length header making a request smuggling attack possible if Tomcat is located behind a reverse proxy that also fails to reject the request with the invalid header."
+    ],
+    "product_detection_result": [
+      "cpe:/a:apache:tomcat:8.5.23",
+      "Detected by Apache Tomcat Detection Consolidation (OID: 1.3.6.1.4.1.25623.1.0.10 ->7652)"
+    ],
+    "log_method": [],
+    "cvss": [
+      7.5,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "port": 8040,
+    "protocol": "tcp",
+    "severity": "HIGH",
+    "references": [],
+    "plugin": [],
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Apache Tomcat 'Hostname Verication' Security Bypass Vulnerability - Linux",
+    "description": [
+      "Apache Tomcat is prone to a security bypass vulnerability.",
+      "Quality of Detection (QoD): 30%"
+    ],
+    "detection_result": [
+      "Installed version: 8.5.23",
+      "Fixed version: 8.5.32",
+      "Installation path / port: 8040/tcp"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: Apache Tomcat 'Hostname Verification' Security Bypass Vulnerability - Linux",
+      ". . . continues on next page . . ."
+    ],
+    "impact": [
+      "Successful exploitation will allow an attacker to bypass certain security restrictions and perform unauthorized actions."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Upgrade to Apache Tomcat version 9.0.10 or 8.5.32 or 8.0.53 or 7.0.90 or later. Please see the references for more information."
+    ],
+    "insight": [
+      "The aw exists due to a missing host name verication when using TLS with the WebSocket client."
+    ],
+    "product_detection_result": [
+      "Product: cpe:/a:apache:tomcat:8.5.23",
+      "Detected by Apache Tomcat Detection Consolidation (OID: 1.3.6.1.4.1.25623.1.0.107652)"
+    ],
+    "log_method": [],
+    "cvss": [
+      7.5,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "port": 8040,
+    "protocol": "tcp",
+    "severity": "HIGH",
+    "references": [
+      "CVE-2018-8034",
+      "http://mail-archives.us.apache.org/mod_mbox/www-announce/201807.mbox/%3C20180722091057.GA70283@minotaur.apache.org%3E",
+      "http://tomcat.apache.org/security-9.html#Fixed_in_Apache_Tomcat_9.0.10",
+      "http://tomcat.apache.org/security-8.html#Fixed_in_Apache_Tomcat_8.0.53",
+      "http://tomcat.apache.org/security-8.html#Fixed_in_Apache_Tomcat_8.5.32",
+      "http://tomcat.apache.org/security-7.html#Fixed_in_Apache_Tomcat_7.0.90",
+      "cert-bund: WID-SEC-2024-1682",
+      "cert-bund: WID-SEC-2024-0528",
+      "cert-bund: CB-K19/0907",
+      "cert-bund: CB-K19/0616",
+      "cert-bund: CB-K19/0320",
+      "cert-bund: CB-K18/1005",
+      "cert-bund: CB-K18/0809",
+      "dfn-cert: DFN-CERT-2019-2418",
+      "dfn-cert: DFN-CERT-2019-1627",
+      "dfn-cert: DFN-CERT-2019-1237",
+      "dfn-cert: DFN-CERT-2019-0951",
+      "dfn-cert: DFN-CERT-2019-0451",
+      "dfn-cert: DFN-CERT-2019-0147",
+      "dfn-cert: DFN-CERT-2018-2165",
+      "dfn-cert: DFN-CERT-2018-2142",
+      "dfn-cert: DFN-CERT-2018-1753",
+      "dfn-cert: DFN-CERT-2018-1471",
+      "dfn-cert: DFN-CERT-2018-1443",
+      "dfn-cert: DFN-CERT-2018-1262"
+    ],
+    "plugin": [],
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Apache Tomcat Clustering DoS Vulnerability (May 2022)",
+    "description": [
+      "Apache Tomcat is prone to a denial of service (DoS) vulnerability when running with enabled Tomcat clustering over an untrusted network.",
+      "Quality of Detection (QoD): 1%"
+    ],
+    "detection_result": [
+      "Installed version: 8.5.23",
+      "Fixed version: See solution information",
+      "Installation path / port: 8040/tcp"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host."
+    ],
+    "impact": [
+      "Apache Tomcat is prone to a denial of service (DoS) vulnerability when running with enabled Tomcat clustering over an untrusted network."
+    ],
+    "solution": [
+      "Solution type: Mitigation",
+      "Don't run Apache Tomcat with enabled Tomcat clustering over an untrusted network",
+      "Update Apache Tomcat to version 10.1.0-M15, 10.0.21, 9.0.63, 8.5.79 or later to receive the corrected / updated documentation"
+    ],
+    "insight": [
+      "The documentation for the EncryptInterceptor incorrectly stated it enabled Tomcat clustering to run over an untrusted network. This was not correct. While the EncryptInterceptor does provide confidentiality and integrity protection, it does not protect against all risks associated with running over any untrusted network, particularly DoS risks."
+    ],
+    "product_detection_result": [
+      "Product: cpe:/a:apache:tomcat:8.5.23",
+      "Detected by Apache Tomcat Detection Consolidation (OID: 1.3.6.1.4.1.25623.1.0.107652)"
+    ],
+    "log_method": [],
+    "cvss": [
+      7.5,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "port": 8040,
+    "protocol": "tcp",
+    "severity": "HIGH",
+    "references": [
+      "CVE-2022-29885",
+      "url: https://tomcat.apache.org/security-10.html#Fixed_in_Apache_Tomcat_10.1.0-M1 ->5",
+      "url: https://tomcat.apache.org/security-10.html#Fixed_in_Apache_Tomcat_10.0.21",
+      "url: https://tomcat.apache.org/security-9.html#Fixed_in_Apache_Tomcat_9.0.63",
+      "url: https://tomcat.apache.org/security-8.html#Fixed_in_Apache_Tomcat_8.5.79",
+      "url: https://lists.apache.org/thread/548bnqoxvp0rqqq2yyj90l0xvwhq087d",
+      "cert-bund: WID-SEC-2024-1238",
+      "cert-bund: WID-SEC-2022-1780",
+      "cert-bund: WID-SEC-2022-1767",
+      "cert-bund: WID-SEC-2022-0799",
+      "cert-bund: WID-SEC-2022-0467",
+      "cert-bund: CB-K22/0597",
+      "dfn-cert: DFN-CERT-2024-1989",
+      "dfn-cert: DFN-CERT-2024-0762",
+      "dfn-cert: DFN-CERT-2022-2392",
+      "dfn-cert: DFN-CERT-2022-2323",
+      "dfn-cert: DFN-CERT-2022-1070"
+    ],
+    "plugin": [],
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Apache Tomcat DoS Vulnerability (Feb 2023) - Linux",
+    "description": [
+      "Apache Tomcat is prone to a denial of service (DoS) vulnerability."
+    ],
+    "detection_result": [
+      "Quality of Detection (QoD): 30%",
+      "Installed version: 8.5.23",
+      "Fixed version: 8.5.85",
+      "Installation path / port: 8040/tcp"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: Apache Tomcat DoS Vulnerability (Feb 2023) - Linux OID:1.3.6.1.4.1.25623.1.0.104550 Version used: 2025-01-21T05:37:33Z",
+      "Product Detection Result: Product: cpe:/a:apache:tomcat:8.5.23 Method: Apache Tomcat Detection Consolidation OID: 1.3.6.1.4.1.25623.1.0.107652"
+    ],
+    "impact": [
+      "An attacker can trigger a denial of service by sending malicious uploads or a series of uploads which exploit lack of limits on the number of request parts processed, potentially exhausting server resources and causing service interruption."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 8.5.85, 9.0.71, 10.1.5, 11.0.0-M3 or later."
+    ],
+    "insight": [
+      "Apache Tomcat uses a packaged renamed copy of Apache Commons FileUpload to provide the file upload functionality defined in the Jakarta Servlet specification.",
+      "Apache Tomcat was, therefore, also vulnerable to the Apache Commons FileUpload vulnerability CVE-2023-24998 as there was no limit to the number of request parts processed.",
+      "This resulted in the possibility of an attacker triggering a DoS with a malicious upload or series of uploads."
+    ],
+    "product_detection_result": [
+      "cpe:/a:apache:tomcat:8.5.23",
+      "Detected by Apache Tomcat Detection Consolidation (OID: 1.3.6.1.4.1.25623.1.0.10 ->7652)",
+      "Product: cpe:/a:apache:tomcat:8.5.23 Method: Apache Tomcat Detection Consolidation OID: 1.3.6.1.4.1.25623.1.0.107652",
+      "Version used: 2025-01-21T05:37:33Z"
+    ],
+    "log_method": [],
+    "cvss": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "port": 8040,
+    "protocol": "tcp",
+    "severity": "HIGH",
+    "references": [
+      "CVE-2023-24998",
+      "https://lists.apache.org/thread/g16kv0xpp272htz107molwbbgdrqrdk1",
+      "https://tomcat.apache.org/security-11.html#Fixed_in_Apache_Tomcat_11.0.0-M3",
+      "https://tomcat.apache.org/security-10.html#Fixed_in_Apache_Tomcat_10.1.5",
+      "https://tomcat.apache.org/security-9.html#Fixed_in_Apache_Tomcat_9.0.71",
+      "https://tomcat.apache.org/security-8.html#Fixed_in_Apache_Tomcat_8.5.85",
+      "https://lists.apache.org/thread/4xl4l09mhwg4vgsk7dxqogcjrobrrdoy",
+      "WID-SEC-2025-0810",
+      "WID-SEC-2024-1652",
+      "WID-SEC-2024-1642",
+      "WID-SEC-2024-1637",
+      "WID-SEC-2024-1622",
+      "WID-SEC-2024-1238",
+      "WID-SEC-2024-0890",
+      "WID-SEC-2024-0888",
+      "WID-SEC-2024-0794",
+      "WID-SEC-2024-0124",
+      "WID-SEC-2024-0117",
+      "WID-SEC-2024-0054",
+      "WID-SEC-2023-2688",
+      "WID-SEC-2023-2675",
+      "WID-SEC-2023-2674",
+      "WID-SEC-2023-2625",
+      "WID-SEC-2023-2309",
+      "WID-SEC-2023-2031",
+      "WID-SEC-2023-1817",
+      "WID-SEC-2023-1815",
+      "WID-SEC-2023-1813",
+      "WID-SEC-2023-1812",
+      "WID-SEC-2023-1811",
+      "WID-SEC-2023-1809",
+      "WID-SEC-2023-1808",
+      "WID-SEC-2023-1807",
+      "WID-SEC-2023-1794",
+      "WID-SEC-2023-1792",
+      "WID-SEC-2023-1791",
+      "WID-SEC-2023-1784",
+      "WID-SEC-2023-1783",
+      "WID-SEC-2023-1782",
+      "WID-SEC-2023-1424",
+      "WID-SEC-2023-1142",
+      "WID-SEC-2023-1021",
+      "WID-SEC-2023-1017",
+      "WID-SEC-2023-1016"
+    ],
+    "plugin": [],
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Apache Tomcat Request Mix-up Vulnerability (May 2022) - Linux",
+    "description": [
+      "Apache Tomcat is prone to a request mix-up vulnerability."
+    ],
+    "detection_result": [
+      "Installed version: 8.5.23",
+      "Fixed version: 8.5.76",
+      "Installation path / port: 8081/tcp"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: Apache Tomcat Request Mix-up Vulnerability (May 2022) - Linux OID:1.3.6.1.4.1.25623.1.0.104203",
+      "Version used: 2022-05-26T03:04:21Z"
+    ],
+    "impact": [
+      "Subsequent connections may use the same pooled object concurrently which could result in data being returned to the wrong user and/or other errors."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 8.5.76, 9.0.21 or later."
+    ],
+    "insight": [
+      "If a web application sends a WebSocket message concurrently with the WebSocket connection closing, it is possible that the application will continue to use the socket after it has been closed.",
+      "The error handling triggered in this case could cause a pooled object to be placed in the pool twice.",
+      "This could result in subsequent connections using the same object concurrently which could result in data being returned to the wrong user and/or other errors."
+    ],
+    "product_detection_result": [
+      "Product: cpe:/a:apache:tomcat:8.5.23",
+      "Method: Apache Tomcat Detection Consolidation",
+      "Detected by Apache Tomcat Detection Consolidation (OID: 1.3.6.1.4.1.25623.1.0.107652)"
+    ],
+    "log_method": [],
+    "cvss": [
+      8.6,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "port": 8081,
+    "protocol": "tcp",
+    "severity": "HIGH",
+    "references": [
+      "CVE-2022-25762",
+      "https://tomcat.apache.org/security-9.html#Fixed_in_Apache_Tomcat_9.0.21",
+      "https://tomcat.apache.org/security-8.html#Fixed_in_Apache_Tomcat_8.5.76",
+      "https://lists.apache.org/thread/tkmozotlgcrpvhx5vt6kw0pxtfx11k67",
+      "cert-bund: WID-SEC-2022-1335",
+      "cert-bund: WID-SEC-2022-1228",
+      "cert-bund: WID-SEC-2022-0899",
+      "cert-bund: WID-SEC-2022-0740",
+      "cert-bund: CB-K22/0600",
+      "dfn-cert: DFN-CERT-2024-0762",
+      "dfn-cert: DFN-CERT-2022-1605"
+    ],
+    "plugin": [],
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Apache Tomcat Multiple DoS Vulnerabilities (Jul 2025) - Linux",
+    "description": [
+      "Apache Tomcat is prone to multiple denial of service (DoS) vulnerabilities."
+    ],
+    "detection_result": [
+      "Installed version: 8.5.23",
+      "Fixed version: 9.0.107",
+      "Installation path / port: 8081/tcp",
+      "Solution type: VendorFix",
+      "Update to version 9.0.107, 10.1.43, 11.0.9 or later."
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: Apache Tomcat Multiple DoS Vulnerabilities (Jul 2025) - Linux OID:1.3.6.1.4.1.25623.1.0.154895 Version used: 2025-07-11T15:43:14Z"
+    ],
+    "impact": [],
+    "solution": [
+      "Update to version 9.0.107, 10.1.43, 11.0.9 or later.",
+      "Solution type: VendorFix"
+    ],
+    "insight": [
+      "The following aw(s) exist:",
+      "CVE-2025-52520: DoS due to overow in le upload limit",
+      "CVE-2025-53506: DoS via excessive HTTP/2 streams"
+    ],
+    "product_detection_result": [
+      "cpe:/a:apache:tomcat:8.5.23 Detected by Apache Tomcat Detection Consolidation (OID: 1.3.6.1.4.1.25623.1.0.10 ->7652)",
+      "Product: cpe:/a:apache:tomcat:8.5.23 Method: Apache Tomcat Detection Consolidation OID: 1.3.6.1.4.1.25623.1.0.107652"
+    ],
+    "log_method": [],
+    "cvss": [
+      7.8,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "port": null,
+    "protocol": null,
+    "severity": "HIGH",
+    "references": [
+      "CVE-2025-52520",
+      "CVE-2025-53506",
+      "https://lists.apache.org/thread/trqq01bbxw6c92zx69kx2mw2qgmfy0o5",
+      "https://lists.apache.org/thread/p09775q0rd185m6zz98krg0fp45j8kr0",
+      "https://tomcat.apache.org/security-9.html#Fixed_in_Apache_Tomcat_9.0.107",
+      "https://tomcat.apache.org/security-10.html#Fixed_in_Apache_Tomcat_10.1.43",
+      "https://tomcat.apache.org/security-11.html#Fixed_in_Apache_Tomcat_11.0.9"
+    ],
+    "plugin": [],
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Apache Tomcat Information Disclosure Vulnerability (Mar 2021) - Linux",
+    "description": [
+      "Apache Tomcat is prone to an information disclosure vulnerability."
+    ],
+    "detection_result": [
+      "Installed version: 8.5.23",
+      "Fixed version: 8.5.63",
+      "Installation path / port: 8081/tcp"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: Apache Tomcat Information Disclosure Vulnerability (Mar 2021) - Linux OID:1.3.6.1.4.1.25623.1.0.145479 Version used: 2024-02-22T05:06:55Z"
+    ],
+    "impact": [],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 8.5.63, 9.0.43, 10.0.2 or later."
+    ],
+    "insight": [
+      "When responding to new h2c connection requests, Apache Tomcat could duplicate request headers and a limited amount of request body from one request to another meaning user A and user B could both see the results of user A's request."
+    ],
+    "product_detection_result": [
+      "cpe:/a:apache:tomcat:8.5.23",
+      "Detected by Apache Tomcat Detection Consolidation (OID: 1.3.6.1.4.1.25623.1.0.107652)"
+    ],
+    "log_method": [],
+    "cvss": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "port": 8081,
+    "protocol": "tcp",
+    "severity": "MEDIUM",
+    "references": [
+      "CVE-2021-25122",
+      "https://lists.apache.org/thread.html/r7b95bc248603360501f18c8eb03bb6001ec0e-e3296205b34b07105b7@%3Cannounce.tomcat.apache.org%3E",
+      "https://tomcat.apache.org/security-10.html#Fixed_in_Apache_Tomcat_10.0.2",
+      "https://tomcat.apache.org/security-9.html#Fixed_in_Apache_Tomcat_9.0.43",
+      "https://tomcat.apache.org/security-8.html#Fixed_in_Apache_Tomcat_8.5.63",
+      "cert-bund: WID-SEC-2022-1375",
+      "cert-bund: WID-SEC-2022-1099",
+      "cert-bund: WID-SEC-2022-0624",
+      "cert-bund: WID-SEC-2022-0607",
+      "cert-bund: CB-K21/1094",
+      "cert-bund: CB-K21/1081",
+      "cert-bund: CB-K21/0770",
+      "cert-bund: CB-K21/0222",
+      "dfn-cert: DFN-CERT-2024-1989",
+      "dfn-cert: DFN-CERT-2022-1530",
+      "dfn-cert: DFN-CERT-2022-0733",
+      "dfn-cert: DFN-CERT-2021-2191",
+      "dfn-cert: DFN-CERT-2021-1904",
+      "dfn-cert: DFN-CERT-2021-1537",
+      "dfn-cert: DFN-CERT-2021-1536",
+      "dfn-cert: DFN-CERT-2021-1403",
+      "dfn-cert: DFN-CERT-2021-0810",
+      "dfn-cert: DFN-CERT-2021-0807",
+      "dfn-cert: DFN-CERT-2021-0544",
+      "dfn-cert: DFN-CERT-2021-0445"
+    ],
+    "plugin": [],
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Apache Tomcat DoS Vulnerability (Jun 2019) - Linux",
+    "description": [
+      "Apache Tomcat is prone to a denial of service vulnerability in the HTTP/2 implementation."
+    ],
+    "detection_result": [
+      "Installed version: 8.5.23",
+      "Fixed version: 8.5.41",
+      "Installation path / port: 8081/tcp"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: Apache Tomcat DoS Vulnerability (Jun 2019) - Linux OID:1.3.6.1.4.1.25623.1.0.107014 Version used: 2025-09-17T05:39:26Z"
+    ],
+    "impact": [],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 8.5.41, 9.0.20 or later."
+    ],
+    "insight": [
+      "The HTTP/2 implementation accepts streams with excessive numbers of SETTINGS frames and also permitts clients to keep streams open without reading/writing request/response data. By keeping streams open for requests that utilises the Servlet API's blocking I/O, clients are able to cause server-side threads to block eventually leading to thread exhaustion and a DoS."
+    ],
+    "product_detection_result": [
+      "cpe:/a:apache:tomcat:8.5.23",
+      "Detected by Apache Tomcat Detection Consolidation (OID: 1.3.6.1.4.1.25623.1.0.107652)"
+    ],
+    "log_method": [],
+    "cvss": [
+      7.5,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "port": 8081,
+    "protocol": "tcp",
+    "severity": "HIGH",
+    "references": [
+      "CVE-2019-10072",
+      "http://tomcat.apache.org/security-9.html",
+      "http://tomcat.apache.org/security-8.html",
+      "cert-bund: WID-SEC-2024-0528",
+      "cert-bund: CB-K20/1008",
+      "cert-bund: CB-K20/0029",
+      "cert-bund: CB-K19/0915",
+      "cert-bund: CB-K19/0523"
+    ],
+    "plugin": [],
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Apache Tomcat Session Fixation Vulnerability (Dec 2019) - Linux",
+    "description": [
+      "Apache Tomcat is prone to a session xation vulnerability."
+    ],
+    "detection_result": [
+      "Installed version: 8.5.23",
+      "Fixed version: 8.5.50",
+      "Installation path / port: 8081/tcp",
+      "Solution: Solution type: VendorFix Update to version 7.0.99, 8.5.50, 9.0.30 or later.",
+      "Aected Software/OS: Apache Tomcat 7.0.0 to 7.0.98, 8.5.0 to 8.5.49 and 9.0.0.M1 to 9.0.29."
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: Apache Tomcat Session Fixation Vulnerability (Dec 2019) - Linux OID:1.3.6.1.4.1.25623.1.0.143313",
+      "Version used: 2024-02-08T05:05:59Z",
+      "Product Detection Result Product: cpe:/a:apache:tomcat:8.5.23 Method: Apache Tomcat Detection Consolidation OID: 1.3.6.1.4.1.25623.1.0.107652)"
+    ],
+    "impact": [],
+    "solution": [
+      "Update to version 7.0.99, 8.5.50, 9.0.30 or later.",
+      "Solution type: VendorFix"
+    ],
+    "insight": [
+      "When using FORM authentication there was a narrow window where an attacker could perform a session xation attack.",
+      "The window was considered too narrow for an exploit to be practical but, erring on the side of caution, this issue has been treated as a security vulnerability."
+    ],
+    "product_detection_result": [
+      "cpe:/a:apache:tomcat:8.5.23 Detected by Apache Tomcat Detection Consolidation (OID: 1.3.6.1.4.1.25623.1.0.10->7652)",
+      "Product: cpe:/a:apache:tomcat:8.5.23 Method: Apache Tomcat Detection Consolidation OID: 1.3.6.1.4.1.25623.1.0.107652)"
+    ],
+    "log_method": [],
+    "cvss": [
+      7.5,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "port": 8081,
+    "protocol": "tcp",
+    "severity": "HIGH",
+    "references": [
+      "CVE-2019-17563",
+      "https://lists.apache.org/thread.html/8b4c1db8300117b28a0f3f743c0b9e3f964687->a690cdf9662a884bbd%40%3Cannounce.tomcat.apache.org%3E",
+      "WID-SEC-2024-0528",
+      "WID-SEC-2023-1229",
+      "WID-SEC-2023-1049",
+      "CB-K21/0071",
+      "DFN-CERT-2020-2132"
+    ],
+    "plugin": [],
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Apache Tomcat 'Hostname Verication' Security Bypass Vulnerability - Linux",
+    "description": [
+      "Apache Tomcat is prone to a security bypass vulnerability."
+    ],
+    "detection_result": [
+      "Installed version: 8.5.23",
+      "Fixed version: 8.5.32",
+      "Installation path / port: 8081/tcp",
+      "Quality of Detection (QoD): 30%"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host."
+    ],
+    "impact": [
+      "Successful exploitation will allow an attacker to bypass certain security restrictions and perform unauthorized actions."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Upgrade to Apache Tomcat version 9.0.10 or 8.5.32 or 8.0.53 or 7.0.90 or later. Please see the references for more information."
+    ],
+    "insight": [
+      "The aw exists due to a missing host name verication when using TLS with the WebSocket client."
+    ],
+    "product_detection_result": [
+      "Product detection result cpe:/a:apache:tomcat:8.5.23",
+      "Detected by Apache Tomcat Detection Consolidation (OID: 1.3.6.1.4.1.25623.1.0.107652)",
+      "Detected by Apache Tomcat Detection Consolidation (OID: 1.3.6.1.4.1.25623.1.0.107652)",
+      "Version used: 2025-09-17T05:39:26Z"
+    ],
+    "log_method": [],
+    "cvss": [
+      7.5,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "port": 8081,
+    "protocol": "tcp",
+    "severity": "HIGH",
+    "references": [
+      "CVE-2018-8034",
+      "http://mail-archives.us.apache.org/mod_mbox/www-announce/201807.mbox/%3C201->80722091057.GA70283@minotaur.apache.org%3E",
+      "http://tomcat.apache.org/security-9.html#Fixed_in_Apache_Tomcat_9.0.10",
+      "http://tomcat.apache.org/security-8.html#Fixed_in_Apache_Tomcat_8.0.53",
+      "http://tomcat.apache.org/security-8.html#Fixed_in_Apache_Tomcat_8.5.32",
+      "http://tomcat.apache.org/security-7.html#Fixed_in_Apache_Tomcat_7.0.90",
+      "cert-bund: WID-SEC-2024-1682",
+      "cert-bund: WID-SEC-2024-0528",
+      "cert-bund: CB-K19/0907",
+      "cert-bund: CB-K19/0616",
+      "cert-bund: CB-K19/0320",
+      "cert-bund: CB-K18/1005",
+      "cert-bund: CB-K18/0809",
+      "dfn-cert: DFN-CERT-2019-2418",
+      "dfn-cert: DFN-CERT-2019-1627",
+      "dfn-cert: DFN-CERT-2019-1237",
+      "dfn-cert: DFN-CERT-2019-0951",
+      "dfn-cert: DFN-CERT-2019-0451",
+      "dfn-cert: DFN-CERT-2019-0147",
+      "dfn-cert: DFN-CERT-2018-2165",
+      "dfn-cert: DFN-CERT-2018-2142",
+      "dfn-cert: DFN-CERT-2018-1753",
+      "dfn-cert: DFN-CERT-2018-1471",
+      "dfn-cert: DFN-CERT-2018-1443",
+      "dfn-cert: DFN-CERT-2018-1262"
+    ],
+    "plugin": [],
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Apache Tomcat Request Smuggling Vulnerability (Oct 2022) - Linux",
+    "description": [
+      "Apache Tomcat is prone to a request smuggling vulnerability."
+    ],
+    "detection_result": [
+      "Installed version: 8.5.23",
+      "Fixed version: 8.5.83",
+      "Installation path / port: 8081/tcp",
+      "Quality of Detection (QoD): 30%"
+    ],
+    "detection_method": [],
+    "impact": [],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 8.5.83, 9.0.68, 10.0.27, 10.1.1 or later."
+    ],
+    "insight": [
+      "If Tomcat is congured to ignore invalid HTTP headers via setting rejectIllegalHeader to false (the default for 8.5.x only), Tomcat does not reject a request containing an invalid Content-"
+    ],
+    "product_detection_result": [
+      "Product: cpe:/a:apache:tomcat:8.5.23",
+      "Method: Apache Tomcat Detection Consolidation",
+      "Detected by Apache Tomcat Detection Consolidation (OID: 1.3.6.1.4.1.25623.1.0.107652)"
+    ],
+    "log_method": [],
+    "cvss": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "port": 8081,
+    "protocol": "tcp",
+    "severity": "HIGH",
+    "references": [],
+    "plugin": [],
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Apache Tomcat 'UTF-8 Decoder' Denial of Service Vulnerability - Linux",
+    "description": [
+      "Apache Tomcat is prone to a denial of service (DoS) vulnerability."
+    ],
+    "detection_result": [
+      "Installed version: 8.5.23",
+      "Fixed version: 8.5.31",
+      "Installation path / port: 8081/tcp"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Version used: 2025-09-17T05:39:26Z",
+      "OID:1.3.6.1.4.1.25623.1.0.813725"
+    ],
+    "impact": [
+      "Successful exploitation will allow an attacker to conduct a denial-of-service condition."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Upgrade to Apache Tomcat version 9.0.8 or 8.5.31 or 8.0.52 or 7.0.90 or later. Please see the references for more information."
+    ],
+    "insight": [
+      "The aw exists due to improper handing of overow in the UTF-8 decoder with supplementary characters."
+    ],
+    "product_detection_result": [
+      "Product: cpe:/a:apache:tomcat:8.5.23",
+      "Method: Apache Tomcat Detection Consolidation",
+      "OID: 1.3.6.1.4.1.25623.1.0.107652)"
+    ],
+    "log_method": [],
+    "cvss": [
+      7.5,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "port": 8081,
+    "protocol": "tcp",
+    "severity": "HIGH",
+    "references": [
+      "CVE-2018-1336",
+      "http://mail-archives.us.apache.org/mod_mbox/www-announce/201807.mbox/%3C20180722090435.GA60759%40minotaur.apache.org%3E",
+      "http://tomcat.apache.org/security-9.html#Fixed_in_Apache_Tomcat_9.0.8",
+      "http://tomcat.apache.org/security-8.html#Fixed_in_Apache_Tomcat_8.5.31",
+      "http://tomcat.apache.org/security-8.html#Fixed_in_Apache_Tomcat_8.0.52",
+      "cert-bund: WID-SEC-2024-0528",
+      "cert-bund: CB-K18/0809",
+      "dfn-cert: DFN-CERT-2020-0048",
+      "dfn-cert: DFN-CERT-2018-2474",
+      "dfn-cert: DFN-CERT-2018-2165",
+      "dfn-cert: DFN-CERT-2018-2142",
+      "dfn-cert: DFN-CERT-2018-2133",
+      "dfn-cert: DFN-CERT-2018-2125",
+      "dfn-cert: DFN-CERT-2018-2097",
+      "dfn-cert: DFN-CERT-2018-1928",
+      "dfn-cert: DFN-CERT-2018-1753",
+      "dfn-cert: DFN-CERT-2018-1541",
+      "dfn-cert: DFN-CERT-2018-1471",
+      "dfn-cert: DFN-CERT-2018-1443",
+      "dfn-cert: DFN-CERT-2018-1262"
+    ],
+    "plugin": [],
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Apache Tomcat DoS Vulnerability (Feb 2023) - Linux",
+    "description": [
+      "Apache Tomcat is prone to a denial of service (DoS) vulnerability."
+    ],
+    "detection_result": [
+      "Installed version: 8.5.23",
+      "Fixed version: 8.5.85",
+      "Installation path / port: 8081/tcp",
+      "Quality of Detection (QoD): 30%"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: Apache Tomcat DoS Vulnerability (Feb 2023) - Linux OID:1.3.6.1.4.1.25623.1.0.104550 Version used: 2025-01-21T05:37:33Z",
+      "Product Detection Result: Product: cpe:/a:apache:tomcat:8.5.23 Method: Apache Tomcat Detection Consolidation OID:1.3.6.1.4.1.25623.1.0.107652"
+    ],
+    "impact": [
+      "This resulted in the possibility of an attacker triggering a DoS with a malicious upload or series of uploads."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 8.5.85, 9.0.71, 10.1.5, 11.0.0-M3 or later."
+    ],
+    "insight": [
+      "Apache Tomcat uses a packaged renamed copy of Apache Commons FileUpload to provide the file upload functionality defined in the Jakarta Servlet specification.",
+      "Apache Tomcat was, therefore, also vulnerable to the Apache Commons FileUpload vulnerability CVE-2023-24998 as there was no limit to the number of request parts processed."
+    ],
+    "product_detection_result": [
+      "Product: cpe:/a:apache:tomcat:8.5.23",
+      "Detected by Apache Tomcat Detection Consolidation (OID: 1.3.6.1.4.1.25623.1.0.10 ->7652)"
+    ],
+    "log_method": [],
+    "cvss": [
+      7.5,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "port": 8081,
+    "protocol": "tcp",
+    "severity": "HIGH",
+    "references": [
+      "CVE-2023-24998",
+      "https://lists.apache.org/thread/g16kv0xpp272htz107molwbbgdrqrdk1",
+      "https://tomcat.apache.org/security-11.html#Fixed_in_Apache_Tomcat_11.0.0-M3",
+      "https://tomcat.apache.org/security-10.html#Fixed_in_Apache_Tomcat_10.1.5",
+      "https://tomcat.apache.org/security-9.html#Fixed_in_Apache_Tomcat_9.0.71",
+      "https://tomcat.apache.org/security-8.html#Fixed_in_Apache_Tomcat_8.5.85"
+    ],
+    "plugin": [],
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Apache Tomcat RCE Vulnerability (Mar 2021) - Linux",
+    "description": [
+      "Apache Tomcat is prone to a remote code execution (RCE) vulnerability due to an incomplete x.",
+      "Quality of Detection (QoD): 30%"
+    ],
+    "detection_result": [
+      "Installed version: 8.5.23",
+      "Fixed version: 8.5.63",
+      "Installation path / port: 8081/tcp",
+      "Product: cpe:/a:apache:tomcat:8.5.23",
+      "Detected by Apache Tomcat Detection Consolidation (OID: 1.3.6.1.4.1.25623.1.0.107652)"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: Apache Tomcat RCE Vulnerability (Mar 2021) - Linux OID:1.3.6.1.4.1.25623.1.0.145477 Version used: 2024-02-22T05:06:55Z"
+    ],
+    "impact": [],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 7.0.108, 8.5.63, 9.0.43, 10.0.2 or later."
+    ],
+    "insight": [],
+    "product_detection_result": [
+      "Product: cpe:/a:apache:tomcat:8.5.23",
+      "Method: Apache Tomcat Detection Consolidation",
+      "OID: 1.3.6.1.4.1.25623.1.0.107652"
+    ],
+    "log_method": [],
+    "cvss": [
+      7.0,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "port": 8081,
+    "protocol": "tcp",
+    "severity": "HIGH",
+    "references": [
+      "CVE-2021-25329",
+      "https://lists.apache.org/thread.html/rfe62fbf9d4c314f166fe8c668e50e5d9dd882->a99447f26f0367474bf@%3Cannounce.tomcat.apache.org%3E",
+      "https://tomcat.apache.org/security-10.html#Fixed_in_Apache_Tomcat_10.0.2",
+      "https://tomcat.apache.org/security-9.html#Fixed_in_Apache_Tomcat_9.0.43",
+      "https://tomcat.apache.org/security-8.html#Fixed_in_Apache_Tomcat_8.5.63",
+      "https://tomcat.apache.org/security-7.html#Fixed_in_Apache_Tomcat_7.0.108",
+      "cert-bund: WID-SEC-2022-1099",
+      "cert-bund: WID-SEC-2022-0607",
+      "cert-bund: CB-K21/0222",
+      "dfn-cert: DFN-CERT-2024-1926",
+      "dfn-cert: DFN-CERT-2022-1530",
+      "dfn-cert: DFN-CERT-2022-0733",
+      "dfn-cert: DFN-CERT-2021-1904",
+      "dfn-cert: DFN-CERT-2021-1403",
+      "dfn-cert: DFN-CERT-2021-0903",
+      "dfn-cert: DFN-CERT-2021-0835",
+      "dfn-cert: DFN-CERT-2021-0807",
+      "dfn-cert: DFN-CERT-2021-0714",
+      "dfn-cert: DFN-CERT-2021-0544",
+      "dfn-cert: DFN-CERT-2021-0445"
+    ],
+    "plugin": [],
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Apache Tomcat Open Redirect Vulnerability (Aug 2023) - Linux",
+    "description": [
+      "Apache Tomcat is prone to an open redirect vulnerability.",
+      "Quality of Detection (QoD): 30%"
+    ],
+    "detection_result": [
+      "Installed version: 8.5.23",
+      "Fixed version: 8.5.93",
+      "Installation path / port: 8040/tcp"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: Apache Tomcat Open Redirect Vulnerability (Aug 2023) - Linux OID:1.3.6.1.4.1.25623.1.0.150908",
+      "Version used: 2024-06-07T05:05:42Z"
+    ],
+    "impact": [],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 8.5.93, 9.0.80, 10.1.13, 11.0.0-M11 or later."
+    ],
+    "insight": [
+      "If the ROOT (default) web application is configured to use FORM authentication then it is possible that a specially crafted URL could be used to trigger a redirect to an URL of the attackers choice."
+    ],
+    "product_detection_result": [
+      "Product detection result",
+      "cpe:/a:apache:tomcat:8.5.23",
+      "Detected by Apache Tomcat Detection Consolidation (OID: 1.3.6.1.4.1.25623.1.0.107652)"
+    ],
+    "log_method": [],
+    "cvss": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "port": 8040,
+    "protocol": "tcp",
+    "severity": "MEDIUM",
+    "references": [
+      "CVE-2023-41080",
+      "https://lists.apache.org/thread/71wvwprtx2j2m54fovq9zr7gbm2wow2f",
+      "https://tomcat.apache.org/security-11.html#Fixed_in_Apache_Tomcat_11.0.0-M1",
+      "https://tomcat.apache.org/security-10.html#Fixed_in_Apache_Tomcat_10.1.13",
+      "https://tomcat.apache.org/security-9.html#Fixed_in_Apache_Tomcat_9.0.80",
+      "https://tomcat.apache.org/security-8.html#Fixed_in_Apache_Tomcat_8.5.93",
+      "WID-SEC-2024-1238",
+      "WID-SEC-2024-0871",
+      "WID-SEC-2024-0528",
+      "WID-SEC-2023-3070",
+      "WID-SEC-2023-2917",
+      "WID-SEC-2023-2690",
+      "WID-SEC-2023-2679",
+      "WID-SEC-2023-2182",
+      "DFN-CERT-2024-3078",
+      "DFN-CERT-2024-0723",
+      "DFN-CERT-2024-0076",
+      "DFN-CERT-2023-3070",
+      "DFN-CERT-2023-3061",
+      "DFN-CERT-2023-2803",
+      "DFN-CERT-2023-2586",
+      "DFN-CERT-2023-2568",
+      "DFN-CERT-2023-2542",
+      "DFN-CERT-2023-2536",
+      "DFN-CERT-2023-2469",
+      "DFN-CERT-2023-2468",
+      "DFN-CERT-2023-1983"
+    ],
+    "plugin": [],
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Apache Tomcat XSS Vulnerability (May 2019) - Linux",
+    "description": [
+      "Apache Tomcat is prone to a cross-site scripting vulnerability.",
+      "Quality of Detection (QoD): 30%"
+    ],
+    "detection_result": [
+      "Installed version: 8.5.23",
+      "Fixed version: 8.5.40",
+      "Installation path / port: 8040/tcp"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: Apache Tomcat XSS Vulnerability (May 2019) - Linux OID:1.3.6.1.4.1.25623.1.0.142479",
+      "Version used: 2025-09-16T05:38:45Z"
+    ],
+    "impact": [],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 7.0.94, 8.5.40, 9.0.18 or later."
+    ],
+    "insight": [
+      "The SSI printenv command in Apache Tomcat echoes user provided data without escaping and is, therefore, vulnerable to XSS.",
+      "SSI is disabled by default.",
+      "The printenv command is intended for debugging and is unlikely to be present in a production website."
+    ],
+    "product_detection_result": [
+      "Product: cpe:/a:apache:tomcat:8.5.23",
+      "Method: Apache Tomcat Detection Consolidation",
+      "OID: 1.3.6.1.4.1.25623.1.0.107652"
+    ],
+    "log_method": [],
+    "cvss": [
+      6.1,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "port": 8040,
+    "protocol": "tcp",
+    "severity": "MEDIUM",
+    "references": [
+      "CVE-2019-0221",
+      "https://seclists.org/fulldisclosure/2019/May/50",
+      "https://lists.apache.org/thread.html/6e6e9eacf7b28fd63d249711e9d3ccd4e0a83f->556e324aee37be5a8c@%3Cannounce.tomcat.apache.org%3E",
+      "WID-SEC-2024-0528",
+      "WID-SEC-2023-1994",
+      "CB-K20/0029",
+      "CB-K19/0434",
+      "DFN-CERT-2024-1926",
+      "DFN-CERT-2021-0819",
+      "DFN-CERT-2020-1129",
+      "DFN-CERT-2020-1094",
+      "DFN-CERT-2020-0557",
+      "DFN-CERT-2019-2710",
+      "DFN-CERT-2019-2457",
+      "DFN-CERT-2019-1895",
+      "DFN-CERT-2019-1704",
+      "DFN-CERT-2019-1472",
+      "DFN-CERT-2019-1231",
+      "DFN-CERT-2019-1092"
+    ],
+    "plugin": [],
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Apache Tomcat Information Disclosure Vulnerability (Mar 2023) - Linux",
+    "description": [
+      "Apache Tomcat is prone to an information disclosure vulnerability."
+    ],
+    "detection_result": [
+      "Installed version: 8.5.23\nFixed version: 8.5.86\nInstallation\npath / port: 8040/tcp\nSolution:\nSolution type: VendorFix\nUpdate to version 8.5.86, 9.0.72, 10.1.6, 11.0.0-M3 or later."
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.\nDetails: Apache Tomcat Information Disclosure Vulnerability (Mar 2023) - Linux\nOID:1.3.6.1.4.1.25623.1.0.104653\nVersion used: 2024-06-07T05:05:42Z"
+    ],
+    "impact": [],
+    "solution": [
+      "Solution type: VendorFix\nUpdate to version 8.5.86, 9.0.72, 10.1.6, 11.0.0-M3 or later."
+    ],
+    "insight": [
+      "When using the RemoteIpFilter with requests received from a reverse proxy via HTTP that include the X-Forwarded-Proto header set to https, session cookies created by Tomcat did not include the secure attribute. This could result in the user agent transmitting the session cookie over an insecure channel."
+    ],
+    "product_detection_result": [
+      "Product: cpe:/a:apache:tomcat:8.5.23\nDetected by Apache Tomcat Detection Consolidation (OID: 1.3.6.1.4.1.25623.1.0.107652)"
+    ],
+    "log_method": [],
+    "cvss": [
+      4.3,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "port": 8040,
+    "protocol": "tcp",
+    "severity": "MEDIUM",
+    "references": [
+      "CVE-2023-28708",
+      "https://lists.apache.org/thread/hdksc59z3s7tm39x0pp33mtwdrt8qr67",
+      "https://tomcat.apache.org/security-11.html#Fixed_in_Apache_Tomcat_11.0.0-M3",
+      "https://tomcat.apache.org/security-10.html#Fixed_in_Apache_Tomcat_10.1.6",
+      "https://tomcat.apache.org/security-9.html#Fixed_in_Apache_Tomcat_9.0.72",
+      "https://tomcat.apache.org/security-8.html#Fixed_in_Apache_Tomcat_8.5.86",
+      "cert-bund: WID-SEC-2024-1238",
+      "cert-bund: WID-SEC-2024-0528",
+      "cert-bund: WID-SEC-2023-2674",
+      "cert-bund: WID-SEC-2023-1812",
+      "cert-bund: WID-SEC-2023-1808",
+      "cert-bund: WID-SEC-2023-1784",
+      "cert-bund: WID-SEC-2023-1783",
+      "cert-bund: WID-SEC-2023-1782",
+      "cert-bund: WID-SEC-2023-1424",
+      "cert-bund: WID-SEC-2023-1021",
+      "cert-bund: WID-SEC-2023-1017",
+      "cert-bund: WID-SEC-2023-0717",
+      "dfn-cert: DFN-CERT-2025-1517",
+      "dfn-cert: DFN-CERT-2024-3078",
+      "dfn-cert: DFN-CERT-2023-2778",
+      "dfn-cert: DFN-CERT-2023-2545",
+      "dfn-cert: DFN-CERT-2023-2054",
+      "dfn-cert: DFN-CERT-2023-0772",
+      "dfn-cert: DFN-CERT-2023-0763",
+      "dfn-cert: DFN-CERT-2023-0640"
+    ],
+    "plugin": [],
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Apache Tomcat HTTP/2 Vulnerability (Oct 2020) - Linux",
+    "description": [
+      "Apache Tomcat is prone to an information disclosure vulnerability in HTTP/2."
+    ],
+    "detection_result": [
+      "Installed version: 8.5.23",
+      "Fixed version: 8.5.58",
+      "Installation path / port: 8040/tcp"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: Apache Tomcat HTTP/2 Vulnerability (Oct 2020) - Linux OID:1.3.6.1.4.1.25623.1.0.144735 Version used: 2024-02-08T05:05:59Z",
+      "Product Detection Result Product: cpe:/a:apache:tomcat:8.5.23 Method: Apache Tomcat Detection Consolidation OID: 1.3.6.1.4.1.25623.1.0.107652"
+    ],
+    "impact": [
+      "If an HTTP/2 client exceeded the agreed maximum number of concurrent streams for a connection (in violation of the HTTP/2 protocol), a subsequent request made on that connection could contain HTTP headers from a previous request rather than the intended headers. This could lead to users seeing responses for unexpected resources."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 8.5.58, 9.0.38, 10.0.0-M8 or later."
+    ],
+    "insight": [
+      "If an HTTP/2 client exceeded the agreed maximum number of concurrent streams for a connection (in violation of the HTTP/2 protocol), it is possible that a subsequent request made on that connection could contain HTTP headers - including HTTP/2 pseudo headers - from a previous request rather than the intended headers. This could lead to users seeing responses for unexpected resources."
+    ],
+    "product_detection_result": [
+      "cpe:/a:apache:tomcat:8.5.23",
+      "Detected by Apache Tomcat Detection Consolidation (OID: 1.3.6.1.4.1.25623.1.0.107652)"
+    ],
+    "log_method": [],
+    "cvss": [
+      4.3,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "port": null,
+    "protocol": null,
+    "severity": "MEDIUM",
+    "references": [
+      "CVE-2020-13943",
+      "https://lists.apache.org/thread.html/r4a390027eb27e4550142fac6c8317cc684b15->7ae314d31514747f307%40%3Cannounce.tomcat.apache.org%3E",
+      "WID-SEC-2024-0528",
+      "WID-SEC-2023-2467",
+      "CB-K20/0971",
+      "DFN-CERT-2022-0733",
+      "DFN-CERT-2021-2620",
+      "DFN-CERT-2021-0338",
+      "DFN-CERT-2021-0134",
+      "DFN-CERT-2021-0034",
+      "DFN-CERT-2020-2224"
+    ],
+    "plugin": [],
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Apache Tomcat Open Redirect Vulnerability - Linux",
+    "description": [
+      "When the default servlet in Apache Tomcat returned a redirect to a directory (e.g. redirecting to '/foo/' when the user requested '/foo') a specially crafted URL could be used to cause the redirect to be generated to any URI of the attackers choice."
+    ],
+    "detection_result": [
+      "Installed version: 8.5.23",
+      "Fixed version: 8.5.34",
+      "Installation path / port: 8040/tcp"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: Apache Tomcat Open Redirect Vulnerability - Linux OID:1.3.6.1.4.1.25623.1.0.141568 Version used: 2024-02-15T05:05:40Z",
+      "Product Detection Result Product: cpe:/a:apache:tomcat:8.5.23 Method: Apache Tomcat Detection Consolidation OID: 1.3.6.1.4.1.25623.1.0.107652"
+    ],
+    "impact": [
+      "A specially crafted URL could cause redirects to attacker-controlled URIs, potentially enabling phishing or redirecting users to malicious sites."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 7.0.91, 8.5.34, 9.0.12 or later."
+    ],
+    "insight": [],
+    "product_detection_result": [
+      "cpe:/a:apache:tomcat:8.5.23",
+      "Detected by Apache Tomcat Detection Consolidation (OID: 1.3.6.1.4.1.25623.1.0.107652)"
+    ],
+    "log_method": [],
+    "cvss": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "port": null,
+    "protocol": null,
+    "severity": "MEDIUM",
+    "references": [
+      "CVE-2018-11784",
+      "http://tomcat.apache.org/security-9.html",
+      "http://tomcat.apache.org/security-8.html",
+      "http://tomcat.apache.org/security-7.html",
+      "WID-SEC-2025-1212",
+      "WID-SEC-2024-1682",
+      "WID-SEC-2024-0528"
+    ],
+    "plugin": [],
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Apache Tomcat JNDI Realm Authentication Weakness Vulnerability (Jul 2021) - Linux",
+    "description": [
+      "Apache Tomcat is prone to an authentication weakness vulnerability in the JNDI Realm.",
+      "Quality of Detection (QoD): 30%"
+    ],
+    "detection_result": [
+      "Installed version: 8.5.23",
+      "Fixed version: 8.5.66",
+      "Installation path / port: 8081/tcp",
+      "Solution: Solution type: VendorFix"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: Apache Tomcat JNDI Realm Authentication Weakness Vulnerability (Jul 2021) - Lin.",
+      "OID:1.3.6.1.4.1.25623.1.0.146264",
+      "Version used: 2021-08-24T06:00:58Z",
+      "Product Detection Result Product: cpe:/a:apache:tomcat:8.5.23 Method: Apache Tomcat Detection Consolidation OID: 1.3.6.1.4.1.25623.1.0.107652"
+    ],
+    "impact": [],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 7.0.109, 8.5.66, 9.0.46, 10.0.6 or later."
+    ],
+    "insight": [
+      "Queries made by the JNDI Realm do not always correctly escape parameters.",
+      "Parameter values could be sourced from user provided data (eg user names) as well as conguration data provided by an administrator.",
+      "In limited circumstances it is possible for users to authenticate using variations of their user name and/or to bypass some of the protection provided by the LockOut Realm."
+    ],
+    "product_detection_result": [
+      "cpe:/a:apache:tomcat:8.5.23",
+      "Detected by Apache Tomcat Detection Consolidation (OID: 1.3.6.1.4.1.25623.1.0.10 ->7652)",
+      "Product: cpe:/a:apache:tomcat:8.5.23",
+      "Method: Apache Tomcat Detection Consolidation",
+      "OID: 1.3.6.1.4.1.25623.1.0.107652"
+    ],
+    "log_method": [],
+    "cvss": [
+      6.5,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "port": 8081,
+    "protocol": "tcp",
+    "severity": "MEDIUM",
+    "references": [
+      "CVE-2021-30640",
+      "https://lists.apache.org/thread.html/r59f9ef03929d32120f91f4ea7e6e79edd5688d75d0a9b65fd26d1fe8%40%3Cannounce.tomcat.apache.org%3E",
+      "https://tomcat.apache.org/security-10.html#Fixed_in_Apache_Tomcat_10.0.6",
+      "https://tomcat.apache.org/security-9.html#Fixed_in_Apache_Tomcat_9.0.46",
+      "https://tomcat.apache.org/security-8.html#Fixed_in_Apache_Tomcat_8.5.66",
+      "https://tomcat.apache.org/security-7.html#Fixed_in_Apache_Tomcat_7.0.109"
+    ],
+    "plugin": [],
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Apache Tomcat Information Disclosure Vulnerability (Mar 2023) - Linux",
+    "description": [
+      "Apache Tomcat is prone to an information disclosure vulnerability."
+    ],
+    "detection_result": [
+      "Installed version: 8.5.23",
+      "Fixed version: 8.5.86",
+      "Installation path / port: 8081/tcp"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: Apache Tomcat Information Disclosure Vulnerability (Mar 2023) - Linux OID:1.3.6.1.4.1.25623.1.0.104653 Version used: 2024-06-07T05:05:42Z"
+    ],
+    "impact": [
+      "Session cookies created by Tomcat may be transmitted over an insecure channel when behind a reverse proxy with X-Forwarded-Proto set to https, potentially leading to information disclosure or session hijacking."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Update to version 8.5.86, 9.0.72, 10.1.6, 11.0.0-M3 or later."
+    ],
+    "insight": [
+      "When using the RemoteIpFilter with requests received from a reverse proxy via HTTP that include the X-Forwarded-Proto header set to https, session cookies created by Tomcat did not include the secure attribute. This could result in the user agent transmitting the session cookie over an insecure channel."
+    ],
+    "product_detection_result": [
+      "cpe:/a:apache:tomcat:8.5.23",
+      "Detected by Apache Tomcat Detection Consolidation (OID: 1.3.6.1.4.1.25623.1.0.107652)",
+      "Product detection result cpe:/a:apache:tomcat:8.5.23 Detected by Apache Tomcat Detection Consolidation (OID: 1.3.6.1.4.1.25623.1.0.10 ->7652)"
+    ],
+    "log_method": [],
+    "cvss": [
+      4.3,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "port": 8081,
+    "protocol": "tcp",
+    "severity": "MEDIUM",
+    "references": [
+      "CVE-2023-28708",
+      "https://lists.apache.org/thread/hdksc59z3s7tm39x0pp33mtwdrt8qr67",
+      "https://tomcat.apache.org/security-11.html#Fixed_in_Apache_Tomcat_11.0.0-M3",
+      "https://tomcat.apache.org/security-10.html#Fixed_in_Apache_Tomcat_10.1.6",
+      "https://tomcat.apache.org/security-9.html#Fixed_in_Apache_Tomcat_9.0.72",
+      "https://tomcat.apache.org/security-8.html#Fixed_in_Apache_Tomcat_8.5.86"
+    ],
+    "plugin": [],
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Apache Tomcat Open Redirect Vulnerability - Linux",
+    "description": [
+      "When the default servlet in Apache Tomcat returned a redirect to a directory (e.g. redirecting to '/foo/' when the user requested '/foo') a specially crafted URL could be used to cause the redirect to be generated to any URI of the attackers choice."
+    ],
+    "detection_result": [
+      "Installed version: 8.5.23",
+      "Fixed version: 8.5.34",
+      "Installation path / port: 8081/tcp",
+      "Solution: Solution type: VendorFix",
+      "Update to version 7.0.91, 8.5.34, 9.0.12 or later."
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: Apache Tomcat Open Redirect Vulnerability - Linux",
+      "OID:1.3.6.1.4.1.25623.1.0.141568",
+      "Version used: 2024-02-15T05:05:40Z",
+      "Product Detection Result Product: cpe:/a:apache:tomcat:8.5.23",
+      "Method: Apache Tomcat Detection Consolidation",
+      "OID: 1.3.6.1.4.1.25623.1.0.107652"
+    ],
+    "impact": [],
+    "solution": [
+      "Update to version 7.0.91, 8.5.34, 9.0.12 or later.",
+      "Solution type: VendorFix"
+    ],
+    "insight": [],
+    "product_detection_result": [
+      "Product detection result cpe:/a:apache:tomcat:8.5.23",
+      "Detected by Apache Tomcat Detection Consolidation (OID: 1.3.6.1.4.1.25623.1.0.107652)"
+    ],
+    "log_method": [],
+    "cvss": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "port": 8081,
+    "protocol": "tcp",
+    "severity": "MEDIUM",
+    "references": [
+      "CVE-2018-11784",
+      "http://tomcat.apache.org/security-9.html",
+      "http://tomcat.apache.org/security-8.html",
+      "http://tomcat.apache.org/security-7.html",
+      "WID-SEC-2025-1212"
+    ],
+    "plugin": [],
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Apache Tomcat HTTP/2 Vulnerability (Oct 2020) - Linux",
+    "description": [
+      "Apache Tomcat is prone to an information disclosure vulnerability in HTTP/2."
+    ],
+    "detection_result": [
+      "Installed version: 8.5.23",
+      "Fixed version: 8.5.58",
+      "Installation path / port: 8081/tcp",
+      "Solution: Solution type: VendorFix",
+      "Update to version 8.5.58, 9.0.38, 10.0.0-M8 or later."
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: Apache Tomcat HTTP/2 Vulnerability (Oct 2020) - Linux",
+      "OID:1.3.6.1.4.1.25623.1.0.144735",
+      "Version used: 2024-02-08T05:05:59Z",
+      "Product Detection Result Product: cpe:/a:apache:tomcat:8.5.23",
+      "Method: Apache Tomcat Detection Consolidation",
+      "OID: 1.3.6.1.4.1.25623.1.0.107652"
+    ],
+    "impact": [],
+    "solution": [
+      "Update to version 8.5.58, 9.0.38, 10.0.0-M8 or later.",
+      "Solution type: VendorFix"
+    ],
+    "insight": [
+      "If an HTTP/2 client exceeded the agreed maximum number of concurrent streams for a connection (in violation of the HTTP/2 protocol), it is possible that a subsequent request made on that connection could contain HTTP headers - including HTTP/2 pseudo headers - from a previous request rather than the intended headers. This could lead to users seeing responses for unexpected resources."
+    ],
+    "product_detection_result": [
+      "Product detection result cpe:/a:apache:tomcat:8.5.23",
+      "Detected by Apache Tomcat Detection Consolidation (OID: 1.3.6.1.4.1.25623.1.0.107652)"
+    ],
+    "log_method": [],
+    "cvss": [
+      4.3,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "port": 8081,
+    "protocol": "tcp",
+    "severity": "MEDIUM",
+    "references": [
+      "CVE-2020-13943",
+      "https://lists.apache.org/thread.html/r4a390027eb27e4550142fac6c8317cc684b157ae314d31514747f307%40%3Cannounce.tomcat.apache.org%3E",
+      "WID-SEC-2024-0528",
+      "WID-SEC-2023-2467"
+    ],
+    "plugin": [],
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Services",
+    "description": [
+      "This plugin performs service detection."
+    ],
+    "detection_result": [
+      "A web server is running on this port"
+    ],
+    "detection_method": [],
+    "impact": [],
+    "solution": [],
+    "insight": [
+      "This plugin attempts to guess which service is running on the remote port(s). For instance, it searches for a web server which could listen on another port than 80 or 443 and makes this information available for other check routines."
+    ],
+    "product_detection_result": [],
+    "log_method": [
+      "Details: Services",
+      "OID:1.3.6.1.4.1.25623.1.0.10330",
+      "Version used: 2025-03-05T05:38:53Z"
+    ],
+    "cvss": [
+      0.0,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "port": 8040,
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [],
+    "plugin": [],
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Allowed HTTP Methods Enumeration",
+    "description": [
+      "Enumerates which HTTP methods are allowed."
+    ],
+    "detection_result": [
+      "The following list contains the URLs and corresponding supported HTTP methods.",
+      "http://artifactory5.trabalho_vulnnet:8040/ | GET, HEAD, POST, PUT, DELETE, OPTIONS (obtained via HTTP OPTIONS method)"
+    ],
+    "detection_method": [],
+    "impact": [],
+    "solution": [],
+    "insight": [
+      "Basic HTTP methods: GET, HEAD, POST, PUT, DELETE, CONNECT, OPTIONS, TRACE",
+      "Extended HTTP methods: ACL, BASELINE-CONTROL, BIND, CHECKIN, CHECK-OUT, COPY, LABEL, LINK, LOCK, MERGE, MKACTIVITY, MKCALENDAR, MKCOL, MKREDIRECTREF, MKWORKSPACE, MOVE, ORDERPATCH, PATCH, PRI, PROPFIND, PROPPATCH, REBIND, REPORT, SEARCH, UNBIND, UNCHECKOUT, UNLINK, UNLOCK, UPDATE, UPDATEREDIRECTREF, VERSION-CONTROL",
+      "Disclaimer: This enumeration script is provided 'as is' (means no support is given) and only providing rudimentary information about the possible enabled methods",
+      "This script doesn't guarantee completeness or full reliability. For more reliable determination of the enabled HTTP methods please inspect the configuration of the web server manually and directly on the target host."
+    ],
+    "product_detection_result": [],
+    "log_method": [
+      "Sends multiple HTTP requests and checks the responses.",
+      "OID:1.3.6.1.4.1.25623.1.0.153974",
+      "Version used: 2025-02-28T05:38:49Z"
+    ],
+    "cvss": [
+      0.0,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "port": 8040,
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [],
+    "plugin": [],
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "HTTP Security Headers Detection",
+    "description": [
+      "All known security headers are being checked on the remote web server.",
+      "On completion a report will hand back whether a specific security header has been implemented (including its value and if it is deprecated) or is missing on the target."
+    ],
+    "detection_result": [
+      "Missing Headers | More Information",
+      "Content-Security-Policy | https://owasp.org/www-project-secure-headers/#content-security-policy",
+      "Cross-Origin-Embedder-Policy | https://scotthelme.co.uk/coop-and-coep/, Note: This is an upcoming header",
+      "Cross-Origin-Opener-Policy | https://scotthelme.co.uk/coop-and-coep/, Note: This is an upcoming header",
+      "Cross-Origin-Resource-Policy | https://scotthelme.co.uk/coop-and-coep/, Note: This is an upcoming header",
+      "Document-Policy | https://w3c.github.io/webappsec-feature-policy/document-policy#document-policy-http-header",
+      "Feature-Policy | https://owasp.org/www-project-secure-headers/#feature-policy, Note: The Feature Policy header has been renamed to Permissions Policy",
+      "Permissions-Policy | https://w3c.github.io/webappsec-feature-policy/#permissions-policy-http-header-field",
+      "Referrer-Policy | https://owasp.org/www-project-secure-headers/#referrer-policy",
+      "Sec-Fetch-Dest | https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers#fetch_metadata_request_headers, Note: This is a new header supported only in newer browsers like e.g. Firefox 90",
+      "Sec-Fetch-Mode | https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers#fetch_metadata_request_headers, Note: This is a new header supported only in newer browsers like e.g. Firefox 90",
+      "Sec-Fetch-Site | https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers#fetch_metadata_request_headers, Note: This is a new header supported only in newer browsers like e.g. Firefox 90",
+      "Sec-Fetch-User | https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers#fetch_metadata_request_headers, Note: This is a new header supported only in newer browsers like e.g. Firefox 90",
+      "X-Content-Type-Options | https://owasp.org/www-project-secure-headers/#x-content-type-options",
+      "X-Frame-Options | https://owasp.org/www-project-secure-headers/#x-frame-options",
+      "X-Permitted-Cross-Domain-Policies | https://owasp.org/www-project-secure-headers/#x-permitted-cross-domain-policies",
+      "X-XSS-Protection | https://owasp.org/www-project-secure-headers/#x-xss-protection, Note: Most major browsers have dropped / deprecated support for this header in 2020."
+    ],
+    "detection_method": [],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "product_detection_result": [],
+    "log_method": [
+      "Details: HTTP Security Headers Detection",
+      "OID:1.3.6.1.4.1.25623.1.0.112081",
+      "Version used: 2025-03-21T15:40:43Z"
+    ],
+    "cvss": [
+      0.0,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "port": 8040,
+    "protocol": "tcp",
+    "severity": "LOG",
+    "references": [
+      "https://owasp.org/www-project-secure-headers/",
+      "https://owasp.org/www-project-secure-headers/#div-headers",
+      "https://securityheaders.com/"
+    ],
+    "plugin": [],
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Allowed HTTP Methods Enumeration",
+    "description": [
+      "Enumerates which HTTP methods are allowed."
+    ],
+    "detection_result": [
+      "The following list contains the URLs and corresponding supported HTTP methods.\n URL | HTTP Methods \n --------------------------------------------------------------------------------\n ->------------------------------------- \n http://artifactory5.trabalho_vulnnet:8081/ | GET, HEAD, POST, PUT, DELETE, OPTIO\n ->NS (obtained via HTTP OPTIONS method)"
+    ],
+    "detection_method": [],
+    "impact": [],
+    "solution": [],
+    "insight": [
+      "- Basic HTTP methods: GET, HEAD, POST, PUT, DELETE, CONNECT, OPTIONS, TRACE",
+      "- Extended HTTP methods: ACL, BASELINE-CONTROL, BIND, CHECKIN, CHECK-\n OUT, COPY, LABEL, LINK, LOCK, MERGE, MKACTIVITY, MKCALENDAR, MKCOL, \n MKREDIRECTREF, MKWORKSPACE, MOVE, ORDERPATCH, PATCH, PRI, PROPFIND, \n PROPPATCH, REBIND, REPORT, SEARCH, UNBIND, UNCHECKOUT, UNLINK, UN- \n LOCK, UPDATE, UPDATEREDIRECTREF, VERSION-CONTROL"
+    ],
+    "product_detection_result": [],
+    "log_method": [
+      "Sends multiple HTTP requests and checks the responses."
+    ],
+    "cvss": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "port": null,
+    "protocol": "null",
+    "severity": "LOG",
+    "references": [],
+    "plugin": [],
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Services",
+    "description": [
+      "This plugin performs service detection."
+    ],
+    "detection_result": [
+      "A web server is running on this port"
+    ],
+    "detection_method": [],
+    "impact": [],
+    "solution": [],
+    "insight": [
+      "This plugin attempts to guess which service is running on the remote port(s). For instance,\n it searches for a web server which could listen on another port than 80 or 443 and makes this\n information available for other check routines."
+    ],
+    "product_detection_result": [],
+    "log_method": [],
+    "cvss": [
+      0.0,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "port": null,
+    "protocol": "null",
+    "severity": "LOG",
+    "references": [],
+    "plugin": [],
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "HTTP Security Headers Detection",
+    "description": [
+      "All known security headers are being checked on the remote web server.\n On completion a report will hand back whether a specic security header has been implemented\n (including its value and if it is deprecated) or is missing on the target."
+    ],
+    "detection_result": [
+      "Missing Headers | More Information \n --------------------------------------------------------------------------------\n ->------------------------------------------------------------------------------\n ->------------------------------------------------ \n Content-Security-Policy | https://owasp.org/www-project-secure-headers\n ->/#content-security-policy \n Cross-Origin-Embedder-Policy | https://scotthelme.co.uk/coop-and-coep/, Not\n ->e: This is an upcoming header"
+    ],
+    "detection_method": [],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "product_detection_result": [],
+    "log_method": [],
+    "cvss": [
+      0.0,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "port": null,
+    "protocol": "null",
+    "severity": "LOG",
+    "references": [
+      "https://owasp.org/www-project-secure-headers/#content-security-policy",
+      "https://scotthelme.co.uk/coop-and-coep/"
+    ],
+    "plugin": [],
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "JFrog Artifactory Detection (HTTP)",
+    "description": [
+      "HTTP based detection of JFrog Artifactory.",
+      "Quality of Detection (QoD): 80%"
+    ],
+    "detection_result": [
+      "Detected JFrog Artifactory",
+      "Version: 5.11.0",
+      "Location: /artifactory",
+      "CPE: cpe:/a:jfrog:artifactory:5.11.0",
+      "Concluded from version/product identification result: \"buildNumber\":\"5.11.0 rev 51100900\"",
+      "Concluded from version/product identification location: http://artifactory5.trabalho_vulnnet:8081/artifactory/ui/auth/screen/footer"
+    ],
+    "detection_method": [
+      "Details: JFrog Artifactory Detection (HTTP)",
+      "OID: 1.3.6.1.4.1.25623.1.0.103918",
+      "Version used: 2026-01-06T05:47:51Z"
+    ],
+    "impact": [],
+    "solution": [],
+    "insight": [],
+    "product_detection_result": [],
+    "log_method": [
+      "Log Method",
+      "Details: JFrog Artifactory Detection (HTTP)",
+      "OID: 1.3.6.1.4.1.25623.1.0.103918",
+      "Version used: 2026-01-06T05:47:51Z"
+    ],
+    "cvss": [
+      0.0,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "port": null,
+    "protocol": null,
+    "severity": "LOG",
+    "references": [
+      "https://jfrog.com/artifactory/"
+    ],
+    "plugin": [],
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  }
+]

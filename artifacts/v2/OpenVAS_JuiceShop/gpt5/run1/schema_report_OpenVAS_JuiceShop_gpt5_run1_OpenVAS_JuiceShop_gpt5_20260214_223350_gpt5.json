@@ -1,0 +1,30 @@
+{
+  "version": "v2",
+  "schema_mode": "auto",
+  "file": "v2\\OpenVAS_JuiceShop\\gpt5\\run1\\OpenVAS_JuiceShop_gpt5_run1_OpenVAS_JuiceShop_gpt5_20260214_223350.json",
+  "json_valid": true,
+  "n_records": 30,
+  "schema_conformance_rate": 1.0,
+  "schema_field_conformance_rate": 1.0,
+  "type_coercion_rate": 0.5083333333333333,
+  "coercion_breakdown": {
+    "cvss:list→float": 30,
+    "plugin_details:list→dict": 30,
+    "severity:case": 1
+  },
+  "extra_fields_rate": 0.0,
+  "missing_field_counts": {},
+  "type_error_examples": [],
+  "type_error_field_counts": {},
+  "field_failure_counts": {},
+  "extra_field_counts": {},
+  "native": {
+    "schema_mode": "v2",
+    "schema_conformance_rate": 1.0,
+    "schema_field_conformance_rate": 1.0,
+    "missing_field_counts": {},
+    "type_error_examples": [],
+    "type_error_field_counts": {},
+    "field_failure_counts": {}
+  }
+}

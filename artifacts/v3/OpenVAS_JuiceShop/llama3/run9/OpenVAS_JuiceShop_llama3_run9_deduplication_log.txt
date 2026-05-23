@@ -1,0 +1,242 @@
+======================================================================
+CONSOLIDATION & DEDUPLICATION REPORT
+======================================================================
+
+Strategy: OpenVAS custom merge
+Description: Groups vulnerabilities by (Name, port, protocol), keeps most complete
+
+INPUT VULNERABILITIES: 55
+
+PROCESSING STAGE 1: Strategy-Specific Consolidation
+  Result: 37 vulnerabilities
+  Removed: 18 (duplicate merge)
+  Note: This is the custom OpenVAS consolidation strategy
+
+OUTPUT FINAL: 37 vulnerabilities (valid & saved)
+
+======================================================================
+DETAIL: Vulnerability Groups
+----------------------------------------------------------------------
+Group 1: Key = (('Name', 'Services'), ('cvss', 0.0), ('description', ('This routine attempts to guess which service is running on the remote ports. For instance, it searches for a web server which could listen on another port than 80 or 443 and makes this information available for other check routines.',)), ('detection_method', ()), ('detection_result', ('A TLScustom server answered on this port',)), ('impact', ()), ('insight', ()), ('instances', ()), ('log_method', ('Details: Services', 'OID:1.3.6.1.4.1.25623.1.0.10330', 'Version used: $Revision: 13541 $')), ('plugin', None), ('plugin_details', ()), ('port', 443), ('product_detection_result', ()), ('protocol', 'tcp'), ('references', ()), ('severity', 'LOG'), ('solution', ()), ('source', 'OPENVAS'))
+  Total vulnerabilities in group: 1
+    1. Name: Services
+       Port: 443 | Protocol: tcp | Severity: LOG
+       Description: This routine attempts to guess which service is running on the remote ports. For instance, it searches for a web server which could listen on another ...
+
+Group 2: Key = (('Name', 'Services'), ('cvss', 0.0), ('description', ('This routine attempts to guess which service is running on the remote ports. For instance, it searches for a web server which could listen on another port than 80 or 443 and makes this information available for other check routines.',)), ('detection_method', ()), ('detection_result', ('A web server is running on this port through SSL',)), ('impact', ()), ('insight', ()), ('instances', ()), ('log_method', ('Details: Services', 'OID:1.3.6.1.4.1.25623.1.0.10330', 'Version used: $Revision: 13541 $')), ('plugin', None), ('plugin_details', ()), ('port', 443), ('product_detection_result', ()), ('protocol', 'tcp'), ('references', ()), ('severity', 'LOG'), ('solution', ()), ('source', 'OPENVAS'))
+  Total vulnerabilities in group: 1
+    1. Name: Services
+       Port: 443 | Protocol: tcp | Severity: LOG
+       Description: This routine attempts to guess which service is running on the remote ports. For instance, it searches for a web server which could listen on another ...
+
+Group 3: Key = (('Name', 'Services'), ('cvss', 0.0), ('description', ('This routine attempts to guess which service is running on the remote ports. For instance, it searches for a web server which could listen on another port than 80 or 443 and makes this information available for other check routines.',)), ('detection_method', ()), ('detection_result', ('An SMTP server is running on this port', 'Here is its banner : 220 9c89ef55d1a6.localdomain ESMTP Postfix')), ('impact', ()), ('insight', ()), ('instances', ()), ('log_method', ('Details: Services', 'OID:1.3.6.1.4.1.25623.1.0.10330', 'Version used: $Revision: 13541 $')), ('plugin', None), ('plugin_details', ()), ('port', 25), ('product_detection_result', ()), ('protocol', 'tcp'), ('references', ()), ('severity', 'LOG'), ('solution', ()), ('source', 'OPENVAS'))
+  Total vulnerabilities in group: 1
+    1. Name: Services
+       Port: 25 | Protocol: tcp | Severity: LOG
+       Description: This routine attempts to guess which service is running on the remote ports. For instance, it searches for a web server which could listen on another ...
+
+Group 4: Key = (('Name', 'Services'), ('cvss', 0.0), ('description', ('This routine attempts to guess which service is running on the remote ports. For instance, it', 'searches for a web server which could listen on another port than 80 or 443 and makes this', 'information available for other check routines.')), ('detection_method', ()), ('detection_result', ('An SMTP server is running on this port', 'Here is its banner :', '220 9c89ef55d1a6.localdomain ESMTP Postfix')), ('impact', ()), ('insight', ()), ('instances', ()), ('log_method', ('Details: Services', 'OID:1.3.6.1.4.1.25623.1.0.10330', 'Version used: $Revision: 13541 $')), ('plugin', None), ('plugin_details', ()), ('port', 25), ('product_detection_result', ()), ('protocol', 'tcp'), ('references', ()), ('severity', 'LOG'), ('solution', ()), ('source', 'OPENVAS'))
+  Total vulnerabilities in group: 1
+    1. Name: Services
+       Port: 25 | Protocol: tcp | Severity: LOG
+       Description: This routine attempts to guess which service is running on the remote ports. For instance, it searches for a web server which could listen on another ...
+
+Group 5: Key = (('Name', 'Services'), ('cvss', 0.0), ('description', ('This routine attempts to guess which service is running on the remote ports. For instance, it searches for a web server which could listen on another port than 80 or 443 and makes this information available for other check routines.',)), ('detection_method', ()), ('detection_result', ('A TLScustom server answered on this port',)), ('impact', ()), ('insight', ()), ('instances', ()), ('log_method', ('Details: Services', 'OID:1.3.6.1.4.1.25623.1.0.10330', 'Version used: $Revision: 13541 $')), ('plugin', None), ('plugin_details', ()), ('port', 9390), ('product_detection_result', ()), ('protocol', 'tcp'), ('references', ()), ('severity', 'LOG'), ('solution', ()), ('source', 'OPENVAS'))
+  Total vulnerabilities in group: 1
+    1. Name: Services
+       Port: 9390 | Protocol: tcp | Severity: LOG
+       Description: This routine attempts to guess which service is running on the remote ports. For instance, it searches for a web server which could listen on another ...
+
+Group 6: Key = ('SMTP too long line', 25, 'tcp')
+  Total vulnerabilities in group: 1
+    1. Name: SMTP too long line
+       Port: 25 | Protocol: tcp | Severity: High
+       Description: Some antivirus scanners dies when they process an email with a too long string without line breaks.   Such a message was sent. If there is an antiviru...
+
+Group 7: Key = ('Check if Mailserver answer to VRFY and EXPN requests', 25, 'tcp')
+  Total vulnerabilities in group: 1
+    1. Name: Check if Mailserver answer to VRFY and EXPN requests
+       Port: 25 | Protocol: tcp | Severity: MEDIUM
+       Description: The Mailserver on this host answers to VRFY and/or EXPN requests.
+
+Group 8: Key = ('Postfix SMTP Server Detection', 25, 'tcp')
+  Total vulnerabilities in group: 1
+    1. Name: Postfix SMTP Server Detection
+       Port: 25 | Protocol: tcp | Severity: LOG
+       Description: The script checks the SMTP server banner for the presence of Postfix.
+
+Group 9: Key = ('SMTP antivirus scanner DoS', 25, 'tcp')
+  Total vulnerabilities in group: 1
+    1. Name: SMTP antivirus scanner DoS
+       Port: 25 | Protocol: tcp | Severity: LOG
+       Description: This script sends the 42.zip recursive archive to the mail server. If there is an antivirus filter, it may start eating huge amounts of CPU or memory.
+
+Group 10: Key = ('SMTP Missing Support For STARTTLS', 25, 'tcp')
+  Total vulnerabilities in group: 1
+    1. Name: SMTP Missing Support For STARTTLS
+       Port: 25 | Protocol: tcp | Severity: LOG
+       Description: The remote SMTP server does not support the 'STARTTLS' command.
+
+Group 11: Key = ('SMTP Server type and version', 25, 'tcp')
+  Total vulnerabilities in group: 1
+    1. Name: SMTP Server type and version
+       Port: 25 | Protocol: tcp | Severity: LOG
+       Description: This detects the SMTP Server's type and version by connecting to the server and processing the buffer received.
+
+Group 12: Key = ("Service Detection with '<xml/>' Request", 25, 'tcp')
+  Total vulnerabilities in group: 1
+    1. Name: Service Detection with '<xml/>' Request
+       Port: 25 | Protocol: tcp | Severity: LOG
+       Description: This plugin performs service detection. This plugin is a complement of find_service.nasl. It sends a '<xml/>' request to the remaining unknown service...
+
+Group 13: Key = ('OpenVAS / Greenbone Vulnerability Manager Default Credentials', 9390, 'tcp')
+  Total vulnerabilities in group: 1
+    1. Name: OpenVAS / Greenbone Vulnerability Manager Default Credentials
+       Port: 9390 | Protocol: tcp | Severity: HIGH
+       Description: The remote OpenVAS / Greenbone Vulnerability Manager is installed/configured in a way that it has account(s) with default passwords enabled.
+
+Group 14: Key = ('SSL/TLS: Certificate Expired', 9390, 'tcp')
+  Total vulnerabilities in group: 1
+    1. Name: SSL/TLS: Certificate Expired
+       Port: 9390 | Protocol: tcp | Severity: MEDIUM
+       Description: The remote server's SSL/TLS certificate has already expired.
+
+Group 15: Key = ('OpenVAS / Greenbone Vulnerability Manager Detection', 9390, 'tcp')
+  Total vulnerabilities in group: 1
+    1. Name: OpenVAS / Greenbone Vulnerability Manager Detection
+       Port: 9390 | Protocol: tcp | Severity: LOG
+       Description: The script sends a connection request to the server and attempts to determine if it is a OpenVAS Manager (openvasmd) or Greebone Vulnerability Manager...
+
+Group 16: Key = ("Service Detection with '<xml/>' Request", 9390, 'tcp')
+  Total vulnerabilities in group: 1
+    1. Name: Service Detection with '<xml/>' Request
+       Port: 9390 | Protocol: tcp | Severity: LOG
+       Description: This plugin performs service detection. This plugin is a complement of find_service.nasl. It sends a '<xml/>' request to the remaining unknown service...
+
+Group 17: Key = ('SSL/TLS: Collect and Report Certificate Details', 9390, 'tcp')
+  Total vulnerabilities in group: 1
+    1. Name: SSL/TLS: Collect and Report Certificate Details
+       Port: 9390 | Protocol: tcp | Severity: LOG
+       Description: This script collects and reports the details of all SSL/TLS certificates. This data will be used by other tests to verify server certificates.
+
+Group 18: Key = ('SSL/TLS: Perfect Forward Secrecy Cipher Suites Missing', 9390, 'tcp')
+  Total vulnerabilities in group: 1
+    1. Name: SSL/TLS: Perfect Forward Secrecy Cipher Suites Missing
+       Port: 9390 | Protocol: tcp | Severity: LOG
+       Description: The remote service is missing support for SSL/TLS cipher suites supporting Perfect Forward Secrecy.
+
+Group 19: Key = ('SSL/TLS: Report Medium Cipher Suites', 9390, 'tcp')
+  Total vulnerabilities in group: 1
+    1. Name: SSL/TLS: Report Medium Cipher Suites
+       Port: 9390 | Protocol: tcp | Severity: LOG
+       Description: This routine reports all Medium SSL/TLS cipher suites accepted by a service.
+
+Group 20: Key = ('SSL/TLS: Report Non Weak Cipher Suites', 9390, 'tcp')
+  Total vulnerabilities in group: 1
+    1. Name: SSL/TLS: Report Non Weak Cipher Suites
+       Port: 9390 | Protocol: tcp | Severity: LOG
+       Description: This routine reports all Non Weak SSL/TLS cipher suites accepted by a service.
+
+Group 21: Key = ('SSL/TLS: Report Supported Cipher Suites', 9390, 'tcp')
+  Total vulnerabilities in group: 1
+    1. Name: SSL/TLS: Report Supported Cipher Suites
+       Port: 9390 | Protocol: tcp | Severity: LOG
+       Description: This routine reports all SSL/TLS cipher suites accepted by a service. As the NVT 'SSL/TLS: Check Supported Cipher Suites' (OID: 1.3.6.1.4.1.25623.1.0....
+
+Group 22: Key = ('CPE Inventory', 9390, 'tcp')
+  Total vulnerabilities in group: 1
+    1. Name: CPE Inventory
+       Port: 9390 | Protocol: tcp | Severity: LOG
+       Description: This routine uses information collected by other routines about CPE identities of operating systems, services and applications detected during the sca...
+
+Group 23: Key = ('SSL/TLS: Certificate Expired', 443, 'tcp')
+  Total vulnerabilities in group: 1
+    1. Name: SSL/TLS: Certificate Expired
+       Port: 443 | Protocol: tcp | Severity: MEDIUM
+       Description: The remote server's SSL/TLS certificate has already expired.
+
+Group 24: Key = ('CGI Scanning Consolidation', 443, 'tcp')
+  Total vulnerabilities in group: 1
+    1. Name: CGI Scanning Consolidation
+       Port: 443 | Protocol: tcp | Severity: LOG
+       Description: The script consolidates various information for CGI scanning. This information is based on the following scripts / settings: - HTTP-Version Detection ...
+
+Group 25: Key = ('Greenbone Security Assistant (GSA) Detection', 443, 'tcp')
+  Total vulnerabilities in group: 1
+    1. Name: Greenbone Security Assistant (GSA) Detection
+       Port: 443 | Protocol: tcp | Severity: LOG
+       Description: The script sends a connection request to the server and attempts to determine if it is a GSA from the reply.
+
+Group 26: Key = ('HTTP Security Headers Detection', 443, 'tcp')
+  Total vulnerabilities in group: 1
+    1. Name: HTTP Security Headers Detection
+       Port: 443 | Protocol: tcp | Severity: LOG
+       Description: All known security headers are being checked on the host. On completion a report will hand back whether a specific security header has been implemente...
+
+Group 27: Key = ('SSL/TLS: Collect and Report Certificate Details', 443, 'tcp')
+  Total vulnerabilities in group: 1
+    1. Name: SSL/TLS: Collect and Report Certificate Details
+       Port: 443 | Protocol: tcp | Severity: LOG
+       Description: This script collects and reports the details of all SSL/TLS certificates. This data will be used by other tests to verify server certificates.
+
+Group 28: Key = ('SSL/TLS: HTTP Public Key Pinning (HPKP) Missing', 443, 'tcp')
+  Total vulnerabilities in group: 1
+    1. Name: SSL/TLS: HTTP Public Key Pinning (HPKP) Missing
+       Port: 443 | Protocol: tcp | Severity: LOG
+       Description: The remote web server is not enforcing HPKP.
+
+Group 29: Key = ('SSL/TLS: HTTP Strict Transport Security (HSTS) Missing', 443, 'tcp')
+  Total vulnerabilities in group: 1
+    1. Name: SSL/TLS: HTTP Strict Transport Security (HSTS) Missing
+       Port: 443 | Protocol: tcp | Severity: LOG
+       Description: The remote web server is not enforcing HSTS.
+
+Group 30: Key = ('SSL/TLS: Perfect Forward Secrecy Cipher Suites Missing', 443, 'tcp')
+  Total vulnerabilities in group: 1
+    1. Name: SSL/TLS: Perfect Forward Secrecy Cipher Suites Missing
+       Port: 443 | Protocol: tcp | Severity: LOG
+       Description: The remote service is missing support for SSL/TLS cipher suites supporting Perfect Forward Secrecy.
+
+Group 31: Key = ('SSL/TLS: Report Medium Cipher Suites', 443, 'tcp')
+  Total vulnerabilities in group: 1
+    1. Name: SSL/TLS: Report Medium Cipher Suites
+       Port: 443 | Protocol: tcp | Severity: LOG
+       Description: This routine reports all Medium SSL/TLS cipher suites accepted by a service.
+
+Group 32: Key = ('SSL/TLS: Report Non Weak Cipher Suites', 443, 'tcp')
+  Total vulnerabilities in group: 1
+    1. Name: SSL/TLS: Report Non Weak Cipher Suites
+       Port: 443 | Protocol: tcp | Severity: LOG
+       Description: This routine reports all Non Weak SSL/TLS cipher suites accepted by a service.
+
+Group 33: Key = ('SSL/TLS: Report Supported Cipher Suites', 443, 'tcp')
+  Total vulnerabilities in group: 1
+    1. Name: SSL/TLS: Report Supported Cipher Suites
+       Port: 443 | Protocol: tcp | Severity: LOG
+       Description: This routine reports all SSL/TLS cipher suites accepted by a service. As the NVT 'SSL/TLS: Check Supported Cipher Suites' (OID: 1.3.6.1.4.1.25623.1.0....
+
+Group 34: Key = ('wapiti (NASL wrapper)', 443, 'tcp')
+  Total vulnerabilities in group: 1
+    1. Name: wapiti (NASL wrapper)
+       Port: 443 | Protocol: tcp | Severity: LOG
+       Description: This plugin uses wapiti to find web security issues. Make sure to have wapiti 2.x as wapiti 1.x is not supported. See the preferences section for wapi...
+
+Group 35: Key = ('CPE Inventory', 'general', 'CPE-T')
+  Total vulnerabilities in group: 1
+    1. Name: CPE Inventory
+       Port: general | Protocol: CPE-T | Severity: LOG
+       Description: This routine uses information collected by other routines about CPE identities of operating systems, services and applications detected during the sca...
+
+Group 36: Key = ('OS Detection Consolidation and Reporting', 'general', 'tcp')
+  Total vulnerabilities in group: 1
+    1. Name: OS Detection Consolidation and Reporting
+       Port: general | Protocol: tcp | Severity: LOG
+       Description: This script consolidates the OS information detected by several NVTs and tries to find the best matching OS. Furthermore it reports all previously col...
+
+Group 37: Key = ('Traceroute', 'general', 'tcp')
+  Total vulnerabilities in group: 1
+    1. Name: Traceroute
+       Port: general | Protocol: tcp | Severity: LOG
+       Description: A traceroute from the scanning server to the target system was conducted. This traceroute is provided primarily for informational value only. In the v...
+
+======================================================================

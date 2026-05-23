@@ -1,0 +1,36 @@
+{
+  "version": "v1",
+  "schema_mode": "auto",
+  "file": "v1\\openvas_artifactory-oss_5.11.0\\llama4\\run5\\openvas_artifactory-oss_5.11.0_llama4_run5.json",
+  "json_valid": true,
+  "n_records": 123,
+  "schema_conformance_rate": 0.0,
+  "schema_field_conformance_rate": 0.8888888888888888,
+  "type_coercion_rate": 0.5,
+  "coercion_breakdown": {
+    "cvss:list→float": 103,
+    "plugin:list→None": 123,
+    "cvss:list→None": 20
+  },
+  "extra_fields_rate": 0.0,
+  "missing_field_counts": {
+    "plugin_details": 123,
+    "instances": 123
+  },
+  "type_error_examples": [],
+  "type_error_field_counts": {},
+  "field_failure_counts": {
+    "plugin_details": 123,
+    "instances": 123
+  },
+  "extra_field_counts": {},
+  "native": {
+    "schema_mode": "v1",
+    "schema_conformance_rate": 1.0,
+    "schema_field_conformance_rate": 1.0,
+    "missing_field_counts": {},
+    "type_error_examples": [],
+    "type_error_field_counts": {},
+    "field_failure_counts": {}
+  }
+}

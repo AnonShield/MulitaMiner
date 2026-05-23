@@ -1,0 +1,245 @@
+[REGISTRY] Validator registered for profile: default
+[REGISTRY] Validator registered for profile: openvas
+[REGISTRY] Validator registered for profile: tenable
+[REGISTRY] Validator registered for profile: cais
+
+============================================================
+[CONFIG] LLM: deepseek-coder
+[CONFIG] Max tokens: 4096
+[CONFIG] Reserve para resposta: 1500
+============================================================
+
+Extraindo layout visual do PDF: openvas_docker.bintray.io_jfrog_artifactory-oss_5.11.0.pdf
+Total de páginas encontradas: 178
+[VISUAL] Sumário/índice extraído até 3408 caracteres usando marker '^\s*NVT:'.
+🖼️  Layout visual salvo em: visual_layout_extracted_openvas_docker.bintray.io_jfrog_artifactory-oss_5.11.0.txt
+
+[DEBUG] Contexto extraído do visual layout: severity=Critical, port=8019, protocol=tcp
+[DEBUG] initial_context_lines (auto): ['general/CPE-T Log', '8040/tcp Log', 'general/tcp Log', '8081/tcp Log', '2.1.1 Critical 8019/tcp']
+[DEBUG] Primeiro bloco salvo com contexto: port=8019, protocol=tcp, severity=Critical
+📦 [INFO] 17 blocos de sessão criados em temp_blocks/
+=== Comparacao de Multiplas Extracoes com Baseline (BERTScore) ===
+
+[OK] Modo CLI: duplicatas legítimas permitidas
+
+Carregando arquivo: metrics/baselines/openvas/openvas_docker.bintray.io_jfrog_artifactory-oss_5.11.0.xlsx
+Carregando aba baseline: Vulnerabilities
+Baseline carregado - Shape: (125, 18)
+Colunas baseline: ['Name', 'description', 'detection_result', 'detection_method', 'product_detection_result', 'impact', 'solution', 'insight', 'log_method', 'cvss', 'port', 'protocol', 'severity', 'references', 'plugin', 'identification', 'http_info', 'source']
+Arquivo de extracao simples detectado - usando aba 'Vulnerabilities'
+
+Abas de extracao encontradas: ['Vulnerabilities']
+
+============================================================
+Processando (BERT): Vulnerabilities
+============================================================
+Shape da extração: (120, 18)
+Processando BERTScore Vulnerabilities...
+   🔧 Scanner detectado: openvas
+   ℹ️ Mantendo 125 instâncias da baseline (modo com duplicatas legítimas)
+   🔍 Fuzzy matching: 2 vulnerabilidades...
+Colunas comparáveis encontradas (BERTScore): 17
+   📊 Calculando scores BERTScore...
+Carregando modelo BERTScore: distilbert-base-uncased...
+Modelo BERTScore carregado com sucesso!
+[DEBUG] baseline_dedup shape: (125, 21)
+[DEBUG] baseline_dedup _baseline_row_id:
+[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119, 120, 121, 122, 123, 124]
+[DEBUG] used_baseline_rowids (pareados):
+[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 19, 20, 23, 24, 26, np.int64(27), 28, 29, 31, 32, 33, 34, 35, 37, 38, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 55, 56, 57, 58, 60, 61, 62, 63, 64, 67, 68, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, np.int64(87), 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100, 101, 102, 103, 104, 105, np.int64(106), 107, np.int64(108), 109, 110, np.int64(111), 112, 113, 114, np.int64(115), np.int64(116), np.int64(117), np.int64(118), np.int64(119), np.int64(120), np.int64(121), np.int64(124)]
+[DEBUG] absent_rowids (serão marcados como ausentes):
+[65, 66, 36, 69, 39, 123, 18, 21, 22, 54, 25, 122, 59, 30]
+✅ Comparação BERT concluída!
+   → Arquivo: metrics\bert\results\openvas_docker.bintray.io_jfrog_artifactory-oss_5.11.0\bert_comparison_vulnerabilities_deepseek.xlsx
+
+   📊 Resumo da Comparação:
+      • Instâncias da baseline pareadas: 111/125
+      • Vulnerabilidades não extraídas (Absent): 14
+      • Vulnerabilidades inventadas (Non-existent): 9
+        ↳ Duplicatas excedentes: 8
+        ↳ Invenções sem match: 1
+
+   Categorização de Similaridade:
+      • Highly Similar (>0.7): 108
+      • Moderately Similar (0.6-0.7): 3
+      • Slightly Similar (0.4-0.6): 0
+      • Divergent (≤0.4): 0
+      • Non-existent (inventadas): 8
+      • Absent (não extraídas): 14
+
+   Estatísticas por campo (exemplo):
+   → description: BERTScore F1=0.920
+   → impact: BERTScore F1=0.503
+   → solution: BERTScore F1=0.789
+   → Média geral de todos os 17 campos: 0.880
+
+📊 Resumo geral salvo em: metrics\bert\results\summary_all_extractions_bert_openvas_docker.bintray.io_jfrog_artifactory-oss_5.11.0_deepseek.xlsx
+
+============================================================
+✅ Todas as comparações BERT concluídas!
+
+📊 Arquivos gerados:
+   - metrics\bert\results\bert_comparison_vulnerabilities.xlsx
+       • Per_Vulnerability: Scores BERTScore F1 detalhados por campo
+       • Summary: Estatísticas agregadas (média, desvio, min, max, mediana)
+       • Categorization: Classificação completa (Similarity + Absent + Non-existent)
+       • Mapping_Debug: Debug do pareamento de nomes
+   - metrics\bert\results\summary_all_extractions_bert.xlsx (comparação consolidada entre todos os modelos)
+[DEBUG] Primeira vulnerabilidade propagada: port=8019, protocol=tcp, severity=Critical
+
+============================================================
+📊 [SUMMARY] Total de blocos: 17
+📊 [SUMMARY] Total de vulnerabilidades extraídas: 139
+============================================================
+
+⚠️ Sem consolidação (permitindo duplicatas) - 139 vulnerabilidades
+📊 Total após deduplicação customizada: 121 (veja results_runs\openvas_docker.bintray.io_jfrog_artifactory-oss_5.11.0\deepseek\run8\openvas_docker.bintray.io_jfrog_artifactory-oss_5.11.0_deepseek_run8_20260215_194129_merge_log.txt para detalhes)
+
+📋 Total de vulnerabilidades: 121
+  - 🆕 NOVAS: 121
+  - 🔄 ATUALIZADAS: 0
+  - ♻️ REPETIDAS (sem mudança): 0
+
+🆕 Vulnerabilidades NOVAS encontradas:
+    1. [NOVO     ] [Critical] Apache Tomcat AJP RCE Vulnerability (Ghostcat) - Active Check
+    2. [NOVO     ] [CRITICAL] Apache Tomcat End of Life (EOL) Detection - Linux
+    3. [NOVO     ] [CRITICAL] Apache Tomcat 'CORS Filter' Setting Security Bypass Vulnerability
+    4. [NOVO     ] [CRITICAL] Apache Tomcat RCE Vulnerability (Mar 2025) - Linux
+    5. [NOVO     ] [CRITICAL] Apache Tomcat Multiple Vulnerabilities (Feb 2020) - Linux
+    6. [NOVO     ] [CRITICAL] Apache Tomcat Rewrite Rule Bypass Vulnerability (Apr 2025) - Linux
+    7. [NOVO     ] [CRITICAL] Apache Tomcat End of Life (EOL) Detection - Linux
+    8. [NOVO     ] [CRITICAL] Apache Tomcat 'CORS Filter' Setting Security Bypass Vulnerability
+    9. [NOVO     ] [CRITICAL] Apache Tomcat Multiple Vulnerabilities (Feb 2020) - Linux
+   10. [NOVO     ] [CRITICAL] Apache Tomcat Rewrite Rule Bypass Vulnerability (Apr 2025) - Linux
+   11. [NOVO     ] [CRITICAL] Apache Tomcat RCE Vulnerability (Mar 2025) - Linux
+   12. [NOVO     ] [HIGH    ] Apache Tomcat Request Mix-up Vulnerability (May 2022) - Linux
+   13. [NOVO     ] [HIGH    ] Apache Tomcat Session Fixation Vulnerability (Aug 2025) - Linux
+   14. [NOVO     ] [HIGH    ] Apache Tomcat DoS Vulnerability (Jul 2024) - Linux
+   15. [NOVO     ] [HIGH    ] Apache Tomcat DoS Vulnerability (Jul 2025) - Linux
+   16. [NOVO     ] [HIGH    ] Apache Tomcat HTTP/2 Protocol DoS Vulnerability (MadeYouReset) - Linux
+   17. [NOVO     ] [HIGH    ] Apache Tomcat Multiple Vulnerabilities (Jun 2025) - Linux
+   18. [NOVO     ] [HIGH    ] Apache Tomcat Multiple DoS Vulnerabilities (Jul 2025) - Linux
+   19. [NOVO     ] [HIGH    ] Apache Tomcat DoS Vulnerability (Sep 2021) - Linux
+   20. [NOVO     ] [HIGH    ] Apache Tomcat Multiple Vulnerabilities (Oct 2023) - Linux
+   21. [NOVO     ] [HIGH    ] Apache Tomcat HTTP/2 Vulnerability (Dec 2020) - Linux
+   22. [NOVO     ] [HIGH    ] Apache Tomcat Information Disclosure Vulnerability (Mar 2021) - Linux
+   23. [NOVO     ] [HIGH    ] Apache Tomcat Session Fixation Vulnerability (Dec 2019) - Linux
+   24. [NOVO     ] [HIGH    ] Apache Tomcat DoS Vulnerability (Jun 2019) - Linux
+   25. [NOVO     ] [HIGH    ] Apache Tomcat DoS Vulnerability (Mar 2019) - Linux
+   26. [NOVO     ] [HIGH    ] Apache Tomcat DoS Vulnerability (Jun 2020) - Linux
+   27. [NOVO     ] [HIGH    ] Apache Tomcat Multiple DoS Vulnerabilities (Jul 2020) - Linux
+   28. [NOVO     ] [HIGH    ] Apache Tomcat Request Smuggling Vulnerability (Oct 2022) - Linux
+   29. [NOVO     ] [HIGH    ] Apache Tomcat 'Hostname Verication' Security Bypass Vulnerability - Linux
+   30. [NOVO     ] [HIGH    ] Apache Tomcat Request Smuggling Vulnerability (Nov 2023) - Linux
+   31. [NOVO     ] [HIGH    ] Apache Tomcat 'UTF-8 Decoder' Denial of Service Vulnerability - Linux
+   32. [NOVO     ] [HIGH    ] Apache Tomcat Clustering DoS Vulnerability (May 2022)
+   33. [NOVO     ] [HIGH    ] Apache Tomcat DoS Vulnerability (Feb 2023) - Linux
+   34. [NOVO     ] [HIGH    ] Apache Tomcat Privilege Escalation Vulnerability (Dec 2019) - Linux
+   35. [NOVO     ] [HIGH    ] Apache Tomcat RCE Vulnerability (Mar 2021) - Linux
+   36. [NOVO     ] [HIGH    ] Apache Tomcat RCE Vulnerability (May 2020) - Linux
+   37. [NOVO     ] [HIGH    ] Apache Tomcat Request Mix-up Vulnerability (May 2022) - Linux
+   38. [NOVO     ] [HIGH    ] Apache Tomcat HTTP/2 Protocol DoS Vulnerability (MadeYouReset) - Linux
+   39. [NOVO     ] [HIGH    ] Apache Tomcat DoS Vulnerability (Jul 2024) - Linux
+   40. [NOVO     ] [HIGH    ] Apache Tomcat DoS Vulnerability (Jul 2025) - Linux
+   41. [NOVO     ] [HIGH    ] Apache Tomcat Session Fixation Vulnerability (Aug 2025) - Linux
+   42. [NOVO     ] [HIGH    ] Apache Tomcat Multiple Vulnerabilities (Jun 2025) - Linux
+   43. [NOVO     ] [HIGH    ] Apache Tomcat Multiple DoS Vulnerabilities (Jul 2025) - Linux
+   44. [NOVO     ] [HIGH    ] Apache Tomcat DoS Vulnerability (Sep 2021) - Linux
+   45. [NOVO     ] [HIGH    ] Apache Tomcat HTTP/2 Vulnerability (Dec 2020) - Linux
+   46. [NOVO     ] [HIGH    ] Apache Tomcat Multiple Vulnerabilities (Oct 2023) - Linux
+   47. [NOVO     ] [HIGH    ] Apache Tomcat Multiple Vulnerabilities
+   48. [NOVO     ] [HIGH    ] Apache Tomcat Information Disclosure Vulnerability (Mar 2021) - Linux
+   49. [NOVO     ] [HIGH    ] Apache Tomcat DoS Vulnerability (Jun 2019) - Linux
+   50. [NOVO     ] [HIGH    ] Apache Tomcat DoS Vulnerability (Mar 2019) - Linux
+   51. [NOVO     ] [HIGH    ] Apache Tomcat DoS Vulnerability (Jun 2020) - Linux
+   52. [NOVO     ] [HIGH    ] Apache Tomcat Multiple DoS Vulnerabilities (Jul 2020) - Linux
+   53. [NOVO     ] [HIGH    ] Apache Tomcat Session Fixation Vulnerability (Dec 2019) - Linux
+   54. [NOVO     ] [HIGH    ] Apache Tomcat 'Hostname Verication' Security Bypass Vulnerability - Linux
+   55. [NOVO     ] [HIGH    ] Apache Tomcat Request Smuggling Vulnerability (Oct 2022) - Linux
+   56. [NOVO     ] [HIGH    ] Apache Tomcat 'UTF-8 Decoder' Denial of Service Vulnerability - Linux
+   57. [NOVO     ] [HIGH    ] Apache Tomcat Request Smuggling Vulnerability (Nov 2023) - Linux
+   58. [NOVO     ] [HIGH    ] Apache Tomcat Clustering DoS Vulnerability (May 2022)
+   59. [NOVO     ] [HIGH    ] Apache Tomcat DoS Vulnerability (Feb 2023) - Linux
+   60. [NOVO     ] [HIGH    ] Apache Tomcat RCE Vulnerability (May 2020) - Linux
+   61. [NOVO     ] [HIGH    ] Apache Tomcat Privilege Escalation Vulnerability (Dec 2019) - Linux
+   62. [NOVO     ] [HIGH    ] Apache Tomcat RCE Vulnerability (Mar 2021) - Linux
+   63. [NOVO     ] [MEDIUM  ] Apache Tomcat JNDI Realm Authentication Weakness Vulnerability (Jul 2021) - Linux
+   64. [NOVO     ] [MEDIUM  ] Apache Tomcat Security Constraint Incorrect Handling Access Bypass Vulnerabilities - Linux
+   65. [NOVO     ] [MEDIUM  ] Apache Tomcat Authentication Bypass Vulnerability (Nov 2024) - Linux
+   66. [NOVO     ] [MEDIUM  ] Apache Tomcat Open Redirect Vulnerability (Aug 2023) - Linux
+   67. [NOVO     ] [MEDIUM  ] Apache Tomcat XSS Vulnerability (May 2019) - Linux
+   68. [NOVO     ] [MEDIUM  ] Apache Tomcat 'NIO/NIO2' Connectors Information Disclosure Vulnerability - Linux
+   69. [NOVO     ] [MEDIUM  ] Apache Tomcat Information Disclosure Vulnerability (Jan 2021) - Linux
+   70. [NOVO     ] [MEDIUM  ] Apache Tomcat Incorrectly Documented CGI Search Algorithm (Jan 2018) - Linux
+   71. [NOVO     ] [MEDIUM  ] Apache Tomcat HTTP Request Smuggling Vulnerability (Jul 2021) - Linux
+   72. [NOVO     ] [MEDIUM  ] Apache Tomcat Information Disclosure Vulnerability (Jan 2024) - Linux
+   73. [NOVO     ] [MEDIUM  ] Apache Tomcat Multiple DoS Vulnerabilities (Mar 2024) - Linux
+   74. [NOVO     ] [MEDIUM  ] Apache Tomcat Multiple Vulnerabilities (Dec 2024) - Linux
+   75. [NOVO     ] [MEDIUM  ] Apache Tomcat CGI Security Constraint Bypass Vulnerability (May 2025) - Linux
+   76. [NOVO     ] [MEDIUM  ] Apache Tomcat Information Disclosure Vulnerability (Mar 2023) - Linux
+   77. [NOVO     ] [MEDIUM  ] Apache Tomcat HTTP/2 Vulnerability (Oct 2020) - Linux
+   78. [NOVO     ] [MEDIUM  ] Apache Tomcat Open Redirect Vulnerability - Linux
+   79. [NOVO     ] [MEDIUM  ] Apache Tomcat JNDI Realm Authentication Weakness Vulnerability (Jul 2021) - Linux
+   80. [NOVO     ] [MEDIUM  ] Apache Tomcat Security Constraint Incorrect Handling Access Bypass Vulnerabilities - Linux
+   81. [NOVO     ] [MEDIUM  ] Apache Tomcat Security Constraint Incorrect Handling Access Bypass Vulnerability
+   82. [NOVO     ] [MEDIUM  ] Apache Tomcat Authentication Bypass Vulnerability (Nov 2024) - Linux
+   83. [NOVO     ] [MEDIUM  ] Apache Tomcat XSS Vulnerability (May 2019) - Linux
+   84. [NOVO     ] [MEDIUM  ] Apache Tomcat Open Redirect Vulnerability (Aug 2023) - Linux
+   85. [NOVO     ] [MEDIUM  ] Apache Tomcat 'NIO/NIO2' Connectors Information Disclosure Vulnerability - Linux
+   86. [NOVO     ] [MEDIUM  ] Apache Tomcat Information Disclosure Vulnerability (Jan 2021) - Linux
+   87. [NOVO     ] [MEDIUM  ] Apache Tomcat HTTP Request Smuggling Vulnerability (Jul 2021) - Linux
+   88. [NOVO     ] [MEDIUM  ] Apache Tomcat Information Disclosure Vulnerability (Jan 2024) - Linux
+   89. [NOVO     ] [MEDIUM  ] Apache Tomcat Incorrectly Documented CGI Search Algorithm (Jan 2018) - Linux
+   90. [NOVO     ] [MEDIUM  ] Apache Tomcat Multiple Vulnerabilities (Dec 2024) - Linux
+   91. [NOVO     ] [MEDIUM  ] Apache Tomcat CGI Security Constraint Bypass Vulnerability (May 2025) - Linux
+   92. [NOVO     ] [MEDIUM  ] Apache Tomcat Multiple DoS Vulnerabilities (Mar 2024) - Linux
+   93. [NOVO     ] [MEDIUM  ] Apache Tomcat Information Disclosure Vulnerability (Mar 2023) - Linux
+   94. [NOVO     ] [MEDIUM  ] Apache Tomcat Open Redirect Vulnerability - Linux
+   95. [NOVO     ] [MEDIUM  ] Apache Tomcat HTTP/2 Vulnerability (Oct 2020) - Linux
+   96. [NOVO     ] [LOW     ] ICMP Timestamp Reply Information Disclosure
+   97. [NOVO     ] [LOW     ] ICMP Timestamp Reply Information Disclosure
+   98. [NOVO     ] [LOW     ] Apache Tomcat Information Disclosure Vulnerability (Sep 2022) - Linux
+   99. [NOVO     ] [LOW     ] TCP Timestamps Information Disclosure
+  100. [NOVO     ] [LOW     ] TCP Timestamps Information Disclosure
+  101. [NOVO     ] [LOW     ] Apache Tomcat Information Disclosure Vulnerability (Sep 2022) - Linux
+  102. [NOVO     ] [LOG     ] Apache JServ Protocol (AJP) v1.3 Detection (TCP)
+  103. [NOVO     ] [LOG     ] CPE Inventory
+  104. [NOVO     ] [LOG     ] CPE Inventory
+  105. [NOVO     ] [LOG     ] Services
+  106. [NOVO     ] [LOG     ] Allowed HTTP Methods Enumeration
+  107. [NOVO     ] [LOG     ] Allowed HTTP Methods Enumeration
+  108. [NOVO     ] [LOG     ] HTTP Security Headers Detection
+  109. [NOVO     ] [LOG     ] JFrog Artifactory Detection (HTTP)
+  110. [NOVO     ] [LOG     ] Web Application Scanning Consolidation / Info Reporting
+  111. [NOVO     ] [LOG     ] Hostname Determination Reporting
+  112. [NOVO     ] [LOG     ] Hostname Determination Reporting
+  113. [NOVO     ] [LOG     ] Traceroute
+  114. [NOVO     ] [LOG     ] IP Forwarding Enabled - Active Check
+  115. [NOVO     ] [LOG     ] OS Detection Consolidation and Reporting
+  116. [NOVO     ] [LOG     ] Apache Tomcat Detection Consolidation
+  117. [NOVO     ] [LOG     ] Web Application Scanning Consolidation / Info Reporting
+  118. [NOVO     ] [LOG     ] Allowed HTTP Methods Enumeration
+  119. [NOVO     ] [LOG     ] Services
+  120. [NOVO     ] [LOG     ] HTTP Security Headers Detection
+  121. [NOVO     ] [LOG     ] JFrog Artifactory Detection (HTTP)
+
+🗑 Log de vulnerabilidades removidas salvo em: results_runs\openvas_docker.bintray.io_jfrog_artifactory-oss_5.11.0\deepseek\run8\openvas_docker.bintray.io_jfrog_artifactory-oss_5.11.0_deepseek_run8_20260215_194129_removed_log.txt
+
+💾 Vulnerabilidades salvas em: results_runs\openvas_docker.bintray.io_jfrog_artifactory-oss_5.11.0\deepseek\run8\openvas_docker.bintray.io_jfrog_artifactory-oss_5.11.0_deepseek_run8_20260215_194129.json
+[TOKENS] Arquivo de tokens salvo em: results_tokens\openvas_docker.bintray.io_jfrog_artifactory-oss_5.11.0_deepseek_run8_20260215_194129_tokens.json
+
+=== CONVERSÃO DE FORMATOS ===
+Arquivo XLSX criado com sucesso: results_runs\openvas_docker.bintray.io_jfrog_artifactory-oss_5.11.0\deepseek\run8\openvas_docker.bintray.io_jfrog_artifactory-oss_5.11.0_deepseek_run8_20260215_194129.xlsx
+Total de vulnerabilidades: 120
+XLSX: results_runs\openvas_docker.bintray.io_jfrog_artifactory-oss_5.11.0\deepseek\run8\openvas_docker.bintray.io_jfrog_artifactory-oss_5.11.0_deepseek_run8_20260215_194129.xlsx
+
+🔄 Conversões geradas: 1
+  📄 results_runs\openvas_docker.bintray.io_jfrog_artifactory-oss_5.11.0\deepseek\run8\openvas_docker.bintray.io_jfrog_artifactory-oss_5.11.0_deepseek_run8_20260215_194129.xlsx
+
+============================================================
+📊 Iniciando avaliação de métricas com o método: 'bert'
+============================================================
+⚙️ Executando comando: C:\Users\Bia\Desktop\Vulnerability_Extractor\venv\Scripts\python.exe metrics\bert\compare_extractions_bert.py --baseline-file metrics/baselines/openvas/openvas_docker.bintray.io_jfrog_artifactory-oss_5.11.0.xlsx --extraction-file results_runs\openvas_docker.bintray.io_jfrog_artifactory-oss_5.11.0\deepseek\run8\openvas_docker.bintray.io_jfrog_artifactory-oss_5.11.0_deepseek_run8_20260215_194129.xlsx --output-dir metrics\bert\results --model deepseek --allow-duplicates
+
+✅ [SUCESSO] Avaliação de métricas concluída.
+📁 Resultados salvos no diretório: 'metrics\bert\results'

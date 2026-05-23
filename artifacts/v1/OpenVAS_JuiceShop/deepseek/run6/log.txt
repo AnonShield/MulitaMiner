@@ -1,0 +1,153 @@
+CMD: C:\Users\Bia\Desktop\Vulnerability_Extractor\venv\Scripts\python.exe main.py C:\Users\Bia\Desktop\Vulnerability_Extractor\baselines\openvas\OpenVAS_JuiceShop.pdf --profile _tmp_grp_deepseek --LLM deepseek
+START: 2026-05-14T19:56:38.652731
+
+C:\Users\Bia\Desktop\Vulnerability_Extractor\venv\Lib\site-packages\langchain_core\_api\deprecation.py:26: UserWarning: Core Pydantic V1 functionality isn't compatible with Python 3.14 or greater.
+  from pydantic.v1.fields import FieldInfo as FieldInfoV1
+C:\Users\Bia\Desktop\Vulnerability_Extractor\main.py:364: UserWarning: Parameters {'max_completion_tokens'} should be specified explicitly. Instead they were passed in as part of `model_kwargs` parameter.
+  main()
+
+============================================================
+[CONFIG] LLM: deepseek-coder
+[CONFIG] Max tokens: 4096
+[CONFIG] Reserve para resposta: 1000
+============================================================
+
+Extraindo layout visual do PDF: OpenVAS_JuiceShop.pdf
+Total de páginas encontradas: 24
+Layout visual salvo em: visual_layout_extracted_OpenVAS_JuiceShop.txt
+Layout visual salvo em: visual_layout_extracted_OpenVAS_JuiceShop.txt
+
+[TOKEN CALC] Max tokens do modelo: 4096
+[TOKEN CALC] Overhead do prompt: ~500 tokens
+[TOKEN CALC] Reserve para resposta: ~1000 tokens
+[TOKEN CALC] Tokens disponíveis para conteúdo: ~2596 tokens
+[TOKEN CALC] Total de chunks criados (respeitando blocos): 5
+Total de chunks: 5
+
+Processando chunks:   0%|          | 0/5 [00:00<?, ?chunk/s]Processando chunks:  20%|██        | 1/5 [00:09<00:38,  9.66s/chunk]Processando chunks:  40%|████      | 2/5 [00:24<00:37, 12.45s/chunk]Processando chunks:  60%|██████    | 3/5 [00:41<00:29, 14.88s/chunk]Processando chunks:  80%|████████  | 4/5 [00:58<00:15, 15.58s/chunk]Processando chunks: 100%|██████████| 5/5 [01:02<00:00, 11.45s/chunk]Processando chunks: 100%|██████████| 5/5 [01:02<00:00, 12.52s/chunk]
+
+============================================================
+Processando chunk 1/5
+============================================================
+[SCANNER] Detectado: OPENVAS (5 blocos)
+[ATTEMPT 1/4] Processando chunk completo (8658 chars)...
+[ATTEMPT 1] ✓ Sucesso (parser alt): 5 vulnerabilidades
+[LOG] Chunk 1/5: 5/5 válidas
+[NOMES] 5:
+   1. SMTP too long line
+   2. OpenVAS / Greenbone Vulnerability Manager Default Credentials
+   3. SSL/TLS: Certificate Expired
+   4. Check if Mailserver answer to VRFY and EXPN requests
+   5. SSL/TLS: Certificate Expired
+
+============================================================
+Processando chunk 2/5
+============================================================
+[SCANNER] Detectado: OPENVAS (8 blocos)
+[ATTEMPT 1/4] Processando chunk completo (9280 chars)...
+[ATTEMPT 1] ✓ Sucesso (parser alt): 8 vulnerabilidades
+[LOG] Chunk 2/5: 8/8 válidas
+[NOMES] 8:
+   1. CGI Scanning Consolidation
+   2. Greenbone Security Assistant (GSA) Detection
+   3. HTTP Security Headers Detection
+   4. Services
+   5. Services
+   6. SSL/TLS: Collect and Report Certificate Details
+   7. SSL/TLS: HTTP Public Key Pinning (HPKP) Missing
+   8. SSL/TLS: HTTP Strict Transport Security (HSTS) Missing
+
+============================================================
+Processando chunk 3/5
+============================================================
+[SCANNER] Detectado: OPENVAS (11 blocos)
+[ATTEMPT 1/4] Processando chunk completo (9181 chars)...
+[ATTEMPT 1] ✓ Sucesso (parser alt): 11 vulnerabilidades
+[LOG] Chunk 3/5: 11/11 válidas
+[NOMES] 11:
+   1. SSL/TLS: Perfect Forward Secrecy Cipher Suites Missing
+   2. SSL/TLS: Report Medium Cipher Suites
+   3. SSL/TLS: Report Non Weak Cipher Suites
+   4. SSL/TLS: Report Supported Cipher Suites
+   5. wapiti (NASL wrapper)
+   6. Postx SMTP Server Detection
+   7. Services
+   8. SMTP antivirus scanner DoS
+   9. SMTP Missing Support For STARTTLS
+  10. SMTP Server type and version
+  11. OpenVAS / Greenbone Vulnerability Manager Detection
+
+============================================================
+Processando chunk 4/5
+============================================================
+[SCANNER] Detectado: OPENVAS (8 blocos)
+[ATTEMPT 1/4] Processando chunk completo (9405 chars)...
+[ATTEMPT 1] ✓ Sucesso (parser alt): 8 vulnerabilidades
+[LOG] Chunk 4/5: 8/8 válidas
+[NOMES] 8:
+   1. Service Detection with '<xml/>' Request
+   2. Services
+   3. SSL/TLS: Collect and Report Certicate Details
+   4. SSL/TLS: Perfect Forward Secrecy Cipher Suites Missing
+   5. SSL/TLS: Report Medium Cipher Suites
+   6. SSL/TLS: Report Non Weak Cipher Suites
+   7. SSL/TLS: Report Supported Cipher Suites
+   8. CPE Inventory
+
+============================================================
+Processando chunk 5/5
+============================================================
+[SCANNER] Detectado: OPENVAS (2 blocos)
+[ATTEMPT 1/4] Processando chunk completo (2199 chars)...
+[ATTEMPT 1] ✓ Sucesso (parser alt): 2 vulnerabilidades
+[LOG] Chunk 5/5: 2/2 válidas
+[NOMES] 2:
+   1. OS Detection Consolidation and Reporting
+   2. Traceroute
+
+[SUMMARY] Total de vulnerabilidades extraídas: 34
+
+Sem consolidação (OpenVAS) - 34 vulnerabilidades
+
+Total de vulnerabilidades (OpenVAS): 34
+  - NOVAS: 34
+  - ATUALIZADAS: 0
+  - REPETIDAS (sem mudança): 0
+
+Vulnerabilidades NOVAS encontradas:
+    1. [NOVO     ] [HIGH    ] SMTP too long line
+    2. [NOVO     ] [HIGH    ] OpenVAS / Greenbone Vulnerability Manager Default Credentials
+    3. [NOVO     ] [MEDIUM  ] SSL/TLS: Certificate Expired
+    4. [NOVO     ] [MEDIUM  ] Check if Mailserver answer to VRFY and EXPN requests
+    5. [NOVO     ] [MEDIUM  ] SSL/TLS: Certificate Expired
+    6. [NOVO     ] [LOG     ] CGI Scanning Consolidation
+    7. [NOVO     ] [LOG     ] Greenbone Security Assistant (GSA) Detection
+    8. [NOVO     ] [LOG     ] HTTP Security Headers Detection
+    9. [NOVO     ] [LOG     ] Services
+   10. [NOVO     ] [LOG     ] Services
+   11. [NOVO     ] [LOG     ] SSL/TLS: Collect and Report Certificate Details
+   12. [NOVO     ] [LOG     ] SSL/TLS: HTTP Public Key Pinning (HPKP) Missing
+   13. [NOVO     ] [LOG     ] SSL/TLS: HTTP Strict Transport Security (HSTS) Missing
+   14. [NOVO     ] [LOG     ] SSL/TLS: Perfect Forward Secrecy Cipher Suites Missing
+   15. [NOVO     ] [LOG     ] SSL/TLS: Report Medium Cipher Suites
+   16. [NOVO     ] [LOG     ] SSL/TLS: Report Non Weak Cipher Suites
+   17. [NOVO     ] [LOG     ] SSL/TLS: Report Supported Cipher Suites
+   18. [NOVO     ] [LOG     ] wapiti (NASL wrapper)
+   19. [NOVO     ] [LOG     ] Postx SMTP Server Detection
+   20. [NOVO     ] [LOG     ] Services
+   21. [NOVO     ] [HIGH    ] SMTP antivirus scanner DoS
+   22. [NOVO     ] [LOG     ] SMTP Missing Support For STARTTLS
+   23. [NOVO     ] [LOG     ] SMTP Server type and version
+   24. [NOVO     ] [LOG     ] OpenVAS / Greenbone Vulnerability Manager Detection
+   25. [NOVO     ] [LOG     ] Service Detection with '<xml/>' Request
+   26. [NOVO     ] [LOG     ] Services
+   27. [NOVO     ] [LOG     ] SSL/TLS: Collect and Report Certicate Details
+   28. [NOVO     ] [LOG     ] SSL/TLS: Perfect Forward Secrecy Cipher Suites Missing
+   29. [NOVO     ] [LOG     ] SSL/TLS: Report Medium Cipher Suites
+   30. [NOVO     ] [LOG     ] SSL/TLS: Report Non Weak Cipher Suites
+   31. [NOVO     ] [LOG     ] SSL/TLS: Report Supported Cipher Suites
+   32. [NOVO     ] [LOG     ] CPE Inventory
+   33. [NOVO     ] [LOG     ] OS Detection Consolidation and Reporting
+   34. [NOVO     ] [LOG     ] Traceroute
+
+Vulnerabilidades salvas em: _tmp_vulns_grp_deepseek.json

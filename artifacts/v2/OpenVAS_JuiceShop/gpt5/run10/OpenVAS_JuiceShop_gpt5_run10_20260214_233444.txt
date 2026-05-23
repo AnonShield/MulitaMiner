@@ -1,0 +1,155 @@
+[REGISTRY] Validator registered for profile: default
+[REGISTRY] Validator registered for profile: openvas
+[REGISTRY] Validator registered for profile: tenable
+[REGISTRY] Validator registered for profile: cais
+
+============================================================
+[CONFIG] LLM: gpt-5-mini-2025-08-07
+[CONFIG] Max tokens: 16000
+[CONFIG] Reserve para resposta: 7000
+============================================================
+
+Extraindo layout visual do PDF: OpenVAS_JuiceShop.pdf
+Total de páginas encontradas: 24
+[VISUAL] Sumário/índice extraído até 2585 caracteres usando marker '^\s*NVT:'.
+🖼️  Layout visual salvo em: visual_layout_extracted_OpenVAS_JuiceShop.txt
+
+[DEBUG] Contexto extraído do visual layout: severity=High, port=25, protocol=tcp
+[DEBUG] initial_context_lines (auto): ['25/tcp Log', '9390/tcp Log', 'general/CPE-T Log', 'general/tcp Log', 'High 25/tcp']
+[DEBUG] Primeiro bloco salvo com contexto: port=25, protocol=tcp, severity=High
+📦 [INFO] 10 blocos de sessão criados em temp_blocks/
+=== Comparacao de Multiplas Extracoes com Baseline (BERTScore) ===
+
+[OK] Modo CLI: duplicatas legítimas permitidas
+
+Carregando arquivo: metrics/baselines/openvas/OpenVAS_JuiceShop.xlsx
+Carregando aba baseline: Vulnerabilities
+Baseline carregado - Shape: (34, 16)
+Colunas baseline: ['Name', 'description', 'detection_result', 'detection_method', 'impact', 'solution', 'insight', 'product_detection_result', 'log_method', 'cvss', 'port', 'protocol', 'severity', 'references', 'plugin', 'source']
+Arquivo de extracao simples detectado - usando aba 'Vulnerabilities'
+
+Abas de extracao encontradas: ['Vulnerabilities']
+
+============================================================
+Processando (BERT): Vulnerabilities
+============================================================
+Shape da extração: (33, 18)
+Processando BERTScore Vulnerabilities...
+   🔧 Scanner detectado: openvas
+   ℹ️ Mantendo 34 instâncias da baseline (modo com duplicatas legítimas)
+   🔍 Fuzzy matching: 0 vulnerabilidades...
+Colunas comparáveis encontradas (BERTScore): 15
+   📊 Calculando scores BERTScore...
+Carregando modelo BERTScore: distilbert-base-uncased...
+Modelo BERTScore carregado com sucesso!
+[DEBUG] baseline_dedup shape: (34, 19)
+[DEBUG] baseline_dedup _baseline_row_id:
+[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33]
+[DEBUG] used_baseline_rowids (pareados):
+[1, 2, 3, 4, 5, 6, 7, np.int64(8), np.int64(9), 10, 11, 12, 13, 14, 15, 16, 17, 18, np.int64(19), 20, 21, 22, 23, np.int64(24), 25, 26, 27, 28, np.int64(29), 31, 32, 33]
+[DEBUG] absent_rowids (serão marcados como ausentes):
+[0, 30]
+✅ Comparação BERT concluída!
+   → Arquivo: metrics\bert\results\OpenVAS_JuiceShop\bert_comparison_vulnerabilities_gpt5.xlsx
+
+   📊 Resumo da Comparação:
+      • Instâncias da baseline pareadas: 32/34
+      • Vulnerabilidades não extraídas (Absent): 2
+      • Vulnerabilidades inventadas (Non-existent): 1
+        ↳ Duplicatas excedentes: 1
+        ↳ Invenções sem match: 0
+
+   Categorização de Similaridade:
+      • Highly Similar (>0.7): 32
+      • Moderately Similar (0.6-0.7): 0
+      • Slightly Similar (0.4-0.6): 0
+      • Divergent (≤0.4): 0
+      • Non-existent (inventadas): 1
+      • Absent (não extraídas): 2
+
+   Estatísticas por campo (exemplo):
+   → description: BERTScore F1=0.962
+   → impact: BERTScore F1=0.967
+   → solution: BERTScore F1=0.949
+   → Média geral de todos os 15 campos: 0.981
+
+📊 Resumo geral salvo em: metrics\bert\results\summary_all_extractions_bert_openvas_juiceshop_gpt5.xlsx
+
+============================================================
+✅ Todas as comparações BERT concluídas!
+
+📊 Arquivos gerados:
+   - metrics\bert\results\bert_comparison_vulnerabilities.xlsx
+       • Per_Vulnerability: Scores BERTScore F1 detalhados por campo
+       • Summary: Estatísticas agregadas (média, desvio, min, max, mediana)
+       • Categorization: Classificação completa (Similarity + Absent + Non-existent)
+       • Mapping_Debug: Debug do pareamento de nomes
+   - metrics\bert\results\summary_all_extractions_bert.xlsx (comparação consolidada entre todos os modelos)
+[DEBUG] Primeira vulnerabilidade propagada: port=25, protocol=tcp, severity=High
+
+============================================================
+📊 [SUMMARY] Total de blocos: 10
+📊 [SUMMARY] Total de vulnerabilidades extraídas: 38
+============================================================
+
+⚠️ Sem consolidação (permitindo duplicatas) - 38 vulnerabilidades
+📊 Total após deduplicação customizada: 33 (veja results_runs\OpenVAS_JuiceShop_gpt5_20260214_234249_merge_log.txt para detalhes)
+
+📋 Total de vulnerabilidades: 33
+  - 🆕 NOVAS: 33
+  - 🔄 ATUALIZADAS: 0
+  - ♻️ REPETIDAS (sem mudança): 0
+
+🆕 Vulnerabilidades NOVAS encontradas:
+    1. [NOVO     ] [High    ] OpenVAS / Greenbone Vulnerability Manager Default Credentials
+    2. [NOVO     ] [HIGH    ] OpenVAS / Greenbone Vulnerability Manager Default Credentials
+    3. [NOVO     ] [MEDIUM  ] SSL/TLS: Certicate Expired
+    4. [NOVO     ] [MEDIUM  ] Check if Mailserver answer to VRFY and EXPN requests
+    5. [NOVO     ] [MEDIUM  ] SSL/TLS: Certicate Expired
+    6. [NOVO     ] [LOG     ] CGI Scanning Consolidation
+    7. [NOVO     ] [LOG     ] Greenbone Security Assistant (GSA) Detection
+    8. [NOVO     ] [LOG     ] HTTP Security Headers Detection
+    9. [NOVO     ] [LOG     ] Services
+   10. [NOVO     ] [LOG     ] SSL/TLS: Collect and Report Certicate Details
+   11. [NOVO     ] [LOG     ] SSL/TLS: HTTP Public Key Pinning (HPKP) Missing
+   12. [NOVO     ] [LOG     ] SSL/TLS: HTTP Strict Transport Security (HSTS) Missing
+   13. [NOVO     ] [LOG     ] SSL/TLS: Perfect Forward Secrecy Cipher Suites Missing
+   14. [NOVO     ] [LOG     ] SSL/TLS: Report Medium Cipher Suites
+   15. [NOVO     ] [LOG     ] SSL/TLS: Report Non Weak Cipher Suites
+   16. [NOVO     ] [LOG     ] SSL/TLS: Report Supported Cipher Suites
+   17. [NOVO     ] [LOG     ] wapiti (NASL wrapper)
+   18. [NOVO     ] [LOG     ] Postx SMTP Server Detection
+   19. [NOVO     ] [LOG     ] Services
+   20. [NOVO     ] [LOG     ] Services
+   21. [NOVO     ] [LOG     ] SMTP antivirus scanner DoS
+   22. [NOVO     ] [LOG     ] SMTP Missing Support For STARTTLS
+   23. [NOVO     ] [LOG     ] SMTP Server type and version
+   24. [NOVO     ] [LOG     ] OpenVAS / Greenbone Vulnerability Manager Detection
+   25. [NOVO     ] [LOG     ] Service Detection with '<xml/>' Request
+   26. [NOVO     ] [LOG     ] Services
+   27. [NOVO     ] [LOG     ] SSL/TLS: Collect and Report Certicate Details
+   28. [NOVO     ] [LOG     ] SSL/TLS: Perfect Forward Secrecy Cipher Suites Missing
+   29. [NOVO     ] [LOG     ] SSL/TLS: Report Medium Cipher Suites
+   30. [NOVO     ] [LOG     ] SSL/TLS: Report Non Weak Cipher Suites
+   31. [NOVO     ] [LOG     ] CPE Inventory
+   32. [NOVO     ] [LOG     ] OS Detection Consolidation and Reporting
+   33. [NOVO     ] [LOG     ] Traceroute
+
+💾 Vulnerabilidades salvas em: results_runs\OpenVAS_JuiceShop_gpt5_20260214_234249.json
+[TOKENS] Arquivo de tokens salvo em: results_tokens\OpenVAS_JuiceShop_gpt5_20260214_234249_tokens.json
+
+=== CONVERSÃO DE FORMATOS ===
+Arquivo XLSX criado com sucesso: results_runs\OpenVAS_JuiceShop_gpt5_20260214_234249.xlsx
+Total de vulnerabilidades: 33
+XLSX: results_runs\OpenVAS_JuiceShop_gpt5_20260214_234249.xlsx
+
+🔄 Conversões geradas: 1
+  📄 results_runs\OpenVAS_JuiceShop_gpt5_20260214_234249.xlsx
+
+============================================================
+📊 Iniciando avaliação de métricas com o método: 'bert'
+============================================================
+⚙️ Executando comando: C:\Users\Bia\Desktop\Vulnerability_Extractor\venv\Scripts\python.exe metrics\bert\compare_extractions_bert.py --baseline-file metrics/baselines/openvas/OpenVAS_JuiceShop.xlsx --extraction-file results_runs\OpenVAS_JuiceShop_gpt5_20260214_234249.xlsx --output-dir metrics\bert\results --model gpt5 --allow-duplicates
+
+✅ [SUCESSO] Avaliação de métricas concluída.
+📁 Resultados salvos no diretório: 'metrics\bert\results'

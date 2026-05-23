@@ -1,0 +1,38 @@
+{
+  "version": "v2",
+  "schema_mode": "auto",
+  "file": "v2\\OpenVAS_bBWA\\llama4\\run8\\OpenVAS_bBWA_llama4_run8_OpenVAS_bBWA_llama4_20260215_001625.json",
+  "json_valid": true,
+  "n_records": 48,
+  "schema_conformance_rate": 0.9791666666666666,
+  "schema_field_conformance_rate": 0.9988425925925926,
+  "type_coercion_rate": 0.5052083333333334,
+  "coercion_breakdown": {
+    "cvss:list→float": 48,
+    "plugin_details:list→dict": 48,
+    "severity:case": 1
+  },
+  "extra_fields_rate": 0.0,
+  "missing_field_counts": {
+    "detection_result": 1
+  },
+  "type_error_examples": [],
+  "type_error_field_counts": {},
+  "field_failure_counts": {
+    "detection_result": 1
+  },
+  "extra_field_counts": {},
+  "native": {
+    "schema_mode": "v2",
+    "schema_conformance_rate": 0.9791666666666666,
+    "schema_field_conformance_rate": 0.9986979166666666,
+    "missing_field_counts": {
+      "detection_result": 1
+    },
+    "type_error_examples": [],
+    "type_error_field_counts": {},
+    "field_failure_counts": {
+      "detection_result": 1
+    }
+  }
+}

@@ -1,0 +1,7 @@
+# Vulnerabilidades removidas por falta de descrição válida:
+- DFN-CERT-2024-2706 | port: 8040 | protocol: tcp | severity: CRITICAL
+- DFN-CERT-2024-2681 | port: 8040 | protocol: tcp | severity: CRITICAL
+- DFN-CERT-2024-2487 | port: 8040 | protocol: tcp | severity: CRITICAL
+- CVE-2023-42795 | port: 80 | protocol: tcp | severity: HIGH
+- Apache Tomcat 'Hostname Verification' Security Bypass Vulnerability - Linux | port: 8081 | protocol: tcp | severity: HIGH
+- Apache Tomcat Multiple Vulnerabilities (Dec 2024) - Linux | port: 8040 | protocol: tcp | severity: HIGH

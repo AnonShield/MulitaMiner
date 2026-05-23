@@ -1,0 +1,663 @@
+[
+  {
+    "Name": "Distributed Ruby (dRuby/DRb) Multiple Remote Code Execution Vulnerabilities",
+    "description": [
+      "Systems using Distributed Ruby (dRuby/DRb), which is available in Ruby versions 1.6 and later, may permit unauthorized systems to execute distributed commands."
+    ],
+    "detection_result": [
+      "The service is running in $SAFE >= 1 mode. However it is still possible to run arbitrary syscall commands on the remote host. Sending an invalid syscall the service returned the following response: Flo:Errno::ENOSYS:bt[\"3/usr/lib/ruby/1.8/drb/drb.rb:1555:in 'syscall'\"0/usr/lib/ ->ruby/1.8/drb/drb.rb:1555:in 'send'\"4/usr/lib/ruby/1.8/drb/drb.rb:1555:in '__send__'\"A/usr/lib/ruby/1.8/drb/drb.rb:1555:in 'perform_without_block'\"3/usr/lib/ ->ruby/1.8/drb/drb.rb:1515:in 'perform'\"5/usr/lib/ruby/1.8/drb/drb.rb:1589:in 'main_loop'\"0/usr/lib/ruby/1.8/drb/drb.rb:1585:in 'loop'\"5/usr/lib/ruby/1.8/drb/ ->drb.rb:1585:in 'main_loop'\"1/usr/lib/ruby/1.8/drb/drb.rb:1581:in 'start'\"5/usr ->/lib/ruby/1.8/drb/drb.rb:1581:in 'main_loop'\"//usr/lib/ruby/1.8/drb/drb.rb:143 ->0:in 'run'\"1/usr/lib/ruby/1.8/drb/drb.rb:1427:in 'start'\"//usr/lib/ruby/1.8/dr b/drb.rb:1427:in 'run'\"6/usr/lib/ruby/1.8/drb/drb.rb:1347:in 'initialize'\"//us ->r/lib/ruby/1.8/drb/drb.rb:1627:in 'new'\"9/usr/lib/ruby/1.8/drb/drb.rb:1627:in ->'start_service'\"%/usr/sbin/druby_timeserver.rb:12:errnoi+:mesg\"Function not implemented"
+    ],
+    "detection_method": [
+      "Send a crafted command to the service and check for a remote command execution via the instance_eval or syscall requests. Details: Distributed Ruby (dRuby/DRb) Multiple Remote Code Execution Vulnerabilities OID:1.3.6.1.4.1.25623.1.0.108010 Version used: $Revision: 12338 $"
+    ],
+    "impact": [
+      "By default, Distributed Ruby does not impose restrictions on allowed hosts or set the $SAFE environment variable to prevent privileged activities. If other controls are not in place, especially if the Distributed Ruby process runs with elevated privileges, an attacker could execute arbitrary system commands or Ruby scripts on the Distributed Ruby server. An attacker may need to know only the URI of the listening Distributed Ruby server to submit Ruby commands."
+    ],
+    "solution": [
+      "Solution type: Mitigation. Administrators of environments that rely on Distributed Ruby should ensure that appropriate controls are in place. Code-level controls may include: - Implementing taint on untrusted input - Setting $SAFE levels appropriately (>=2 is recommended if untrusted hosts are allowed to submit Ruby commands, and >=3 may be appropriate) - Including drb/acl.rb to set ACLEntry to restrict access to trusted hosts"
+    ],
+    "insight": [],
+    "product_detection_result": [],
+    "log_method": [],
+    "cvss": [
+      10.0,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "port": 8787,
+    "protocol": "tcp",
+    "severity": "HIGH",
+    "references": [
+      "BID:47071",
+      "https://tools.cisco.com/security/center/viewAlert.x?alertId=22750",
+      "http://www.securityfocus.com/bid/47071",
+      "http://blog.recurity-labs.com/archives/2011/05/12/druby_for_penetration_testers/",
+      "http://www.ruby-doc.org/stdlib-1.9.3/libdoc/drb/rdoc/DRb.html"
+    ],
+    "plugin": [],
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "rexec Passwordless / Unencrypted Cleartext Login",
+    "description": [
+      "This remote host is running a rexec service."
+    ],
+    "detection_result": [
+      "The rexec service is not allowing connections from this host."
+    ],
+    "detection_method": [
+      "Details: rexec Passwordless / Unencrypted Cleartext Login",
+      "OID:1.3.6.1.4.1.25623.1.0.100111",
+      "Version used: $Revision: 13541 $"
+    ],
+    "impact": [],
+    "solution": [
+      "Solution type: Mitigation",
+      "Disable the rexec service and use alternatives like SSH instead."
+    ],
+    "insight": [
+      "rexec (Remote Process Execution) has the same kind of functionality that rsh has: you can execute shell commands on a remote computer.",
+      "The main dierence is that rexec authenticate by reading the username and password *unen-crypted* from the socket."
+    ],
+    "product_detection_result": [],
+    "log_method": [],
+    "cvss": [
+      10.0,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "port": 512,
+    "protocol": "tcp",
+    "severity": "HIGH",
+    "references": [
+      "https://web.nvd.nist.gov/view/vuln/detail?vulnId=CVE-1999-0618",
+      "CVE-1999-0618"
+    ],
+    "plugin": [],
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "MySQL / MariaDB weak password",
+    "description": [
+      "It was possible to login into the remote MySQL as root using weak credentials."
+    ],
+    "detection_result": [
+      "It was possible to login as root with an empty password."
+    ],
+    "detection_method": [
+      "Details: MySQL / MariaDB weak password",
+      "OID:1.3.6.1.4.1.25623.1.0.103551",
+      "Version used: $Revision: 12175 $",
+      "Product Detection Result Product: cpe:/a:mysql:mysql:5.0.51a",
+      "Method: MySQL/MariaDB Detection",
+      "OID: 1.3.6.1.4.1.25623.1.0.100152"
+    ],
+    "impact": [],
+    "solution": [
+      "Solution type: Mitigation",
+      "Change the password as soon as possible."
+    ],
+    "insight": [],
+    "product_detection_result": [
+      "cpe:/a:mysql:mysql:5.0.51a",
+      "Detected by MySQL/MariaDB Detection (OID: 1.3.6.1.4.1.25623.1.0.100152)"
+    ],
+    "log_method": [],
+    "cvss": [
+      9.0,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "port": 3306,
+    "protocol": "tcp",
+    "severity": "HIGH",
+    "references": [],
+    "plugin": [],
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "vsftpd Compromised Source Packages Backdoor Vulnerability",
+    "description": [
+      "vsftpd is prone to a backdoor vulnerability."
+    ],
+    "detection_result": [
+      "Vulnerability was detected according to the Vulnerability Detection Method."
+    ],
+    "detection_method": [
+      "Details: vsftpd Compromised Source Packages Backdoor Vulnerability",
+      "OID:1.3.6.1.4.1.25623.1.0.103185",
+      "Version used: $Revision: 12076 $",
+      "References: BID:48539",
+      "Other URLs: http://www.securityfocus.com/bid/48539",
+      "http://scarybeastsecurity.blogspot.com/2011/07/alert-vsftpd-download-back->doored.html",
+      "https://security.appspot.com/vsftpd.html"
+    ],
+    "impact": [
+      "Attackers can exploit this issue to execute arbitrary commands in the context of the application.",
+      "Successful attacks will compromise the aected application."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "The repaired package can be downloaded from the referenced link. Please validate the package with its signature."
+    ],
+    "insight": [],
+    "product_detection_result": [
+      "The vsftpd 2.3.4 source package is aected."
+    ],
+    "log_method": [],
+    "cvss": [
+      7.5,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "port": 6200,
+    "protocol": "tcp",
+    "severity": "HIGH",
+    "references": [
+      "BID-48539",
+      "http://www.securityfocus.com/bid/48539",
+      "http://scarybeastsecurity.blogspot.com/2011/07/alert-vsftpd-download-back->doored.html",
+      "https://security.appspot.com/vsftpd.html"
+    ],
+    "plugin": [],
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "rlogin Passwordless / Unencrypted Cleartext Login",
+    "description": [
+      "This remote host is running a rlogin service."
+    ],
+    "detection_result": [
+      "The service is misconfigured so it is allowing conntections without a password."
+    ],
+    "detection_method": [
+      "Details: rlogin Passwordless / Unencrypted Cleartext Login",
+      "OID:1.3.6.1.4.1.25623.1.0.901202",
+      "Version used: $Revision: 13541 $"
+    ],
+    "impact": [],
+    "solution": [
+      "Solution type: Mitigation",
+      "Disable the rlogin service and use alternatives like SSH instead."
+    ],
+    "insight": [
+      "rlogin has several serious security problems, - all information, including passwords, is transmitted unencrypted.",
+      "- .rlogin (or .rhosts) le is easy to misuse (potentially allowing anyone to login without a password)"
+    ],
+    "product_detection_result": [],
+    "log_method": [],
+    "cvss": [
+      7.5,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "port": 513,
+    "protocol": "tcp",
+    "severity": "HIGH",
+    "references": [
+      "https://web.nvd.nist.gov/view/vuln/detail?vulnId=CVE-1999-0651",
+      "http://en.wikipedia.org/wiki/Rlogin",
+      "http://www.ietf.org/rfc/rfc1282.txt",
+      "CVE-1999-0651"
+    ],
+    "plugin": [],
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Tiki Wiki CMS Groupware < 17.2 SQL Injection Vulnerability",
+    "description": [
+      "In Tiki the user task component is vulnerable to a SQL Injection via the tiki-user_tasks.php show_history parameter."
+    ],
+    "detection_result": [
+      "Installed version: 1.9.5",
+      "Fixed version: 17.2"
+    ],
+    "detection_method": [
+      "Checks if a vulnerable version is present on the target host.",
+      "Details: Tiki Wiki CMS Groupware < 17.2 SQL Injection Vulnerability OID:1.3.6.1.4.1.25623.1.0.141885",
+      "Version used: $Revision: 13115 $",
+      "Product Detection Result Product: cpe:/a:tiki:tikiwiki_cms/groupware:1.9.5",
+      "Method: Tiki Wiki CMS Groupware Version Detection (OID: 1.3.6.1.4.1.25623.1.0.901001)"
+    ],
+    "impact": [],
+    "solution": [
+      "Solution type: VendorFix",
+      "Upgrade to version 17.2 or later."
+    ],
+    "insight": [],
+    "product_detection_result": [
+      "cpe:/a:tiki:tikiwiki_cms/groupware:1.9.5",
+      "Detected by Tiki Wiki CMS Groupware Version Detection (OID: 1.3.6.1.4.1.25623.1.0.901001)",
+      "Version used: $Revision: 13115 $",
+      "Product: cpe:/a:tiki:tikiwiki_cms/groupware:1.9.5"
+    ],
+    "log_method": [],
+    "cvss": [
+      6.5,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "port": null,
+    "protocol": null,
+    "severity": "MEDIUM",
+    "references": [
+      "CVE-2009-4898",
+      "http://www.openwall.com/lists/oss-security/2010/08/03/8",
+      "http://www.openwall.com/lists/oss-security/2010/08/02/17",
+      "http://twiki.org/cgi-bin/view/Codev/SecurityAuditTokenBasedCsrfFix",
+      "http://twiki.org/cgi-bin/view/Codev/DownloadTWiki"
+    ],
+    "plugin": [],
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "TWiki Cross-Site Request Forgery Vulnerability",
+    "description": [
+      "The host is running TWiki and is prone to Cross-Site Request Forgery Vulnerability."
+    ],
+    "detection_result": [
+      "Installed version: 01.Feb.2003",
+      "Fixed version: 4.3.1"
+    ],
+    "detection_method": [
+      "Details: TWiki Cross-Site Request Forgery Vulnerability OID:1.3.6.1.4.1.25623.1.0.800400",
+      "Version used: $Revision: 12952 $",
+      "Method: TWiki Version Detection (OID: 1.3.6.1.4.1.25623.1.0.800399)",
+      "Product Detection Result Product: cpe:/a:twiki:twiki:01.Feb.2003"
+    ],
+    "impact": [
+      "Successful exploitation will allow attacker to gain administrative privileges on the target application and can cause CSRF attack."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Upgrade to version 4.3.1 or later."
+    ],
+    "insight": [
+      "Remote authenticated user can create a specially crafted image tag that, when viewed by the target user, will update pages on the target system with the privileges of the target user via HTTP requests."
+    ],
+    "product_detection_result": [
+      "cpe:/a:twiki:twiki:01.Feb.2003",
+      "Detected by TWiki Version Detection (OID: 1.3.6.1.4.1.25623.1.0.800399)"
+    ],
+    "log_method": [],
+    "cvss": [
+      6.0,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "port": null,
+    "protocol": null,
+    "severity": "MEDIUM",
+    "references": [
+      "CVE-2018-20719",
+      "https://blog.ripstech.com/2018/scan-verify-patch-security-issues-in-minutes/"
+    ],
+    "plugin": [],
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "HTTP Debugging Methods (TRACE/TRACK) Enabled",
+    "description": [
+      "Debugging functions are enabled on the remote web server.",
+      "The remote web server supports the TRACE and/or TRACK methods.",
+      "TRACE and TRACK are HTTP methods which are used to debug web server connections."
+    ],
+    "detection_result": [
+      "The web server has the following HTTP methods enabled: TRACE"
+    ],
+    "detection_method": [
+      "Details: HTTP Debugging Methods (TRACE/TRACK) Enabled OID:1.3.6.1.4.1.25623.1.0.11213",
+      "Version used: $Revision: 10828 $"
+    ],
+    "impact": [
+      "An attacker may use this aw to trick your legitimate web users to give him their credentials."
+    ],
+    "solution": [
+      "Solution type: Mitigation",
+      "Disable the TRACE and TRACK methods in your web server configuration.",
+      "Please see the manual of your web server or the references for more information."
+    ],
+    "insight": [
+      "It has been shown that web servers supporting this methods are subject to cross-site-scripting attacks, dubbed XST for Cross-Site-Tracing, when used in conjunction with various weaknesses in browsers."
+    ],
+    "product_detection_result": [
+      "Web servers with enabled TRACE and/or TRACK methods."
+    ],
+    "log_method": [],
+    "cvss": [
+      5.8,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "port": null,
+    "protocol": null,
+    "severity": "MEDIUM",
+    "references": [
+      "CVE-2003-1567",
+      "CVE-2004-2320",
+      "CVE-2004-2763",
+      "CVE-2005-3398",
+      "CVE-2006-4683",
+      "CVE-2007-3008",
+      "CVE-2008-7253",
+      "CVE-2009-2823",
+      "CVE-2010-0386",
+      "CVE-2012-2223",
+      "CVE-2014-7883",
+      "BID:9506",
+      "BID:9561",
+      "BID:11604",
+      "BID:15222",
+      "BID:19915",
+      "BID:24456",
+      "BID:33374",
+      "BID:36956",
+      "BID:36990",
+      "BID:37995",
+      "http://www.kb.cert.org/vuls/id/288308",
+      "http://www.kb.cert.org/vuls/id/867593",
+      "http://httpd.apache.org/docs/current/de/mod/core.html#traceenable",
+      "https://www.owasp.org/index.php/Cross_Site_Tracing"
+    ],
+    "plugin": [],
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "Check if Mailserver answer to VRFY and EXPN requests",
+    "description": [
+      "The Mailserver on this host answers to VRFY and/or EXPN requests."
+    ],
+    "detection_result": [
+      "'VRFY root' produces the following answer: 252 2.0.0 root"
+    ],
+    "detection_method": [
+      "Details: Check if Mailserver answer to VRFY and EXPN requests",
+      "OID:1.3.6.1.4.1.25623.1.0.100072",
+      "Version used: $Revision: 13470 $"
+    ],
+    "impact": [],
+    "solution": [
+      "Solution type: Workaround",
+      "Disable VRFY and/or EXPN on your Mailserver.",
+      "For postx add 'disable_vrfy_command=yes' in 'main.cf'.",
+      "For Sendmail add the option 'O PrivacyOptions=goaway'.",
+      "It is suggested that, if you really want to publish this type of information, you use a mechanism that legitimate users actually know about, such as Finger or HTTP."
+    ],
+    "insight": [
+      "VRFY and EXPN ask the server for information about an address. They are inherently unusable through rewalls, gateways, mail exchangers for part-time hosts, etc."
+    ],
+    "product_detection_result": [],
+    "log_method": [],
+    "cvss": [
+      5.0,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "port": null,
+    "protocol": "null",
+    "severity": "MEDIUM",
+    "references": [
+      "http://cr.yp.to/smtp/vrfy.html"
+    ],
+    "plugin": [],
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "SSL/TLS: 'DHE_EXPORT' Man in the Middle Security Bypass Vulnerability (LogJam)",
+    "description": [
+      "This host is accepting 'DHE_EXPORT' cipher suites and is prone to man in the middle attack."
+    ],
+    "detection_result": [
+      "'DHE_EXPORT' cipher suites accepted by this service via the SSLv3 protocol:",
+      "TLS_DHE_RSA_EXPORT_WITH_DES40_CBC_SHA",
+      "TLS_DH_anon_EXPORT_WITH_DES40_CBC_SHA",
+      "TLS_DH_anon_EXPORT_WITH_RC4_40_MD5",
+      "'DHE_EXPORT' cipher suites accepted by this service via the TLSv1.0 protocol:",
+      "TLS_DHE_RSA_EXPORT_WITH_DES40_CBC_SHA",
+      "TLS_DH_anon_EXPORT_WITH_DES40_CBC_SHA",
+      "TLS_DH_anon_EXPORT_WITH_RC4_40_MD5"
+    ],
+    "detection_method": [
+      "Check previous collected cipher suites saved in the KB.",
+      "Details: SSL/TLS: 'DHE_EXPORT' Man in the Middle Security Bypass Vulnerability (LogJam)",
+      "OID:1.3.6.1.4.1.25623.1.0.805188",
+      "Version used: $Revision: 11872 $"
+    ],
+    "impact": [
+      "Successful exploitation will allow a man-in-the-middle attacker to downgrade the security of a TLS session to 512-bit export-grade cryptography, which is signicantly weaker, allowing the attacker to more easily break the encryption and monitor or tamper with the encrypted stream."
+    ],
+    "solution": [
+      "Solution type: VendorFix",
+      "Remove support for 'DHE_EXPORT' cipher suites from the service",
+      "If running OpenSSL update to version 1.0.2b or 1.0.1n or later.",
+      "Affected Software/OS - Hosts accepting 'DHE_EXPORT' cipher suites",
+      "OpenSSL version before 1.0.2b and 1.0.1n"
+    ],
+    "insight": [
+      "Flaw is triggered when handling Die-Hellman key exchanges dened in the 'DHE_EXPORT' cipher suites."
+    ],
+    "product_detection_result": [
+      "Hosts accepting 'DHE_EXPORT' cipher suites",
+      "OpenSSL version before 1.0.2b and 1.0.1n"
+    ],
+    "log_method": [],
+    "cvss": [
+      4.3,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "port": null,
+    "protocol": "null",
+    "severity": "MEDIUM",
+    "references": [
+      "CVE-2015-4000",
+      "BID:74733",
+      "https://weakdh.org",
+      "https://weakdh.org/imperfect-forward-secrecy.pdf",
+      "http://openwall.com/lists/oss-security/2015/05/20/8",
+      "https://blog.cloudflare.com/logjam-the-latest-tls-vulnerability-explained",
+      "https://www.openssl.org/blog/blog/2015/05/20/logjam-freak-upcoming-change"
+    ],
+    "plugin": [],
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "SSL/TLS: Deprecated SSLv2 and SSLv3 Protocol Detection",
+    "description": [
+      "It was possible to detect the usage of the deprecated SSLv2 and/or SSLv3 protocol on this system."
+    ],
+    "detection_result": [
+      "In addition to TLSv1.0+ the service is also providing the deprecated SSLv2 and SSLv3 protocols and supports one or more ciphers. Those supported ciphers can be found in the 'SSL/TLS: Report Weak and Supported Ciphers' (OID: 1.3.6.1.4.1.25623.1.0.802067) NVT."
+    ],
+    "detection_method": [
+      "Check the used protocols of the services provided by this system.",
+      "Details: SSL/TLS: Deprecated SSLv2 and SSLv3 Protocol Detection",
+      "OID:1.3.6.1.4.1.25623.1.0.111012",
+      "Version used: $Revision: 5547 $"
+    ],
+    "impact": [
+      "An attacker might be able to use the known cryptographic aws to eavesdrop the connection between clients and the service to get access to sensitive data transferred within the secured connection."
+    ],
+    "solution": [
+      "Solution type: Mitigation",
+      "It is recommended to disable the deprecated SSLv2 and/or SSLv3 protocols in favor of the TLSv1+ protocols. Please see the references for more information."
+    ],
+    "insight": [
+      "The SSLv2 and SSLv3 protocols containing known cryptographic aws like:",
+      "Padding Oracle On Downgraded Legacy Encryption (POODLE, CVE-2014-3566)",
+      "Decrypting RSA with Obsolete and Weakened eNcryption (DROWN, CVE-2016-0800)"
+    ],
+    "product_detection_result": [
+      "All services providing an encrypted communication using the SSLv2 and/or SSLv3 protocols."
+    ],
+    "log_method": [],
+    "cvss": [
+      4.3,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "port": null,
+    "protocol": "null",
+    "severity": "MEDIUM",
+    "references": [
+      "CVE-2016-0800",
+      "CVE-2014-3566",
+      "https://www.enisa.europa.eu/activities/identity-and-trust/library/deliverables/algorithms-key-sizes-and-parameters-report",
+      "https://bettercrypto.org/",
+      "https://mozilla.github.io/server-side-tls/ssl-config-generator/",
+      "https://drownattack.com/",
+      "https://www.imperialviolet.org/2014/10/14/poodle.html"
+    ],
+    "plugin": [],
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "SSH Weak MAC Algorithms Supported",
+    "description": [
+      "The remote SSH server is congured to allow weak MD5 and/or 96-bit MAC algorithms."
+    ],
+    "detection_result": [
+      "The following weak client-to-server MAC algorithms are supported by the remote s ->ervice: hmac-md5 hmac-md5-96 hmac-sha1-96",
+      "The following weak server-to-client MAC algorithms are supported by the remote s . . . continued from previous page . . . ->ervice: hmac-md5 hmac-md5-96 hmac-sha1-96"
+    ],
+    "detection_method": [
+      "Details: SSH Weak MAC Algorithms Supported OID:1.3.6.1.4.1.25623.1.0.105610 Version used: $Revision: 13581 $"
+    ],
+    "impact": [],
+    "solution": [
+      "Solution type: Mitigation Disable the weak MAC algorithms."
+    ],
+    "insight": [],
+    "product_detection_result": [],
+    "log_method": [],
+    "cvss": [
+      2.6,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "port": 22,
+    "protocol": "tcp",
+    "severity": "LOW",
+    "references": [
+      "CVE-2018-7188",
+      "http://openwall.com/lists/oss-security/2018/02/16/1"
+    ],
+    "plugin": [],
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  },
+  {
+    "Name": "TCP timestamps",
+    "description": [
+      "The remote host implements TCP timestamps and therefore allows to compute the uptime."
+    ],
+    "detection_result": [
+      "It was detected that the host implements RFC1323. The following timestamps were retrieved with a delay of 1 seconds in-between: Packet 1: 246103389 Packet 2: 246104428"
+    ],
+    "detection_method": [
+      "Special IP packets are forged and sent with a little delay in between to the target IP. The responses are searched for a timestamps. If found, the timestamps are reported. Details: TCP timestamps OID:1.3.6.1.4.1.25623.1.0.80091 Version used: $Revision: 14310 $"
+    ],
+    "impact": [
+      "A side eect of this feature is that the uptime of the remote host can sometimes be computed."
+    ],
+    "solution": [
+      "Solution type: Mitigation To disable TCP timestamps on linux add the line 'net.ipv4.tcp_timestamps = 0' to /etc/sysctl.conf. Execute 'sysctl -p' to apply the settings at runtime. To disable TCP timestamps on Windows execute 'netsh int tcp set global timestamps=disabled' Starting with Windows Server 2008 and Vista, the timestamp can not be completely disabled. The default behavior of the TCP/IP stack on this Systems is to not use the Timestamp options when initiating TCP connections, but use them if the TCP peer that is initiating communication includes them in their synchronize (SYN) segment. See the references for more information."
+    ],
+    "insight": [
+      "The remote host implements TCP timestamps, as dened by RFC1323."
+    ],
+    "product_detection_result": [],
+    "log_method": [],
+    "cvss": [
+      2.6,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "port": null,
+    "protocol": "tcp",
+    "severity": "LOW",
+    "references": [
+      "http://www.ietf.org/rfc/rfc1323.txt",
+      "http://www.microsoft.com/en-us/download/details.aspx?id=9152"
+    ],
+    "plugin": [],
+    "identification": [],
+    "http_info": [],
+    "source": "OPENVAS"
+  }
+]

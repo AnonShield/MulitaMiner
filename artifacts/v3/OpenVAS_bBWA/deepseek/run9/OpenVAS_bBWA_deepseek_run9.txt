@@ -1,0 +1,108 @@
+
+============================================================
+[CONFIG] LLM: deepseek-coder
+[CONFIG] Max tokens: 8192
+[CONFIG] Reserve for response: 3500
+============================================================
+
+[PDF] Loading PDF from: baselines/openvas/OpenVAS_bBWA.pdf
+[PDF] Using extractor: PdfplumberExtractor
+Extracting visual layout from PDF: OpenVAS_bBWA.pdf
+Total pages found: 58
+[VISUAL] Table of contents extracted up to 5208 characters using marker '^\s*NVT:'.
+[LAYOUT] Visual layout: C:\Users\Bia\Documents\GitHub\Projetos\MulitaMiner\results_runs\visual_layouts\OpenVAS_bBWA.txt
+[EXTRACTION] Full extraction saved: results_runs\OpenVAS_bBWA\deepseek\run9\extraction_OpenVAS_bBWA.txt
+[BLOCKS] 28 session blocks created
+[DEBUG] Attempting to load tokenizer with config: {'type': 'tiktoken', 'model': 'cl100k_base'}
+[DEBUG] Loading tiktoken with encoding: cl100k_base
+[DEBUG] Successfully loaded tokenizer object: <class 'tiktoken.core.Encoding'>
+
+Processing blocks:   0%|                              | 0/32 [00:00<?, ?chunk/s]
+Processing blocks:   3%|▋                     | 1/32 [00:06<03:28,  6.72s/chunk]
+                                                                                
+
+Processing blocks:   3%|▋                     | 1/32 [00:18<03:28,  6.72s/chunk]
+Processing blocks:   6%|█▍                    | 2/32 [00:39<10:57, 21.91s/chunk]
+Processing blocks:   9%|██                    | 3/32 [00:44<06:58, 14.43s/chunk]
+Processing blocks:  12%|██▊                   | 4/32 [00:46<04:24,  9.46s/chunk]
+Processing blocks:  16%|███▍                  | 5/32 [00:51<03:29,  7.75s/chunk]
+Processing blocks:  19%|████▏                 | 6/32 [00:56<02:54,  6.73s/chunk]
+Processing blocks:  22%|████▊                 | 7/32 [00:59<02:17,  5.52s/chunk]
+Processing blocks:  25%|█████▌                | 8/32 [01:02<01:53,  4.73s/chunk]
+Processing blocks:  28%|██████▏               | 9/32 [01:05<01:39,  4.33s/chunk]
+Processing blocks:  31%|██████▌              | 10/32 [01:09<01:30,  4.11s/chunk]
+Processing blocks:  34%|███████▏             | 11/32 [01:14<01:36,  4.58s/chunk]
+Processing blocks:  38%|███████▉             | 12/32 [01:17<01:21,  4.10s/chunk]
+Processing blocks:  41%|████████▌            | 13/32 [01:22<01:18,  4.14s/chunk]
+Processing blocks:  44%|█████████▏           | 14/32 [01:26<01:14,  4.15s/chunk]
+Processing blocks:  47%|█████████▊           | 15/32 [01:31<01:13,  4.33s/chunk]
+                                                                                
+
+Processing blocks:  47%|█████████▊           | 15/32 [01:44<01:13,  4.33s/chunk]
+Processing blocks:  50%|██████████▌          | 16/32 [02:05<03:36, 13.53s/chunk]
+                                                                                
+
+Processing blocks:  50%|██████████▌          | 16/32 [02:19<03:36, 13.53s/chunk]
+Processing blocks:  53%|███████████▏         | 17/32 [02:36<04:40, 18.72s/chunk]
+Processing blocks:  56%|███████████▊         | 18/32 [02:46<03:46, 16.17s/chunk]
+Processing blocks:  59%|████████████▍        | 19/32 [02:54<02:56, 13.55s/chunk]
+Processing blocks:  62%|█████████████▏       | 20/32 [02:57<02:03, 10.30s/chunk]
+Processing blocks:  66%|█████████████▊       | 21/32 [03:00<01:28,  8.09s/chunk]
+Processing blocks:  69%|██████████████▍      | 22/32 [03:07<01:17,  7.75s/chunk]
+                                                                                
+
+Processing blocks:  69%|██████████████▍      | 22/32 [03:26<01:17,  7.75s/chunk]
+Processing blocks:  72%|███████████████      | 23/32 [03:50<02:45, 18.36s/chunk]
+                                                                                
+
+Processing blocks:  72%|███████████████      | 23/32 [04:04<02:45, 18.36s/chunk]
+Processing blocks:  75%|███████████████▊     | 24/32 [04:23<03:04, 23.00s/chunk]
+                                                                                
+
+Processing blocks:  75%|███████████████▊     | 24/32 [04:41<03:04, 23.00s/chunk]
+Processing blocks:  78%|████████████████▍    | 25/32 [05:06<03:22, 28.91s/chunk]
+Processing blocks:  81%|█████████████████    | 26/32 [05:15<02:17, 22.95s/chunk]
+Processing blocks:  84%|█████████████████▋   | 27/32 [05:21<01:28, 17.77s/chunk]
+Processing blocks:  88%|██████████████████▍  | 28/32 [05:23<00:52, 13.09s/chunk]
+Processing blocks:  91%|███████████████████  | 29/32 [05:26<00:30, 10.01s/chunk]
+Processing blocks:  94%|███████████████████▋ | 30/32 [05:30<00:16,  8.30s/chunk]
+Processing blocks:  97%|████████████████████▎| 31/32 [05:34<00:06,  7.00s/chunk]
+Processing blocks: 100%|█████████████████████| 32/32 [05:38<00:00,  6.17s/chunk]
+Processing blocks: 100%|█████████████████████| 32/32 [05:38<00:00, 10.59s/chunk]
+[CHUNK] Performing intelligent redivision...
+[CHUNK] Performing intelligent redivision...
+[CHUNK] Performing intelligent redivision...
+[CHUNK] Performing intelligent redivision...
+[CHUNK] Performing intelligent redivision...
+[CHUNK] Performing intelligent redivision...
+
+------------------------------------------------------------
+[EXTRACTION] Total blocks processed: 28
+------------------------------------------------------------
+
+[PROCESSING] Consolidating vulnerabilities (allow_duplicates=True)
+[DEDUPLICATION] Custom mode: allow_duplicates=True (scanner: OPENVAS)
+[DEDUPLICATION] Removed items log: results_runs\OpenVAS_bBWA\deepseek\run9\OpenVAS_bBWA_deepseek_run9_removed_log.txt
+[DEDUPLICATION] Consolidation log saved to: results_runs\OpenVAS_bBWA\deepseek\run9\OpenVAS_bBWA_deepseek_run9_deduplication_log.txt
+
+============================================================
+[SUMMARY] EXTRACTION COMPLETE
+============================================================
+Output file: results_runs\OpenVAS_bBWA\deepseek\run9\OpenVAS_bBWA_deepseek_run9.json
+Final vulnerabilities: 60
+============================================================
+
+[TOKENS] Token file saved at: results_tokens\OpenVAS_bBWA_deepseek_run9_deepseek-coder_tokens.json
+
+============================================================
+[PERFORMANCE] EXECUTION SUMMARY
+============================================================
+Total execution time: 344.72s
+LLM: deepseek-coder
+Chunks processed: 28
+Vulnerability pipeline:
+  Extracted: 96 vulns
+  After deduplication: 60 vulns
+  Final (valid & saved): 60 vulns
+============================================================
+

@@ -1,0 +1,315 @@
+CMD: C:\Users\Bia\Desktop\Vulnerability_Extractor\venv\Scripts\python.exe main.py C:\Users\Bia\Desktop\Vulnerability_Extractor\baselines\openvas\OpenVAS_bBWA.pdf --profile _tmp_grp_groq --LLM llama3
+START: 2026-05-14T18:41:30.587244
+
+C:\Users\Bia\Desktop\Vulnerability_Extractor\venv\Lib\site-packages\langchain_core\_api\deprecation.py:26: UserWarning: Core Pydantic V1 functionality isn't compatible with Python 3.14 or greater.
+  from pydantic.v1.fields import FieldInfo as FieldInfoV1
+C:\Users\Bia\Desktop\Vulnerability_Extractor\main.py:364: UserWarning: Parameters {'max_completion_tokens'} should be specified explicitly. Instead they were passed in as part of `model_kwargs` parameter.
+  main()
+
+============================================================
+[CONFIG] LLM: llama-3.3-70b-versatile
+[CONFIG] Max tokens: 4096
+[CONFIG] Reserve para resposta: 1000
+============================================================
+
+Extraindo layout visual do PDF: OpenVAS_bBWA.pdf
+Total de páginas encontradas: 58
+Layout visual salvo em: visual_layout_extracted_OpenVAS_bBWA.txt
+Layout visual salvo em: visual_layout_extracted_OpenVAS_bBWA.txt
+
+[TOKEN CALC] Max tokens do modelo: 4096
+[TOKEN CALC] Overhead do prompt: ~500 tokens
+[TOKEN CALC] Reserve para resposta: ~1000 tokens
+[TOKEN CALC] Tokens disponíveis para conteúdo: ~2596 tokens
+[TOKEN CALC] Total de chunks criados (respeitando blocos): 10
+Total de chunks: 10
+
+Processando chunks:   0%|          | 0/10 [00:00<?, ?chunk/s]Processando chunks:  10%|█         | 1/10 [00:09<01:28,  9.81s/chunk]Processando chunks:  20%|██        | 2/10 [00:15<01:00,  7.54s/chunk]Processando chunks:  30%|███       | 3/10 [00:22<00:49,  7.11s/chunk]Processando chunks:  40%|████      | 4/10 [00:28<00:40,  6.83s/chunk]Processando chunks:  50%|█████     | 5/10 [00:35<00:33,  6.72s/chunk]Processando chunks:  60%|██████    | 6/10 [00:41<00:26,  6.67s/chunk]Processando chunks:  70%|███████   | 7/10 [00:47<00:18,  6.32s/chunk]Processando chunks:  80%|████████  | 8/10 [00:52<00:12,  6.07s/chunk]Processando chunks:  90%|█████████ | 9/10 [00:59<00:06,  6.29s/chunk]Processando chunks: 100%|██████████| 10/10 [01:02<00:00,  5.26s/chunk]Processando chunks: 100%|██████████| 10/10 [01:02<00:00,  6.27s/chunk]
+
+============================================================
+Processando chunk 1/10
+============================================================
+[SCANNER] Detectado: OPENVAS (1 blocos)
+[ATTEMPT 1/4] Processando chunk completo (8402 chars)...
+[WARN attempt 1] Nenhuma estratégia de parse conseguiu extrair JSON válido
+[ATTEMPT 1] ✗ Falha no chunk completo - iniciando subdivisão
+[INFO] Próxima tentativa com subchunks de 2000 chars
+
+[ATTEMPT 2/4] Erro lógico detectado - subdividindo chunk pela metade...
+[ATTEMPT 2] Chunk dividido em 2 partes pela metade
+  [Subchunk 1/2] Tamanho: 4202 chars...
+  [Subchunk 1] ✓ 28 vulnerabilidades extraídas
+  [Subchunk 2/2] Tamanho: 4200 chars...
+[WARN subchunk 2] Nenhuma estratégia de parse conseguiu extrair JSON válido
+  [Subchunk 2] ✗ JSON inválido
+[ATTEMPT 2] ✓ Sucesso na subdivisão: 28 vulnerabilidades
+[LOG] Chunk 1/10: 28/28 válidas
+[NOMES] 28:
+   1. 8787/tcp
+   2. 80/tcp
+   3. 22/tcp
+   4. 1524/tcp
+   5. 514/tcp
+   6. 21/tcp
+   7. 5432/tcp
+   8. 6667/tcp
+   9. 512/tcp
+  10. 3306/tcp
+  11. 6200/tcp
+  12. 513/tcp
+  13. general/tcp
+  14. 3632/tcp
+  15. 5900/tcp
+  16. 80/tcp
+  17. 22/tcp
+  18. 2121/tcp
+  19. 445/tcp
+  20. 21/tcp
+  21. 25/tcp
+  22. 5432/tcp
+  23. 6667/tcp
+  24. 23/tcp
+  25. 5900/tcp
+  26. 80/tcp
+  27. 22/tcp
+  28. general/tcp
+
+============================================================
+Processando chunk 2/10
+============================================================
+[SCANNER] Detectado: OPENVAS (6 blocos)
+[ATTEMPT 1/4] Processando chunk completo (9484 chars)...
+[ATTEMPT 1] ✓ Sucesso: 6 vulnerabilidades extraídas
+[LOG] Chunk 2/10: 6/6 válidas
+[NOMES] 6:
+   1. TWiki XSS and Command Execution Vulnerabilities
+   2. phpinfo() output Reporting
+   3. Tiki Wiki CMS Groupware < 4.2 Multiple Unspecified Vulnerabilities
+   4. PHP-CGI-based setups vulnerability when parsing query string parameters from php files
+   5. Test HTTP dangerous methods
+   6. SSH Brute Force Logins With Default Credentials Reporting
+
+============================================================
+Processando chunk 3/10
+============================================================
+[SCANNER] Detectado: OPENVAS (9 blocos)
+[ATTEMPT 1/4] Processando chunk completo (9180 chars)...
+[ATTEMPT 1] ✓ Sucesso: 9 vulnerabilidades extraídas
+[LOG] Chunk 3/10: 9/9 válidas
+[NOMES] 9:
+   1. Possible Backdoor: Ingreslock
+   2. rsh Unencrypted Cleartext Login
+   3. vsftpd Compromised Source Packages Backdoor Vulnerability
+   4. PostgreSQL weak password
+   5. Check for Backdoor in UnrealIRCd
+   6. rexec Passwordless / Unencrypted Cleartext Login
+   7. MySQL / MariaDB weak password
+   8. vsftpd Compromised Source Packages Backdoor Vulnerability
+   9. rlogin Passwordless / Unencrypted Cleartext Login
+
+============================================================
+Processando chunk 4/10
+============================================================
+[SCANNER] Detectado: OPENVAS (7 blocos)
+[ATTEMPT 1/4] Processando chunk completo (10067 chars)...
+[ATTEMPT 1] ✓ Sucesso: 8 vulnerabilidades extraídas
+[LOG] Chunk 4/10: 8/8 válidas
+[NOMES] 8:
+   1. OS End Of Life Detection
+   2. DistCC Remote Code Execution Vulnerability
+   3. VNC Brute Force Login
+   4. TWiki Cross-Site Request Forgery Vulnerability - Sep10
+   5. Tiki Wiki CMS Groupware < 17.2 SQL Injection Vulnerability
+   6. TWiki Cross-Site Request Forgery Vulnerability
+   7. HTTP Debugging Methods (TRACE/TRACK) Enabled
+   8. HTTP Debugging Methods (TRACE/TRACK) Enabled
+
+============================================================
+Processando chunk 5/10
+============================================================
+[SCANNER] Detectado: OPENVAS (7 blocos)
+[ATTEMPT 1/4] Processando chunk completo (10259 chars)...
+[ATTEMPT 1] ✓ Sucesso: 7 vulnerabilidades extraídas
+[LOG] Chunk 5/10: 7/7 válidas
+[NOMES] 7:
+   1. /doc directory browsable
+   2. Tiki Wiki CMS Groupware 'xedURLData' Local File Inclusion Vulnerability
+   3. Tiki Wiki CMS Groupware Input Sanitation Weakness Vulnerability
+   4. awiki Multiple Local File Include Vulnerabilities
+   5. Cleartext Transmission of Sensitive Information via HTTP
+   6. TWiki < 6.1.0 XSS Vulnerability
+   7. Apache HTTP Server 'httpOnly' Cookie Information Disclosure Vulnerability
+
+============================================================
+Processando chunk 6/10
+============================================================
+[SCANNER] Detectado: OPENVAS (6 blocos)
+[ATTEMPT 1/4] Processando chunk completo (9956 chars)...
+[ATTEMPT 1] ✓ Sucesso: 6 vulnerabilidades extraídas
+[LOG] Chunk 6/10: 6/6 válidas
+[NOMES] 6:
+   1. phpMyAdmin 'error.php' Cross Site Scripting Vulnerability
+   2. TWiki 'organization' Cross-Site Scripting Vulnerability
+   3. SSH Weak Encryption Algorithms Supported
+   4. FTP Unencrypted Cleartext Login
+   5. Samba MS-RPC Remote Shell Command Execution Vulnerability (Active Check)
+   6. Anonymous FTP Login Reporting
+
+============================================================
+Processando chunk 7/10
+============================================================
+[SCANNER] Detectado: OPENVAS (6 blocos)
+[ATTEMPT 1/4] Processando chunk completo (10677 chars)...
+[ATTEMPT 1] ✓ Sucesso: 6 vulnerabilidades extraídas
+[LOG] Chunk 7/10: 6/6 válidas
+[NOMES] 6:
+   1. FTP Unencrypted Cleartext Login
+   2. Multiple Vendors STARTTLS Implementation Plaintext Arbitrary Command Injection Vulnerability
+   3. SSL/TLS: Certificate Expired
+   4. Check if Mailserver answer to VRFY and EXPN requests
+   5. SSL/TLS: 'DHE_EXPORT' Man in the Middle Security Bypass Vulnerability (LogJam)
+   6. SSL/TLS: Deprecated SSLv2 and SSLv3 Protocol Detection
+
+============================================================
+Processando chunk 8/10
+============================================================
+[SCANNER] Detectado: OPENVAS (6 blocos)
+[ATTEMPT 1/4] Processando chunk completo (10649 chars)...
+[ATTEMPT 1] ✓ Sucesso: 6 vulnerabilidades extraídas
+[LOG] Chunk 8/10: 6/6 válidas
+[NOMES] 6:
+   1. SSL/TLS: RSA Temporary Key Handling 'RSA_EXPORT' Downgrade Issue (FREAK)
+   2. SSL/TLS: SSLv3 Protocol CBC Cipher Suites Information Disclosure Vulnerability (POODLE)
+   3. SSL/TLS: Certificate Signed Using A Weak Signature Algorithm
+   4. SSL/TLS: Diffie-Hellman Key Exchange Insufficient DH Group Strength Vulnerability
+   5. SSL/TLS: OpenSSL CCS Man in the Middle Security Bypass Vulnerability
+   6. SSL/TLS: Certificate Expired
+
+============================================================
+Processando chunk 9/10
+============================================================
+[SCANNER] Detectado: OPENVAS (6 blocos)
+[ATTEMPT 1/4] Processando chunk completo (11022 chars)...
+[ATTEMPT 1] ✓ Sucesso: 6 vulnerabilidades extraídas
+[LOG] Chunk 9/10: 6/6 válidas
+[NOMES] 6:
+   1. SSL/TLS: Deprecated SSLv2 and SSLv3 Protocol Detection
+   2. SSL/TLS: Report Weak Cipher Suites
+   3. SSL/TLS: SSLv3 Protocol CBC Cipher Suites Information Disclosure Vulnerability (POODLE)
+   4. SSL/TLS: Certificate Signed Using A Weak Signature Algorithm
+   5. SSL/TLS: Diffie-Hellman Key Exchange Insufficient DH Group Strength Vulnerability
+   6. UnrealIRCd Authentication Spoofing Vulnerability
+
+============================================================
+Processando chunk 10/10
+============================================================
+[SCANNER] Detectado: OPENVAS (5 blocos)
+[ATTEMPT 1/4] Processando chunk completo (5915 chars)...
+[ATTEMPT 1] ✓ Sucesso: 5 vulnerabilidades extraídas
+[LOG] Chunk 10/10: 5/5 válidas
+[NOMES] 5:
+   1. Telnet Unencrypted Cleartext Login
+   2. VNC Server Unencrypted Data Transmission
+   3. Tiki Wiki CMS Groupware XSS Vulnerability
+   4. SSH Weak MAC Algorithms Supported
+   5. TCP timestamps
+
+[SUMMARY] Total de vulnerabilidades extraídas: 87
+
+Sem consolidação (OpenVAS) - 87 vulnerabilidades
+
+Total de vulnerabilidades (OpenVAS): 87
+  - NOVAS: 87
+  - ATUALIZADAS: 0
+  - REPETIDAS (sem mudança): 0
+
+Vulnerabilidades NOVAS encontradas:
+    1. [NOVO     ] [HIGH    ] 8787/tcp
+    2. [NOVO     ] [HIGH    ] 80/tcp
+    3. [NOVO     ] [HIGH    ] 22/tcp
+    4. [NOVO     ] [HIGH    ] 1524/tcp
+    5. [NOVO     ] [HIGH    ] 514/tcp
+    6. [NOVO     ] [HIGH    ] 21/tcp
+    7. [NOVO     ] [HIGH    ] 5432/tcp
+    8. [NOVO     ] [HIGH    ] 6667/tcp
+    9. [NOVO     ] [HIGH    ] 512/tcp
+   10. [NOVO     ] [HIGH    ] 3306/tcp
+   11. [NOVO     ] [HIGH    ] 6200/tcp
+   12. [NOVO     ] [HIGH    ] 513/tcp
+   13. [NOVO     ] [HIGH    ] general/tcp
+   14. [NOVO     ] [HIGH    ] 3632/tcp
+   15. [NOVO     ] [HIGH    ] 5900/tcp
+   16. [NOVO     ] [MEDIUM  ] 80/tcp
+   17. [NOVO     ] [MEDIUM  ] 22/tcp
+   18. [NOVO     ] [MEDIUM  ] 2121/tcp
+   19. [NOVO     ] [MEDIUM  ] 445/tcp
+   20. [NOVO     ] [MEDIUM  ] 21/tcp
+   21. [NOVO     ] [MEDIUM  ] 25/tcp
+   22. [NOVO     ] [MEDIUM  ] 5432/tcp
+   23. [NOVO     ] [MEDIUM  ] 6667/tcp
+   24. [NOVO     ] [MEDIUM  ] 23/tcp
+   25. [NOVO     ] [MEDIUM  ] 5900/tcp
+   26. [NOVO     ] [LOW     ] 80/tcp
+   27. [NOVO     ] [LOW     ] 22/tcp
+   28. [NOVO     ] [LOW     ] general/tcp
+   29. [NOVO     ] [HIGH    ] TWiki XSS and Command Execution Vulnerabilities
+   30. [NOVO     ] [HIGH    ] phpinfo() output Reporting
+   31. [NOVO     ] [HIGH    ] Tiki Wiki CMS Groupware < 4.2 Multiple Unspecified Vulnerabilities
+   32. [NOVO     ] [HIGH    ] PHP-CGI-based setups vulnerability when parsing query string parameters from php files
+   33. [NOVO     ] [HIGH    ] Test HTTP dangerous methods
+   34. [NOVO     ] [HIGH    ] SSH Brute Force Logins With Default Credentials Reporting
+   35. [NOVO     ] [HIGH    ] Possible Backdoor: Ingreslock
+   36. [NOVO     ] [HIGH    ] rsh Unencrypted Cleartext Login
+   37. [NOVO     ] [HIGH    ] vsftpd Compromised Source Packages Backdoor Vulnerability
+   38. [NOVO     ] [HIGH    ] PostgreSQL weak password
+   39. [NOVO     ] [HIGH    ] Check for Backdoor in UnrealIRCd
+   40. [NOVO     ] [HIGH    ] rexec Passwordless / Unencrypted Cleartext Login
+   41. [NOVO     ] [HIGH    ] MySQL / MariaDB weak password
+   42. [NOVO     ] [HIGH    ] vsftpd Compromised Source Packages Backdoor Vulnerability
+   43. [NOVO     ] [HIGH    ] rlogin Passwordless / Unencrypted Cleartext Login
+   44. [NOVO     ] [HIGH    ] OS End Of Life Detection
+   45. [NOVO     ] [HIGH    ] DistCC Remote Code Execution Vulnerability
+   46. [NOVO     ] [HIGH    ] VNC Brute Force Login
+   47. [NOVO     ] [MEDIUM  ] TWiki Cross-Site Request Forgery Vulnerability - Sep10
+   48. [NOVO     ] [MEDIUM  ] Tiki Wiki CMS Groupware < 17.2 SQL Injection Vulnerability
+   49. [NOVO     ] [MEDIUM  ] TWiki Cross-Site Request Forgery Vulnerability
+   50. [NOVO     ] [MEDIUM  ] HTTP Debugging Methods (TRACE/TRACK) Enabled
+   51. [NOVO     ] [MEDIUM  ] HTTP Debugging Methods (TRACE/TRACK) Enabled
+   52. [NOVO     ] [MEDIUM  ] /doc directory browsable
+   53. [NOVO     ] [MEDIUM  ] Tiki Wiki CMS Groupware 'xedURLData' Local File Inclusion Vulnerability
+   54. [NOVO     ] [MEDIUM  ] Tiki Wiki CMS Groupware Input Sanitation Weakness Vulnerability
+   55. [NOVO     ] [MEDIUM  ] awiki Multiple Local File Include Vulnerabilities
+   56. [NOVO     ] [MEDIUM  ] Cleartext Transmission of Sensitive Information via HTTP
+   57. [NOVO     ] [MEDIUM  ] TWiki < 6.1.0 XSS Vulnerability
+   58. [NOVO     ] [MEDIUM  ] Apache HTTP Server 'httpOnly' Cookie Information Disclosure Vulnerability
+   59. [NOVO     ] [MEDIUM  ] phpMyAdmin 'error.php' Cross Site Scripting Vulnerability
+   60. [NOVO     ] [MEDIUM  ] TWiki 'organization' Cross-Site Scripting Vulnerability
+   61. [NOVO     ] [MEDIUM  ] SSH Weak Encryption Algorithms Supported
+   62. [NOVO     ] [MEDIUM  ] FTP Unencrypted Cleartext Login
+   63. [NOVO     ] [MEDIUM  ] Samba MS-RPC Remote Shell Command Execution Vulnerability (Active Check)
+   64. [NOVO     ] [MEDIUM  ] Anonymous FTP Login Reporting
+   65. [NOVO     ] [MEDIUM  ] FTP Unencrypted Cleartext Login
+   66. [NOVO     ] [MEDIUM  ] Multiple Vendors STARTTLS Implementation Plaintext Arbitrary Command Injection Vulnerability
+   67. [NOVO     ] [MEDIUM  ] SSL/TLS: Certificate Expired
+   68. [NOVO     ] [MEDIUM  ] Check if Mailserver answer to VRFY and EXPN requests
+   69. [NOVO     ] [MEDIUM  ] SSL/TLS: 'DHE_EXPORT' Man in the Middle Security Bypass Vulnerability (LogJam)
+   70. [NOVO     ] [MEDIUM  ] SSL/TLS: Deprecated SSLv2 and SSLv3 Protocol Detection
+   71. [NOVO     ] [MEDIUM  ] SSL/TLS: RSA Temporary Key Handling 'RSA_EXPORT' Downgrade Issue (FREAK)
+   72. [NOVO     ] [MEDIUM  ] SSL/TLS: SSLv3 Protocol CBC Cipher Suites Information Disclosure Vulnerability (POODLE)
+   73. [NOVO     ] [MEDIUM  ] SSL/TLS: Certificate Signed Using A Weak Signature Algorithm
+   74. [NOVO     ] [MEDIUM  ] SSL/TLS: Diffie-Hellman Key Exchange Insufficient DH Group Strength Vulnerability
+   75. [NOVO     ] [MEDIUM  ] SSL/TLS: OpenSSL CCS Man in the Middle Security Bypass Vulnerability
+   76. [NOVO     ] [MEDIUM  ] SSL/TLS: Certificate Expired
+   77. [NOVO     ] [MEDIUM  ] SSL/TLS: Deprecated SSLv2 and SSLv3 Protocol Detection
+   78. [NOVO     ] [MEDIUM  ] SSL/TLS: Report Weak Cipher Suites
+   79. [NOVO     ] [MEDIUM  ] SSL/TLS: SSLv3 Protocol CBC Cipher Suites Information Disclosure Vulnerability (POODLE)
+   80. [NOVO     ] [MEDIUM  ] SSL/TLS: Certificate Signed Using A Weak Signature Algorithm
+   81. [NOVO     ] [MEDIUM  ] SSL/TLS: Diffie-Hellman Key Exchange Insufficient DH Group Strength Vulnerability
+   82. [NOVO     ] [MEDIUM  ] UnrealIRCd Authentication Spoofing Vulnerability
+   83. [NOVO     ] [MEDIUM  ] Telnet Unencrypted Cleartext Login
+   84. [NOVO     ] [LOW     ] VNC Server Unencrypted Data Transmission
+   85. [NOVO     ] [LOW     ] Tiki Wiki CMS Groupware XSS Vulnerability
+   86. [NOVO     ] [LOW     ] SSH Weak MAC Algorithms Supported
+   87. [NOVO     ] [LOW     ] TCP timestamps
+
+Vulnerabilidades salvas em: _tmp_vulns_grp_groq.json

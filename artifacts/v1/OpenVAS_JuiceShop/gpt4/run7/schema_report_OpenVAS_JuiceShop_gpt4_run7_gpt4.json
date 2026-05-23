@@ -1,0 +1,36 @@
+{
+  "version": "v1",
+  "schema_mode": "auto",
+  "file": "v1\\OpenVAS_JuiceShop\\gpt4\\run7\\OpenVAS_JuiceShop_gpt4_run7.json",
+  "json_valid": true,
+  "n_records": 28,
+  "schema_conformance_rate": 0.0,
+  "schema_field_conformance_rate": 0.8888888888888888,
+  "type_coercion_rate": 0.5,
+  "coercion_breakdown": {
+    "cvss:list→float": 23,
+    "plugin:list→None": 28,
+    "cvss:list→None": 5
+  },
+  "extra_fields_rate": 0.0,
+  "missing_field_counts": {
+    "plugin_details": 28,
+    "instances": 28
+  },
+  "type_error_examples": [],
+  "type_error_field_counts": {},
+  "field_failure_counts": {
+    "plugin_details": 28,
+    "instances": 28
+  },
+  "extra_field_counts": {},
+  "native": {
+    "schema_mode": "v1",
+    "schema_conformance_rate": 1.0,
+    "schema_field_conformance_rate": 1.0,
+    "missing_field_counts": {},
+    "type_error_examples": [],
+    "type_error_field_counts": {},
+    "field_failure_counts": {}
+  }
+}

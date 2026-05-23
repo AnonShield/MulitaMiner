@@ -1,0 +1,218 @@
+
+============================================================
+[CONFIG] LLM: gpt-5-mini-2025-08-07
+[CONFIG] Max tokens: 16000
+[CONFIG] Reserve for response: 7000
+============================================================
+
+[PDF] Loading PDF from: baselines/openvas/openvas_artifactory-oss_5.11.0.pdf
+[PDF] Using extractor: PdfplumberExtractor
+Extracting visual layout from PDF: openvas_artifactory-oss_5.11.0.pdf
+Total pages found: 178
+[VISUAL] Table of contents extracted up to 3422 characters using marker '^\s*NVT:'.
+[LAYOUT] Visual layout: C:\Users\Bia\Documents\GitHub\Projetos\MulitaMiner\results_runs\visual_layouts\openvas_artifactory-oss_5.11.0.txt
+[BLOCKS] 17 session blocks created
+[DEBUG] Attempting to load tokenizer with config: {'type': 'tiktoken', 'model': 'o200k_base'}
+[DEBUG] Loading tiktoken with encoding: o200k_base
+[DEBUG] Successfully loaded tokenizer object: <class 'tiktoken.core.Encoding'>
+[CHUNK] Warning: Vulnerability alone exceeds limits (tokens=2332/3000, chars=7,310/6,937). Sending anyway for redivision if needed.
+[CHUNK] Warning: Vulnerability alone exceeds limits (tokens=6048/3000, chars=14,296/6,937). Sending anyway for redivision if needed.
+[CHUNK] Warning: Vulnerability alone exceeds limits (tokens=3534/3000, chars=8,829/6,937). Sending anyway for redivision if needed.
+[CHUNK] Warning: Vulnerability alone exceeds limits (tokens=2324/3000, chars=7,222/6,918). Sending anyway for redivision if needed.
+[CHUNK] Warning: Vulnerability alone exceeds limits (tokens=2765/3000, chars=7,091/6,918). Sending anyway for redivision if needed.
+[CHUNK] Warning: Vulnerability alone exceeds limits (tokens=5934/3000, chars=13,822/6,918). Sending anyway for redivision if needed.
+[CHUNK] Warning: Vulnerability alone exceeds limits (tokens=3505/3000, chars=8,761/6,918). Sending anyway for redivision if needed.
+[CHUNK] Warning: Vulnerability alone exceeds limits (tokens=2549/3000, chars=7,454/7,189). Sending anyway for redivision if needed.
+[CHUNK] Warning: Vulnerability alone exceeds limits (tokens=2536/3000, chars=7,415/7,187). Sending anyway for redivision if needed.
+
+Processing blocks:   0%|                              | 0/99 [00:00<?, ?chunk/s]
+Processing blocks:   1%|▏                   | 1/99 [00:42<1:09:15, 42.40s/chunk]
+Processing blocks:   2%|▍                   | 2/99 [01:26<1:10:25, 43.56s/chunk]
+Processing blocks:   3%|▌                   | 3/99 [02:22<1:18:27, 49.03s/chunk]
+Processing blocks:   4%|▊                   | 4/99 [03:27<1:27:27, 55.23s/chunk]
+Processing blocks:   5%|█                   | 5/99 [04:12<1:21:12, 51.83s/chunk]
+Processing blocks:   6%|█▏                  | 6/99 [05:01<1:18:24, 50.59s/chunk]
+Processing blocks:   7%|█▍                  | 7/99 [06:10<1:26:52, 56.66s/chunk]
+Processing blocks:   8%|█▌                  | 8/99 [07:06<1:25:36, 56.44s/chunk]
+Processing blocks:   9%|█▊                  | 9/99 [07:29<1:09:15, 46.17s/chunk]
+Processing blocks:  10%|█▉                 | 10/99 [08:03<1:02:42, 42.27s/chunk]
+Processing blocks:  11%|██                 | 11/99 [08:55<1:06:29, 45.34s/chunk]
+Processing blocks:  12%|██▎                | 12/99 [09:46<1:08:14, 47.06s/chunk]
+Processing blocks:  13%|██▍                | 13/99 [10:25<1:04:00, 44.65s/chunk]
+Processing blocks:  14%|██▋                | 14/99 [11:22<1:08:35, 48.42s/chunk]
+Processing blocks:  15%|██▉                | 15/99 [12:11<1:07:50, 48.46s/chunk]
+Processing blocks:  16%|███▍                 | 16/99 [12:41<59:26, 42.97s/chunk]
+Processing blocks:  17%|███▌                 | 17/99 [13:26<59:26, 43.49s/chunk]
+                                                                                
+
+Processing blocks:  17%|███▌                 | 17/99 [14:49<59:26, 43.49s/chunk]
+                                                                                
+
+Processing blocks:  17%|███▌                 | 17/99 [15:44<59:26, 43.49s/chunk]
+                                                                                
+
+Processing blocks:  17%|███▌                 | 17/99 [15:48<59:26, 43.49s/chunk]
+Processing blocks:  18%|███▍               | 18/99 [15:51<1:40:00, 74.08s/chunk]
+Processing blocks:  19%|███▋               | 19/99 [16:38<1:27:46, 65.83s/chunk]
+Processing blocks:  20%|███▊               | 20/99 [17:09<1:13:03, 55.48s/chunk]
+Processing blocks:  21%|████               | 21/99 [17:49<1:05:55, 50.71s/chunk]
+Processing blocks:  22%|████▋                | 22/99 [18:22<58:12, 45.36s/chunk]
+Processing blocks:  23%|████▍              | 23/99 [19:18<1:01:46, 48.77s/chunk]
+Processing blocks:  24%|████▌              | 24/99 [20:10<1:02:09, 49.72s/chunk]
+Processing blocks:  25%|████▊              | 25/99 [20:58<1:00:38, 49.17s/chunk]
+Processing blocks:  26%|████▉              | 26/99 [22:06<1:06:35, 54.74s/chunk]
+Processing blocks:  27%|█████▏             | 27/99 [22:49<1:01:33, 51.29s/chunk]
+Processing blocks:  28%|█████▉               | 28/99 [23:38<59:41, 50.45s/chunk]
+Processing blocks:  29%|█████▌             | 29/99 [24:33<1:00:33, 51.91s/chunk]
+Processing blocks:  30%|█████▊             | 30/99 [25:29<1:01:03, 53.10s/chunk]
+                                                                                
+
+Processing blocks:  30%|█████▊             | 30/99 [26:09<1:01:03, 53.10s/chunk]
+                                                                                
+
+Processing blocks:  30%|█████▊             | 30/99 [27:16<1:01:03, 53.10s/chunk]
+Processing blocks:  31%|█████▉             | 31/99 [27:19<1:19:36, 70.24s/chunk]
+Processing blocks:  32%|██████▏            | 32/99 [28:06<1:10:34, 63.20s/chunk]
+Processing blocks:  33%|██████▎            | 33/99 [28:56<1:05:13, 59.29s/chunk]
+Processing blocks:  34%|███████▏             | 34/99 [29:35<57:33, 53.14s/chunk]
+Processing blocks:  35%|███████▍             | 35/99 [30:25<55:37, 52.15s/chunk]
+Processing blocks:  36%|███████▋             | 36/99 [31:28<58:14, 55.47s/chunk]
+Processing blocks:  37%|███████▊             | 37/99 [32:12<53:57, 52.22s/chunk]
+Processing blocks:  38%|████████             | 38/99 [32:49<48:23, 47.60s/chunk]
+Processing blocks:  39%|████████▎            | 39/99 [33:30<45:36, 45.60s/chunk]
+Processing blocks:  40%|████████▍            | 40/99 [34:09<42:47, 43.52s/chunk]
+Processing blocks:  41%|████████▋            | 41/99 [34:45<39:56, 41.31s/chunk]
+Processing blocks:  42%|████████▉            | 42/99 [35:26<39:05, 41.15s/chunk]
+Processing blocks:  43%|█████████            | 43/99 [36:14<40:30, 43.40s/chunk]
+                                                                                
+
+Processing blocks:  43%|█████████            | 43/99 [38:05<40:30, 43.40s/chunk]
+                                                                                
+
+Processing blocks:  43%|█████████            | 43/99 [39:13<40:30, 43.40s/chunk]
+Processing blocks:  44%|████████▍          | 44/99 [39:33<1:22:20, 89.82s/chunk]
+Processing blocks:  45%|████████▋          | 45/99 [40:23<1:10:14, 78.05s/chunk]
+Processing blocks:  46%|█████████▊           | 46/99 [41:04<59:10, 67.00s/chunk]
+Processing blocks:  47%|█████████▉           | 47/99 [42:11<57:59, 66.92s/chunk]
+Processing blocks:  48%|██████████▏          | 48/99 [42:58<51:48, 60.95s/chunk]
+Processing blocks:  49%|██████████▍          | 49/99 [43:45<47:23, 56.86s/chunk]
+Processing blocks:  51%|██████████▌          | 50/99 [44:39<45:39, 55.92s/chunk]
+Processing blocks:  52%|██████████▊          | 51/99 [45:19<40:51, 51.08s/chunk]
+Processing blocks:  53%|███████████          | 52/99 [46:05<38:57, 49.73s/chunk]
+Processing blocks:  54%|███████████▏         | 53/99 [46:58<38:52, 50.71s/chunk]
+Processing blocks:  55%|███████████▍         | 54/99 [47:46<37:13, 49.63s/chunk]
+                                                                                
+
+Processing blocks:  55%|███████████▍         | 54/99 [48:28<37:13, 49.63s/chunk]
+                                                                                
+
+Processing blocks:  55%|███████████▍         | 54/99 [49:09<37:13, 49.63s/chunk]
+Processing blocks:  56%|███████████▋         | 55/99 [49:15<45:10, 61.59s/chunk]
+Processing blocks:  57%|███████████▉         | 56/99 [50:15<43:44, 61.03s/chunk]
+Processing blocks:  58%|████████████         | 57/99 [51:09<41:19, 59.03s/chunk]
+Processing blocks:  59%|████████████▎        | 58/99 [52:10<40:46, 59.67s/chunk]
+Processing blocks:  60%|████████████▌        | 59/99 [53:17<41:11, 61.79s/chunk]
+Processing blocks:  61%|████████████▋        | 60/99 [54:08<37:58, 58.42s/chunk]
+Processing blocks:  62%|████████████▉        | 61/99 [54:59<35:41, 56.37s/chunk]
+Processing blocks:  63%|█████████████▏       | 62/99 [55:34<30:42, 49.80s/chunk]
+                                                                                
+
+Processing blocks:  63%|█████████████▏       | 62/99 [57:04<30:42, 49.80s/chunk]
+                                                                                
+
+Processing blocks:  63%|█████████████▏       | 62/99 [58:49<30:42, 49.80s/chunk]
+Processing blocks:  64%|█████████████▎       | 63/99 [58:52<56:35, 94.32s/chunk]
+Processing blocks:  65%|█████████████▌       | 64/99 [59:42<47:21, 81.19s/chunk]
+Processing blocks:  66%|████████████▍      | 65/99 [1:00:21<38:46, 68.41s/chunk]
+Processing blocks:  67%|████████████▋      | 66/99 [1:01:22<36:22, 66.14s/chunk]
+Processing blocks:  68%|████████████▊      | 67/99 [1:01:56<30:10, 56.56s/chunk]
+Processing blocks:  69%|█████████████      | 68/99 [1:03:05<31:07, 60.25s/chunk]
+                                                                                
+
+Processing blocks:  69%|█████████████      | 68/99 [1:04:11<31:07, 60.25s/chunk]
+                                                                                
+
+Processing blocks:  69%|█████████████      | 68/99 [1:05:23<31:07, 60.25s/chunk]
+Processing blocks:  70%|█████████████▏     | 69/99 [1:05:26<42:15, 84.52s/chunk]
+Processing blocks:  71%|█████████████▍     | 70/99 [1:05:58<33:13, 68.75s/chunk]
+Processing blocks:  72%|█████████████▋     | 71/99 [1:06:45<29:00, 62.16s/chunk]
+Processing blocks:  73%|█████████████▊     | 72/99 [1:07:24<24:54, 55.37s/chunk]
+Processing blocks:  74%|██████████████     | 73/99 [1:08:05<22:01, 50.83s/chunk]
+Processing blocks:  75%|██████████████▏    | 74/99 [1:08:57<21:22, 51.30s/chunk]
+Processing blocks:  76%|██████████████▍    | 75/99 [1:09:55<21:19, 53.31s/chunk]
+Processing blocks:  77%|██████████████▌    | 76/99 [1:10:43<19:51, 51.81s/chunk]
+Processing blocks:  78%|██████████████▊    | 77/99 [1:11:32<18:37, 50.79s/chunk]
+Processing blocks:  79%|██████████████▉    | 78/99 [1:12:38<19:21, 55.33s/chunk]
+Processing blocks:  80%|███████████████▏   | 79/99 [1:13:30<18:09, 54.49s/chunk]
+Processing blocks:  81%|███████████████▎   | 80/99 [1:14:29<17:40, 55.80s/chunk]
+Processing blocks:  82%|███████████████▌   | 81/99 [1:15:17<16:01, 53.41s/chunk]
+Processing blocks:  83%|███████████████▋   | 82/99 [1:16:10<15:09, 53.48s/chunk]
+Processing blocks:  84%|███████████████▉   | 83/99 [1:16:49<13:02, 48.92s/chunk]
+Processing blocks:  85%|████████████████   | 84/99 [1:17:23<11:08, 44.56s/chunk]
+                                                                                
+
+Processing blocks:  85%|████████████████   | 84/99 [1:18:25<11:08, 44.56s/chunk]
+                                                                                
+
+Processing blocks:  85%|████████████████   | 84/99 [1:19:17<11:08, 44.56s/chunk]
+Processing blocks:  86%|████████████████▎  | 85/99 [1:19:21<15:30, 66.49s/chunk]
+Processing blocks:  87%|████████████████▌  | 86/99 [1:20:08<13:07, 60.59s/chunk]
+Processing blocks:  88%|████████████████▋  | 87/99 [1:21:08<12:04, 60.37s/chunk]
+Processing blocks:  89%|████████████████▉  | 88/99 [1:21:37<09:21, 51.00s/chunk]
+Processing blocks:  90%|█████████████████  | 89/99 [1:22:22<08:11, 49.18s/chunk]
+Processing blocks:  91%|█████████████████▎ | 90/99 [1:23:01<06:56, 46.29s/chunk]
+Processing blocks:  92%|█████████████████▍ | 91/99 [1:23:24<05:15, 39.39s/chunk]
+Processing blocks:  93%|█████████████████▋ | 92/99 [1:23:44<03:54, 33.50s/chunk]
+Processing blocks:  94%|█████████████████▊ | 93/99 [1:24:15<03:15, 32.62s/chunk]
+Processing blocks:  95%|██████████████████ | 94/99 [1:25:04<03:07, 37.50s/chunk]
+Processing blocks:  96%|██████████████████▏| 95/99 [1:25:49<02:40, 40.00s/chunk]
+Processing blocks:  97%|██████████████████▍| 96/99 [1:26:49<02:17, 45.89s/chunk]
+Processing blocks:  98%|██████████████████▌| 97/99 [1:27:36<01:32, 46.20s/chunk]
+Processing blocks:  99%|██████████████████▊| 98/99 [1:28:31<00:48, 48.90s/chunk]
+Processing blocks: 100%|███████████████████| 99/99 [1:29:13<00:00, 46.80s/chunk]
+Processing blocks: 100%|███████████████████| 99/99 [1:29:13<00:00, 54.08s/chunk]
+[CHUNK] Performing intelligent redivision...
+[SUB-CHUNK 2] Empty response []. Retrying...
+[SUB-CHUNK 3] Empty response []. Retrying...
+[CHUNK] Performing intelligent redivision...
+[SUB-CHUNK 3] Empty response []. Retrying...
+[CHUNK] Performing intelligent redivision...
+[SUB-CHUNK 2] Empty response []. Retrying...
+[CHUNK] Performing intelligent redivision...
+[SUB-CHUNK 3] Empty response []. Retrying...
+[CHUNK] Performing intelligent redivision...
+[SUB-CHUNK 3] Empty response []. Retrying...
+[CHUNK] Performing intelligent redivision...
+[SUB-CHUNK 3] Empty response []. Retrying...
+[CHUNK] Performing intelligent redivision...
+[SUB-CHUNK 3] Empty response []. Retrying...
+
+------------------------------------------------------------
+[EXTRACTION] Total blocks processed: 17
+------------------------------------------------------------
+
+[PROCESSING] Consolidating vulnerabilities (allow_duplicates=True)
+[DEDUPLICATION] Custom mode: allow_duplicates=True (scanner: OPENVAS)
+[DEDUPLICATION] Consolidation log saved to: results_runs\openvas_artifactory-oss_5.11.0\gpt5\run4\openvas_artifactory-oss_5.11.0_gpt5_run4_deduplication_log.txt
+
+============================================================
+[SUMMARY] EXTRACTION COMPLETE
+============================================================
+Output file: results_runs\openvas_artifactory-oss_5.11.0\gpt5\run4\openvas_artifactory-oss_5.11.0_gpt5_run4.json
+Final vulnerabilities: 116
+============================================================
+
+[TOKENS] Token file saved at: results_tokens\openvas_artifactory-oss_5.11.0_gpt5_run4_gpt-5-mini-2025-08-07_tokens.json
+
+============================================================
+[PERFORMANCE] EXECUTION SUMMARY
+============================================================
+Total execution time: 5367.63s
+LLM: gpt-5-mini-2025-08-07
+Chunks processed: 17
+Vulnerability pipeline:
+  Extracted: 187 vulns
+  After deduplication: 116 vulns
+  Final (valid & saved): 116 vulns
+============================================================
+
