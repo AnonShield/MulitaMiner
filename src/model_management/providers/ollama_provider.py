@@ -2,75 +2,63 @@
 Ollama provider for using local LLM models.
 
 Connects to Ollama running on localhost:11434 (or custom endpoint).
-Supported models: Mistral, DeepSeek, Llama2, Neural Chat, etc.
+Calls the Ollama HTTP API directly (/api/chat) so that runtime options —
+notably num_ctx — are sent on every request. langchain's ChatOllama did not
+reliably forward num_ctx, which silently left models running at the default
+context window.
 """
 
 import requests
-from langchain_ollama import ChatOllama
 from .base_provider import BaseLLMProvider
 
 
 class OllamaProvider(BaseLLMProvider):
-    """Provider for Ollama local LLM models."""
-    
+    """Provider for Ollama local LLM models (direct HTTP API)."""
+
     def __init__(self, config: dict):
         """
         Initialize Ollama provider.
-        
+
         Args:
             config: Configuration dict with:
-                - model: Model name (must be imported in Ollama)
+                - model: Model name (must be pulled in Ollama)
                 - endpoint: Ollama endpoint (default: http://localhost:11434)
                 - temperature: Temperature setting
                 - timeout: Request timeout
-                - max_tokens: Max tokens in response
+                - max_tokens: Max tokens in response (-> num_predict)
+                - options: Runtime options forwarded to Ollama (num_ctx, top_k, ...)
         """
         self.config = config
-        
-        # Get endpoint (defaults to Ollama default)
+
         endpoint = config.get("endpoint", "http://localhost:11434")
-        
+        self.endpoint = endpoint.rstrip("/")
+        self.model_name = config["model"]
+        self.timeout = config.get("timeout", 120)
+        self.disable_thinking = bool(config.get("disable_thinking", False))
+
         # Parse temperature
         temperature = config.get("temperature", 0.0)
         if temperature is None:
             temperature = 0.0
-        temperature = float(temperature)
-        
-        # Parse max_tokens
+
+        # Parse max_tokens (-> num_predict, the output token cap)
         max_tokens = config.get("max_tokens", 4096)
         if max_tokens is None:
             max_tokens = 4096
-        max_tokens = int(max_tokens)
-        
-        self.model_name = config["model"]
-        self.endpoint = endpoint
-        self.disable_thinking = bool(config.get("disable_thinking", False))
-        
-        try:
-            ollama_kwargs = {
-                "model": config["model"],
-                "base_url": endpoint,
-                "temperature": temperature,
-                "timeout": config.get("timeout", 120),
-                "num_predict": max_tokens,
-            }
-            # Forward runtime options (num_ctx, top_k, top_p, repeat_penalty, ...)to the Ollama server.
-            for opt_key, opt_val in config.get("options", {}).items():
-                ollama_kwargs[opt_key] = opt_val
 
-            self.llm = ChatOllama(**ollama_kwargs)
+        # Options sent to Ollama on EVERY request. num_ctx and any other tuning
+        # come from config["options"]; this is what makes num_ctx actually apply.
+        self.options = {
+            "temperature": float(temperature),
+            "num_predict": int(max_tokens),
+        }
+        for opt_key, opt_val in config.get("options", {}).items():
+            self.options[opt_key] = opt_val
 
-            self._verify_num_ctx(config, endpoint)
-
-        except Exception as e:
-            raise RuntimeError(
-                f"Failed to initialize Ollama provider. "
-                f"Ensure Ollama is running at {endpoint}. "
-                f"Error: {str(e)}"
-            ) from e
+        self._verify_num_ctx(config, self.endpoint)
 
     def _verify_num_ctx(self, config: dict, endpoint: str):
-        """Query Ollama server to verify num_ctx is being applied."""
+        """Query Ollama server to sanity-check the requested num_ctx vs model capacity."""
         requested_ctx = config.get("options", {}).get("num_ctx")
         if requested_ctx is None:
             return
@@ -98,25 +86,39 @@ class OllamaProvider(BaseLLMProvider):
             if server_ctx is None:
                 print(f"[OLLAMA] {config['model']} initialized (num_ctx: {requested_ctx} — could not read model default to compare)")
             elif requested_ctx <= server_ctx:
-                print(f"[OLLAMA] {config['model']} initialized (num_ctx: {requested_ctx} \u2713, model supports up to {server_ctx})")
+                print(f"[OLLAMA] {config['model']} initialized (num_ctx: {requested_ctx} ✓, model supports up to {server_ctx})")
             else:
                 print(f"[OLLAMA] WARNING: num_ctx={requested_ctx} exceeds model capacity ({server_ctx}) — Ollama will clamp it down")
         except Exception:
             print(f"[OLLAMA] {config['model']} initialized (num_ctx: {requested_ctx} — server unreachable for verification)")
-    
+
     def invoke(self, prompt: str) -> str:
-        """Send prompt to Ollama and return response text."""
+        """Send prompt to Ollama via /api/chat and return the response text."""
+        if self.disable_thinking:
+            prompt = f"/no_think\n{prompt}"
+
+        payload = {
+            "model": self.model_name,
+            "messages": [{"role": "user", "content": prompt}],
+            "stream": False,
+            "options": self.options,
+        }
+
         try:
-            if self.disable_thinking:
-                prompt = f"/no_think\n{prompt}"
-            response = self.llm.invoke(prompt)
-            return response.content
+            resp = requests.post(
+                f"{self.endpoint}/api/chat",
+                json=payload,
+                timeout=self.timeout,
+            )
+            resp.raise_for_status()
+            data = resp.json()
+            return data["message"]["content"]
         except Exception as e:
             raise RuntimeError(
                 f"Ollama inference failed. Check endpoint: {self.endpoint}. "
                 f"Error: {str(e)}"
             ) from e
-    
+
     def get_model_name(self) -> str:
         """Return model identifier."""
         return self.model_name

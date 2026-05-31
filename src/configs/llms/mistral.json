@@ -1,6 +1,6 @@
 {
   "provider": "ollama",
-  "model": "mistral-custom",
+  "model": "mistral",
   "endpoint": "http://localhost:11434",
   "temperature": 0.0,
   "max_tokens": 4000,
