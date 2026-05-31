@@ -35,6 +35,10 @@ class OllamaProvider(BaseLLMProvider):
         self.model_name = config["model"]
         self.timeout = config.get("timeout", 120)
         self.disable_thinking = bool(config.get("disable_thinking", False))
+        # Ollama 'think' control for reasoning models (e.g. gpt-oss). Sent at the
+        # TOP LEVEL of the request (not inside options). None -> model default;
+        # False -> disable reasoning; or "low"/"medium"/"high" for gpt-oss.
+        self.think = config.get("think")
 
         # Parse temperature
         temperature = config.get("temperature", 0.0)
@@ -103,6 +107,8 @@ class OllamaProvider(BaseLLMProvider):
             "stream": False,
             "options": self.options,
         }
+        if self.think is not None:
+            payload["think"] = self.think
 
         try:
             resp = requests.post(

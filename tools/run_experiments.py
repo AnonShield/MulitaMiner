@@ -12,6 +12,7 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 from src.utils.reporting import generate_final_report
+from src.utils.gpu_sampler import GpuSampler
 from src.model_management.config_loader import get_provider_key, load_llm
 
 # Lines from subprocess stdout that are forwarded to the terminal in parallel mode
@@ -46,6 +47,7 @@ def execute_run(run_id, run_info, group_key, checkpoints, checkpoint_path,
         return
 
     cmd = None
+    gpu_sampler = None
     try:
         baseline_path = run_info['baseline']
         extractor_path = run_info['extractor']
@@ -89,6 +91,10 @@ def execute_run(run_id, run_info, group_key, checkpoints, checkpoint_path,
 
         run_start = time.time()
 
+        # Sample GPU metrics (VRAM peak, energy, util) only for local runs.
+        if get_provider_key(llm) == "local":
+            gpu_sampler = GpuSampler().start()
+
         if parallel:
             llm_config = load_llm(llm) or {}
             model_name = llm_config.get("model", llm)
@@ -126,12 +132,15 @@ def execute_run(run_id, run_info, group_key, checkpoints, checkpoint_path,
             raise subprocess.CalledProcessError(proc.returncode, cmd)
 
         elapsed = time.time() - run_start
+        gpu_stats = gpu_sampler.stop() if gpu_sampler else {}
 
         with checkpoint_lock:
             checkpoints[run_id]["status"] = "ok"
             checkpoints[run_id]["output_file"] = output_file
             checkpoints[run_id]["timestamp"] = timestamp
             checkpoints[run_id]["elapsed_time"] = round(elapsed, 2)
+            if gpu_stats:
+                checkpoints[run_id].update(gpu_stats)
             checkpoints[run_id]["cmd"] = " ".join(cmd)
             with open(checkpoint_path, "w", encoding="utf-8") as f:
                 json.dump(checkpoint_data, f, indent=2, ensure_ascii=False)
@@ -147,6 +156,8 @@ def execute_run(run_id, run_info, group_key, checkpoints, checkpoint_path,
             print(f"[CHECKPOINT] Saved to {checkpoint_path} after run {run_id}")
 
     except Exception as e:
+        if gpu_sampler:
+            gpu_sampler.stop()
         with print_lock:
             if parallel:
                 print(f"[{group_key}] -> ERROR: {run_id} -- {e}")

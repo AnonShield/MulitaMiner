@@ -1,0 +1,18 @@
+{
+  "provider": "ollama",
+  "model": "gpt-oss:20b",
+  "endpoint": "http://localhost:11434",
+  "temperature": 0.0,
+  "think": false,
+  "max_tokens": 2500,
+  "max_chunk_size": 10000,
+  "reserve_for_response": 3000,
+  "timeout": 7200,
+  "options": {
+    "num_ctx": 16000
+  },
+  "tokenizer": {
+    "type": "tiktoken",
+    "model": "o200k_base"
+  }
+}
