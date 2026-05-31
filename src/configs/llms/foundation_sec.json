@@ -1,0 +1,13 @@
+{
+  "provider": "huggingface",
+  "model": "fdtn-ai/Foundation-Sec-1.1-8B-Instruct",
+  "temperature": 0.0,
+  "quantization": "4bit",
+  "max_tokens": 2500,
+  "max_chunk_size": 10000,
+  "reserve_for_response": 3000,
+  "tokenizer": {
+    "type": "huggingface",
+    "model": "fdtn-ai/Foundation-Sec-1.1-8B-Instruct"
+  }
+}

@@ -65,6 +65,10 @@ def load_llm(llm_name):
                 env_var = match.group(1)
                 config[k] = os.getenv(env_var, "")
     
+    # Normalize provider aliases so the rest of the code sees one canonical name
+    if config.get("provider") == "hf":
+        config["provider"] = "huggingface"
+
     # Auto-detect provider if not specified
     if "provider" not in config:
         endpoint = config.get("endpoint", "").lower()
@@ -85,7 +89,7 @@ def get_provider_key(llm_name):
     config = load_llm(llm_name)
     if config is None:
         return "unknown"
-    if config.get("provider") in ("ollama", "lm_studio"):
+    if config.get("provider") in ("ollama", "lm_studio", "huggingface"):
         return "local"
     endpoint = config.get("endpoint", "")
     netloc = urlparse(endpoint).netloc

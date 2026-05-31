@@ -1,17 +1,17 @@
 {
   "provider": "ollama",
-  "model": "gemma4:e4b",
+  "model": "ministral-3:8b",
   "endpoint": "http://localhost:11434",
   "temperature": 0.0,
   "max_tokens": 2500,
-  "max_chunk_size": 6000,
+  "max_chunk_size": 10000,
   "reserve_for_response": 3000,
   "timeout": 7200,
   "options": {
-    "num_ctx": 12000
+    "num_ctx": 16000
   },
   "tokenizer": {
     "type": "huggingface",
-    "model": "google/gemma-4-E4B"
+    "model": "mistralai/Ministral-8B-Instruct-2410"
   }
 }

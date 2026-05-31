@@ -36,6 +36,14 @@ scikit-learn==1.8.0
 jinja2==3.1.6
 scipy==1.13.1
 
+# Optional Dependencies - For local HuggingFace inference (GPU)
+# Needed only for the 'huggingface' local provider with 4-bit quantization.
+# bitsandbytes provides the 4-bit backend (Linux/CUDA; Windows needs >=0.43).
+# Pin exact versions after a successful install on your GPU box.
+transformers>=4.45.0
+accelerate>=1.0.0
+bitsandbytes>=0.43.0
+
 # =================================================================
 # Installation Instructions:
 # =================================================================
