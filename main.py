@@ -356,6 +356,16 @@ def main():
         return
     real_start_time = time.time()
 
+    # Contexto p/ o log de usage REAL (results_tokens/usage_real_*.jsonl):
+    # grava o baseline (target) e o run no registro -> custo real por baseline sem depender de PID.
+    try:
+        if getattr(args, 'input', None):
+            os.environ['MULITA_TARGET'] = os.path.splitext(os.path.basename(args.input))[0]
+        if getattr(args, 'output_file', None):
+            os.environ['MULITA_RUN'] = args.output_file
+    except Exception:
+        pass
+
     # ────────────────────────────────────────────────────────────────────
     # --metrics-only short-circuit: skip extraction, run metrics on the
     # existing JSON in --output-dir. Used after fixing a baseline or

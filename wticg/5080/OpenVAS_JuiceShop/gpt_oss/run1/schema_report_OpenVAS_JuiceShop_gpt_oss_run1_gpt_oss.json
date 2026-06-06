@@ -1,0 +1,42 @@
+{
+  "version": "v3",
+  "file": "5080\\OpenVAS_JuiceShop\\gpt_oss\\run1\\OpenVAS_JuiceShop_gpt_oss_run1.json",
+  "json_valid": true,
+  "n_records": 38,
+  "schema_conformance_rate": 0.9736842105263158,
+  "schema_field_conformance_rate": 0.9809941520467836,
+  "extra_fields_rate": 0.0,
+  "missing_field_counts": {
+    "detection_result": 1,
+    "detection_method": 1,
+    "product_detection_result": 1,
+    "impact": 1,
+    "solution": 1,
+    "insight": 1,
+    "log_method": 1,
+    "cvss": 1,
+    "references": 1,
+    "plugin": 1,
+    "plugin_details": 1,
+    "instances": 1,
+    "source": 1
+  },
+  "type_error_examples": [],
+  "type_error_field_counts": {},
+  "field_failure_counts": {
+    "solution": 1,
+    "references": 1,
+    "detection_method": 1,
+    "impact": 1,
+    "insight": 1,
+    "plugin_details": 1,
+    "log_method": 1,
+    "plugin": 1,
+    "instances": 1,
+    "detection_result": 1,
+    "product_detection_result": 1,
+    "source": 1,
+    "cvss": 1
+  },
+  "extra_field_counts": {}
+}

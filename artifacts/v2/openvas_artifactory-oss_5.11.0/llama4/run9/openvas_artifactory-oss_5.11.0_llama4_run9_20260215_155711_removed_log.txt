@@ -1,4 +1,0 @@
-# Vulnerabilidades removidas por falta de descrição válida:
-- Apache Tomcat End of Life (EOL) Detection - Linux | port: 8081 | protocol: tcp | severity: CRITICAL
-- ICMP Timestamp Reply Information Disclosure | port: 8081 | protocol: tcp | severity: LOW
-- Apache Tomcat Information Disclosure Vulnerability (Sep 2022) - Linux | port: 8019 | protocol: tcp | severity: LOG

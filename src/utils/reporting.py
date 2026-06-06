@@ -82,7 +82,7 @@ def generate_final_report(
         for base, count in run_stats['baseline_counts'].items():
             lines.append(f"| {base} | {count} |")
 
-    lines.append(_section("Token usage & cost"))
+    lines.append(_section("Token usage & cost (estimativa — tiktoken)"))
     if llm_totals:
         lines.append("| LLM | Files | Input tokens | Output tokens | Cost (USD) |")
         lines.append("|---|---:|---:|---:|---:|")
@@ -96,6 +96,27 @@ def generate_final_report(
         )
     else:
         lines.append("_No token data found._")
+
+    # Usage REAL da API (usage_real_*.jsonl): contagem exata + custo com cache do DeepSeek.
+    from src.utils.tokens_cost import calc_real_usage
+    real = calc_real_usage(tokens_dir)
+    real = {k: v for k, v in real.items() if (v.get("input") or v.get("output"))}
+    if real:
+        lines.append(_section("Real API usage & cost"))
+        lines.append("| LLM | Input (real) | cache hit | cache miss | Output | Cost real (USD) |")
+        lines.append("|---|---:|---:|---:|---:|---:|")
+        tot_real_cost = 0.0
+        for llm, a in real.items():
+            c = a.get("cost")
+            tot_real_cost += c or 0
+            cost_s = f"{c:.4f}" if c is not None else "—"
+            lines.append(
+                f"| {llm} | {a['input']:,} | {a['cache_hit']:,} | {a['cache_miss']:,} | "
+                f"{a['output']:,} | {cost_s} |"
+            )
+        lines.append(f"| **TOTAL** | | | | | **{tot_real_cost:.4f}** |")
+        lines.append("\n_Contagem real retornada pela API (modelos locais não retornam usage → não aparecem). "
+                     "Confirme o valor oficial no dashboard do provedor._")
 
     lines.append(_section("Timing"))
     if timing_report:

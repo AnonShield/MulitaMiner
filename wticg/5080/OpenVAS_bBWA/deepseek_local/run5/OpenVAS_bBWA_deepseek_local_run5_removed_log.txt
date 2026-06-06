@@ -1,0 +1,11 @@
+# LOG OF REMOVED VULNERABILITIES (missing valid Name or description)
+
+Removed 1:
+{
+  "instances": [],
+  "source": "OPENVAS",
+  "port": 5900,
+  "protocol": "tcp",
+  "severity": "Medium"
+}
+---

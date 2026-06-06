@@ -63,6 +63,11 @@ class OpenAIProvider(BaseLLMProvider):
     def invoke(self, prompt: str) -> str:
         """Send prompt to OpenAI and return response text."""
         response = self.llm.invoke(prompt)
+        try:
+            from src.utils.usage_log import log_real_usage
+            log_real_usage(response, self.model_name)  # captura usage REAL antes de reduzir a .content
+        except Exception:
+            pass
         return response.content
     
     def get_model_name(self) -> str:

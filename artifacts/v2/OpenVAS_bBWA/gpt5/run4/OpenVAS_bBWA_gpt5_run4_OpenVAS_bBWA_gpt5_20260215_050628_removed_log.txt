@@ -1,2 +1,0 @@
-# Vulnerabilidades removidas por falta de descrição válida:
-- Samba MS-RPC Remote Shell Command Execution Vulnerability (Active Check) | port: 445 | protocol: tcp | severity: MEDIUM

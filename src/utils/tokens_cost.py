@@ -4,9 +4,13 @@ from glob import glob
 import argparse
 import re
 
+# Preços por 1M de tokens (USD). ⚠️ CONFERIR na página oficial (mudam + têm desconto off-peak).
+# DeepSeek: "deepseek-coder" hoje é alias de "deepseek-chat" (V3.x) — use o preço do deepseek-chat.
+#   'cache_hit' = input que bateu no cache (bem mais barato); 'input' = input cache-miss; 'output' = saída.
+#   Os 3 só são usados com o usage REAL (results_tokens/usage_real_*.jsonl) via `calc_real_usage`.
 LLM_PRICES = {
     "gpt5": {"input": 0.25, "output": 2.0},
-    "deepseek": {"input": 0.28, "output": 0.42},
+    "deepseek": {"input": 0.14, "output": 0.28, "cache_hit": 0.0028},  # deepseek-v4-flash (aliases chat/coder caem aqui), USD/1M: cache-miss / output / cache-hit (jun/2026)
     "llama3": {"input": 0.59, "output": 0.79},
     "llama4": {"input": 0.11, "output": 0.34},
     "gpt4": {"input": 0.15, "output": 0.6},
@@ -94,6 +98,58 @@ def calc_tokens_and_cost(tokens_dir):
     total_cost = sum(llm_costs.values())
     return llm_totals, llm_costs, total_all_tokens, total_cost
 
+def _price_key(name):
+    """Mapeia o nome do --llm pra uma chave de LLM_PRICES. Modelos locais (Ollama) = None (sem custo de API)."""
+    n = normalize_model_name(name or "")
+    if "_local" in n:
+        return None  # roda local -> sem custo de API
+    for original, key in MODEL_NAME_MAPPING.items():
+        if normalize_model_name(original) in n:
+            return key
+    for key in LLM_PRICES:
+        if key in n:
+            return key
+    return None
+
+
+def calc_real_usage(tokens_dir):
+    """Lê os usage_real_*.jsonl (usage REAL da API) e calcula o custo com a tabela escalonada.
+
+    Para o DeepSeek usa o split de cache: custo = cache_hit*preço_hit + cache_miss*preço_input + output*preço_output.
+    Retorna {llm: {input, output, cache_hit, cache_miss, cost}}. cost=None se o modelo não tem preço (ex.: local).
+    """
+    files = glob(os.path.join(tokens_dir, "usage_real_*.jsonl"))
+    agg = {}
+    for fp in files:
+        with open(fp, encoding="utf-8") as f:
+            for line in f:
+                line = line.strip()
+                if not line:
+                    continue
+                try:
+                    r = json.loads(line)
+                except Exception:
+                    continue
+                llm = r.get("llm") or "unknown"
+                a = agg.setdefault(llm, {"input": 0, "output": 0, "cache_hit": 0, "cache_miss": 0})
+                a["input"] += r.get("input_tokens") or 0
+                a["output"] += r.get("output_tokens") or 0
+                a["cache_hit"] += r.get("cache_hit_tokens") or 0
+                a["cache_miss"] += r.get("cache_miss_tokens") or 0
+    out = {}
+    for llm, a in agg.items():
+        key = _price_key(llm)
+        price = LLM_PRICES.get(key) if key else None
+        cost = None
+        if price:
+            if price.get("cache_hit") is not None and (a["cache_hit"] or a["cache_miss"]):
+                cost = (a["cache_hit"] / 1e6) * price["cache_hit"] + (a["cache_miss"] / 1e6) * price["input"] + (a["output"] / 1e6) * price["output"]
+            else:
+                cost = (a["input"] / 1e6) * price["input"] + (a["output"] / 1e6) * price["output"]
+        out[llm] = {**a, "cost": cost}
+    return out
+
+
 def calc_tokens_cost_llm(tokens_dir, llm_name, show_files=False, price_per_1M=None):
     pattern = os.path.join(tokens_dir, f"*{llm_name}*.json")
     files = glob(pattern)
@@ -130,6 +186,9 @@ def main():
     parser_llm.add_argument('--show-files', action='store_true', help='Show token counts for individual files')
     parser_llm.add_argument('--price-per-1M', type=float, default=None, help='Price per 1M tokens (USD)')
 
+    parser_real = subparsers.add_parser('real', help='Custo a partir do usage REAL da API (usage_real_*.jsonl)')
+    parser_real.add_argument('--tokens-dir', type=str, default='results_tokens', help='Directory of token files')
+
     args = parser.parse_args()
 
     if args.mode == 'all':
@@ -155,6 +214,15 @@ def main():
             show_files=args.show_files,
             price_per_1M=args.price_per_1M
         )
+    elif args.mode == 'real':
+        rows = calc_real_usage(args.tokens_dir)
+        if not rows:
+            print(f"Nenhum usage_real_*.jsonl em {args.tokens_dir} (rode uma extração com modelo de API primeiro).")
+        for llm, a in rows.items():
+            print(f"\nLLM: {llm}")
+            print(f"  input REAL: {a['input']:,}  (cache_hit={a['cache_hit']:,}, cache_miss={a['cache_miss']:,})")
+            print(f"  output REAL: {a['output']:,}")
+            print("  custo REAL: " + (f"US$ {a['cost']:.4f}" if a['cost'] is not None else "— (sem preço / modelo local)"))
 
 if __name__ == "__main__":
     main()

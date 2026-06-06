@@ -1,0 +1,303 @@
+`torch_dtype` is deprecated! Use `dtype` instead!
+
+Loading checkpoint shards:   0%|          | 0/4 [00:00<?, ?it/s]/usr/local/lib/python3.12/site-packages/bitsandbytes/backends/cuda/ops.py:213: FutureWarning: _check_is_size will be removed in a future PyTorch release along with guard_size_oblivious.     Use _check(i >= 0) instead.
+  torch._check_is_size(blocksize)
+
+Loading checkpoint shards:  25%|██▌       | 1/4 [00:01<00:04,  1.47s/it]
+Loading checkpoint shards:  50%|█████     | 2/4 [00:03<00:03,  1.63s/it]
+Loading checkpoint shards:  75%|███████▌  | 3/4 [00:04<00:01,  1.67s/it]
+Loading checkpoint shards: 100%|██████████| 4/4 [00:05<00:00,  1.06s/it]
+Loading checkpoint shards: 100%|██████████| 4/4 [00:05<00:00,  1.26s/it]
+
+============================================================
+[CONFIG] LLM: fdtn-ai/Foundation-Sec-1.1-8B-Instruct
+[CONFIG] Max tokens: 2500
+[CONFIG] Reserve for response: 3000
+============================================================
+
+[PDF] Loading PDF from: baselines/openvas/openvas_artifactory-oss_5.11.0.pdf
+[PDF] Using extractor: PdfplumberExtractor
+Extracting visual layout from PDF: openvas_artifactory-oss_5.11.0.pdf
+Total pages found: 178
+[VISUAL] Table of contents extracted up to 3422 characters using marker '^\s*NVT:'.
+[LAYOUT] Visual layout: /app/visual_layouts/openvas_artifactory-oss_5.11.0.txt
+[BLOCKS] 17 session blocks created
+[DEBUG] Attempting to load tokenizer with config: {'type': 'huggingface', 'model': 'fdtn-ai/Foundation-Sec-1.1-8B-Instruct'}
+[DEBUG] Loading Hugging Face tokenizer: fdtn-ai/Foundation-Sec-1.1-8B-Instruct
+[DEBUG] Successfully loaded tokenizer object: <class 'transformers.tokenization_utils_fast.PreTrainedTokenizerFast'>
+
+Processing blocks:   0%|                              | 0/49 [00:00<?, ?chunk/s]/usr/local/lib/python3.12/site-packages/bitsandbytes/backends/cuda/ops.py:468: FutureWarning: _check_is_size will be removed in a future PyTorch release along with guard_size_oblivious.     Use _check(i >= 0) instead.
+  torch._check_is_size(blocksize)
+
+Processing blocks:   2%|▍                     | 1/49 [00:12<10:19, 12.90s/chunk]
+                                                                                
+
+Processing blocks:   2%|▍                     | 1/49 [00:47<10:19, 12.90s/chunk]
+Processing blocks:   4%|▉                     | 2/49 [01:24<37:05, 47.35s/chunk]
+                                                                                
+
+Processing blocks:   4%|▉                     | 2/49 [01:38<37:05, 47.35s/chunk]
+Processing blocks:   6%|█▎                    | 3/49 [02:05<34:12, 44.62s/chunk]
+                                                                                
+
+Processing blocks:   6%|█▎                    | 3/49 [02:40<34:12, 44.62s/chunk]
+Processing blocks:   8%|█▊                    | 4/49 [03:11<39:42, 52.94s/chunk]
+                                                                                
+
+Processing blocks:   8%|█▊                    | 4/49 [03:26<39:42, 52.94s/chunk]
+                                                                                
+
+Processing blocks:   8%|█▊                    | 4/49 [03:45<39:42, 52.94s/chunk]
+Processing blocks:  10%|██▏                   | 5/49 [03:46<34:08, 46.55s/chunk]
+                                                                                
+
+Processing blocks:  10%|██▏                   | 5/49 [04:21<34:08, 46.55s/chunk]
+Processing blocks:  12%|██▋                   | 6/49 [04:58<39:36, 55.26s/chunk]
+                                                                                
+
+Processing blocks:  12%|██▋                   | 6/49 [05:11<39:36, 55.26s/chunk]
+                                                                                
+
+Processing blocks:  12%|██▋                   | 6/49 [05:24<39:36, 55.26s/chunk]
+Processing blocks:  14%|███▏                  | 7/49 [05:43<36:20, 51.92s/chunk]
+Processing blocks:  16%|███▌                  | 8/49 [05:53<26:22, 38.60s/chunk]
+                                                                                
+
+Processing blocks:  16%|███▌                  | 8/49 [06:29<26:22, 38.60s/chunk]
+                                                                                
+
+Processing blocks:  16%|███▌                  | 8/49 [06:52<26:22, 38.60s/chunk]
+                                                                                
+
+Processing blocks:  16%|███▌                  | 8/49 [06:55<26:22, 38.60s/chunk]
+Processing blocks:  18%|████                  | 9/49 [06:56<30:39, 45.99s/chunk]
+                                                                                
+
+Processing blocks:  18%|████                  | 9/49 [07:04<30:39, 45.99s/chunk]
+Processing blocks:  20%|████▎                | 10/49 [07:34<28:19, 43.58s/chunk]
+                                                                                
+
+Processing blocks:  20%|████▎                | 10/49 [07:41<28:19, 43.58s/chunk]
+Processing blocks:  22%|████▋                | 11/49 [08:20<28:08, 44.45s/chunk]
+                                                                                
+
+Processing blocks:  22%|████▋                | 11/49 [08:32<28:08, 44.45s/chunk]
+Processing blocks:  24%|█████▏               | 12/49 [09:11<28:33, 46.32s/chunk]
+                                                                                
+
+Processing blocks:  24%|█████▏               | 12/49 [09:21<28:33, 46.32s/chunk]
+Processing blocks:  27%|█████▌               | 13/49 [09:44<25:25, 42.38s/chunk]
+                                                                                
+
+Processing blocks:  27%|█████▌               | 13/49 [10:05<25:25, 42.38s/chunk]
+Processing blocks:  29%|██████               | 14/49 [10:37<26:36, 45.61s/chunk]
+                                                                                
+
+Processing blocks:  29%|██████               | 14/49 [10:45<26:36, 45.61s/chunk]
+Processing blocks:  31%|██████▍              | 15/49 [11:20<25:16, 44.61s/chunk]
+                                                                                
+
+Processing blocks:  31%|██████▍              | 15/49 [11:49<25:16, 44.61s/chunk]
+Processing blocks:  33%|██████▊              | 16/49 [12:26<28:05, 51.07s/chunk]
+                                                                                
+
+Processing blocks:  33%|██████▊              | 16/49 [12:45<28:05, 51.07s/chunk]
+Processing blocks:  35%|███████▎             | 17/49 [13:16<27:10, 50.95s/chunk]
+                                                                                
+
+Processing blocks:  35%|███████▎             | 17/49 [13:26<27:10, 50.95s/chunk]
+Processing blocks:  37%|███████▋             | 18/49 [13:55<24:25, 47.26s/chunk]
+                                                                                
+
+Processing blocks:  37%|███████▋             | 18/49 [14:31<24:25, 47.26s/chunk]
+                                                                                
+
+Processing blocks:  37%|███████▋             | 18/49 [14:46<24:25, 47.26s/chunk]
+Processing blocks:  39%|████████▏            | 19/49 [14:52<25:02, 50.07s/chunk]
+                                                                                
+
+Processing blocks:  39%|████████▏            | 19/49 [15:09<25:02, 50.07s/chunk]
+Processing blocks:  41%|████████▌            | 20/49 [15:48<25:05, 51.93s/chunk]
+                                                                                
+
+Processing blocks:  41%|████████▌            | 20/49 [16:16<25:05, 51.93s/chunk]
+Processing blocks:  43%|█████████            | 21/49 [16:44<24:51, 53.28s/chunk]
+                                                                                
+
+Processing blocks:  43%|█████████            | 21/49 [17:13<24:51, 53.28s/chunk]
+Processing blocks:  45%|█████████▍           | 22/49 [17:48<25:20, 56.33s/chunk]
+                                                                                
+
+Processing blocks:  45%|█████████▍           | 22/49 [17:56<25:20, 56.33s/chunk]
+Processing blocks:  47%|█████████▊           | 23/49 [18:19<21:09, 48.82s/chunk]
+                                                                                
+
+Processing blocks:  47%|█████████▊           | 23/49 [18:38<21:09, 48.82s/chunk]
+Processing blocks:  49%|██████████▎          | 24/49 [19:09<20:30, 49.22s/chunk]
+                                                                                
+
+Processing blocks:  49%|██████████▎          | 24/49 [19:19<20:30, 49.22s/chunk]
+Processing blocks:  51%|██████████▋          | 25/49 [19:49<18:35, 46.50s/chunk]
+                                                                                
+
+Processing blocks:  51%|██████████▋          | 25/49 [19:58<18:35, 46.50s/chunk]
+Processing blocks:  53%|███████████▏         | 26/49 [20:40<18:15, 47.63s/chunk]
+                                                                                
+
+Processing blocks:  53%|███████████▏         | 26/49 [21:16<18:15, 47.63s/chunk]
+Processing blocks:  55%|███████████▌         | 27/49 [22:06<21:46, 59.41s/chunk]
+                                                                                
+
+Processing blocks:  55%|███████████▌         | 27/49 [22:14<21:46, 59.41s/chunk]
+Processing blocks:  57%|████████████         | 28/49 [22:53<19:27, 55.60s/chunk]
+                                                                                
+
+Processing blocks:  57%|████████████         | 28/49 [23:03<19:27, 55.60s/chunk]
+                                                                                
+
+Processing blocks:  57%|████████████         | 28/49 [23:34<19:27, 55.60s/chunk]
+Processing blocks:  59%|████████████▍        | 29/49 [23:35<17:06, 51.34s/chunk]
+                                                                                
+
+Processing blocks:  59%|████████████▍        | 29/49 [24:10<17:06, 51.34s/chunk]
+Processing blocks:  61%|████████████▊        | 30/49 [24:44<18:01, 56.90s/chunk]
+                                                                                
+
+Processing blocks:  61%|████████████▊        | 30/49 [25:20<18:01, 56.90s/chunk]
+Processing blocks:  63%|█████████████▎       | 31/49 [26:16<20:13, 67.41s/chunk]
+                                                                                
+
+Processing blocks:  63%|█████████████▎       | 31/49 [26:27<20:13, 67.41s/chunk]
+Processing blocks:  65%|█████████████▋       | 32/49 [27:04<17:24, 61.42s/chunk]
+                                                                                
+
+Processing blocks:  65%|█████████████▋       | 32/49 [27:20<17:24, 61.42s/chunk]
+Processing blocks:  67%|██████████████▏      | 33/49 [28:06<16:24, 61.51s/chunk]
+                                                                                
+
+Processing blocks:  67%|██████████████▏      | 33/49 [28:32<16:24, 61.51s/chunk]
+Processing blocks:  69%|██████████████▌      | 34/49 [28:54<14:23, 57.55s/chunk]
+                                                                                
+
+Processing blocks:  69%|██████████████▌      | 34/49 [29:03<14:23, 57.55s/chunk]
+Processing blocks:  71%|███████████████      | 35/49 [29:37<12:25, 53.23s/chunk]
+Processing blocks:  73%|███████████████▍     | 36/49 [29:46<08:37, 39.82s/chunk]
+Processing blocks:  76%|███████████████▊     | 37/49 [29:51<05:54, 29.56s/chunk]
+Processing blocks:  78%|████████████████▎    | 38/49 [29:57<04:07, 22.53s/chunk]
+Processing blocks:  80%|████████████████▋    | 39/49 [30:07<03:07, 18.70s/chunk]
+Processing blocks:  82%|█████████████████▏   | 40/49 [30:14<02:15, 15.09s/chunk]
+Processing blocks:  84%|█████████████████▌   | 41/49 [30:20<01:38, 12.31s/chunk]
+Processing blocks:  86%|██████████████████   | 42/49 [30:29<01:20, 11.44s/chunk]
+Processing blocks:  88%|██████████████████▍  | 43/49 [30:39<01:05, 10.89s/chunk]
+                                                                                
+
+Processing blocks:  88%|██████████████████▍  | 43/49 [31:02<01:05, 10.89s/chunk]
+                                                                                
+
+Processing blocks:  88%|██████████████████▍  | 43/49 [31:25<01:05, 10.89s/chunk]
+Processing blocks:  90%|██████████████████▊  | 44/49 [31:30<01:54, 22.94s/chunk]
+Processing blocks:  92%|███████████████████▎ | 45/49 [31:47<01:25, 21.34s/chunk]
+Processing blocks:  94%|███████████████████▋ | 46/49 [32:04<00:59, 19.97s/chunk]
+Processing blocks:  96%|████████████████████▏| 47/49 [32:09<00:31, 15.53s/chunk]
+                                                                                
+
+Processing blocks:  96%|████████████████████▏| 47/49 [32:20<00:31, 15.53s/chunk]
+Processing blocks:  98%|████████████████████▌| 48/49 [33:00<00:26, 26.03s/chunk]
+Processing blocks: 100%|█████████████████████| 49/49 [33:04<00:00, 19.48s/chunk]
+Processing blocks: 100%|█████████████████████| 49/49 [33:04<00:00, 40.50s/chunk]
+[WARN] Recovered 4 vulns via json_repair
+[CHUNK] Performing intelligent redivision...
+[WARN] Recovered 2 vulns via json_repair
+[CHUNK] Performing intelligent redivision...
+[WARN] Recovered 4 vulns via json_repair
+[CHUNK] Performing intelligent redivision...
+[WARN] Recovered 2 vulns via json_repair
+[CHUNK] Performing intelligent redivision...
+[SUB-CHUNK 3] Empty response []. Retrying...
+[WARN] Recovered 5 vulns via json_repair
+[CHUNK] Performing intelligent redivision...
+[CHUNK] Performing intelligent redivision...
+[WARN] Recovered 1 vulns via json_repair
+[SUB-CHUNK 2] Empty response []. Retrying...
+[WARN] Recovered 1 vulns via json_repair
+[CHUNK] Performing intelligent redivision...
+[SUB-CHUNK 2] Empty response []. Retrying...
+[SUB-CHUNK 3] Empty response []. Retrying...
+[CHUNK] Performing intelligent redivision...
+[CHUNK] Performing intelligent redivision...
+[WARN] Recovered 2 vulns via json_repair
+[CHUNK] Performing intelligent redivision...
+[CHUNK] Performing intelligent redivision...
+[WARN] Recovered 2 vulns via json_repair
+[CHUNK] Performing intelligent redivision...
+[CHUNK] Performing intelligent redivision...
+[CHUNK] Performing intelligent redivision...
+[WARN] Recovered 1 vulns via json_repair
+[WARN] Recovered 3 vulns via json_repair
+[CHUNK] Performing intelligent redivision...
+[CHUNK] Performing intelligent redivision...
+[WARN] Recovered 1 vulns via json_repair
+[CHUNK] Performing intelligent redivision...
+[SUB-CHUNK 2] Empty response []. Retrying...
+[CHUNK] Performing intelligent redivision...
+[WARN] Recovered 3 vulns via json_repair
+[CHUNK] Performing intelligent redivision...
+[WARN] Recovered 2 vulns via json_repair
+[CHUNK] Performing intelligent redivision...
+[CHUNK] Performing intelligent redivision...
+[WARN] Recovered 3 vulns via json_repair
+[CHUNK] Performing intelligent redivision...
+[CHUNK] Performing intelligent redivision...
+[CHUNK] Performing intelligent redivision...
+[WARN] Recovered 4 vulns via json_repair
+[CHUNK] Performing intelligent redivision...
+[WARN] Recovered 3 vulns via json_repair
+[CHUNK] Performing intelligent redivision...
+[CHUNK] Performing intelligent redivision...
+[SUB-CHUNK 3] Empty response []. Retrying...
+[WARN] Recovered 4 vulns via json_repair
+[CHUNK] Performing intelligent redivision...
+[WARN] Recovered 4 vulns via json_repair
+[CHUNK] Performing intelligent redivision...
+[CHUNK] Performing intelligent redivision...
+[CHUNK] Performing intelligent redivision...
+[WARN] Recovered 2 vulns via json_repair
+[WARN] Recovered 3 vulns via json_repair
+[CHUNK] Performing intelligent redivision...
+[CHUNK] Performing intelligent redivision...
+[WARN] Recovered 4 vulns via json_repair
+[CHUNK] Performing intelligent redivision...
+[SUB-CHUNK 3] Empty response []. Retrying...
+[WARN] Recovered 1 vulns via json_repair
+[CHUNK] Performing intelligent redivision...
+[WARN] Recovered 2 vulns via concat_arrays fallback
+
+------------------------------------------------------------
+[EXTRACTION] Total blocks processed: 17
+------------------------------------------------------------
+
+[PROCESSING] Consolidating vulnerabilities (allow_duplicates=True)
+[DEDUPLICATION] Custom mode: allow_duplicates=True (scanner: OPENVAS)
+[DEDUPLICATION] Consolidation log saved to: results_5080/openvas_artifactory-oss_5.11.0/foundation_sec/run1/openvas_artifactory-oss_5.11.0_foundation_sec_run1_deduplication_log.txt
+
+============================================================
+[SUMMARY] EXTRACTION COMPLETE
+============================================================
+Output file: results_5080/openvas_artifactory-oss_5.11.0/foundation_sec/run1/openvas_artifactory-oss_5.11.0_foundation_sec_run1.json
+Final vulnerabilities: 116
+============================================================
+
+[TOKENS] Token file saved at: results_tokens/openvas_artifactory-oss_5.11.0_foundation_sec_run1_fdtn-ai_Foundation-Sec-1.1-8B-Instruct_tokens.json
+
+============================================================
+[PERFORMANCE] EXECUTION SUMMARY
+============================================================
+Total execution time: 2002.76s
+LLM: fdtn-ai/Foundation-Sec-1.1-8B-Instruct
+Chunks processed: 17
+Vulnerability pipeline:
+  Extracted: 151 vulns
+  After deduplication: 116 vulns
+  Final (valid & saved): 116 vulns
+============================================================
+

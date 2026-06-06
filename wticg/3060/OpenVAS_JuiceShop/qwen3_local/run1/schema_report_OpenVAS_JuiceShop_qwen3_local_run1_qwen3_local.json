@@ -1,0 +1,44 @@
+{
+  "version": "v3",
+  "file": "results_runs/OpenVAS_JuiceShop/qwen3_local/run1/OpenVAS_JuiceShop_qwen3_local_run1.json",
+  "json_valid": true,
+  "n_records": 37,
+  "schema_conformance_rate": 0.8918918918918919,
+  "schema_field_conformance_rate": 0.9534534534534534,
+  "extra_fields_rate": 0.02702702702702703,
+  "missing_field_counts": {
+    "detection_result": 1,
+    "detection_method": 2,
+    "product_detection_result": 4,
+    "impact": 3,
+    "solution": 2,
+    "insight": 3,
+    "log_method": 4,
+    "cvss": 2,
+    "references": 2,
+    "plugin": 2,
+    "plugin_details": 2,
+    "instances": 2,
+    "source": 2
+  },
+  "type_error_examples": [],
+  "type_error_field_counts": {},
+  "field_failure_counts": {
+    "log_method": 4,
+    "cvss": 2,
+    "instances": 2,
+    "detection_method": 2,
+    "impact": 3,
+    "detection_result": 1,
+    "product_detection_result": 4,
+    "references": 2,
+    "plugin_details": 2,
+    "insight": 3,
+    "plugin": 2,
+    "solution": 2,
+    "source": 2
+  },
+  "extra_field_counts": {
+    ",": 1
+  }
+}

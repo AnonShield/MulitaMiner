@@ -1,0 +1,316 @@
+[OLLAMA] qwen3:8b initialized (num_ctx: 16000 ✓, model supports up to 40960)
+
+============================================================
+[CONFIG] LLM: qwen3:8b
+[CONFIG] Max tokens: 16000
+[CONFIG] Reserve for response: 3000
+============================================================
+
+[PDF] Loading PDF from: tmp/OpenVAS_bBWA.pdf
+[PDF] Using extractor: PdfplumberExtractor
+Extracting visual layout from PDF: OpenVAS_bBWA.pdf
+Total pages found: 58
+[VISUAL] Table of contents extracted up to 5208 characters using marker '^\s*NVT:'.
+[LAYOUT] Visual layout: /home/beatriz/MulitaMiner/results_runs/visual_layouts/OpenVAS_bBWA.txt
+[BLOCKS] 28 session blocks created
+[DEBUG] Attempting to load tokenizer with config: {'type': 'huggingface', 'model': 'Qwen/Qwen3-8B'}
+[DEBUG] Loading Hugging Face tokenizer: Qwen/Qwen3-8B
+[DEBUG] Successfully loaded tokenizer object: <class 'transformers.models.qwen2.tokenization_qwen2.Qwen2Tokenizer'>
+
+Processing blocks:   0%|                              | 0/35 [00:00<?, ?chunk/s]
+                                                                                
+
+Processing blocks:   0%|                              | 0/35 [00:49<?, ?chunk/s]
+Processing blocks:   3%|▌                  | 1/35 [02:25<1:22:31, 145.64s/chunk]
+                                                                                
+
+Processing blocks:   3%|▌                  | 1/35 [03:19<1:22:31, 145.64s/chunk]
+                                                                                
+
+Processing blocks:   3%|▌                  | 1/35 [04:10<1:22:31, 145.64s/chunk]
+Processing blocks:   6%|█                  | 2/35 [04:10<1:06:45, 121.37s/chunk]
+                                                                                
+
+Processing blocks:   6%|█                  | 2/35 [04:58<1:06:45, 121.37s/chunk]
+Processing blocks:   9%|█▋                 | 3/35 [06:33<1:10:00, 131.25s/chunk]
+                                                                                
+
+Processing blocks:   9%|█▋                 | 3/35 [07:20<1:10:00, 131.25s/chunk]
+                                                                                
+
+Processing blocks:   9%|█▋                 | 3/35 [07:52<1:10:00, 131.25s/chunk]
+Processing blocks:  11%|██▍                  | 4/35 [07:52<57:10, 110.67s/chunk]
+Processing blocks:  14%|███▏                  | 5/35 [08:02<37:13, 74.44s/chunk]
+                                                                                
+
+Processing blocks:  14%|███▏                  | 5/35 [08:50<37:13, 74.44s/chunk]
+Processing blocks:  17%|███▊                  | 6/35 [10:24<47:08, 97.53s/chunk]
+Processing blocks:  20%|████▍                 | 7/35 [11:04<36:42, 78.64s/chunk]
+Processing blocks:  23%|█████                 | 8/35 [11:31<28:03, 62.34s/chunk]
+Processing blocks:  26%|█████▋                | 9/35 [11:54<21:37, 49.91s/chunk]
+Processing blocks:  29%|██████               | 10/35 [12:34<19:29, 46.77s/chunk]
+                                                                                
+
+Processing blocks:  29%|██████               | 10/35 [13:22<19:29, 46.77s/chunk]
+Processing blocks:  31%|██████▌              | 11/35 [14:56<30:27, 76.13s/chunk]
+                                                                                
+
+Processing blocks:  31%|██████▌              | 11/35 [15:44<30:27, 76.13s/chunk]
+Processing blocks:  34%|███████▏             | 12/35 [17:19<36:56, 96.35s/chunk]
+Processing blocks:  37%|███████▊             | 13/35 [17:46<27:37, 75.35s/chunk]
+                                                                                
+
+Processing blocks:  37%|███████▊             | 13/35 [18:34<27:37, 75.35s/chunk]
+Processing blocks:  40%|████████▍            | 14/35 [20:09<33:32, 95.82s/chunk]
+                                                                                
+
+Processing blocks:  40%|████████▍            | 14/35 [20:57<33:32, 95.82s/chunk]
+Processing blocks:  43%|████████▌           | 15/35 [22:32<36:41, 110.06s/chunk]
+Processing blocks:  46%|█████████▌           | 16/35 [23:20<28:55, 91.35s/chunk]
+                                                                                
+
+Processing blocks:  46%|█████████▌           | 16/35 [24:14<28:55, 91.35s/chunk]
+                                                                                
+
+Processing blocks:  46%|█████████▌           | 16/35 [25:02<28:55, 91.35s/chunk]
+                                                                                
+
+Processing blocks:  46%|█████████▌           | 16/35 [25:51<28:55, 91.35s/chunk]
+Processing blocks:  49%|█████████▋          | 17/35 [27:09<39:46, 132.60s/chunk]
+Processing blocks:  51%|██████████▎         | 18/35 [27:53<30:00, 105.94s/chunk]
+                                                                                
+
+Processing blocks:  51%|██████████▎         | 18/35 [28:45<30:00, 105.94s/chunk]
+                                                                                
+
+Processing blocks:  51%|██████████▎         | 18/35 [29:34<30:00, 105.94s/chunk]
+                                                                                
+
+Processing blocks:  51%|██████████▎         | 18/35 [30:23<30:00, 105.94s/chunk]
+                                                                                
+
+Processing blocks:  51%|██████████▎         | 18/35 [31:11<30:00, 105.94s/chunk]
+                                                                                
+
+Processing blocks:  51%|██████████▎         | 18/35 [33:35<30:00, 105.94s/chunk]
+                                                                                
+
+Processing blocks:  51%|██████████▎         | 18/35 [34:12<30:00, 105.94s/chunk]
+Processing blocks:  54%|██████████▊         | 19/35 [34:12<50:09, 188.12s/chunk]
+                                                                                
+
+Processing blocks:  54%|██████████▊         | 19/35 [35:01<50:09, 188.12s/chunk]
+Processing blocks:  57%|███████████▍        | 20/35 [36:36<43:43, 174.92s/chunk]
+Processing blocks:  60%|████████████        | 21/35 [37:22<31:44, 136.05s/chunk]
+Processing blocks:  63%|█████████████▏       | 22/35 [37:36<21:35, 99.63s/chunk]
+                                                                                
+
+Processing blocks:  63%|█████████████▏       | 22/35 [38:25<21:35, 99.63s/chunk]
+Processing blocks:  66%|█████████████▏      | 23/35 [40:00<22:33, 112.78s/chunk]
+                                                                                
+
+Processing blocks:  66%|█████████████▏      | 23/35 [40:48<22:33, 112.78s/chunk]
+                                                                                
+
+Processing blocks:  66%|█████████████▏      | 23/35 [41:36<22:33, 112.78s/chunk]
+Processing blocks:  69%|█████████████▋      | 24/35 [41:36<19:45, 107.78s/chunk]
+                                                                                
+
+Processing blocks:  69%|█████████████▋      | 24/35 [42:31<19:45, 107.78s/chunk]
+                                                                                
+
+Processing blocks:  69%|█████████████▋      | 24/35 [43:19<19:45, 107.78s/chunk]
+                                                                                
+
+Processing blocks:  69%|█████████████▋      | 24/35 [44:07<19:45, 107.78s/chunk]
+Processing blocks:  71%|██████████████▎     | 25/35 [45:39<24:44, 148.46s/chunk]
+                                                                                
+
+Processing blocks:  71%|██████████████▎     | 25/35 [46:33<24:44, 148.46s/chunk]
+                                                                                
+
+Processing blocks:  71%|██████████████▎     | 25/35 [47:21<24:44, 148.46s/chunk]
+                                                                                
+
+Processing blocks:  71%|██████████████▎     | 25/35 [48:09<24:44, 148.46s/chunk]
+                                                                                
+
+Processing blocks:  71%|██████████████▎     | 25/35 [49:42<24:44, 148.46s/chunk]
+Processing blocks:  74%|██████████████▊     | 26/35 [51:18<30:48, 205.40s/chunk]
+Processing blocks:  77%|███████████████▍    | 27/35 [52:06<21:05, 158.21s/chunk]
+                                                                                
+
+Processing blocks:  77%|███████████████▍    | 27/35 [53:00<21:05, 158.21s/chunk]
+                                                                                
+
+Processing blocks:  77%|███████████████▍    | 27/35 [53:49<21:05, 158.21s/chunk]
+                                                                                
+
+Processing blocks:  77%|███████████████▍    | 27/35 [54:38<21:05, 158.21s/chunk]
+Processing blocks:  80%|████████████████    | 28/35 [55:57<21:01, 180.15s/chunk]
+                                                                                
+
+Processing blocks:  80%|████████████████    | 28/35 [56:49<21:01, 180.15s/chunk]
+                                                                                
+
+Processing blocks:  80%|████████████████    | 28/35 [58:28<21:01, 180.15s/chunk]
+                                                                                
+
+Processing blocks:  80%|████████████████    | 28/35 [58:28<21:01, 180.15s/chunk]
+                                                                                
+
+Processing blocks:  80%|████████████████    | 28/35 [59:18<21:01, 180.15s/chunk]
+                                                                                
+
+Processing blocks:  80%|██████████████▍   | 28/35 [1:00:58<21:01, 180.15s/chunk]
+Processing blocks:  83%|██████████████▉   | 29/35 [1:02:59<25:16, 252.81s/chunk]
+Processing blocks:  86%|███████████████▍  | 30/35 [1:03:43<15:50, 190.18s/chunk]
+Processing blocks:  89%|███████████████▉  | 31/35 [1:04:20<09:36, 144.05s/chunk]
+Processing blocks:  91%|████████████████▍ | 32/35 [1:04:34<05:15, 105.24s/chunk]
+Processing blocks:  94%|█████████████████▉ | 33/35 [1:05:07<02:46, 83.42s/chunk]
+                                                                                
+
+Processing blocks:  94%|█████████████████▉ | 33/35 [1:05:55<02:46, 83.42s/chunk]
+Processing blocks:  97%|█████████████████▍| 34/35 [1:07:30<01:41, 101.16s/chunk]
+Processing blocks: 100%|███████████████████| 35/35 [1:07:46<00:00, 75.75s/chunk]
+Processing blocks: 100%|██████████████████| 35/35 [1:07:46<00:00, 116.18s/chunk]
+[WARN] No parsing strategy could extract valid JSON
+[CHUNK] Empty response [] detected. Retrying...
+[WARN] No parsing strategy could extract valid JSON
+[WARN] No parsing strategy could extract valid JSON
+[WARN] No parsing strategy could extract valid JSON
+[CHUNK] Empty response [] detected. Retrying...
+[WARN] Recovered 4 vulns via json_repair
+✅ [CHUNK] Retry 1: recovered 4 vulns
+[WARN] No parsing strategy could extract valid JSON
+[CHUNK] Empty response [] detected. Retrying...
+[WARN] No parsing strategy could extract valid JSON
+[WARN] No parsing strategy could extract valid JSON
+[WARN] No parsing strategy could extract valid JSON
+[CHUNK] Empty response [] detected. Retrying...
+✅ [CHUNK] Retry 1: recovered 3 vulns
+[WARN] No parsing strategy could extract valid JSON
+[CHUNK] Empty response [] detected. Retrying...
+[WARN] No parsing strategy could extract valid JSON
+[WARN] No parsing strategy could extract valid JSON
+[WARN] No parsing strategy could extract valid JSON
+[CHUNK] Empty response [] detected. Retrying...
+[WARN] No parsing strategy could extract valid JSON
+[WARN] No parsing strategy could extract valid JSON
+[WARN] No parsing strategy could extract valid JSON
+[CHUNK] Empty response [] detected. Retrying...
+[WARN] No parsing strategy could extract valid JSON
+[WARN] No parsing strategy could extract valid JSON
+[WARN] No parsing strategy could extract valid JSON
+[CHUNK] Empty response [] detected. Retrying...
+[WARN] No parsing strategy could extract valid JSON
+[WARN] No parsing strategy could extract valid JSON
+[WARN] No parsing strategy could extract valid JSON
+[CHUNK] Empty response [] detected. Retrying...
+[WARN] No parsing strategy could extract valid JSON
+[WARN] No parsing strategy could extract valid JSON
+[WARN] Recovered 1 vulns via json_repair
+[WARN] Recovered 4 vulns via json_repair
+[CHUNK] Performing intelligent redivision...
+[WARN] No parsing strategy could extract valid JSON
+[SUB-CHUNK 1] Empty response []. Retrying...
+[WARN] Recovered 2 vulns via json_repair
+✅ [SUB-CHUNK 1] Retry 1: recovered 2 vulns
+[WARN] Recovered 2 vulns via json_repair
+[WARN] Recovered 2 vulns via json_repair
+[CHUNK] Performing intelligent redivision...
+[WARN] No parsing strategy could extract valid JSON
+[SUB-CHUNK 1] Empty response []. Retrying...
+[WARN] Recovered 1 vulns via json_repair
+✅ [SUB-CHUNK 1] Retry 1: recovered 1 vulns
+[WARN] No parsing strategy could extract valid JSON
+[SUB-CHUNK 2] Empty response []. Retrying...
+[WARN] No parsing strategy could extract valid JSON
+[WARN] No parsing strategy could extract valid JSON
+[WARN] No parsing strategy could extract valid JSON
+[SUB-CHUNK 3] Empty response []. Retrying...
+✅ [SUB-CHUNK 3] Retry 1: recovered 2 vulns
+[WARN] No parsing strategy could extract valid JSON
+[CHUNK] Empty response [] detected. Retrying...
+[WARN] No parsing strategy could extract valid JSON
+[WARN] No parsing strategy could extract valid JSON
+[WARN] No parsing strategy could extract valid JSON
+[CHUNK] Empty response [] detected. Retrying...
+[WARN] No parsing strategy could extract valid JSON
+[WARN] No parsing strategy could extract valid JSON
+[WARN] No parsing strategy could extract valid JSON
+[CHUNK] Empty response [] detected. Retrying...
+[WARN] Recovered 1 vulns via json_repair
+✅ [CHUNK] Retry 1: recovered 1 vulns
+[WARN] Recovered 2 vulns via json_repair
+[CHUNK] Performing intelligent redivision...
+[WARN] No parsing strategy could extract valid JSON
+[SUB-CHUNK 1] Empty response []. Retrying...
+[WARN] Recovered 1 vulns via json_repair
+✅ [SUB-CHUNK 1] Retry 1: recovered 1 vulns
+[WARN] Recovered 1 vulns via json_repair
+[WARN] Recovered 4 vulns via json_repair
+[CHUNK] Performing intelligent redivision...
+[WARN] No parsing strategy could extract valid JSON
+[SUB-CHUNK 1] Empty response []. Retrying...
+[WARN] Recovered 1 vulns via json_repair
+✅ [SUB-CHUNK 1] Retry 1: recovered 1 vulns
+[WARN] No parsing strategy could extract valid JSON
+[SUB-CHUNK 3] Empty response []. Retrying...
+[WARN] No parsing strategy could extract valid JSON
+[WARN] No parsing strategy could extract valid JSON
+[WARN] Recovered 1 vulns via json_repair
+[WARN] Recovered 4 vulns via json_repair
+[CHUNK] Performing intelligent redivision...
+[WARN] No parsing strategy could extract valid JSON
+[SUB-CHUNK 1] Empty response []. Retrying...
+[WARN] Recovered 3 vulns via json_repair
+✅ [SUB-CHUNK 1] Retry 1: recovered 3 vulns
+[WARN] Recovered 1 vulns via json_repair
+[WARN] No parsing strategy could extract valid JSON
+[CHUNK] Empty response [] detected. Retrying...
+[WARN] No parsing strategy could extract valid JSON
+[WARN] No parsing strategy could extract valid JSON
+[CHUNK] Underextraction detected (0 vulns vs many markers). Forcing redivision.
+[CHUNK] Performing intelligent redivision...
+[WARN] No parsing strategy could extract valid JSON
+[SUB-CHUNK 1] Empty response []. Retrying...
+[WARN] No parsing strategy could extract valid JSON
+[WARN] No parsing strategy could extract valid JSON
+[SUB-CHUNK 1] Underextraction detected (0 vulns vs many markers). Splitting further.
+[WARN] No parsing strategy could extract valid JSON
+[WARN] No parsing strategy could extract valid JSON
+[CHUNK] Empty response [] detected. Retrying...
+[WARN] No parsing strategy could extract valid JSON
+[WARN] No parsing strategy could extract valid JSON
+
+------------------------------------------------------------
+[EXTRACTION] Total blocks processed: 28
+------------------------------------------------------------
+
+[PROCESSING] Consolidating vulnerabilities (allow_duplicates=True)
+[DEDUPLICATION] Custom mode: allow_duplicates=True (scanner: OPENVAS)
+[DEDUPLICATION] Removed items log: results_runs/OpenVAS_bBWA/qwen3_local/run3/OpenVAS_bBWA_qwen3_local_run3_removed_log.txt
+[DEDUPLICATION] Consolidation log saved to: results_runs/OpenVAS_bBWA/qwen3_local/run3/OpenVAS_bBWA_qwen3_local_run3_deduplication_log.txt
+
+============================================================
+[SUMMARY] EXTRACTION COMPLETE
+============================================================
+Output file: results_runs/OpenVAS_bBWA/qwen3_local/run3/OpenVAS_bBWA_qwen3_local_run3.json
+Final vulnerabilities: 53
+============================================================
+
+[TOKENS] Token file saved at: results_tokens/OpenVAS_bBWA_qwen3_local_run3_qwen3_8b_tokens.json
+
+============================================================
+[PERFORMANCE] EXECUTION SUMMARY
+============================================================
+Total execution time: 4072.96s
+LLM: qwen3:8b
+Chunks processed: 28
+Vulnerability pipeline:
+  Extracted: 61 vulns
+  After deduplication: 53 vulns
+  Final (valid & saved): 53 vulns
+============================================================
+

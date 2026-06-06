@@ -263,20 +263,25 @@ def assess(
     }])
 
     # Per-field presence rates — useful for diagnostic plots / tables.
+    # Omission is conditional on presence and restricted to MATCHED pairs: among
+    # matched vulns whose baseline populates field f, the fraction where the
+    # extraction left f empty. This isolates field fidelity from vuln-level
+    # omission (a whole missed vuln counts only in vuln_omission_rate, never here).
+    # When no matched vuln has f populated, there was no opportunity to omit, so
+    # the rate is undefined (NaN) — rendered neutral downstream, not 0.
     per_field_rows = []
     for f in CANONICAL_FIELDS:
         h = sum(1 for ext, base in matched
                 if is_populated(ext.get(f)) and not is_populated(base.get(f)))
+        h += sum(1 for ext in ext_only if is_populated(ext.get(f)))
+        denom_ext = len(matched) + len(ext_only)
+        n_present = sum(1 for ext, base in matched if is_populated(base.get(f)))
         o = sum(1 for ext, base in matched
                 if is_populated(base.get(f)) and not is_populated(ext.get(f)))
-        h += sum(1 for ext in ext_only if is_populated(ext.get(f)))
-        o += sum(1 for base in base_only if is_populated(base.get(f)))
-        denom_ext = len(matched) + len(ext_only)
-        denom_base = len(matched) + len(base_only)
         per_field_rows.append({
             "Field": f,
             "Hallucination_Rate": h / denom_ext if denom_ext else 0.0,
-            "Omission_Rate": o / denom_base if denom_base else 0.0,
+            "Omission_Rate": (o / n_present) if n_present else float("nan"),
         })
     per_field = pd.DataFrame(per_field_rows)
 

@@ -1,0 +1,115 @@
+[OLLAMA] phi4:14b initialized (num_ctx: 16000 ✓, model supports up to 16384)
+
+============================================================
+[CONFIG] LLM: phi4:14b
+[CONFIG] Max tokens: 16000
+[CONFIG] Reserve for response: 3000
+============================================================
+
+[PDF] Loading PDF from: baselines/openvas/OpenVAS_bBWA.pdf
+[PDF] Using extractor: PdfplumberExtractor
+Extracting visual layout from PDF: OpenVAS_bBWA.pdf
+Total pages found: 58
+[VISUAL] Table of contents extracted up to 5208 characters using marker '^\s*NVT:'.
+[LAYOUT] Visual layout: /app/results_runs/visual_layouts/OpenVAS_bBWA.txt
+[BLOCKS] 28 session blocks created
+[DEBUG] Attempting to load tokenizer with config: {'type': 'huggingface', 'model': 'microsoft/phi-4'}
+[DEBUG] Loading Hugging Face tokenizer: microsoft/phi-4
+[DEBUG] Successfully loaded tokenizer object: <class 'transformers.models.gpt2.tokenization_gpt2_fast.GPT2TokenizerFast'>
+
+Processing blocks:   0%|                              | 0/35 [00:00<?, ?chunk/s]
+Processing blocks:   3%|▋                     | 1/35 [00:11<06:44, 11.88s/chunk]
+                                                                                
+
+Processing blocks:   3%|▋                     | 1/35 [00:41<06:44, 11.88s/chunk]
+Processing blocks:   6%|█▎                    | 2/35 [01:15<23:22, 42.51s/chunk]
+Processing blocks:   9%|█▉                    | 3/35 [01:23<14:15, 26.74s/chunk]
+Processing blocks:  11%|██▌                   | 4/35 [01:32<10:02, 19.43s/chunk]
+Processing blocks:  14%|███▏                  | 5/35 [01:35<06:55, 13.84s/chunk]
+Processing blocks:  17%|███▊                  | 6/35 [01:42<05:34, 11.52s/chunk]
+Processing blocks:  20%|████▍                 | 7/35 [01:49<04:37,  9.91s/chunk]
+Processing blocks:  23%|█████                 | 8/35 [01:53<03:33,  7.89s/chunk]
+Processing blocks:  26%|█████▋                | 9/35 [01:58<03:06,  7.19s/chunk]
+Processing blocks:  29%|██████               | 10/35 [02:05<02:53,  6.93s/chunk]
+Processing blocks:  31%|██████▌              | 11/35 [02:11<02:42,  6.76s/chunk]
+Processing blocks:  34%|███████▏             | 12/35 [02:18<02:40,  6.97s/chunk]
+Processing blocks:  37%|███████▊             | 13/35 [02:23<02:16,  6.21s/chunk]
+Processing blocks:  40%|████████▍            | 14/35 [02:30<02:15,  6.47s/chunk]
+Processing blocks:  43%|█████████            | 15/35 [02:38<02:17,  6.86s/chunk]
+Processing blocks:  46%|█████████▌           | 16/35 [02:46<02:16,  7.17s/chunk]
+                                                                                
+
+Processing blocks:  46%|█████████▌           | 16/35 [03:14<02:16,  7.17s/chunk]
+Processing blocks:  49%|██████████▏          | 17/35 [03:55<07:45, 25.87s/chunk]
+Processing blocks:  51%|██████████▊          | 18/35 [04:13<06:40, 23.59s/chunk]
+                                                                                
+
+Processing blocks:  51%|██████████▊          | 18/35 [04:40<06:40, 23.59s/chunk]
+Processing blocks:  54%|███████████▍         | 19/35 [05:08<08:47, 32.98s/chunk]
+Processing blocks:  57%|████████████         | 20/35 [05:15<06:14, 24.99s/chunk]
+Processing blocks:  60%|████████████▌        | 21/35 [05:25<04:48, 20.63s/chunk]
+Processing blocks:  63%|█████████████▏       | 22/35 [05:29<03:24, 15.75s/chunk]
+Processing blocks:  66%|█████████████▊       | 23/35 [05:35<02:32, 12.67s/chunk]
+Processing blocks:  69%|██████████████▍      | 24/35 [05:46<02:13, 12.09s/chunk]
+                                                                                
+
+Processing blocks:  69%|██████████████▍      | 24/35 [06:19<02:13, 12.09s/chunk]
+Processing blocks:  71%|███████████████      | 25/35 [06:59<05:04, 30.42s/chunk]
+                                                                                
+
+Processing blocks:  71%|███████████████      | 25/35 [07:32<05:04, 30.42s/chunk]
+Processing blocks:  74%|███████████████▌     | 26/35 [08:14<06:35, 43.90s/chunk]
+Processing blocks:  77%|████████████████▏    | 27/35 [08:22<04:24, 33.12s/chunk]
+                                                                                
+
+Processing blocks:  77%|████████████████▏    | 27/35 [08:54<04:24, 33.12s/chunk]
+Processing blocks:  80%|████████████████▊    | 28/35 [09:36<05:16, 45.22s/chunk]
+                                                                                
+
+Processing blocks:  80%|████████████████▊    | 28/35 [10:01<05:16, 45.22s/chunk]
+Processing blocks:  83%|█████████████████▍   | 29/35 [10:34<04:54, 49.16s/chunk]
+Processing blocks:  86%|██████████████████   | 30/35 [10:43<03:06, 37.23s/chunk]
+Processing blocks:  89%|██████████████████▌  | 31/35 [10:47<01:48, 27.07s/chunk]
+Processing blocks:  91%|███████████████████▏ | 32/35 [10:51<01:00, 20.21s/chunk]
+Processing blocks:  94%|███████████████████▊ | 33/35 [10:58<00:32, 16.16s/chunk]
+Processing blocks:  97%|████████████████████▍| 34/35 [11:06<00:13, 13.72s/chunk]
+Processing blocks: 100%|█████████████████████| 35/35 [11:12<00:00, 11.49s/chunk]
+Processing blocks: 100%|█████████████████████| 35/35 [11:12<00:00, 19.21s/chunk]
+[CHUNK] Performing intelligent redivision...
+[CHUNK] Performing intelligent redivision...
+[CHUNK] Performing intelligent redivision...
+[CHUNK] Performing intelligent redivision...
+[WARN] Recovered 5 vulns via json_repair
+[CHUNK] Performing intelligent redivision...
+[CHUNK] Performing intelligent redivision...
+[CHUNK] Performing intelligent redivision...
+
+------------------------------------------------------------
+[EXTRACTION] Total blocks processed: 28
+------------------------------------------------------------
+
+[PROCESSING] Consolidating vulnerabilities (allow_duplicates=True)
+[DEDUPLICATION] Custom mode: allow_duplicates=True (scanner: OPENVAS)
+[DEDUPLICATION] Consolidation log saved to: results_runs/OpenVAS_bBWA/phi4/run3/OpenVAS_bBWA_phi4_run3_deduplication_log.txt
+
+============================================================
+[SUMMARY] EXTRACTION COMPLETE
+============================================================
+Output file: results_runs/OpenVAS_bBWA/phi4/run3/OpenVAS_bBWA_phi4_run3.json
+Final vulnerabilities: 64
+============================================================
+
+[TOKENS] Token file saved at: results_tokens/OpenVAS_bBWA_phi4_run3_phi4_14b_tokens.json
+
+============================================================
+[PERFORMANCE] EXECUTION SUMMARY
+============================================================
+Total execution time: 676.33s
+LLM: phi4:14b
+Chunks processed: 28
+Vulnerability pipeline:
+  Extracted: 97 vulns
+  After deduplication: 64 vulns
+  Final (valid & saved): 64 vulns
+============================================================
+

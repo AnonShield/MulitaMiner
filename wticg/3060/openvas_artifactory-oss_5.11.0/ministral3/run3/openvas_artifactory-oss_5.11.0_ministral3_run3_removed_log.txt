@@ -1,0 +1,29 @@
+# LOG OF REMOVED VULNERABILITIES (missing valid Name or description)
+
+Removed 1:
+{
+  "Name": "Hostname Determination Reporting",
+  "description": [],
+  "detection_result": [
+    "Hostname determination for IP 172.31.1.54:",
+    "Hostname|Source",
+    "artifactory5.trabalho_vulnnet|Reverse-DNS"
+  ],
+  "detection_method": [],
+  "product_detection_result": [],
+  "impact": [],
+  "solution": [],
+  "insight": [],
+  "log_method": [
+    "Details: Hostname Determination Reporting"
+  ],
+  "cvss": 0.0,
+  "port": "general",
+  "protocol": "tcp",
+  "severity": "LOG",
+  "references": [],
+  "plugin": null,
+  "plugin_details": {},
+  "instances": []
+}
+---

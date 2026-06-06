@@ -1,0 +1,36 @@
+# LOG OF REMOVED VULNERABILITIES (missing valid Name or description)
+
+Removed 1:
+{
+  "Name": "OpenVAS / Greenbone Vulnerability Manager Default Credentials",
+  "description": [],
+  "detection_result": [
+    "It was possible to login using the following credentials (username:password:role ): admin:admin:Admin"
+  ],
+  "detection_method": [],
+  "product_detection_result": [
+    "cpe:/a:openvas:openvas_manager:7.0",
+    "Detected by OpenVAS / Greenbone Vulnerability Manager Detection (OID: 1.3.6.1.4. 1.25623.1.0.103825)"
+  ],
+  "impact": [
+    "This issue may be exploited by a remote attacker to gain access to sensitive information or modify system configuration."
+  ],
+  "solution": [
+    "Solution type: Workaround",
+    "Change the password of the mentioned account(s)."
+  ],
+  "insight": [
+    "... continues on next page ..."
+  ],
+  "log_method": [],
+  "cvss": 10.0,
+  "port": 25,
+  "protocol": "tcp",
+  "severity": "HIGH",
+  "references": [],
+  "plugin": null,
+  "plugin_details": {},
+  "instances": [],
+  "source": "OPENVAS"
+}
+---

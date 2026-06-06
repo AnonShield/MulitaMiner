@@ -1,0 +1,87 @@
+[OLLAMA] ministral-3:8b initialized (num_ctx: 16000 ✓, model supports up to 262144)
+
+============================================================
+[CONFIG] LLM: ministral-3:8b
+[CONFIG] Max tokens: 16000
+[CONFIG] Reserve for response: 3000
+============================================================
+
+[PDF] Loading PDF from: tmp/OpenVAS_JuiceShop.pdf
+[PDF] Using extractor: PdfplumberExtractor
+Extracting visual layout from PDF: OpenVAS_JuiceShop.pdf
+Total pages found: 24
+[VISUAL] Table of contents extracted up to 2594 characters using marker '^\s*NVT:'.
+[LAYOUT] Visual layout: /home/beatriz/MulitaMiner/results_runs/visual_layouts/OpenVAS_JuiceShop.txt
+[BLOCKS] 10 session blocks created
+[DEBUG] Attempting to load tokenizer with config: {'type': 'huggingface', 'model': 'mistralai/Ministral-8B-Instruct-2410'}
+[DEBUG] Loading Hugging Face tokenizer: mistralai/Ministral-8B-Instruct-2410
+[DEBUG] Successfully loaded tokenizer object: <class 'transformers.tokenization_utils_tokenizers.TokenizersBackend'>
+
+Processing blocks:   0%|                              | 0/16 [00:00<?, ?chunk/s]
+Processing blocks:   6%|█▍                    | 1/16 [00:12<03:01, 12.07s/chunk]
+Processing blocks:  12%|██▊                   | 2/16 [00:23<02:47, 11.97s/chunk]
+Processing blocks:  19%|████▏                 | 3/16 [00:37<02:42, 12.46s/chunk]
+Processing blocks:  25%|█████▌                | 4/16 [00:44<02:05, 10.48s/chunk]
+Processing blocks:  31%|██████▉               | 5/16 [00:50<01:36,  8.80s/chunk]
+                                                                                
+
+Processing blocks:  31%|██████▉               | 5/16 [01:33<01:36,  8.80s/chunk]
+Processing blocks:  38%|████████▎             | 6/16 [02:15<05:46, 34.63s/chunk]
+                                                                                
+
+Processing blocks:  38%|████████▎             | 6/16 [03:02<05:46, 34.63s/chunk]
+Processing blocks:  44%|█████████▋            | 7/16 [04:01<08:43, 58.17s/chunk]
+                                                                                
+
+Processing blocks:  44%|█████████▋            | 7/16 [04:50<08:43, 58.17s/chunk]
+Processing blocks:  50%|███████████           | 8/16 [05:53<10:02, 75.33s/chunk]
+Processing blocks:  56%|████████████▍         | 9/16 [06:13<06:45, 57.87s/chunk]
+Processing blocks:  62%|█████████████▏       | 10/16 [06:32<04:36, 46.03s/chunk]
+Processing blocks:  69%|██████████████▍      | 11/16 [06:49<03:04, 36.91s/chunk]
+Processing blocks:  75%|███████████████▊     | 12/16 [07:13<02:12, 33.18s/chunk]
+                                                                                
+
+Processing blocks:  75%|███████████████▊     | 12/16 [08:02<02:12, 33.18s/chunk]
+Processing blocks:  81%|█████████████████    | 13/16 [09:05<02:50, 56.89s/chunk]
+                                                                                
+
+Processing blocks:  81%|█████████████████    | 13/16 [09:50<02:50, 56.89s/chunk]
+Processing blocks:  88%|██████████████████▍  | 14/16 [10:52<02:24, 72.11s/chunk]
+Processing blocks:  94%|███████████████████▋ | 15/16 [10:59<00:52, 52.38s/chunk]
+Processing blocks: 100%|█████████████████████| 16/16 [11:15<00:00, 41.48s/chunk]
+Processing blocks: 100%|█████████████████████| 16/16 [11:15<00:00, 42.20s/chunk]
+[CHUNK] Performing intelligent redivision...
+[CHUNK] Performing intelligent redivision...
+[CHUNK] Performing intelligent redivision...
+[CHUNK] Performing intelligent redivision...
+[CHUNK] Performing intelligent redivision...
+
+------------------------------------------------------------
+[EXTRACTION] Total blocks processed: 10
+------------------------------------------------------------
+
+[PROCESSING] Consolidating vulnerabilities (allow_duplicates=True)
+[DEDUPLICATION] Custom mode: allow_duplicates=True (scanner: OPENVAS)
+[DEDUPLICATION] Consolidation log saved to: results_runs/OpenVAS_JuiceShop/ministral3/run4/OpenVAS_JuiceShop_ministral3_run4_deduplication_log.txt
+
+============================================================
+[SUMMARY] EXTRACTION COMPLETE
+============================================================
+Output file: results_runs/OpenVAS_JuiceShop/ministral3/run4/OpenVAS_JuiceShop_ministral3_run4.json
+Final vulnerabilities: 39
+============================================================
+
+[TOKENS] Token file saved at: results_tokens/OpenVAS_JuiceShop_ministral3_run4_ministral-3_8b_tokens.json
+
+============================================================
+[PERFORMANCE] EXECUTION SUMMARY
+============================================================
+Total execution time: 680.08s
+LLM: ministral-3:8b
+Chunks processed: 10
+Vulnerability pipeline:
+  Extracted: 57 vulns
+  After deduplication: 39 vulns
+  Final (valid & saved): 39 vulns
+============================================================
+

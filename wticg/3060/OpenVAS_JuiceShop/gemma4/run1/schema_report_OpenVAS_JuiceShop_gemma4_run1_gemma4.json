@@ -1,0 +1,42 @@
+{
+  "version": "v3",
+  "file": "gemma4/OpenVAS_JuiceShop/gemma4/run1/OpenVAS_JuiceShop_gemma4_run1.json",
+  "json_valid": true,
+  "n_records": 35,
+  "schema_conformance_rate": 0.6571428571428571,
+  "schema_field_conformance_rate": 0.8317460317460317,
+  "extra_fields_rate": 0.0,
+  "missing_field_counts": {
+    "plugin": 10,
+    "plugin_details": 11,
+    "instances": 11,
+    "source": 11,
+    "detection_result": 2,
+    "detection_method": 7,
+    "product_detection_result": 7,
+    "impact": 7,
+    "solution": 7,
+    "insight": 7,
+    "log_method": 7,
+    "cvss": 9,
+    "references": 10
+  },
+  "type_error_examples": [],
+  "type_error_field_counts": {},
+  "field_failure_counts": {
+    "instances": 11,
+    "log_method": 7,
+    "detection_result": 2,
+    "insight": 7,
+    "source": 11,
+    "plugin": 10,
+    "product_detection_result": 7,
+    "solution": 7,
+    "impact": 7,
+    "cvss": 9,
+    "detection_method": 7,
+    "references": 10,
+    "plugin_details": 11
+  },
+  "extra_field_counts": {}
+}

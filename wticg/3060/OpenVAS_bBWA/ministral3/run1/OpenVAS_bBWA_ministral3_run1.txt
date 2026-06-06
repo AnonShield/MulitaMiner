@@ -1,0 +1,116 @@
+[OLLAMA] ministral-3:8b initialized (num_ctx: 16000 ✓, model supports up to 262144)
+
+============================================================
+[CONFIG] LLM: ministral-3:8b
+[CONFIG] Max tokens: 16000
+[CONFIG] Reserve for response: 3000
+============================================================
+
+[PDF] Loading PDF from: tmp/OpenVAS_bBWA.pdf
+[PDF] Using extractor: PdfplumberExtractor
+Extracting visual layout from PDF: OpenVAS_bBWA.pdf
+Total pages found: 58
+[VISUAL] Table of contents extracted up to 5208 characters using marker '^\s*NVT:'.
+[LAYOUT] Visual layout: /home/beatriz/MulitaMiner/results_runs/visual_layouts/OpenVAS_bBWA.txt
+[BLOCKS] 28 session blocks created
+[DEBUG] Attempting to load tokenizer with config: {'type': 'huggingface', 'model': 'mistralai/Ministral-8B-Instruct-2410'}
+[DEBUG] Loading Hugging Face tokenizer: mistralai/Ministral-8B-Instruct-2410
+[DEBUG] Successfully loaded tokenizer object: <class 'transformers.tokenization_utils_tokenizers.TokenizersBackend'>
+
+Processing blocks:   0%|                              | 0/35 [00:00<?, ?chunk/s]
+Processing blocks:   3%|▋                     | 1/35 [00:25<14:22, 25.35s/chunk]
+                                                                                
+
+Processing blocks:   3%|▋                     | 1/35 [01:19<14:22, 25.35s/chunk]
+Processing blocks:   6%|█▎                    | 2/35 [02:21<43:24, 78.93s/chunk]
+Processing blocks:   9%|█▉                    | 3/35 [02:35<26:13, 49.16s/chunk]
+Processing blocks:  11%|██▌                   | 4/35 [02:48<17:59, 34.83s/chunk]
+Processing blocks:  14%|███▏                  | 5/35 [02:53<12:03, 24.12s/chunk]
+Processing blocks:  17%|███▊                  | 6/35 [03:05<09:35, 19.86s/chunk]
+Processing blocks:  20%|████▍                 | 7/35 [03:18<08:14, 17.64s/chunk]
+Processing blocks:  23%|█████                 | 8/35 [03:24<06:16, 13.95s/chunk]
+Processing blocks:  26%|█████▋                | 9/35 [03:33<05:26, 12.56s/chunk]
+Processing blocks:  29%|██████               | 10/35 [03:44<05:01, 12.06s/chunk]
+Processing blocks:  31%|██████▌              | 11/35 [03:58<04:59, 12.46s/chunk]
+Processing blocks:  34%|███████▏             | 12/35 [04:12<05:00, 13.05s/chunk]
+Processing blocks:  37%|███████▊             | 13/35 [04:19<04:08, 11.29s/chunk]
+Processing blocks:  40%|████████▍            | 14/35 [04:31<04:03, 11.58s/chunk]
+Processing blocks:  43%|█████████            | 15/35 [04:46<04:10, 12.53s/chunk]
+Processing blocks:  46%|█████████▌           | 16/35 [05:01<04:09, 13.14s/chunk]
+                                                                                
+
+Processing blocks:  46%|█████████▌           | 16/35 [05:53<04:09, 13.14s/chunk]
+Processing blocks:  49%|██████████▏          | 17/35 [06:57<13:13, 44.08s/chunk]
+Processing blocks:  51%|██████████▊          | 18/35 [07:33<11:51, 41.86s/chunk]
+                                                                                
+
+Processing blocks:  51%|██████████▊          | 18/35 [08:18<11:51, 41.86s/chunk]
+Processing blocks:  54%|███████████▍         | 19/35 [09:12<15:40, 58.77s/chunk]
+Processing blocks:  57%|████████████         | 20/35 [09:27<11:24, 45.66s/chunk]
+Processing blocks:  60%|████████████▌        | 21/35 [09:46<08:47, 37.69s/chunk]
+Processing blocks:  63%|█████████████▏       | 22/35 [09:53<06:10, 28.47s/chunk]
+Processing blocks:  66%|█████████████▊       | 23/35 [10:02<04:33, 22.77s/chunk]
+Processing blocks:  69%|██████████████▍      | 24/35 [10:21<03:55, 21.41s/chunk]
+                                                                                
+
+Processing blocks:  69%|██████████████▍      | 24/35 [11:13<03:55, 21.41s/chunk]
+Processing blocks:  71%|███████████████      | 25/35 [12:12<08:02, 48.29s/chunk]
+                                                                                
+
+Processing blocks:  71%|███████████████      | 25/35 [13:04<08:02, 48.29s/chunk]
+Processing blocks:  74%|███████████████▌     | 26/35 [14:08<10:17, 68.66s/chunk]
+Processing blocks:  77%|████████████████▏    | 27/35 [14:21<06:56, 52.07s/chunk]
+                                                                                
+
+Processing blocks:  77%|████████████████▏    | 27/35 [15:06<06:56, 52.07s/chunk]
+Processing blocks:  80%|████████████████▊    | 28/35 [16:11<08:05, 69.37s/chunk]
+                                                                                
+
+Processing blocks:  80%|████████████████▊    | 28/35 [16:51<08:05, 69.37s/chunk]
+Processing blocks:  83%|█████████████████▍   | 29/35 [17:51<07:52, 78.77s/chunk]
+Processing blocks:  86%|██████████████████   | 30/35 [18:08<05:00, 60.15s/chunk]
+Processing blocks:  89%|██████████████████▌  | 31/35 [18:13<02:54, 43.65s/chunk]
+Processing blocks:  91%|███████████████████▏ | 32/35 [18:20<01:37, 32.65s/chunk]
+Processing blocks:  94%|███████████████████▊ | 33/35 [18:33<00:53, 26.58s/chunk]
+Processing blocks:  97%|████████████████████▍| 34/35 [18:45<00:22, 22.31s/chunk]
+Processing blocks: 100%|█████████████████████| 35/35 [18:55<00:00, 18.70s/chunk]
+Processing blocks: 100%|█████████████████████| 35/35 [18:55<00:00, 32.45s/chunk]
+[WARN] Recovered 5 vulns via json_repair
+[CHUNK] Performing intelligent redivision...
+[CHUNK] Performing intelligent redivision...
+[CHUNK] Performing intelligent redivision...
+[CHUNK] Performing intelligent redivision...
+[CHUNK] Performing intelligent redivision...
+[CHUNK] Performing intelligent redivision...
+[CHUNK] Performing intelligent redivision...
+
+------------------------------------------------------------
+[EXTRACTION] Total blocks processed: 28
+------------------------------------------------------------
+
+[PROCESSING] Consolidating vulnerabilities (allow_duplicates=True)
+[DEDUPLICATION] Custom mode: allow_duplicates=True (scanner: OPENVAS)
+[DEDUPLICATION] Removed items log: results_runs/OpenVAS_bBWA/ministral3/run1/OpenVAS_bBWA_ministral3_run1_removed_log.txt
+[DEDUPLICATION] Consolidation log saved to: results_runs/OpenVAS_bBWA/ministral3/run1/OpenVAS_bBWA_ministral3_run1_deduplication_log.txt
+
+============================================================
+[SUMMARY] EXTRACTION COMPLETE
+============================================================
+Output file: results_runs/OpenVAS_bBWA/ministral3/run1/OpenVAS_bBWA_ministral3_run1.json
+Final vulnerabilities: 64
+============================================================
+
+[TOKENS] Token file saved at: results_tokens/OpenVAS_bBWA_ministral3_run1_ministral-3_8b_tokens.json
+
+============================================================
+[PERFORMANCE] EXECUTION SUMMARY
+============================================================
+Total execution time: 1142.55s
+LLM: ministral-3:8b
+Chunks processed: 28
+Vulnerability pipeline:
+  Extracted: 96 vulns
+  After deduplication: 64 vulns
+  Final (valid & saved): 64 vulns
+============================================================
+

@@ -1,0 +1,116 @@
+[OLLAMA] qwen3:8b initialized (num_ctx: 16000 ✓, model supports up to 40960)
+
+============================================================
+[CONFIG] LLM: qwen3:8b
+[CONFIG] Max tokens: 16000
+[CONFIG] Reserve for response: 3000
+============================================================
+
+[PDF] Loading PDF from: tmp/OpenVAS_JuiceShop.pdf
+[PDF] Using extractor: PdfplumberExtractor
+Extracting visual layout from PDF: OpenVAS_JuiceShop.pdf
+Total pages found: 24
+[VISUAL] Table of contents extracted up to 2594 characters using marker '^\s*NVT:'.
+[LAYOUT] Visual layout: /home/beatriz/MulitaMiner/results_runs/visual_layouts/OpenVAS_JuiceShop.txt
+[BLOCKS] 10 session blocks created
+[DEBUG] Attempting to load tokenizer with config: {'type': 'huggingface', 'model': 'Qwen/Qwen3-8B'}
+[DEBUG] Loading Hugging Face tokenizer: Qwen/Qwen3-8B
+[DEBUG] Successfully loaded tokenizer object: <class 'transformers.models.qwen2.tokenization_qwen2.Qwen2Tokenizer'>
+
+Processing blocks:   0%|                              | 0/16 [00:00<?, ?chunk/s]
+Processing blocks:   6%|█▍                    | 1/16 [00:43<10:45, 43.01s/chunk]
+Processing blocks:  12%|██▊                   | 2/16 [01:11<08:05, 34.67s/chunk]
+Processing blocks:  19%|████▏                 | 3/16 [01:40<06:57, 32.14s/chunk]
+Processing blocks:  25%|█████▌                | 4/16 [02:02<05:33, 27.82s/chunk]
+                                                                                
+
+Processing blocks:  25%|█████▌                | 4/16 [02:49<05:33, 27.82s/chunk]
+                                                                                
+
+Processing blocks:  25%|█████▌                | 4/16 [03:08<05:33, 27.82s/chunk]
+Processing blocks:  31%|██████▉               | 5/16 [03:08<07:38, 41.66s/chunk]
+                                                                                
+
+Processing blocks:  31%|██████▉               | 5/16 [03:59<07:38, 41.66s/chunk]
+                                                                                
+
+Processing blocks:  31%|██████▉               | 5/16 [04:35<07:38, 41.66s/chunk]
+                                                                                
+
+Processing blocks:  31%|██████▉               | 5/16 [05:18<07:38, 41.66s/chunk]
+                                                                                
+
+Processing blocks:  31%|██████▉               | 5/16 [05:18<07:38, 41.66s/chunk]
+Processing blocks:  38%|████████▎             | 6/16 [05:18<11:57, 71.70s/chunk]
+                                                                                
+
+Processing blocks:  38%|████████▎             | 6/16 [06:09<11:57, 71.70s/chunk]
+                                                                                
+
+Processing blocks:  38%|████████▎             | 6/16 [06:57<11:57, 71.70s/chunk]
+Processing blocks:  44%|█████████▋            | 7/16 [06:57<12:06, 80.75s/chunk]
+Processing blocks:  50%|███████████           | 8/16 [07:48<09:30, 71.30s/chunk]
+Processing blocks:  56%|████████████▍         | 9/16 [08:12<06:34, 56.32s/chunk]
+Processing blocks:  62%|█████████████▏       | 10/16 [08:53<05:10, 51.80s/chunk]
+Processing blocks:  69%|██████████████▍      | 11/16 [09:35<04:02, 48.58s/chunk]
+Processing blocks:  75%|███████████████▊     | 12/16 [10:23<03:13, 48.47s/chunk]
+Processing blocks:  81%|█████████████████    | 13/16 [11:13<02:27, 49.07s/chunk]
+                                                                                
+
+Processing blocks:  81%|█████████████████    | 13/16 [12:00<02:27, 49.07s/chunk]
+                                                                                
+
+Processing blocks:  81%|█████████████████    | 13/16 [13:11<02:27, 49.07s/chunk]
+Processing blocks:  88%|██████████████████▍  | 14/16 [13:23<02:27, 73.54s/chunk]
+Processing blocks:  94%|███████████████████▋ | 15/16 [13:44<00:57, 57.66s/chunk]
+Processing blocks: 100%|█████████████████████| 16/16 [14:12<00:00, 48.74s/chunk]
+Processing blocks: 100%|█████████████████████| 16/16 [14:12<00:00, 53.30s/chunk]
+[WARN] No parsing strategy could extract valid JSON
+[CHUNK] Empty response [] detected. Retrying...
+✅ [CHUNK] Retry 1: recovered 1 vulns
+[WARN] Recovered 6 vulns via json_repair
+[CHUNK] Performing intelligent redivision...
+[WARN] Recovered 4 vulns via json_repair
+[SUB-CHUNK 2] Empty response []. Retrying...
+[WARN] Recovered 4 vulns via json_repair
+[WARN] Ignoring non-dict item in vulns: <class 'list'> - ['Details: CGI Scanning Consolidation', 'OID:1.3.6.1.4.1.25623.1.0.111038', 'Version used: $Revision
+[WARN] Ignoring non-dict item in vulns: <class 'list'> - ['URL:https://community.greenbone.net/c/vulnerability-tests']
+[WARN] No parsing strategy could extract valid JSON
+[CHUNK] Empty response [] detected. Retrying...
+✅ [CHUNK] Retry 1: recovered 6 vulns
+[WARN] Recovered 2 vulns via json_repair
+[WARN] Recovered 3 vulns via json_repair
+[WARN] Recovered 5 vulns via json_repair
+[CHUNK] Performing intelligent redivision...
+[SUB-CHUNK 3] Empty response []. Retrying...
+
+------------------------------------------------------------
+[EXTRACTION] Total blocks processed: 10
+------------------------------------------------------------
+
+[PROCESSING] Consolidating vulnerabilities (allow_duplicates=True)
+[DEDUPLICATION] Custom mode: allow_duplicates=True (scanner: OPENVAS)
+[DEDUPLICATION] Removed items log: results_runs/OpenVAS_JuiceShop/qwen3_local/run2/OpenVAS_JuiceShop_qwen3_local_run2_removed_log.txt
+[DEDUPLICATION] Consolidation log saved to: results_runs/OpenVAS_JuiceShop/qwen3_local/run2/OpenVAS_JuiceShop_qwen3_local_run2_deduplication_log.txt
+
+============================================================
+[SUMMARY] EXTRACTION COMPLETE
+============================================================
+Output file: results_runs/OpenVAS_JuiceShop/qwen3_local/run2/OpenVAS_JuiceShop_qwen3_local_run2.json
+Final vulnerabilities: 39
+============================================================
+
+[TOKENS] Token file saved at: results_tokens/OpenVAS_JuiceShop_qwen3_local_run2_qwen3_8b_tokens.json
+
+============================================================
+[PERFORMANCE] EXECUTION SUMMARY
+============================================================
+Total execution time: 857.76s
+LLM: qwen3:8b
+Chunks processed: 10
+Vulnerability pipeline:
+  Extracted: 47 vulns
+  After deduplication: 39 vulns
+  Final (valid & saved): 39 vulns
+============================================================
+

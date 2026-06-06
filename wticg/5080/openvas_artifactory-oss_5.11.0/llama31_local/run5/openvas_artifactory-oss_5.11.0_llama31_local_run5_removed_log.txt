@@ -1,0 +1,573 @@
+# LOG OF REMOVED VULNERABILITIES (missing valid Name or description)
+
+Removed 1:
+{
+  "Name": "cert-bund: WID-SEC-2025-2356",
+  "description": [],
+  "detection_result": [],
+  "detection_method": [],
+  "product_detection_result": [],
+  "impact": [],
+  "solution": [],
+  "insight": [],
+  "log_method": [],
+  "cvss": null,
+  "port": 8040,
+  "protocol": "tcp",
+  "severity": "High",
+  "references": [],
+  "plugin": null,
+  "plugin_details": {},
+  "instances": [],
+  "source": "OPENVAS"
+}
+---
+Removed 2:
+{
+  "Name": "cert-bund: WID-SEC-2025-1830",
+  "description": [],
+  "detection_result": [],
+  "detection_method": [],
+  "product_detection_result": [],
+  "impact": [],
+  "solution": [],
+  "insight": [],
+  "log_method": [],
+  "cvss": null,
+  "port": 8040,
+  "protocol": "tcp",
+  "severity": "High",
+  "references": [],
+  "plugin": null,
+  "plugin_details": {},
+  "instances": [],
+  "source": "OPENVAS"
+}
+---
+Removed 3:
+{
+  "Name": "dfn-cert: DFN-CERT-2025-3431",
+  "description": [],
+  "detection_result": [],
+  "detection_method": [],
+  "product_detection_result": [],
+  "impact": [],
+  "solution": [],
+  "insight": [],
+  "log_method": [],
+  "cvss": null,
+  "port": 8040,
+  "protocol": "tcp",
+  "severity": "High",
+  "references": [],
+  "plugin": null,
+  "plugin_details": {},
+  "instances": [],
+  "source": "OPENVAS"
+}
+---
+Removed 4:
+{
+  "Name": "dfn-cert: DFN-CERT-2025-2957",
+  "description": [],
+  "detection_result": [],
+  "detection_method": [],
+  "product_detection_result": [],
+  "impact": [],
+  "solution": [],
+  "insight": [],
+  "log_method": [],
+  "cvss": null,
+  "port": 8040,
+  "protocol": "tcp",
+  "severity": "High",
+  "references": [],
+  "plugin": null,
+  "plugin_details": {},
+  "instances": [],
+  "source": "OPENVAS"
+}
+---
+Removed 5:
+{
+  "Name": "dfn-cert: DFN-CERT-2025-2224",
+  "description": [],
+  "detection_result": [],
+  "detection_method": [],
+  "product_detection_result": [],
+  "impact": [],
+  "solution": [],
+  "insight": [],
+  "log_method": [],
+  "cvss": null,
+  "port": 8040,
+  "protocol": "tcp",
+  "severity": "High",
+  "references": [],
+  "plugin": null,
+  "plugin_details": {},
+  "instances": [],
+  "source": "OPENVAS"
+}
+---
+Removed 6:
+{
+  "Name": "cert-bund: WID-SEC-2024-0874",
+  "description": [],
+  "detection_result": [],
+  "detection_method": [],
+  "product_detection_result": [],
+  "impact": [],
+  "solution": [],
+  "insight": [],
+  "log_method": [],
+  "cvss": null,
+  "port": 8040,
+  "protocol": "tcp",
+  "severity": "High",
+  "references": [],
+  "plugin": null,
+  "plugin_details": {},
+  "instances": [],
+  "source": "OPENVAS"
+}
+---
+Removed 7:
+{
+  "Name": "cert-bund: WID-SEC-2024-0521",
+  "description": [],
+  "detection_result": [],
+  "detection_method": [],
+  "product_detection_result": [],
+  "impact": [],
+  "solution": [],
+  "insight": [],
+  "log_method": [],
+  "cvss": null,
+  "port": 8040,
+  "protocol": "tcp",
+  "severity": "High",
+  "references": [],
+  "plugin": null,
+  "plugin_details": {},
+  "instances": [],
+  "source": "OPENVAS"
+}
+---
+Removed 8:
+{
+  "Name": "cert-bund: WID-SEC-2023-3146",
+  "description": [],
+  "detection_result": [],
+  "detection_method": [],
+  "product_detection_result": [],
+  "impact": [],
+  "solution": [],
+  "insight": [],
+  "log_method": [],
+  "cvss": null,
+  "port": 8040,
+  "protocol": "tcp",
+  "severity": "High",
+  "references": [],
+  "plugin": null,
+  "plugin_details": {},
+  "instances": [],
+  "source": "OPENVAS"
+}
+---
+Removed 9:
+{
+  "Name": "cert-bund: WID-SEC-2023-2993",
+  "description": [],
+  "detection_result": [],
+  "detection_method": [],
+  "product_detection_result": [],
+  "impact": [],
+  "solution": [],
+  "insight": [],
+  "log_method": [],
+  "cvss": null,
+  "port": 8040,
+  "protocol": "tcp",
+  "severity": "High",
+  "references": [],
+  "plugin": null,
+  "plugin_details": {},
+  "instances": [],
+  "source": "OPENVAS"
+}
+---
+Removed 10:
+{
+  "Name": "cert-bund: WID-SEC-2023-2788",
+  "description": [],
+  "detection_result": [],
+  "detection_method": [],
+  "product_detection_result": [],
+  "impact": [],
+  "solution": [],
+  "insight": [],
+  "log_method": [],
+  "cvss": null,
+  "port": 8040,
+  "protocol": "tcp",
+  "severity": "High",
+  "references": [],
+  "plugin": null,
+  "plugin_details": {},
+  "instances": [],
+  "source": "OPENVAS"
+}
+---
+Removed 11:
+{
+  "Name": "cert-bund: WID-SEC-2023-2655",
+  "description": [],
+  "detection_result": [],
+  "detection_method": [],
+  "product_detection_result": [],
+  "impact": [],
+  "solution": [],
+  "insight": [],
+  "log_method": [],
+  "cvss": null,
+  "port": 8040,
+  "protocol": "tcp",
+  "severity": "High",
+  "references": [],
+  "plugin": null,
+  "plugin_details": {},
+  "instances": [],
+  "source": "OPENVAS"
+}
+---
+Removed 12:
+{
+  "Name": "dfn-cert: DFN-CERT-2025-1991",
+  "description": [],
+  "detection_result": [],
+  "detection_method": [],
+  "product_detection_result": [],
+  "impact": [],
+  "solution": [],
+  "insight": [],
+  "log_method": [],
+  "cvss": null,
+  "port": 8040,
+  "protocol": "tcp",
+  "severity": "Medium",
+  "references": [],
+  "plugin": null,
+  "plugin_details": {},
+  "instances": [],
+  "source": "OPENVAS"
+}
+---
+Removed 13:
+{
+  "Name": "dfn-cert: DFN-CERT-2025-0890",
+  "description": [],
+  "detection_result": [],
+  "detection_method": [],
+  "product_detection_result": [],
+  "impact": [],
+  "solution": [],
+  "insight": [],
+  "log_method": [],
+  "cvss": null,
+  "port": 8040,
+  "protocol": "tcp",
+  "severity": "Medium",
+  "references": [],
+  "plugin": null,
+  "plugin_details": {},
+  "instances": [],
+  "source": "OPENVAS"
+}
+---
+Removed 14:
+{
+  "Name": "dfn-cert: DFN-CERT-2025-0766",
+  "description": [],
+  "detection_result": [],
+  "detection_method": [],
+  "product_detection_result": [],
+  "impact": [],
+  "solution": [],
+  "insight": [],
+  "log_method": [],
+  "cvss": null,
+  "port": 8040,
+  "protocol": "tcp",
+  "severity": "Medium",
+  "references": [],
+  "plugin": null,
+  "plugin_details": {},
+  "instances": [],
+  "source": "OPENVAS"
+}
+---
+Removed 15:
+{
+  "Name": "dfn-cert: DFN-CERT-2025-0444",
+  "description": [],
+  "detection_result": [],
+  "detection_method": [],
+  "product_detection_result": [],
+  "impact": [],
+  "solution": [],
+  "insight": [],
+  "log_method": [],
+  "cvss": null,
+  "port": 8040,
+  "protocol": "tcp",
+  "severity": "Medium",
+  "references": [],
+  "plugin": null,
+  "plugin_details": {},
+  "instances": [],
+  "source": "OPENVAS"
+}
+---
+Removed 16:
+{
+  "Name": "dfn-cert: DFN-CERT-2024-3364",
+  "description": [],
+  "detection_result": [],
+  "detection_method": [],
+  "product_detection_result": [],
+  "impact": [],
+  "solution": [],
+  "insight": [],
+  "log_method": [],
+  "cvss": null,
+  "port": 8040,
+  "protocol": "tcp",
+  "severity": "Medium",
+  "references": [],
+  "plugin": null,
+  "plugin_details": {},
+  "instances": [],
+  "source": "OPENVAS"
+}
+---
+Removed 17:
+{
+  "Name": null,
+  "description": [],
+  "detection_result": [],
+  "detection_method": [],
+  "product_detection_result": [],
+  "impact": [],
+  "solution": [],
+  "insight": [],
+  "log_method": [],
+  "cvss": null,
+  "port": 8040,
+  "protocol": "tcp",
+  "severity": "Log",
+  "references": [
+    "https://owasp.org/www-project-secure-headers/",
+    "https://owasp.org/www-project-secure-headers/#div-headers",
+    "https://securityheaders.com/"
+  ],
+  "plugin": null,
+  "plugin_details": {},
+  "instances": [],
+  "source": "OPENVAS"
+}
+---
+Removed 18:
+{
+  "Name": "cert-bund: WID-SEC-2024-0521",
+  "description": [],
+  "detection_result": [],
+  "detection_method": [],
+  "product_detection_result": [],
+  "impact": [],
+  "solution": [],
+  "insight": [],
+  "log_method": [],
+  "cvss": null,
+  "port": 8081,
+  "protocol": "tcp",
+  "severity": "High",
+  "references": [],
+  "plugin": null,
+  "plugin_details": {},
+  "instances": [],
+  "source": "OPENVAS"
+}
+---
+Removed 19:
+{
+  "Name": "cert-bund: WID-SEC-2023-3146",
+  "description": [],
+  "detection_result": [],
+  "detection_method": [],
+  "product_detection_result": [],
+  "impact": [],
+  "solution": [],
+  "insight": [],
+  "log_method": [],
+  "cvss": null,
+  "port": 8081,
+  "protocol": "tcp",
+  "severity": "High",
+  "references": [],
+  "plugin": null,
+  "plugin_details": {},
+  "instances": [],
+  "source": "OPENVAS"
+}
+---
+Removed 20:
+{
+  "Name": "cert-bund: WID-SEC-2023-2993",
+  "description": [],
+  "detection_result": [],
+  "detection_method": [],
+  "product_detection_result": [],
+  "impact": [],
+  "solution": [],
+  "insight": [],
+  "log_method": [],
+  "cvss": null,
+  "port": 8081,
+  "protocol": "tcp",
+  "severity": "High",
+  "references": [],
+  "plugin": null,
+  "plugin_details": {},
+  "instances": [],
+  "source": "OPENVAS"
+}
+---
+Removed 21:
+{
+  "Name": "cert-bund: WID-SEC-2023-2788",
+  "description": [],
+  "detection_result": [],
+  "detection_method": [],
+  "product_detection_result": [],
+  "impact": [],
+  "solution": [],
+  "insight": [],
+  "log_method": [],
+  "cvss": null,
+  "port": 8081,
+  "protocol": "tcp",
+  "severity": "High",
+  "references": [],
+  "plugin": null,
+  "plugin_details": {},
+  "instances": [],
+  "source": "OPENVAS"
+}
+---
+Removed 22:
+{
+  "Name": "cert-bund: WID-SEC-2023-2655",
+  "description": [],
+  "detection_result": [],
+  "detection_method": [],
+  "product_detection_result": [],
+  "impact": [],
+  "solution": [],
+  "insight": [],
+  "log_method": [],
+  "cvss": null,
+  "port": 8081,
+  "protocol": "tcp",
+  "severity": "High",
+  "references": [],
+  "plugin": null,
+  "plugin_details": {},
+  "instances": [],
+  "source": "OPENVAS"
+}
+---
+Removed 23:
+{
+  "Name": "dfn-cert: DFN-CERT-2025-2658",
+  "description": [],
+  "detection_result": [],
+  "detection_method": [],
+  "product_detection_result": [],
+  "impact": [],
+  "solution": [],
+  "insight": [],
+  "log_method": [],
+  "cvss": null,
+  "port": 8081,
+  "protocol": "tcp",
+  "severity": "High",
+  "references": [],
+  "plugin": null,
+  "plugin_details": {},
+  "instances": [],
+  "source": "OPENVAS"
+}
+---
+Removed 24:
+{
+  "Name": "dfn-cert: DFN-CERT-2025-1517",
+  "description": [],
+  "detection_result": [],
+  "detection_method": [],
+  "product_detection_result": [],
+  "impact": [],
+  "solution": [],
+  "insight": [],
+  "log_method": [],
+  "cvss": null,
+  "port": 8081,
+  "protocol": "tcp",
+  "severity": "High",
+  "references": [],
+  "plugin": null,
+  "plugin_details": {},
+  "instances": [],
+  "source": "OPENVAS"
+}
+---
+Removed 25:
+{
+  "Name": "dfn-cert: DFN-CERT-2024-3078",
+  "description": [],
+  "detection_result": [],
+  "detection_method": [],
+  "product_detection_result": [],
+  "impact": [],
+  "solution": [],
+  "insight": [],
+  "log_method": [],
+  "cvss": null,
+  "port": 8081,
+  "protocol": "tcp",
+  "severity": "High",
+  "references": [],
+  "plugin": null,
+  "plugin_details": {},
+  "instances": [],
+  "source": "OPENVAS"
+}
+---
+Removed 26:
+{
+  "Name": "dfn-cert: DFN-CERT-2024-2706",
+  "description": [],
+  "detection_result": [],
+  "detection_method": [],
+  "product_detection_result": [],
+  "impact": [],
+  "solution": [],
+  "insight": [],
+  "log_method": [],
+  "cvss": null,
+  "port": 8081,
+  "protocol": "tcp",
+  "severity": "High"
+}
+---

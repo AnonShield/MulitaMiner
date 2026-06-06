@@ -1,0 +1,70 @@
+
+============================================================
+[CONFIG] LLM: deepseek-v4-flash
+[CONFIG] Max tokens: 2500
+[CONFIG] Reserve for response: 3000
+============================================================
+
+[PDF] Loading PDF from: baselines/openvas\OpenVAS_JuiceShop.pdf
+[PDF] Using extractor: PdfplumberExtractor
+Extracting visual layout from PDF: OpenVAS_JuiceShop.pdf
+Total pages found: 24
+[VISUAL] Table of contents extracted up to 2594 characters using marker '^\s*NVT:'.
+[LAYOUT] Visual layout: C:\Users\Bia\Documents\GitHub\Projetos\MulitaMiner\visual_layouts\OpenVAS_JuiceShop.txt
+[BLOCKS] 10 session blocks created
+[DEBUG] Attempting to load tokenizer with config: {'type': 'tiktoken', 'model': 'cl100k_base'}
+[DEBUG] Loading tiktoken with encoding: cl100k_base
+[DEBUG] Successfully loaded tokenizer object: <class 'tiktoken.core.Encoding'>
+
+Processing blocks:   0%|                              | 0/16 [00:00<?, ?chunk/s]
+Processing blocks:   6%|█▍                    | 1/16 [00:25<06:18, 25.24s/chunk]
+Processing blocks:  12%|██▊                   | 2/16 [00:58<06:59, 29.99s/chunk]
+Processing blocks:  19%|████▏                 | 3/16 [01:19<05:34, 25.73s/chunk]
+Processing blocks:  25%|█████▌                | 4/16 [01:27<03:45, 18.83s/chunk]
+Processing blocks:  31%|██████▉               | 5/16 [01:36<02:48, 15.33s/chunk]
+Processing blocks:  38%|████████▎             | 6/16 [02:49<05:50, 35.07s/chunk]
+Processing blocks:  44%|█████████▋            | 7/16 [03:43<06:09, 41.01s/chunk]
+                                                                                
+
+Processing blocks:  44%|█████████▋            | 7/16 [04:45<06:09, 41.01s/chunk]
+Processing blocks:  50%|███████████           | 8/16 [06:32<10:55, 81.90s/chunk]
+Processing blocks:  56%|████████████▍         | 9/16 [07:36<08:52, 76.10s/chunk]
+Processing blocks:  62%|█████████████▏       | 10/16 [07:54<05:49, 58.31s/chunk]
+Processing blocks:  69%|██████████████▍      | 11/16 [08:25<04:09, 49.98s/chunk]
+Processing blocks:  75%|███████████████▊     | 12/16 [08:54<02:54, 43.50s/chunk]
+Processing blocks:  81%|█████████████████    | 13/16 [10:03<02:34, 51.34s/chunk]
+Processing blocks:  88%|██████████████████▍  | 14/16 [11:13<01:54, 57.08s/chunk]
+Processing blocks:  94%|███████████████████▋ | 15/16 [11:21<00:42, 42.02s/chunk]
+Processing blocks: 100%|█████████████████████| 16/16 [11:34<00:00, 33.29s/chunk]
+Processing blocks: 100%|█████████████████████| 16/16 [11:34<00:00, 43.38s/chunk]
+[CHUNK] Performing intelligent redivision...
+
+------------------------------------------------------------
+[EXTRACTION] Total blocks processed: 10
+------------------------------------------------------------
+
+[PROCESSING] Consolidating vulnerabilities (allow_duplicates=True)
+[DEDUPLICATION] Custom mode: allow_duplicates=True (scanner: OPENVAS)
+[DEDUPLICATION] Consolidation log saved to: cloud\OpenVAS_JuiceShop\deepseek\run1\OpenVAS_JuiceShop_deepseek_run1_deduplication_log.txt
+
+============================================================
+[SUMMARY] EXTRACTION COMPLETE
+============================================================
+Output file: cloud\OpenVAS_JuiceShop\deepseek\run1\OpenVAS_JuiceShop_deepseek_run1.json
+Final vulnerabilities: 37
+============================================================
+
+[TOKENS] Token file saved at: results_tokens\OpenVAS_JuiceShop_deepseek_run1_deepseek-v4-flash_tokens.json
+
+============================================================
+[PERFORMANCE] EXECUTION SUMMARY
+============================================================
+Total execution time: 697.23s
+LLM: deepseek-v4-flash
+Chunks processed: 10
+Vulnerability pipeline:
+  Extracted: 51 vulns
+  After deduplication: 37 vulns
+  Final (valid & saved): 37 vulns
+============================================================
+
