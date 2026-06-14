@@ -4,6 +4,8 @@ plot_runs/
 results_runs/
 results_runs_xlsx/
 results_tokens/
+# Archived raw data (large CSVs, val.txt, schema snapshots — kept out of git)
+archive/data/
 # Ambientes virtuais
 .venv/
 metrics/.venv/
