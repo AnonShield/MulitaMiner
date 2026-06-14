@@ -53,7 +53,9 @@ from main import (  # noqa: E402
 # Single canonical results root by default. Multi-root walks (e.g. for the
 # V2-vs-V3 paper experiment) are opt-in via ``--root``.
 DEFAULT_ROOT: Path = PROJECT_ROOT / "results_runs"
-BASELINES_DIR = PROJECT_ROOT / "baselines"
+DEFAULT_BASELINES_DIR: Path = PROJECT_ROOT / "resources" / "baselines"
+# Overridable via --baselines-dir (reassigned in main() from the parsed args).
+BASELINES_DIR = DEFAULT_BASELINES_DIR
 
 # Output filename glob per method — used to detect "already done" runs and
 # skip them unless ``--force`` is passed.
@@ -228,6 +230,11 @@ def _parse_args() -> argparse.Namespace:
         help=f"Result roots to walk. Default: {DEFAULT_ROOT.name}/. Pass multiple "
              "paths for cross-root comparisons (e.g. results_runs_v2 results_runs_v3).",
     )
+    parser.add_argument(
+        "--baselines-dir", type=Path, default=DEFAULT_BASELINES_DIR,
+        help="Directory holding <scanner>/<target>.xlsx baselines. "
+             f"Default: {DEFAULT_BASELINES_DIR.relative_to(PROJECT_ROOT).as_posix()}/.",
+    )
     parser.add_argument("--only-target", help="Filter by target dir name (e.g. OpenVAS_JuiceShop)")
     parser.add_argument("--only-llm", help="Filter by LLM dir name (e.g. llama4)")
     parser.add_argument(
@@ -303,6 +310,9 @@ def _run_aggregator(roots: list[Path]) -> None:
 
 def main() -> None:
     args = _parse_args()
+
+    global BASELINES_DIR
+    BASELINES_DIR = args.baselines_dir
 
     methods = expand_evaluation_methods(args.methods)
     if not methods:
