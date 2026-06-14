@@ -2,7 +2,6 @@
   "provider": "huggingface",
   "model": "trendmicro-ailab/Llama-Primus-Merged",
   "temperature": 0.0,
-  "quantization": "4bit",
   "max_tokens": 2500,
   "max_chunk_size": 10000,
   "reserve_for_response": 3000,

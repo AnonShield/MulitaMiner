@@ -3,8 +3,8 @@ HuggingFace provider for using LLM models from HuggingFace.
 
 Supports both:
 - Remote: HuggingFace Inference API (requires api_key)
-- Local: transformers running on a local GPU with 4-bit quantization
-  (no api_key needed)
+- Local: transformers running on a local GPU in full precision by
+  default, with optional 4-bit/8-bit quantization (no api_key needed)
 
 Supported models: Mistral, DeepSeek, Llama, Qwen, etc.
 """
@@ -89,8 +89,9 @@ class HuggingFaceRemoteProvider(BaseLLMProvider):
 class HuggingFaceLocalProvider(BaseLLMProvider):
     """Run a HuggingFace model locally on GPU via transformers.
 
-    Loads the model with 4-bit quantization by default so that 7B-14B
-    models fit on a single 12GB GPU. No api_key required.
+    Loads the model in full precision by default. Quantization is opt-in
+    via config ("4bit"/"8bit") to fit larger models on smaller GPUs.
+    No api_key required.
     """
 
     def __init__(self, config: dict):
@@ -102,7 +103,7 @@ class HuggingFaceLocalProvider(BaseLLMProvider):
                 - model: HF repo id (e.g., "Qwen/Qwen3-8B")
                 - temperature: Sampling temperature (0.0 = greedy/deterministic)
                 - max_tokens: Max new tokens to generate
-                - quantization: "4bit" (default), "8bit", or "none"
+                - quantization: "none" (default), "4bit", or "8bit"
                 - device_map: transformers device map (default "auto")
                 - disable_thinking: Skip the <think> block on models that support it
         """
@@ -146,8 +147,9 @@ class HuggingFaceLocalProvider(BaseLLMProvider):
         else:
             compute_dtype = torch.float32
 
-        # 4-bit by default so 7B-14B fits on 12GB; opt out via config.
-        quantization = str(config.get("quantization", "4bit")).lower()
+        # Full precision by default; opt into 4-bit/8-bit via config to
+        # fit larger models on smaller GPUs.
+        quantization = str(config.get("quantization", "none")).lower()
         if quantization in ("4bit", "8bit") and not cuda:
             print(
                 "[HF] No CUDA GPU detected — bitsandbytes requires CUDA. "
