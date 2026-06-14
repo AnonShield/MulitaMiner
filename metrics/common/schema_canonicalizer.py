@@ -1,31 +1,25 @@
-"""Canonicalize legacy V1/V2 records to the V3 schema (see metrics.md §0).
+"""Canonicalize records to the V3 schema (see metrics.md §0).
 
-V1, V2 and V3 emit the same logical fields but differ in Python types:
-    - cvss            V2 list[str] / V1 list[7]   →  float | None
-    - plugin_details  V2 list                     →  dict  (absent in V1)
-    - severity        mixed case                  →  upper case (LLM-side bug)
-    - port            str | int                   →  int | None (when castable)
-    - plugin          V1 list                     →  None  (V3 expects str|None)
-    - identification  V1 only                     →  dropped (not in V3 schema)
-    - http_info       V1 only                     →  dropped (not in V3 schema)
+Records — chiefly the human baselines, which carry PDF-extraction artifacts —
+differ from the V3 schema in Python types:
+    - cvss            list[str] / list      →  float | None
+    - plugin_details  list                  →  dict
+    - severity        mixed case            →  upper case
+    - port            str (e.g. "9,390\\n")  →  int | None (when castable)
 
 The number of coercions applied is itself a metric — type-coercion rate —
-reportable as the *cost* of operating with the legacy pipeline. See §0.
+reportable as the *cost* of normalising legacy/dirty records. See §0.
 
-NOTE: V1 support is TEMPORARY for the paper's cross-version comparison
-figure. After the paper ships, this module returns to V2→V3 only —
-delete the V1-only coercers (``_coerce_plugin``, ``_drop_v1_only_fields``)
-and remove them from ``_COERCERS``. See ``TODO.md`` post-paper section.
-
-This module is pure (no I/O); pipelines call it as a pre-processor.
-Idempotent: applying ``canonicalize_to_v3`` to a V3 record is a no-op.
+This module is pure (no I/O); pipelines call it as a pre-processor
+(e.g. coverage's Exact Record Match). Idempotent: applying
+``canonicalize_to_v3`` to an already-V3 record is a no-op.
 """
 from __future__ import annotations
 
 from collections import Counter
 from typing import Any
 
-# Fields whose **type** differs between the V2 and V3 schemas. Used as the
+# Fields whose **type** differs between legacy/dirty records and the V3 schema. Used as the
 # denominator for ``type_coercion_rate``: rate = n_coercions / (n_records · |this|).
 #
 # This list is deliberately distinct from ``coverage.ERM_FIELDS`` —
@@ -37,12 +31,6 @@ from typing import Any
 V2_TO_V3_COERCIBLE_FIELDS: tuple[str, ...] = ("cvss", "plugin_details", "severity", "port")
 # Backwards-compat alias.
 COERCIBLE_FIELDS = V2_TO_V3_COERCIBLE_FIELDS
-
-# V1-only fields. Listed here so denominators stay honest when normalising
-# a V1 record (the LLM had no V3 prompt to comply with; these are just
-# extra fields it was asked to emit). Dropped during canonicalisation.
-# TEMPORARY — remove with the rest of V1 support post-paper.
-V1_ONLY_FIELDS: tuple[str, ...] = ("identification", "http_info")
 
 
 def _coerce_cvss(value: Any) -> tuple[Any, str | None]:
@@ -87,25 +75,11 @@ def _coerce_port(value: Any) -> tuple[Any, str | None]:
     return value, None
 
 
-def _coerce_plugin(value: Any) -> tuple[Any, str | None]:
-    """V1 emits ``plugin`` as a list (almost always ``[]``); V3 expects
-    ``str | None``. Map empty list to ``None`` and non-empty to its first
-    element coerced to str. TEMPORARY — V1-only path.
-    """
-    if isinstance(value, list):
-        if not value:
-            return None, "plugin:list→None"
-        return str(value[0]), "plugin:list→str"
-    return value, None
-
-
 _COERCERS = {
     "cvss": _coerce_cvss,
     "plugin_details": _coerce_plugin_details,
     "severity": _coerce_severity,
     "port": _coerce_port,
-    # V1-only — no-op on V2/V3 since their ``plugin`` is already str|None.
-    "plugin": _coerce_plugin,
 }
 
 
@@ -126,14 +100,6 @@ def canonicalize_to_v3(record: dict) -> tuple[dict, list[str]]:
         if label is not None:
             out[field] = new_value
             coercions.append(label)
-    # Drop V1-only fields silently. They aren't "coercions" in the type
-    # sense (no V3 home), so they're NOT appended to ``coercions`` — that
-    # would inflate type_coercion_rate. ``extra_fields_rate`` already
-    # captures structural divergence; dropping here just keeps the V3
-    # schema validator happy.
-    # TEMPORARY — remove the block below post-paper.
-    for v1_field in V1_ONLY_FIELDS:
-        out.pop(v1_field, None)
     return out, coercions
 
 

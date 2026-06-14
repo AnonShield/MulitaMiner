@@ -268,7 +268,7 @@ def main() -> None:
         args.output = args.root / "aggregated_metrics.xlsx"
 
     # ``gather_long`` still accepts a list (other callers like
-    # ``statistical_tests`` and ``version_compare`` pass multi-root). Wrap.
+    # ``statistical_tests`` pass multi-root). Wrap.
     long_df = gather_long([args.root])
     if long_df.empty:
         print(f"[AGG] No artifacts found under {args.root}.")

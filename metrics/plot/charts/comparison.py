@@ -318,7 +318,7 @@ def cv_per_version(dataset: Dataset) -> dict:
 def schema_field_failures_per_version(dataset: Dataset) -> dict:
     """Per-field failure rates per (version, model) from ``schema_report*.json``.
 
-    Reads each run's native-mode ``field_failure_counts`` and divides by
+    Reads each run's ``field_failure_counts`` and divides by
     ``n_records`` to get a per-field, per-record failure rate. Summed across
     runs of the same (version, model). The result is the *transparency layer*
     behind the per-field conformance KPI — answers "which field is dragging
@@ -344,8 +344,7 @@ def schema_field_failures_per_version(dataset: Dataset) -> dict:
                 report = _json.loads(path.read_text(encoding="utf-8"))
             except (_json.JSONDecodeError, OSError):
                 continue
-            native = report.get("native") or {}
-            failures = native.get("field_failure_counts") or {}
+            failures = report.get("field_failure_counts") or {}
             n_rec = int(report.get("n_records") or 0)
             if not failures or n_rec <= 0:
                 continue

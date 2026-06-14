@@ -21,15 +21,11 @@ _HEADLINE_METRICS = [
     # number was actually up. The scatter is the right place to decompose.
     ("severity", "coverage_aware_macro_F1",           "Severity Macro-F1 (coverage-aware)", False),
     ("coverage", "exact_record_match",                "Exact Record Match",       True),
-    # ``schema_field_conformance_rate_native`` — per-field LLM compliance
-    # against the version's own schema. Soft metric: averages pass-rate across
-    # all field-checks instead of demanding every field on every record. A
-    # single recurrent type error (e.g. V2 plugin_details emitted as list)
-    # doesn't collapse it to 0%. The "auto/legacy" rate was dropped from the
-    # headline — it's mostly canonicalised-clean (residual ~0), so the KPI
-    # carried no signal. Coercion cost lives in the Type-coercion breakdown
-    # chart instead.
-    ("schema",   "schema_field_conformance_rate_native", "Schema (per-field LLM compliance)", True),
+    # ``schema_field_conformance_rate`` — per-field LLM compliance against the
+    # V3 schema. Soft metric: averages pass-rate across all field-checks instead
+    # of demanding every field on every record, so a single recurrent type error
+    # doesn't collapse it to 0%.
+    ("schema",   "schema_field_conformance_rate", "Schema (per-field LLM compliance)", True),
 ]
 
 
