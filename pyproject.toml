@@ -1,3 +1,7 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
 [project]
 name = "mulita-miner"
 version = "0.1.0"
@@ -39,3 +43,6 @@ hf-local = [
     "accelerate>=1.0.0",
     "bitsandbytes>=0.43.0",
 ]
+
+[tool.setuptools.packages.find]
+where = ["src"]

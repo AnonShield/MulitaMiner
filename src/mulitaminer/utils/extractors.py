@@ -35,7 +35,7 @@ class PdfplumberExtractor(PdfExtractor):
     output_ext = "txt"
 
     def extract(self, pdf_path, scanner=None):
-        from src.utils.pdf_loader import extract_visual_layout_from_pdf
+        from mulitaminer.utils.pdf_loader import extract_visual_layout_from_pdf
         docs = extract_visual_layout_from_pdf(pdf_path)
         if not docs or len(docs) < 2:
             return None
@@ -46,7 +46,7 @@ class MarkerExtractor(PdfExtractor):
     output_ext = "md"
 
     def extract(self, pdf_path, scanner=None):
-        from src.utils.pdf_loader import load_pdf_with_marker
+        from mulitaminer.utils.pdf_loader import load_pdf_with_marker
         docs = load_pdf_with_marker(pdf_path)
         if not docs or len(docs) < 2:
             return None

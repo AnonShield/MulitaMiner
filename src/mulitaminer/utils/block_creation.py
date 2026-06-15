@@ -4,7 +4,7 @@ import re
 from tqdm import tqdm
 import tiktoken
 from .chunking import retry_chunk_with_subdivision
-from src.model_management import get_tokenizer, count_tokens
+from mulitaminer.model_management import get_tokenizer, count_tokens
 
 def create_session_blocks_from_text(report_text: str, temp_dir: str = 'temp_blocks',
                                     visual_layout_path: str = None, scanner: str = 'openvas', output_ext: str = "txt") -> list:
@@ -21,7 +21,7 @@ def create_session_blocks_from_text(report_text: str, temp_dir: str = 'temp_bloc
 
     Fallback: If scanner has no custom strategy, creates a single block with all text.
     """
-    from src.scanner_strategies.registry import get_strategy
+    from mulitaminer.scanner_strategies.registry import get_strategy
 
     if os.path.exists(temp_dir):
         shutil.rmtree(temp_dir)
@@ -66,8 +66,8 @@ def extract_vulns_from_blocks(blocks: list, llm, profile_config: dict,
     Raises:
         ValueError: If llm_config is None or missing required fields
     """
-    from src.utils.chunking import get_token_based_chunks, split_text_to_subchunks, TokenChunk
-    from src.model_management import get_tokenizer, count_tokens
+    from mulitaminer.utils.chunking import get_token_based_chunks, split_text_to_subchunks, TokenChunk
+    from mulitaminer.model_management import get_tokenizer, count_tokens
 
     if not llm_config:
         raise ValueError(
@@ -109,7 +109,7 @@ def extract_vulns_from_blocks(blocks: list, llm, profile_config: dict,
             block_text = f.read()
             
             # Smart chunking: respects markers, tokens, vuln count, size simultaneously
-            from src.utils.chunking import smart_chunk_vulnerabilities
+            from mulitaminer.utils.chunking import smart_chunk_vulnerabilities
             chunks = smart_chunk_vulnerabilities(
                 text=block_text,
                 marker_pattern=marker_pattern,
@@ -129,7 +129,7 @@ def extract_vulns_from_blocks(blocks: list, llm, profile_config: dict,
             for chunk in chunks:
                 # Build prompt once to count input tokens correctly
                 # (includes template + Unicode sanitization)
-                from src.utils.chunking import build_prompt
+                from mulitaminer.utils.chunking import build_prompt
                 prompt = build_prompt(chunk, profile_config)
                 
                 # Count input tokens from the actual prompt that will be sent

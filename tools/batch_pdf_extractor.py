@@ -1,15 +1,11 @@
 import os
 import sys
 import time
-# Ensures project root is in sys.path for absolute imports
-project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
-if project_root not in sys.path:
-    sys.path.insert(0, project_root)
 
 import argparse
 import subprocess
 from tqdm import tqdm
-from src.utils.cli_args import parse_arguments
+from mulitaminer.utils.cli_args import parse_arguments
 
 def batch_extract_vulnerabilities(input_dir, output_dir=None, marker='_batch', scanner=None, llm=None, convert=None, extra_args=None):
     """
@@ -68,10 +64,7 @@ def batch_extract_vulnerabilities(input_dir, output_dir=None, marker='_batch', s
             failures.append({"run_id": base_name, "error": str(e)})
     real_end_time = time.time()
     # Generate final modular report
-    # Add project root to path for imports
-    if project_root not in sys.path:
-        sys.path.insert(0, project_root)
-    from src.utils.reporting import generate_final_report
+    from mulitaminer.utils.reporting import generate_final_report
     run_stats = {
         'start_time': real_start_time,
         'end_time': real_end_time,

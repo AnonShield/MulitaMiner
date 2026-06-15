@@ -9,11 +9,9 @@ import shutil
 from datetime import datetime
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-
-from src.utils.reporting import generate_final_report
-from src.utils.gpu_sampler import GpuSampler
-from src.model_management.config_loader import get_provider_key, load_llm
+from mulitaminer.utils.reporting import generate_final_report
+from mulitaminer.utils.gpu_sampler import GpuSampler
+from mulitaminer.model_management.config_loader import get_provider_key, load_llm
 
 # Lines from subprocess stdout that are forwarded to the terminal in parallel mode
 _PARALLEL_FORWARD = ("[BLOCKS]", "[EXTRACTION]", "[PERFORMANCE]")

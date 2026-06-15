@@ -1,9 +1,9 @@
 import tiktoken
 import re
 from typing import List, Dict, Any
-from src.model_management import parse_json_response, load_prompt, validate_json_and_tokens, get_tokenizer
-from src.utils.llm_debug import save_llm_response_debug
-from src.utils.processing import extract_response_content, sanitize_unicode_text
+from mulitaminer.model_management import parse_json_response, load_prompt, validate_json_and_tokens, get_tokenizer
+from mulitaminer.utils.llm_debug import save_llm_response_debug
+from mulitaminer.utils.processing import extract_response_content, sanitize_unicode_text
 import unicodedata
 import os
 from tqdm import tqdm
@@ -333,7 +333,7 @@ def smart_chunk_vulnerabilities(
     Returns:
         List[TokenChunk]: Chunks that respect all constraints
     """
-    from src.model_management import count_tokens, get_tokenizer
+    from mulitaminer.model_management import count_tokens, get_tokenizer
     
     # Initialize tokenizer if needed - prioritize config-based tokenizer
     if tokenizer is None:
@@ -492,7 +492,7 @@ def intelligent_chunk_redivision(chunk_content: str, max_tokens: int,
         except Exception:
             tokenizer = tiktoken.get_encoding("cl100k_base")
 
-    from src.model_management import count_tokens
+    from mulitaminer.model_management import count_tokens
 
     base_target = max_tokens - reserve_for_response
     token_count = max(count_tokens(chunk_content, tokenizer), 1)
@@ -641,7 +641,7 @@ def robust_chunk_processing(doc_chunk: TokenChunk, llm, profile_config: Dict[str
 
     # Ensure tokenizer is initialized from LLM config if not provided
     if tokenizer is None:
-        from src.model_management import get_tokenizer
+        from mulitaminer.model_management import get_tokenizer
         if profile_config and 'llm_config' in profile_config:
             tokenizer = get_tokenizer(profile_config['llm_config'])
         else:

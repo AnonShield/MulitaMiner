@@ -19,25 +19,20 @@ import shutil
 import io
 from tqdm import tqdm
 
-from src.utils.block_creation import create_session_blocks_from_text, extract_vulns_from_blocks, cleanup_temp_blocks
-from src.utils.cli_args import parse_arguments
-from src.utils.pdf_loader import save_visual_layout
-from src.utils.extractors import get_extractor
-from src.utils import pdf_loader, block_creation
-from src.model_management import load_profile, load_llm, init_llm, validate_and_normalize_vulnerability
-from src.converters import execute_conversions
-from src.utils.cais_validator import validate_cais_vulnerability
+from mulitaminer.utils.block_creation import create_session_blocks_from_text, extract_vulns_from_blocks, cleanup_temp_blocks
+from mulitaminer.utils.cli_args import parse_arguments
+from mulitaminer.utils.pdf_loader import save_visual_layout
+from mulitaminer.utils.extractors import get_extractor
+from mulitaminer.utils import pdf_loader, block_creation
+from mulitaminer.model_management import load_profile, load_llm, init_llm, validate_and_normalize_vulnerability
+from mulitaminer.converters import execute_conversions
+from mulitaminer.utils.cais_validator import validate_cais_vulnerability
 
-from src.utils.chunking import get_token_based_chunks
-from src.scanner_strategies.consolidation import central_custom_allow_duplicates
-from src.utils.profile_registry import is_cais_profile
+from mulitaminer.utils.chunking import get_token_based_chunks
+from mulitaminer.scanner_strategies.consolidation import central_custom_allow_duplicates
+from mulitaminer.utils.profile_registry import is_cais_profile
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.output_parsers import StrOutputParser
-
-project_root = os.path.abspath(os.path.dirname(__file__))
-src_path = os.path.join(project_root, 'src')
-if src_path not in sys.path:
-    sys.path.insert(0, src_path)
 
 if sys.stdout.encoding and sys.stdout.encoding.lower() != 'utf-8':
     sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
@@ -571,7 +566,7 @@ def main():
             }
         ]
         if not args.run_experiments:
-            from src.utils.reporting import generate_final_report
+            from mulitaminer.utils.reporting import generate_final_report
             generate_final_report(
                 start_time=real_start_time,
                 end_time=real_end_time,
