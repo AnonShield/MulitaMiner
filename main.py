@@ -31,6 +31,7 @@ from mulitaminer.utils.cais_validator import validate_cais_vulnerability
 from mulitaminer.utils.chunking import get_token_based_chunks
 from mulitaminer.scanner_strategies.consolidation import central_custom_allow_duplicates
 from mulitaminer.utils.profile_registry import is_cais_profile
+from mulitaminer.configs.constants import TMP_DIR, TOKENS_DIR, DEBUG_DIR
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.output_parsers import StrOutputParser
 
@@ -351,7 +352,7 @@ def main():
         return
     real_start_time = time.time()
 
-    # Contexto p/ o log de usage REAL (results_tokens/usage_real_*.jsonl):
+    # Contexto p/ o log de usage REAL (outputs/tokens/usage_real_*.jsonl):
     # grava o baseline (target) e o run no registro -> custo real por baseline sem depender de PID.
     try:
         if getattr(args, 'input', None):
@@ -439,7 +440,7 @@ def main():
 
     # Criação de blocos de sessão com nome único para paralelismo (PRECISA do LLM)
     unique_process_id = args.llm
-    temp_dir = f'temp_blocks_{unique_process_id}'
+    temp_dir = str(TMP_DIR / f'temp_blocks_{unique_process_id}')
     session_blocks = create_session_blocks_from_text(
         extraction_text,
         temp_dir=temp_dir,
@@ -459,7 +460,7 @@ def main():
     pdf_name = os.path.splitext(pdf_filename)[0]  # Remove extension
     llm_name = args.llm
     debug_mode = getattr(args, 'debug', False)
-    debug_dir = getattr(args, 'debug_dir', 'llm_debug_responses')
+    debug_dir = getattr(args, 'debug_dir', str(DEBUG_DIR))
     
     all_vulnerabilities = extract_vulns_from_blocks(
         session_blocks, llm, profile_config, get_token_based_chunks, llm_config=llm_config,
@@ -502,14 +503,14 @@ def main():
     if save_result['success']:
         # Handle token log file renaming
         pid = os.getpid()
-        tokens_candidates = glob.glob(f'results_tokens/tokens_info_{pid}.json')
+        tokens_candidates = glob.glob(os.path.join(str(TOKENS_DIR), f'tokens_info_{pid}.json'))
         if tokens_candidates:
             llm_name = llm_config.get('model', 'unknown').replace('/', '_').replace(':', '_')
             tokens_final_name = f"{output_base}_{llm_name}_tokens.json"
-            tokens_final_path = os.path.join('results_tokens', tokens_final_name)
-            
+            tokens_final_path = os.path.join(str(TOKENS_DIR), tokens_final_name)
+
             # Ensure the directory exists
-            os.makedirs('results_tokens', exist_ok=True)
+            os.makedirs(TOKENS_DIR, exist_ok=True)
             
             shutil.move(tokens_candidates[0], tokens_final_path)
             print(f"[TOKENS] Token file saved at: {tokens_final_path}")
@@ -571,7 +572,7 @@ def main():
                 start_time=real_start_time,
                 end_time=real_end_time,
                 run_stats=run_stats,
-                tokens_dir='results_tokens',
+                tokens_dir=str(TOKENS_DIR),
                 report_dir=os.path.dirname(output_file) or '.',
                 include_metrics_time=True,
                 timing_report=timing_report

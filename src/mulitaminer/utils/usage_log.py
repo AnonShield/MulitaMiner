@@ -1,6 +1,6 @@
 """Captura do usage REAL retornado pela API (DeepSeek/OpenAI).
 
-Grava por chamada em results_tokens/usage_real_<pid>.jsonl:
+Grava por chamada em outputs/tokens/usage_real_<pid>.jsonl:
   {llm, input_tokens, output_tokens, cache_hit_tokens, cache_miss_tokens}
 
 Aditivo e defensivo: nunca levanta exceção, nunca afeta a chamada da LLM.
@@ -11,6 +11,8 @@ from __future__ import annotations
 
 import os
 import json
+
+from mulitaminer.configs.constants import TOKENS_DIR
 
 
 def log_real_usage(response, llm_name):
@@ -29,8 +31,8 @@ def log_real_usage(response, llm_name):
         }
         if rec["input_tokens"] is None and rec["output_tokens"] is None:
             return  # provider não expôs usage
-        os.makedirs("results_tokens", exist_ok=True)
-        with open(os.path.join("results_tokens", f"usage_real_{os.getpid()}.jsonl"),
+        os.makedirs(TOKENS_DIR, exist_ok=True)
+        with open(os.path.join(TOKENS_DIR, f"usage_real_{os.getpid()}.jsonl"),
                   "a", encoding="utf-8") as f:
             f.write(json.dumps(rec, ensure_ascii=False) + "\n")
     except Exception:

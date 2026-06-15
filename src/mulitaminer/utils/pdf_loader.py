@@ -5,6 +5,8 @@ from langchain_core.documents import Document
 import pdfplumber
 import datetime
 
+from mulitaminer.configs.constants import VISUAL_LAYOUTS_DIR
+
 _CID_MAP = {
     16: '"',
     17: '"',
@@ -326,33 +328,13 @@ def extract_visual_layout_from_pdf(pdf_path):
          return None
 
 def _resolve_visual_cache_dir(output_dir):
-     """Pick where the visual_layouts cache lives.
+     """Return the central visual_layouts cache dir (``outputs/visual_layouts/``).
 
-     Priority (most-specific first):
-       1. If ``output_dir`` is inside an experiments root (``results_runs[_*]``),
-          cache lives at ``<results_runs_*>/visual_layouts/`` — keeps the
-          cache co-located with the experiment outputs.
-       2. Otherwise, fall back to ``<project_root>/visual_layouts/`` — useful
-          when running ``main.py`` ad-hoc with a custom output dir.
-
-     Heuristic: walk up from output_dir; the first ancestor whose name starts
-     with ``results_runs`` is the experiments root. Stops at filesystem root
-     to avoid infinite loops on weird paths.
+     Layouts are deterministic from the source PDF, so one shared cache keyed by
+     file name dedupes across runs. ``output_dir`` is accepted for backward
+     compatibility but no longer affects the location.
      """
-     if output_dir:
-         current = os.path.abspath(output_dir)
-         # Cap at 6 levels — typical structure is results_runs/<baseline>/<llm>/<run>/
-         # so 3-4 hops up is enough; extra cushion for nested experiments.
-         for _ in range(6):
-             parent = os.path.dirname(current)
-             if parent == current:
-                 break
-             if os.path.basename(current).lower().startswith("results_runs"):
-                 return os.path.join(current, "visual_layouts")
-             current = parent
-     # Fallback: project root (parent of src/utils/).
-     project_root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-     return os.path.join(project_root, "visual_layouts")
+     return str(VISUAL_LAYOUTS_DIR)
 
 
 def save_visual_layout(content, pdf_path, process_id=None, output_ext="txt", output_dir=None):

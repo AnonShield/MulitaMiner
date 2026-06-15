@@ -1,5 +1,7 @@
 import argparse
 
+from mulitaminer.configs.constants import DEBUG_DIR
+
 def parse_arguments() -> argparse.Namespace:
     """Parse command-line arguments for main extraction processing."""
     parser = argparse.ArgumentParser(
@@ -45,9 +47,9 @@ def parse_arguments() -> argparse.Namespace:
     # Debug options group
     debug_group = parser.add_argument_group('Debug Options')
     debug_group.add_argument('--debug', dest='debug', action='store_true',
-                           help='Enable debug logging of raw LLM responses (saves to llm_debug_responses/). Note: increases disk I/O (default: False)')
-    debug_group.add_argument('--debug-dir', dest='debug_dir', default='llm_debug_responses',
-                           help='Directory for debug logs (default: llm_debug_responses)')
+                           help='Enable debug logging of raw LLM responses (saves to outputs/debug/). Note: increases disk I/O (default: False)')
+    debug_group.add_argument('--debug-dir', dest='debug_dir', default=str(DEBUG_DIR),
+                           help=f'Directory for debug logs (default: {DEBUG_DIR})')
     
     # Internal flag for experiment script
     parser.add_argument('--run-experiments', action='store_true', help=argparse.SUPPRESS) # Hide from help

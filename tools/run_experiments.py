@@ -12,6 +12,7 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 from mulitaminer.utils.reporting import generate_final_report
 from mulitaminer.utils.gpu_sampler import GpuSampler
 from mulitaminer.model_management.config_loader import get_provider_key, load_llm
+from mulitaminer.configs.constants import RUNS_DIR, DEBUG_DIR, CHECKPOINTS_DIR, PLOTS_DIR, TOKENS_DIR
 
 # Lines from subprocess stdout that are forwarded to the terminal in parallel mode
 _PARALLEL_FORWARD = ("[BLOCKS]", "[EXTRACTION]", "[PERFORMANCE]")
@@ -29,7 +30,8 @@ def get_base(filename):
 
 
 def make_checkpoint_path(ts):
-    return f"run_checkpoints_{ts}.json"
+    os.makedirs(CHECKPOINTS_DIR, exist_ok=True)
+    return str(CHECKPOINTS_DIR / f"run_checkpoints_{ts}.json")
 
 
 def execute_run(run_id, run_info, group_key, checkpoints, checkpoint_path,
@@ -84,7 +86,7 @@ def execute_run(run_id, run_info, group_key, checkpoints, checkpoint_path,
         if args.debug:
             cmd.append('--debug')
 
-        if args.debug_dir != 'llm_debug_responses':
+        if args.debug_dir != str(DEBUG_DIR):
             cmd += ['--debug-dir', args.debug_dir]
 
         run_start = time.time()
@@ -213,11 +215,11 @@ def main():
                         help='Checkpoint file to resume from. When provided, all other arguments become optional.')
     parser.add_argument('--debug', action='store_true',
                         help='Enable debug logging of raw LLM responses.')
-    parser.add_argument('--debug-dir', type=str, default='llm_debug_responses',
+    parser.add_argument('--debug-dir', type=str, default=str(DEBUG_DIR),
                         help='Directory for debug logs.')
-    parser.add_argument('--output-dir', dest='output_dir', type=str, default='results_runs',
+    parser.add_argument('--output-dir', dest='output_dir', type=str, default=str(RUNS_DIR),
                         help='Results root directory where per-run subdirs are created '
-                             '(default: results_runs).')
+                             f'(default: {RUNS_DIR}).')
     parser.add_argument('--metrics-workers', type=int, default=4,
                         help='Parallel workers for the post-experiment metrics pass (default: 4).')
     parser.add_argument('--skip-metrics', action='store_true',
@@ -407,7 +409,7 @@ def main():
         start_time=start_time,
         end_time=end_time,
         run_stats=run_stats,
-        tokens_dir='results_tokens',
+        tokens_dir=str(TOKENS_DIR),
         report_dir=report_dir,
         include_metrics_time=True,
         timing_report=timing_report,
@@ -447,7 +449,7 @@ def main():
             "--root", args.output_dir,
         ], check=True)
 
-        plot_dir = os.path.abspath('plot_runs')
+        plot_dir = os.path.abspath(str(PLOTS_DIR))
         if os.path.exists(plot_dir):
             reports = sorted([f for f in os.listdir(plot_dir)
                               if f.startswith('metrics_report_') and f.endswith('.html')])

@@ -1,9 +1,13 @@
+# All run artifacts live under one gitignored tree (see configs/constants.py)
+outputs/
+# Legacy output dirs (pre-outputs/ consolidation; ignored if any linger)
 temp_blocks/
-# Results and temporary outputs
 plot_runs/
 results_runs/
 results_runs_xlsx/
 results_tokens/
+visual_layouts/
+llm_debug_responses/
 # Archived raw data (large CSVs, val.txt, schema snapshots — kept out of git)
 archive/data/
 # Ambientes virtuais

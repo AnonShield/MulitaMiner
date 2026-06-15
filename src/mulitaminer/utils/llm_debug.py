@@ -5,7 +5,7 @@ Provides functionality to capture and save raw LLM responses for debugging purpo
 Maintains a modular structure with JSONL format for efficient storage and analysis.
 
 Directory structure:
-    llm_debug_responses/
+    outputs/debug/
     ├── {scenario}/{pdf_name}/{llm_name}/
     │   ├── responses.jsonl       (append-only log of responses)
     │   └── metadata.json         (summary of processing)
@@ -18,8 +18,10 @@ from datetime import datetime
 from typing import Optional, Dict, Any
 import uuid
 
+from mulitaminer.configs.constants import DEBUG_DIR
 
-DEFAULT_DEBUG_DIR = "llm_debug_responses"
+
+DEFAULT_DEBUG_DIR = str(DEBUG_DIR)
 
 # Cache for session-specific filenames (stores one per pdf/llm/scenario combination)
 _session_files = {}

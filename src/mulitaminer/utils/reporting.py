@@ -12,6 +12,8 @@ import os
 import uuid
 from datetime import datetime, timedelta
 
+from mulitaminer.configs.constants import TOKENS_DIR, RUNS_DIR
+
 
 def _fmt_duration(seconds: float) -> str:
     td = timedelta(seconds=seconds)
@@ -29,8 +31,8 @@ def generate_final_report(
     start_time,
     end_time,
     run_stats,
-    tokens_dir="results_tokens",
-    report_dir="results_runs",
+    tokens_dir=str(TOKENS_DIR),
+    report_dir=str(RUNS_DIR),
     include_metrics_time=True,
     timing_report=None,
     failures=None,

@@ -6,6 +6,7 @@ import argparse
 import subprocess
 from tqdm import tqdm
 from mulitaminer.utils.cli_args import parse_arguments
+from mulitaminer.configs.constants import DEBUG_DIR, TOKENS_DIR
 
 def batch_extract_vulnerabilities(input_dir, output_dir=None, marker='_batch', scanner=None, llm=None, convert=None, extra_args=None):
     """
@@ -77,7 +78,7 @@ def batch_extract_vulnerabilities(input_dir, output_dir=None, marker='_batch', s
         start_time=real_start_time,
         end_time=real_end_time,
         run_stats=run_stats,
-        tokens_dir='results_tokens',
+        tokens_dir=str(TOKENS_DIR),
         report_dir=output_dir,
         include_metrics_time=True,
         timing_report=timing_report,
@@ -94,14 +95,14 @@ if __name__ == "__main__":
     parser.add_argument('--convert', choices=['csv', 'xlsx', 'tsv', 'all'], help="Optionally convert output to a specific format")
     parser.add_argument('--allow-duplicates', action='store_true', help="Allow duplicate vulnerabilities in the output (default: False)")
     parser.add_argument('--debug', action='store_true', help="Enable debug logging of raw LLM responses.")
-    parser.add_argument('--debug-dir', type=str, default='llm_debug_responses', help="Directory for debug logs.")
+    parser.add_argument('--debug-dir', type=str, default=str(DEBUG_DIR), help="Directory for debug logs.")
     args, extra = parser.parse_known_args()
     
     if args.allow_duplicates and '--allow-duplicates' not in extra:
         extra.append('--allow-duplicates')
     if args.debug and '--debug' not in extra:
         extra.append('--debug')
-    if args.debug_dir != 'llm_debug_responses' and '--debug-dir' not in extra:
+    if args.debug_dir != str(DEBUG_DIR) and '--debug-dir' not in extra:
         extra.extend(['--debug-dir', args.debug_dir])
     batch_extract_vulnerabilities(
         input_dir=args.input_dir,

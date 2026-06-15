@@ -49,10 +49,11 @@ from main import (  # noqa: E402
     METRIC_SCRIPTS,
     expand_evaluation_methods,
 )
+from mulitaminer.configs.constants import RUNS_DIR  # noqa: E402
 
 # Single canonical results root by default. Multi-root walks (e.g. for the
 # V2-vs-V3 paper experiment) are opt-in via ``--root``.
-DEFAULT_ROOT: Path = PROJECT_ROOT / "results_runs"
+DEFAULT_ROOT: Path = RUNS_DIR
 DEFAULT_BASELINES_DIR: Path = PROJECT_ROOT / "resources" / "baselines"
 # Overridable via --baselines-dir (reassigned in main() from the parsed args).
 BASELINES_DIR = DEFAULT_BASELINES_DIR

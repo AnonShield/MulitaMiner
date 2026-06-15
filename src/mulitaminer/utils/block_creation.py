@@ -5,8 +5,11 @@ from tqdm import tqdm
 import tiktoken
 from .chunking import retry_chunk_with_subdivision
 from mulitaminer.model_management import get_tokenizer, count_tokens
+from mulitaminer.configs.constants import TOKENS_DIR, TMP_DIR
 
-def create_session_blocks_from_text(report_text: str, temp_dir: str = 'temp_blocks',
+_DEFAULT_TEMP_DIR = str(TMP_DIR / 'temp_blocks')
+
+def create_session_blocks_from_text(report_text: str, temp_dir: str = _DEFAULT_TEMP_DIR,
                                     visual_layout_path: str = None, scanner: str = 'openvas', output_ext: str = "txt") -> list:
     """
     Create temporary session block files from extracted report text.
@@ -211,15 +214,15 @@ def extract_vulns_from_blocks(blocks: list, llm, profile_config: dict,
                     else:
                         all_vulns.extend([v for v in vulns if isinstance(v, dict)])
                 pbar.update(1)
-    # Salva tokens_info em results_tokens
+    # Salva tokens_info em outputs/tokens
     import os, json
-    os.makedirs('results_tokens', exist_ok=True)
-    tokens_path = os.path.join('results_tokens', f'tokens_info_{os.getpid()}.json')
+    os.makedirs(TOKENS_DIR, exist_ok=True)
+    tokens_path = os.path.join(TOKENS_DIR, f'tokens_info_{os.getpid()}.json')
     with open(tokens_path, 'w', encoding='utf-8') as f:
         json.dump(tokens_info, f, ensure_ascii=False, indent=2)
     return all_vulns
 
-def cleanup_temp_blocks(temp_dir: str = 'temp_blocks'):
+def cleanup_temp_blocks(temp_dir: str = _DEFAULT_TEMP_DIR):
     """Remove all temporary session block files."""
     if os.path.exists(temp_dir):
         shutil.rmtree(temp_dir)

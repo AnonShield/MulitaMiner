@@ -27,9 +27,9 @@ def plot_similarity_category_stacked_bar():
     ]
 
     metrics = ["bert", "rouge"]
-    os.makedirs('plot_runs', exist_ok=True)
+    os.makedirs('outputs/plots', exist_ok=True)
 
-    results_base = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'results_runs'))
+    results_base = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'outputs/runs'))
 
     for metric in metrics:
         print(f"[STACKED] Processing metric: {metric}")
@@ -179,7 +179,7 @@ def plot_similarity_category_stacked_bar():
 
             plt.tight_layout(rect=[0, 0.12, 1, 1])
             timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
-            fname_out = f"plot_runs/stacked_similarity_{scanner}_{metric}_{timestamp}.png"
+            fname_out = f"outputs/plots/stacked_similarity_{scanner}_{metric}_{timestamp}.png"
             plt.savefig(fname_out, dpi=150, bbox_inches='tight')
             plt.close()
             print(f"Saved: {fname_out}")
@@ -188,7 +188,7 @@ def plot_similarity_category_stacked_bar():
 def build_heatmap_df_all_llms(metric: str, baseline: str) -> pd.DataFrame:
     """Build heatmap dataframe aggregating scores across all LLMs for a metric and baseline."""
     metric = metric.lower()
-    results_dir = Path('results_runs') / str(baseline)
+    results_dir = Path('outputs/runs') / str(baseline)
     arquivos = []
     for root, dirs, files in os.walk(results_dir):
         for f in files:
@@ -229,10 +229,10 @@ def build_heatmap_df_all_llms(metric: str, baseline: str) -> pd.DataFrame:
     return pd.DataFrame(df_final).T
 
 
-RESULTS_DIR = "results_runs"
+RESULTS_DIR = "outputs/runs"
 
 def get_baselines():
-    """Get list of baselines from results_runs directory."""
+    """Get list of baselines from outputs/runs directory."""
     return sorted([d for d in os.listdir(RESULTS_DIR) if os.path.isdir(os.path.join(RESULTS_DIR, d))])
 
 
@@ -284,7 +284,7 @@ def plot_absent_nonexistent_mean():
     file_count = 0
     row_count = 0
     arquivos_encontrados = False
-    os.makedirs('plot_runs', exist_ok=True)
+    os.makedirs('outputs/plots', exist_ok=True)
     for root, dirs, files in os.walk(RESULTS_DIR):
         for fname in files:
             if not fname.endswith(".xlsx"):
@@ -343,9 +343,9 @@ def plot_absent_nonexistent_mean():
             plt.tight_layout()
             from datetime import datetime
             timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
-            plt.savefig(f"plot_runs/absent_nonexistent_std_{scanner}_{report}_{timestamp}.png")
+            plt.savefig(f"outputs/plots/absent_nonexistent_std_{scanner}_{report}_{timestamp}.png")
             plt.close()
-        print(f"[ABSENT/NON-EXISTENT] Graphs saved in plot_runs/ for each scanner+report.")
+        print(f"[ABSENT/NON-EXISTENT] Graphs saved in outputs/plots/ for each scanner+report.")
     else:
         print("[ABSENT/NON-EXISTENT] No valid data found to generate barplots for Absent/Non-existent.")
 
@@ -356,7 +356,7 @@ def plot_matched_rate_mean_std():
     arquivos_processados = []
     matched_data = []
     arquivos_encontrados = False
-    os.makedirs('plot_runs', exist_ok=True)
+    os.makedirs('outputs/plots', exist_ok=True)
     def normalize_name(name):
         """Normalize names for comparison."""
         return str(name).strip().lower().replace(' ', '').replace('_', '').replace('-', '')
@@ -448,9 +448,9 @@ def plot_matched_rate_mean_std():
                 plt.tight_layout()
                 from datetime import datetime
                 timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
-                plt.savefig(f"plot_runs/matched_rate_mean_std_{scanner}_{metric}_{timestamp}.png")
+                plt.savefig(f"outputs/plots/matched_rate_mean_std_{scanner}_{metric}_{timestamp}.png")
                 plt.close()
-        print(f"[MATCHED RATE] Graphs saved in plot_runs/ for each scanner+metric.")
+        print(f"[MATCHED RATE] Graphs saved in outputs/plots/ for each scanner+metric.")
     else:
         print("[MATCHED RATE] No valid data found to generate barplots for Matched Rate.")
 
@@ -483,7 +483,7 @@ def plot_score_heatmaps():
     baselines = get_baselines()
     metrics = ["bert", "rouge"]
     import datetime
-    os.makedirs('plot_runs', exist_ok=True)
+    os.makedirs('outputs/plots', exist_ok=True)
     timestamp = datetime.datetime.now().strftime('%Y%m%d_%H%M%S')
     for baseline in baselines:
         if '_' in baseline:
@@ -499,7 +499,7 @@ def plot_score_heatmaps():
                     continue
                 from pathlib import Path
                 import matplotlib.pyplot as plt
-                out_path = Path('plot_runs') / f"heatmap_scores_{baseline}_{metric}_{timestamp}.png"
+                out_path = Path('outputs/plots') / f"heatmap_scores_{baseline}_{metric}_{timestamp}.png"
                 plt.figure(figsize=(18, 8))
                 plt.rcParams.update({'font.size': 15})
                 import seaborn as sns
@@ -525,7 +525,7 @@ def plot_score_heatmaps():
 
 def plot_entity_metrics():
     """Generate plots for entity metrics (F1, precision, recall) across LLMs and fields."""
-    os.makedirs('plot_runs', exist_ok=True)
+    os.makedirs('outputs/plots', exist_ok=True)
     entity_data = []
     
     print("[ENTITY] Searching for entity metrics files...")
@@ -618,7 +618,7 @@ def plot_entity_metrics():
         
         plt.tight_layout()
         timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
-        fname_out = f"plot_runs/entity_f1_scores_{scanner}_{baseline}_{timestamp}.png"
+        fname_out = f"outputs/plots/entity_f1_scores_{scanner}_{baseline}_{timestamp}.png"
         plt.savefig(fname_out, dpi=150, bbox_inches='tight')
         plt.close()
         print(f"[ENTITY] Saved: {fname_out}")
@@ -649,7 +649,7 @@ def plot_entity_metrics():
         
         plt.suptitle(f"Entity Metrics - Precision vs Recall\n{scanner} | {baseline}", fontsize=16, y=1.00)
         plt.tight_layout()
-        fname_out = f"plot_runs/entity_precision_recall_{scanner}_{baseline}_{timestamp}.png"
+        fname_out = f"outputs/plots/entity_precision_recall_{scanner}_{baseline}_{timestamp}.png"
         plt.savefig(fname_out, dpi=150, bbox_inches='tight')
         plt.close()
         print(f"[ENTITY] Saved: {fname_out}")

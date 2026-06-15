@@ -52,10 +52,10 @@ def _ensure_aggregated(roots) -> None:
 
 def main() -> int:
     parser = argparse.ArgumentParser(description="Generate the metrics report (HTML + PNGs).")
-    parser.add_argument("--root", type=Path, nargs="+", default=[Path("results_runs")],
-                        help="Result roots — each must contain aggregated_metrics.xlsx (default: results_runs).")
-    parser.add_argument("--output-dir", type=Path, default=Path("plot_runs"),
-                        help="Where the HTML and PNGs are written (default: plot_runs).")
+    parser.add_argument("--root", type=Path, nargs="+", default=[Path("outputs/runs")],
+                        help="Result roots — each must contain aggregated_metrics.xlsx (default: outputs/runs).")
+    parser.add_argument("--output-dir", type=Path, default=Path("outputs/plots"),
+                        help="Where the HTML and PNGs are written (default: outputs/plots).")
     parser.add_argument("--png-only", action="store_true", help="Skip the HTML report.")
     parser.add_argument("--report-only", action="store_true", help="Skip the PNG export.")
     args = parser.parse_args()

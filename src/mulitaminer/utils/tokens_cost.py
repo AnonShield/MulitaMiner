@@ -4,10 +4,12 @@ from glob import glob
 import argparse
 import re
 
+from mulitaminer.configs.constants import TOKENS_DIR
+
 # Preços por 1M de tokens (USD). ⚠️ CONFERIR na página oficial (mudam + têm desconto off-peak).
 # DeepSeek: "deepseek-coder" hoje é alias de "deepseek-chat" (V3.x) — use o preço do deepseek-chat.
 #   'cache_hit' = input que bateu no cache (bem mais barato); 'input' = input cache-miss; 'output' = saída.
-#   Os 3 só são usados com o usage REAL (results_tokens/usage_real_*.jsonl) via `calc_real_usage`.
+#   Os 3 só são usados com o usage REAL (outputs/tokens/usage_real_*.jsonl) via `calc_real_usage`.
 LLM_PRICES = {
     "gpt5": {"input": 0.25, "output": 2.0},
     "deepseek": {"input": 0.14, "output": 0.28, "cache_hit": 0.0028},  # deepseek-v4-flash (aliases chat/coder caem aqui), USD/1M: cache-miss / output / cache-hit (jun/2026)
@@ -178,16 +180,16 @@ def main():
     subparsers = parser.add_subparsers(dest='mode', required=True)
 
     parser_all = subparsers.add_parser('all', help='Summary of tokens and costs for all LLMs')
-    parser_all.add_argument('--tokens-dir', type=str, default='results_tokens', help='Directory of token files')
+    parser_all.add_argument('--tokens-dir', type=str, default=str(TOKENS_DIR), help='Directory of token files')
 
     parser_llm = subparsers.add_parser('llm', help='Summary of tokens and costs for a specific LLM')
     parser_llm.add_argument('--llm', type=str, required=True, help='Name of the LLM (e.g., llama3, gpt4, etc.)')
-    parser_llm.add_argument('--tokens-dir', type=str, default='results_tokens', help='Directory of token files')
+    parser_llm.add_argument('--tokens-dir', type=str, default=str(TOKENS_DIR), help='Directory of token files')
     parser_llm.add_argument('--show-files', action='store_true', help='Show token counts for individual files')
     parser_llm.add_argument('--price-per-1M', type=float, default=None, help='Price per 1M tokens (USD)')
 
     parser_real = subparsers.add_parser('real', help='Custo a partir do usage REAL da API (usage_real_*.jsonl)')
-    parser_real.add_argument('--tokens-dir', type=str, default='results_tokens', help='Directory of token files')
+    parser_real.add_argument('--tokens-dir', type=str, default=str(TOKENS_DIR), help='Directory of token files')
 
     args = parser.parse_args()
 
