@@ -85,10 +85,11 @@ def get_token_based_chunks(text: str, max_tokens: int,
 
 def build_prompt(doc_chunk: TokenChunk, profile_config: Dict[str, Any]) -> str:
     prompt_template = profile_config.get('prompt_template', '') if profile_config else ''
-    # If it's a file path, load content
-    if os.path.isfile(prompt_template):
-        prompt_template = load_prompt(prompt_template)
-    
+    # Resolve a template path to its content. load_prompt handles absolute and
+    # package-relative paths (e.g. "configs/templates/openvas_prompt.txt") and
+    # returns the value unchanged if it isn't a locatable file (inline prompt).
+    prompt_template = load_prompt(prompt_template)
+
     sanitized_content = sanitize_unicode_text(doc_chunk.page_content)
     
     wrapped = f"<report_content>\n{sanitized_content}\n</report_content>"
