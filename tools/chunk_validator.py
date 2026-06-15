@@ -180,7 +180,7 @@ class ChunkValidator:
         if structure_issues:
             print(f"   • {structure_issues} chunks with problematic structure")
         
-        print("Solutions: Adjust scanner settings in src/configs/scanners/")
+        print("Solutions: Adjust scanner settings in src/mulitaminer/configs/scanners/")
         
     def test_alternative_chunking(self, text: str, pattern_info: dict):
         print(f"\nTESTE ALTERNATIVO:")

@@ -64,7 +64,7 @@ CANONICAL_FIELDS: tuple[str, ...] = (
 #
 # Note: this list intentionally differs from
 # ``metrics.common.schema_canonicalizer.V2_TO_V3_COERCIBLE_FIELDS`` and from
-# ``src/configs/schema/field_categories.json``. Each list answers a different
+# ``src/mulitaminer/configs/schema/field_categories.json``. Each list answers a different
 # question:
 #   - ``ERM_FIELDS``                  → fields whose exact equality counts in ERM
 #   - ``V2_TO_V3_COERCIBLE_FIELDS``  → fields whose *type* differs between V2 and V3

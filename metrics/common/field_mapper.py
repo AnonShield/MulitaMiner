@@ -12,7 +12,7 @@ from typing import Dict, List, Set
 
 def load_field_categories() -> Dict[str, List[str]]:
     """Load field categories from config JSON."""
-    config_path = Path(__file__).parents[2] / 'src' / 'configs' / 'schema' / 'field_categories.json'
+    config_path = Path(__file__).parents[2] / 'src' / 'mulitaminer' / 'configs' / 'schema' / 'field_categories.json'
     
     if not config_path.exists():
         raise FileNotFoundError(f"Field categories config not found: {config_path}")

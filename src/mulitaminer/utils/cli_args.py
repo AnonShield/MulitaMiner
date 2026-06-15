@@ -8,9 +8,9 @@ def parse_arguments() -> argparse.Namespace:
     # --- Simplified arguments for convenience ---
     parser.add_argument('--input', required=False, help='Path to input PDF file (required unless --metrics-only)')
     parser.add_argument('--scanner', default='default', 
-                       help='Scanner profile name (e.g., "openvas"). Loads the corresponding .json from src/configs/scanners/.')
+                       help='Scanner profile name (e.g., "openvas"). Loads the corresponding .json from src/mulitaminer/configs/scanners/.')
     parser.add_argument('--llm', default='gpt4', 
-                       help='LLM configuration name (e.g., "llama3"). Loads the corresponding .json from src/configs/llms/.')
+                       help='LLM configuration name (e.g., "llama3"). Loads the corresponding .json from src/mulitaminer/configs/llms/.')
     
     # Conversion options group
     conversion_group = parser.add_argument_group('Conversion & Output Options')

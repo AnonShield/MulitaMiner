@@ -1,6 +1,6 @@
 {
   "reader": "openvas",
-  "prompt_template": "src/configs/templates/openvas_prompt.txt",
+  "prompt_template": "configs/templates/openvas_prompt.txt",
   "retry_attempts": 3,
   "delay_between_chunks": 2,
   "output_file": "vulnerabilities_default_openvas.json",

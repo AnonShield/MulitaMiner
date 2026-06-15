@@ -1,6 +1,6 @@
 {
   "reader": "cais_openvas",
-  "prompt_template": "src/configs/templates/cais_openvas_prompt.txt",
+  "prompt_template": "configs/templates/cais_openvas_prompt.txt",
   "retry_attempts": 2,
   "delay_between_chunks": 1,
   "output_file": "vulnerabilities_cais_openvas.json",

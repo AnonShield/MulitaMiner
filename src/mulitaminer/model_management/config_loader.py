@@ -8,8 +8,13 @@ including environment variable substitution.
 import os
 import json
 import re
+from pathlib import Path
 from urllib.parse import urlparse
 from dotenv import load_dotenv
+
+# Config files ship inside the package (src/mulitaminer/configs/), so locate
+# them relative to this module — never relative to the process CWD.
+_CONFIGS_DIR = Path(__file__).resolve().parent.parent / "configs"
 
 
 def load_profile(profile_name):
@@ -23,7 +28,7 @@ def load_profile(profile_name):
         dict: Profile configuration or None if not found
     """
     profile_name = profile_name.lower()
-    path = f"src/configs/scanners/{profile_name}.json"
+    path = _CONFIGS_DIR / "scanners" / f"{profile_name}.json"
     try:
         with open(path, "r", encoding="utf-8") as f:
             return json.load(f)
@@ -48,7 +53,7 @@ def load_llm(llm_name):
     load_dotenv()
     
     llm_name = llm_name.lower()
-    path = f"src/configs/llms/{llm_name}.json"
+    path = _CONFIGS_DIR / "llms" / f"{llm_name}.json"
     
     try:
         with open(path, "r", encoding="utf-8") as f:
