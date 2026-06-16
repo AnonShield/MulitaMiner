@@ -1,6 +1,6 @@
 import argparse
 
-from mulitaminer.configs.constants import DEBUG_DIR
+from mulitaminer.configs.constants import DEBUG_DIR, RUNS_DIR
 
 def parse_arguments() -> argparse.Namespace:
     """Parse command-line arguments for main extraction processing."""
@@ -17,7 +17,7 @@ def parse_arguments() -> argparse.Namespace:
     # Conversion options group
     conversion_group = parser.add_argument_group('Conversion & Output Options')
     conversion_group.add_argument('--output-file', help='Output filename without extension (e.g., "my_extraction"). Default: PDF name.')
-    conversion_group.add_argument('--output-dir', default='.', help='Output directory for results (default: current directory).')
+    conversion_group.add_argument('--output-dir', default=str(RUNS_DIR), help=f'Output directory for results (default: {RUNS_DIR}).')
     conversion_group.add_argument('--convert', choices=['csv', 'xlsx', 'tsv', 'all'],
                        default=None,
                        help='Optionally convert the JSON output to an additional format. Omit to keep only JSON (the native output that metrics consume directly).')
