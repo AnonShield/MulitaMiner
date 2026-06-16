@@ -13,7 +13,7 @@ import sys
 
 from mulitaminer.utils.pdf_loader import load_pdf_with_pypdf2
 from mulitaminer.utils.chunking import get_token_based_chunks, split_text_to_subchunks, detect_scanner_pattern
-from mulitaminer.model_management import load_profile, load_llm
+from mulitaminer.llm import load_profile, load_llm
 import tiktoken
 import re
 

@@ -24,12 +24,12 @@ from mulitaminer.utils.cli_args import parse_arguments
 from mulitaminer.utils.pdf_loader import save_visual_layout
 from mulitaminer.utils.extractors import get_extractor
 from mulitaminer.utils import pdf_loader, block_creation
-from mulitaminer.model_management import load_profile, load_llm, init_llm, validate_and_normalize_vulnerability
-from mulitaminer.converters import execute_conversions
+from mulitaminer.llm import load_profile, load_llm, init_llm, validate_and_normalize_vulnerability
+from mulitaminer.writers import execute_conversions
 from mulitaminer.utils.cais_validator import validate_cais_vulnerability
 
 from mulitaminer.utils.chunking import get_token_based_chunks
-from mulitaminer.scanner_strategies.consolidation import central_custom_allow_duplicates
+from mulitaminer.scanners.consolidation import central_custom_allow_duplicates
 from mulitaminer.utils.profile_registry import is_cais_profile
 from mulitaminer.configs.constants import TMP_DIR, TOKENS_DIR, DEBUG_DIR
 from langchain_core.prompts import ChatPromptTemplate

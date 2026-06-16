@@ -1,7 +1,7 @@
 import tiktoken
 import re
 from typing import List, Dict, Any
-from mulitaminer.model_management import parse_json_response, load_prompt, validate_json_and_tokens, get_tokenizer
+from mulitaminer.llm import parse_json_response, load_prompt, validate_json_and_tokens, get_tokenizer
 from mulitaminer.utils.llm_debug import save_llm_response_debug
 from mulitaminer.utils.processing import extract_response_content, sanitize_unicode_text
 import unicodedata
@@ -86,7 +86,7 @@ def get_token_based_chunks(text: str, max_tokens: int,
 def build_prompt(doc_chunk: TokenChunk, profile_config: Dict[str, Any]) -> str:
     prompt_template = profile_config.get('prompt_template', '') if profile_config else ''
     # Resolve a template path to its content. load_prompt handles absolute and
-    # package-relative paths (e.g. "configs/templates/openvas_prompt.txt") and
+    # package-relative paths (e.g. "configs/prompts/openvas_prompt.txt") and
     # returns the value unchanged if it isn't a locatable file (inline prompt).
     prompt_template = load_prompt(prompt_template)
 
@@ -334,7 +334,7 @@ def smart_chunk_vulnerabilities(
     Returns:
         List[TokenChunk]: Chunks that respect all constraints
     """
-    from mulitaminer.model_management import count_tokens, get_tokenizer
+    from mulitaminer.llm import count_tokens, get_tokenizer
     
     # Initialize tokenizer if needed - prioritize config-based tokenizer
     if tokenizer is None:
@@ -493,7 +493,7 @@ def intelligent_chunk_redivision(chunk_content: str, max_tokens: int,
         except Exception:
             tokenizer = tiktoken.get_encoding("cl100k_base")
 
-    from mulitaminer.model_management import count_tokens
+    from mulitaminer.llm import count_tokens
 
     base_target = max_tokens - reserve_for_response
     token_count = max(count_tokens(chunk_content, tokenizer), 1)
@@ -642,7 +642,7 @@ def robust_chunk_processing(doc_chunk: TokenChunk, llm, profile_config: Dict[str
 
     # Ensure tokenizer is initialized from LLM config if not provided
     if tokenizer is None:
-        from mulitaminer.model_management import get_tokenizer
+        from mulitaminer.llm import get_tokenizer
         if profile_config and 'llm_config' in profile_config:
             tokenizer = get_tokenizer(profile_config['llm_config'])
         else:

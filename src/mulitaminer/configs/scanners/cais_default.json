@@ -1,6 +1,6 @@
 {
   "reader": "cais_default",
-  "prompt_template": "configs/templates/cais_prompt_v3.txt",
+  "prompt_template": "configs/prompts/cais_prompt_v3.txt",
   "retry_attempts": 3,
   "delay_between_chunks": 2,
   "output_file": "vulnerabilities_cais.json",

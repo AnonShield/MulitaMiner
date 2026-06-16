@@ -4,7 +4,7 @@ import re
 from tqdm import tqdm
 import tiktoken
 from .chunking import retry_chunk_with_subdivision
-from mulitaminer.model_management import get_tokenizer, count_tokens
+from mulitaminer.llm import get_tokenizer, count_tokens
 from mulitaminer.configs.constants import TOKENS_DIR, TMP_DIR
 
 _DEFAULT_TEMP_DIR = str(TMP_DIR / 'temp_blocks')
@@ -24,7 +24,7 @@ def create_session_blocks_from_text(report_text: str, temp_dir: str = _DEFAULT_T
 
     Fallback: If scanner has no custom strategy, creates a single block with all text.
     """
-    from mulitaminer.scanner_strategies.registry import get_strategy
+    from mulitaminer.scanners.registry import get_strategy
 
     if os.path.exists(temp_dir):
         shutil.rmtree(temp_dir)
@@ -70,7 +70,7 @@ def extract_vulns_from_blocks(blocks: list, llm, profile_config: dict,
         ValueError: If llm_config is None or missing required fields
     """
     from mulitaminer.utils.chunking import get_token_based_chunks, split_text_to_subchunks, TokenChunk
-    from mulitaminer.model_management import get_tokenizer, count_tokens
+    from mulitaminer.llm import get_tokenizer, count_tokens
 
     if not llm_config:
         raise ValueError(

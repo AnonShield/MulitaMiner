@@ -11,7 +11,7 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 
 from mulitaminer.utils.reporting import generate_final_report
 from mulitaminer.utils.gpu_sampler import GpuSampler
-from mulitaminer.model_management.config_loader import get_provider_key, load_llm
+from mulitaminer.llm.config_loader import get_provider_key, load_llm
 from mulitaminer.configs.constants import RUNS_DIR, DEBUG_DIR, CHECKPOINTS_DIR, PLOTS_DIR, TOKENS_DIR
 
 # Lines from subprocess stdout that are forwarded to the terminal in parallel mode

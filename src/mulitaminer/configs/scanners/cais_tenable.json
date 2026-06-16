@@ -1,6 +1,6 @@
 {
   "reader": "cais",
-  "prompt_template": "configs/templates/cais_tenable_prompt.txt",
+  "prompt_template": "configs/prompts/cais_tenable_prompt.txt",
   "retry_attempts": 2,
   "delay_between_chunks": 1,
   "output_file": "vulnerabilities_cais_tenable.json",

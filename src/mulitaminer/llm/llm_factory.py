@@ -61,7 +61,7 @@ def init_llm(llm_config: dict) -> "BaseLLMProvider":
             # Attempt to dynamically import custom provider
             # Replace hyphens with underscores for module name
             safe_provider_name = llm_provider.replace("-", "_")
-            module_name = f"src.model_management.providers.{safe_provider_name}_provider"
+            module_name = f"mulitaminer.llm.providers.{safe_provider_name}_provider"
             provider_class_name = f"{safe_provider_name.capitalize()}Provider"
             
             module = __import__(module_name, fromlist=[provider_class_name])
@@ -73,7 +73,7 @@ def init_llm(llm_config: dict) -> "BaseLLMProvider":
                 f"Unknown LLM provider: '{llm_provider}'\n\n"
                 f"Built-in options: openai, ollama, huggingface\n\n"
                 f"To add support for '{llm_provider}':\n"
-                f"1. Create: src/mulitaminer/model_management/providers/{llm_provider}_provider.py\n"
+                f"1. Create: src/mulitaminer/llm/providers/{llm_provider}_provider.py\n"
                 f"2. Define class: class {llm_provider.capitalize()}Provider(BaseLLMProvider)\n"
                 f"3. Implement methods: invoke(prompt) and get_model_name()\n"
                 f"4. See docs/CUSTOM_PROVIDER_TEMPLATE.md for a template.\n"

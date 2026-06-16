@@ -2,16 +2,16 @@
 Utils module - Backward compatibility layer
 
 This module maintains backward compatibility with code that imports from mulitaminer.utils.
-New code should import directly from mulitaminer.model_management.
+New code should import directly from mulitaminer.llm.
 
-Deprecated imports are forwarded to their new locations in model_management.
+Deprecated imports are forwarded to their new locations in mulitaminer.llm.
 """
 
 # DEPRECATED: These imports are maintained for backward compatibility only.
-# New code should use: from mulitaminer.model_management import ...
+# New code should use: from mulitaminer.llm import ...
 
 # Re-export model management functions for backward compatibility
-from mulitaminer.model_management import (
+from mulitaminer.llm import (
     load_llm,
     load_profile,
     get_tokenizer,

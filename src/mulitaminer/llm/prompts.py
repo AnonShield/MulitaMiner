@@ -7,7 +7,7 @@ Handles loading prompt templates from files or returning them as strings.
 import os
 from pathlib import Path
 
-# Templates ship inside the package (src/mulitaminer/configs/templates/), so
+# Templates ship inside the package (src/mulitaminer/configs/prompts/), so
 # resolve stored template paths relative to the package root, never the CWD.
 _PACKAGE_ROOT = Path(__file__).resolve().parent.parent  # src/mulitaminer/
 
@@ -18,7 +18,7 @@ def load_prompt(prompt):
 
     Tries multiple path resolution strategies:
     1. Direct file path
-    2. Relative to the package root (e.g. "configs/templates/openvas_prompt.txt")
+    2. Relative to the package root (e.g. "configs/prompts/openvas_prompt.txt")
     3. Return as string if not a file
 
     Args:
