@@ -1,6 +1,22 @@
 import argparse
+import os
 
-from mulitaminer.configs.constants import DEBUG_DIR, RUNS_DIR
+from mulitaminer.configs.constants import DEBUG_DIR, RUNS_DIR, OUTPUTS_DIR
+
+
+def _nest_under_outputs(path: str) -> str:
+    """Keep all run artifacts under outputs/. A relative ``--output-dir`` that
+    isn't already inside ``outputs/`` is reparented there (so ``cloud_smoke``
+    becomes ``outputs/cloud_smoke``). Absolute paths and paths already under
+    ``outputs/`` (e.g. run_experiments' ``outputs/runs/...``) are left as-is.
+    """
+    if os.path.isabs(path):
+        return path
+    norm = os.path.normpath(path)
+    base = str(OUTPUTS_DIR)
+    if norm == base or norm.startswith(base + os.sep):
+        return path
+    return os.path.join(base, norm)
 
 def parse_arguments() -> argparse.Namespace:
     """Parse command-line arguments for main extraction processing."""
@@ -17,7 +33,7 @@ def parse_arguments() -> argparse.Namespace:
     # Conversion options group
     conversion_group = parser.add_argument_group('Conversion & Output Options')
     conversion_group.add_argument('--output-file', help='Output filename without extension (e.g., "my_extraction"). Default: PDF name.')
-    conversion_group.add_argument('--output-dir', default=str(RUNS_DIR), help=f'Output directory for results (default: {RUNS_DIR}).')
+    conversion_group.add_argument('--output-dir', default=str(RUNS_DIR), help=f'Output directory for results (default: {RUNS_DIR}). A relative path is nested under outputs/; pass an absolute path to opt out.')
     conversion_group.add_argument('--convert', choices=['csv', 'xlsx', 'tsv', 'all'],
                        default=None,
                        help='Optionally convert the JSON output to an additional format. Omit to keep only JSON (the native output that metrics consume directly).')
@@ -53,5 +69,7 @@ def parse_arguments() -> argparse.Namespace:
     
     # Internal flag for experiment script
     parser.add_argument('--run-experiments', action='store_true', help=argparse.SUPPRESS) # Hide from help
-    
-    return parser.parse_args()
+
+    args = parser.parse_args()
+    args.output_dir = _nest_under_outputs(args.output_dir)
+    return args
