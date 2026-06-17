@@ -16,7 +16,7 @@ from mulitaminer.chunking.block_creation import (
     cleanup_temp_blocks,
 )
 from mulitaminer.readers import get_reader
-from mulitaminer.chunking.chunking import get_token_based_chunks
+from mulitaminer.chunking import get_token_based_chunks
 from mulitaminer.llm import load_profile, load_llm, init_llm
 from mulitaminer.writers import execute_conversions
 from mulitaminer.configs.constants import TMP_DIR, TOKENS_DIR, DEBUG_DIR
