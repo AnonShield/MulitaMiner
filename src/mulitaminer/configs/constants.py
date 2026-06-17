@@ -1,4 +1,4 @@
-"""Single source of truth for output locations.
+"""Single source of truth for output locations and tunable constants.
 
 All run artifacts live under one gitignored ``outputs/`` tree, resolved
 relative to the current working directory (the project root, by convention —
@@ -29,3 +29,16 @@ DEBUG_DIR = OUTPUTS_DIR / "debug"
 PLOTS_DIR = OUTPUTS_DIR / "plots"
 CHECKPOINTS_DIR = OUTPUTS_DIR / "checkpoints"
 TMP_DIR = OUTPUTS_DIR / "tmp"
+
+
+# ---------------------------------------------------------------------------
+# Chunking — char-budget tuning for splitting a block into LLM-sized chunks.
+# ---------------------------------------------------------------------------
+# Fraction of the theoretical char budget actually used, leaving headroom for
+# the prompt template + tokenizer estimation error. A per-LLM override can be
+# read from the LLM JSON (``chunk_chars_safety_margin``) defaulting to this.
+CHUNK_SAFETY_MARGIN_DEFAULT = 0.85
+# Absolute floor for the char ceiling, and the token multiplier above it:
+# ceiling = max(CHUNK_CHAR_CEILING_MIN, chunk_size_tokens * CHUNK_CHAR_CEILING_TOKEN_MULT)
+CHUNK_CHAR_CEILING_MIN = 30_000
+CHUNK_CHAR_CEILING_TOKEN_MULT = 2

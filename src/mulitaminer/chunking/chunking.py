@@ -4,6 +4,11 @@ from typing import List, Dict, Any
 from mulitaminer.llm import parse_json_response, load_prompt, validate_json_and_tokens, get_tokenizer
 from mulitaminer.reporting.llm_debug import save_llm_response_debug
 from mulitaminer.chunking.processing import extract_response_content, sanitize_unicode_text
+from mulitaminer.configs.constants import (
+    CHUNK_SAFETY_MARGIN_DEFAULT,
+    CHUNK_CHAR_CEILING_MIN,
+    CHUNK_CHAR_CEILING_TOKEN_MULT,
+)
 import unicodedata
 import os
 from tqdm import tqdm
@@ -392,10 +397,13 @@ def smart_chunk_vulnerabilities(
     # Use full text for exact proportion (no approximation error from sampling)
     token_count = count_tokens(text, tokenizer)
     chars_per_token = len(text) / max(token_count, 1)
-    # Apply 85% safety margin to balance safety and chunk size
-    optimized_target_chars = int(chunk_size_tokens * chars_per_token * 0.85)
+    # Apply the safety margin to balance safety and chunk size
+    optimized_target_chars = int(chunk_size_tokens * chars_per_token * CHUNK_SAFETY_MARGIN_DEFAULT)
     # Relaxed limit: respect LLM config capacity instead of hardcoding 8K
-    optimized_target_chars = min(optimized_target_chars, max(30000, chunk_size_tokens * 2))
+    optimized_target_chars = min(
+        optimized_target_chars,
+        max(CHUNK_CHAR_CEILING_MIN, chunk_size_tokens * CHUNK_CHAR_CEILING_TOKEN_MULT),
+    )
     
     # Build chunks respecting ALL constraints simultaneously
     chunks = []
@@ -498,7 +506,7 @@ def intelligent_chunk_redivision(chunk_content: str, max_tokens: int,
     base_target = max_tokens - reserve_for_response
     token_count = max(count_tokens(chunk_content, tokenizer), 1)
     chars_per_token = len(chunk_content) / token_count
-    target_chars = int(base_target * chars_per_token * 0.85)
+    target_chars = int(base_target * chars_per_token * CHUNK_SAFETY_MARGIN_DEFAULT)
 
     if not error_context.get('token_valid', True):
         target_chars = min(target_chars, len(chunk_content) // 2)
