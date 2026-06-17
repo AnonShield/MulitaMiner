@@ -15,8 +15,7 @@ from mulitaminer.utils.block_creation import (
     extract_vulns_from_blocks,
     cleanup_temp_blocks,
 )
-from mulitaminer.utils.pdf_loader import save_visual_layout
-from mulitaminer.utils.extractors import get_extractor
+from mulitaminer.readers import get_reader
 from mulitaminer.utils.chunking import get_token_based_chunks
 from mulitaminer.llm import load_profile, load_llm, init_llm
 from mulitaminer.writers import execute_conversions
@@ -86,28 +85,27 @@ def run_extraction(args: argparse.Namespace) -> None:
     print(f"[CONFIG] Reserve for response: {reserve_response}")
     print(f"{'='*60}\n")
 
-    # Extração do PDF com layout visual
-    print(f"[PDF] Loading PDF from: {args.input}")
-
-    extractor = get_extractor(getattr(args, 'use_markdown', False))
-    print(f"[PDF] Using extractor: {extractor.__class__.__name__}")
-    result = extractor.extract(args.input, args.scanner)
-
-    if result is None:
-        print("[ERROR] No text could be extracted from the PDF.")
+    # Load the input via the format-appropriate reader (PDF/CSV/...).
+    print(f"[INPUT] Loading: {args.input}")
+    try:
+        reader = get_reader(args.input)
+    except ValueError as e:
+        print(f"[ERROR] {e}")
         return
 
-    output_ext = result.output_ext
-
-    # Salvar layout visual a partir do sumário (necessário para estratégias
-    # que requerem contexto visual, como OpenVAS).
-    visual_file = save_visual_layout(
-        result.summary.page_content, args.input,
-        output_ext=output_ext, output_dir=args.output_dir,
+    doc = reader.read(
+        args.input, scanner=args.scanner, output_dir=args.output_dir,
+        use_markdown=getattr(args, 'use_markdown', False),
     )
+    if doc is None:
+        print("[ERROR] No text could be extracted from the input.")
+        return
+
+    output_ext = doc.output_ext
+    visual_file = doc.visual_layout_path
     print(f"[LAYOUT] Visual layout: {visual_file}")
 
-    extraction_text = result.extraction.page_content
+    extraction_text = doc.text
 
     # Texto bruto da extração — útil para inspeção, mas só persiste com --debug
     # para não criar lixo na raiz do projeto em runs normais.
