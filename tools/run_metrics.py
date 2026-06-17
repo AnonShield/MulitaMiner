@@ -41,10 +41,9 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
-sys.path.insert(0, str(PROJECT_ROOT))
 
 # Single source of truth for available metrics + their CLIs + their order.
-from main import (  # noqa: E402
+from mulitaminer.pipeline.metrics_dispatch import (  # noqa: E402
     ALL_METHODS_ORDER,
     METRIC_SCRIPTS,
     expand_evaluation_methods,
