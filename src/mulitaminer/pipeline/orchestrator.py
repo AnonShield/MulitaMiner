@@ -10,13 +10,13 @@ import os
 import shutil
 import time
 
-from mulitaminer.utils.block_creation import (
+from mulitaminer.chunking.block_creation import (
     create_session_blocks_from_text,
     extract_vulns_from_blocks,
     cleanup_temp_blocks,
 )
 from mulitaminer.readers import get_reader
-from mulitaminer.utils.chunking import get_token_based_chunks
+from mulitaminer.chunking.chunking import get_token_based_chunks
 from mulitaminer.llm import load_profile, load_llm, init_llm
 from mulitaminer.writers import execute_conversions
 from mulitaminer.configs.constants import TMP_DIR, TOKENS_DIR, DEBUG_DIR
@@ -246,7 +246,7 @@ def run_extraction(args: argparse.Namespace) -> None:
             }
         ]
         if not args.run_experiments:
-            from mulitaminer.utils.reporting import generate_final_report
+            from mulitaminer.reporting.reporting import generate_final_report
             generate_final_report(
                 start_time=real_start_time,
                 end_time=real_end_time,

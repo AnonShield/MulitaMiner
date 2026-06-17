@@ -127,7 +127,7 @@ def validate_vulnerability(vuln: Dict[str, Any], profile_config: Dict[str, Any])
 def register_default_validators():
     """Register validators for built-in profile types."""
     from mulitaminer.llm import validate_and_normalize_vulnerability
-    from .cais_validator import validate_cais_vulnerability
+    from mulitaminer.validators.cais_validator import validate_cais_vulnerability
     
     # Default validator (system fields: Name, description, etc)
     register_validator('default', validate_and_normalize_vulnerability)

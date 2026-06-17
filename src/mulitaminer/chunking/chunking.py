@@ -2,8 +2,8 @@ import tiktoken
 import re
 from typing import List, Dict, Any
 from mulitaminer.llm import parse_json_response, load_prompt, validate_json_and_tokens, get_tokenizer
-from mulitaminer.utils.llm_debug import save_llm_response_debug
-from mulitaminer.utils.processing import extract_response_content, sanitize_unicode_text
+from mulitaminer.reporting.llm_debug import save_llm_response_debug
+from mulitaminer.chunking.processing import extract_response_content, sanitize_unicode_text
 import unicodedata
 import os
 from tqdm import tqdm

@@ -69,7 +69,7 @@ def extract_vulns_from_blocks(blocks: list, llm, profile_config: dict,
     Raises:
         ValueError: If llm_config is None or missing required fields
     """
-    from mulitaminer.utils.chunking import get_token_based_chunks, split_text_to_subchunks, TokenChunk
+    from mulitaminer.chunking.chunking import get_token_based_chunks, split_text_to_subchunks, TokenChunk
     from mulitaminer.llm import get_tokenizer, count_tokens
 
     if not llm_config:
@@ -112,7 +112,7 @@ def extract_vulns_from_blocks(blocks: list, llm, profile_config: dict,
             block_text = f.read()
             
             # Smart chunking: respects markers, tokens, vuln count, size simultaneously
-            from mulitaminer.utils.chunking import smart_chunk_vulnerabilities
+            from mulitaminer.chunking.chunking import smart_chunk_vulnerabilities
             chunks = smart_chunk_vulnerabilities(
                 text=block_text,
                 marker_pattern=marker_pattern,
@@ -132,7 +132,7 @@ def extract_vulns_from_blocks(blocks: list, llm, profile_config: dict,
             for chunk in chunks:
                 # Build prompt once to count input tokens correctly
                 # (includes template + Unicode sanitization)
-                from mulitaminer.utils.chunking import build_prompt
+                from mulitaminer.chunking.chunking import build_prompt
                 prompt = build_prompt(chunk, profile_config)
                 
                 # Count input tokens from the actual prompt that will be sent

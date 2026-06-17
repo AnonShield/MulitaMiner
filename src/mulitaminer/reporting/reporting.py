@@ -64,7 +64,7 @@ def generate_final_report(
     final_report_name = f"final_report_{report_ts}_{report_uuid}.md"
     final_report_path = os.path.join(report_dir, final_report_name)
 
-    from mulitaminer.utils.tokens_cost import calc_tokens_and_cost
+    from mulitaminer.reporting.tokens_cost import calc_tokens_and_cost
     llm_totals, llm_costs, total_all_tokens, total_cost = calc_tokens_and_cost(tokens_dir)
 
     lines: list[str] = []
@@ -100,7 +100,7 @@ def generate_final_report(
         lines.append("_No token data found._")
 
     # Usage REAL da API (usage_real_*.jsonl): contagem exata + custo com cache do DeepSeek.
-    from mulitaminer.utils.tokens_cost import calc_real_usage
+    from mulitaminer.reporting.tokens_cost import calc_real_usage
     real = calc_real_usage(tokens_dir)
     real = {k: v for k, v in real.items() if (v.get("input") or v.get("output"))}
     if real:

@@ -64,7 +64,7 @@ class OpenAIProvider(BaseLLMProvider):
         """Send prompt to OpenAI and return response text."""
         response = self.llm.invoke(prompt)
         try:
-            from mulitaminer.utils.usage_log import log_real_usage
+            from mulitaminer.reporting.usage_log import log_real_usage
             log_real_usage(response, self.model_name)  # captura usage REAL antes de reduzir a .content
         except Exception:
             pass

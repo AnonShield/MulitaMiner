@@ -11,8 +11,8 @@ Analyzes all generated chunks to ensure:
 import os
 import sys
 
-from mulitaminer.utils.pdf_loader import load_pdf_with_pypdf2
-from mulitaminer.utils.chunking import get_token_based_chunks, split_text_to_subchunks, detect_scanner_pattern
+from mulitaminer.readers.pdf_loader import load_pdf_with_pypdf2
+from mulitaminer.chunking.chunking import get_token_based_chunks, split_text_to_subchunks, detect_scanner_pattern
 from mulitaminer.llm import load_profile, load_llm
 import tiktoken
 import re

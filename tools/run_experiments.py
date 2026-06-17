@@ -9,7 +9,7 @@ import shutil
 from datetime import datetime
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
-from mulitaminer.utils.reporting import generate_final_report
+from mulitaminer.reporting.reporting import generate_final_report
 from mulitaminer.utils.gpu_sampler import GpuSampler
 from mulitaminer.llm.config_loader import get_provider_key, load_llm
 from mulitaminer.configs.constants import RUNS_DIR, DEBUG_DIR, CHECKPOINTS_DIR, PLOTS_DIR, TOKENS_DIR

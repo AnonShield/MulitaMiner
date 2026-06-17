@@ -5,7 +5,7 @@ import time
 import argparse
 import subprocess
 from tqdm import tqdm
-from mulitaminer.utils.cli_args import parse_arguments
+from mulitaminer.cli_args import parse_arguments
 from mulitaminer.configs.constants import DEBUG_DIR, TOKENS_DIR
 
 def batch_extract_vulnerabilities(input_dir, output_dir=None, marker='_batch', scanner=None, llm=None, convert=None, extra_args=None):
@@ -65,7 +65,7 @@ def batch_extract_vulnerabilities(input_dir, output_dir=None, marker='_batch', s
             failures.append({"run_id": base_name, "error": str(e)})
     real_end_time = time.time()
     # Generate final modular report
-    from mulitaminer.utils.reporting import generate_final_report
+    from mulitaminer.reporting.reporting import generate_final_report
     run_stats = {
         'start_time': real_start_time,
         'end_time': real_end_time,

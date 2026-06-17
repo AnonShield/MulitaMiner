@@ -8,8 +8,8 @@ from __future__ import annotations
 from typing import Optional
 
 from mulitaminer.readers.base import InputReader, RawDocument, register
-from mulitaminer.utils.extractors import get_extractor
-from mulitaminer.utils.pdf_loader import save_visual_layout
+from mulitaminer.readers.extractors import get_extractor
+from mulitaminer.readers.pdf_loader import save_visual_layout
 
 
 @register

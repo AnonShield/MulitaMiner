@@ -9,7 +9,7 @@ import io
 import os
 import sys
 
-from mulitaminer.utils.cli_args import parse_arguments
+from mulitaminer.cli_args import parse_arguments
 from mulitaminer.pipeline.orchestrator import run_extraction
 from mulitaminer.pipeline.metrics_dispatch import run_metrics_only
 
