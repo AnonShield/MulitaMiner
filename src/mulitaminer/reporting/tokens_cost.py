@@ -10,12 +10,23 @@ from mulitaminer.configs.constants import TOKENS_DIR
 # DeepSeek: "deepseek-coder" hoje é alias de "deepseek-chat" (V3.x) — use o preço do deepseek-chat.
 #   'cache_hit' = input que bateu no cache (bem mais barato); 'input' = input cache-miss; 'output' = saída.
 #   Os 3 só são usados com o usage REAL (outputs/tokens/usage_real_*.jsonl) via `calc_real_usage`.
+#
+# Cada entrada carrega ``_last_updated`` + ``_source`` para auditoria. As datas
+# marcam quando a TABELA foi consolidada (~jun/2026, vide deepseek), não uma
+# verificação independente por-preço — reconferir no ``_source`` ao revisar.
+# Os consumidores leem só as chaves numéricas (input/output/cache_hit); os
+# campos ``_*`` são ignorados.
 LLM_PRICES = {
-    "gpt5": {"input": 0.25, "output": 2.0},
-    "deepseek": {"input": 0.14, "output": 0.28, "cache_hit": 0.0028},  # deepseek-v4-flash (aliases chat/coder caem aqui), USD/1M: cache-miss / output / cache-hit (jun/2026)
-    "llama3": {"input": 0.59, "output": 0.79},
-    "llama4": {"input": 0.11, "output": 0.34},
-    "gpt4": {"input": 0.15, "output": 0.6},
+    "gpt5":     {"input": 0.25, "output": 2.0,
+                 "_last_updated": "2026-06", "_source": "https://openai.com/api/pricing/"},
+    "deepseek": {"input": 0.14, "output": 0.28, "cache_hit": 0.0028,  # deepseek-v4-flash (aliases chat/coder caem aqui): cache-miss / output / cache-hit
+                 "_last_updated": "2026-06", "_source": "https://api-docs.deepseek.com/quick_start/pricing"},
+    "llama3":   {"input": 0.59, "output": 0.79,
+                 "_last_updated": "2026-06", "_source": "https://groq.com/pricing/"},
+    "llama4":   {"input": 0.11, "output": 0.34,
+                 "_last_updated": "2026-06", "_source": "https://groq.com/pricing/"},
+    "gpt4":     {"input": 0.15, "output": 0.6,
+                 "_last_updated": "2026-06", "_source": "https://openai.com/api/pricing/"},
 }
 
 # Map model names to LLM_PRICES keys
