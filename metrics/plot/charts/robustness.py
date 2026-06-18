@@ -16,7 +16,7 @@ from metrics.plot.data_source import Dataset
 def f1_distribution_box(dataset: Dataset) -> dict:
     """Per-model F1 values across runs, ordered by median desc."""
     df = dataset.long
-    f1 = df[(df["source"] == "entity") & (df["metric"] == "F1_Score")]
+    f1 = df[(df["source"] == "field_f1") & (df["metric"] == "F1_Score")]
     if f1.empty:
         return {"empty": True, "models": [], "values": {}}
 
@@ -33,9 +33,9 @@ def wilcoxon_pvalue_heatmap(dataset: Dataset, target_metric: str = "F1_Score") -
     NaN cells (no overlap, single value) are encoded as None for JSON.
     """
     df = dataset.long
-    f1 = df[(df["source"] == "entity") & (df["metric"] == target_metric)]
+    f1 = df[(df["source"] == "field_f1") & (df["metric"] == target_metric)]
     if f1.empty:
-        return {"empty": True, "models": [], "matrix": [], "reason": "no entity metrics yet"}
+        return {"empty": True, "models": [], "matrix": [], "reason": "no field_f1 metrics yet"}
 
     per_run = f1.groupby(["model", "run"], as_index=False)["value"].mean()
     models = sorted(per_run["model"].unique().tolist())

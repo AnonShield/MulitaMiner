@@ -15,7 +15,7 @@ Pipeline:
 
 CLI is the project-standard ``parse_arguments_common`` plus ``--scorer NAME``.
 Output filename adopts legacy prefixes when the scorer is ``bertscore`` or
-``rouge_l`` so downstream consumers (entity, severity, paper, aggregator)
+``rouge_l`` so downstream consumers (field_f1, severity, paper, aggregator)
 keep working without modification.
 
 Usage::
@@ -54,7 +54,7 @@ from metrics.scorers import SCORERS, list_scorers  # noqa: E402
 
 # Per-scorer cosmetic conventions: column suffixes, summary prefixes, file
 # prefixes. Legacy scorers preserve the names already produced by bert/rouge
-# so aggregator and entity pipelines keep finding the files they expect.
+# so aggregator and field_f1 pipelines keep finding the files they expect.
 _CONFIG: dict[str, dict[str, str]] = {
     "bertscore": {"suffix": "_bertscore_f1", "stat_prefix": "BERTScore_F1", "file_prefix": "bert_comparison"},
     "rouge_l":   {"suffix": "_rouge_l",      "stat_prefix": "ROUGE_L",      "file_prefix": "rouge_comparison"},
@@ -138,7 +138,7 @@ def score_run(
                 row[f"{col}{suffix}"] = _pair_score(scorer, ext_row[col], base_row[col])
         else:
             # Distinguish UNMATCHED (no candidate) from UNMATCHED_EXCESS
-            # (candidate was already consumed) — preserves the entity/paper
+            # (candidate was already consumed) — preserves the field_f1/paper
             # downstream consumers' status semantics.
             status = "UNMATCHED"
             for d in res.debug_rows:

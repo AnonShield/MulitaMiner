@@ -13,13 +13,13 @@ Computes three record/field-level coverage metrics:
                           missing from extraction).
 
 Reads matched pairs from a BERT or ROUGE comparison XLSX (Mapping_Debug
-sheet — same convention as entity/severity). Reloads baseline + extraction
+sheet — same convention as field_f1/severity). Reloads baseline + extraction
 XLSX to walk field presence record-by-record.
 
-Why not part of entity:
-    Entity reports per-field exact-match P/R/F1 for deterministic fields.
+Why not part of field_f1:
+    field_f1 reports per-field exact-match P/R/F1 for deterministic fields.
     Coverage aggregates across *all* fields and accounts for *unmatched*
-    vulnerabilities (entity skips them).
+    vulnerabilities (field_f1 skips them).
 
 CLI is the project-standard ``parse_arguments_common`` so the pipeline
 runs through ``main.py --evaluation-methods coverage`` (or ``all``).
@@ -45,7 +45,7 @@ import pandas as pd  # noqa: E402
 from metrics.common.cli import parse_arguments_common  # noqa: E402
 from metrics.common.schema_canonicalizer import canonicalize_to_v3  # noqa: E402
 from metrics.common.sheet_resolver import resolve_baseline_sheet  # noqa: E402
-from metrics.entity.compare_extractions_entity import (  # noqa: E402
+from metrics.field_f1.field_f1 import (  # noqa: E402
     find_metric_comparison_file,
 )
 from metrics.scorers.exact_match import normalize as norm_exact  # noqa: E402

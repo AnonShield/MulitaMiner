@@ -32,7 +32,7 @@ def main():
                         help='Scanner to use (e.g., openvas, tenable).')
     parser.add_argument('--metrics', dest='evaluation_methods',
                         type=str, nargs='+', default=None,
-                        help=('Metrics to run. Available: bert, rouge, entity, schema, severity, '
+                        help=('Metrics to run. Available: bert, rouge, field_f1, schema, severity, '
                               'coverage. Use "all" for every method (recommended). Producer/consumer '
                               'dependencies are auto-resolved (e.g. requesting only "coverage" '
                               'auto-adds "bert").'))

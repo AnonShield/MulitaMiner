@@ -171,7 +171,7 @@ def field_hallucination_omission_heatmap(dataset: Dataset, kind: str = "hallucin
 def field_coverage_heatmap(dataset: Dataset, metric: str = "F1_Score") -> dict:
     """rows=field, cols=model, values=metric mean. Fields ordered by mean desc."""
     df = dataset.agg
-    sub = df[(df["source"] == "entity") & (df["metric"] == metric)]
+    sub = df[(df["source"] == "field_f1") & (df["metric"] == metric)]
     if sub.empty:
         return {"empty": True, "fields": [], "models": [], "matrix": []}
     pivot = sub.pivot_table(index="field", columns="model", values="mean", aggfunc="mean")

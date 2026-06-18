@@ -15,7 +15,7 @@ def consistency_table(dataset: Dataset) -> list[dict]:
     if df.empty:
         return []
 
-    f1 = df[(df["source"] == "entity") & (df["metric"] == "F1_Score")]
+    f1 = df[(df["source"] == "field_f1") & (df["metric"] == "F1_Score")]
     if f1.empty:
         return []
 

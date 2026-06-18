@@ -31,7 +31,7 @@ def effective_f1_per_model(dataset: Dataset, version: str | None = None) -> dict
     df = dataset.agg
     if version is not None:
         df = df[df["version"] == version]
-    f1 = df[(df["source"] == "entity") & (df["metric"] == "F1_Score")]
+    f1 = df[(df["source"] == "field_f1") & (df["metric"] == "F1_Score")]
     om = df[(df["source"] == "coverage") & (df["metric"] == "omission_rate")]
     if f1.empty or om.empty:
         return {}
@@ -56,7 +56,7 @@ def best_f1_card(dataset: Dataset) -> dict:
     """
     eff = effective_f1_per_model(dataset)
     if not eff:
-        return _empty_card("Best Effective F1", "no entity/coverage metrics yet")
+        return _empty_card("Best Effective F1", "no field_f1/coverage metrics yet")
     best_model, best_val = max(eff.items(), key=lambda kv: kv[1])
     band = categorize(best_val, "f1")
     return {
@@ -148,7 +148,7 @@ def leaderboard(dataset: Dataset) -> list[dict]:
         agg = sub.groupby("model")["mean"].mean()
         return {m: (v * 100 if scale_pct else v) for m, v in agg.items()}
 
-    f1     = by_model("entity",   "F1_Score")
+    f1     = by_model("field_f1",   "F1_Score")
     schema = by_model("schema",   "schema_conformance_rate", scale_pct=True)
     sev    = by_model("severity", "macro_F1")
     erm    = by_model("coverage", "exact_record_match",      scale_pct=True)

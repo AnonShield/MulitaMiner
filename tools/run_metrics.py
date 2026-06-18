@@ -63,7 +63,7 @@ _OUTPUT_PATTERNS: dict[str, str] = {
     "bert":     "bert_comparison_*.xlsx",
     "rouge":    "rouge_comparison_*.xlsx",
     "token_f1": "token_f1_comparison_*.xlsx",
-    "entity":   "entity_metrics_*.xlsx",
+    "field_f1":  "field_f1_metrics_*.xlsx",
     "schema":   "schema_report_*.json",
     "severity": "severity_confusion_*.xlsx",
     "coverage": "coverage_*.xlsx",
@@ -354,7 +354,7 @@ def main() -> None:
                 print(f"{tag} {rel}  ok")
 
     # Iterate methods in dependency order. Schema runs first; bert/rouge produce
-    # the matched-pairs that entity/severity/coverage consume; so phase order is
+    # the matched-pairs that field_f1/severity/coverage consume; so phase order is
     # crucial regardless of within-phase parallelism.
     for method in methods:
         completed = [0]

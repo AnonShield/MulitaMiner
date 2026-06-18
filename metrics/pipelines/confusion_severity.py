@@ -2,7 +2,7 @@
 
 Reads matched pairs from a BERT or ROUGE comparison XLSX (the same
 ``Per_Vulnerability`` + ``Mapping_Debug`` convention used by
-``compare_extractions_entity.py``), then re-loads the *original*
+``field_f1.py``), then re-loads the *original*
 baseline/extraction XLSX to recover the canonical severity values.
 
 Outputs an XLSX with three sheets:
@@ -10,15 +10,15 @@ Outputs an XLSX with three sheets:
     Per_Class  — precision/recall/F1/support per severity class
     Summary    — macro-F1 (over classes with non-zero support) and accuracy
 
-Why a separate pipeline (not extending entity):
-    Entity computes binary exact-match F1 per field — useful, but blind to
+Why a separate pipeline (not extending field_f1):
+    field_f1 computes binary exact-match F1 per field — useful, but blind to
     *which* class confuses with which. The confusion matrix is the figure
     a tier-1 reviewer will ask for if missing.
 
 CLI is the project-standard ``parse_arguments_common`` so the pipeline can
-be invoked through ``main.py`` exactly like ``bert``/``rouge``/``entity``.
+be invoked through ``main.py`` exactly like ``bert``/``rouge``/``field_f1``.
 The BERT/ROUGE comparison XLSX is auto-located in ``--output-dir`` (BERT
-preferred, ROUGE as fallback) using the same lookup as ``entity``.
+preferred, ROUGE as fallback) using the same lookup as ``field_f1``.
 """
 from __future__ import annotations
 
@@ -27,7 +27,7 @@ import os
 import sys
 from pathlib import Path
 
-# Force UTF-8 stdout on Windows (consistency with bert/rouge/entity scripts).
+# Force UTF-8 stdout on Windows (consistency with bert/rouge/field_f1 scripts).
 if sys.platform.startswith("win") and sys.stdout.encoding and sys.stdout.encoding.lower() != "utf-8":
     sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8")
     sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding="utf-8")
@@ -40,7 +40,7 @@ import pandas as pd  # noqa: E402
 
 from metrics.common.cli import parse_arguments_common  # noqa: E402
 from metrics.common.sheet_resolver import resolve_baseline_sheet  # noqa: E402
-from metrics.entity.compare_extractions_entity import (  # noqa: E402
+from metrics.field_f1.field_f1 import (  # noqa: E402
     find_metric_comparison_file,
 )
 
@@ -78,7 +78,7 @@ def _build_pairs(
 ) -> list[tuple[str, str]]:
     """Reconstruct ``(baseline_severity, extraction_severity)`` for matched rows.
 
-    Mirrors the row-id logic in ``compare_extractions_entity.py`` so duplicate
+    Mirrors the row-id logic in ``field_f1.py`` so duplicate
     Names at different ports (e.g. "Services") are not collapsed.
     """
     if (

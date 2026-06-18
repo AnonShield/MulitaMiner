@@ -22,7 +22,7 @@ METRIC_SCRIPTS: dict[str, list[str]] = {
     'bert':     [_UNIFIED, '--scorer', 'bertscore'],
     'rouge':    [_UNIFIED, '--scorer', 'rouge_l'],
     'token_f1': [_UNIFIED, '--scorer', 'token_f1'],
-    'entity':   [os.path.join('metrics', 'entity',    'compare_extractions_entity.py')],
+    'field_f1':   [os.path.join('metrics', 'field_f1',  'field_f1.py')],
     'schema':   [os.path.join('metrics', 'pipelines', 'schema_check.py')],
     'severity': [os.path.join('metrics', 'pipelines', 'confusion_severity.py')],
     'coverage': [os.path.join('metrics', 'pipelines', 'coverage.py')],
@@ -30,12 +30,12 @@ METRIC_SCRIPTS: dict[str, list[str]] = {
 
 # Order used when the user requests ``all``. Schema runs first (operates on
 # the raw JSON, no dependencies); bert/rouge/token_f1 produce the matched
-# pairs that entity, severity and coverage metrics consume.
-ALL_METHODS_ORDER: list[str] = ['schema', 'bert', 'rouge', 'token_f1', 'entity', 'severity', 'coverage']
+# pairs that field_f1, severity and coverage metrics consume.
+ALL_METHODS_ORDER: list[str] = ['schema', 'bert', 'rouge', 'token_f1', 'field_f1', 'severity', 'coverage']
 
 # Methods that need a bert_comparison_*.xlsx or rouge_comparison_*.xlsx
 # already in the run directory before they execute.
-_DEPS_ON_PAIRS: set[str] = {'entity', 'severity', 'coverage'}
+_DEPS_ON_PAIRS: set[str] = {'field_f1', 'severity', 'coverage'}
 
 
 def expand_evaluation_methods(methods: list[str]) -> list[str]:
@@ -44,7 +44,7 @@ def expand_evaluation_methods(methods: list[str]) -> list[str]:
     Behaviour:
         * ``'all'`` expands to every registered method.
         * Unknown methods are warned and dropped.
-        * If any consumer (``entity``/``severity``/``paper``) is requested
+        * If any consumer (``field_f1``/``severity``/``paper``) is requested
           without a producer (``bert``/``rouge``) being part of the list,
           ``bert`` is auto-added so the consumer has matched pairs to read.
         * The returned list is ordered by :data:`ALL_METHODS_ORDER`,
@@ -61,7 +61,7 @@ def expand_evaluation_methods(methods: list[str]) -> list[str]:
             print(f"[WARN] Unknown evaluation method: {m} (skipping)")
 
     if (requested & _DEPS_ON_PAIRS) and not (requested & {'bert', 'rouge'}):
-        print("[INFO] Auto-adding 'bert' because entity/severity/coverage need matched pairs.")
+        print("[INFO] Auto-adding 'bert' because field_f1/severity/coverage need matched pairs.")
         requested.add('bert')
 
     return [m for m in ALL_METHODS_ORDER if m in requested]
@@ -156,8 +156,8 @@ def run_metrics_only(args: argparse.Namespace) -> None:
 
     # Metric scripts read JSON natively (same contract as run_metrics.py).
     methods = expand_evaluation_methods(args.evaluation_methods)
-    if 'entity' not in methods:
-        methods.append('entity')
+    if 'field_f1' not in methods:
+        methods.append('field_f1')
     methods = [m for m in ALL_METHODS_ORDER if m in methods]
     metric_start = time.time()
     for method in methods:

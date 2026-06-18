@@ -523,27 +523,27 @@ def plot_score_heatmaps():
                 print(f"[HEATMAP] Error generating heatmap for baseline={baseline}, metric={metric}: {e}")
 
 
-def plot_entity_metrics():
-    """Generate plots for entity metrics (F1, precision, recall) across LLMs and fields."""
+def plot_field_f1_metrics():
+    """Generate plots for field_f1 metrics (F1, precision, recall) across LLMs and fields."""
     os.makedirs('outputs/plots', exist_ok=True)
-    entity_data = []
+    field_f1_data = []
     
-    print("[ENTITY] Searching for entity metrics files...")
+    print("[FIELD_F1] Searching for field_f1 metrics files...")
     
     for root, dirs, files in os.walk(RESULTS_DIR):
         for fname in files:
-            if not (fname.startswith("entity_metrics_") and fname.endswith(".xlsx")):
+            if not (fname.startswith("field_f1_metrics_") and fname.endswith(".xlsx")):
                 continue
             
             path = os.path.join(root, fname)
             try:
                 df = pd.read_excel(path, sheet_name="Summary", engine="openpyxl")
             except Exception as e:
-                print(f"[ENTITY] Error reading {path}: {e}")
+                print(f"[FIELD_F1] Error reading {path}: {e}")
                 continue
             
             # Extract baseline and LLM from filename
-            # Format: entity_metrics_{baseline}_{llm}.xlsx
+            # Format: field_f1_metrics_{baseline}_{llm}.xlsx
             base = os.path.splitext(fname)[0]
             parts = base.split('_')
             
@@ -566,7 +566,7 @@ def plot_entity_metrics():
                 if 'Field' not in row.index:
                     continue
                 
-                entity_data.append({
+                field_f1_data.append({
                     'scanner': scanner.lower(),
                     'baseline': baseline.lower(),
                     'llm': llm,
@@ -576,17 +576,17 @@ def plot_entity_metrics():
                     'f1': float(row['F1_Score']) if pd.notna(row['F1_Score']) else 0.0
                 })
     
-    if not entity_data:
-        print("[ENTITY] No entity metrics found. Skipping entity plots.")
+    if not field_f1_data:
+        print("[FIELD_F1] No field_f1 metrics found. Skipping field_f1 plots.")
         return
     
-    print(f"[ENTITY] Found {len(entity_data)} entity metric records")
+    print(f"[FIELD_F1] Found {len(field_f1_data)} field_f1 metric records")
     
-    df_entity = pd.DataFrame(entity_data)
+    df_entity = pd.DataFrame(field_f1_data)
     
     # Group by scanner and baseline
     for (scanner, baseline), group in df_entity.groupby(['scanner', 'baseline']):
-        print(f"[ENTITY] Generating plots for {scanner} | {baseline}...")
+        print(f"[FIELD_F1] Generating plots for {scanner} | {baseline}...")
         
         # Aggregate by LLM and Field
         agg_data = group.groupby(['llm', 'field'])[['precision', 'recall', 'f1']].mean().reset_index()
@@ -609,7 +609,7 @@ def plot_entity_metrics():
         
         ax.set_xlabel("Field", fontsize=14)
         ax.set_ylabel("F1-Score", fontsize=14)
-        ax.set_title(f"Entity Metrics - F1-Score Comparison\n{scanner} | {baseline}", fontsize=16)
+        ax.set_title(f"field_f1 Metrics - F1-Score Comparison\n{scanner} | {baseline}", fontsize=16)
         ax.set_xticks(x + width * (len(llms) - 1) / 2)
         ax.set_xticklabels(fields, fontsize=12)
         ax.legend(fontsize=11, loc='best')
@@ -621,7 +621,7 @@ def plot_entity_metrics():
         fname_out = f"outputs/plots/entity_f1_scores_{scanner}_{baseline}_{timestamp}.png"
         plt.savefig(fname_out, dpi=150, bbox_inches='tight')
         plt.close()
-        print(f"[ENTITY] Saved: {fname_out}")
+        print(f"[FIELD_F1] Saved: {fname_out}")
         
         # Plot 2: Precision vs Recall scatter for each field
         fig, axes = plt.subplots(len(fields), 1, figsize=(10, 4 * len(fields)))
@@ -647,14 +647,14 @@ def plot_entity_metrics():
             ax.legend(fontsize=10)
             ax.grid(alpha=0.3)
         
-        plt.suptitle(f"Entity Metrics - Precision vs Recall\n{scanner} | {baseline}", fontsize=16, y=1.00)
+        plt.suptitle(f"field_f1 Metrics - Precision vs Recall\n{scanner} | {baseline}", fontsize=16, y=1.00)
         plt.tight_layout()
         fname_out = f"outputs/plots/entity_precision_recall_{scanner}_{baseline}_{timestamp}.png"
         plt.savefig(fname_out, dpi=150, bbox_inches='tight')
         plt.close()
-        print(f"[ENTITY] Saved: {fname_out}")
+        print(f"[FIELD_F1] Saved: {fname_out}")
     
-    print("[ENTITY] Entity metrics plots generated successfully")
+    print("[FIELD_F1] field_f1 metrics plots generated successfully")
 
 
 if __name__ == "__main__":
@@ -662,4 +662,4 @@ if __name__ == "__main__":
     plot_matched_rate_mean_std()
     plot_score_heatmaps()
     plot_similarity_category_stacked_bar()
-    plot_entity_metrics()
+    plot_field_f1_metrics()

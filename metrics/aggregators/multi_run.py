@@ -11,7 +11,7 @@ sheets, and emits two tidy tables:
 Sources collected (whatever exists in the run dir):
     bert     → Summary sheet of bert_comparison_*.xlsx
     rouge    → Summary sheet of rouge_comparison_*.xlsx
-    entity   → Summary sheet of entity_metrics_*.xlsx
+    field_f1 → Summary sheet of field_f1_metrics_*.xlsx
     severity → Summary sheet of severity_confusion_*.xlsx
     coverage → Summary + Per_Field of coverage_*.xlsx
     schema   → JSON file (top-level scalar fields)
@@ -69,7 +69,7 @@ def _read_summary_xlsx(path: Path, source: str, run: RunArtifacts,
 
     ``value_columns`` are the numeric columns to flatten into the long format.
     The ``field_col`` is the descriptor column (e.g. ``Column`` for bert/rouge,
-    ``Field`` for entity).
+    ``Field`` for field_f1).
     """
     try:
         df = pd.read_excel(path, sheet_name="Summary", engine="openpyxl")
@@ -127,12 +127,12 @@ def _read_token_f1(run: RunArtifacts) -> list[dict]:
     )
 
 
-def _read_entity(run: RunArtifacts) -> list[dict]:
-    path = run.first("entity")
+def _read_field_f1(run: RunArtifacts) -> list[dict]:
+    path = run.first("field_f1")
     if path is None:
         return []
     return _read_summary_xlsx(
-        path, source="entity", run=run,
+        path, source="field_f1", run=run,
         value_columns=("Precision", "Recall", "F1_Score"),
         field_col="Field",
     )
@@ -217,7 +217,7 @@ _READERS = {
     "bert": _read_bert,
     "rouge": _read_rouge,
     "token_f1": _read_token_f1,
-    "entity": _read_entity,
+    "field_f1": _read_field_f1,
     "severity": _read_severity,
     "coverage": _read_coverage,
     "schema": _read_schema,

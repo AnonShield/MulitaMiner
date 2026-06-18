@@ -50,7 +50,7 @@ def parse_arguments() -> argparse.Namespace:
                                  help='Path to the .xlsx ground truth file for comparison. Required if --evaluation-methods is used.')
     evaluation_group.add_argument('--metrics', dest='evaluation_methods',
                                  nargs='+', default=[],
-                                 help=('Metrics to run. Available: bert, rouge, entity, schema, '
+                                 help=('Metrics to run. Available: bert, rouge, field_f1, schema, '
                                        'severity, coverage. Use "all" for every method. Producer/consumer '
                                        'dependencies are auto-resolved. Example: --metrics all'))
     evaluation_group.add_argument('--allow-duplicates', dest='allow_duplicates', action='store_true',

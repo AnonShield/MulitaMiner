@@ -12,7 +12,7 @@ from metrics.plot.data_source import Dataset
 def precision_recall_f1(dataset: Dataset) -> dict:
     """Mean ± σ of P/R/F1 per model, ordered by F1 desc."""
     df = dataset.agg
-    sub = df[(df["source"] == "entity") & (df["metric"].isin(["Precision", "Recall", "F1_Score"]))]
+    sub = df[(df["source"] == "field_f1") & (df["metric"].isin(["Precision", "Recall", "F1_Score"]))]
     if sub.empty:
         return {"empty": True, "models": [], "values": {}, "stds": {}}
 
@@ -51,10 +51,10 @@ def recall_vs_f1_scatter(dataset: Dataset) -> dict:
     if df.empty:
         return {"empty": True, "points": []}
 
-    f1 = df[(df["source"] == "entity") & (df["metric"] == "F1_Score")]
+    f1 = df[(df["source"] == "field_f1") & (df["metric"] == "F1_Score")]
     om = df[(df["source"] == "coverage") & (df["metric"] == "omission_rate")]
     if f1.empty or om.empty:
-        return {"empty": True, "points": [], "reason": "need entity F1 + coverage omission_rate"}
+        return {"empty": True, "points": [], "reason": "need field_f1 + coverage omission_rate"}
 
     f1_per = f1.groupby("model")["mean"].mean()
     om_per = om.groupby("model")["mean"].mean()

@@ -1,7 +1,7 @@
 """
 Field Category Mapper - Centralized field configuration for metrics
 
-Maps fields to either deterministic (Entity Metrics) or semantic (BERT/ROUGE) analysis.
+Maps fields to either deterministic (Field-F1 Metrics) or semantic (BERT/ROUGE) analysis.
 Provides utilities for normalizing field values and filtering fields by category.
 """
 import json

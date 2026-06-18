@@ -1,5 +1,5 @@
 """
-Entity Metrics Evaluation - F1/Precision/Recall for Deterministic Fields
+Field-F1 Metrics Evaluation - F1/Precision/Recall for Deterministic Fields
 
 Evaluates extraction accuracy for deterministic fields (cvss, severity, port, protocol, plugin)
 using standard ML metrics (F1-score, Precision, Recall).
@@ -105,11 +105,11 @@ def calculate_field_metrics(baseline_values: List[str], extraction_values: List[
 
 
 def main():
-    """Main entity metrics evaluation - reads from BERT/ROUGE comparison output."""
+    """Main field_f1 metrics evaluation - reads from BERT/ROUGE comparison output."""
     args = parse_arguments_common(require_model=False)
     
     print("\n" + "="*60)
-    print("[ENTITY] Entity Metrics Evaluation (F1/Precision/Recall)")
+    print("[FIELD_F1] Field-F1 Metrics Evaluation (F1/Precision/Recall)")
     print("="*60)
     
     baseline_file = args.baseline_file
@@ -122,10 +122,10 @@ def main():
     if not baseline_name or baseline_name.strip() == "":
         baseline_name = "baseline"
     
-    print(f"[ENTITY] Baseline: {baseline_file}")
-    print(f"[ENTITY] Extraction: {extraction_file}")
-    print(f"[ENTITY] Model: {model_name}")
-    print(f"[ENTITY] Baseline Name: {baseline_name}")
+    print(f"[FIELD_F1] Baseline: {baseline_file}")
+    print(f"[FIELD_F1] Extraction: {extraction_file}")
+    print(f"[FIELD_F1] Model: {model_name}")
+    print(f"[FIELD_F1] Baseline Name: {baseline_name}")
     
     # Create output directory before any file operations
     try:
@@ -144,7 +144,7 @@ def main():
             print(f"[ERROR]        or rouge_comparison_vulnerabilities_{model_name}.xlsx")
             return
         
-        print(f"[ENTITY] Reading matched pairs from: {metric_file.name} ({metric_type.upper()})")
+        print(f"[FIELD_F1] Reading matched pairs from: {metric_file.name} ({metric_type.upper()})")
         
         # Load matched pairs from BERT/ROUGE output
         per_vuln_df = pd.read_excel(metric_file, sheet_name="Per_Vulnerability", engine="openpyxl")
@@ -153,16 +153,16 @@ def main():
         matched_df = per_vuln_df[per_vuln_df["_status"].isin(["OK", "MATCHED"])].reset_index(drop=True)
         
         if matched_df.empty:
-            print("[ENTITY] No matched pairs found in comparison file.")
+            print("[FIELD_F1] No matched pairs found in comparison file.")
             return
         
-        print(f"[ENTITY] Matched pairs: {len(matched_df)}")
+        print(f"[FIELD_F1] Matched pairs: {len(matched_df)}")
         
         # Also load mapping debug to get baseline-extraction correlation
         try:
             mapping_df = pd.read_excel(metric_file, sheet_name="Mapping_Debug", engine="openpyxl")
         except Exception as e:
-            print(f"[ENTITY] Warning: Could not read Mapping_Debug sheet: {e}")
+            print(f"[FIELD_F1] Warning: Could not read Mapping_Debug sheet: {e}")
             mapping_df = None
         
         # Baseline is always XLSX (curated ground truth); extraction may be JSON or XLSX.
@@ -174,10 +174,10 @@ def main():
         field_map = build_field_map(baseline_df.columns)
         
         if not deterministic_fields:
-            print("[ENTITY] No deterministic fields found in baseline.")
+            print("[FIELD_F1] No deterministic fields found in baseline.")
             return
         
-        print(f"[ENTITY] Found deterministic fields: {deterministic_fields}")
+        print(f"[FIELD_F1] Found deterministic fields: {deterministic_fields}")
 
         # Prefer authoritative row indices recorded by BERT during scoring.
         # Each row in mapping_df represents one extraction with its paired baseline
@@ -197,7 +197,7 @@ def main():
                 if pd.isna(ext_rid) or pd.isna(base_rid):
                     continue
                 matched_pairs.append((int(ext_rid), int(base_rid), str(r.get('Extraction_Name', '')).strip()))
-            print(f"[ENTITY] Using row-id pairs from Mapping_Debug: {len(matched_pairs)}")
+            print(f"[FIELD_F1] Using row-id pairs from Mapping_Debug: {len(matched_pairs)}")
         else:
             # Legacy fallback: Name-based lookup (first occurrence only)
             baseline_name_idx: dict = {}
@@ -249,7 +249,7 @@ def main():
                     continue
             
             if not baseline_vals:
-                print(f"[ENTITY] Field '{field_lower}': no data could be extracted.")
+                print(f"[FIELD_F1] Field '{field_lower}': no data could be extracted.")
                 continue
             
             # Calculate metrics
@@ -268,7 +268,7 @@ def main():
                 })
             
             # Print summary
-            print(f"\n[ENTITY] {field_lower}:")
+            print(f"\n[FIELD_F1] {field_lower}:")
             print(f"         Precision: {metrics['precision']:.3f}")
             print(f"         Recall:    {metrics['recall']:.3f}")
             print(f"         F1-Score:  {metrics['f1']:.3f}")
@@ -293,7 +293,7 @@ def main():
             })
         
         if not summary_data:
-            print("[ENTITY] No metrics could be calculated.")
+            print("[FIELD_F1] No metrics could be calculated.")
             return
         
         summary_df = pd.DataFrame(summary_data)
@@ -302,13 +302,13 @@ def main():
         detailed_df = pd.DataFrame(detailed_results) if detailed_results else pd.DataFrame()
         
         # Save to XLSX with proper path handling
-        output_file = f"entity_metrics_{baseline_name}_{model_name}.xlsx"
+        output_file = f"field_f1_metrics_{baseline_name}_{model_name}.xlsx"
         output_path = output_dir / output_file
         
         # Debug logging
-        print(f"\n[ENTITY] Saving to: {output_path}")
-        print(f"[ENTITY] Output dir exists: {output_dir.exists()}")
-        print(f"[ENTITY] Output dir is dir: {output_dir.is_dir()}")
+        print(f"\n[FIELD_F1] Saving to: {output_path}")
+        print(f"[FIELD_F1] Output dir exists: {output_dir.exists()}")
+        print(f"[FIELD_F1] Output dir is dir: {output_dir.is_dir()}")
         
         # Ensure output path is properly formatted as string
         output_path_str = str(output_path)
@@ -320,11 +320,11 @@ def main():
             if not detailed_df.empty:
                 detailed_df.to_excel(writer, sheet_name="Detailed", index=False)
         
-        print(f"[ENTITY] Results saved: {output_path_str}")
+        print(f"[FIELD_F1] Results saved: {output_path_str}")
         print(f"{'='*60}")
         
     except Exception as e:
-        print(f"[ERROR] Entity metrics failed: {e}")
+        print(f"[ERROR] Field-F1 metrics failed: {e}")
         print(f"[DEBUG] baseline_file: {args.baseline_file}")
         print(f"[DEBUG] extraction_file: {args.extraction_file}")
         print(f"[DEBUG] output_dir: {args.output_dir}")

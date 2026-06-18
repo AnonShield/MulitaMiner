@@ -11,7 +11,7 @@ Expected layout::
         <target>_<model>_<runN>.xlsx                (converted)
         bert_comparison_*.xlsx                      (after running bert)
         rouge_comparison_*.xlsx                     (after running rouge)
-        entity_metrics_*.xlsx                       (after running entity)
+        field_f1_metrics_*.xlsx                       (after running field_f1)
         schema_report_*.json                        (after running schema)
         severity_confusion_*.xlsx                   (after running severity)
         coverage_*.xlsx                             (after running coverage)
@@ -32,7 +32,7 @@ _ARTIFACT_GLOBS: dict[str, str] = {
     "bert": "bert_comparison_*.xlsx",
     "rouge": "rouge_comparison_*.xlsx",
     "token_f1": "token_f1_comparison_*.xlsx",
-    "entity": "entity_metrics_*.xlsx",
+    "field_f1": "field_f1_metrics_*.xlsx",
     "schema": "schema_report_*.json",
     "severity": "severity_confusion_*.xlsx",
     "coverage": "coverage_*.xlsx",
@@ -82,7 +82,7 @@ def _collect_files(run_dir: Path) -> dict[str, list[Path]]:
         found[kind] = sorted(run_dir.glob(pattern))
 
     metric_files = (
-        set(found["bert"]) | set(found["rouge"]) | set(found["entity"])
+        set(found["bert"]) | set(found["rouge"]) | set(found["field_f1"])
         | set(found["schema"]) | set(found["severity"]) | set(found["coverage"])
     )
     found["raw_json"] = [p for p in found["raw_json"] if p not in metric_files]

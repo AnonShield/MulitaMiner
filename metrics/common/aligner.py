@@ -161,7 +161,7 @@ class AlignmentResult:
         unmatched_extraction: extraction row indices with no baseline match.
         unmatched_baseline: baseline row indices not consumed by any pair.
         debug_rows: dicts ready to populate the ``Mapping_Debug`` sheet
-            consumed by entity/severity/paper pipelines.
+            consumed by field_f1/severity/paper pipelines.
         scanner_type: detected scanner kind (``openvas``/``tenable``/``generic``).
     """
     pairs: List[Tuple[int, int]] = field(default_factory=list)

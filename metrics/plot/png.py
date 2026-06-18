@@ -101,7 +101,7 @@ def _empty_png(path: Path, msg: str, size=(8, 4)):
 
 def render_quality_prf(d: dict, path: Path):
     if d["empty"]:
-        _empty_png(path, "no entity metrics yet"); return
+        _empty_png(path, "no field_f1 metrics yet"); return
     fig, ax = plt.subplots(figsize=(10, 5))
     models = d["models"]
     metrics = ["Precision", "Recall", "F1"]
@@ -181,7 +181,7 @@ def render_quality_recall_f1(d: dict, path: Path):
 
 def render_robust_box(d: dict, path: Path):
     if d["empty"]:
-        _empty_png(path, "no entity metrics yet"); return
+        _empty_png(path, "no field_f1 metrics yet"); return
     fig, ax = plt.subplots(figsize=(10, 5))
     models = d["models"]
     sorted_models = sorted(models)
@@ -292,7 +292,7 @@ def render_diag_schema(d: dict, path: Path):
 
 def render_diag_field_coverage(d: dict, path: Path):
     if d["empty"]:
-        _empty_png(path, "no entity metrics yet"); return
+        _empty_png(path, "no field_f1 metrics yet"); return
     _heatmap(d["fields"], d["models"], d["matrix"], path,
              title=f"Per-field {d.get('metric','F1')} — fields ordered by overall difficulty",
              fmt=lambda v: f"{v:.2f}", cbar_label=d.get("metric", "F1"))

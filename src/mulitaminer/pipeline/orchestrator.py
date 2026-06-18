@@ -221,8 +221,8 @@ def run_extraction(args: argparse.Namespace) -> None:
                                if xlsx_output_path and os.path.isfile(xlsx_output_path)
                                else output_file)
             methods = expand_evaluation_methods(args.evaluation_methods)
-            if 'entity' not in methods:
-                methods.append('entity')
+            if 'field_f1' not in methods:
+                methods.append('field_f1')
             methods = [m for m in ALL_METHODS_ORDER if m in methods]
             for method in methods:
                 run_evaluation_method(args, extraction_path, method)

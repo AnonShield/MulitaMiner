@@ -21,7 +21,7 @@ from metrics.plot.charts.kpi import effective_f1_per_model
 
 
 # Synthetic metric: Effective F1 = (1 − omission_rate) × per_match_F1.
-# Treated as a first-class headline alongside the entity/severity/coverage
+# Treated as a first-class headline alongside the field_f1/severity/coverage
 # scalars. Marker source/metric_key so downstream code can dispatch off them.
 _EFFECTIVE_F1 = ("__derived__", "effective_f1", "F1 (coverage-aware)", False)
 
@@ -156,10 +156,10 @@ def wilcoxon_pairs(dataset: Dataset) -> dict:
         return {"empty": True, "models": [], "p_values": {}, "significant": {},
                 "versions": versions}
 
-    f1 = df[(df["source"] == "entity") & (df["metric"] == "F1_Score")]
+    f1 = df[(df["source"] == "field_f1") & (df["metric"] == "F1_Score")]
     if f1.empty:
         return {"empty": True, "models": [], "p_values": {}, "significant": {},
-                "versions": versions, "reason": "no entity F1 rows"}
+                "versions": versions, "reason": "no field_f1 rows"}
 
     try:
         from scipy.stats import wilcoxon
@@ -230,7 +230,7 @@ def wilcoxon_pairs(dataset: Dataset) -> dict:
 def recall_vs_f1_scatter(dataset: Dataset) -> dict:
     """Per-(version, model) (recall, per-match F1) coordinates for the scatter.
 
-    Recall = 1 − omission_rate. F1 = entity F1_Score (conditioned on match).
+    Recall = 1 − omission_rate. F1 = field_f1 F1_Score (conditioned on match).
     The chart draws each (model, version) as a point and connects same-model
     points across versions with an arrow — visualising the Pareto move
     (V2→V3 typically: ↑ recall, ↓ F1, net ↗ effective).
@@ -240,11 +240,11 @@ def recall_vs_f1_scatter(dataset: Dataset) -> dict:
     if df.empty or not versions:
         return {"empty": True, "versions": [], "points": []}
 
-    f1 = df[(df["source"] == "entity") & (df["metric"] == "F1_Score")]
+    f1 = df[(df["source"] == "field_f1") & (df["metric"] == "F1_Score")]
     om = df[(df["source"] == "coverage") & (df["metric"] == "omission_rate")]
     if f1.empty or om.empty:
         return {"empty": True, "versions": versions, "points": [],
-                "reason": "need entity F1 + coverage omission_rate"}
+                "reason": "need field_f1 + coverage omission_rate"}
 
     points = []
     for v in versions:
@@ -277,10 +277,10 @@ def cv_per_version(dataset: Dataset) -> dict:
     if df.empty or len(versions) < 2:
         return {"empty": True, "versions": [], "models": [], "cv": {}, "delta": {}}
 
-    f1 = df[(df["source"] == "entity") & (df["metric"] == "F1_Score")]
+    f1 = df[(df["source"] == "field_f1") & (df["metric"] == "F1_Score")]
     if f1.empty:
         return {"empty": True, "versions": versions, "models": [], "cv": {}, "delta": {},
-                "reason": "no entity F1 rows"}
+                "reason": "no field_f1 rows"}
 
     # Average across fields/targets per (version, model, run) — one F1 score per run.
     per_run = f1.groupby(["version", "model", "run"], as_index=False)["value"].mean()
