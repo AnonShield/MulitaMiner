@@ -165,6 +165,26 @@ python -c "import bert_score; import rouge_score; print('Metrics dependencies OK
 python3 -c "import bert_score; import rouge_score; print('Metrics dependencies OK')"
 ```
 
+## Development (tests & linting)
+
+Install the dev tools (pytest, ruff, mypy) and run them from the project root.
+There's no wrapper script — `pytest` is configured in `pyproject.toml`, so it
+finds the suite on its own.
+
+```bash
+pip install -e ".[dev]"      # or: uv sync --extra dev
+
+# Run the test suite
+python -m pytest             # all tests
+python -m pytest -v          # verbose (one line per test)
+python -m pytest tests/unit/test_chunking.py   # a single file
+python -m pytest --cov=mulitaminer             # with coverage
+
+# Lint (static analysis — does not run the code)
+ruff check src tests         # report issues
+ruff check . --fix           # auto-fix what it can
+```
+
 ## Next Steps
 
 After installation:
