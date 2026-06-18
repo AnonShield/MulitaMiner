@@ -3,17 +3,17 @@
   <picture>
     <source media="(prefers-color-scheme: dark)" srcset="imgs/MulitaMiner_logo_light.png">
     <source media="(prefers-color-scheme: light)" srcset="imgs/MulitaMiner_logo_dark.png">
-    <img src="assets/MulitaMiner_logo_light" width="500" alt="MulitaMiner logo">
+    <img src="imgs/MulitaMiner_logo_light.png" width="500" alt="MulitaMiner logo">
   </picture>
 
 **Vulnerability Extraction from Security Reports using LLMs**
 
 _Automated · Structured · Multi-LLM_
 
-![Python](https://img.shields.io/badge/Python-3.8+-blue)
+![Python](https://img.shields.io/badge/Python-3.11+-blue)
 ![license](https://img.shields.io/badge/license-MIT-green)
 ![status](https://img.shields.io/badge/status-active-orange)
-![update](https://img.shields.io/badge/last%20update-Mar%202026-lightgrey)
+![update](https://img.shields.io/badge/last%20update-Jun%202026-lightgrey)
 
 </div>
 
@@ -52,7 +52,7 @@ The following badges are considered for evaluation: **Available**, **Functional*
 | Component   | Requirement                                      |
 | ----------- | ------------------------------------------------ |
 | **OS**      | Windows 10+, Linux (Ubuntu 20.04+), macOS 10.15+ |
-| **Python**  | 3.8+ (recommended: 3.10+)                        |
+| **Python**  | 3.11+                                            |
 | **RAM**     | 4GB+ (8GB recommended for large PDFs)            |
 | **Disk**    | 500MB for dependencies + space for outputs       |
 | **Network** | Internet connection required for LLM API calls   |
@@ -67,27 +67,13 @@ The following badges are considered for evaluation: **Available**, **Functional*
 
 ## Dependencies
 
-### Main Dependencies
+All dependencies are declared in **`pyproject.toml`** (single source of truth)
+and installed with `pip install -e .` — see [Installation](#installation). Key
+libraries:
 
-```
-langchain>=0.1.0,<0.3.0          # LLM framework
-langchain-openai>=0.1.0,<0.2.0   # OpenAI integration
-tiktoken>=0.5.1,<0.7.0           # Tokenization
-pdfplumber>=0.10.0,<0.12.0       # PDF extraction
-python-dotenv>=0.21.0            # Environment variables
-tqdm>=4.0.0,<5.0.0               # Progress bars
-pandas>=1.3.0,<3.0.0             # Data manipulation
-openpyxl>=3.0.0,<4.0.0           # Excel export
-```
-
-### Metrics Evaluation (Optional)
-
-```
-bert-score>=0.3.0,<0.4.0         # BERTScore
-rouge-score>=0.1.0               # ROUGE
-torch>=1.10.0,<3.0.0             # PyTorch (required for BERTScore)
-rapidfuzz>=3.0.0,<4.0.0          # Fuzzy matching
-```
+- **Extraction**: `langchain` + `langchain-openai`/`langchain-ollama`, `pdfplumber`, `tiktoken`, `pydantic` (config validation), `python-dotenv`, `pandas` + `openpyxl` (XLSX export).
+- **Metrics** (included): `bert-score`, `rouge-score`, `torch`, `scikit-learn`, `scipy`, `rapidfuzz`, `matplotlib`/`seaborn`/`jinja2` (reports).
+- **Optional extras**: `.[hf-local]` (local HuggingFace GPU inference), `.[dev]` (pytest, ruff, mypy).
 
 **Third-party resources:**
 
@@ -129,20 +115,30 @@ python3 -m venv .venv
 source .venv/bin/activate
 ```
 
-### 3. Install Dependencies
+### 3. Install the Package
+
+MulitaMiner is an installable package (`src/mulitaminer/`). Install it editable
+so `python main.py` and the `tools/` scripts work from anywhere:
 
 ```bash
-pip install -r requirements.txt
+pip install -e .
 ```
+
+> Add extras as needed: `pip install -e ".[dev]"` (tests/lint) or
+> `pip install -e ".[hf-local]"` (local GPU inference).
 
 ### 4. Configure API Keys
 
-Create/edit the `.env` file:
+Copy the template and fill in your keys (`.env` is gitignored):
+
+```bash
+cp .env.example .env
+```
 
 ```env
-API_KEY_GPT4 = "your-openai-api-key"
-API_KEY_LLAMA3 = "your-groq-api-key"
-API_KEY_DEEPSEEK = "your-deepseek-api-key"
+API_KEY_GPT4="your-openai-api-key"
+API_KEY_LLAMA3="your-groq-api-key"
+API_KEY_DEEPSEEK="your-deepseek-api-key"
 ```
 
 See [docs/CONFIG.md](docs/CONFIG.md) for all configuration options.
@@ -154,27 +150,20 @@ After installation, run this minimal test to verify the setup:
 ### 1. Run Extraction
 
 ```bash
-# Basic extraction using Groq
-
-# Windows
-python main.py --input test\openvas\OpenVAS_JuiceShop.pdf --llm llama3 --scanner openvas --allow-duplicates --output-file openvas_test
-
-# Linux/macOS
-python3 main.py --input test/openvas/OpenVAS_JuiceShop.pdf --llm llama3 --scanner openvas --allow-duplicates --output-file openvas_test
+# Basic extraction using Groq (baselines live under resources/)
+python main.py --input resources/baselines/openvas/OpenVAS_JuiceShop.pdf --llm llama3 --scanner openvas --allow-duplicates --output-file openvas_test
 ```
 
-**Expected result**: openvas_test.json with extracted vulnerabilities and visual_layout.txt file
+**Expected result**: `outputs/runs/openvas_test.json` with extracted vulnerabilities,
+plus the visual-layout dump in `outputs/visual_layouts/`. (All run artifacts live
+under the gitignored `outputs/` tree; a relative `--output-dir` is nested there too.)
 
 ### 2. Verify Output
 
 Check the generated JSON file for extracted vulnerabilities:
 
 ```bash
-# Windows
-python tools/summarize_vulnerabilities.py --input openvas_test.json
-
-# Linux/macOS
-python3 tools/summarize_vulnerabilities.py --input openvas_test.json
+python tools/summarize_vulnerabilities.py --input outputs/runs/openvas_test.json
 ```
 
 **Expected result**: Terminal print with summary of all extracted vulnerabilities in tabular format.
@@ -195,16 +184,9 @@ This section describes how to reproduce the main claims from the paper.
 
 ```bash
 # Extract using DeepSeek (best cost-benefit in the paper) and other LLMs for comparison
-
-# Windows
-python main.py --input test\openvas\OpenVAS_JuiceShop.pdf --llm deepseek --scanner openvas --allow-duplicates --output-file openvas_test_deepseek
-python main.py --input test\openvas\OpenVAS_JuiceShop.pdf --llm gpt4 --scanner openvas --allow-duplicates --output-file openvas_test_gpt4
-python main.py --input test\openvas\OpenVAS_JuiceShop.pdf --llm llama3 --scanner openvas --allow-duplicates --output-file openvas_test_llama3
-
-# Linux/macOS
-python3 main.py --input test/openvas/OpenVAS_JuiceShop.pdf --llm deepseek --scanner openvas --allow-duplicates --output-file openvas_test_deepseek
-python3 main.py --input test/openvas/OpenVAS_JuiceShop.pdf --llm gpt4 --scanner openvas --allow-duplicates --output-file openvas_test_gpt4
-python3 main.py --input test/openvas/OpenVAS_JuiceShop.pdf --llm llama3 --scanner openvas --allow-duplicates --output-file openvas_test_llama3
+python main.py --input resources/baselines/openvas/OpenVAS_JuiceShop.pdf --llm deepseek --scanner openvas --allow-duplicates --output-file openvas_test_deepseek
+python main.py --input resources/baselines/openvas/OpenVAS_JuiceShop.pdf --llm gpt4 --scanner openvas --allow-duplicates --output-file openvas_test_gpt4
+python main.py --input resources/baselines/openvas/OpenVAS_JuiceShop.pdf --llm llama3 --scanner openvas --allow-duplicates --output-file openvas_test_llama3
 ```
 
 **Expected time**: ~12 minutes for all extractions
@@ -221,21 +203,26 @@ python3 main.py --input test/openvas/OpenVAS_JuiceShop.pdf --llm llama3 --scanne
 
 **Execution**:
 
+Metrics run **inline** during extraction — pass `--metrics` plus the ground-truth
+`--baseline-path`. (The standalone `metrics/bert/…`/`metrics/rouge/…` scripts were
+unified into `metrics/pipelines/compare_extractions.py`, dispatched by name.)
+
 ```bash
-# Evaluate with BERTScore and ROUGE-L
-
-# Windows
-python metrics/bert/compare_extractions_bert.py --baseline-file test\openvas\OpenVAS_JuiceShop.xlsx --extraction-file openvas_test_deepseek.json --model deepseek --output-dir results_bert --allow-duplicates
-python metrics/rouge/compare_extractions_rouge.py --baseline-file test\openvas\OpenVAS_JuiceShop.xlsx --extraction-file openvas_test_deepseek.json --model deepseek --output-dir results_rouge --allow-duplicates
-
-# Linux/macOS
-python3 metrics/bert/compare_extractions_bert.py --baseline-file test/openvas/OpenVAS_JuiceShop.xlsx --extraction-file openvas_test_deepseek.json --model deepseek --output-dir results_bert --allow-duplicates
-python3 metrics/rouge/compare_extractions_rouge.py --baseline-file test/openvas/OpenVAS_JuiceShop.xlsx --extraction-file openvas_test_deepseek.json --model deepseek --output-dir results_rouge --allow-duplicates
+# Extract + evaluate with BERTScore and ROUGE-L in one command
+python main.py --input resources/baselines/openvas/OpenVAS_JuiceShop.pdf --llm deepseek --scanner openvas --allow-duplicates \
+    --output-file openvas_test_deepseek \
+    --baseline-path resources/baselines/openvas/OpenVAS_JuiceShop.xlsx \
+    --metrics bert rouge
 ```
+
+Use `--metrics all` for the full suite (schema, bert, rouge, token_f1, entity,
+severity, coverage). To (re-)run metrics on an existing results tree without
+re-calling the LLM, use `python tools/run_metrics.py --root <dir> --methods all`.
 
 **Expected time**: ~15 seconds for BERT and ~3 seconds for ROUGE
 
-**Expected result**: XLSX files with BERTScore and ROUGE-L metrics in ./results_bert and ./results_rouge directories.
+**Expected result**: BERTScore and ROUGE-L XLSX reports written next to the
+extraction JSON under `outputs/runs/`.
 
 ### Claim #3: Large-Scale Reproducibility
 
@@ -244,18 +231,13 @@ python3 metrics/rouge/compare_extractions_rouge.py --baseline-file test/openvas/
 **Execution**:
 
 ```bash
-# Run full experiment suite
-
-# Windows
-python tools/run_experiments.py --input-dir test\openvas --llm deepseek --scanner openvas --metrics bert rouge --runs-per-model 5 --allow-duplicates
-
-# Linux/macOS
-python3 tools/run_experiments.py --input-dir test/openvas --llm deepseek --scanner openvas --metrics bert rouge --runs-per-model 5 --allow-duplicates
+# Run full experiment suite (point --input-dir at a folder of matching .pdf/.xlsx pairs)
+python tools/run_experiments.py --input-dir resources/baselines/openvas --llm deepseek --scanner openvas --metrics bert rouge --runs-per-model 5 --allow-duplicates
 ```
 
 **Expected time**: ~40 minutes
 
-**Expected result**: Organized results in `results_runs/` with extracted vulnerabilities (JSON per run; pass `--convert xlsx` to also emit XLSX), BERTScore and ROUGE-L evaluation reports, an `aggregated_metrics.xlsx` summary, and a Markdown final report with token usage and cost estimation. Charts and visualizations are saved in `plot_runs/`.
+**Expected result**: Organized results in `outputs/runs/` with extracted vulnerabilities (JSON per run; pass `--convert xlsx` to also emit XLSX), BERTScore and ROUGE-L evaluation reports, an `aggregated_metrics.xlsx` summary, and a Markdown final report with token usage and cost estimation. Charts and the interactive HTML report are saved in `outputs/plots/`.
 
 > **Note**:
 > For practical reasons (time, token cost, and infrastructure), this experiment does not use the same set of reports and LLMs as the paper. Here, a simplified version was used: only 1 report and 1 LLM (deepseek), chosen for its cost-effectiveness and performance.
