@@ -93,10 +93,10 @@ Comparison against OpenVAS CSV baseline (6,343 vulnerabilities) using fuzzy matc
 # Run experiments with specified configurations
 
 # Windows
-python tools/run_experiments.py --input-dir test\openvas --llm deepseek gpt4 --scanner openvas --metrics bert rouge --runs-per-model 5
+python tools/run_experiments.py --input-dir resources/baselines/openvas --llm deepseek gpt4 --scanner openvas --metrics bert rouge --runs-per-model 5
 
 # Linux/macOS
-python3 tools/run_experiments.py --input-dir test/openvas --llm deepseek gpt4 --scanner openvas --metrics bert rouge --runs-per-model 5
+python3 tools/run_experiments.py --input-dir resources/baselines/openvas --llm deepseek gpt4 --scanner openvas --metrics bert rouge --runs-per-model 5
 
 # With allow-duplicates (OpenVAS recommended)
 python tools/run_experiments.py --input-dir test\openvas --llm deepseek gpt4 --scanner openvas --metrics bert rouge --runs-per-model 5 --allow-duplicates
@@ -126,7 +126,7 @@ python3 tools/run_experiments.py --checkpoint-file run_checkpoints_2026-03-16T12
 - `--metrics`: Methods to run (`bert`, `rouge`, `entity`, `schema`, `severity`, `coverage`, or `all`). Producer/consumer dependencies auto-resolved.
 - `--runs-per-model`: Number of runs per combination (default: 10)
 - `--allow-duplicates`: Flag to allow duplicates (recommended for OpenVAS; omit for Tenable)
-- `--output-dir`: Results root directory (default: `results_runs`)
+- `--output-dir`: Results root directory (default: `outputs/runs`)
 - `--metrics-workers`: Parallel workers for the post-extraction metrics pass (default: 4)
 - `--skip-metrics`: Skip the metrics + aggregator post-pass
 - `--checkpoint-file`: Checkpoint file to resume from
