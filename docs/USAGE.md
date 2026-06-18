@@ -256,7 +256,7 @@ When running with `--output-file openvas_test`, you'll get:
 ./openvas_test_deduplication_log.txt         # Consolidation details
 ./openvas_test_removed_log.txt               # Filtered vulnerabilities
 ./final_report_20260320_210550_*.md          # Execution summary (Markdown)
-results_tokens/openvas_test_*_tokens.json    # Token usage statistics
+outputs/tokens/openvas_test_*_tokens.json    # Token usage statistics
 ```
 
 ## Batch Extraction
@@ -319,149 +319,57 @@ python3 tools/chunk_validator.py --input report.pdf --llm gpt4 --scanner tenable
 
 ## Metrics Analysis
 
-The metrics scripts automatically handle JSON-to-XLSX conversion and cache the converted files for efficiency. You can pass either `.json` or `.xlsx` files directly.
+Metric scripts read the extraction JSON natively (no manual XLSX conversion
+needed). There are three ways to run them, most to least convenient.
 
-### Isolated Analyses
+### 1. Inline during extraction
 
-#### BERT Analysis
-
-```bash
-# Syntax: Using JSON extraction (automatic conversion to XLSX)
-
-# Windows
-python metrics/bert/compare_extractions_bert.py --baseline <baseline_xlsx> --extraction-file <extraction.json> --model <llm> [--allow-duplicates]
-
-# Linux/macOS
-python3 metrics/bert/compare_extractions_bert.py --baseline <baseline_xlsx> --extraction-file <extraction.json> --model <llm> [--allow-duplicates]
-
-# Example:
-
-# Windows
-python metrics/bert/compare_extractions_bert.py --baseline test/openvas/OpenVAS_JuiceShop.xlsx --extraction-file openvas_test.json --model llama3 --allow-duplicates
-
-# Linux/macOS
-python3 metrics/bert/compare_extractions_bert.py --baseline test/openvas/OpenVAS_JuiceShop.xlsx --extraction-file openvas_test.json --model llama3 --allow-duplicates
-
-# Syntax: Or using pre-converted XLSX
-
-# Windows
-python metrics/bert/compare_extractions_bert.py --baseline <baseline_xlsx> --extraction-file <extraction.xlsx> --model <llm> [--allow-duplicates]
-
-# Linux/macOS
-python3 metrics/bert/compare_extractions_bert.py --baseline <baseline_xlsx> --extraction-file <extraction.xlsx> --model <llm> [--allow-duplicates]
-
-# Example:
-
-# Windows
-python metrics/bert/compare_extractions_bert.py --baseline test/openvas/OpenVAS_JuiceShop.xlsx --extraction-file openvas_test.xlsx --model llama3 --allow-duplicates
-
-# Linux/macOS
-python3 metrics/bert/compare_extractions_bert.py --baseline test/openvas/OpenVAS_JuiceShop.xlsx --extraction-file openvas_test.xlsx --model llama3 --allow-duplicates
-```
-
-#### ROUGE Analysis (ROUGE-L)
+Pass `--metrics` plus the ground-truth `--baseline-path` to `main.py`; the
+metrics run right after extraction and write their reports next to the JSON.
 
 ```bash
-# Syntax: Using JSON extraction (automatic conversion to XLSX)
-
-# Windows
-python metrics/rouge/compare_extractions_rouge.py --baseline <baseline_xlsx> --extraction-file <extraction.json> --model <llm> [--allow-duplicates]
-
-# Linux/macOS
-python3 metrics/rouge/compare_extractions_rouge.py --baseline <baseline_xlsx> --extraction-file <extraction.json> --model <llm> [--allow-duplicates]
-
-# Example:
-
-# Windows
-python metrics/rouge/compare_extractions_rouge.py --baseline test/openvas/OpenVAS_JuiceShop.xlsx --extraction-file openvas_test.json --model llama3 --allow-duplicates
-
-# Linux/macOS
-python3 metrics/rouge/compare_extractions_rouge.py --baseline test/openvas/OpenVAS_JuiceShop.xlsx --extraction-file openvas_test.json --model llama3 --allow-duplicates
-
-# Syntax: Or using pre-converted XLSX
-
-# Windows
-python metrics/rouge/compare_extractions_rouge.py --baseline <baseline_xlsx> --extraction-file <extraction.xlsx> --model <llm> [--allow-duplicates]
-
-# Linux/macOS
-python3 metrics/rouge/compare_extractions_rouge.py --baseline <baseline_xlsx> --extraction-file <extraction.xlsx> --model <llm> [--allow-duplicates]
-
-# Example:
-
-# Windows
-python metrics/rouge/compare_extractions_rouge.py --baseline test/openvas/OpenVAS_JuiceShop.xlsx --extraction-file openvas_test.xlsx --model llama3 --allow-duplicates
-
-# Linux/macOS
-python3 metrics/rouge/compare_extractions_rouge.py --baseline test/openvas/OpenVAS_JuiceShop.xlsx --extraction-file openvas_test.xlsx --model llama3 --allow-duplicates
+python main.py --input resources/baselines/openvas/OpenVAS_JuiceShop.pdf     --scanner openvas --llm llama3 --allow-duplicates     --output-file openvas_test     --baseline-path resources/baselines/openvas/OpenVAS_JuiceShop.xlsx     --metrics bert rouge
 ```
 
-**Note:** The `--model` parameter is optional but recommended for result organization. Both scripts generate four output sheets:
+Available methods: `schema`, `bert`, `rouge`, `token_f1`, `entity`, `severity`,
+`coverage`, or `all`. Producer/consumer dependencies are auto-resolved (e.g.
+requesting `coverage` auto-adds `bert`, which produces the matched pairs it needs).
 
-- **Per_Vulnerability**: Detailed scores per vulnerability
-- **Summary**: Aggregate statistics
-- **Categorization**: Similarity categorization (Highly Similar, Moderately Similar, etc.)
-- **Mapping_Debug**: Internal matching details
+### 2. On an existing results tree (no LLM call)
 
-**Internal Note:** When called from `run_experiments.py`, metrics use `--baseline-file` argument (for internal consistency in checkpoint tracking).
-
-### Chart Generation
-
-> **Important:** Pass the baseline (ground truth) file in the `--baseline` parameter. The plotting script uses the baseline as a reference to automatically compare the results of all models/extractions available.
+To (re-)run metrics over a directory of prior runs without re-extracting, use
+`run_metrics.py`. It walks `<root>/<target>/<llm>/run<N>/`, locates the matching
+baseline under `resources/baselines/`, and runs the requested methods in parallel.
 
 ```bash
-# Syntax: Single model comparison
-
-# Windows
-python -m metrics.plot.cli --metric <metric> --baseline <baseline_xlsx> --models <llm>
-
-# Linux/macOS
-python3 -m metrics.plot.cli --metric <metric> --baseline <baseline_xlsx> --models <llm>
-
-# Example: ROUGE chart for DeepSeek
-
-# Windows
-python -m metrics.plot.cli --metric rouge --baseline test/openvas/OpenVAS_JuiceShop.xlsx --models deepseek
-
-# Linux/macOS
-python3 -m metrics.plot.cli --metric rouge --baseline test/openvas/OpenVAS_JuiceShop.xlsx --models deepseek
-
-# Syntax: Multiple models comparison
-
-# Windows
-python -m metrics.plot.cli --metric <metric> --baseline <baseline_xlsx> --models <llm1>,<llm2>,<llm3>
-
-# Linux/macOS
-python3 -m metrics.plot.cli --metric <metric> --baseline <baseline_xlsx> --models <llm1>,<llm2>,<llm3>
-
-# Example: BERT comparison for three models
-
-# Windows
-python -m metrics.plot.cli --metric bert --baseline test/openvas/OpenVAS_JuiceShop.xlsx --models deepseek,gpt4,llama3
-
-# Linux/macOS
-python3 -m metrics.plot.cli --metric bert --baseline test/openvas/OpenVAS_JuiceShop.xlsx --models deepseek,gpt4,llama3
-
-# Syntax: Chart with specific baseline sheet
-
-# Windows
-python -m metrics.plot.cli --metric <metric> --baseline <baseline_xlsx> --models <llm> --baseline-sheet <sheet_name>
-
-# Linux/macOS
-python3 -m metrics.plot.cli --metric <metric> --baseline <baseline_xlsx> --models <llm> --baseline-sheet <sheet_name>
-
-# Example: ROUGE with specific sheet
-
-# Windows
-python -m metrics.plot.cli --metric rouge --baseline test/openvas/OpenVAS_JuiceShop.xlsx --models deepseek --baseline-sheet Vulnerabilities
-
-# Linux/macOS
-python3 -m metrics.plot.cli --metric rouge --baseline test/openvas/OpenVAS_JuiceShop.xlsx --models deepseek --baseline-sheet Vulnerabilities
+python tools/run_metrics.py --root outputs/runs --methods all
+# subset / filters:
+python tools/run_metrics.py --root outputs/runs --methods bert rouge --only-llm deepseek
 ```
+
+The unified `metrics/pipelines/compare_extractions.py` backs `bert`, `rouge` and
+`token_f1` (selected via `--scorer`). Each produces four sheets —
+**Per_Vulnerability**, **Summary**, **Categorization**, **Mapping_Debug**.
+(The old standalone `metrics/bert/…` and `metrics/rouge/…` scripts were removed
+in favor of this single dispatcher.)
+
+### 3. Charts + interactive report
+
+After a metrics pass, build the HTML dashboard + PNG charts. It reads the
+aggregated metrics under the result root and writes to `outputs/plots/`.
+
+```bash
+python -m metrics.plot.metrics --root outputs/runs
+```
+
+Pass two roots to get the cross-version comparison report
+(`python -m metrics.plot.metrics --root outputs/runs outputs/runs_v2`); the
+`--root` order controls the Δ orientation (new − old).
 
 ## Processing Flow
 
 1. **Input**: PDF specified in `pdf_path`
-2. **Temp blocks creation**: Scanner-aware segmentation creates blocks in `temp_blocks_<llm>/` directory (preserves report structure)
+2. **Temp blocks creation**: Scanner-aware segmentation creates blocks in `outputs/tmp/temp_blocks_<llm>/` (preserves report structure; cleaned up after the run)
 3. **Chunk calculation**: Optimized system calculates ideal token sizes per LLM (within each block)
 4. **Processing**: Using scanner and LLM configured with optimized chunks
 5. **Extraction**: Vulnerabilities extracted with smart retry
@@ -599,10 +507,10 @@ python3 tools/run_experiments.py --input-dir <input_directory> --llm <llm1> <llm
 # Example: Run with DeepSeek and GPT-4 on OpenVAS (with allow-duplicates)
 
 # Windows
-python tools/run_experiments.py --input-dir test\openvas --llm deepseek gpt4 --scanner openvas --metrics bert rouge --runs-per-model 5 --allow-duplicates
+python tools/run_experiments.py --input-dir resources/baselines/openvas --llm deepseek gpt4 --scanner openvas --metrics bert rouge --runs-per-model 5 --allow-duplicates
 
 # Linux/macOS
-python3 tools/run_experiments.py --input-dir test/openvas --llm deepseek gpt4 --scanner openvas --metrics bert rouge --runs-per-model 5 --allow-duplicates
+python3 tools/run_experiments.py --input-dir resources/baselines/openvas --llm deepseek gpt4 --scanner openvas --metrics bert rouge --runs-per-model 5 --allow-duplicates
 
 # Example: Run on Tenable (no --allow-duplicates)
 
@@ -634,10 +542,10 @@ python3 tools/run_experiments.py --checkpoint-file run_checkpoints_2026-03-16T12
 - **One scanner per invocation**: run separately for OpenVAS and Tenable
 - **Checkpoint support**: Resume interrupted experiments from checkpoint files
 - **Timing reports**: Tracks and sums execution time across all runs
-- **Token cost analysis**: Integrates with `results_tokens/` directory
+- **Token cost analysis**: Integrates with `outputs/tokens/` directory
 - **Single Markdown final report**: One `final_report_*.md` per orchestrator run; per-run reports are suppressed
 - **Post-extraction metrics pass**: Extracts first, then runs all metrics in parallel via `tools/run_metrics.py` (transformer models load once instead of once per run)
-- **Organized results**: Per-run subdirs under `--output-dir` (default `results_runs/`), each containing the JSON/XLSX extraction + per-metric output
+- **Organized results**: Per-run subdirs under `--output-dir` (default `outputs/runs/`), each containing the JSON/XLSX extraction + per-metric output
 
 **Parameters:**
 
@@ -647,7 +555,7 @@ python3 tools/run_experiments.py --checkpoint-file run_checkpoints_2026-03-16T12
 - `--metrics`: Methods to run (`bert`, `rouge`, `entity`, `schema`, `severity`, `coverage`, or `all`). Producer/consumer dependencies auto-resolved.
 - `--runs-per-model`: Number of runs per model combination (default: 10)
 - `--allow-duplicates`: Flag to allow duplicates (recommended for OpenVAS; omit for Tenable)
-- `--output-dir`: Results root directory (default: `results_runs`)
+- `--output-dir`: Results root directory (default: `outputs/runs`)
 - `--metrics-workers`: Parallel workers for the post-extraction metrics pass (default: 4)
 - `--skip-metrics`: Skip the metrics + aggregator post-pass
 - `--checkpoint-file`: Optional checkpoint file to resume execution
