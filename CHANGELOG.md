@@ -37,6 +37,9 @@ internals or scripting against the old paths — see the migration notes below.
   (selected via `--scorer`). Run metrics inline (`main.py --metrics …`), over a
   results tree (`tools/run_metrics.py --root … --methods …`), or build charts with
   `python -m metrics.plot.metrics --root …`.
+- **Metric renamed `entity` → `field_f1`** (it computes per-field F1, not NER
+  entities). Use `--metrics field_f1`; outputs are `field_f1_metrics_*.xlsx` with
+  aggregation source `field_f1`; the script moved to `metrics/field_f1/field_f1.py`.
 
 ### Added
 
