@@ -6,100 +6,100 @@ This document describes the organization and main components of MulitaMiner.
 
 ```
 MulitaMiner/
-├── main.py                              # Main CLI script (entry point for extraction)
-├── requirements.txt                     # Python dependencies
-├── README.md                            # Documentation
-├── compare_dataset_csv.py               # Dataset comparison utility (CSV analysis)
-├── tools/
-│   ├── run_experiments.py               # Massive execution and automated evaluation (benchmarks)
-│   ├── process_results.py               # Chart and statistics generation (metrics visualization)
-│   ├── dataset_generator.py             # Dataset consolidation (CSV/XLSX/JSON/JSONL)
-│   ├── batch_pdf_extractor.py           # Batch PDF extraction (processes multiple PDFs)
-│   └── chunk_validator.py               # Chunk analysis and validation tool
-├── src/
-│   ├── __init__.py
-│   ├── configs/
-│   │   ├── llms/                        # LLM configurations (JSON files for models)
-│   │   ├── scanners/                    # Scanner configurations (JSON)
-│   │   └── templates/                   # Prompt templates (TXT)
-│   ├── converters/
-│   │   ├── base_converter.py            # Base converter class
-│   │   ├── csv_converter.py             # CSV/TSV export logic
-│   │   └── xlsx_converter.py            # Excel export logic
-│   ├── scanner_strategies/              # Modular scanner strategies (Strategy Pattern)
-│   │   ├── __init__.py
-│   │   ├── base.py                      # Base class for scanner strategies
-│   │   ├── consolidation.py             # Central consolidation logic
-│   │   ├── openvas.py                   # OpenVAS custom strategy
-│   │   ├── registry.py                  # Strategy registry (maps scanner to logic)
-│   │   └── tenablewas.py                # Tenable WAS custom strategy
-│   └── utils/
-│       ├── block_creation.py            # Block creation and parsing logic
-│       ├── cais_validator.py            # CAIS format validation
-│       ├── chunking.py                  # Chunk calculation and optimization
-│       ├── cli_args.py                  # CLI argument parsing
-│       ├── llm_debug.py                 # Debug logging of raw LLM responses
-│       ├── pdf_loader.py                # PDF text extraction and layout preservation
-│       ├── processing.py                # Response extraction and content sanitization
-│       ├── profile_registry.py          # Profile and scanner registration
-│       ├── reporting.py                 # Execution summary and final report generation
-│       └── tokens_cost.py               # Token usage and cost calculation
-├── metrics/
-│   ├── __init__.py
-│   ├── bert/
-│   │   └── compare_extractions_bert.py  # BERTScore evaluation script
-│   ├── rouge/
-│   │   └── compare_extractions_rouge.py # ROUGE evaluation script
-│   ├── common/
-│   │   ├── cli.py                       # CLI for metrics
-│   │   ├── config.py                    # Metrics configuration
-│   │   ├── matching.py                  # Matching logic for metrics
-│   │   └── normalization.py             # Normalization utilities
-│   └── plot/
-│       ├── __init__.py
-│       ├── __main__.py                  # CLI entry for plotting
-│       ├── charts.py                    # Chart generation logic
-│       └── utils.py                     # Plotting utilities
-├── dataset/                             # Datasets generated (CSV, XLSX, JSON, JSONL)
-├── jsons/                               # JSONs used in the dataset generation
-├── results_tokens/                      # Token files per LLM (token/cost analysis)
-└── docs/                                # Documentation files
+├── main.py                          # thin entry point → mulitaminer.cli:main
+├── pyproject.toml                   # dependencies + tooling (single source of truth)
+├── .env.example                     # API-key template (copy to .env)
+├── README.md  CLAUDE.md  LICENSE
+│
+├── src/mulitaminer/                 # the installable package (pip install -e .)
+│   ├── cli.py                       # parse args, validate, dispatch
+│   ├── cli_args.py                  # argparse definitions (+ --output-dir nesting under outputs/)
+│   ├── pipeline/                    # end-to-end extraction
+│   │   ├── orchestrator.py          # run_extraction: input → blocks → chunks → LLM → JSON
+│   │   ├── save.py                  # consolidate + filter + dump
+│   │   └── metrics_dispatch.py      # METRIC_SCRIPTS registry + run_metrics_only
+│   ├── readers/                     # input formats — Open/Closed via a registry
+│   │   ├── base.py                  # InputReader ABC + RawDocument + get_reader()
+│   │   ├── pdf.py                   # PdfReader (@register for .pdf)
+│   │   ├── extractors.py            # pdfplumber / marker PDF backends
+│   │   └── pdf_loader.py            # PDF text + visual-layout extraction
+│   ├── chunking/                    # split block text into LLM-sized chunks
+│   │   ├── tokens.py                # TokenChunk, splitters, build_prompt, smart_chunk_vulnerabilities
+│   │   ├── retry.py                 # invoke + validate + retry/redivide
+│   │   ├── errors.py                # fatal-API-error detection (quota/auth → re-raise)
+│   │   └── block_creation.py        # session blocks from extracted text
+│   ├── llm/                         # providers + config + prompts (was model_management)
+│   │   ├── config_loader.py         # load_llm / load_profile (+ pydantic validation)
+│   │   ├── llm_factory.py  prompts.py  validation.py  tokenizer_utils.py
+│   │   └── providers/               # openai, ollama, lm_studio, huggingface
+│   ├── scanners/                    # scanner strategies (was scanner_strategies)
+│   │   ├── base.py  registry.py  consolidation.py  openvas.py  tenablewas.py
+│   │   └── profile_registry.py
+│   ├── writers/                     # output formats (was converters): csv, xlsx, conversions
+│   ├── validators/                  # cais_validator.py
+│   ├── reporting/                   # final report, tokens_cost (+ LLM_PRICES), llm_debug, usage_log
+│   ├── experiments/                 # runner.py + checkpoint.py (batch experiment runs)
+│   ├── utils/                       # gpu_sampler.py (residual)
+│   └── configs/
+│       ├── constants.py             # SSOT: output paths + chunking tunables
+│       ├── schemas.py               # pydantic LLMConfig / ScannerConfig
+│       └── llms/  scanners/  prompts/  schema/   # JSON configs + TXT prompts
+│
+├── metrics/                         # independent evaluation subsystem (no package dep)
+│   ├── scorers/                     # bertscore, rouge_l, token_f1, set_f1, exact_match, presence
+│   ├── pipelines/                   # compare_extractions (unified bert/rouge/token_f1),
+│   │                                #   coverage, schema_check, confusion_severity
+│   ├── entity/  interrater/  aggregators/  common/
+│   └── plot/                        # charts/ + report builders + metrics.py CLI
+│
+├── tools/                           # thin CLI scripts (logic lives in the package)
+│   ├── run_experiments.py  run_metrics.py  batch_pdf_extractor.py
+│   └── chunk_validator.py  summarize_vulnerabilities.py  dataset_generator.py
+├── tests/                           # pytest (unit + MockLLM)
+├── resources/baselines/            # ground-truth baselines (<scanner>/<target>.xlsx + .pdf)
+├── outputs/                        # ALL run artifacts (gitignored)
+│   └── runs/ tokens/ visual_layouts/ debug/ plots/ checkpoints/ tmp/
+├── archive/                        # parked notes + raw data (gitignored)
+└── docs/                           # this documentation
 ```
 
 ## Main Components
 
 ### Interface Scripts
 
-- **main.py**: Main CLI with modern arguments and full orchestration
-- **chunk_validator.py**: Chunk analysis and validation tool
+- **main.py**: 12-line wrapper around `mulitaminer.cli:main`
+- **mulitaminer/cli.py**: arg parsing, validation, dispatch (extraction vs `--metrics-only`)
+- **mulitaminer/pipeline/orchestrator.py**: the full extraction flow
+- **tools/chunk_validator.py**: chunk analysis and validation tool
 
 ### Processing System
 
-- **src/utils/processing.py**: Response extraction and content sanitization
-- **src/utils/pdf_loader.py**: Optimized text extraction with layout preservation
-- **src/utils/chunking.py**: Chunk calculation and optimization logic
-- **src/utils/reporting.py**: Final execution summary and report generation
+- **mulitaminer/readers/**: input layer — `get_reader(path)` dispatches by extension to a `RawDocument` (PDF today; CSV/XML/JSON are additive)
+- **mulitaminer/chunking/**: `tokens.py` (split + prompt build), `retry.py` (invoke/validate/redivide), `errors.py` (fatal-error detection)
+- **mulitaminer/pipeline/save.py**: consolidation, validity filtering, JSON dump
+- **mulitaminer/reporting/**: execution summary + Markdown final report, token/cost accounting
 
 ### Specialized Strategies
 
-- **src/scanner_strategies/**: Modular scanner strategies for different report types
-  - `base.py`: Base class for scanner strategies
-  - `openvas.py`: OpenVAS custom strategy
-  - `tenablewas.py`: Tenable WAS custom strategy
-  - `registry.py`: Strategy registry (maps scanner to logic)
-  - `consolidation.py`: Central consolidation logic
+- **mulitaminer/scanners/**: modular scanner strategies for different report types
+  - `base.py`: base class for scanner strategies
+  - `openvas.py` / `tenablewas.py`: scanner-specific strategies
+  - `registry.py`: strategy registry (maps scanner → logic)
+  - `consolidation.py`: central consolidation logic
 
 ### Configuration System
 
-- **src/configs/llms/**: LLM provider configurations (JSON)
-- **src/configs/scanners/**: Scanner processing rules (JSON)
-- **src/configs/templates/**: Prompt templates (TXT)
+- **mulitaminer/configs/llms/**: LLM provider configurations (JSON)
+- **mulitaminer/configs/scanners/**: scanner processing rules (JSON)
+- **mulitaminer/configs/prompts/**: prompt templates (TXT)
+- **mulitaminer/configs/{constants,schemas}.py**: tunable-constant SSOT + pydantic config validation
 
 ### Export System
 
-- **src/converters/base_converter.py**: Base framework for converters
-- **src/converters/csv_converter.py**: CSV/TSV export with customizable settings
-- **src/converters/xlsx_converter.py**: Excel export with advanced formatting and automatic cache management
+- **mulitaminer/writers/**: output-format writers (was `converters/`)
+  - `csv_converter.py`: CSV/TSV export with customizable settings
+  - `xlsx_converter.py`: Excel export with advanced formatting and automatic cache management
+  - `conversions.py`: dispatch for `--convert`
 
 **Cache System**: The XLSX converter automatically caches converted files with the same name as the source JSON:
 
@@ -109,14 +109,15 @@ MulitaMiner/
 
 ### Metrics System
 
-- **metrics/bert/**: BERTScore F1 evaluation (semantic similarity via transformer embeddings)
-  - Accepts JSON or XLSX inputs (auto-converts JSON to XLSX if needed)
-  - Outputs standardized comparison sheets with per-vulnerability and aggregate statistics
-- **metrics/rouge/**: ROUGE-L evaluation (longest common subsequence-based metrics)
-  - Accepts JSON or XLSX inputs (auto-converts JSON to XLSX if needed)
-  - Provides token-level similarity assessment
-- **metrics/common/**: Shared utilities (normalization, matching, CLI parsing)
-- **metrics/plot/**: Chart generation with visualization of model comparison
+The `metrics/` package is independent of `mulitaminer` (it consumes extraction
+JSON/XLSX, not the package internals).
+
+- **metrics/scorers/**: pure `score(pred, ref)` functions — `bertscore`, `rouge_l`, `token_f1`, `set_f1`, `exact_match`, `presence`
+- **metrics/pipelines/**: `compare_extractions.py` (unified — runs any scorer via `--scorer`, replacing the old `metrics/bert` + `metrics/rouge` scripts), plus `coverage.py`, `schema_check.py`, `confusion_severity.py`
+- **metrics/entity/**, **metrics/interrater/**: field-level F1 and inter-annotator agreement
+- **metrics/aggregators/**: multi-run aggregation + statistical tests
+- **metrics/common/**: shared IO, aligner, field mapping
+- **metrics/plot/**: `charts/` + the HTML report builders, driven by `metrics.plot.metrics`
 
 ## Key Features
 

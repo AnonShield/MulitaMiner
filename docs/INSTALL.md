@@ -50,17 +50,23 @@ source .venv/bin/activate
 
 #### Alternative: pip + venv
 
+The project is an installable package, so install it editable with `pip install -e .`
+(this reads `pyproject.toml` and also makes `import mulitaminer` work everywhere):
+
 ```bash
 # Windows
 python -m venv .venv
 .venv\Scripts\activate
-pip install -r requirements.txt
+pip install -e .
 
 # Linux/macOS
 python3 -m venv .venv
 source .venv/bin/activate
-pip install -r requirements.txt
+pip install -e .
 ```
+
+Optional extras: `pip install -e ".[dev]"` (pytest/ruff/mypy) and
+`pip install -e ".[hf-local]"` (local HuggingFace GPU inference).
 
 ## Main Python Dependencies
 
@@ -73,6 +79,7 @@ langchain-openai==0.3.35   # OpenAI integration
 langchain-ollama==0.3.10   # Ollama integration
 tiktoken==0.12.0           # Tokenization (OpenAI models)
 python-dotenv==1.2.2       # Environment variables
+pydantic>=2,<3             # Config validation (fail-fast on malformed JSON)
 ```
 
 ### PDF Processing - Optimized Extraction
@@ -109,6 +116,7 @@ rouge-score==0.1.2         # ROUGE
 torch==2.11.0              # Required for BERTScore
 numpy==1.26.4              # Numeric operations
 scikit-learn==1.8.0        # ML utilities (BERTScore dependency)
+scipy==1.13.1              # Wilcoxon stats + Hungarian matching
 matplotlib==3.10.8         # Visualization
 seaborn==0.13.2            # Visualization
 ```
@@ -120,7 +128,7 @@ jinja2==3.1.6              # HTML report generation
 kaleido==1.2.0             # Static image export for charts
 ```
 
-> **Note:** All versions are pinned in both `pyproject.toml` and `requirements.txt` for stability. `uv sync` reads from `pyproject.toml`; `pip install -r requirements.txt` uses the flat file — both install the same packages.
+> **Note:** All versions are pinned in `pyproject.toml` (the single source of truth; `requirements.txt` was removed). `uv sync` and `pip install -e .` both read it. The deterministic lock for paper reproducibility lives in `uv.lock`.
 > **Note:** The project forces UTF-8 encoding on Windows/Linux to avoid character errors.
 
 ## Verifying Installation
