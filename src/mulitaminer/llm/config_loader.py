@@ -11,10 +11,23 @@ import re
 from pathlib import Path
 from urllib.parse import urlparse
 from dotenv import load_dotenv
+from pydantic import ValidationError
+
+from mulitaminer.configs.schemas import LLMConfig, ScannerConfig
 
 # Config files ship inside the package (src/mulitaminer/configs/), so locate
 # them relative to this module — never relative to the process CWD.
 _CONFIGS_DIR = Path(__file__).resolve().parent.parent / "configs"
+
+
+def _validate(model, config: dict, kind: str, name: str) -> None:
+    """Fail fast with a clear message if a config is malformed, instead of
+    letting a missing/mistyped field surface as a cryptic error several
+    frames later."""
+    try:
+        model.model_validate(config)
+    except ValidationError as exc:
+        raise ValueError(f"Invalid {kind} config '{name}':\n{exc}") from exc
 
 
 def load_profile(profile_name):
@@ -31,10 +44,12 @@ def load_profile(profile_name):
     path = _CONFIGS_DIR / "scanners" / f"{profile_name}.json"
     try:
         with open(path, "r", encoding="utf-8") as f:
-            return json.load(f)
+            config = json.load(f)
     except FileNotFoundError:
         print(f"[ERROR] Profile configuration file not found for '{profile_name}' at '{path}'.")
         return None
+    _validate(ScannerConfig, config, "scanner profile", profile_name)
+    return config
 
 
 def load_llm(llm_name):
@@ -85,7 +100,8 @@ def load_llm(llm_name):
         else:
             # Default to openai for backward compatibility
             config["provider"] = "openai"
-    
+
+    _validate(LLMConfig, config, "LLM", llm_name)
     return config
 
 
