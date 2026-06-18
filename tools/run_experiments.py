@@ -19,6 +19,7 @@ from mulitaminer.llm.config_loader import get_provider_key
 from mulitaminer.configs.constants import RUNS_DIR, DEBUG_DIR, TOKENS_DIR, PLOTS_DIR
 from mulitaminer.experiments.runner import get_base, run_group_sequential
 from mulitaminer.experiments.checkpoint import make_checkpoint_path, save_checkpoint
+from mulitaminer.cli_args import nest_under_outputs
 
 
 def main():
@@ -62,6 +63,11 @@ def main():
 
     if not args.checkpoint_file and not args.input_dir:
         parser.error("--input-dir is required when not using --checkpoint-file")
+
+    # Nest a relative --output-dir under outputs/ (consistent with main.py).
+    # Done once here so the per-run subdirs and the subprocess --output-dir
+    # passed to main.py are already under outputs/ (main.py leaves them as-is).
+    args.output_dir = nest_under_outputs(args.output_dir)
 
     print("[INFO] Starting run_experiments.py...")
 

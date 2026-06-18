@@ -4,11 +4,12 @@ import os
 from mulitaminer.configs.constants import DEBUG_DIR, RUNS_DIR, OUTPUTS_DIR
 
 
-def _nest_under_outputs(path: str) -> str:
+def nest_under_outputs(path: str) -> str:
     """Keep all run artifacts under outputs/. A relative ``--output-dir`` that
     isn't already inside ``outputs/`` is reparented there (so ``cloud_smoke``
     becomes ``outputs/cloud_smoke``). Absolute paths and paths already under
-    ``outputs/`` (e.g. run_experiments' ``outputs/runs/...``) are left as-is.
+    ``outputs/`` are left as-is. Shared by main.py (here) and run_experiments
+    so both nest consistently.
     """
     if os.path.isabs(path):
         return path
@@ -71,5 +72,5 @@ def parse_arguments() -> argparse.Namespace:
     parser.add_argument('--run-experiments', action='store_true', help=argparse.SUPPRESS) # Hide from help
 
     args = parser.parse_args()
-    args.output_dir = _nest_under_outputs(args.output_dir)
+    args.output_dir = nest_under_outputs(args.output_dir)
     return args
