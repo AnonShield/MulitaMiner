@@ -8,7 +8,7 @@ MulitaMiner was designed to be easily expanded, allowing integration of new scan
 
 ### 1. Create a Prompt Template
 
-Add a file in `src/configs/templates/` (e.g., `rapid7_prompt.txt`).
+Add a file in `src/mulitaminer/configs/prompts/` (e.g., `rapid7_prompt.txt`).
 
 The template should explain to the LLM how to extract vulnerabilities from the report, mapping fields to the standard JSON format. Check existing templates for examples.
 
@@ -42,7 +42,7 @@ MulitaMiner segments reports into **blocks** (preserving report structure) befor
 
 **If your scanner has a unique report structure** (e.g., grouped by asset, plugin family, or custom sections), implement custom block logic in your `ScannerStrategy` subclass:
 
-#### In your strategy file (e.g., `src/scanner_strategies/mynewscanner.py`):
+#### In your strategy file (e.g., `src/mulitaminer/scanners/mynewscanner.py`):
 
 ```python
 class MyNewScannerStrategy(ScannerStrategy):
@@ -61,7 +61,7 @@ class MyNewScannerStrategy(ScannerStrategy):
         return blocks
 ```
 
-Then register in `src/scanner_strategies/registry.py`:
+Then register in `src/mulitaminer/scanners/registry.py`:
 
 ```python
 from .mynewscanner import MyNewScannerStrategy
@@ -84,9 +84,9 @@ If your scanner needs special rules to group/merge vulnerabilities, implement a 
 
 #### Step 1: Create Your Strategy Class
 
-1. Create a class in a new `.py` file inside `src/scanner_strategies/` (e.g., `mycustomscanner.py`)
+1. Create a class in a new `.py` file inside `src/mulitaminer/scanners/` (e.g., `mycustomscanner.py`)
 2. Inherit from `ScannerStrategy` (see `base.py`)
-3. Register your class in `src/scanner_strategies/registry.py`
+3. Register your class in `src/mulitaminer/scanners/registry.py`
 
 The key you use to register must match the scanner name declared in your profile JSON.
 
@@ -214,7 +214,7 @@ def _consolidate_by_plugin(self, vulns):
     pass
 ```
 
-**Examples:** See `src/scanner_strategies/openvas.py` and `src/scanner_strategies/tenablewas.py` for complete implementations.
+**Examples:** See `src/mulitaminer/scanners/openvas.py` and `src/mulitaminer/scanners/tenablewas.py` for complete implementations.
 
 ### Understanding the Consolidation Pipeline
 
@@ -287,7 +287,7 @@ The `consolidation_field` in your scanner profile defines which field will be us
 
 Suppose you want to add support for "MyCorp Scanner" which has a unique format where vulnerabilities can be grouped by asset ID:
 
-**Step 1: Create the strategy** (`src/scanner_strategies/mycorp.py`):
+**Step 1: Create the strategy** (`src/mulitaminer/scanners/mycorp.py`):
 
 ```python
 from typing import List, Dict
@@ -325,7 +325,7 @@ class MyCorporpStrategy(ScannerStrategy):
         }
 ```
 
-**Step 2: Register it** (`src/scanner_strategies/registry.py`):
+**Step 2: Register it** (`src/mulitaminer/scanners/registry.py`):
 
 ```python
 from .mycorp import MyCorporpStrategy
@@ -431,7 +431,7 @@ For proprietary APIs or specialized inference backends not covered by built-in p
 
 #### Step 1: Create Provider Class
 
-File: `src/model_management/providers/myprovider.py`
+File: `src/mulitaminer/llm/providers/myprovider.py`
 
 ```python
 from .base_provider import BaseLLMProvider
@@ -496,7 +496,7 @@ python main.py --input scan.pdf --llm myprovider --scanner myscanner
 
 #### Class Naming Convention
 
-- File: `src/model_management/providers/{name}_provider.py`
+- File: `src/mulitaminer/llm/providers/{name}_provider.py`
 - Class: `{Name}Provider` (capitalize first letter)
 
 Examples:
@@ -512,7 +512,7 @@ Examples:
 | Extension Point          | Location                          | Purpose                    |
 | ------------------------ | --------------------------------- | -------------------------- |
 | New LLM (config)         | `src/configs/llms/`               | Add model via JSON         |
-| New LLM provider (code)  | `src/model_management/providers/` | Custom backend/API support |
-| New scanner strategy     | `src/scanner_strategies/`         | Custom consolidation logic |
+| New LLM provider (code)  | `src/mulitaminer/llm/providers/` | Custom backend/API support |
+| New scanner strategy     | `src/mulitaminer/scanners/`         | Custom consolidation logic |
 | New scanner (config)     | `src/configs/scanners/`           | Define scanner behavior    |
-| New extraction templates | `src/configs/templates/`          | Custom prompts for LLMs    |
+| New extraction templates | `src/mulitaminer/configs/prompts/`          | Custom prompts for LLMs    |
