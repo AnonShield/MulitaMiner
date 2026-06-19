@@ -30,3 +30,18 @@ def test_presence_is_populated():
     assert presence.is_populated("something") is True
     assert presence.is_populated("") is False
     assert presence.is_populated(None) is False
+
+
+def test_presence_empty_containers_not_populated():
+    assert presence.is_populated([]) is False
+    assert presence.is_populated({}) is False
+    assert presence.is_populated([""]) is False
+
+
+def test_presence_serialized_empty_sentinels_not_populated():
+    # Empty list/dict/NaN serialized to a spreadsheet cell come back as text;
+    # they must read as empty so coverage doesn't see phantom omissions.
+    for sentinel in ("[]", "{}", "nan", "NaN", "None", "null", "  []  "):
+        assert presence.is_populated(sentinel) is False, sentinel
+    # A real serialized list still counts.
+    assert presence.is_populated("['URL:https://example.com']") is True

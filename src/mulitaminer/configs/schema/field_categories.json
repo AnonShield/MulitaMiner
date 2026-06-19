@@ -1,5 +1,5 @@
 {
-  "deterministic": ["cvss", "port", "protocol", "severity", "plugin"],
+  "deterministic": ["cvss", "port", "protocol", "severity", "plugin", "host"],
   "semantic": [
     "description",
     "solution",

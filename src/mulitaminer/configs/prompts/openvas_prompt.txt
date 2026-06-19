@@ -70,6 +70,9 @@ EXTRACTION RULES:
    - plugin_details: {}
    - instances: []
    - source: "OPENVAS"
+   - host: null. The scanned target host is assigned automatically from the
+     report's per-host section; it is NOT present in this chunk. Always return
+     null here — never infer or guess an IP/hostname.
 
 3. Port/protocol resolution order for each NVT (use the FIRST that applies):
    (a) An explicit `<number>/<tcp|udp>` mentioned inside THIS NVT's body (most reliable — e.g., "path / port: 80/tcp" inside Detection Result).
@@ -84,11 +87,12 @@ EXTRACTION RULES:
    - cvss: null if no numeric score appears in the source.
    - port/protocol: null if unknown.
    - plugin: null; plugin_details: {}; instances: [].
+   - host: null (assigned automatically — see field list above).
 
 6. Extract only content that is explicitly present. Never infer, extrapolate, or invent vulnerabilities. Ignore generic sections, tables, indexes, footers, headers, and page notes. Include ALL content from the source — never use "...", "etc.", or any abbreviation; split long content into multiple array elements if needed.
 
 JSON SCHEMA (all fields required):
-[{"Name":"<string>","description":["<paragraphs>"],"detection_result":["<lines>"],"detection_method":["<lines>"],"product_detection_result":["<lines>"],"impact":["<lines>"],"solution":["<lines>"],"insight":["<lines>"],"log_method":["<lines>"],"cvss":<number or null>,"port":<number or null>,"protocol":"<tcp|udp|null>","severity":"CRITICAL|HIGH|MEDIUM|LOW|LOG","references":["<refs>"],"plugin":null,"plugin_details":{},"instances":[],"source":"OPENVAS"}]
+[{"Name":"<string>","description":["<paragraphs>"],"detection_result":["<lines>"],"detection_method":["<lines>"],"product_detection_result":["<lines>"],"impact":["<lines>"],"solution":["<lines>"],"insight":["<lines>"],"log_method":["<lines>"],"cvss":<number or null>,"port":<number or null>,"protocol":"<tcp|udp|null>","severity":"CRITICAL|HIGH|MEDIUM|LOW|LOG","references":["<refs>"],"plugin":null,"plugin_details":{},"instances":[],"source":"OPENVAS","host":null}]
 
 EXAMPLE:
 
@@ -113,7 +117,7 @@ https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2024-0001
 ---
 
 Expected output:
-[{"Name":"SSL/TLS: Certificate Expired","description":["The SSL/TLS certificate of the remote service has expired."],"detection_result":["The certificate expired on 2024-01-15T00:00:00+00:00"],"detection_method":["Check the expiration date of the SSL/TLS certificate.","OID: 1.3.6.1.4.1.25623.1.0.103955"],"product_detection_result":[],"impact":["Users will receive warnings when accessing the service, potentially leading to loss of trust."],"solution":["Replace the SSL/TLS certificate with a valid one."],"insight":[],"log_method":[],"cvss":7.5,"port":443,"protocol":"tcp","severity":"HIGH","references":["https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2024-0001"],"plugin":null,"plugin_details":{},"instances":[],"source":"OPENVAS"}]
+[{"Name":"SSL/TLS: Certificate Expired","description":["The SSL/TLS certificate of the remote service has expired."],"detection_result":["The certificate expired on 2024-01-15T00:00:00+00:00"],"detection_method":["Check the expiration date of the SSL/TLS certificate.","OID: 1.3.6.1.4.1.25623.1.0.103955"],"product_detection_result":[],"impact":["Users will receive warnings when accessing the service, potentially leading to loss of trust."],"solution":["Replace the SSL/TLS certificate with a valid one."],"insight":[],"log_method":[],"cvss":7.5,"port":443,"protocol":"tcp","severity":"HIGH","references":["https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2024-0001"],"plugin":null,"plugin_details":{},"instances":[],"source":"OPENVAS","host":null}]
 
 SECOND EXAMPLE (CRITICAL with multi-line NVT name — CVSS comes from the
 header above; port/protocol come from the NVT body, since there is no
@@ -137,7 +141,7 @@ https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2018-7584
 ---
 
 Expected output:
-[{"Name":"PHP 5.x < 5.6.34, 7.x < 7.0.28, 7.1.x < 7.1.15, 7.2.x < 7.2.3 Stack Buffer Overflow Vulnerability (Mar 2018) - Linux","description":["A stack-based buffer overflow flaw was found in PHP versions prior to the listed releases."],"detection_result":["path / port: 80/tcp"],"detection_method":[],"product_detection_result":[],"impact":["Successful exploitation may allow arbitrary code execution."],"solution":["Update PHP to a patched version."],"insight":[],"log_method":[],"cvss":9.8,"port":80,"protocol":"tcp","severity":"CRITICAL","references":["https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2018-7584"],"plugin":null,"plugin_details":{},"instances":[],"source":"OPENVAS"}]
+[{"Name":"PHP 5.x < 5.6.34, 7.x < 7.0.28, 7.1.x < 7.1.15, 7.2.x < 7.2.3 Stack Buffer Overflow Vulnerability (Mar 2018) - Linux","description":["A stack-based buffer overflow flaw was found in PHP versions prior to the listed releases."],"detection_result":["path / port: 80/tcp"],"detection_method":[],"product_detection_result":[],"impact":["Successful exploitation may allow arbitrary code execution."],"solution":["Update PHP to a patched version."],"insight":[],"log_method":[],"cvss":9.8,"port":80,"protocol":"tcp","severity":"CRITICAL","references":["https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2018-7584"],"plugin":null,"plugin_details":{},"instances":[],"source":"OPENVAS","host":null}]
 
 INVALID OUTPUTS (never produce any of these):
 - `Based on the rules, here is the JSON: [...]`        (no preamble)

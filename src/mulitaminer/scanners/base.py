@@ -35,16 +35,16 @@ class ScannerStrategy(ABC):
         """
         pass
     
-    def extract_visual_context(self, visual_layout_path: str) -> Tuple[List, None, None, None]:
+    def extract_visual_context(self, visual_layout_path: str) -> Tuple[List, None, None, None, None]:
         """
-        Extract initial context from visual layout (severity, port, protocol).
+        Extract initial context from visual layout (severity, port, protocol, host).
         Override if scanner needs visual layout extraction.
-        
+
         Returns:
-            Tuple: (initial_context_lines, severity, port, protocol)
+            Tuple: (initial_context_lines, severity, port, protocol, host)
             Default: Empty context
         """
-        return [], None, None, None
+        return [], None, None, None, None
     
     def create_blocks(self, report_text: str, temp_dir: str, initial_context: Tuple, output_ext: str = "txt") -> List[Dict]:
         """
@@ -63,7 +63,7 @@ class ScannerStrategy(ABC):
         """
         import os
 
-        initial_context_lines, initial_severity, initial_port, initial_protocol = initial_context
+        initial_context_lines, initial_severity, initial_port, initial_protocol, initial_host = initial_context
 
         # Default: single block with all text
         block_path = os.path.join(temp_dir, f"block_{self.scanner_name}_1.{output_ext}")
@@ -73,12 +73,13 @@ class ScannerStrategy(ABC):
                     f.write(f"{ctx_line}\n")
                 f.write("---\n")
             f.write(report_text)
-        
+
         return [{
             'file': block_path,
             'port': initial_port,
             'protocol': initial_protocol,
-            'severity': initial_severity
+            'severity': initial_severity,
+            'host': initial_host
         }]
     
     def get_consolidation_report(self, input_count: int, output_count: int, removed: int) -> Dict:

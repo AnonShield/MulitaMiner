@@ -42,6 +42,14 @@ from pathlib import Path
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 
+# This script lives in tools/, so its own dir — not the repo root — is on
+# sys.path[0]. The `metrics` package sits at the repo root and is NOT part of
+# the installed `mulitaminer` package, so in-process imports (run_metric_in_process
+# → metrics.pipelines…) need the root explicitly. The -m/cwd subprocess paths
+# already get this for free; this makes the in-process path consistent.
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
+
 # Single source of truth for available metrics + their CLIs + their order.
 from mulitaminer.pipeline.metrics_dispatch import (  # noqa: E402
     ALL_METHODS_ORDER,

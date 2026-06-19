@@ -48,6 +48,31 @@ class OpenVASStrategy(ScannerStrategy):
         re.IGNORECASE,
     )
 
+    # Host detection. In "Results per Host" the scanned target IP sits on the
+    # line immediately above "Host scan start". An optional section-number
+    # prefix may precede it ("2.1 172.31.1.54" in some layouts vs a bare
+    # "127.0.0.1" in others), so the prefix is matched and discarded.
+    _HOST_LINE = re.compile(r"^\s*(?:\d+(?:\.\d+)*\s+)?((?:\d{1,3}\.){3}\d{1,3})\s*$")
+    _HOST_SCAN_ANCHOR = re.compile(r"^\s*host scan start", re.IGNORECASE)
+
+    def _host_above_anchor(self, lines: List[str], anchor_idx: int):
+        """Return the IP on the nearest non-blank line above ``anchor_idx``."""
+        for j in range(anchor_idx - 1, -1, -1):
+            if lines[j].strip():
+                m = self._HOST_LINE.match(lines[j])
+                return m.group(1) if m else None
+        return None
+
+    def _detect_initial_host(self, layout_lines: List[str]):
+        """First scanned host in the report (the only one in single-host
+        reports), read from the per-host section in the visual layout. The
+        host lives before the first NVT, so it never reaches the chunked body
+        — the visual layout is the only place to recover it."""
+        for idx, line in enumerate(layout_lines):
+            if self._HOST_SCAN_ANCHOR.match(line):
+                return self._host_above_anchor(layout_lines, idx)
+        return None
+
     def extract_visual_context(self, visual_layout_path: str) -> Tuple[List, None, None, None]:
         """Extract the **last header + its CVSS context** from the visual layout.
 
@@ -67,15 +92,17 @@ class OpenVASStrategy(ScannerStrategy):
         prepended to block_1.
         """
         if not visual_layout_path or 'openvas' not in visual_layout_path.lower():
-            return [], None, None, None
+            return [], None, None, None, None
 
         initial_severity = initial_port = initial_protocol = None
+        initial_host = None
         header_idx = None
         layout_lines = []
 
         try:
             with open(visual_layout_path, encoding="utf-8") as f:
                 layout_lines = [l.strip() for l in f.readlines() if l.strip()]
+            initial_host = self._detect_initial_host(layout_lines)
             for idx in range(len(layout_lines) - 1, -1, -1):
                 line = layout_lines[idx]
                 m = self.HEADER_REGEX.match(line) or self.HEADER_REGEX_ALT.match(line)
@@ -89,7 +116,7 @@ class OpenVASStrategy(ScannerStrategy):
             pass
 
         if header_idx is None:
-            return [], initial_severity, initial_port, initial_protocol
+            return [], initial_severity, initial_port, initial_protocol, initial_host
 
         header_line = f"{initial_severity} {initial_port}/{initial_protocol}"
         context_lines = [header_line]
@@ -104,7 +131,7 @@ class OpenVASStrategy(ScannerStrategy):
                 context_lines.append(next_line)
                 break  # one CVSS line is enough; further lines are noise
 
-        return context_lines, initial_severity, initial_port, initial_protocol
+        return context_lines, initial_severity, initial_port, initial_protocol, initial_host
     
     def create_blocks(self, report_text: str, temp_dir: str, initial_context: Tuple, output_ext: str = "txt") -> List[Dict]:
         """Parse OpenVAS report and create blocks for each vulnerability.
@@ -115,7 +142,7 @@ class OpenVASStrategy(ScannerStrategy):
             initial_context: Tuple from extract_visual_context()
             output_ext: Extension to use for block files (e.g. "txt", "md")
         """
-        initial_context_lines, initial_severity, initial_port, initial_protocol = initial_context
+        initial_context_lines, initial_severity, initial_port, initial_protocol, initial_host = initial_context
 
         file_ext = f".{output_ext}"
 
@@ -125,6 +152,12 @@ class OpenVASStrategy(ScannerStrategy):
         current_port = initial_port
         current_protocol = initial_protocol
         current_severity = initial_severity
+        # current_host is updated eagerly at each per-host boundary; block_host
+        # lags it so a block (flushed lazily at the NEXT severity header) keeps
+        # the host that was in effect when its own header was seen.
+        current_host = initial_host
+        block_host = initial_host
+        last_nonblank = None
         block_idx = 0
 
         # Decide ONCE whether the first block actually needs the visual-layout
@@ -161,6 +194,17 @@ class OpenVASStrategy(ScannerStrategy):
         # Iterate through lines and create blocks by severity headers
         for line in lines:
             stripped = line.strip()
+            # Multi-host reports interleave a per-host preamble in the body:
+            # the target IP one line above "Host scan start". Update so the
+            # blocks that follow inherit the right host. Single-host reports
+            # keep their preamble in the visual layout, so current_host stays
+            # at initial_host throughout.
+            if self._HOST_SCAN_ANCHOR.match(stripped) and last_nonblank:
+                m = self._HOST_LINE.match(last_nonblank)
+                if m:
+                    current_host = m.group(1)
+            if stripped:
+                last_nonblank = stripped
             header_match = self.HEADER_REGEX.match(stripped) or self.HEADER_REGEX_ALT.match(stripped)
             if header_match:
                 if current_block:
@@ -179,12 +223,15 @@ class OpenVASStrategy(ScannerStrategy):
                         'file': block_path,
                         'port': bloco_port,
                         'protocol': bloco_protocol,
-                        'severity': bloco_severity
+                        'severity': bloco_severity,
+                        'host': block_host
                     })
                     current_block = []
                 current_severity = header_match.group("sev")
                 current_port = header_match.group("port")
                 current_protocol = header_match.group("proto")
+                # This header starts a new block; freeze its host now.
+                block_host = current_host
             current_block.append(line)
         
         # Handle last block
@@ -214,9 +261,10 @@ class OpenVASStrategy(ScannerStrategy):
                 'file': block_path,
                 'port': bloco_port,
                 'protocol': bloco_protocol,
-                'severity': bloco_severity
+                'severity': bloco_severity,
+                'host': block_host
             })
-        
+
         return blocks
     
     @staticmethod

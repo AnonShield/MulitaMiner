@@ -46,7 +46,7 @@ def create_session_blocks_from_text(report_text: str, temp_dir: str = _DEFAULT_T
         }]
 
     # Extract visual context if scanner requires it
-    context = ([], None, None, None)
+    context = ([], None, None, None, None)
     if strategy.requires_visual_layout and visual_layout_path:
         context = strategy.extract_visual_context(visual_layout_path)
 
@@ -172,6 +172,16 @@ def extract_vulns_from_blocks(blocks: list, llm, profile_config: dict,
                     else:
                         flattened.append(v)
                 vulns = flattened
+
+                # Host is document/section-level metadata (the per-host section
+                # header), not present in most chunks — so it is assigned
+                # deterministically from the block, never extracted by the LLM.
+                # Authoritative: overwrite whatever the model may have emitted.
+                block_host = block.get('host')
+                if block_host is not None:
+                    for v in vulns:
+                        if isinstance(v, dict):
+                            v['host'] = block_host
 
                 if profile_config and profile_config.get('reader', '').lower() == 'tenable':
                     all_vulns.extend([v for v in vulns if isinstance(v, dict)])
