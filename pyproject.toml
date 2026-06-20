@@ -8,6 +8,9 @@ version = "0.1.0"
 description = "PDF Vulnerability Extractor - Extract vulnerabilities from PDF reports using LLM"
 requires-python = ">=3.11"
 
+# Core = the extraction runtime only (PDF -> structured JSON via LLM). Kept lean
+# so the common-user image stays small. The evaluation/metrics/plot stack and
+# the heavy Marker PDF backend live in optional extras below.
 dependencies = [
     "langchain==0.3.28",
     "langchain-core==0.3.84",
@@ -24,6 +27,13 @@ dependencies = [
     "rapidfuzz==3.14.5",
     "pydantic>=2,<3",
     "numpy==1.26.4",
+]
+
+[project.optional-dependencies]
+# Evaluation / metrics / reporting stack. Required to run the ``metrics.*``
+# package, ``tools/run_metrics.py``, ``tools/run_experiments.py`` and the chart
+# pipeline. Pulls torch (via bert-score) — the bulk of the research image size.
+metrics = [
     "matplotlib==3.10.8",
     "seaborn==0.13.2",
     "bert-score==0.3.13",
@@ -32,10 +42,16 @@ dependencies = [
     "scikit-learn==1.8.0",
     "scipy==1.13.1",
     "jinja2==3.1.6",
+]
+# Marker PDF backend — the ``--md`` extraction path. Heavy ML; the default
+# pdfplumber backend needs none of it, so it stays opt-in.
+marker = [
     "marker-pdf>=1.10.2",
 ]
-
-[project.optional-dependencies]
+# Everything needed for research (experiments + metrics + charts + Marker).
+full = [
+    "mulita-miner[metrics,marker]",
+]
 # Local HuggingFace inference on GPU (4-bit quantization).
 # Install only on GPU machines: `uv sync --extra hf-local`.
 # bitsandbytes needs CUDA (Linux, or Windows with bitsandbytes>=0.43).

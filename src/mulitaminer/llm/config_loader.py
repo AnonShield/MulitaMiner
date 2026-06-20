@@ -20,6 +20,23 @@ from mulitaminer.configs.schemas import LLMConfig, ScannerConfig
 _CONFIGS_DIR = Path(__file__).resolve().parent.parent / "configs"
 
 
+def _config_path(subdir: str, name: str) -> Path:
+    """Resolve ``<subdir>/<name>.json``, preferring an external override dir.
+
+    ``MULITA_CONFIG_DIR`` (when set) is checked first: a file there shadows or
+    adds to the packaged configs, so a Docker user can mount custom LLM/scanner
+    JSONs (``-v ./myconfigs:/configs -e MULITA_CONFIG_DIR=/configs``) without
+    knowing the package's internal path or rebuilding the image. Falls back to
+    the packaged ``configs/`` when the override is unset or lacks the file.
+    """
+    override = os.getenv("MULITA_CONFIG_DIR")
+    if override:
+        candidate = Path(override) / subdir / f"{name}.json"
+        if candidate.is_file():
+            return candidate
+    return _CONFIGS_DIR / subdir / f"{name}.json"
+
+
 def _validate(model, config: dict, kind: str, name: str) -> None:
     """Fail fast with a clear message if a config is malformed, instead of
     letting a missing/mistyped field surface as a cryptic error several
@@ -41,7 +58,7 @@ def load_profile(profile_name):
         dict: Profile configuration or None if not found
     """
     profile_name = profile_name.lower()
-    path = _CONFIGS_DIR / "scanners" / f"{profile_name}.json"
+    path = _config_path("scanners", profile_name)
     try:
         with open(path, "r", encoding="utf-8") as f:
             config = json.load(f)
@@ -68,8 +85,8 @@ def load_llm(llm_name):
     load_dotenv()
     
     llm_name = llm_name.lower()
-    path = _CONFIGS_DIR / "llms" / f"{llm_name}.json"
-    
+    path = _config_path("llms", llm_name)
+
     try:
         with open(path, "r", encoding="utf-8") as f:
             config = json.load(f)

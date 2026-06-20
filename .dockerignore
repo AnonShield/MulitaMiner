@@ -1,0 +1,24 @@
+# Keep the build context small and never ship secrets or generated data.
+
+# VCS, virtualenvs, caches
+.git/
+.venv/
+**/__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+
+# Secrets — must never enter the build context
+.env
+.env.*
+!.env.example
+
+# Generated output / heavy / irrelevant to the image
+outputs/
+archive/
+memory/
+.claude/
+docs/
+tests/

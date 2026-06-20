@@ -145,40 +145,6 @@ def render_quality_halluc(d: dict, path: Path):
     _save(fig, path)
 
 
-def render_quality_recall_f1(d: dict, path: Path):
-    """Per-model Recall × per-match F1 scatter with iso-Effective-F1 contours."""
-    if d["empty"]:
-        _empty_png(path, d.get("reason", "no recall/F1 data yet")); return
-    pts = d["points"]
-    sorted_models = sorted({p["model"] for p in pts})
-    fig, ax = plt.subplots(figsize=(8, 7))
-
-    # Iso-contours: dashed grey curves at Eff = 0.5 / 0.7 / 0.85.
-    import numpy as _np
-    for eff in (0.5, 0.7, 0.85):
-        rs = _np.linspace(eff, 1.0, 60)
-        ax.plot(rs, eff / rs, color="#999", linestyle="--", linewidth=0.9, alpha=0.6, zorder=1)
-        # Label the contour at recall=0.95.
-        ax.text(0.97, eff / 0.97 + 0.012, f"Eff={eff}", color="#999",
-                fontsize=8, ha="right", va="bottom")
-
-    # Points + labels.
-    for p in pts:
-        c = _color_for(p["model"], sorted_models)
-        ax.scatter(p["recall"], p["f1"], s=180, color=c, alpha=FILL_ALPHA,
-                   edgecolor="white", linewidth=2, zorder=3)
-        ax.annotate(p["model"], (p["recall"], p["f1"]),
-                    xytext=(10, 0), textcoords="offset points",
-                    fontsize=10, color="#222", va="center")
-    ax.set_xlim(0, 1); ax.set_ylim(0, 1)
-    ax.set_xlabel("Recall (1 − omission_rate)")
-    ax.set_ylabel("Per-match F1 score")
-    ax.xaxis.set_major_formatter(plt.FuncFormatter(lambda v, _: f"{v*100:.0f}%"))
-    ax.set_title("Recall × per-match F1 — iso-Effective-F1 contours dashed",
-                 loc="left", pad=12, fontsize=13, weight="bold")
-    _save(fig, path)
-
-
 def render_robust_box(d: dict, path: Path):
     if d["empty"]:
         _empty_png(path, "no field_f1 metrics yet"); return
@@ -251,34 +217,50 @@ def _heatmap(rows, cols, matrix, path, *, title, fmt, vmin=0, vmax=1, cbar_label
     _save(fig, path)
 
 
-def render_diag_schema_validity(d: dict, path: Path):
+def _merge_validity(schema_d: dict, json_d: dict) -> dict:
+    """Combine the two single-bar validity dicts into one model-aligned dict.
+
+    ``schema_validity_per_model`` and ``json_validity_per_model`` each sort
+    models by their own value, so we re-key by model and take the union to
+    keep both series on a single x-axis.
+    """
+    if schema_d["empty"] and json_d["empty"]:
+        return {"empty": True, "models": [], "schema": [], "json": []}
+    smap = dict(zip(schema_d["models"], schema_d["values"]))
+    jmap = dict(zip(json_d["models"], json_d["values"]))
+    models = sorted(set(smap) | set(jmap))
+    return {
+        "empty": False,
+        "models": models,
+        "schema": [smap.get(m) for m in models],
+        "json": [jmap.get(m) for m in models],
+    }
+
+
+def render_diag_validity(d: dict, path: Path):
+    """Output validity per model: schema conformance + JSON validity, grouped."""
     if d["empty"]:
-        _empty_png(path, "no schema conformance yet"); return
-    fig, ax = plt.subplots(figsize=(max(7, 1.0 * len(d["models"]) + 3), 4))
-    bars = ax.bar(d["models"], d["values"], color="#A3BE8C", alpha=FILL_ALPHA, edgecolor="white")
-    for b, v in zip(bars, d["values"]):
-        ax.text(b.get_x() + b.get_width()/2, v + 1.4, f"{v:.1f}%",
-                ha="center", va="bottom", fontsize=9, color="#444")
+        _empty_png(path, "no schema/JSON validity yet"); return
+    models = d["models"]
+    fig, ax = plt.subplots(figsize=(max(7, 1.2 * len(models) + 3), 4.4))
+    width = 0.38
+    x = np.arange(len(models))
+    for i, (label, vals, color) in enumerate(
+        [("Schema conformance", d["schema"], "#A3BE8C"),
+         ("JSON validity", d["json"], "#88C0D0")]
+    ):
+        bars = ax.bar(x + (i - 0.5) * width, [v or 0 for v in vals], width=width,
+                      label=label, color=color, alpha=FILL_ALPHA, edgecolor="white")
+        for b, v in zip(bars, vals):
+            if v is not None:
+                ax.text(b.get_x() + b.get_width()/2, v + 1.4, f"{v:.0f}%",
+                        ha="center", va="bottom", fontsize=8, color="#444")
+    ax.set_xticks(x); ax.set_xticklabels(models, rotation=18, ha="right")
     ax.set_ylim(0, 110); ax.yaxis.set_major_formatter(plt.FuncFormatter(lambda v, _: f"{v:.0f}%"))
-    ax.set_ylabel("Conformance rate")
-    ax.set_title("Schema validity per model — LLM compliance with V3 schema",
+    ax.set_ylabel("Rate")
+    ax.set_title("Output validity per model — schema conformance · JSON validity",
                  loc="left", pad=12, fontsize=13, weight="bold")
-    ax.tick_params(axis="x", rotation=18)
-    _save(fig, path)
-
-
-def render_diag_json_validity(d: dict, path: Path):
-    if d["empty"]:
-        _empty_png(path, "no JSON validity yet"); return
-    fig, ax = plt.subplots(figsize=(max(7, 1.0 * len(d["models"]) + 3), 4))
-    bars = ax.bar(d["models"], d["values"], color="#88C0D0", alpha=FILL_ALPHA, edgecolor="white")
-    for b, v in zip(bars, d["values"]):
-        ax.text(b.get_x() + b.get_width()/2, v + 1.4, f"{v:.1f}%",
-                ha="center", va="bottom", fontsize=9, color="#444")
-    ax.set_ylim(0, 110); ax.yaxis.set_major_formatter(plt.FuncFormatter(lambda v, _: f"{v:.0f}%"))
-    ax.set_ylabel("JSON valid")
-    ax.set_title("JSON validity rate per model", loc="left", pad=12, fontsize=13, weight="bold")
-    ax.tick_params(axis="x", rotation=18)
+    ax.legend(frameon=False, loc="lower right")
     _save(fig, path)
 
 
@@ -382,22 +364,13 @@ def render_drill_text(d: dict, path: Path):
 BASELINE_HATCHES = ['/', '+', '\\', '-', '|', '++', 'X', 'o', 'O', '.', '*', '//']
 
 
-def _render_similarity_metric(d: dict, metric_key: str, label: str, path: Path):
-    """One PNG per metric (BERT or ROUGE). Models on x-axis, hatched groups per baseline."""
-    from matplotlib.patches import Patch
-
-    cats = d["categories"]
-    models = d["models"]
-    baselines = d["baselines"]
-    n_models, n_baselines = len(models), len(baselines)
-    if n_models == 0 or n_baselines == 0:
-        _empty_png(path, f"no {label} categorization yet"); return
-
-    fig, ax = plt.subplots(figsize=(max(12, 2.2 * n_models + 4), 7))
+def _similarity_bars_on_ax(ax, d: dict, metric_key: str, label: str) -> None:
+    """Draw one metric's stacked similarity bars (hatched per baseline) on ``ax``."""
+    cats, models, baselines = d["categories"], d["models"], d["baselines"]
+    n_baselines = len(baselines)
     bar_width = 0.78 / n_baselines
-    x = np.arange(n_models)
+    x = np.arange(len(models))
     per_baseline = d[metric_key]
-
     for b_idx, baseline in enumerate(baselines):
         hatch = BASELINE_HATCHES[b_idx % len(BASELINE_HATCHES)]
         for m_idx, model in enumerate(models):
@@ -405,46 +378,48 @@ def _render_similarity_metric(d: dict, metric_key: str, label: str, path: Path):
             bottom = 0.0
             bar_x = x[m_idx] + b_idx * bar_width
             for ci, cat in enumerate(cats):
-                # Legacy similarity bars: full opacity so the bar color matches
-                # the legend swatch (Patch is drawn without alpha).
                 ax.bar(bar_x, pct[ci], bar_width, bottom=bottom,
                        color=SIMILARITY_COLORS[cat],
                        edgecolor="#cccccc", linewidth=0.7, hatch=hatch)
                 bottom += pct[ci]
-
-    ax.set_ylabel("Distribution (%)", fontsize=14)
-    ax.set_xlabel("Model", fontsize=14)
     ax.set_ylim(0, 100)
-    ax.set_title(f"Similarity Category Distribution\n{label}", fontsize=15, weight="bold")
+    ax.set_title(label, fontsize=13, weight="bold", loc="left")
     ax.set_xticks(x + bar_width * (n_baselines - 1) / 2)
-    ax.set_xticklabels([m.capitalize() for m in models], fontsize=12)
+    ax.set_xticklabels([m.capitalize() for m in models], fontsize=11)
     ax.grid(axis="y", linestyle="--", alpha=0.4)
     ax.set_axisbelow(True)
+
+
+def render_drill_similarity(d: dict, path: Path):
+    """BERT and ROUGE similarity-category distributions side by side (one figure)."""
+    from matplotlib.patches import Patch
+
+    if d["empty"]:
+        _empty_png(path, "no similarity categorization yet"); return
+    cats, models, baselines = d["categories"], d["models"], d["baselines"]
+    if not models or not baselines:
+        _empty_png(path, "no similarity categorization yet"); return
+
+    fig, axes = plt.subplots(1, 2, figsize=(max(14, 2.4 * len(models) + 5), 7), sharey=True)
+    _similarity_bars_on_ax(axes[0], d, "bert", "BERTScore")
+    _similarity_bars_on_ax(axes[1], d, "rouge", "ROUGE-L")
+    axes[0].set_ylabel("Distribution (%)", fontsize=13)
 
     cat_patches = [Patch(facecolor=SIMILARITY_COLORS[c], edgecolor="#cccccc", linewidth=0.7, label=c)
                    for c in cats]
     bl_patches = [Patch(facecolor="#cccccc", edgecolor="#333",
                         hatch=BASELINE_HATCHES[i % len(BASELINE_HATCHES)], label=b)
                   for i, b in enumerate(baselines)]
-    fig.legend(handles=cat_patches, loc="lower center", bbox_to_anchor=(0.5, 0.02),
-               ncol=len(cats), title="Category", frameon=True, fontsize=11, title_fontsize=12)
-    fig.legend(handles=bl_patches, loc="lower center", bbox_to_anchor=(0.5, -0.05),
-               ncol=min(n_baselines, 4), title="Baseline (pattern)", frameon=True,
-               fontsize=11, title_fontsize=12)
-    fig.tight_layout(rect=[0, 0.12, 1, 1])
+    leg1 = fig.legend(handles=cat_patches, loc="lower center", bbox_to_anchor=(0.5, 0.02),
+                      ncol=len(cats), title="Category", frameon=True, fontsize=10, title_fontsize=11)
+    fig.legend(handles=bl_patches, loc="lower center", bbox_to_anchor=(0.5, -0.04),
+               ncol=min(len(baselines), 4), title="Baseline (pattern)", frameon=True,
+               fontsize=10, title_fontsize=11)
+    fig.add_artist(leg1)
+    fig.suptitle("Similarity category distribution — semantic (BERT) · lexical (ROUGE)",
+                 x=0.02, ha="left", fontsize=14, weight="bold")
+    fig.tight_layout(rect=[0, 0.12, 1, 0.96])
     _save(fig, path)
-
-
-def render_drill_similarity_bert(d: dict, path: Path):
-    if d["empty"]:
-        _empty_png(path, "no bert categorization yet"); return
-    _render_similarity_metric(d, "bert", "BERT", path)
-
-
-def render_drill_similarity_rouge(d: dict, path: Path):
-    if d["empty"]:
-        _empty_png(path, "no rouge categorization yet"); return
-    _render_similarity_metric(d, "rouge", "ROUGE", path)
 
 
 # ---------------------------------------------------------------------------
@@ -606,27 +581,42 @@ def export_all(roots: Iterable[Path], output_dir: Path) -> list[Path]:
 
     dataset = load_dataset(roots)
 
+    # Core set — always meaningful for a single run. The HTML report keeps the
+    # full exploration; PNGs are the curated paper figures.
     plan = [
         ("quality_prf",          quality.precision_recall_f1(dataset),                 render_quality_prf),
         ("quality_halluc",       quality.hallucination_omission_scatter(dataset),      render_quality_halluc),
-        ("quality_recall_f1",    quality.recall_vs_f1_scatter(dataset),                render_quality_recall_f1),
-        ("robust_f1_box",        robustness.f1_distribution_box(dataset),              render_robust_box),
-        ("robust_wilcoxon",      robustness.wilcoxon_pvalue_heatmap(dataset),          render_wilcoxon),
+        ("diag_validity",        _merge_validity(diagnostic.schema_validity_per_model(dataset),
+                                                 diagnostic.json_validity_per_model(dataset)), render_diag_validity),
         ("diag_schema",          diagnostic.schema_conformance_heatmap(dataset),       render_diag_schema),
-        ("diag_schema_validity", diagnostic.schema_validity_per_model(dataset),        render_diag_schema_validity),
-        ("diag_json_validity",   diagnostic.json_validity_per_model(dataset),          render_diag_json_validity),
         ("diag_field_halluc",    diagnostic.field_hallucination_omission_heatmap(dataset, "hallucination_rate"), render_diag_field_halluc),
         ("diag_field_omiss",     diagnostic.field_hallucination_omission_heatmap(dataset, "omission_rate"),      render_diag_field_omiss),
         ("diag_severity",        diagnostic.severity_confusion_small_multiples(dataset), render_diag_severity),
         ("diag_field_coverage",  diagnostic.field_coverage_heatmap(dataset),           render_diag_field_coverage),
-        ("drill_text_per_field",   drilldown.text_similarity_by_field(dataset),        render_drill_text),
-        ("stacked_similarity_bert",  drilldown.similarity_distribution(dataset),       render_drill_similarity_bert),
-        ("stacked_similarity_rouge", drilldown.similarity_distribution(dataset),       render_drill_similarity_rouge),
-        # §0 — pipeline-version comparison (paper-only)
-        ("version_headline",       versioning.headline_per_version(dataset),           render_v2_v3_headline),
-        ("version_json_validity",  versioning.json_validity_per_version(dataset),      render_v2_v3_json_validity),
-        ("version_similarity",     versioning.similarity_distribution_per_version(dataset), render_v2_v3_similarity),
+        ("drill_text_per_field", drilldown.text_similarity_by_field(dataset),          render_drill_text),
+        ("drill_similarity",     drilldown.similarity_distribution(dataset),           render_drill_similarity),
     ]
+
+    # Conditional figures — only emit them when the experiment shape supports
+    # the chart, so single-run/single-version runs don't litter the output with
+    # degenerate placeholders.
+    multi_version = len(dataset.versions) >= 2
+    multi_model = len(dataset.models) >= 2
+    if not dataset.long.empty and "run" in dataset.long.columns:
+        multi_run = bool((dataset.long.groupby("model")["run"].nunique() >= 2).any())
+    else:
+        multi_run = False
+
+    if multi_version:
+        plan += [
+            ("version_headline",      versioning.headline_per_version(dataset),                render_v2_v3_headline),
+            ("version_json_validity", versioning.json_validity_per_version(dataset),           render_v2_v3_json_validity),
+            ("version_similarity",    versioning.similarity_distribution_per_version(dataset), render_v2_v3_similarity),
+        ]
+    if multi_run:
+        plan.append(("robust_f1_box", robustness.f1_distribution_box(dataset), render_robust_box))
+    if multi_run and multi_model:
+        plan.append(("robust_wilcoxon", robustness.wilcoxon_pvalue_heatmap(dataset), render_wilcoxon))
 
     written: list[Path] = []
     for stem, data, render in plan:

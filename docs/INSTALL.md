@@ -171,8 +171,11 @@ Install the dev tools (pytest, ruff, mypy) and run them from the project root.
 There's no wrapper script — `pytest` is configured in `pyproject.toml`, so it
 finds the suite on its own.
 
+The test suite exercises the `metrics.*` package too, so development needs the
+`metrics` extra alongside `dev`:
+
 ```bash
-pip install -e ".[dev]"      # or: uv sync --extra dev
+pip install -e ".[metrics,dev]"      # or: uv sync --extra metrics --extra dev
 
 # Run the test suite
 python -m pytest             # all tests
@@ -184,6 +187,48 @@ python -m pytest --cov=mulitaminer             # with coverage
 ruff check src tests         # report issues
 ruff check . --fix           # auto-fix what it can
 ```
+
+### Dependency extras
+
+Core install (`pip install .`) is **extraction only** — kept lean. Heavier
+capabilities are opt-in extras:
+
+| Extra | Adds | Use it for |
+|-------|------|------------|
+| _(none)_ | extraction runtime | running `main.py` against a PDF |
+| `metrics` | BERTScore/ROUGE/torch, charts, stats | `tools/run_metrics.py`, experiments, plots |
+| `marker` | Marker PDF backend | the `--md` extraction path |
+| `full` | `metrics` + `marker` | research (everything above) |
+| `hf-local` | transformers/accelerate/bitsandbytes | running HF models in-process on a GPU |
+| `dev` | pytest/ruff/mypy | development |
+
+## Docker
+
+Two images are built from a single `Dockerfile` (select with `--target`):
+
+```bash
+# Common-user image — extraction only, lean (no metrics/ML stack):
+docker build --target extraction -t mulitaminer:extraction .
+
+# Research image — extraction + experiments + metrics + charts + Marker.
+# Torch defaults to CPU; add --build-arg TORCH_INDEX=.../cu128 for a GPU build:
+docker build --target full -t mulitaminer:full .
+```
+
+Run it — API keys come in at runtime (never baked into the image), inputs and
+outputs are bind-mounted:
+
+```bash
+docker run --rm --env-file .env \
+  -v "$PWD/input:/app/input" -v "$PWD/outputs:/app/outputs" \
+  mulitaminer:extraction --input /app/input/report.pdf --scanner openvas --llm gpt4
+```
+
+The `full` image runs any script (`ENTRYPOINT python`), e.g.
+`docker run --rm mulitaminer:full tools/run_experiments.py ...`.
+
+See [DOCKER.md](DOCKER.md) for the full guide — API keys, custom LLM/scanner
+configs without rebuilding (`MULITA_CONFIG_DIR`), and local-LLM networking.
 
 ## Next Steps
 

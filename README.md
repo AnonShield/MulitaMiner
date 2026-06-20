@@ -11,9 +11,9 @@
 _Automated · Structured · Multi-LLM_
 
 ![Python](https://img.shields.io/badge/Python-3.11+-blue)
-![license](https://img.shields.io/badge/license-MIT-green)
-![status](https://img.shields.io/badge/status-active-orange)
-![update](https://img.shields.io/badge/last%20update-Jun%202026-lightgrey)
+![License](https://img.shields.io/badge/license-MIT-green)
+![Status](https://img.shields.io/badge/status-active-brightgreen)
+![Last commit](https://img.shields.io/github/last-commit/AnonShield/MulitaMiner)
 
 </div>
 
@@ -21,7 +21,7 @@ _Automated · Structured · Multi-LLM_
 
 **MulitaMiner** is an automated tool for extracting and structuring vulnerabilities from heterogeneous PDF reports produced by security scanners. Its LLM-based pipeline combines adaptive chunking and scanner-aware prompting to convert unstructured findings into consistent, analysis-ready vulnerability records, with standardized outputs and quality validation.
 
-As a key contribution, a dataset of **6,700 vulnerabilities** extracted from **129 OpenVAS reports** is provided, serving as a reference for future research. The dataset was evaluated against ground-truth records via host/IP and vulnerability name matching, achieving **Recall of 96.18%**, **Precision of 91.06%**, and **F1-score of 0.9355**. Additionally, the extraction tool was validated against structured baselines from 3 reports using BERTScore and ROUGE-L semantic similarity metrics.
+It also supports quality evaluation of the extraction against ground-truth baselines, combining deterministic per-field metrics with semantic similarity (BERTScore and ROUGE-L).
 
 **Use Cases:**
 
@@ -31,7 +31,6 @@ As a key contribution, a dataset of **6,700 vulnerabilities** extracted from **1
 
 ## README Structure
 
-- [Considered Badges](#considered-badges)
 - [Basic Information](#basic-information)
 - [Dependencies](#dependencies)
 - [Security Concerns](#security-concerns)
@@ -40,10 +39,6 @@ As a key contribution, a dataset of **6,700 vulnerabilities** extracted from **1
 - [Experiments](#experiments)
 - [Documentation](#documentation)
 - [LICENSE](#license)
-
-## Considered Badges
-
-The following badges are considered for evaluation: **Available**, **Functional**, **Sustainable**, and **Reproducible**.
 
 ## Basic Information
 
@@ -71,9 +66,8 @@ All dependencies are declared in **`pyproject.toml`** (single source of truth)
 and installed with `pip install -e .` — see [Installation](#installation). Key
 libraries:
 
-- **Extraction**: `langchain` + `langchain-openai`/`langchain-ollama`, `pdfplumber`, `tiktoken`, `pydantic` (config validation), `python-dotenv`, `pandas` + `openpyxl` (XLSX export).
-- **Metrics** (included): `bert-score`, `rouge-score`, `torch`, `scikit-learn`, `scipy`, `rapidfuzz`, `matplotlib`/`seaborn`/`jinja2` (reports).
-- **Optional extras**: `.[hf-local]` (local HuggingFace GPU inference), `.[dev]` (pytest, ruff, mypy).
+- **Core (extraction)**: `langchain` + `langchain-openai`/`langchain-ollama`, `pdfplumber`, `tiktoken`, `pydantic` (config validation), `python-dotenv`, `pandas` + `openpyxl` (XLSX export), `rapidfuzz`. Kept lean so the common-user setup stays small.
+- **Optional extras**: `.[metrics]` (`bert-score`, `rouge-score`, `torch`, `scikit-learn`, `scipy`, `matplotlib`/`seaborn`/`jinja2` — evaluation & charts), `.[marker]` (Marker PDF backend), `.[full]` (= metrics + marker, for research), `.[hf-local]` (local HuggingFace GPU inference), `.[dev]` (pytest, ruff, mypy).
 
 **Third-party resources:**
 
@@ -124,8 +118,9 @@ so `python main.py` and the `tools/` scripts work from anywhere:
 pip install -e .
 ```
 
-> Add extras as needed: `pip install -e ".[dev]"` (tests/lint) or
-> `pip install -e ".[hf-local]"` (local GPU inference).
+> Core install is **extraction only**. Add extras as needed: `.[metrics]`
+> (evaluation + charts), `.[full]` (research = metrics + Marker), `.[metrics,dev]`
+> (development — tests cover the metrics package). See [docs/INSTALL.md](docs/INSTALL.md).
 
 ### 4. Configure API Keys
 
@@ -170,11 +165,11 @@ python tools/summarize_vulnerabilities.py --input outputs/runs/openvas_test.json
 
 ## Experiments
 
-This section describes how to reproduce the main claims from the paper.
+This section shows how to run the tool end-to-end with a few examples.
 
 > **Note**: The execution times are based on AMD Ryzen 5 5600G, 32GB RAM, 1TB SSD, Windows 11. Actual times may vary depending on system specifications, network latency, and API response times.
 
-### Claim #1: Multi-LLM Vulnerability Extraction
+### Example 1: Multi-LLM Vulnerability Extraction
 
 **Description**: MulitaMiner extracts vulnerabilities from PDF reports using multiple LLM providers (DeepSeek, GPT-4, LLaMa 3, etc).
 
@@ -197,7 +192,7 @@ python main.py --input resources/baselines/openvas/OpenVAS_JuiceShop.pdf --llm l
 
 **Expected result**: openvas_test<llm_name>.json files with extracted vulnerabilities containing fields like `Name`, `description`, `severity`, `cvss`, `port`, `references`, etc.
 
-### Claim #2: Quality Evaluation with BERTScore/ROUGE-L
+### Example 2: Quality Evaluation with BERTScore/ROUGE-L
 
 **Description**: The tool evaluates extraction quality against ground truth baselines using BERTScore and ROUGE-L metrics, with similarity scores categorized as: Highly Similar (≥0.7), Moderately Similar (0.6-0.7), Low Similarity (0.4-0.6), and Divergent (<0.4).
 
@@ -215,7 +210,7 @@ python main.py --input resources/baselines/openvas/OpenVAS_JuiceShop.pdf --llm d
     --metrics bert rouge
 ```
 
-Use `--metrics all` for the full suite (schema, bert, rouge, token_f1, entity,
+Use `--metrics all` for the full suite (schema, bert, rouge, token_f1, field_f1,
 severity, coverage). To (re-)run metrics on an existing results tree without
 re-calling the LLM, use `python tools/run_metrics.py --root <dir> --methods all`.
 
@@ -224,7 +219,7 @@ re-calling the LLM, use `python tools/run_metrics.py --root <dir> --methods all`
 **Expected result**: BERTScore and ROUGE-L XLSX reports written next to the
 extraction JSON under `outputs/runs/`.
 
-### Claim #3: Large-Scale Reproducibility
+### Example 3: Large-Scale Reproducibility
 
 **Description**: MulitaMiner supports batch experiments across multiple reports, LLMs, and runs with checkpoint support to resume interrupted executions.
 
@@ -253,6 +248,7 @@ Detailed documentation is organized in separate files:
 | Document                                           | Description                          |
 | -------------------------------------------------- | ------------------------------------ |
 | [docs/INSTALL.md](docs/INSTALL.md)                 | Detailed installation guide          |
+| [docs/DOCKER.md](docs/DOCKER.md)                   | Running the two Docker images        |
 | [docs/USAGE.md](docs/USAGE.md)                     | Complete usage guide with examples   |
 | [docs/CONFIG.md](docs/CONFIG.md)                   | API keys and token configuration     |
 | [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)       | Code structure and components        |
