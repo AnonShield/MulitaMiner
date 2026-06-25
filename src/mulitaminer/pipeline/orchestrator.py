@@ -209,6 +209,16 @@ def run_extraction(args: argparse.Namespace) -> None:
         except Exception as e:
             print(f"[ERROR] Conversion failed: {e}")
 
+        # Prioritization: rank the findings into a remediation queue next to the
+        # JSON. Non-fatal (skips if feeds are missing). Runs per extraction —
+        # including each experiment run, which is its own main.py subprocess — so
+        # every run dir gets its own ``<run>_prioritization.csv``/``.xlsx``.
+        try:
+            from mulitaminer.prioritization.apply import prioritize_extraction
+            prioritize_extraction(output_file)
+        except Exception as e:
+            print(f"[PRIORITIZATION] Skipped due to error: {e}")
+
         # Handle evaluation(s). Metric scripts read JSON natively (same
         # contract as ``tools/run_metrics.py``), so we always have an
         # extraction file to feed them — no XLSX gate. Prefer xlsx when the

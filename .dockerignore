@@ -17,6 +17,9 @@
 
 # Generated output / heavy / irrelevant to the image
 outputs/
+# Prioritization feeds: regenerable cache with daily churn — never bake into the
+# image (mount resources/feeds/ as a volume and sync at runtime instead).
+resources/feeds/
 archive/
 memory/
 .claude/

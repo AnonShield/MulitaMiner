@@ -180,24 +180,3 @@ The system supports multiple provider types with auto-detection:
 | `ollama`      | Local        | localhost:11434              | Local    | `localhost:11434/*`              |
 | `lm_studio`   | Local        | localhost:1234 (default)     | Local    | `localhost:1234/*`               |
 | `huggingface` | Remote/Local | api-inference.huggingface.co | Variable | `huggingface.co/*` or local mode |
-
-### Tested Models
-
-All these models have been tested and verified working in real scenarios:
-
-#### Remote (Cloud) Models
-
-| Model                          | Provider | Inference Speed | Token Efficiency | Best For                  |
-| ------------------------------ | -------- | --------------- | ---------------- | ------------------------- |
-| gpt-4o-mini-2024-07-18         | OpenAI   | ⚡⚡ Fast       | Good (~60%)      | Cost-effective production |
-| gpt-5-mini-2025-08-07          | OpenAI   | ⚡ Moderate     | Excellent (~52%) | High-accuracy analysis    |
-| deepseek-coder                 | DeepSeek | ⚡ Moderate     | Moderate (~43%)  | Code-focused reports      |
-| llama-3.3-70b-versatile        | Groq     | ⚡⚡ Fast       | Good (~43%)      | General-purpose, budget   |
-| llama-4-scout-17b-16e-instruct | Groq     | ⚡⚡ Fast       | Better (~44%)    | Balanced analysis         |
-| qwen/qwen3-32b                 | Groq     | ⚡⚡ Fast       | Limited (~22%)   | Quick processing          |
-
-#### Local Models (Zero API Cost)
-
-| Model                | Provider   | Inference Speed | Memory Req | Quality   | Status    |
-| -------------------- | ---------- | --------------- | ---------- | --------- | --------- |
-| ibm/granite-4-h-tiny | LLM Studio | ⚡ Moderate     | ~4GB       | Excellent | ✅ Tested |

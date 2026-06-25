@@ -252,6 +252,7 @@ Detailed documentation is organized in separate files:
 | [docs/USAGE.md](docs/USAGE.md)                     | Complete usage guide with examples   |
 | [docs/CONFIG.md](docs/CONFIG.md)                   | API keys and token configuration     |
 | [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)       | Code structure and components        |
+| [docs/PRIORITIZATION.md](docs/PRIORITIZATION.md)   | Remediation queue: KEV/EPSS + SSVC   |
 | [docs/EXTENSIBILITY.md](docs/EXTENSIBILITY.md)     | Adding new scanners and LLMs         |
 | [docs/TROUBLESHOOTING.md](docs/TROUBLESHOOTING.md) | Common errors and optimization tips  |
 | [docs/EXPERIMENTS.md](docs/EXPERIMENTS.md)         | Experimental validation details      |

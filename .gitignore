@@ -10,6 +10,8 @@ visual_layouts/
 llm_debug_responses/
 # Archived raw data (large CSVs, val.txt, schema snapshots — kept out of git)
 archive/data/
+# Prioritization feeds (KEV/EPSS) — regenerable cache, changes daily; sync via tools/sync_feeds.py
+resources/feeds/
 # Ambientes virtuais
 .venv/
 metrics/.venv/
