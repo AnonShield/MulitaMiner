@@ -4,46 +4,25 @@ Vulnerability validation and normalization (post-LLM, pre-storage).
 Used by ``main.py`` for non-CAIS extraction profiles (OpenVAS / TenableWAS).
 The CAIS profile has its own validator at ``src/utils/cais_validator.py``.
 
-Schema source of truth: ``metrics/pipelines/schema_check.V3_SCHEMA`` —
-the same definition the schema-check pipeline validates against. Keeping
-the validator consistent with that schema prevents the silent drift
-that the previous implementation suffered from (it forced ``plugin: list``
-when the schema says ``plugin: null``, and inserted phantom CAIS-only
-fields ``identification``/``http_info`` into every OpenVAS record).
+Schema source of truth: ``configs/vuln_schema.py`` (the Pydantic model) —
+the same definition the schema-check pipeline validates against. Keeping the
+validator consistent with that model prevents the silent drift the previous
+implementation suffered from (it forced ``plugin: list`` when the schema says
+``plugin: null``, and inserted phantom CAIS-only fields into OpenVAS records).
 """
 
 import re
 from typing import Optional, Dict, Any
 
+from ..configs.vuln_schema import expected_fields, validation_types
 
-# Reuse the canonical V3 schema definition. Imported lazily so test contexts
-# without the metrics package on sys.path still load this module.
-def _v3_schema() -> Dict[str, tuple]:
-    try:
-        from metrics.pipelines.schema_check import V3_SCHEMA
-        return V3_SCHEMA
-    except ImportError:
-        # Minimal fallback — only the fields we actually act on below.
-        return {
-            "Name": (str,),
-            "description": (list,),
-            "detection_result": (list,),
-            "detection_method": (list,),
-            "product_detection_result": (list,),
-            "impact": (list,),
-            "solution": (list,),
-            "insight": (list,),
-            "log_method": (list,),
-            "cvss": (float, int, list, type(None)),
-            "port": (int, str, type(None)),
-            "protocol": (str, type(None)),
-            "severity": (str,),
-            "references": (list,),
-            "plugin": (str, int, type(None)),
-            "plugin_details": (dict,),
-            "instances": (list,),
-            "source": (str,),
-        }
+
+def _v3_schema(source: Optional[str] = None) -> Dict[str, tuple]:
+    """The field → allowed-types map for normalization, from the single source
+    of truth. Restricted to LLM-produced fields (host / scanner_specific are
+    filled by the pipeline, not normalized here), matching the old field set."""
+    types = validation_types(source)
+    return {f: types[f] for f in expected_fields(source)}
 
 
 def _default_for(allowed: tuple):
@@ -118,7 +97,7 @@ def validate_and_normalize_vulnerability(vuln) -> Optional[Dict[str, Any]]:
     if not name:
         return None
 
-    schema = _v3_schema()
+    schema = _v3_schema(vuln.get("source"))
 
     # Fill missing fields with type-appropriate defaults; coerce mismatches
     # only when the conversion is unambiguous.

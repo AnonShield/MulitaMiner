@@ -53,51 +53,50 @@ if sys.platform.startswith("win") and sys.stdout.encoding and sys.stdout.encodin
 sys.path.insert(0, str(Path(__file__).parents[2]))
 
 from metrics.common.cli import parse_arguments_common  # noqa: E402
+from mulitaminer.configs.vuln_schema import (  # noqa: E402
+    expected_fields,
+    validation_types,
+)
 
-# V3 canonical schema — the contract the LLM is given.
-V3_SCHEMA: dict[str, tuple[type, ...]] = {
-    "Name": (str,),
-    "description": (list,),
-    "detection_result": (list,),
-    "detection_method": (list,),
-    "product_detection_result": (list,),
-    "impact": (list,),
-    "solution": (list,),
-    "insight": (list,),
-    "log_method": (list,),
-    "cvss": (float, int, type(None)),
-    "port": (int, str, type(None)),
-    "protocol": (str, type(None)),
-    "severity": (str,),
-    "references": (list,),
-    "plugin": (str, type(None)),
-    "plugin_details": (dict,),
-    "instances": (list,),
-    "source": (str,),
-}
+# The schema is no longer hand-copied here — it is derived, per scanner, from the
+# single source of truth (src/mulitaminer/configs/vuln_schema.py). This is what
+# fixes the old drift (V3_SCHEMA claimed plugin=str|None; the Tenable prompt emits
+# a number, so every correct Tenable record was flagged). Now schema_check picks
+# the right contract by the record's `source` and asks the model for its types.
 
 
 # ---------------------------------------------------------------------------
 # Pure functions — no I/O, easy to test.
 # ---------------------------------------------------------------------------
 
-def _validate_record(record: dict, schema: dict[str, tuple[type, ...]]) -> tuple[list[str], list[str]]:
-    """Return ``(missing_fields, type_errors)`` for one record vs. ``schema``."""
+def _validate_record(
+    record: dict,
+    schema: dict[str, tuple[type, ...]],
+    expected: list[str],
+) -> tuple[list[str], list[str]]:
+    """Return ``(missing_fields, type_errors)`` for one record.
+
+    ``expected`` is the set of fields the LLM must produce (pipeline-filled
+    fields like host/scanner_specific are excluded). ``schema`` maps every
+    model field to its allowed runtime types — used to type-check whatever the
+    record actually carries.
+    """
     missing: list[str] = []
     type_errors: list[str] = []
-    for field, allowed in schema.items():
+    for field in expected:
         if field not in record:
             missing.append(field)
             continue
-        if not isinstance(record[field], allowed):
+        allowed = schema.get(field)
+        if allowed and not isinstance(record[field], allowed):
             actual = type(record[field]).__name__
-            expected = "|".join(t.__name__ for t in allowed)
-            type_errors.append(f"{field}: expected {expected}, got {actual}")
+            expected_types = "|".join(t.__name__ for t in allowed)
+            type_errors.append(f"{field}: expected {expected_types}, got {actual}")
     return missing, type_errors
 
 
 def _extra_fields(record: dict, schema: dict[str, tuple[type, ...]]) -> list[str]:
-    """Fields present in the record but not in the schema."""
+    """Fields present in the record but not declared by the scanner's model."""
     return [k for k in record if k not in schema]
 
 
@@ -131,7 +130,6 @@ def assess(json_path: Path) -> dict[str, Any]:
     if not isinstance(records, list):
         records = [records]
 
-    schema = V3_SCHEMA
     records_to_check = records
 
     missing_total: list[str] = []
@@ -140,10 +138,18 @@ def assess(json_path: Path) -> dict[str, Any]:
     extra_total: list[str] = []
     n_conformant = 0
     n_with_extras = 0
+    field_checks = 0  # accumulated per record: each scanner expects a different set
 
     for record in records_to_check:
-        missing, type_errors = _validate_record(record, schema)
+        # Source-aware: pick the contract for THIS record's scanner. An OpenVAS
+        # record is not expected to carry Tenable-only fields (instances, plugin)
+        # and vice-versa — the model encodes that, so we no longer flag it.
+        src = record.get("source") if isinstance(record, dict) else None
+        schema = validation_types(src)
+        expected = expected_fields(src)
+        missing, type_errors = _validate_record(record, schema, expected)
         extras = _extra_fields(record, schema)
+        field_checks += len(expected)
         missing_total.extend(missing)
         type_error_total.extend(type_errors)
         for msg in type_errors:
@@ -161,7 +167,6 @@ def assess(json_path: Path) -> dict[str, Any]:
     # Softer than record-level all-or-nothing — one recurrently bad field
     # doesn't collapse the metric to 0%.
     field_failures = sum(missing_counts.values()) + sum(type_error_field_counts.values())
-    field_checks = n * len(schema)
     field_conformance = 1 - (field_failures / field_checks) if field_checks else 0.0
     field_failure_counts = {
         f: missing_counts.get(f, 0) + type_error_field_counts.get(f, 0)

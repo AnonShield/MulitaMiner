@@ -32,6 +32,36 @@ Add a JSON file in `src/configs/scanners/` (e.g., `rapid7.json`).
 
 Define: scanner name, template path, consolidation fields (`consolidation_field`), duplicate rules, retry parameters, etc.
 
+### 2b. (Optional) Declare the scanner's fields in the schema model
+
+The extracted record shape has one source of truth: `src/mulitaminer/configs/vuln_schema.py`.
+From it the metric validator (`schema_check`) and the post-LLM normalizer derive their
+field/type contract, so the schema never drifts across those files.
+
+**You usually don't need to touch this.** If your scanner uses the standard fields, records
+fall back to the base `VulnRecord` automatically — declare nothing. Only add a subclass when
+your scanner has a **custom typed field** (e.g. a numeric `risk_score`) that deserves
+validation:
+
+```python
+# in vuln_schema.py
+class NexposeRecord(VulnRecord):
+    source: Literal["NEXPOSE"] = "NEXPOSE"
+    risk_score: int          # your scanner's own field, inherits the rest
+
+_BY_SOURCE["NEXPOSE"] = NexposeRecord   # register for dispatch (by the record's `source`)
+```
+
+The `source` string here must match what your prompt tells the LLM to put in the `source`
+field. Everything else (`Name`, `cvss`, `severity`, …) is inherited from the base.
+
+**Prompts stay hand-written, but are guarded.** A test
+(`tests/unit/test_schema_single_source.py`) asserts every field the model declares also
+appears in each prompt's `JSON SCHEMA` block — so if you add a field to the model and forget
+the prompt, the test fails and tells you. (We keep prompts hand-written on purpose:
+regenerating them from the model measurably hurt extraction — see
+`archive/notes/SCHEMA_SINGLE_SOURCE.md`.)
+
 ### 3. (Optional) Custom Block Logic
 
 MulitaMiner segments reports into **blocks** (preserving report structure) before dividing into **chunks** (respecting token limits). This ensures the LLM processes related vulnerabilities together.
