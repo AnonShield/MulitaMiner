@@ -8,11 +8,8 @@ Reads matched pairs from BERT or ROUGE output and calculates metrics for determi
 Priority: BERT > ROUGE
 """
 import sys
-from pathlib import Path
-sys.path.insert(0, str(Path(__file__).parents[2]))
 
 import pandas as pd
-import numpy as np
 from pathlib import Path
 import warnings
 import os
@@ -28,15 +25,12 @@ if sys.platform.startswith('win'):
         sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding='utf-8')
     os.environ['PYTHONIOENCODING'] = 'utf-8'
 
-# Add root directory to path
-sys.path.insert(0, str(Path(__file__).parents[1]))
 
 from metrics.common.cli import parse_arguments_common
 from metrics.common.field_mapper import (
     get_deterministic_fields,
     normalize_field_value,
-    build_field_map,
-    get_actual_column_name
+    build_field_map
 )
 from metrics.common.io import load_baseline, load_extraction
 
@@ -44,17 +38,33 @@ def find_metric_comparison_file(output_dir: Path, model_name: str) -> Tuple[Opti
     """
     Find BERT or ROUGE comparison file (priority: BERT > ROUGE).
     Returns (file_path, metric_type) or (None, None) if not found.
+
+    Tries the exact ``--llm``-labeled name first; if absent, falls back to a
+    glob so a comparison produced under a different --llm label is still found
+    (with a warning) instead of failing silently. Multiple candidates are
+    ambiguous — we refuse to guess and list them.
     """
-    # Priority 1: BERT
-    bert_file = output_dir / f"bert_comparison_vulnerabilities_{model_name}.xlsx"
-    if bert_file.exists():
-        return bert_file, "bert"
-    
-    # Priority 2: ROUGE
-    rouge_file = output_dir / f"rouge_comparison_vulnerabilities_{model_name}.xlsx"
-    if rouge_file.exists():
-        return rouge_file, "rouge"
-    
+    for metric in ("bert", "rouge"):
+        exact = output_dir / f"{metric}_comparison_vulnerabilities_{model_name}.xlsx"
+        if exact.exists():
+            return exact, metric
+
+    for metric in ("bert", "rouge"):
+        candidates = sorted(output_dir.glob(f"{metric}_comparison_vulnerabilities_*.xlsx"))
+        if len(candidates) == 1:
+            print(
+                f"[WARN] No comparison file labeled '{model_name}'; "
+                f"using the only one present: {candidates[0].name}"
+            )
+            return candidates[0], metric
+        if len(candidates) > 1:
+            print(
+                f"[WARN] --llm '{model_name}' matches no comparison file and "
+                f"multiple candidates exist — refusing to guess: "
+                f"{[c.name for c in candidates]}"
+            )
+            return None, None
+
     return None, None
 
 

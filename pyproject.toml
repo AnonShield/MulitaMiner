@@ -12,15 +12,12 @@ requires-python = ">=3.11"
 # so the common-user image stays small. The evaluation/metrics/plot stack and
 # the heavy Marker PDF backend live in optional extras below.
 dependencies = [
-    "langchain==0.3.28",
     "langchain-core==0.3.84",
     "langchain-openai==0.3.35",
-    "langchain-ollama==0.3.10",
     "pdfplumber==0.11.9",
     "tqdm==4.67.3",
     "tiktoken==0.12.0",
     "python-dotenv==1.2.2",
-    "deepmerge==1.1.1",
     "json-repair==0.59.5",
     "pandas==2.3.3",
     "openpyxl==3.1.5",
@@ -68,13 +65,19 @@ dev = [
     "mypy>=1.10",
 ]
 
+# Two package roots: the extraction runtime under src/ (mulitaminer) and the
+# evaluation stack at the repo root (metrics). Packaging metrics makes it
+# importable from the editable install, so its scripts no longer need
+# per-file sys.path hacks to find it regardless of the process CWD.
 [tool.setuptools.packages.find]
-where = ["src"]
+where = ["src", "."]
+include = ["mulitaminer*", "metrics*"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
-# Repo root on sys.path so tests can import the top-level ``metrics`` package
-# (mulitaminer is already importable via the editable install).
+# Repo root on sys.path for the test session. Redundant once the package is
+# reinstalled (metrics is packaged from the repo root now), but kept so the
+# suite runs green without requiring a reinstall first.
 pythonpath = ["."]
 markers = ["slow: integration tests that hit real LLMs (deselect with -m 'not slow')"]
 

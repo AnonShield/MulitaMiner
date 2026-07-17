@@ -18,6 +18,8 @@ from typing import Any, Mapping, Union
 
 import pandas as pd
 
+from mulitaminer.configs.vuln_schema import registered_sources, validation_types
+
 from metrics.common.sheet_resolver import resolve_baseline_sheet
 
 
@@ -66,19 +68,31 @@ def _read_resolved_xlsx(path: Path) -> pd.DataFrame:
     return df
 
 
-# Type expectations the baseline XLSX must satisfy (post-_parse_xlsx_struct).
-# Subset of V3_SCHEMA — covers the fields metric pipelines actually rely on.
-# Accepts the union of OpenVAS (cvss as float) and Tenable (cvss as list of
-# CVSSV3/V4 strings) shapes — both are legitimate, the differentiator is the
-# scanner profile. Validator is intentionally permissive on cvss for that reason.
-_BASELINE_EXPECTED_TYPES: dict[str, tuple[type, ...]] = {
-    "cvss":           (int, float, list, type(None)),
-    "port":           (int, str, type(None)),
-    "protocol":       (str, type(None)),
-    "severity":       (str,),
-    "plugin_details": (dict, type(None)),
-    "instances":      (list, type(None)),
-}
+# Fields the baseline validator checks — the ones metric pipelines rely on.
+_BASELINE_VALIDATED_FIELDS: tuple[str, ...] = (
+    "cvss", "port", "protocol", "severity", "plugin_details", "instances",
+)
+
+
+def _baseline_expected_types() -> dict[str, tuple[type, ...]]:
+    """Type expectations the baseline XLSX must satisfy (post-_parse_xlsx_struct).
+
+    Derived from the single-source schema (vuln_schema) as the UNION of every
+    registered scanner's types, because one baseline mixes both scanners' rows
+    (e.g. cvss is a float for OpenVAS but a list of CVSS strings for Tenable —
+    both legitimate). Replaces a hand-copied dict that could drift.
+    """
+    union: dict[str, tuple[type, ...]] = {}
+    for source in registered_sources():
+        for field, types in validation_types(source).items():
+            if field not in _BASELINE_VALIDATED_FIELDS:
+                continue
+            merged = union.get(field, ())
+            union[field] = merged + tuple(t for t in types if t not in merged)
+    return union
+
+
+_BASELINE_EXPECTED_TYPES: dict[str, tuple[type, ...]] = _baseline_expected_types()
 
 
 def validate_baseline(df: pd.DataFrame, *, raise_on_error: bool = False) -> list[str]:

@@ -32,7 +32,6 @@ if sys.platform.startswith("win") and sys.stdout.encoding and sys.stdout.encodin
     sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding="utf-8")
     os.environ["PYTHONIOENCODING"] = "utf-8"
 
-sys.path.insert(0, str(Path(__file__).parents[2]))
 
 import numpy as np  # noqa: E402
 import pandas as pd  # noqa: E402

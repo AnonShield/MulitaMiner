@@ -5,18 +5,25 @@ Maps fields to either deterministic (Field-F1 Metrics) or semantic (BERT/ROUGE) 
 Provides utilities for normalizing field values and filtering fields by category.
 """
 import json
-import os
 from pathlib import Path
 from typing import Dict, List, Set
 
+import mulitaminer
+
 
 def load_field_categories() -> Dict[str, List[str]]:
-    """Load field categories from config JSON."""
-    config_path = Path(__file__).parents[2] / 'src' / 'mulitaminer' / 'configs' / 'schema' / 'field_categories.json'
-    
+    """Load field categories from the mulitaminer package config.
+
+    Located via the installed package (``mulitaminer.__file__``) rather than a
+    relative reach into ``../../src/mulitaminer`` — the latter broke the moment
+    the package moved (e.g. installed as a wheel) and coupled metrics to the
+    source-tree layout.
+    """
+    config_path = Path(mulitaminer.__file__).parent / 'configs' / 'schema' / 'field_categories.json'
+
     if not config_path.exists():
         raise FileNotFoundError(f"Field categories config not found: {config_path}")
-    
+
     with open(config_path, 'r', encoding='utf-8') as f:
         return json.load(f)
 

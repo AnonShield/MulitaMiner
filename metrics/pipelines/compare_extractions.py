@@ -33,16 +33,13 @@ import argparse
 import io
 import os
 import sys
-from collections import Counter
 from pathlib import Path
-from typing import Iterable
 
 if sys.platform.startswith("win") and sys.stdout.encoding and sys.stdout.encoding.lower() != "utf-8":
     sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8")
     sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding="utf-8")
     os.environ["PYTHONIOENCODING"] = "utf-8"
 
-sys.path.insert(0, str(Path(__file__).parents[2]))
 
 import pandas as pd  # noqa: E402
 

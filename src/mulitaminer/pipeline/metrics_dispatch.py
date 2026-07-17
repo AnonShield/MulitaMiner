@@ -11,21 +11,33 @@ import os
 import subprocess
 import sys
 import time
+from pathlib import Path
+
+# Metric scripts live under ``metrics/`` at the repo root, resolved from this
+# file's location so dispatch works regardless of the process CWD (the old
+# relative paths silently broke when main.py was run from another directory).
+# src/mulitaminer/pipeline/metrics_dispatch.py → parents[3] is the repo root.
+_METRICS_ROOT = Path(__file__).resolve().parents[3] / 'metrics'
+
+
+def _script(*parts: str) -> str:
+    return str(_METRICS_ROOT.joinpath(*parts))
+
 
 # Dispatch table for evaluation methods. Each entry is a list:
 # ``[script_path, *fixed_args]``. The fixed args are appended after the
 # common ones (--baseline-file etc.) and let us route ``bert`` and ``rouge``
 # to the unified pipeline with the right ``--scorer`` without keeping
 # wrapper scripts around. Adding a new pipeline = one new entry here.
-_UNIFIED = os.path.join('metrics', 'pipelines', 'compare_extractions.py')
+_UNIFIED = _script('pipelines', 'compare_extractions.py')
 METRIC_SCRIPTS: dict[str, list[str]] = {
     'bert':     [_UNIFIED, '--scorer', 'bertscore'],
     'rouge':    [_UNIFIED, '--scorer', 'rouge_l'],
     'token_f1': [_UNIFIED, '--scorer', 'token_f1'],
-    'field_f1':   [os.path.join('metrics', 'field_f1',  'field_f1.py')],
-    'schema':   [os.path.join('metrics', 'pipelines', 'schema_check.py')],
-    'severity': [os.path.join('metrics', 'pipelines', 'confusion_severity.py')],
-    'coverage': [os.path.join('metrics', 'pipelines', 'coverage.py')],
+    'field_f1':   [_script('field_f1',  'field_f1.py')],
+    'schema':   [_script('pipelines', 'schema_check.py')],
+    'severity': [_script('pipelines', 'confusion_severity.py')],
+    'coverage': [_script('pipelines', 'coverage.py')],
 }
 
 # Order used when the user requests ``all``. Schema runs first (operates on
@@ -118,8 +130,8 @@ def run_evaluation_method(args: argparse.Namespace, extraction_output_path: str,
         print(f"[METRICS] {method.upper()} evaluation completed")
         print(f"[METRICS] Results: {output_dir}")
     except FileNotFoundError:
-        print(f"[ERROR] Python or script not found: {script_path}")
-        print("Check if the 'metrics' virtual environment is properly configured.")
+        print(f"[ERROR] Python interpreter or metric script not found: {script_path}")
+        print(f"Expected metric scripts under: {_METRICS_ROOT}")
     except subprocess.CalledProcessError as e:
         print("[ERROR] Metrics evaluation failed")
         print(f"  Command: {' '.join(e.cmd)}")

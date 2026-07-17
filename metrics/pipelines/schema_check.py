@@ -49,8 +49,6 @@ if sys.platform.startswith("win") and sys.stdout.encoding and sys.stdout.encodin
     sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding="utf-8")
     os.environ["PYTHONIOENCODING"] = "utf-8"
 
-# Allow execution as ``python -m`` *or* as a direct script.
-sys.path.insert(0, str(Path(__file__).parents[2]))
 
 from metrics.common.cli import parse_arguments_common  # noqa: E402
 from mulitaminer.configs.vuln_schema import (  # noqa: E402
@@ -239,8 +237,12 @@ def main() -> None:
 
     out_dir = Path(args.output_dir)
     out_dir.mkdir(parents=True, exist_ok=True)
-    model_suffix = f"_{args.llm}" if args.llm else ""
-    out_path = out_dir / f"schema_report_{json_path.stem}{model_suffix}.json"
+    # The extraction file's stem already encodes the real provenance (scanner,
+    # model config, run). Appending --llm on top of it produced lying names
+    # when the flag didn't match the file (e.g. a DeepSeek extraction labeled
+    # `_gpt4` because --metrics-only used the default --llm). Name from the
+    # data, not the argument.
+    out_path = out_dir / f"schema_report_{json_path.stem}.json"
     out_path.write_text(json.dumps(report, indent=2, ensure_ascii=False), encoding="utf-8")
 
     _print_summary(report)

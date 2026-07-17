@@ -170,6 +170,12 @@ _BY_SOURCE: dict[str, type[VulnRecord]] = {
 }
 
 
+def registered_sources() -> list[str]:
+    """Scanner sources that have a typed record registered (e.g. for building
+    cross-scanner type unions — the baseline mixes both scanners' shapes)."""
+    return list(_BY_SOURCE)
+
+
 def parse_record(data: dict) -> VulnRecord:
     """Validate one raw record into the correct typed model by its `source`
     (unknown source → base model, which still validates the core contract)."""
