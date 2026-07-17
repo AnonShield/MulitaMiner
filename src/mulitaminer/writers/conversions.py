@@ -5,8 +5,10 @@ Manages the conversion workflow based on command-line arguments.
 
 import os
 from typing import List, Optional
-from .xlsx_converter import XLSXConverter
-from .csv_converter import CSVConverter, TSVConverter
+
+# Importing the converter modules runs their @register_converter decorators.
+from . import xlsx_converter, csv_converter  # noqa: F401
+from .base_converter import available_formats, get_converter_factory
 
 
 def convert_single_format(json_file_path: str, format_type: str, args) -> Optional[str]:
@@ -24,11 +26,11 @@ def convert_single_format(json_file_path: str, format_type: str, args) -> Option
     """
     try:
         base_name = os.path.splitext(os.path.basename(json_file_path))[0]
-        
+
         # Generate output filename with correct extension
         # Keeps the JSON base name (which already includes model and timestamp)
         if hasattr(args, 'output_file') and args.output_file and args.convert != 'all':
-            ext = {'xlsx': '.xlsx', 'csv': '.csv', 'tsv': '.tsv'}.get(format_type, '')
+            ext = f'.{format_type}'
             # Only strip a recognized format extension; otherwise keep the name as-is
             # (avoids splitext eating dotted suffixes like "...5.11.0_gpt4_run1").
             root, current_ext = os.path.splitext(args.output_file)
@@ -55,23 +57,15 @@ def convert_single_format(json_file_path: str, format_type: str, args) -> Option
         if output_dir and not os.path.exists(output_dir):
             os.makedirs(output_dir, exist_ok=True)
         
-        # Select appropriate converter
-        if format_type == 'csv':
-            csv_delimiter = getattr(args, 'csv_delimiter', ',')
-            csv_encoding = getattr(args, 'csv_encoding', 'utf-8-sig')
-            converter = CSVConverter(
-                delimiter=csv_delimiter,
-                encoding=csv_encoding,
-                include_metadata=False
+        # Select appropriate converter from the registry
+        factory = get_converter_factory(format_type)
+        if factory is None:
+            raise ValueError(
+                f"Unsupported format: {format_type}. "
+                f"Available: {', '.join(available_formats())}"
             )
-        elif format_type == 'tsv':
-            csv_encoding = getattr(args, 'csv_encoding', 'utf-8-sig')
-            converter = TSVConverter(encoding=csv_encoding, include_metadata=False)
-        elif format_type == 'xlsx':
-            converter = XLSXConverter()
-        else:
-            raise ValueError(f"Unsupported format: {format_type}")
-        
+        converter = factory(args)
+
         # Convert
         result = converter.convert(json_file_path, output_file)
         print(f"✅ {format_type.upper()}: {result}")
@@ -107,8 +101,7 @@ def execute_conversions(json_file_path: str, args) -> List[str]:
     converted_files = []
     
     if convert_type == 'all':
-        formats = ['csv', 'tsv', 'xlsx']
-        for format_type in formats:
+        for format_type in available_formats():
             try:
                 result = convert_single_format(json_file_path, format_type, args)
                 if result:

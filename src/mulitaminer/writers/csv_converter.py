@@ -7,7 +7,7 @@ import os
 from typing import List, Dict, Any, Optional
 from datetime import datetime
 
-from .base_converter import BaseConverter
+from .base_converter import BaseConverter, register_converter
 
 
 class CSVConverter(BaseConverter):
@@ -88,11 +88,11 @@ class CSVConverter(BaseConverter):
             writer.writerow(['Total vulnerabilities', len(data)])
             writer.writerow(['Conversor', f"{self.get_format_name()} Converter"])
             
-            # Contar por severidade (usando campo 'Risk' do nosso formato)
+            # Count by severity ('severity' is the record contract's field)
             if data:
                 severity_counts = {}
                 for item in data:
-                    severity = item.get('Risk', item.get('severity', 'Unknown'))  # Fallback para compatibilidade
+                    severity = item.get('severity', 'Unknown')
                     severity_counts[severity] = severity_counts.get(severity, 0) + 1
                 
                 writer.writerow([])
@@ -127,11 +127,11 @@ class CSVConverter(BaseConverter):
                 writer.writerow(['Total vulnerabilities', len(data)])
                 writer.writerow(['Converter', f"{self.get_format_name()} Converter"])
                 
-                # Contar por severidade (usando campo 'Risk' do nosso formato)
+                # Count by severity ('severity' is the record contract's field)
                 if data:
                     severity_counts = {}
                     for item in data:
-                        severity = item.get('Risk', item.get('severity', 'Unknown'))  # Fallback para compatibilidade
+                        severity = item.get('severity', 'Unknown')
                         severity_counts[severity] = severity_counts.get(severity, 0) + 1
                     
                     writer.writerow([])  # Linha vazia
@@ -216,7 +216,25 @@ class TSVConverter(CSVConverter):
         return "TSV"
 
 
-def convert_json_to_csv(json_file_path: str, output_file_path: Optional[str] = None, 
+@register_converter('csv')
+def _make_csv_converter(args) -> CSVConverter:
+    """Build a CSVConverter from CLI args (co-located construction)."""
+    return CSVConverter(
+        delimiter=getattr(args, 'csv_delimiter', ','),
+        encoding=getattr(args, 'csv_encoding', 'utf-8-sig'),
+        include_metadata=False,
+    )
+
+
+@register_converter('tsv')
+def _make_tsv_converter(args) -> TSVConverter:
+    return TSVConverter(
+        encoding=getattr(args, 'csv_encoding', 'utf-8-sig'),
+        include_metadata=False,
+    )
+
+
+def convert_json_to_csv(json_file_path: str, output_file_path: Optional[str] = None,
                        delimiter: str = ',', encoding: str = 'utf-8-sig') -> str:
     """
     Função utilitária para conversão direta para CSV

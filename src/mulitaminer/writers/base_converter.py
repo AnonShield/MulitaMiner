@@ -6,29 +6,48 @@ Define a interface comum para todos os conversores
 from abc import ABC, abstractmethod
 import json
 import os
-from typing import List, Dict, Any, Optional
-from datetime import datetime
+from typing import List, Dict, Any, Callable, Optional
+
+from ..configs.vuln_schema import validation_types
+
+
+# format name -> factory(args) -> converter instance. Each converter file
+# registers its own factory (co-locating per-format construction), the same
+# Open/Closed pattern the input readers and LLM providers use. This is also the
+# seam the standard-format exporters (SARIF/CSAF, see OUTPUT_STANDARDS.md) plug
+# into later — a new format is a new file + one decorator, no dispatch edit.
+ConverterFactory = Callable[[Any], "BaseConverter"]
+_CONVERTER_FACTORIES: dict[str, ConverterFactory] = {}
+
+
+def register_converter(*names: str) -> Callable[[ConverterFactory], ConverterFactory]:
+    """Decorator: register a converter factory under one or more format names."""
+    def deco(factory: ConverterFactory) -> ConverterFactory:
+        for name in names:
+            _CONVERTER_FACTORIES[name.lower()] = factory
+        return factory
+    return deco
+
+
+def get_converter_factory(name: str) -> Optional[ConverterFactory]:
+    """Return the registered factory for a format name, or None."""
+    return _CONVERTER_FACTORIES.get(name.lower())
+
+
+def available_formats() -> list[str]:
+    """Registered output format names — drives the ``--convert all`` expansion."""
+    return sorted(_CONVERTER_FACTORIES)
 
 
 class BaseConverter(ABC):
     """
     Classe base abstrata para conversores de formato
     """
-    
+
     def __init__(self):
-        # Campos do nosso formato JSON atual
-        self.supported_fields = [
-            'Name',
-            'name',
-            'Synopsis', 
-            'Description',
-            'Plugin Output',
-            'Solution',
-            'See Also',
-            'CVSSv3',
-            'CVSSv4',
-            'Risk'
-        ]
+        # Column ordering priority: the record contract's fields in declaration
+        # order, derived from the single-source schema so it can never drift.
+        self.supported_fields = list(validation_types())
     
     def load_json_data(self, json_file_path: str) -> List[Dict[str, Any]]:
         """

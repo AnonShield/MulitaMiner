@@ -20,7 +20,7 @@ try:
 except ImportError:
     OPENPYXL_AVAILABLE = False
 
-from .base_converter import BaseConverter
+from .base_converter import BaseConverter, register_converter
 
 
 class XLSXConverter(BaseConverter):
@@ -141,11 +141,11 @@ class XLSXConverter(BaseConverter):
         metadata_ws['A5'] = "Converter:"
         metadata_ws['B5'] = f"{self.get_format_name()} Converter"
         
-        # Contar por severidade
+        # Count by severity ('severity' is the record contract's field)
         if data:
             severity_counts = {}
             for item in data:
-                severity = item.get('Risk', item.get('severity', 'Unknown'))  # Fallback para compatibilidade
+                severity = item.get('severity', 'Unknown')
                 severity_counts[severity] = severity_counts.get(severity, 0) + 1
             
             metadata_ws['A7'] = "Severity Distribution:"
@@ -206,6 +206,12 @@ class XLSXConverter(BaseConverter):
             return output_file_path
         except Exception as e:
             raise Exception(f"Error creating XLSX file: {e}")
+
+
+@register_converter('xlsx')
+def _make_xlsx_converter(args) -> XLSXConverter:
+    """Build an XLSXConverter (takes no CLI-specific options)."""
+    return XLSXConverter()
 
 
 def convert_json_to_xlsx(json_file_path: str, output_file_path: Optional[str] = None) -> str:
