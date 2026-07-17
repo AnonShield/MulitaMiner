@@ -33,8 +33,7 @@ MulitaMiner/
 │   │   ├── llm_factory.py  prompts.py  validation.py  tokenizer_utils.py
 │   │   └── providers/               # openai, ollama, lm_studio, huggingface
 │   ├── scanners/                    # scanner strategies (was scanner_strategies)
-│   │   ├── base.py  registry.py  consolidation.py  openvas.py  tenablewas.py
-│   │   └── profile_registry.py
+│   │   └── base.py  registry.py  consolidation.py  openvas.py  tenablewas.py
 │   ├── writers/                     # output formats (was converters): csv, xlsx, conversions
 │   ├── validators/                  # cais_validator.py
 │   ├── reporting/                   # final report, tokens_cost (+ LLM_PRICES), llm_debug, usage_log

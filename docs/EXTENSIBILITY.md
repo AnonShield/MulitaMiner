@@ -75,33 +75,39 @@ MulitaMiner segments reports into **blocks** (preserving report structure) befor
 #### In your strategy file (e.g., `src/mulitaminer/scanners/mynewscanner.py`):
 
 ```python
+from .base import Block, ScannerStrategy, VisualContext
+from .registry import register_strategy
+
+@register_strategy('mynewscanner')   # ← self-registers; no edit to registry.py
 class MyNewScannerStrategy(ScannerStrategy):
     scanner_name = 'mynewscanner'
     requires_visual_layout = False  # Set to True if you need visual layout
 
-    def extract_visual_context(self, visual_layout_path: str) -> Tuple[List, None, None, None]:
+    def extract_visual_context(self, visual_layout_path: str) -> VisualContext:
         """Optional: Extract context from visual layout."""
         # Your custom logic here
-        return initial_context_lines, severity, port, protocol
+        return VisualContext(lines, severity, port, protocol, host)
 
-    def create_blocks(self, report_text: str, temp_dir: str, initial_context: Tuple) -> List[Dict]:
+    def create_blocks(self, report_text: str, temp_dir: str,
+                      initial_context: VisualContext, output_ext: str = "txt") -> list[Block]:
         """Optional: Create custom blocks."""
         # Your block creation logic here
-        # Return list of {'file': path, 'port': port, 'protocol': protocol, 'severity': severity}
+        # Return list of Block dicts: {'file': path, 'port': ..., 'protocol': ..., 'severity': ..., 'host': ...}
         return blocks
 ```
 
-Then register in `src/mulitaminer/scanners/registry.py`:
+The `@register_strategy('mynewscanner')` decorator self-registers the strategy —
+you never edit `registry.py`. The only wiring is to make sure the module gets
+imported, so add it to the import line in `src/mulitaminer/scanners/registry.py`:
 
 ```python
-from .mynewscanner import MyNewScannerStrategy
-
-SCANNER_STRATEGIES = {
-    'openvas': OpenVASStrategy(),
-    'tenable': TenableWASStrategy(),
-    'mynewscanner': MyNewScannerStrategy(),  # ← Add here
-}
+# Importing the strategy modules runs their @register_strategy decorators.
+from . import openvas, tenablewas, mynewscanner  # ← add your module here
 ```
+
+The name you pass to `@register_strategy(...)` must match the scanner name in
+your profile JSON's `reader` field (family aliases like `cais_openvas` resolve
+to `openvas` automatically).
 
 **If not implemented:** The base class provides default behavior:
 
@@ -355,16 +361,13 @@ class MyCorporpStrategy(ScannerStrategy):
         }
 ```
 
-**Step 2: Register it** (`src/mulitaminer/scanners/registry.py`):
+**Step 2: Register it** — decorate the class with `@register_strategy('mycorp')`
+(no edit to the registry dict), then add your module to the import line in
+`src/mulitaminer/scanners/registry.py` so the decorator runs:
 
 ```python
-from .mycorp import MyCorporpStrategy
-
-SCANNER_STRATEGIES = {
-    'openvas': OpenVASStrategy(),
-    'tenable': TenableWASStrategy(),
-    'mycorp': MyCorporpStrategy(),  # Add this line
-}
+# Importing the strategy modules runs their @register_strategy decorators.
+from . import openvas, tenablewas, mycorp  # ← add your module
 ```
 
 **Step 3: Create profile** (`src/configs/scanners/mycorp.json`):
@@ -464,9 +467,10 @@ For proprietary APIs or specialized inference backends not covered by built-in p
 File: `src/mulitaminer/llm/providers/myprovider.py`
 
 ```python
-from .base_provider import BaseLLMProvider
+from .base_provider import BaseLLMProvider, register_provider
 
-class MyproviderProvider(BaseLLMProvider):
+@register_provider("myprovider")   # ← name used in the config's "provider" field
+class MyProviderProvider(BaseLLMProvider):
     """Custom provider for MyService API."""
 
     def __init__(self, config: dict):
@@ -510,9 +514,17 @@ File: `src/configs/llms/myprovider.json`
 }
 ```
 
-#### Step 3: Use It
+#### Step 3: Register the module and use it
 
-System auto-discovers the provider:
+Add your provider module to the import line in
+`src/mulitaminer/llm/providers/__init__.py` so its `@register_provider`
+decorator runs:
+
+```python
+from .myprovider_provider import MyProviderProvider  # ← add this
+```
+
+Then:
 
 ```bash
 python main.py --input scan.pdf --llm myprovider --scanner myscanner
@@ -521,19 +533,13 @@ python main.py --input scan.pdf --llm myprovider --scanner myscanner
 **How it works:**
 
 1. Loads `myprovider.json` → sees `"provider": "myprovider"`
-2. Auto-imports `MyproviderProvider` from `myprovider_provider.py`
-3. Instantiates and uses it
+2. `init_llm` looks `"myprovider"` up in the provider registry
+3. The registered factory (your decorated class) is instantiated and used
 
-#### Class Naming Convention
-
-- File: `src/mulitaminer/llm/providers/{name}_provider.py`
-- Class: `{Name}Provider` (capitalize first letter)
-
-Examples:
-
-- `groq_provider.py` → `GroqProvider`
-- `anthropic_provider.py` → `AnthropicProvider`
-- `myservice_provider.py` → `MyserviceProvider`
+The `@register_provider("name")` decorator decouples the config name from the
+class name — call your class whatever you like (no `{Name}Provider` capitalize
+convention to obey). A class can register multiple aliases:
+`@register_provider("huggingface", "hf")`.
 
 ---
 

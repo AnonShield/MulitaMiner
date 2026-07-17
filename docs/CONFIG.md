@@ -128,10 +128,10 @@ Current JSON files use a simplified, provider-aware structure:
 ### Important Fields
 
 - **`api_key`** _(optional for local)_: Use `${VAR_NAME}` for .env substitution
-- **`provider`** _(optional)_: Auto-detected from endpoint if not specified
-  - `"openai"` for api.openai.com
-  - `"ollama"` for localhost:11434
-  - `"lm_studio"` for localhost:1234
+- **`provider`** _(optional, default `"openai"`)_: Which backend to use —
+  `"openai"` (any OpenAI-compatible API: OpenAI, DeepSeek, Groq, …), `"ollama"`,
+  `"lm_studio"`, or `"huggingface"` (alias `"hf"`). Omit it only for
+  OpenAI-compatible endpoints; **local backends must set it explicitly**.
 - **`endpoint`**: Service URL
 - **`model`**: Model identifier
 - **`temperature`**: 0.0 for deterministic (recommended), higher for creative
@@ -143,20 +143,16 @@ Current JSON files use a simplified, provider-aware structure:
   - Type: `"tiktoken"` (OpenAI models) or `"huggingface"` (open models)
   - Model: Tokenizer model ID (must match LLM)
 
-### Auto-Detection Logic
+### Provider Resolution
 
-Provider is auto-detected from endpoint if `"provider"` field is omitted:
+The provider is taken from the `"provider"` field. If omitted, it defaults to
+`"openai"` (which handles any OpenAI-compatible endpoint — OpenAI, DeepSeek,
+Groq, …). There is no endpoint sniffing: a local backend (Ollama, LM Studio)
+**must** declare `"provider"` explicitly, e.g. `"provider": "ollama"`.
 
-```python
-if "localhost" in endpoint and "11434" in endpoint:
-    provider = "ollama"
-elif "localhost" in endpoint and "1234" in endpoint:
-    provider = "lm_studio"
-elif "openai" in endpoint:
-    provider = "openai"
-else:
-    provider = "openai"  # default
-```
+The name is resolved through the provider registry (`init_llm`), so a custom
+provider added via `@register_provider("name")` is available the same way — see
+[EXTENSIBILITY.md → Create Custom Provider](EXTENSIBILITY.md#option-3-create-custom-provider).
 
 ## Scanner Configuration Files
 
@@ -172,11 +168,11 @@ Scanner configurations are stored in `src/configs/scanners/`. Each JSON file def
 
 ### System-Level Providers Available
 
-The system supports multiple provider types with auto-detection:
+The system supports multiple provider types. Set `"provider"` to one of:
 
-| Provider      | Type         | Endpoint                     | Location | Auto-Detect Pattern              |
-| ------------- | ------------ | ---------------------------- | -------- | -------------------------------- |
-| `openai`      | Remote API   | api.openai.com               | Cloud    | `openai.com/*`                   |
-| `ollama`      | Local        | localhost:11434              | Local    | `localhost:11434/*`              |
-| `lm_studio`   | Local        | localhost:1234 (default)     | Local    | `localhost:1234/*`               |
-| `huggingface` | Remote/Local | api-inference.huggingface.co | Variable | `huggingface.co/*` or local mode |
+| Provider      | Type         | Endpoint                     | Location | `"provider"` value       |
+| ------------- | ------------ | ---------------------------- | -------- | ------------------------ |
+| `openai`      | Remote API   | any OpenAI-compatible API    | Cloud    | `"openai"` (or omit)     |
+| `ollama`      | Local        | localhost:11434              | Local    | `"ollama"`               |
+| `lm_studio`   | Local        | localhost:1234 (default)     | Local    | `"lm_studio"`            |
+| `huggingface` | Remote/Local | api-inference.huggingface.co | Variable | `"huggingface"` / `"hf"` |

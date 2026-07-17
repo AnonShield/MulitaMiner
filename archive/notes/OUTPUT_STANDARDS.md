@@ -123,7 +123,12 @@ porque CSAF é formato de *publicador de advisory*, não o que um agregador de s
    scan de rede (modelo de *componente*, não *host:porta*).
 
 Nada disso muda o pipeline de extração — é camada de saída, via
-`--output-format {mulita-legacy | hybrid | generic | sarif | csaf | cyclonedx-vex}`.
+`--output-format {mulita-legacy | hybrid | generic | sarif | csaf | cyclonedx-vex | cais}`.
+
+O `cais` entra nessa mesma lista, mas é de natureza diferente dos demais: não é padrão
+de interoperabilidade (OASIS/OWASP) e sim **formato institucional específico** (schema CSV
+do CAIS). Arquiteturalmente, porém, pluga na **mesma costura** — e por já ter schema-alvo
+definido, é o candidato natural a ser o **primeiro exportador** implementado (§6).
 
 ---
 
@@ -183,10 +188,106 @@ interoperar**.
 
 ---
 
-## 6. Decisões em aberto
+## 6. CAIS: de prompt de extração para exportador (plano)
+
+O CAIS já existe no projeto, mas pelo **caminho errado**: como um modo de extração próprio.
+Esta seção documenta a decisão de convertê-lo em **exportador** (transformação determinística
+`V3 → CAIS`) e o plano para fazê-lo. É a primeira aplicação concreta da costura do §4.
+
+### 6.1 O problema do desenho atual
+
+Hoje o CAIS é um caminho de extração paralelo, com superfície própria:
+
+- **prompts** — `cais_openvas_prompt.txt` (249 linhas, maduro), `cais_tenable_prompt.txt`
+  (37 linhas, **stub inacabado**), `cais_prompt_v3.txt`;
+- **validador** — `validators/cais_validator.py` (hoje **código morto**: só era alcançado pelo
+  `profile_registry`, que já foi removido por estar inteiro morto);
+- **configs** — `cais_openvas.json`, `cais_tenable.json`, `cais_default.json`.
+
+O prompt pede ao LLM que **já cuspa** o schema pontilhado do CAIS (`definition.name`,
+`asset.display_ipv4_address`, `definition.cvss3.base_vector`...). Consequências:
+
+1. **Fura a fonte-única.** Todo o trabalho de schema desta época (o `VulnRecord` como única
+   fonte de verdade, ver [`SCHEMA_SINGLE_SOURCE.md`](SCHEMA_SINGLE_SOURCE.md)) é contornado —
+   o schema do CAIS vive, à mão, dentro da prosa dos prompts.
+2. **Mistura extração com serialização.** Extrair (PDF → dados) e formatar saída (dados →
+   schema-alvo) viram um passo só.
+3. **É frágil.** LLM erra mais emitindo schema exótico de chave-pontilhada do que o V3 limpo.
+4. **É assimétrico.** O CAIS-OpenVAS foi construído; o CAIS-Tenable nunca passou de esboço.
+
+### 6.2 A proposta
+
+CAIS é um **formato de saída**, não um modo de extração. Extrai-se **uma vez** no V3 canônico
+e mapeia-se `V3 → CAIS` deterministicamente, na mesma costura `--output-format` do §4.
+
+Ganhos: separação de responsabilidades; o CAIS **reentra** na fonte-única; conversão 100%
+confiável (determinística, não sujeita a alucinação); e **agnóstica de scanner** — como opera
+no registro V3 já normalizado, o problema do "Tenable nunca foi construído" **desaparece de
+graça** (não há prompt CAIS-Tenable para construir; há um mapeador só).
+
+### 6.3 Mapeamento `V3 → CAIS` (viabilidade)
+
+~90% dos campos CAIS saem direto do `VulnRecord`:
+
+| Campo CAIS | Origem no V3 |
+|---|---|
+| `definition.name` / `severity` / `description` / `solution` | direto |
+| `definition.id` | `plugin` |
+| `definition.cve` | derivado de `references` (o `extract_cve_ids` de [`signals.py`](../../src/mulitaminer/prioritization/signals.py) já faz isso) |
+| `definition.cvss3.base_score` / `base_vector` | `cvss` |
+| `port`, `protocol`, `source`, `severity` | direto |
+| `asset.display_fqdn` / `display_ipv4_address` / `host_name` | `host` |
+| `asset.system_type` | derivado de `source` (`"Network Service"` p/ OpenVAS, `"Web Application"` p/ Tenable) |
+| `output` | `detection_result` / `plugin_details` |
+| `name_consolidated`, `state` | pós-processamento / constante |
+
+**Lacunas honestas** (os únicos campos que o prompt "sabia" e o V3 não captura direto):
+
+- `asset.operating_system` — não existe no V3; quase sempre `null` de qualquer forma.
+- `definition.cwe` — não é campo do V3, mas é parseável de `references` (como o CVE).
+
+Nenhuma das duas inviabiliza o mapeamento; ambas são campos tipicamente vazios.
+
+### 6.4 Plano de implementação
+
+**Fase 0 — costura de exportador** (pré-requisito, compartilhada com SARIF/CSAF/...)
+→ `writers/exporters/` com registry por decorator (o mesmo padrão já usado em scanners/
+providers/writers). `--output-format <fmt>` resolve o exportador pelo nome.
+→ *verify:* `--output-format mulita-legacy` reproduz a saída atual byte-a-byte.
+
+**Fase 1 — mapeador `V3 → CAIS`**
+→ `writers/exporters/cais.py`: uma função `to_cais(record: VulnRecord) -> dict` + registro
+`@register_exporter("cais")`.
+→ *verify:* teste com um registro V3 real de OpenVAS produz o mesmo dict-CAIS que o prompt
+`cais_openvas` produzia (comparar contra uma extração CAIS antiga como golden).
+
+**Fase 2 — aposentar o caminho de prompt** (opcional; só quando o CAIS for reativado de fato)
+→ remover `cais_*_prompt.txt`, `cais_validator.py`, `validators/` (se CAIS era o único uso),
+`cais_*.json`.
+→ *verify:* suíte verde; nenhuma referência órfã.
+
+### 6.5 Por que o CAIS é o primeiro exportador a construir
+
+Ele **estabelece o padrão** da costura que SARIF/CSAF vão reusar, e é o cobaia ideal: já tem
+schema-alvo bem definido e uma saída antiga para servir de golden. Fazer o CAIS certo valida
+o desenho antes de investir nos formatos de interoperabilidade.
+
+### 6.6 Ressalva de prioridade
+
+O CAIS está **dormente** hoje (validador morto, prompt do Tenable é stub). Então isto **não é
+urgente** — é o desenho-alvo para quando o CAIS for retomado, ou o gatilho natural para
+construir a costura `--output-format` (Fase 0), que é útil por si só (Generic/SARIF do §4).
+
+---
+
+## 7. Decisões em aberto
 
 - [ ] Ordem de implementação dos conversores (recomendado: CSAF → SARIF → CycloneDX).
 - [ ] Consumidor downstream do A/B: LLM-assistente vs. ingestão real em DefectDojo (ou ambos).
 - [ ] Perfil CSAF a mirar: `csaf_vex` (mais enxuto) vs. `csaf_security_advisory` (completo).
 - [ ] Mapear campos `scanner_specific` do híbrido: em CSAF vão para `notes[]`; em SARIF para
       `properties` (property bag). Confirmar que nada crítico se perde.
+- [ ] CAIS (§6): confirmar `definition.cwe` via parse de `references`; decidir se `asset.
+      operating_system` fica `null` fixo ou tenta um parse best-effort.
+- [ ] CAIS (§6): manter o caminho de prompt vivo em paralelo durante a transição, ou cortar
+      de vez (dado que já está dormente)?
