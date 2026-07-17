@@ -102,21 +102,13 @@ def load_llm(llm_name):
                 env_var = match.group(1)
                 config[k] = os.getenv(env_var, "")
     
-    # Normalize provider aliases so the rest of the code sees one canonical name
+    # Normalize provider aliases so the rest of the code sees one canonical name.
+    # This is the single place config is canonicalized; the factory resolves the
+    # provider by name from here (no endpoint sniffing — every provider-less
+    # config points at an OpenAI-compatible endpoint, so openai is the default).
     if config.get("provider") == "hf":
         config["provider"] = "huggingface"
-
-    # Auto-detect provider if not specified
-    if "provider" not in config:
-        endpoint = config.get("endpoint", "").lower()
-        
-        if "localhost" in endpoint or "127.0.0.1" in endpoint or "11434" in endpoint:
-            config["provider"] = "ollama"
-        elif "openai" in endpoint or "api.openai.com" in endpoint:
-            config["provider"] = "openai"
-        else:
-            # Default to openai for backward compatibility
-            config["provider"] = "openai"
+    config.setdefault("provider", "openai")
 
     _validate(LLMConfig, config, "LLM", llm_name)
     return config

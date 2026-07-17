@@ -9,9 +9,10 @@ context window.
 """
 
 import requests
-from .base_provider import BaseLLMProvider
+from .base_provider import BaseLLMProvider, register_provider
 
 
+@register_provider("ollama")
 class OllamaProvider(BaseLLMProvider):
     """Provider for Ollama local LLM models (direct HTTP API)."""
 

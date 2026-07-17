@@ -6,9 +6,10 @@ This provider handles all OpenAI API models (GPT-4, GPT-3.5, etc).
 
 import os
 from langchain_openai import ChatOpenAI
-from .base_provider import BaseLLMProvider
+from .base_provider import BaseLLMProvider, register_provider
 
 
+@register_provider("openai")
 class OpenAIProvider(BaseLLMProvider):
     """Provider for OpenAI API models (GPT-4, GPT-3.5, etc)."""
     

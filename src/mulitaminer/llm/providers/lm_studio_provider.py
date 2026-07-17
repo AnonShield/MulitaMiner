@@ -8,9 +8,10 @@ LLM Studio provides OpenAI-compatible API endpoints.
 """
 
 from langchain_openai import ChatOpenAI
-from .base_provider import BaseLLMProvider
+from .base_provider import BaseLLMProvider, register_provider
 
 
+@register_provider("lm_studio")
 class Lm_studioProvider(BaseLLMProvider):
     """Provider for LLM Studio local models via OpenAI-compatible API."""
     

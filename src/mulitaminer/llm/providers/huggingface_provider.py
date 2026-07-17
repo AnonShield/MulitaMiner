@@ -9,7 +9,16 @@ Supports both:
 Supported models: Mistral, DeepSeek, Llama, Qwen, etc.
 """
 
-from .base_provider import BaseLLMProvider
+from .base_provider import BaseLLMProvider, register_provider
+
+
+@register_provider("huggingface", "hf")
+def _huggingface_factory(config: dict) -> BaseLLMProvider:
+    """Pick the remote (Inference API) or local (transformers) HuggingFace
+    provider from the config: an ``api_key`` means remote, its absence local."""
+    if config.get("api_key"):
+        return HuggingFaceRemoteProvider(config)
+    return HuggingFaceLocalProvider(config)
 
 
 class HuggingFaceRemoteProvider(BaseLLMProvider):
@@ -233,7 +242,3 @@ class HuggingFaceLocalProvider(BaseLLMProvider):
     def get_model_name(self) -> str:
         """Return model identifier."""
         return self.model_name
-
-
-# Alias for backward compatibility
-HuggingFaceProvider = HuggingFaceRemoteProvider
