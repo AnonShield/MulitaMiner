@@ -85,14 +85,20 @@ def detect_scanner_pattern(text: str, profile_config: dict = None) -> dict:
             if matches:
                 return chunking_config
 
-    # Fallback: Auto-detect
+    # The profile still tells us WHO the scanner is — identity informed by the
+    # caller is never re-guessed from the text. This branch fires e.g. on
+    # markdown-extracted text where the profile's plain-text marker no longer
+    # matches. Content regexes below only confirm the family's fingerprint.
+    reader = (profile_config or {}).get('reader', '').lower()
+    known_family = 'openvas' if 'openvas' in reader else ('tenable' if 'tenable' in reader else None)
+
     # Detect OpenVAS: starts with "NVT: "
     nvt_matches = re.findall(r'^\s*NVT:\s', text, re.MULTILINE)
 
     # Detect Tenable WAS: pattern "VULNERABILITY CRITICAL/HIGH/MEDIUM/LOW PLUGIN ID XXXX"
     vuln_matches = re.findall(r'^\s*VULNERABILITY\s+(CRITICAL|HIGH|MEDIUM|LOW)\s+PLUGIN\s+ID\s+\d+', text, re.MULTILINE)
 
-    if nvt_matches:
+    if nvt_matches and known_family in (None, 'openvas'):
         return {
             'scanner_type': 'openvas',
             # Match the severity/CVSS header that sits one line above NVT — keeps
@@ -103,7 +109,7 @@ def detect_scanner_pattern(text: str, profile_config: dict = None) -> dict:
             'force_break_at_markers': True,
             'max_vulnerabilities_per_chunk': 5
         }
-    elif vuln_matches:
+    elif vuln_matches and known_family in (None, 'tenable'):
         return {
             'scanner_type': 'tenable_was',
             'marker_pattern': r'^\s*VULNERABILITY\s+(CRITICAL|HIGH|MEDIUM|LOW)\s+PLUGIN\s+ID\s+\d+',

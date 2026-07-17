@@ -1,5 +1,37 @@
 from abc import ABC, abstractmethod
-from typing import List, Dict, Tuple
+from typing import List, Dict, NamedTuple, Optional, TypedDict
+
+
+class Block(TypedDict, total=False):
+    """One unit of report text handed to the LLM, plus the metadata the
+    generic pipeline stamps onto every vulnerability extracted from it.
+
+    ``file`` is always present; the rest are optional (a scanner that doesn't
+    know a value omits it, and the pipeline reads it back with ``.get()``).
+    Making the contract explicit is what kills the silent host bug: the generic
+    loop can now stamp ``host`` unconditionally from ``block.get('host')``
+    instead of only when some strategy happened to set the key.
+    """
+    file: str
+    severity: Optional[str]
+    port: Optional[str]
+    protocol: Optional[str]
+    host: Optional[str]
+
+
+class VisualContext(NamedTuple):
+    """The initial context a scanner recovers from the report's visual layout.
+
+    Was an un-named 5-tuple whose annotation lied (declared 4 elements, returned
+    5), so a new strategy trusting the signature broke on unpack. Named fields
+    make the shape self-documenting and the annotation honest.
+    """
+    lines: List[str]
+    severity: Optional[str]
+    port: Optional[str]
+    protocol: Optional[str]
+    host: Optional[str]
+
 
 class ScannerStrategy(ABC):
     """
@@ -35,18 +67,18 @@ class ScannerStrategy(ABC):
         """
         pass
     
-    def extract_visual_context(self, visual_layout_path: str) -> Tuple[List, None, None, None, None]:
+    def extract_visual_context(self, visual_layout_path: str) -> VisualContext:
         """
         Extract initial context from visual layout (severity, port, protocol, host).
         Override if scanner needs visual layout extraction.
 
         Returns:
-            Tuple: (initial_context_lines, severity, port, protocol, host)
-            Default: Empty context
+            VisualContext(lines, severity, port, protocol, host).
+            Default: empty context.
         """
-        return [], None, None, None, None
-    
-    def create_blocks(self, report_text: str, temp_dir: str, initial_context: Tuple, output_ext: str = "txt") -> List[Dict]:
+        return VisualContext([], None, None, None, None)
+
+    def create_blocks(self, report_text: str, temp_dir: str, initial_context: VisualContext, output_ext: str = "txt") -> List[Block]:
         """
         Create blocks from report text. Override for custom logic.
         Default: Creates a single block with entire report.

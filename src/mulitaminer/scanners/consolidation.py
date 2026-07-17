@@ -1,4 +1,3 @@
-from typing import List, Dict
 
 def deduplicate_by_name(vulnerabilities: list, field: str = "Name") -> list:
     """
@@ -123,12 +122,18 @@ def central_custom_allow_duplicates(vulnerabilities: list, profile_config: dict 
     import os
     import json
     
+    # Scanner identity flows from the profile (the --scanner the user passed).
+    # The LLM-stamped `source` of the first record is only a fallback for
+    # direct calls without a profile — identity is never re-guessed from data
+    # when it was informed. (The old order also silently missed the Tenable
+    # strategy: records stamp source='TENABLEWAS', but the registry key is
+    # 'tenable', so lookup by record-source never resolved it.)
     source = None
-    if vulnerabilities and isinstance(vulnerabilities[0], dict):
-        source = vulnerabilities[0].get('source', None)
-    if not source and profile_config and 'reader' in profile_config:
+    if profile_config and profile_config.get('reader'):
         source = profile_config['reader']
-    
+    if not source and vulnerabilities and isinstance(vulnerabilities[0], dict):
+        source = vulnerabilities[0].get('source', None)
+
     strategy = get_strategy(source) if source else None
     
     # Setup output files

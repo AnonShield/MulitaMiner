@@ -1,8 +1,6 @@
 import os
 import shutil
-import re
 from tqdm import tqdm
-import tiktoken
 from mulitaminer.chunking import retry_chunk_with_subdivision
 from mulitaminer.llm import get_tokenizer, count_tokens
 from mulitaminer.configs.constants import TOKENS_DIR, TMP_DIR
@@ -46,7 +44,8 @@ def create_session_blocks_from_text(report_text: str, temp_dir: str = _DEFAULT_T
         }]
 
     # Extract visual context if scanner requires it
-    context = ([], None, None, None, None)
+    from mulitaminer.scanners.base import VisualContext
+    context = VisualContext([], None, None, None, None)
     if strategy.requires_visual_layout and visual_layout_path:
         context = strategy.extract_visual_context(visual_layout_path)
 
@@ -54,24 +53,20 @@ def create_session_blocks_from_text(report_text: str, temp_dir: str = _DEFAULT_T
     return strategy.create_blocks(report_text, temp_dir, context, output_ext=output_ext)
 
 def extract_vulns_from_blocks(blocks: list, llm, profile_config: dict,
-                               chunk_func, llm_config: dict = None, pdf_name: str = "unknown",
+                               llm_config: dict = None, pdf_name: str = "unknown",
                                llm_name: str = "unknown", debug_mode: bool = False) -> list:
     """
     For each session block, apply chunking and extract vulnerabilities, propagating port/protocol.
-    
+
     Args:
         blocks: List of block dictionaries with file paths
         llm: Initialized LLM instance
         profile_config: Profile configuration
-        chunk_func: Chunking function reference (legacy parameter, not used)
         llm_config: LLM configuration from JSON (REQUIRED)
-    
+
     Raises:
         ValueError: If llm_config is None or missing required fields
     """
-    from mulitaminer.chunking import get_token_based_chunks, split_text_to_subchunks, TokenChunk
-    from mulitaminer.llm import get_tokenizer, count_tokens
-
     if not llm_config:
         raise ValueError(
             "[ERROR] llm_config is required in extract_vulns_from_blocks. "
@@ -176,12 +171,15 @@ def extract_vulns_from_blocks(blocks: list, llm, profile_config: dict,
                 # Host is document/section-level metadata (the per-host section
                 # header), not present in most chunks — so it is assigned
                 # deterministically from the block, never extracted by the LLM.
-                # Authoritative: overwrite whatever the model may have emitted.
+                # Authoritative and UNCONDITIONAL: every record gets the block's
+                # host (None included). The old `if block_host is not None` guard
+                # meant scanners that don't populate host (Tenable, the generic
+                # default) silently left the key absent — an implicit contract
+                # the Block TypedDict now makes explicit (see scanners/base.py).
                 block_host = block.get('host')
-                if block_host is not None:
-                    for v in vulns:
-                        if isinstance(v, dict):
-                            v['host'] = block_host
+                for v in vulns:
+                    if isinstance(v, dict):
+                        v['host'] = block_host
 
                 if profile_config and profile_config.get('reader', '').lower() == 'tenable':
                     all_vulns.extend([v for v in vulns if isinstance(v, dict)])

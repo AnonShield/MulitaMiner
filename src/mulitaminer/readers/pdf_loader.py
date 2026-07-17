@@ -196,7 +196,31 @@ def _makes_sense_as_continuation(prev_line, next_line):
 
      return False
 
-def extract_visual_layout_from_pdf(pdf_path):
+def _resolve_scanner(pdf_path, scanner=None):
+     """Resolve which scanner family a PDF belongs to.
+
+     The caller's ``--scanner`` (profile name) is authoritative when it names a
+     known family — identity is never re-guessed once informed. Filename
+     sniffing survives only as an explicit fallback for when no scanner was
+     provided (direct calls / ``--scanner default``), and warns when it fires.
+     """
+     if scanner and scanner.lower() != 'default':
+         s = scanner.lower()
+         if 'openvas' in s:
+             return 'openvas'
+         if 'tenable' in s:
+             return 'tenable'
+         # Explicitly-named scanner with no PDF-split rules: generic handling.
+         return None
+     basename = os.path.basename(pdf_path).lower()
+     for family in ('openvas', 'tenable'):
+         if family in basename:
+             print(f"[WARN] Scanner not informed; inferred '{family}' from the PDF filename.")
+             return family
+     return None
+
+
+def extract_visual_layout_from_pdf(pdf_path, scanner=None):
      print(f"Extracting visual layout from PDF: {os.path.basename(pdf_path)}")
      try:
          with pdfplumber.open(pdf_path) as pdf:
@@ -243,11 +267,7 @@ def extract_visual_layout_from_pdf(pdf_path):
              texto_completo = _restore_cid_glyphs(texto_completo)
 
              # Find start of first vulnerability
-             scanner = None
-             if 'openvas' in os.path.basename(pdf_path).lower():
-                 scanner = 'openvas'
-             elif 'tenable' in os.path.basename(pdf_path).lower():
-                 scanner = 'tenable'
+             scanner = _resolve_scanner(pdf_path, scanner)
 
              if scanner == 'openvas':
                  marker_pattern = r'^\s*NVT:'
@@ -382,7 +402,7 @@ def save_visual_layout(content, pdf_path, process_id=None, output_ext="txt", out
          print(f"Error saving visual layout: {e}")
          return None
 
-def load_pdf_with_marker(pdf_path):
+def load_pdf_with_marker(pdf_path, scanner=None):
     """
     Extract PDF to Markdown using Marker library.
     Returns a list of Document objects compatible with the rest of the pipeline.
@@ -411,12 +431,8 @@ def load_pdf_with_marker(pdf_path):
             return None
         
         # Find table of contents / summary boundary
-        scanner = None
-        if 'openvas' in os.path.basename(pdf_path).lower():
-            scanner = 'openvas'
-        elif 'tenable' in os.path.basename(pdf_path).lower():
-            scanner = 'tenable'
-        
+        scanner = _resolve_scanner(pdf_path, scanner)
+
         # Split into summary and extraction
         if scanner == 'openvas':
             # Cut at the first severity header (e.g. "High 25/tcp"). This

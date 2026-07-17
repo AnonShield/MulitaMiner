@@ -1,7 +1,8 @@
 import re
 import os
-from typing import List, Dict, Tuple
-from .base import ScannerStrategy
+from typing import List, Dict
+from .base import Block, ScannerStrategy, VisualContext
+from .registry import register_strategy
 
 
 def make_hashable(val):
@@ -12,6 +13,7 @@ def make_hashable(val):
     else:
         return val
 
+@register_strategy('openvas')
 class OpenVASStrategy(ScannerStrategy):
     scanner_name = 'openvas'
     requires_visual_layout = True
@@ -73,10 +75,10 @@ class OpenVASStrategy(ScannerStrategy):
                 return self._host_above_anchor(layout_lines, idx)
         return None
 
-    def extract_visual_context(self, visual_layout_path: str) -> Tuple[List, None, None, None]:
+    def extract_visual_context(self, visual_layout_path: str) -> VisualContext:
         """Extract the **last header + its CVSS context** from the visual layout.
 
-        Returns a 4-tuple ``(context_lines, severity, port, protocol)``:
+        Returns a ``VisualContext(lines, severity, port, protocol, host)``:
 
         * ``context_lines``: 1-2 lines — the matched header (``High 25/tcp``)
           plus the immediately following ``High (CVSS: X.X)`` line **when
@@ -91,8 +93,11 @@ class OpenVASStrategy(ScannerStrategy):
         *not* included — that was the noise the previous implementation
         prepended to block_1.
         """
-        if not visual_layout_path or 'openvas' not in visual_layout_path.lower():
-            return [], None, None, None, None
+        # No re-check of the path here: this strategy was already dispatched as
+        # openvas by the registry — a PDF not named "*openvas*" must not lose
+        # its visual context when --scanner openvas was explicitly given.
+        if not visual_layout_path:
+            return VisualContext([], None, None, None, None)
 
         initial_severity = initial_port = initial_protocol = None
         initial_host = None
@@ -116,7 +121,7 @@ class OpenVASStrategy(ScannerStrategy):
             pass
 
         if header_idx is None:
-            return [], initial_severity, initial_port, initial_protocol, initial_host
+            return VisualContext([], initial_severity, initial_port, initial_protocol, initial_host)
 
         header_line = f"{initial_severity} {initial_port}/{initial_protocol}"
         context_lines = [header_line]
@@ -131,9 +136,9 @@ class OpenVASStrategy(ScannerStrategy):
                 context_lines.append(next_line)
                 break  # one CVSS line is enough; further lines are noise
 
-        return context_lines, initial_severity, initial_port, initial_protocol, initial_host
-    
-    def create_blocks(self, report_text: str, temp_dir: str, initial_context: Tuple, output_ext: str = "txt") -> List[Dict]:
+        return VisualContext(context_lines, initial_severity, initial_port, initial_protocol, initial_host)
+
+    def create_blocks(self, report_text: str, temp_dir: str, initial_context: VisualContext, output_ext: str = "txt") -> List[Block]:
         """Parse OpenVAS report and create blocks for each vulnerability.
 
         Args:

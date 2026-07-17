@@ -16,7 +16,6 @@ from mulitaminer.chunking.block_creation import (
     cleanup_temp_blocks,
 )
 from mulitaminer.readers import get_reader
-from mulitaminer.chunking import get_token_based_chunks
 from mulitaminer.llm import load_profile, load_llm, init_llm
 from mulitaminer.writers import execute_conversions
 from mulitaminer.configs.constants import TMP_DIR, TOKENS_DIR, DEBUG_DIR
@@ -145,7 +144,7 @@ def run_extraction(args: argparse.Namespace) -> None:
     debug_dir = getattr(args, 'debug_dir', str(DEBUG_DIR))
 
     all_vulnerabilities = extract_vulns_from_blocks(
-        session_blocks, llm, profile_config, get_token_based_chunks, llm_config=llm_config,
+        session_blocks, llm, profile_config, llm_config=llm_config,
         pdf_name=pdf_name, llm_name=llm_name, debug_mode=debug_mode
     )
     total_chunks = len(session_blocks)
