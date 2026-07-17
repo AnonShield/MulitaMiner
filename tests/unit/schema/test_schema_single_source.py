@@ -18,6 +18,7 @@ These tests lock that in:
 import re
 from pathlib import Path
 
+import mulitaminer
 from metrics.common.field_mapper import load_field_categories
 from mulitaminer.configs.vuln_schema import (
     OpenVASRecord,
@@ -28,7 +29,9 @@ from mulitaminer.configs.vuln_schema import (
     validation_types,
 )
 
-_PROMPTS = Path(__file__).parents[2] / "src" / "mulitaminer" / "configs" / "prompts"
+# Locate prompts via the installed package, not a relative parent count — the
+# latter breaks the moment the test file moves (as it did into tests/unit/schema/).
+_PROMPTS = Path(mulitaminer.__file__).parent / "configs" / "prompts"
 
 
 def _aliases(model) -> set[str]:
@@ -100,6 +103,81 @@ def test_tenable_record_takes_list_cvss_and_int_plugin():
     assert rec.cvss == ["CVSSV3 BASE SCORE 6.5"]
     assert rec.plugin == 98056
     assert rec.instances[0].instance == "https://x"
+
+
+def test_coverage_field_lists_stay_anchored_to_model():
+    # coverage.py keeps its own lists ON PURPOSE (they answer metric questions,
+    # not schema questions — see its docstring). This guard only pins them to
+    # the model's field set, so a schema rename/removal fails loudly here
+    # instead of silently zeroing a metric.
+    from metrics.pipelines.coverage import CANONICAL_FIELDS, ERM_FIELDS
+
+    assert set(CANONICAL_FIELDS) == set(expected_fields()), (
+        "coverage.CANONICAL_FIELDS drifted from the model's LLM-produced fields"
+    )
+    assert set(ERM_FIELDS) <= set(CANONICAL_FIELDS)
+
+
+def test_canonicalizer_fields_exist_in_model():
+    from metrics.common.schema_canonicalizer import V2_TO_V3_COERCIBLE_FIELDS
+
+    assert set(V2_TO_V3_COERCIBLE_FIELDS) <= set(expected_fields())
+
+
+def test_aligner_composite_key_fields_exist_in_model():
+    # aligner builds composite keys from these names inline; a model rename
+    # would silently break record alignment without this guard.
+    model_fields = _aliases(VulnRecord)
+    for field in ("Name", "port", "protocol", "severity", "plugin", "source"):
+        assert field in model_fields, f"aligner relies on '{field}' — missing from model"
+
+
+def test_prioritization_host_fields_cover_model_names():
+    # signals.py is deliberately loose (tries many names to support unknown
+    # scanners) — but the names the CURRENT schema provides must be among them,
+    # or host_of() goes blind after a schema rename with no failing test.
+    from mulitaminer.configs.vuln_schema import Instance
+    from mulitaminer.prioritization.signals import (
+        HOST_FIELDS,
+        INSTANCE_FIELDS,
+        INSTANCE_HOST_KEYS,
+    )
+
+    model_fields = _aliases(VulnRecord)
+    assert "host" in model_fields and "host" in HOST_FIELDS
+    assert "instances" in model_fields and "instances" in INSTANCE_FIELDS
+    assert "instance" in Instance.model_fields and "instance" in INSTANCE_HOST_KEYS
+
+
+def test_baseline_types_are_union_of_registered_scanners():
+    # io.py derives its baseline type checks from the model (union across
+    # scanners, since one baseline mixes both shapes). Behavioral check:
+    # both scanners' legitimate shapes pass, the canonical failure is flagged.
+    import pandas as pd
+
+    from metrics.common.io import validate_baseline
+
+    # dtype=object keeps 443 an int (default inference would coerce the
+    # int+None column to float64, a pandas-ism unrelated to what's tested).
+    mixed = pd.DataFrame(
+        [
+            # OpenVAS shape: numeric cvss
+            {"cvss": 7.5, "port": 443, "protocol": "tcp", "severity": "HIGH",
+             "plugin_details": {}, "instances": []},
+            # Tenable shape: list cvss, structured plugin_details
+            {"cvss": ["CVSSV3 BASE SCORE 6.5"], "port": None, "protocol": None,
+             "severity": "MEDIUM", "plugin_details": {"plugin_id": 1},
+             "instances": [{"instance": "https://x"}]},
+        ],
+        dtype=object,
+    )
+    assert validate_baseline(mixed) == []
+
+    # plugin_details stored as the string "{}" (XLSX flattening not un-done).
+    broken = mixed.copy()
+    broken["plugin_details"] = ["{}", "{}"]
+    issues = validate_baseline(broken)
+    assert issues and "plugin_details" in issues[0]
 
 
 def test_validation_types_are_source_aware():
