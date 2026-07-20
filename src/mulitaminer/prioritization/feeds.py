@@ -10,6 +10,7 @@ The directory is gitignored (regenerable cache that changes daily).
 """
 from __future__ import annotations
 
+import argparse
 import csv
 import gzip
 import io
@@ -176,3 +177,25 @@ def _epss_score_date(epss_bytes: bytes) -> str | None:
         first = fh.readline()
     m = re.search(r"score_date:([0-9T:\-]+)", first)
     return m.group(1) if m else None
+
+
+# --------------------------------------------------------------------------- #
+# CLI (``python tools/sync_feeds.py`` wrapper / ``mulita-sync-feeds`` entry)
+# --------------------------------------------------------------------------- #
+def main() -> None:
+    parser = argparse.ArgumentParser(
+        description="Download the KEV + EPSS feeds for prioritization."
+    )
+    parser.add_argument(
+        "--dest",
+        type=Path,
+        default=FEEDS_DIR,
+        help=f"feeds directory (default: {FEEDS_DIR})",
+    )
+    args = parser.parse_args()
+
+    meta = sync_feeds(args.dest)
+    print(f"Synced feeds to {args.dest}/")
+    print(f"  KEV entries:  {meta['kev_count']}")
+    print(f"  EPSS entries: {meta['epss_count']} (score_date: {meta['epss_score_date']})")
+    print(f"  synced_at:    {meta['synced_at']}")

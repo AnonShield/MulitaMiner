@@ -13,11 +13,12 @@ import sys
 import time
 from pathlib import Path
 
-# Metric scripts live under ``metrics/`` at the repo root, resolved from this
+# Metric scripts live in the ``metrics`` package, a sibling of ``mulitaminer``
+# (``src/`` in the repo, site-packages when installed), resolved from this
 # file's location so dispatch works regardless of the process CWD (the old
 # relative paths silently broke when main.py was run from another directory).
-# src/mulitaminer/pipeline/metrics_dispatch.py → parents[3] is the repo root.
-_METRICS_ROOT = Path(__file__).resolve().parents[3] / 'metrics'
+# src/mulitaminer/pipeline/metrics_dispatch.py → parents[2] is that package root.
+_METRICS_ROOT = Path(__file__).resolve().parents[2] / 'metrics'
 
 
 def _script(*parts: str) -> str:

@@ -29,8 +29,9 @@ dependencies = [
 
 [project.optional-dependencies]
 # Evaluation / metrics / reporting stack. Required to run the ``metrics.*``
-# package, ``tools/run_metrics.py``, ``tools/run_experiments.py`` and the chart
-# pipeline. Pulls torch (via bert-score) — the bulk of the research image size.
+# package, mulita-metrics / mulita-experiments (or their tools/ wrappers) and
+# the chart pipeline. Pulls torch (via bert-score) — the bulk of the research
+# image size.
 metrics = [
     "matplotlib==3.10.8",
     "seaborn==0.13.2",
@@ -65,20 +66,25 @@ dev = [
     "mypy>=1.10",
 ]
 
-# Two package roots: the extraction runtime under src/ (mulitaminer) and the
-# evaluation stack at the repo root (metrics). Packaging metrics makes it
-# importable from the editable install, so its scripts no longer need
-# per-file sys.path hacks to find it regardless of the process CWD.
+# Entry-point twins of the tools/ wrapper scripts (same code, same run-from-
+# repo-root convention). mulita-metrics needs the [metrics] extra installed.
+[project.scripts]
+mulita-sync-feeds = "mulitaminer.prioritization.feeds:main"
+mulita-experiments = "mulitaminer.experiments.cli:main"
+mulita-metrics = "metrics.run_metrics:main"
+
+# Both top-level packages live under src/: the extraction runtime (mulitaminer)
+# and the evaluation stack (metrics). They stay separate packages so the lean
+# extraction install can ship without the metrics/ML stack.
 [tool.setuptools.packages.find]
-where = ["src", "."]
+where = ["src"]
 include = ["mulitaminer*", "metrics*"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
-# Repo root on sys.path for the test session. Redundant once the package is
-# reinstalled (metrics is packaged from the repo root now), but kept so the
-# suite runs green without requiring a reinstall first.
-pythonpath = ["."]
+# src/ on sys.path for the test session. Redundant with an (editable) install,
+# but kept so the suite runs green without requiring a reinstall first.
+pythonpath = ["src"]
 markers = ["slow: integration tests that hit real LLMs (deselect with -m 'not slow')"]
 
 [tool.ruff]

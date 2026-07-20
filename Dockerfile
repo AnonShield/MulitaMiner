@@ -30,7 +30,7 @@ ENV UV_SYSTEM_PYTHON=1 \
 WORKDIR /app
 
 # Package metadata + source first so the (slow) dependency layers stay cached
-# when only the top-level scripts (main.py / tools / metrics) change.
+# when only the top-level scripts (main.py / tools) change.
 COPY pyproject.toml ./
 COPY src/ ./src/
 
@@ -54,7 +54,6 @@ RUN uv pip install torch==2.11.0 --index-url ${TORCH_INDEX}
 RUN uv pip install -e ".[full]"
 COPY main.py ./
 COPY tools/ ./tools/
-COPY metrics/ ./metrics/
 COPY resources/ ./resources/
 ENTRYPOINT ["python"]
 CMD ["main.py", "--help"]
