@@ -22,7 +22,7 @@ MulitaMiner/
 │   │   ├── base.py                  # InputReader ABC + RawDocument + get_reader()
 │   │   ├── pdf.py                   # PdfReader (@register for .pdf)
 │   │   ├── extractors.py            # pdfplumber / marker PDF backends
-│   │   └── pdf_loader.py            # PDF text + visual-layout extraction
+│   │   └── pdf_extraction.py            # PDF text + visual-layout extraction
 │   ├── chunking/                    # split block text into LLM-sized chunks
 │   │   ├── tokens.py                # TokenChunk, splitters, build_prompt, smart_chunk_vulnerabilities
 │   │   ├── retry.py                 # invoke + validate + retry/redivide

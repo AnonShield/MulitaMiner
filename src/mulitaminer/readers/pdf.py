@@ -9,7 +9,7 @@ from typing import Optional
 
 from mulitaminer.readers.base import InputReader, RawDocument, register
 from mulitaminer.readers.extractors import get_extractor
-from mulitaminer.readers.pdf_loader import save_visual_layout
+from mulitaminer.readers.pdf_extraction import save_visual_layout
 
 
 @register

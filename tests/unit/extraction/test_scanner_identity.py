@@ -7,7 +7,7 @@ explicitly informed --scanner.
 """
 
 from mulitaminer.chunking.tokens import detect_scanner_pattern
-from mulitaminer.readers.pdf_loader import _resolve_scanner
+from mulitaminer.readers.pdf_extraction import _resolve_scanner
 from mulitaminer.scanners.consolidation import central_custom_allow_duplicates
 from mulitaminer.scanners.openvas import OpenVASStrategy
 from mulitaminer.scanners.registry import get_strategy

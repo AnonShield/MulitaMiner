@@ -1,3 +1,10 @@
+"""PDF text-extraction engine (the backend behind :mod:`mulitaminer.readers.pdf`).
+
+Holds the pdfplumber and Marker extraction paths, page-continuation merging,
+CID-glyph restoration, the scanner-specific summary/extraction split and the
+visual-layout cache. The thin :class:`PdfReader` adapter in ``pdf.py`` is what
+plugs this into the reader registry.
+"""
 import os
 import re
 import unicodedata
@@ -491,5 +498,3 @@ def load_pdf_with_marker(pdf_path, scanner=None):
         return None
 
 
-def load_pdf_with_pypdf2(pdf_path):
-     return extract_visual_layout_from_pdf(pdf_path)

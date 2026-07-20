@@ -8,7 +8,7 @@ import time
 from datetime import datetime
 
 from mulitaminer.llm.config_loader import get_provider_key, load_llm
-from mulitaminer.utils.gpu_sampler import GpuSampler
+from mulitaminer.experiments.gpu_sampler import GpuSampler
 from mulitaminer.configs.constants import DEBUG_DIR
 from mulitaminer.experiments.checkpoint import save_checkpoint
 
