@@ -7,7 +7,8 @@ if not exist .env (
     echo ERROR: copy .env.example to .env and fill in API_KEY_DEEPSEEK.
     exit /b 1
 )
-findstr /C:"API_KEY_DEEPSEEK" .env >nul || (
+python -c "import pathlib,sys; sys.exit(0 if 'API_KEY_DEEPSEEK' in pathlib.Path('.env').read_text(encoding='utf-8',errors='ignore') else 1)"
+if errorlevel 1 (
     echo ERROR: .env must define API_KEY_DEEPSEEK="..."
     exit /b 1
 )
