@@ -1,4 +1,0 @@
-# Duplicatas agrupadas por chave composta:
-Chave: ('check if mailserver answer to vrfy and expn requests', '25', 'tcp')
-  - Check if Mailserver answer to VRFY and EXPN requests | port: 25 | protocol: tcp | severity: MEDIUM
-

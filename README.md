@@ -21,7 +21,9 @@ _Automated · Structured · Multi-LLM_
 
 **MulitaMiner** is an automated tool for extracting and structuring vulnerabilities from heterogeneous PDF reports produced by security scanners. Its LLM-based pipeline combines adaptive chunking and scanner-aware prompting to convert unstructured findings into consistent, analysis-ready vulnerability records, with standardized outputs and quality validation.
 
-As a key contribution, a dataset of **6,700 vulnerabilities** extracted from **129 OpenVAS reports** is provided, serving as a reference for future research. The dataset was evaluated against ground-truth records via host/IP and vulnerability name matching, achieving **Recall of 96.18%**, **Precision of 91.06%**, and **F1-score of 0.9355**. Additionally, the extraction tool was validated against structured baselines from 3 reports using BERTScore and ROUGE-L semantic similarity metrics.
+This artifact accompanies the paper **"MulitaMiner: A Multi-Version Evaluation of LLM-Based Vulnerability Report Extraction"** (SBSeg 2026, main track). The paper evaluates three successive versions of the pipeline (V1, V2, V3) with five LLMs on three manually curated baselines (217 vulnerabilities), totaling **450 independent runs**. Without changing the underlying models, **Exact Record Match rises from 37.5% to 90.4%** and **vulnerability-level omission falls from 20.5% to 1.7%**, showing that pipeline engineering, not model substitution, is the primary lever for extraction quality.
+
+This repository contains the **V3** pipeline (the version described in Section 3 of the paper). The two earlier versions are shipped as source snapshots in [versions/](versions/), so the version-progression claim can be reproduced end to end from this single repository.
 
 **Use Cases:**
 
@@ -30,6 +32,17 @@ As a key contribution, a dataset of **6,700 vulnerabilities** extracted from **1
 - **Research and Development**: Comparative evaluation of different LLMs
 
 ## README Structure
+
+Key directories for artifact evaluation:
+
+| Directory                  | Content                                                          |
+| -------------------------- | ---------------------------------------------------------------- |
+| [claims/](claims/)         | One script per claim (`.sh` for Linux/macOS, `.bat` for Windows) |
+| [versions/](versions/)     | V1 and V2 pipeline snapshots as zips (used by Claim 2)           |
+| [baselines/](baselines/)   | Curated ground-truth baselines (PDF report + XLSX annotation)    |
+| [docs/](docs/)             | Detailed documentation (install, usage, architecture)            |
+
+Sections of this README:
 
 - [Considered Badges](#considered-badges)
 - [Basic Information](#basic-information)
@@ -65,29 +78,37 @@ The following badges are considered for evaluation: **Available**, **Functional*
 | Groq     | Llama3, Llama4, Qwen3 |
 | DeepSeek | deepseek-chat         |
 
+> **Note**: all experiment claims below use **DeepSeek only** (the API key provided for evaluation). The other providers are supported by the tool but are not needed to reproduce the claims.
+
 ## Dependencies
 
 ### Main Dependencies
 
-```
-langchain>=0.1.0,<0.3.0          # LLM framework
-langchain-openai>=0.1.0,<0.2.0   # OpenAI integration
-tiktoken>=0.5.1,<0.7.0           # Tokenization
-pdfplumber>=0.10.0,<0.12.0       # PDF extraction
-python-dotenv>=0.21.0            # Environment variables
-tqdm>=4.0.0,<5.0.0               # Progress bars
-pandas>=1.3.0,<3.0.0             # Data manipulation
-openpyxl>=3.0.0,<4.0.0           # Excel export
-```
-
-### Metrics Evaluation (Optional)
+All versions are pinned in [requirements.txt](requirements.txt). Core extraction:
 
 ```
-bert-score>=0.3.0,<0.4.0         # BERTScore
-rouge-score>=0.1.0               # ROUGE
-torch>=1.10.0,<3.0.0             # PyTorch (required for BERTScore)
-rapidfuzz>=3.0.0,<4.0.0          # Fuzzy matching
+langchain==0.3.28                # LLM framework
+langchain-core==0.3.84
+langchain-openai==0.3.35         # OpenAI-compatible APIs (incl. DeepSeek)
+langchain-ollama==0.3.10         # Local execution backend
+tiktoken==0.12.0                 # Tokenization
+pdfplumber==0.11.9               # PDF extraction
+json-repair==0.59.5              # Recovery of malformed LLM outputs
+python-dotenv==1.2.2             # Environment variables
+pandas==2.3.3 / openpyxl==3.1.5  # Data manipulation and XLSX export
 ```
+
+### Metrics Evaluation
+
+```
+bert-score==0.3.13               # BERTScore (downloads DistilBERT on first use)
+rouge-score==0.1.2               # ROUGE-L
+torch==2.11.0                    # Required by BERTScore
+rapidfuzz==3.14.5                # Fuzzy record alignment
+scipy==1.13.1 / scikit-learn==1.8.0
+```
+
+The V1/V2 snapshots used by Claim 2 have their own (older) dependencies; the claim script installs them automatically in a separate virtual environment.
 
 **Third-party resources:**
 
@@ -113,7 +134,7 @@ See [docs/INSTALL.md](docs/INSTALL.md) for complete dependency details.
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/AnonShield/MulitaMiner.git
+git clone -b V3 https://github.com/AnonShield/MulitaMiner.git
 cd MulitaMiner
 ```
 
@@ -137,132 +158,150 @@ pip install -r requirements.txt
 
 ### 4. Configure API Keys
 
-Create/edit the `.env` file:
+Copy [.env.example](.env.example) to `.env` at the repository root and fill in the DeepSeek key:
+
+```bash
+# Windows
+copy .env.example .env
+
+# Linux/macOS
+cp .env.example .env
+```
 
 ```env
-API_KEY_GPT4 = "your-openai-api-key"
-API_KEY_LLAMA3 = "your-groq-api-key"
-API_KEY_DEEPSEEK = "your-deepseek-api-key"
+API_KEY_DEEPSEEK = "your-deepseek-api-key"   # required for the experiment claims
 ```
+
+Only the DeepSeek key is required to reproduce the claims; the other keys in the example file are optional.
 
 See [docs/CONFIG.md](docs/CONFIG.md) for all configuration options.
 
 ## Minimum Test
 
-After installation, run this minimal test to verify the setup:
-
-### 1. Run Extraction
-
-```bash
-# Basic extraction using Groq
-
-# Windows
-python main.py --input test\openvas\OpenVAS_JuiceShop.pdf --llm llama3 --scanner openvas --allow-duplicates --output-file openvas_test
-
-# Linux/macOS
-python3 main.py --input test/openvas/OpenVAS_JuiceShop.pdf --llm llama3 --scanner openvas --allow-duplicates --output-file openvas_test
-```
-
-**Expected result**: openvas_test.json with extracted vulnerabilities and visual_layout.txt file
-
-### 2. Verify Output
-
-Check the generated JSON file for extracted vulnerabilities:
+After installation (including the `.env` file with the DeepSeek key), run a single extraction of the smallest report (OWASP Juice Shop) and summarize it in the terminal:
 
 ```bash
 # Windows
-python tools/summarize_vulnerabilities.py --input openvas_test.json
+python main.py --input baselines\openvas\OpenVAS_JuiceShop.pdf --llm deepseek --scanner openvas --allow-duplicates --output-file openvas_test --output-dir claims\out\minimum_test
+python tools\summarize_vulnerabilities.py --input claims\out\minimum_test\openvas_test.json
 
 # Linux/macOS
-python3 tools/summarize_vulnerabilities.py --input openvas_test.json
+python3 main.py --input baselines/openvas/OpenVAS_JuiceShop.pdf --llm deepseek --scanner openvas --allow-duplicates --output-file openvas_test --output-dir claims/out/minimum_test
+python3 tools/summarize_vulnerabilities.py --input claims/out/minimum_test/openvas_test.json
 ```
 
-**Expected result**: Terminal print with summary of all extracted vulnerabilities in tabular format.
+**Expected time**: ~3 minutes
+
+**Expected result**: a terminal table listing approximately 34 extracted vulnerabilities, e.g.:
+
+```text
+SEVERITY   | NAME                                               | CVSS     | PORT/PROTO | CVE
+==============================================================================================
+HIGH       | SMTP too long line                                 | CVSS 7.5 | 25/tcp     | N/A
+MEDIUM     | Check if Mailserver answer to VRFY and EXPN ...    | CVSS 5.0 | 25/tcp     | N/A
+LOG        | Postfix SMTP Server Detection                      | CVSS 0.0 | 25/tcp     | N/A
+...
+```
 
 ## Experiments
 
-This section describes how to reproduce the main claims from the paper.
+This section describes how to reproduce the main claims from the paper. Each claim has a ready-to-run script in [claims/](claims/) (`.bat` for Windows, `.sh` for Linux/macOS), to be executed from the repository root with the virtual environment active. Outputs are written to `claims/out/`.
 
-> **Note**: The execution times are based on AMD Ryzen 5 5600G, 32GB RAM, 1TB SSD, Windows 11. Actual times may vary depending on system specifications, network latency, and API response times.
+Both claims use **DeepSeek only**, the API key provided for evaluation (configure `.env` as shown in [Installation](#installation)).
 
-### Claim #1: Multi-LLM Vulnerability Extraction
+> **Note on execution times**: based on AMD Ryzen 5 5600G, 32GB RAM, 1TB SSD, Windows 11. Actual times may vary depending on system specifications, network latency, and API response times.
 
-**Description**: MulitaMiner extracts vulnerabilities from PDF reports using multiple LLM providers (DeepSeek, GPT-4, LLaMa 3, etc).
+> **Note on variability**: LLM decoding is stochastic and hosted models are updated by their providers over time, so single-run results are expected to deviate by a few percentage points from the reference values below (reference values are means of 10 runs from the paper's evaluation). What validates each claim is the trend, not the exact figure: in the paper's full evaluation (5 LLMs × 3 baselines × 10 runs per configuration), all headline differences between versions hold with non-overlapping 95% bootstrap confidence intervals, e.g. Exact Record Match 37.5% [34.3, 40.7] (V1) → 88.0% [86.9, 89.2] (V2) → 90.4% [89.3, 91.5] (V3), and vulnerability-level omission 20.5% [16.2, 25.2] → 8.1% [6.5, 9.9] → 1.7% [1.4, 2.0].
 
-**Configuration**: Edit `.env` with API keys for desired providers.
+### Claim #1: Structured Extraction with Quantitative Evaluation (V3 pipeline)
 
-**Execution**:
-
-```bash
-# Extract using DeepSeek (best cost-benefit in the paper) and other LLMs for comparison
-
-# Windows
-python main.py --input test\openvas\OpenVAS_JuiceShop.pdf --llm deepseek --scanner openvas --allow-duplicates --output-file openvas_test_deepseek
-python main.py --input test\openvas\OpenVAS_JuiceShop.pdf --llm gpt4 --scanner openvas --allow-duplicates --output-file openvas_test_gpt4
-python main.py --input test\openvas\OpenVAS_JuiceShop.pdf --llm llama3 --scanner openvas --allow-duplicates --output-file openvas_test_llama3
-
-# Linux/macOS
-python3 main.py --input test/openvas/OpenVAS_JuiceShop.pdf --llm deepseek --scanner openvas --allow-duplicates --output-file openvas_test_deepseek
-python3 main.py --input test/openvas/OpenVAS_JuiceShop.pdf --llm gpt4 --scanner openvas --allow-duplicates --output-file openvas_test_gpt4
-python3 main.py --input test/openvas/OpenVAS_JuiceShop.pdf --llm llama3 --scanner openvas --allow-duplicates --output-file openvas_test_llama3
-```
-
-**Expected time**: ~12 minutes for all extractions
-
-- Deepseek: ~6 minutes
-- GPT4: ~5 minutes
-- LLAMA3: ~45 seconds
-
-**Expected result**: openvas_test<llm_name>.json files with extracted vulnerabilities containing fields like `Name`, `description`, `severity`, `cvss`, `port`, `references`, etc.
-
-### Claim #2: Quality Evaluation with BERTScore/ROUGE-L
-
-**Description**: The tool evaluates extraction quality against ground truth baselines using BERTScore and ROUGE-L metrics, with similarity scores categorized as: Highly Similar (≥0.7), Moderately Similar (0.6-0.7), Low Similarity (0.4-0.6), and Divergent (<0.4).
+**Description**: MulitaMiner (V3) extracts structured vulnerability records from a heterogeneous scanner PDF using scanner-aware adaptive chunking, and evaluates the result against a manually curated ground truth with the full metric battery of the paper (Section 4.2): schema check, BERTScore, ROUGE-L, Token-F1, Field-F1, severity confusion, and coverage (Exact Record Match, hallucination and omission rates). The test report is OWASP Juice Shop (34 vulnerabilities in the curated baseline).
 
 **Execution**:
 
 ```bash
-# Evaluate with BERTScore and ROUGE-L
-
 # Windows
-python metrics/bert/compare_extractions_bert.py --baseline-file test\openvas\OpenVAS_JuiceShop.xlsx --extraction-file openvas_test_deepseek.json --model deepseek --output-dir results_bert --allow-duplicates
-python metrics/rouge/compare_extractions_rouge.py --baseline-file test\openvas\OpenVAS_JuiceShop.xlsx --extraction-file openvas_test_deepseek.json --model deepseek --output-dir results_rouge --allow-duplicates
+claims\claim1_extraction_metrics.bat
 
 # Linux/macOS
-python3 metrics/bert/compare_extractions_bert.py --baseline-file test/openvas/OpenVAS_JuiceShop.xlsx --extraction-file openvas_test_deepseek.json --model deepseek --output-dir results_bert --allow-duplicates
-python3 metrics/rouge/compare_extractions_rouge.py --baseline-file test/openvas/OpenVAS_JuiceShop.xlsx --extraction-file openvas_test_deepseek.json --model deepseek --output-dir results_rouge --allow-duplicates
+bash claims/claim1_extraction_metrics.sh
 ```
 
-**Expected time**: ~15 seconds for BERT and ~3 seconds for ROUGE
+**Expected time**: ~5 minutes (~3 for the extraction; the first metrics run also downloads the DistilBERT model used by BERTScore)
 
-**Expected result**: XLSX files with BERTScore and ROUGE-L metrics in ./results_bert and ./results_rouge directories.
+**Expected resources**: ~2 GB RAM during the metric pass (PyTorch/BERTScore); ~300 MB extra disk for the DistilBERT model on first use; one DeepSeek extraction over the API (a fraction of a US dollar in tokens)
 
-### Claim #3: Large-Scale Reproducibility
+**Expected result**: a terminal table listing the extracted vulnerabilities (approximately 34 records following the canonical 18-field schema: `Name`, `description`, `severity`, `cvss`, `port`, `protocol`, `references`, etc.), followed by a terminal metric summary. Reference values for DeepSeek on JuiceShop under V3 (mean of 10 runs in the paper's evaluation): Exact Record Match in the 0.90-0.95 range, field-level omission in the 3-6% range, severity macro-F1 ≥ 0.9. The underlying extraction JSON and metric reports are also written to `claims/out/results_runs_v3/` for inspection.
 
-**Description**: MulitaMiner supports batch experiments across multiple reports, LLMs, and runs with checkpoint support to resume interrupted executions.
+Example terminal output from a real run (values vary slightly between runs, see the variability note):
+
+```text
+SEVERITY   | NAME                                               | CVSS     | PORT/PROTO | CVE
+==============================================================================================
+HIGH       | SMTP too long line                                 | CVSS 7.5 | 25/tcp     | N/A
+MEDIUM     | Check if Mailserver answer to VRFY and EXPN ...    | CVSS 5.0 | 25/tcp     | N/A
+LOG        | Postfix SMTP Server Detection                      | CVSS 0.0 | 25/tcp     | N/A
+...        | (~34 records)                                      |          |            |
+
+=== Metric summary (V3, DeepSeek, JuiceShop) ===
+
+Target: OpenVAS_JuiceShop | LLM: deepseek
+Metric                       V3
+-------------------------------
+Exact Record Match         0.94
+Field omission             4.2%
+Field hallucination        1.9%
+Vuln omission              0.0%
+Matched pairs                34
+Severity macro-F1          0.93
+```
+
+### Claim #2: Pipeline Versioning Drives Extraction Quality (V1 → V2 → V3)
+
+**Description**: The paper's central claim. The same report is extracted with the three pipeline versions using the same LLM (DeepSeek), and all outputs are evaluated with the same V3 metric battery. V1 and V2 are unpacked from [versions/](versions/) and run in a dedicated legacy virtual environment created automatically by the script. If the V3 run from Claim 1 is not found, the script executes Claim 1 first.
 
 **Execution**:
 
 ```bash
-# Run full experiment suite
-
 # Windows
-python tools/run_experiments.py --input-dir test\openvas --llm deepseek --scanner openvas --metrics bert rouge --runs-per-model 5 --allow-duplicates
+claims\claim2_version_progression.bat
 
 # Linux/macOS
-python3 tools/run_experiments.py --input-dir test/openvas --llm deepseek --scanner openvas --metrics bert rouge --runs-per-model 5 --allow-duplicates
+bash claims/claim2_version_progression.sh
 ```
 
-**Expected time**: ~40 minutes
+**Expected time**: ~10 minutes (legacy dependency install + two extractions + metrics)
 
-**Expected result**: Organized results in `results_runs/` with extracted vulnerabilities (JSON per run; pass `--convert xlsx` to also emit XLSX), BERTScore and ROUGE-L evaluation reports, an `aggregated_metrics.xlsx` summary, and a Markdown final report with token usage and cost estimation. Charts and visualizations are saved in `plot_runs/`.
+**Expected resources**: ~2 GB RAM during the metric pass; ~500 MB extra disk for the unpacked V1/V2 snapshots and their virtual environment; two DeepSeek extractions over the API (a fraction of a US dollar in tokens)
 
-> **Note**:
-> For practical reasons (time, token cost, and infrastructure), this experiment does not use the same set of reports and LLMs as the paper. Here, a simplified version was used: only 1 report and 1 LLM (deepseek), chosen for its cost-effectiveness and performance.
+**Expected result**: a terminal table comparing the three versions side by side on the same extraction task. Reference values for DeepSeek on JuiceShop (mean of 10 runs in the paper's evaluation):
 
----
+| Metric               | V1   | V2   | V3   |
+| -------------------- | ---- | ---- | ---- |
+| Exact Record Match   | 0.21 | 0.91 | 0.94 |
+| Field-level omission | 13%  | 5%   | 4%   |
 
-For detailed experiment configurations and paper results, see [docs/EXPERIMENTS.md](docs/EXPERIMENTS.md).
+Single-run values may deviate from the table (e.g. V1 Exact Record Match anywhere in the 0.15-0.25 range, see the variability note above). What validates the claim is the ordering: V1 scores far below V2 and V3 on Exact Record Match, and omission falls monotonically from V1 to V3, reproducing at small scale the aggregate result of the paper (Table 3: ERM 37.5% → 88.0% → 90.4%).
+
+Example terminal output from a real run:
+
+```text
+=== Cross-version summary (DeepSeek, JuiceShop) ===
+
+Target: OpenVAS_JuiceShop | LLM: deepseek
+Metric                       V1        V2        V3
+---------------------------------------------------
+Exact Record Match         0.15      0.94      0.94
+Field omission            13.9%      4.4%      4.2%
+Field hallucination       16.3%      3.2%      1.9%
+Vuln omission              0.0%      0.0%      0.0%
+Matched pairs                34        34        34
+Severity macro-F1          0.84      1.00      0.93
+
+Expected trend (paper, Table 3): Exact Record Match rises and
+omission falls from V1 to V3. Single-run values vary (stochastic
+LLM decoding); the ordering across versions is what validates the claim.
+```
 
 ## Documentation
 
