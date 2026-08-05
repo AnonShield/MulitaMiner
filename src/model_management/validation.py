@@ -1,11 +1,4 @@
-"""
-JSON response validation and error detection for LLM outputs.
-
-Provides robust validation of LLM responses, including:
-- JSON parsing with multiple fallback strategies
-- Token counting and limit validation
-- Error detection and redivision determination
-"""
+"""LLM response validation: JSON parsing fallbacks, token limits, truncation."""
 
 import json
 import re
@@ -25,25 +18,13 @@ _CONCAT_ARRAY_RE = re.compile(r'\]\s*\[')
 
 
 def parse_json_response(resposta, chunk_id="", return_strategy=False):
-    """
-    Parse JSON response from LLM with flexible handling.
+    """Extract the vulnerability list from an LLM response.
 
-    Tries multiple strategies to extract valid JSON, in order:
-    - "direct"          → json.loads on the raw response
-    - "bracket_slice"   → slice between first '[' and last ']'
-    - "markdown_block"  → content of ```json ... ``` fence
-    - "prefix_strip"    → drop leading prose ("Here is...", "Based on...")
-    - "concat_arrays"   → merge `][` artifacts into a single array
-    - "json_repair"     → json-repair library (last-resort fixer)
-
-    Args:
-        resposta: Response string from LLM.
-        chunk_id: ID for logging purposes.
-        return_strategy: When True, returns (vulns, strategy_name). The strategy
-            is None if parsing failed. Default False keeps the original API.
-
-    Returns:
-        list of vulns, or (list, strategy_name) when return_strategy=True.
+    Strategies tried in order: "direct" (raw json.loads), "bracket_slice"
+    (first '[' to last ']'), "markdown_block" (```json fence), "prefix_strip"
+    (drop leading prose), "concat_arrays" (merge `][` artifacts), "json_repair"
+    (library fixer, last resort). With return_strategy=True returns
+    (vulns, strategy_name), strategy None on failure.
     """
     def _result(vulns, strategy):
         return (vulns, strategy) if return_strategy else vulns
@@ -66,8 +47,8 @@ def parse_json_response(resposta, chunk_id="", return_strategy=False):
     except json.JSONDecodeError:
         pass
 
-    # Strategy: bracket_slice — first `[` to last `]`, then peel trailing `]`
-    # if the slice has more `]` than `[` (e.g. model emits `[...]\n]`).
+    # bracket_slice also peels trailing `]` when the slice is unbalanced
+    # (e.g. model emits `[...]\n]`)
     try:
         start = resposta.find('[')
         end = resposta.rfind(']') + 1
@@ -89,7 +70,6 @@ def parse_json_response(resposta, chunk_id="", return_strategy=False):
     except Exception:
         pass
 
-    # Strategy: markdown_block — ```json ... ```
     try:
         code_start = resposta.find('```json')
         if code_start != -1:
@@ -102,7 +82,6 @@ def parse_json_response(resposta, chunk_id="", return_strategy=False):
     except Exception:
         pass
 
-    # Strategy: prefix_strip — drop "Here is..." / "Based on..." prefixes
     try:
         cleaned = resposta.strip()
         if cleaned.startswith('Here') or cleaned.startswith('Based'):
@@ -115,7 +94,7 @@ def parse_json_response(resposta, chunk_id="", return_strategy=False):
     except Exception:
         pass
 
-    # Strategy: concat_arrays — model emitted `[a][b][c]` instead of `[a,b,c]`
+    # concat_arrays: model emitted `[a][b][c]` instead of `[a,b,c]`
     try:
         start = resposta.find('[')
         end = resposta.rfind(']') + 1
@@ -128,7 +107,6 @@ def parse_json_response(resposta, chunk_id="", return_strategy=False):
     except Exception:
         pass
 
-    # Strategy: json_repair — last-resort recovery for malformed JSON
     if _HAS_JSON_REPAIR:
         try:
             parsed = repair_json(resposta, return_objects=True)
@@ -156,30 +134,12 @@ def parse_json_response(resposta, chunk_id="", return_strategy=False):
 def validate_json_and_tokens(response: str, chunk_content: str, max_tokens: int,
                              prompt_template: str = "", tokenizer=None,
                              num_predict: Optional[int] = None) -> Dict[str, Any]:
-    """
-    Validate LLM response JSON and check token limits.
+    """Validate the response JSON and token budget; returns a result dict.
 
-    Args:
-        response: Response string from LLM
-        chunk_content: Original chunk content sent to LLM
-        max_tokens: Maximum tokens allowed for this chunk (input budget)
-        prompt_template: Template prompt used (for token counting)
-        tokenizer: Tokenizer object (tiktoken or HuggingFace). If None, uses tiktoken fallback.
-        num_predict: Model's output token cap (mapped from llm_config.max_tokens). When the
-            response lands within 5% of this cap AND the JSON is invalid, likely_truncated
-            is flagged so truncation can be distinguished from format/syntax errors.
-
-    Returns:
-        dict with validation results:
-        - json_valid (bool): Whether response is valid JSON
-        - json_data (list): Parsed JSON data if valid
-        - token_valid (bool): Whether token count is within limits
-        - token_count (int): Total tokens used
-        - errors (list): List of error messages
-        - needs_redivision (bool): Whether chunk should be redivided
-        - likely_truncated (bool): Response hit the output cap (diagnostic only)
+    num_predict is the model's output cap: a response within 5% of it while
+    the JSON is invalid is flagged likely_truncated, distinguishing truncation
+    from plain syntax errors.
     """
-    # Use provided tokenizer or create fallback
     if tokenizer is None:
         try:
             tokenizer = tiktoken.encoding_for_model("gpt-3.5-turbo")
@@ -197,10 +157,8 @@ def validate_json_and_tokens(response: str, chunk_content: str, max_tokens: int,
         'recovered_via': None,
     }
 
-    # 1. JSON VALIDATION
-    # Empty list `[]` is a VALID response — the LLM legitimately found no vulns
-    # in this chunk. Treating it as failure causes wasteful redivision and may
-    # split real vulnerabilities across sub-chunks, losing them entirely.
+    # Empty list `[]` is a VALID response (no vulns in this chunk); treating it
+    # as failure causes wasteful redivision that can split and lose real vulns
     try:
         json_data, strategy = parse_json_response(response, return_strategy=True)
         result['recovered_via'] = strategy
@@ -212,27 +170,22 @@ def validate_json_and_tokens(response: str, chunk_content: str, max_tokens: int,
     except Exception as e:
         result['errors'].append(f"Error parsing JSON: {str(e)}")
     
-    # 2. TOKEN VALIDATION
-    # Calculate tokens of complete prompt (template + chunk + overhead)
     prompt_tokens = len(tokenizer.encode(prompt_template)) if prompt_template else 800
     chunk_tokens = len(tokenizer.encode(chunk_content))
     response_tokens = len(tokenizer.encode(response))
     total_tokens = prompt_tokens + chunk_tokens + response_tokens
-    
+
     result['token_count'] = total_tokens
-    
-    # Check if exceeds limit (leave margin of 500 tokens)
+
+    # 500-token safety margin below the hard limit
     if total_tokens > (max_tokens - 500):
         result['token_valid'] = False
         result['errors'].append(f"Exceeds token limit: {total_tokens}/{max_tokens}")
         result['needs_redivision'] = True
-    
-    # 3. DETECT REDIVISION NECESSITY
-    # If invalid JSON OR exceeds tokens OR chunk too large
+
     if not result['json_valid'] or not result['token_valid'] or chunk_tokens > (max_tokens * 0.6):
         result['needs_redivision'] = True
-    
-    # 4. ANALYZE SPECIFIC JSON ERRORS
+
     if not result['json_valid']:
         if "..." in response or "truncated" in response.lower():
             result['errors'].append("Resposta truncada detectada")
@@ -241,14 +194,14 @@ def validate_json_and_tokens(response: str, chunk_content: str, max_tokens: int,
         if response.count('{') != response.count('}'):
             result['errors'].append("JSON mal formado - chaves desbalanceadas")
 
-    # 5. TRUNCATION DETECTION (diagnostic): response hit the num_predict cap
-    # Flagged only when JSON also failed — an intact JSON at cap is just a tight fit.
+    # Truncation is flagged only when JSON also failed: an intact JSON at the
+    # cap is just a tight fit
     if num_predict and num_predict > 0 and not result['json_valid']:
         if response_tokens >= int(num_predict * 0.95):
             result['likely_truncated'] = True
             result['errors'].append(
                 f"Response {response_tokens}/{num_predict} tokens (>=95% of num_predict cap) "
-                f"AND JSON invalid — likely truncated. Consider bumping max_tokens or shrinking chunk."
+                f"AND JSON invalid, likely truncated. Consider bumping max_tokens or shrinking chunk."
             )
 
     return result

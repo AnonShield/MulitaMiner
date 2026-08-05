@@ -8,18 +8,9 @@ from src.model_management import get_tokenizer, count_tokens
 
 def create_session_blocks_from_text(report_text: str, temp_dir: str = 'temp_blocks',
                                     visual_layout_path: str = None, scanner: str = 'openvas', output_ext: str = "txt") -> list:
-    """
-    Create temporary session block files from extracted report text.
-    Uses scanner-specific strategies for block creation.
+    """Create session block files using the scanner strategy.
 
-    Args:
-        report_text: Extracted report text
-        temp_dir: Directory to store temporary blocks
-        visual_layout_path: Path to visual layout file (if applicable)
-        scanner: Scanner name (e.g., 'openvas')
-        output_ext: Extension for block files (e.g. "txt", "md")
-
-    Fallback: If scanner has no custom strategy, creates a single block with all text.
+    Falls back to a single block when the scanner has no custom strategy.
     """
     from src.scanner_strategies.registry import get_strategy
 
@@ -27,11 +18,9 @@ def create_session_blocks_from_text(report_text: str, temp_dir: str = 'temp_bloc
         shutil.rmtree(temp_dir)
     os.makedirs(temp_dir, exist_ok=True)
 
-    # Get scanner strategy
     strategy = get_strategy(scanner)
 
     if strategy is None:
-        # Fallback for unknown scanner: create single block
         block_path = os.path.join(temp_dir, f"block_generic.{output_ext}")
         with open(block_path, 'w', encoding='utf-8') as f:
             f.write(report_text)
@@ -42,29 +31,18 @@ def create_session_blocks_from_text(report_text: str, temp_dir: str = 'temp_bloc
             'severity': None
         }]
 
-    # Extract visual context if scanner requires it
     context = ([], None, None, None)
     if strategy.requires_visual_layout and visual_layout_path:
         context = strategy.extract_visual_context(visual_layout_path)
 
-    # Delegate block creation to strategy
     return strategy.create_blocks(report_text, temp_dir, context, output_ext=output_ext)
 
 def extract_vulns_from_blocks(blocks: list, llm, profile_config: dict,
                                chunk_func, llm_config: dict = None, pdf_name: str = "unknown",
                                llm_name: str = "unknown", debug_mode: bool = False) -> list:
-    """
-    For each session block, apply chunking and extract vulnerabilities, propagating port/protocol.
-    
-    Args:
-        blocks: List of block dictionaries with file paths
-        llm: Initialized LLM instance
-        profile_config: Profile configuration
-        chunk_func: Chunking function reference (legacy parameter, not used)
-        llm_config: LLM configuration from JSON (REQUIRED)
-    
-    Raises:
-        ValueError: If llm_config is None or missing required fields
+    """Chunk each block, extract vulnerabilities, propagate port/protocol/severity.
+
+    chunk_func is a legacy parameter and is not used; llm_config is required.
     """
     from src.utils.chunking import get_token_based_chunks, split_text_to_subchunks, TokenChunk
     from src.model_management import get_tokenizer, count_tokens
@@ -94,11 +72,9 @@ def extract_vulns_from_blocks(blocks: list, llm, profile_config: dict,
 
     all_vulns = []
     tokens_info = []
-    # Count total chunks for progress bar
     total_chunks = 0
     block_chunks_map = []
-    
-    # Get scanner type and chunking config from profile
+
     scanner_type = profile_config.get('reader', '').lower() if profile_config else 'unknown'
     chunking_config = profile_config.get('chunking', {}) if profile_config else {}
     marker_pattern = chunking_config.get('marker_pattern', None)
@@ -107,8 +83,8 @@ def extract_vulns_from_blocks(blocks: list, llm, profile_config: dict,
     for block_idx, block in enumerate(blocks):
         with open(block['file'], 'r', encoding='utf-8') as f:
             block_text = f.read()
-            
-            # Smart chunking: respects markers, tokens, vuln count, size simultaneously
+
+            # Respects markers, token budget, vuln count and size simultaneously
             from src.utils.chunking import smart_chunk_vulnerabilities
             chunks = smart_chunk_vulnerabilities(
                 text=block_text,
@@ -123,21 +99,15 @@ def extract_vulns_from_blocks(blocks: list, llm, profile_config: dict,
         block_chunks_map.append((block, chunks))
         total_chunks += len(chunks)
 
-    # Process with progress bar
     with tqdm(total=total_chunks, desc="Processing blocks", unit="chunk", ncols=80) as pbar:
         for block_idx, (block, chunks) in enumerate(block_chunks_map):
             for chunk in chunks:
-                # Build prompt once to count input tokens correctly
-                # (includes template + Unicode sanitization)
+                # Count input tokens from the actual prompt that will be sent
                 from src.utils.chunking import build_prompt
                 prompt = build_prompt(chunk, profile_config)
-                
-                # Count input tokens from the actual prompt that will be sent
                 tokens_input = count_tokens(prompt, tokenizer)
 
-                # A lógica de invocação e retry foi movida para retry_chunk_with_subdivision
-                # para centralizar o tratamento de erros e redivisão.
-                max_retries = 3 # Default
+                max_retries = 3
                 chunk_result = retry_chunk_with_subdivision(
                     chunk, llm, profile_config, max_retries,
                     tokenizer=tokenizer,
@@ -158,10 +128,8 @@ def extract_vulns_from_blocks(blocks: list, llm, profile_config: dict,
                     'tokens_output': tokens_output
                 })
 
-                # Flatten one level of nesting: some LLMs (e.g. granite4) wrap a vuln dict
-                # in an extra list, yielding [[{vuln}], ...] instead of [{vuln}, ...].
-                # Unwrap singleton lists whose only element is a dict so the real vuln
-                # isn't dropped by the isinstance filter below.
+                # Some LLMs wrap each vuln dict in an extra list ([[{vuln}], ...]);
+                # unwrap singletons so the isinstance filter below keeps them
                 flattened = []
                 for v in vulns:
                     if isinstance(v, list) and len(v) == 1 and isinstance(v[0], dict):
@@ -211,7 +179,7 @@ def extract_vulns_from_blocks(blocks: list, llm, profile_config: dict,
                     else:
                         all_vulns.extend([v for v in vulns if isinstance(v, dict)])
                 pbar.update(1)
-    # Salva tokens_info em results_tokens
+
     import os, json
     os.makedirs('results_tokens', exist_ok=True)
     tokens_path = os.path.join('results_tokens', f'tokens_info_{os.getpid()}.json')

@@ -1,9 +1,4 @@
-"""
-Ollama provider for using local LLM models.
-
-Connects to Ollama running on localhost:11434 (or custom endpoint).
-Supported models: Mistral, DeepSeek, Llama2, Neural Chat, etc.
-"""
+"""Ollama provider for local LLM models."""
 
 import requests
 from langchain_ollama import ChatOllama
@@ -14,38 +9,24 @@ class OllamaProvider(BaseLLMProvider):
     """Provider for Ollama local LLM models."""
     
     def __init__(self, config: dict):
-        """
-        Initialize Ollama provider.
-        
-        Args:
-            config: Configuration dict with:
-                - model: Model name (must be imported in Ollama)
-                - endpoint: Ollama endpoint (default: http://localhost:11434)
-                - temperature: Temperature setting
-                - timeout: Request timeout
-                - max_tokens: Max tokens in response
-        """
         self.config = config
-        
-        # Get endpoint (defaults to Ollama default)
+
         endpoint = config.get("endpoint", "http://localhost:11434")
-        
-        # Parse temperature
+
         temperature = config.get("temperature", 0.0)
         if temperature is None:
             temperature = 0.0
         temperature = float(temperature)
-        
-        # Parse max_tokens
+
         max_tokens = config.get("max_tokens", 4096)
         if max_tokens is None:
             max_tokens = 4096
         max_tokens = int(max_tokens)
-        
+
         self.model_name = config["model"]
         self.endpoint = endpoint
         self.disable_thinking = bool(config.get("disable_thinking", False))
-        
+
         try:
             ollama_kwargs = {
                 "model": config["model"],
@@ -54,7 +35,7 @@ class OllamaProvider(BaseLLMProvider):
                 "timeout": config.get("timeout", 120),
                 "num_predict": max_tokens,
             }
-            # Forward runtime options (num_ctx, top_k, top_p, repeat_penalty, ...)to the Ollama server.
+            # Forward runtime options (num_ctx, top_k, top_p, ...) to the server
             for opt_key, opt_val in config.get("options", {}).items():
                 ollama_kwargs[opt_key] = opt_val
 
@@ -96,13 +77,13 @@ class OllamaProvider(BaseLLMProvider):
                     break
 
             if server_ctx is None:
-                print(f"[OLLAMA] {config['model']} initialized (num_ctx: {requested_ctx} — could not read model default to compare)")
+                print(f"[OLLAMA] {config['model']} initialized (num_ctx: {requested_ctx}, could not read model default to compare)")
             elif requested_ctx <= server_ctx:
                 print(f"[OLLAMA] {config['model']} initialized (num_ctx: {requested_ctx} \u2713, model supports up to {server_ctx})")
             else:
-                print(f"[OLLAMA] WARNING: num_ctx={requested_ctx} exceeds model capacity ({server_ctx}) — Ollama will clamp it down")
+                print(f"[OLLAMA] WARNING: num_ctx={requested_ctx} exceeds model capacity ({server_ctx}), Ollama will clamp it down")
         except Exception:
-            print(f"[OLLAMA] {config['model']} initialized (num_ctx: {requested_ctx} — server unreachable for verification)")
+            print(f"[OLLAMA] {config['model']} initialized (num_ctx: {requested_ctx}, server unreachable for verification)")
     
     def invoke(self, prompt: str) -> str:
         """Send prompt to Ollama and return response text."""

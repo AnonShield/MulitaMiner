@@ -1,20 +1,11 @@
 #!/usr/bin/env python3
-"""
-Validate and normalize CAIS vulnerability objects.
-Adapted from utils.py but for CAIS field schema with dotted names.
-"""
+"""Validation and normalization for the CAIS schema (dotted field names)."""
 
 def validate_cais_vulnerability(vuln):
-    """
-    Validate CAIS vulnerability object with dotted field names.
-    
-    CAIS fields: definition.name, asset.display_fqdn, etc
-    Returns normalized vuln or None if invalid.
-    """
+    """Normalize a CAIS vulnerability dict; returns None when invalid."""
     if not isinstance(vuln, dict):
         return None
-    
-    # CAIS required fields
+
     cais_fields = {
         "id": str,
         "asset.name": (type(None), str),
@@ -61,15 +52,13 @@ def validate_cais_vulnerability(vuln):
         "age_in_days": (type(None), int),
     }
     
-    # Normalize all fields
     for field, expected_type in cais_fields.items():
         if field not in vuln:
-            # Set default
             if expected_type == list:
                 vuln[field] = []
             elif expected_type == str:
-                if field == "definition.name":  # Required
-                    return None  # Invalid: missing required name
+                if field == "definition.name":  # the only required field
+                    return None
                 vuln[field] = ""
             elif expected_type == (type(None), str):
                 vuln[field] = None
@@ -82,8 +71,7 @@ def validate_cais_vulnerability(vuln):
             continue
         
         value = vuln[field]
-        
-        # Type validation
+
         if isinstance(expected_type, tuple):
             if not isinstance(value, expected_type):
                 if expected_type == (type(None), str) and value is not None:
@@ -104,8 +92,7 @@ def validate_cais_vulnerability(vuln):
         elif expected_type == list:
             if not isinstance(value, list):
                 vuln[field] = [value] if value else []
-    
-    # Validate required field
+
     if not vuln.get("definition.name") or not str(vuln.get("definition.name")).strip():
         return None
     
@@ -130,7 +117,6 @@ def process_cais_response(vulnerabilities, chunk_id=""):
 
 
 if __name__ == "__main__":
-    # Test
     test_vuln = {
         "id": "vuln_1",
         "definition.name": "SSL Certificate Expired",

@@ -1,9 +1,4 @@
-"""
-LLM Providers - Implementations of different LLM backends.
-
-Includes built-in providers for OpenAI, Ollama, and HuggingFace.
-Custom providers can be added by creating a new file in this directory.
-"""
+"""LLM provider backends; add custom ones as new files in this directory."""
 
 from .base_provider import BaseLLMProvider
 from .openai_provider import OpenAIProvider

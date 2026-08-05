@@ -21,12 +21,11 @@ class OpenVASStrategy(ScannerStrategy):
         """Custom consolidation activates when allow_duplicates=True"""
         return True
     
-    # Header detection — supports three layouts the report can emit:
-    #   (1) "High 443/tcp"                 → severity then port/proto (text PDF)
-    #   (2) "443/tcp High"                 → port/proto then severity (markdown extractor — order reversed)
-    #   (3) "2.1.1 Critical 8019/tcp"      → section-number prefix (markdown TOC numbering)
-    # All three carry the same three groups: severity (group 'sev'), port (group 'port'),
-    # protocol (group 'proto'). Optional `#+ ` prefix accepts markdown headings.
+    # Header detection supports three report layouts:
+    #   (1) "High 443/tcp"            severity then port/proto (text PDF)
+    #   (2) "443/tcp High"            reversed order (markdown extractor)
+    #   (3) "2.1.1 Critical 8019/tcp" section-number prefix (markdown TOC)
+    # All carry groups 'sev', 'port', 'proto'; optional `#+ ` accepts headings.
     _SEV = r"(?P<sev>Critical|High|Medium|Low|Log)"
     _PORT = r"(?P<port>\d+|general)"
     _PROTO = r"(?P<proto>[a-zA-Z0-9_-]+)"
@@ -35,36 +34,25 @@ class OpenVASStrategy(ScannerStrategy):
         rf"^(?:#+\s+)?{_SECTION_NUM}{_SEV}\s+{_PORT}/{_PROTO}",
         re.IGNORECASE,
     )
-    # Alternative order: port/proto first, severity second (markdown layout).
     HEADER_REGEX_ALT = re.compile(
         rf"^(?:#+\s+)?{_PORT}/{_PROTO}\s+{_SEV}",
         re.IGNORECASE,
     )
     
-    # Lines worth carrying alongside the header — typically the severity+CVSS
-    # line that the LLM needs to populate the cvss field for the first NVT.
+    # Severity+CVSS line the LLM needs to fill cvss for the first NVT
     _CVSS_LINE_RE = re.compile(
         rf"^(?:#+\s+)?(?:Critical|High|Medium|Low|Log)\s*\(CVSS:\s*[0-9.]+\s*\)",
         re.IGNORECASE,
     )
 
     def extract_visual_context(self, visual_layout_path: str) -> Tuple[List, None, None, None]:
-        """Extract the **last header + its CVSS context** from the visual layout.
+        """Extract the last header plus its CVSS line from the visual layout.
 
-        Returns a 4-tuple ``(context_lines, severity, port, protocol)``:
-
-        * ``context_lines``: 1-2 lines — the matched header (``High 25/tcp``)
-          plus the immediately following ``High (CVSS: X.X)`` line **when
-          present**. The CVSS line carries the score for the first NVT after
-          the header; dropping it would force the LLM to invent a cvss for
-          that NVT (the very bug the cleanup of the orange "default by
-          severity" rule was meant to prevent).
-        * Severity / port / protocol: parsed from the header for callers that
-          want the structured tuple.
-
-        Lines unrelated to the header (Summary, page numbers, NVT bodies) are
-        *not* included — that was the noise the previous implementation
-        prepended to block_1.
+        Returns (context_lines, severity, port, protocol). context_lines is the
+        matched header ("High 25/tcp") plus the following "High (CVSS: X.X)"
+        line when present; without that line the LLM would have to invent a
+        cvss for the first NVT. Unrelated layout lines are excluded on purpose,
+        they were noise in the previous implementation.
         """
         if not visual_layout_path or 'openvas' not in visual_layout_path.lower():
             return [], None, None, None
@@ -94,27 +82,18 @@ class OpenVASStrategy(ScannerStrategy):
         header_line = f"{initial_severity} {initial_port}/{initial_protocol}"
         context_lines = [header_line]
 
-        # Capture up to the next 2 lines after the header IF they look like
-        # a CVSS info line ("High (CVSS: 7.5)") — the LLM needs that for the
-        # first NVT in the chunk. Stop at NVT: or any non-CVSS noise.
+        # Grab at most one CVSS info line right after the header; stop at NVT:
         for next_line in layout_lines[header_idx + 1: header_idx + 3]:
             if next_line.lower().startswith("nvt:"):
                 break
             if self._CVSS_LINE_RE.match(next_line):
                 context_lines.append(next_line)
-                break  # one CVSS line is enough; further lines are noise
+                break
 
         return context_lines, initial_severity, initial_port, initial_protocol
     
     def create_blocks(self, report_text: str, temp_dir: str, initial_context: Tuple, output_ext: str = "txt") -> List[Dict]:
-        """Parse OpenVAS report and create blocks for each vulnerability.
-
-        Args:
-            report_text: Text extracted from report (may contain markdown)
-            temp_dir: Directory to save block files
-            initial_context: Tuple from extract_visual_context()
-            output_ext: Extension to use for block files (e.g. "txt", "md")
-        """
+        """Split the OpenVAS report into one block per severity header."""
         initial_context_lines, initial_severity, initial_port, initial_protocol = initial_context
 
         file_ext = f".{output_ext}"
@@ -127,24 +106,19 @@ class OpenVASStrategy(ScannerStrategy):
         current_severity = initial_severity
         block_idx = 0
 
-        # Decide ONCE whether the first block actually needs the visual-layout
-        # context prepended. If the report_text already carries a header above
-        # its first NVT, the LLM has all it needs — prepending becomes noise.
-        # If it doesn't, the visual_layout is the only way to recover the
-        # implicit "this NVT belongs to header X" — fall back to it.
+        # Prepend the visual-layout context only when the report has no header
+        # above its first NVT: with an inline header it would be noise, without
+        # one it is the only way to know which header the first NVT belongs to
         first_nvt_idx = next((i for i, l in enumerate(lines) if l.strip().startswith('NVT:')), None)
         report_has_inline_header = False
         if first_nvt_idx is not None:
-            # Search the few lines above the first NVT for a header.
             window = [lines[i].strip() for i in range(max(0, first_nvt_idx - 3), first_nvt_idx)]
             for candidate in window:
                 if self.HEADER_REGEX.match(candidate) or self.HEADER_REGEX_ALT.match(candidate):
                     report_has_inline_header = True
                     break
-        # Skip the visual-layout prepend when the report already self-describes.
         prepend_layout = (not report_has_inline_header) and bool(initial_context_lines)
 
-        # Try to extract port/protocol from first NVT
         if first_nvt_idx is not None and first_nvt_idx >= 2:
             port_line = lines[first_nvt_idx - 2].strip()
             port_match = self.HEADER_REGEX.match(port_line) or self.HEADER_REGEX_ALT.match(port_line)
@@ -158,7 +132,6 @@ class OpenVASStrategy(ScannerStrategy):
                     current_port = alt_match.group(1)
                     current_protocol = alt_match.group(2)
         
-        # Iterate through lines and create blocks by severity headers
         for line in lines:
             stripped = line.strip()
             header_match = self.HEADER_REGEX.match(stripped) or self.HEADER_REGEX_ALT.match(stripped)
@@ -186,8 +159,7 @@ class OpenVASStrategy(ScannerStrategy):
                 current_port = header_match.group("port")
                 current_protocol = header_match.group("proto")
             current_block.append(line)
-        
-        # Handle last block
+
         if current_block:
             block_idx += 1
             bloco_is_first = (len(blocks) == 0)
@@ -227,11 +199,8 @@ class OpenVASStrategy(ScannerStrategy):
         return re.sub(r'\s+', ' ', str(name).strip().lower())
 
     def vulnerability_processing_logic(self, vulns: List[Dict], allow_duplicates: bool = True, profile_config: Dict = None) -> List[Dict]:
-        """
-        Consolida todas as vulnerabilidades do OpenVAS agrupando por (Name, port, protocol),
-        faz merge das duplicatas, mantendo a mais completa (com descrição válida).
-        Passa também por um dedup fuzzy (rapidfuzz) para agrupar Nomes com pequenas variações.
-        """
+        """Group by (Name, port, protocol), keep the most complete record,
+        then run a fuzzy pass to merge small Name variations."""
         if not vulns:
             return []
         from collections import defaultdict
@@ -253,7 +222,6 @@ class OpenVASStrategy(ScannerStrategy):
             if len(group) == 1:
                 merged.append(group[0])
             else:
-                # Merge: keep the most complete
                 most_complete = max(group, key=count_filled_fields)
                 merged.append(most_complete)
         return self._fuzzy_merge(merged, threshold=90)
@@ -261,11 +229,7 @@ class OpenVASStrategy(ScannerStrategy):
     _CVE_PATTERN = re.compile(r'CVE-\d{4}-\d+', re.IGNORECASE)
 
     def _extract_cves(self, vuln: Dict) -> set:
-        """
-        Extract CVE IDs from `references` field (typically a list of strings).
-        Used as semantic guard in fuzzy merge: vulns with disjoint CVE sets are
-        treated as distinct even when names are similar.
-        """
+        """CVE IDs from `references`; semantic guard for the fuzzy merge."""
         cves = set()
         refs = vuln.get('references')
         if not refs:
@@ -278,16 +242,11 @@ class OpenVASStrategy(ScannerStrategy):
         return cves
 
     def _should_merge(self, v: Dict, cluster_rep: Dict, threshold: int, fuzz) -> bool:
-        """
-        Decide whether vuln `v` should join the cluster represented by `cluster_rep`.
+        """Name-similarity gate, then CVE guard.
 
-        Step 1 — Name similarity gate: fuzz.ratio < threshold rejects immediately.
-        Step 2 — CVE semantic guard: when both vulns carry CVEs, merge only when
-                 one CVE set is a subset of the other (one extraction missed CVEs
-                 the other captured). Partial overlap with extras on both sides
-                 means the vulns are actually distinct (e.g. shared CVE-A but
-                 each carries a unique CVE-B/CVE-C). When either side has no CVE,
-                 falls back to the threshold decision.
+        When both sides carry CVEs, merge only if one CVE set is a subset of
+        the other: partial overlap with extras on both sides means the vulns
+        are actually distinct.
         """
         vname = self._normalize_name(v.get('Name') or '')
         rep_name = self._normalize_name(cluster_rep.get('Name') or '')
@@ -303,12 +262,8 @@ class OpenVASStrategy(ScannerStrategy):
         return True
 
     def _fuzzy_merge(self, vulns: List[Dict], threshold: int = 90) -> List[Dict]:
-        """
-        Second dedup pass: within same (port, protocol), cluster vulns whose
-        normalized Name similarity >= threshold (via rapidfuzz) AND whose CVE
-        sets are not disjoint. Keeps the most complete in each cluster.
-        'Services' entries are passed through unchanged.
-        """
+        """Second dedup pass within (port, protocol): cluster by Name similarity
+        plus CVE guard, keep the most complete; 'Services' passes through."""
         if not vulns:
             return []
         try:
@@ -333,7 +288,7 @@ class OpenVASStrategy(ScannerStrategy):
             if len(items) == 1:
                 result.append(items[0])
                 continue
-            # Greedy clustering: name similarity gate, then CVE semantic guard
+            # Greedy clustering
             clusters: List[List[Dict]] = []
             for v in items:
                 placed = False
@@ -352,9 +307,7 @@ class OpenVASStrategy(ScannerStrategy):
         return result
     
     def get_consolidation_report(self, input_count: int, output_count: int, removed: int) -> Dict:
-        """
-        Retorna report específico da estratégia OpenVAS.
-        """
+        """OpenVAS-specific consolidation report."""
         return {
             'strategy_name': 'OpenVAS custom merge',
             'description': 'Groups vulnerabilities by (Name, port, protocol), keeps most complete',

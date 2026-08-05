@@ -1,9 +1,4 @@
-"""
-Tokenizer management and utilities.
-
-Abstracts different tokenizer types (tiktoken, HuggingFace) and provides
-a unified interface for token counting and model configuration.
-"""
+"""Unified tokenizer loading and token counting (tiktoken, HuggingFace)."""
 
 import tiktoken
 import subprocess
@@ -12,21 +7,7 @@ import warnings
 
 
 def get_tokenizer(llm_config: dict = None):
-    """
-    Get an appropriate tokenizer for the model, prioritizing explicit configuration.
-    
-    Supports multiple tokenizer types defined in llm_config:
-    - tiktoken: Models from OpenAI
-    - huggingface: Models from Hugging Face
-    
-    Falls back to cl100k_base if no config provided.
-    
-    Args:
-        llm_config: LLM configuration dict with tokenizer settings
-    
-    Returns:
-        Tokenizer object (tiktoken encoding or HF AutoTokenizer)
-    """
+    """Load the tokenizer from llm_config; falls back to cl100k_base."""
     if llm_config:
         tokenizer_config = llm_config.get('tokenizer')
         if tokenizer_config and isinstance(tokenizer_config, dict):
@@ -38,23 +19,11 @@ def get_tokenizer(llm_config: dict = None):
             except Exception as e:
                 print(f"[ERROR] Failed to load tokenizer from config. Error: {e}. Falling back.")
 
-    # Fallback universal para garantir que sempre haja um tokenizador.
     return tiktoken.get_encoding("cl100k_base")
 
 
 def _load_tokenizer(tokenizer_config: dict):
-    """
-    Load a tokenizer based on provided configuration.
-    
-    Args:
-        tokenizer_config: Dict with 'type' and 'model' keys
-    
-    Returns:
-        Tokenizer object
-    
-    Raises:
-        ValueError: If configuration is invalid or tokenizer type is unsupported
-    """
+    """Load a tokenizer from a {'type', 'model'} config dict."""
     tokenizer_type = tokenizer_config.get('type', 'tiktoken')
     model_name = tokenizer_config.get('model')
 
@@ -75,7 +44,6 @@ def _load_tokenizer(tokenizer_config: dict):
                 raise ImportError("transformers library is required but installation failed.")
         
         print(f"[DEBUG] Loading Hugging Face tokenizer: {model_name}")
-        # from_pretrained lida com o cache automaticamente.
         return AutoTokenizer.from_pretrained(model_name)
     
     elif tokenizer_type == 'tiktoken':
@@ -87,16 +55,7 @@ def _load_tokenizer(tokenizer_config: dict):
 
 
 def count_tokens(text: str, tokenizer=None) -> int:
-    """
-    Count tokens in text, agnostic to tokenizer type.
-
-    Args:
-        text: Text to count tokens for
-        tokenizer: Tokenizer object (tiktoken or HF AutoTokenizer)
-
-    Returns:
-        int: Number of tokens
-    """
+    """Count tokens in text, agnostic to tokenizer type."""
     if not text:
         return 0
 

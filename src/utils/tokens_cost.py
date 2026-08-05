@@ -1,9 +1,12 @@
+"""Token accounting and cost estimation from results_tokens/ files."""
+
 import os
 import json
 from glob import glob
 import argparse
 import re
 
+# USD per 1M tokens
 LLM_PRICES = {
     "gpt5": {"input": 0.25, "output": 2.0},
     "deepseek": {"input": 0.28, "output": 0.42},
@@ -12,7 +15,7 @@ LLM_PRICES = {
     "gpt4": {"input": 0.15, "output": 0.6},
 }
 
-# Map model names to LLM_PRICES keys
+# Full model ids to LLM_PRICES keys
 MODEL_NAME_MAPPING = {
     "llama-3.3-70b-versatile": "llama3",
     "meta-llama/llama-4-scout-17b-16e-instruct": "llama4",
@@ -26,6 +29,7 @@ def normalize_model_name(name: str) -> str:
     return name.lower().replace('/', '_').replace(':', '_').replace('-', '_').replace('.', '_')
 
 def calc_tokens_and_cost(tokens_dir):
+    """Aggregate tokens and cost per LLM over all token files in a directory."""
     files = glob(os.path.join(tokens_dir, '*_tokens.json'))
     llm_totals = {}
     llm_costs = {}
@@ -33,25 +37,23 @@ def calc_tokens_and_cost(tokens_dir):
         fname = os.path.basename(fpath)
         parts = fname.lower().split('_')
         llm = None
-        
-        # Extract potential model name from filename
+
+        # Resolve the LLM key from the filename: full model id first, then
+        # exact / prefix / substring matches against the price table
         fname_no_ext = fname.replace('_tokens.json', '')
         fname_normalized = normalize_model_name(fname_no_ext)
-        
-        # Check against all known model names
+
         for original_name, key in MODEL_NAME_MAPPING.items():
             if normalize_model_name(original_name) in fname_normalized:
                 llm = key
                 break
-        
-        # If not found, try simple key matching
+
         if not llm:
             for p in parts:
                 if p in LLM_PRICES:
                     llm = p
                     break
-        
-        # Try prefix matching
+
         if not llm:
             for p in parts:
                 for key in LLM_PRICES:
@@ -60,8 +62,7 @@ def calc_tokens_and_cost(tokens_dir):
                         break
                 if llm:
                     break
-        
-        # Try substring matching
+
         if not llm:
             for p in parts:
                 for key in LLM_PRICES:
@@ -95,6 +96,7 @@ def calc_tokens_and_cost(tokens_dir):
     return llm_totals, llm_costs, total_all_tokens, total_cost
 
 def calc_tokens_cost_llm(tokens_dir, llm_name, show_files=False, price_per_1M=None):
+    """Print the token/cost summary for a single LLM."""
     pattern = os.path.join(tokens_dir, f"*{llm_name}*.json")
     files = glob(pattern)
     total_input = 0

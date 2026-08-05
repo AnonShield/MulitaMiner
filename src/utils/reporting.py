@@ -1,12 +1,7 @@
-"""Final-report generator (Markdown).
+"""Markdown final-report generator.
 
-Produces a single ``final_report_<ts>_<uuid>.md`` per call, structured for
-both human reading and downstream parsing. The legacy plain-text layout was
-flattened and noisy; this version uses headers + tables.
-
-Per-run reports are deliberately NOT generated here — orchestrators
-(``run_experiments.py`` / ``batch_pdf_extractor.py``) call this once at the
-end. ``main.py`` only writes a report when invoked standalone.
+Writes one final_report_<ts>_<uuid>.md per call. Orchestrators call it once at
+the end of a batch, so per-run reports are deliberately not generated here.
 """
 import os
 import uuid
@@ -35,19 +30,11 @@ def generate_final_report(
     timing_report=None,
     failures=None,
 ):
-    """Write a Markdown final report and return its path.
+    """Write the Markdown final report and return its path.
 
-    Args:
-        start_time / end_time: Unix timestamps.
-        run_stats: dict with optional keys ``baseline_counts``, ``total_runs``.
-        tokens_dir: directory with ``*_tokens.json`` files.
-        report_dir: where the .md is written.
-        include_metrics_time: kept for API compat (currently unused; metrics
-            time is part of the per-run timing).
-        timing_report: list of per-run dicts (must contain ``total_time``,
-            optionally ``run_id``, ``llm``, ``baseline``).
-        failures: list of dicts with ``run_id`` + ``error`` for the
-            "Failures" section.
+    timing_report holds per-run dicts with total_time (plus optional run_id,
+    llm, baseline); failures holds run_id + error entries. include_metrics_time
+    is unused, kept for API compatibility.
     """
     start_dt = datetime.fromtimestamp(start_time)
     end_dt = datetime.fromtimestamp(end_time)
@@ -118,7 +105,7 @@ def generate_final_report(
         for f in failures:
             run_id = f.get('run_id', '?')
             err = f.get('error', '').replace('\n', ' ').strip()
-            lines.append(f"- `{run_id}` — {err}")
+            lines.append(f"- `{run_id}`: {err}")
 
     os.makedirs(report_dir, exist_ok=True)
     with open(final_report_path, "w", encoding="utf-8") as f:

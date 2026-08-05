@@ -1,9 +1,4 @@
-"""
-Configuration loader for LLM and Scanner profiles.
-
-Handles loading and parsing of model configurations from JSON files,
-including environment variable substitution.
-"""
+"""Loaders for LLM and scanner profile JSON configs, with env var substitution."""
 
 import os
 import json
@@ -13,15 +8,7 @@ from dotenv import load_dotenv
 
 
 def load_profile(profile_name):
-    """
-    Load a scanner profile configuration by its short name.
-    
-    Args:
-        profile_name: Name of the profile (e.g., 'openvas', 'tenable', 'cais_openvas')
-    
-    Returns:
-        dict: Profile configuration or None if not found
-    """
+    """Load a scanner profile config by short name (e.g. 'openvas'); None if missing."""
     profile_name = profile_name.lower()
     path = f"src/configs/scanners/{profile_name}.json"
     try:
@@ -33,18 +20,7 @@ def load_profile(profile_name):
 
 
 def load_llm(llm_name):
-    """
-    Load an LLM configuration by its short name.
-    
-    Supports environment variable substitution in format ${VAR_NAME}.
-    Auto-detects LLM type if not specified in JSON.
-    
-    Args:
-        llm_name: Name of the LLM (e.g., 'gpt4', 'deepseek', 'ollama-local')
-    
-    Returns:
-        dict: LLM configuration with resolved environment variables and type field
-    """
+    """Load an LLM config by short name, resolving ${VAR} from the environment."""
     load_dotenv()
     
     llm_name = llm_name.lower()
@@ -57,7 +33,6 @@ def load_llm(llm_name):
         print(f"[ERROR] LLM configuration file not found for '{llm_name}' at '{path}'.")
         return None
 
-    # Replace environment variables in format ${NAME}
     for k, v in config.items():
         if isinstance(v, str):
             match = re.fullmatch(r"\$\{([A-Z0-9_]+)\}", v)
@@ -74,7 +49,7 @@ def load_llm(llm_name):
         elif "openai" in endpoint or "api.openai.com" in endpoint:
             config["provider"] = "openai"
         else:
-            # Default to openai for backward compatibility
+            # openai is the backward-compatible default
             config["provider"] = "openai"
     
     return config
