@@ -35,6 +35,7 @@ scikit-learn==1.8.0
 # HTML Report Generation
 jinja2==3.1.6
 scipy==1.13.1
+requests==2.32.3
 
 # =================================================================
 # Installation Instructions:

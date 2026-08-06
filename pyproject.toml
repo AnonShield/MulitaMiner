@@ -25,7 +25,15 @@ dependencies = [
     "rouge-score==0.1.2",
     "torch==2.11.0",
     "scikit-learn==1.8.0",
+    "scipy==1.13.1",
+    "requests==2.32.3",
     "jinja2==3.1.6",
+]
+
+[project.optional-dependencies]
+# Only needed for --md (Marker-based PDF extraction) and HTML report export.
+# Not required by the claims, which use the default pdfplumber extractor.
+extras = [
     "marker-pdf>=1.10.2",
     "playwright>=1.60.0",
 ]

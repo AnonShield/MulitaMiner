@@ -1,4 +1,7 @@
 temp_blocks/
+temp_blocks_*/
+visual_layouts/
+results_tokens/
 # Results and temporary outputs
 plot_runs/
 results_runs/

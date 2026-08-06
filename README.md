@@ -1,16 +1,16 @@
 <div align="center">
 
   <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="imgs/MulitaMiner_logo_light.png">
-    <source media="(prefers-color-scheme: light)" srcset="imgs/MulitaMiner_logo_dark.png">
-    <img src="assets/MulitaMiner_logo_light" width="500" alt="MulitaMiner logo">
+    <source media="(prefers-color-scheme: dark)" srcset="imgs/MulitaMiner_logo_dark.png">
+    <source media="(prefers-color-scheme: light)" srcset="imgs/MulitaMiner_logo_light.png">
+    <img src="imgs/MulitaMiner_logo_light.png" width="500" alt="MulitaMiner logo">
   </picture>
 
 **Vulnerability Extraction from Security Reports using LLMs**
 
 _Automated · Structured · Multi-LLM_
 
-![Python](https://img.shields.io/badge/Python-3.8+-blue)
+![Python](https://img.shields.io/badge/Python-3.11+-blue)
 ![license](https://img.shields.io/badge/license-MIT-green)
 ![status](https://img.shields.io/badge/status-active-orange)
 ![update](https://img.shields.io/badge/last%20update-Mar%202026-lightgrey)
@@ -42,12 +42,18 @@ SBSeg 2026, Main Track.
 
 Key directories for artifact evaluation:
 
-| Directory                  | Content                                                          |
-| -------------------------- | ---------------------------------------------------------------- |
-| [claims/](claims/)         | One script per claim (`.sh` for Linux/macOS, `.bat` for Windows) |
-| [versions/](versions/)     | V1 and V2 pipeline snapshots as zips (used by Claim 2)           |
-| [baselines/](baselines/)   | Curated ground-truth baselines (PDF report + XLSX annotation)    |
-| [docs/](docs/)             | Detailed documentation (install, usage, architecture)            |
+| Path                                     | Content                                                              |
+| ---------------------------------------- | -------------------------------------------------------------------- |
+| [main.py](main.py)                       | CLI entry point: extraction, format conversion and metric evaluation |
+| [claims/](claims/)                       | One script per claim (`.sh` for Linux/macOS, `.bat` for Windows)     |
+| [versions/](versions/)                   | V1 and V2 pipeline snapshots as zips (used by Claim 2)               |
+| [baselines/](baselines/)                 | Curated ground-truth baselines (PDF report + XLSX annotation)        |
+| [src/](src/)                             | Pipeline: PDF extraction, chunking, scanner strategies, LLM providers |
+| [metrics/](metrics/)                     | Metric battery: scorers, pipelines and cross-run aggregators         |
+| [tools/](tools/)                         | Batch orchestration (`run_experiments.py`, `run_metrics.py`)         |
+| [docs/](docs/)                           | Detailed documentation (install, usage, architecture)                |
+| [requirements.txt](requirements.txt) · [pyproject.toml](pyproject.toml) | Pinned dependencies (both install the same set)   |
+| [.env.example](.env.example)             | Template for the API key file                                        |
 
 Sections of this README:
 
@@ -72,7 +78,7 @@ The following badges are considered for evaluation: **Available**, **Functional*
 | Component   | Requirement                                      |
 | ----------- | ------------------------------------------------ |
 | **OS**      | Windows 10+, Linux (Ubuntu 20.04+), macOS 10.15+ |
-| **Python**  | 3.8+ (recommended: 3.10+)                        |
+| **Python**  | 3.11+ (tested on 3.11)                           |
 | **RAM**     | 4GB+ (8GB recommended for large PDFs)            |
 | **Disk**    | 500MB for dependencies + space for outputs       |
 | **Network** | Internet connection required for LLM API calls   |
@@ -128,7 +134,9 @@ See [docs/INSTALL.md](docs/INSTALL.md) for complete dependency details.
 
 **API Keys**: The tool requires LLM API keys configured in a `.env` file. Never commit this file to public repositories.
 
-**PDF Processing**: The tool processes PDF files locally. No data is sent to external services except for the LLM API calls (text chunks for vulnerability extraction).
+**PDF Processing**: PDF parsing, chunking and all metric computation happen locally.
+
+**Report content leaves the machine**: extraction works by sending the report text to the configured LLM provider. That text includes whatever the scanner wrote, typically **IP addresses, hostnames, open ports and vulnerability descriptions**, which together map the attack surface of the scanned target. Use the bundled sample reports for evaluation, and for real assessments prefer a local backend (Ollama, LM Studio or Hugging Face, all supported) so nothing reaches a third party.
 
 **Network**: The tool makes HTTPS requests to LLM APIs. Ensure your network allows outbound connections to:
 
@@ -289,47 +297,3 @@ bash claims/claim2_version_progression.sh
 | Field-level omission | 13%  | 5%   | 4%   |
 
 Single-run values may deviate from the table (e.g. V1 Exact Record Match anywhere in the 0.15-0.25 range, see the variability note above). What validates the claim is the ordering: V1 scores far below V2 and V3 on Exact Record Match, and omission falls monotonically from V1 to V3, reproducing at small scale the aggregate result of the paper (Table 3: ERM 37.5% → 88.0% → 90.4%).
-
-Example terminal output from a real run:
-
-```text
-=== Cross-version summary (DeepSeek, JuiceShop) ===
-
-Target: OpenVAS_JuiceShop | LLM: deepseek
-Metric                       V1        V2        V3
----------------------------------------------------
-Exact Record Match         0.15      0.94      0.94
-Field omission            13.9%      4.4%      4.2%
-Field hallucination       16.3%      3.2%      1.9%
-Vuln omission              0.0%      0.0%      0.0%
-Matched pairs                34        34        34
-Severity macro-F1          0.84      1.00      0.93
-
-Expected trend (paper, Table 3): Exact Record Match rises and
-omission falls from V1 to V3. Single-run values vary (stochastic
-LLM decoding); the ordering across versions is what validates the claim.
-```
-
-## Documentation
-
-Detailed documentation is organized in separate files:
-
-| Document                                           | Description                          |
-| -------------------------------------------------- | ------------------------------------ |
-| [docs/INSTALL.md](docs/INSTALL.md)                 | Detailed installation guide          |
-| [docs/USAGE.md](docs/USAGE.md)                     | Complete usage guide with examples   |
-| [docs/CONFIG.md](docs/CONFIG.md)                   | API keys and token configuration     |
-| [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)       | Code structure and components        |
-| [docs/EXTENSIBILITY.md](docs/EXTENSIBILITY.md)     | Adding new scanners and LLMs         |
-| [docs/TROUBLESHOOTING.md](docs/TROUBLESHOOTING.md) | Common errors and optimization tips  |
-| [docs/EXPERIMENTS.md](docs/EXPERIMENTS.md)         | Experimental validation details      |
-| [docs/INVENTORY.md](docs/INVENTORY.md)             | Container inventory and distribution |
-
-## LICENSE
-
-This project is licensed under the [MIT License](https://opensource.org/licenses/MIT).
-
-- **Permitted use**: Free for use, modification, distribution, and sublicensing, including for commercial purposes.
-- **Notice**: Provided "as is", without warranties. The user is responsible for use and secure configuration of data and keys.
-
-See the [LICENSE](LICENSE) file for the full license text.

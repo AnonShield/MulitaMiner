@@ -120,7 +120,9 @@ jinja2==3.1.6              # HTML report generation
 kaleido==1.2.0             # Static image export for charts
 ```
 
-> **Note:** All versions are pinned in both `pyproject.toml` and `requirements.txt` for stability. `uv sync` reads from `pyproject.toml`; `pip install -r requirements.txt` uses the flat file — both install the same packages.
+> **Note:** All versions are pinned in both `pyproject.toml` and `requirements.txt` for stability. `uv sync` reads from `pyproject.toml`; `pip install -r requirements.txt` uses the flat file. Both install the same set of packages, which is everything the claims need.
+>
+> `marker-pdf` and `playwright` are **optional** and live in the `extras` group: they are only used by the `--md` extraction backend and the HTML report. Install them with `uv sync --extra extras` (or `pip install marker-pdf playwright`) if you need those features.
 > **Note:** The project forces UTF-8 encoding on Windows/Linux to avoid character errors.
 
 ## Verifying Installation
