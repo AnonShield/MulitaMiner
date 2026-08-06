@@ -21,9 +21,16 @@ _Automated · Structured · Multi-LLM_
 
 **MulitaMiner** is an automated tool for extracting and structuring vulnerabilities from heterogeneous PDF reports produced by security scanners. Its LLM-based pipeline combines adaptive chunking and scanner-aware prompting to convert unstructured findings into consistent, analysis-ready vulnerability records, with standardized outputs and quality validation.
 
-This artifact accompanies the paper **"MulitaMiner: A Multi-Version Evaluation of LLM-Based Vulnerability Report Extraction"** (SBSeg 2026, main track). The paper evaluates three successive versions of the pipeline (V1, V2, V3) with five LLMs on three manually curated baselines (217 vulnerabilities), totaling **450 independent runs**. Without changing the underlying models, **Exact Record Match rises from 37.5% to 90.4%** and **vulnerability-level omission falls from 20.5% to 1.7%**, showing that pipeline engineering, not model substitution, is the primary lever for extraction quality.
+## Paper
 
-This repository contains the **V3** pipeline (the version described in Section 3 of the paper). The two earlier versions are shipped as source snapshots in [versions/](versions/), so the version-progression claim can be reproduced end to end from this single repository.
+**MulitaMiner: A Multi-Version Evaluation of LLM-Based Vulnerability Report Extraction**
+SBSeg 2026, Main Track.
+
+> **Abstract.** Security teams face 131 new CVEs per day, yet the National Vulnerability Database fails to enrich 44% of new submissions, leaving practitioners without the structured metadata required to prioritize remediation. MulitaMiner closes this gap: an LLM-based pipeline for structured vulnerability extraction from heterogeneous scanner PDFs, hardened across three successive versions (V1–V3) that evolve from a functional baseline, to scanner-aware segmentation, and finally to per-LLM tuning with few-shot prompting. We evaluate five LLMs (DeepSeek, GPT-4, GPT-5, LLaMA 3, LLaMA 4) on three manually curated baselines across 450 independent runs. Without changing the underlying models, Exact Record Match rises from 37.5% to 90.4%, vulnerability-level omission falls by an order of magnitude (20.5% → 1.7%), and cross-model variance in field-level omission collapses from 41.8 to 2.9 percentage points, all with non-overlapping 95% bootstrap confidence intervals. These results establish that pipeline engineering, not model substitution, is the primary lever for extraction quality: under a well-engineered pipeline, LLM choice becomes a question of cost and latency rather than accuracy.
+
+**Purpose of this artifact.** This branch (`V3`) contains the pipeline version described in Section 3 of the paper, plus everything needed to reproduce its two central claims. The two earlier pipeline versions are shipped as source snapshots in [versions/](versions/), so the V1 → V2 → V3 progression can be reproduced end to end from this single repository.
+
+> ⚠️ This repository also hosts a **different artifact** for another paper, on branch [`slms`](../../tree/slms) (WTICG 2026, local LLMs). Make sure you are on the branch that matches the paper you are reviewing.
 
 **Use Cases:**
 
