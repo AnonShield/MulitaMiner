@@ -83,7 +83,7 @@ The following badges are considered for evaluation: **Available**, **Functional*
 | -------- | --------------------- |
 | OpenAI   | GPT-4, GPT-5          |
 | Groq     | Llama3, Llama4, Qwen3 |
-| DeepSeek | deepseek-chat         |
+| DeepSeek | deepseek-coder        |
 
 > **Note**: all experiment claims below use **DeepSeek only** (the API key provided for evaluation). The other providers are supported by the tool but are not needed to reproduce the claims.
 
