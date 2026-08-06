@@ -329,34 +329,34 @@ The metrics scripts automatically handle JSON-to-XLSX conversion and cache the c
 # Syntax: Using JSON extraction (automatic conversion to XLSX)
 
 # Windows
-python metrics/bert/compare_extractions_bert.py --baseline <baseline_xlsx> --extraction-file <extraction.json> --model <llm> [--allow-duplicates]
+python tools/run_metrics.py --methods bert --baseline <baseline_xlsx> --extraction-file <extraction.json> --model <llm> [--allow-duplicates]
 
 # Linux/macOS
-python3 metrics/bert/compare_extractions_bert.py --baseline <baseline_xlsx> --extraction-file <extraction.json> --model <llm> [--allow-duplicates]
+python tools/run_metrics.py --methods bert --baseline <baseline_xlsx> --extraction-file <extraction.json> --model <llm> [--allow-duplicates]
 
 # Example:
 
 # Windows
-python metrics/bert/compare_extractions_bert.py --baseline test/openvas/OpenVAS_JuiceShop.xlsx --extraction-file openvas_test.json --model llama3 --allow-duplicates
+python tools/run_metrics.py --methods bert --baseline baselines/openvas/OpenVAS_JuiceShop.xlsx --extraction-file openvas_test.json --model llama3 --allow-duplicates
 
 # Linux/macOS
-python3 metrics/bert/compare_extractions_bert.py --baseline test/openvas/OpenVAS_JuiceShop.xlsx --extraction-file openvas_test.json --model llama3 --allow-duplicates
+python tools/run_metrics.py --methods bert --baseline baselines/openvas/OpenVAS_JuiceShop.xlsx --extraction-file openvas_test.json --model llama3 --allow-duplicates
 
 # Syntax: Or using pre-converted XLSX
 
 # Windows
-python metrics/bert/compare_extractions_bert.py --baseline <baseline_xlsx> --extraction-file <extraction.xlsx> --model <llm> [--allow-duplicates]
+python tools/run_metrics.py --methods bert --baseline <baseline_xlsx> --extraction-file <extraction.xlsx> --model <llm> [--allow-duplicates]
 
 # Linux/macOS
-python3 metrics/bert/compare_extractions_bert.py --baseline <baseline_xlsx> --extraction-file <extraction.xlsx> --model <llm> [--allow-duplicates]
+python tools/run_metrics.py --methods bert --baseline <baseline_xlsx> --extraction-file <extraction.xlsx> --model <llm> [--allow-duplicates]
 
 # Example:
 
 # Windows
-python metrics/bert/compare_extractions_bert.py --baseline test/openvas/OpenVAS_JuiceShop.xlsx --extraction-file openvas_test.xlsx --model llama3 --allow-duplicates
+python tools/run_metrics.py --methods bert --baseline baselines/openvas/OpenVAS_JuiceShop.xlsx --extraction-file openvas_test.xlsx --model llama3 --allow-duplicates
 
 # Linux/macOS
-python3 metrics/bert/compare_extractions_bert.py --baseline test/openvas/OpenVAS_JuiceShop.xlsx --extraction-file openvas_test.xlsx --model llama3 --allow-duplicates
+python tools/run_metrics.py --methods bert --baseline baselines/openvas/OpenVAS_JuiceShop.xlsx --extraction-file openvas_test.xlsx --model llama3 --allow-duplicates
 ```
 
 #### ROUGE Analysis (ROUGE-L)
@@ -365,34 +365,34 @@ python3 metrics/bert/compare_extractions_bert.py --baseline test/openvas/OpenVAS
 # Syntax: Using JSON extraction (automatic conversion to XLSX)
 
 # Windows
-python metrics/rouge/compare_extractions_rouge.py --baseline <baseline_xlsx> --extraction-file <extraction.json> --model <llm> [--allow-duplicates]
+python tools/run_metrics.py --methods rouge --baseline <baseline_xlsx> --extraction-file <extraction.json> --model <llm> [--allow-duplicates]
 
 # Linux/macOS
-python3 metrics/rouge/compare_extractions_rouge.py --baseline <baseline_xlsx> --extraction-file <extraction.json> --model <llm> [--allow-duplicates]
+python tools/run_metrics.py --methods rouge --baseline <baseline_xlsx> --extraction-file <extraction.json> --model <llm> [--allow-duplicates]
 
 # Example:
 
 # Windows
-python metrics/rouge/compare_extractions_rouge.py --baseline test/openvas/OpenVAS_JuiceShop.xlsx --extraction-file openvas_test.json --model llama3 --allow-duplicates
+python tools/run_metrics.py --methods rouge --baseline baselines/openvas/OpenVAS_JuiceShop.xlsx --extraction-file openvas_test.json --model llama3 --allow-duplicates
 
 # Linux/macOS
-python3 metrics/rouge/compare_extractions_rouge.py --baseline test/openvas/OpenVAS_JuiceShop.xlsx --extraction-file openvas_test.json --model llama3 --allow-duplicates
+python tools/run_metrics.py --methods rouge --baseline baselines/openvas/OpenVAS_JuiceShop.xlsx --extraction-file openvas_test.json --model llama3 --allow-duplicates
 
 # Syntax: Or using pre-converted XLSX
 
 # Windows
-python metrics/rouge/compare_extractions_rouge.py --baseline <baseline_xlsx> --extraction-file <extraction.xlsx> --model <llm> [--allow-duplicates]
+python tools/run_metrics.py --methods rouge --baseline <baseline_xlsx> --extraction-file <extraction.xlsx> --model <llm> [--allow-duplicates]
 
 # Linux/macOS
-python3 metrics/rouge/compare_extractions_rouge.py --baseline <baseline_xlsx> --extraction-file <extraction.xlsx> --model <llm> [--allow-duplicates]
+python tools/run_metrics.py --methods rouge --baseline <baseline_xlsx> --extraction-file <extraction.xlsx> --model <llm> [--allow-duplicates]
 
 # Example:
 
 # Windows
-python metrics/rouge/compare_extractions_rouge.py --baseline test/openvas/OpenVAS_JuiceShop.xlsx --extraction-file openvas_test.xlsx --model llama3 --allow-duplicates
+python tools/run_metrics.py --methods rouge --baseline baselines/openvas/OpenVAS_JuiceShop.xlsx --extraction-file openvas_test.xlsx --model llama3 --allow-duplicates
 
 # Linux/macOS
-python3 metrics/rouge/compare_extractions_rouge.py --baseline test/openvas/OpenVAS_JuiceShop.xlsx --extraction-file openvas_test.xlsx --model llama3 --allow-duplicates
+python tools/run_metrics.py --methods rouge --baseline baselines/openvas/OpenVAS_JuiceShop.xlsx --extraction-file openvas_test.xlsx --model llama3 --allow-duplicates
 ```
 
 **Note:** The `--model` parameter is optional but recommended for result organization. Both scripts generate four output sheets:
@@ -406,56 +406,40 @@ python3 metrics/rouge/compare_extractions_rouge.py --baseline test/openvas/OpenV
 
 ### Chart Generation
 
-> **Important:** Pass the baseline (ground truth) file in the `--baseline` parameter. The plotting script uses the baseline as a reference to automatically compare the results of all models/extractions available.
+Charts are generated from the `aggregated_metrics.xlsx` that the metrics pass
+writes into each result root, so run the metrics first (see above). The report
+covers every model and baseline found in those roots; there is no per-model
+flag to pass.
 
 ```bash
-# Syntax: Single model comparison
+# Single result root (default: results_runs)
 
 # Windows
-python -m metrics.plot.cli --metric <metric> --baseline <baseline_xlsx> --models <llm>
+python -m metrics.plot.metrics --root results_runs --output-dir plot_runs
 
 # Linux/macOS
-python3 -m metrics.plot.cli --metric <metric> --baseline <baseline_xlsx> --models <llm>
+python3 -m metrics.plot.metrics --root results_runs --output-dir plot_runs
 
-# Example: ROUGE chart for DeepSeek
+# Several roots at once (cross-version comparison)
 
 # Windows
-python -m metrics.plot.cli --metric rouge --baseline test/openvas/OpenVAS_JuiceShop.xlsx --models deepseek
+python -m metrics.plot.metrics --root results_runs_v1 results_runs_v2 results_runs_v3
 
 # Linux/macOS
-python3 -m metrics.plot.cli --metric rouge --baseline test/openvas/OpenVAS_JuiceShop.xlsx --models deepseek
+python3 -m metrics.plot.metrics --root results_runs_v1 results_runs_v2 results_runs_v3
 
-# Syntax: Multiple models comparison
+# Only the PNGs, skipping the HTML report
+python -m metrics.plot.metrics --root results_runs --png-only
 
-# Windows
-python -m metrics.plot.cli --metric <metric> --baseline <baseline_xlsx> --models <llm1>,<llm2>,<llm3>
+# Only the HTML report, skipping the PNG export
+python -m metrics.plot.metrics --root results_runs --report-only
+```
 
-# Linux/macOS
-python3 -m metrics.plot.cli --metric <metric> --baseline <baseline_xlsx> --models <llm1>,<llm2>,<llm3>
+Each root must contain an `aggregated_metrics.xlsx`. That file is produced
+automatically at the end of `tools/run_metrics.py`, or on demand with:
 
-# Example: BERT comparison for three models
-
-# Windows
-python -m metrics.plot.cli --metric bert --baseline test/openvas/OpenVAS_JuiceShop.xlsx --models deepseek,gpt4,llama3
-
-# Linux/macOS
-python3 -m metrics.plot.cli --metric bert --baseline test/openvas/OpenVAS_JuiceShop.xlsx --models deepseek,gpt4,llama3
-
-# Syntax: Chart with specific baseline sheet
-
-# Windows
-python -m metrics.plot.cli --metric <metric> --baseline <baseline_xlsx> --models <llm> --baseline-sheet <sheet_name>
-
-# Linux/macOS
-python3 -m metrics.plot.cli --metric <metric> --baseline <baseline_xlsx> --models <llm> --baseline-sheet <sheet_name>
-
-# Example: ROUGE with specific sheet
-
-# Windows
-python -m metrics.plot.cli --metric rouge --baseline test/openvas/OpenVAS_JuiceShop.xlsx --models deepseek --baseline-sheet Vulnerabilities
-
-# Linux/macOS
-python3 -m metrics.plot.cli --metric rouge --baseline test/openvas/OpenVAS_JuiceShop.xlsx --models deepseek --baseline-sheet Vulnerabilities
+```bash
+python -m metrics.aggregators.multi_run --root results_runs
 ```
 
 ## Processing Flow
@@ -602,7 +586,7 @@ python3 tools/run_experiments.py --input-dir <input_directory> --llm <llm1> <llm
 python tools/run_experiments.py --input-dir test\openvas --llm deepseek gpt4 --scanner openvas --metrics bert rouge --runs-per-model 5 --allow-duplicates
 
 # Linux/macOS
-python3 tools/run_experiments.py --input-dir test/openvas --llm deepseek gpt4 --scanner openvas --metrics bert rouge --runs-per-model 5 --allow-duplicates
+python3 tools/run_experiments.py --input-dir baselines/openvas --llm deepseek gpt4 --scanner openvas --metrics bert rouge --runs-per-model 5 --allow-duplicates
 
 # Example: Run on Tenable (no --allow-duplicates)
 

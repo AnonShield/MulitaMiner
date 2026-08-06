@@ -46,23 +46,27 @@ MulitaMiner/
 │       └── tokens_cost.py               # Token usage and cost calculation
 ├── metrics/
 │   ├── __init__.py
-│   ├── bert/
-│   │   └── compare_extractions_bert.py  # BERTScore evaluation script
-│   ├── rouge/
-│   │   └── compare_extractions_rouge.py # ROUGE evaluation script
-│   ├── common/
-│   │   ├── cli.py                       # CLI for metrics
-│   │   ├── config.py                    # Metrics configuration
-│   │   ├── matching.py                  # Matching logic for metrics
-│   │   └── normalization.py             # Normalization utilities
-│   └── plot/
-│       ├── __init__.py
-│       ├── __main__.py                  # CLI entry for plotting
-│       ├── charts.py                    # Chart generation logic
-│       └── utils.py                     # Plotting utilities
-├── dataset/                             # Datasets generated (CSV, XLSX, JSON, JSONL)
-├── jsons/                               # JSONs used in the dataset generation
-├── results_tokens/                      # Token files per LLM (token/cost analysis)
+│   ├── scorers/                         # Single-owner implementations of each score
+│   │   ├── bertscore.py                 # BERTScore F1 (semantic)
+│   │   ├── rouge_l.py                   # ROUGE-L (lexical)
+│   │   ├── token_f1.py                  # Token overlap
+│   │   ├── exact_match.py               # Deterministic field equality
+│   │   ├── presence.py                  # Field presence
+│   │   └── set_f1.py                    # Set-valued field comparison
+│   ├── pipelines/                       # One pipeline per metric family
+│   │   ├── compare_extractions.py       # bert / rouge / token_f1 comparison sheets
+│   │   ├── coverage.py                  # ERM, hallucination and omission rates
+│   │   ├── severity.py                  # Severity confusion matrix and macro F1
+│   │   └── schema_check.py              # Canonical V3 schema conformance
+│   ├── entity/                          # Field-level precision, recall and F1
+│   ├── aggregators/                     # Cross-run and cross-version aggregation
+│   │   ├── multi_run.py                 # aggregated_metrics.xlsx per result root
+│   │   ├── bootstrap_ci.py              # 95% bootstrap confidence intervals
+│   │   ├── version_compare.py           # Wide cross-version table
+│   │   └── statistical_tests.py         # Significance tests between versions
+│   ├── interrater/                      # Inter-annotator agreement utilities
+│   ├── common/                          # Alignment, normalization, shared CLI
+│   └── plot/                            # HTML report and PNG chart generation
 └── docs/                                # Documentation files
 ```
 
@@ -109,14 +113,19 @@ MulitaMiner/
 
 ### Metrics System
 
-- **metrics/bert/**: BERTScore F1 evaluation (semantic similarity via transformer embeddings)
-  - Accepts JSON or XLSX inputs (auto-converts JSON to XLSX if needed)
-  - Outputs standardized comparison sheets with per-vulnerability and aggregate statistics
-- **metrics/rouge/**: ROUGE-L evaluation (longest common subsequence-based metrics)
-  - Accepts JSON or XLSX inputs (auto-converts JSON to XLSX if needed)
-  - Provides token-level similarity assessment
-- **metrics/common/**: Shared utilities (normalization, matching, CLI parsing)
-- **metrics/plot/**: Chart generation with visualization of model comparison
+- **metrics/scorers/**: one module per score (BERTScore, ROUGE-L, Token-F1, exact
+  match, presence, set F1). Each score has a single owner, so pipelines never
+  reimplement one.
+- **metrics/pipelines/**: one pipeline per metric family. `compare_extractions.py`
+  produces the comparison sheets consumed by the other pipelines; `coverage.py`
+  computes Exact Record Match plus hallucination and omission rates;
+  `severity.py` builds the confusion matrix and macro F1; `schema_check.py`
+  validates records against the canonical V3 schema.
+- **metrics/entity/**: per-field precision, recall and F1 over deterministic fields.
+- **metrics/aggregators/**: aggregation across runs and versions, including the
+  bootstrap confidence intervals reported in the paper.
+- **metrics/common/**: record alignment, normalization and shared CLI parsing.
+- **metrics/plot/**: HTML report and PNG charts from the aggregated metrics.
 
 ## Key Features
 

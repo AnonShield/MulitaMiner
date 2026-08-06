@@ -344,6 +344,31 @@ def _run_metrics_only(args: argparse.Namespace) -> None:
     print(f"\n[METRICS-ONLY] Done in {time.time() - metric_start:.1f}s")
 
 
+def _report_api_failure(exc: BaseException, llm_name: str) -> None:
+    """Print an actionable message for provider errors instead of a raw traceback."""
+    from src.utils.chunking import _is_fatal_api_error
+
+    msg = str(exc)
+    print(f"\n{'-' * 60}")
+    if _is_fatal_api_error(exc):
+        low = msg.lower()
+        if any(k in low for k in ("401", "authentication", "invalid_api_key", "incorrect api key")):
+            reason = f"the API key for '{llm_name}' was rejected (invalid or expired)"
+            hint = "Check the key in your .env file; see .env.example for the expected name."
+        elif any(k in low for k in ("quota", "429", "rate limit", "ratelimit")):
+            reason = f"the provider refused the request for '{llm_name}' (quota or rate limit)"
+            hint = "Wait and retry, or use a key with remaining quota."
+        else:
+            reason = f"the provider rejected the request for '{llm_name}'"
+            hint = "Check the key and the endpoint in src/configs/llms/."
+        print(f"[ERROR] Extraction aborted: {reason}.")
+        print(f"        {hint}")
+    else:
+        print(f"[ERROR] Extraction aborted: {type(exc).__name__}: {msg}")
+    print(f"        Provider message: {msg.strip()[:300]}")
+    print(f"{'-' * 60}")
+
+
 def main():
     """Main extraction pipeline entry point."""
     parser = argparse.ArgumentParser(add_help=False)
@@ -456,10 +481,15 @@ def main():
     debug_mode = getattr(args, 'debug', False)
     debug_dir = getattr(args, 'debug_dir', 'llm_debug_responses')
     
-    all_vulnerabilities = extract_vulns_from_blocks(
-        session_blocks, llm, profile_config, get_token_based_chunks, llm_config=llm_config,
-        pdf_name=pdf_name, llm_name=llm_name, debug_mode=debug_mode
-    )
+    try:
+        all_vulnerabilities = extract_vulns_from_blocks(
+            session_blocks, llm, profile_config, get_token_based_chunks, llm_config=llm_config,
+            pdf_name=pdf_name, llm_name=llm_name, debug_mode=debug_mode
+        )
+    except Exception as exc:
+        cleanup_temp_blocks(temp_dir=temp_dir)
+        _report_api_failure(exc, args.llm)
+        sys.exit(1)
     total_chunks = len(session_blocks)
 
     cleanup_temp_blocks(temp_dir=temp_dir)
