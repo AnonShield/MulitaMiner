@@ -1,12 +1,17 @@
 """BERTScore F1 scorer (single owner of the implementation).
 
 The model is loaded lazily and cached process-wide on first call. CPU/GPU
-selection is automatic via ``torch.cuda.is_available()``. When the
-``bert_score`` package is unavailable, ``score`` returns 0.0 silently —
-keeps pipelines runnable in environments without the heavy dependency.
+selection is automatic via ``torch.cuda.is_available()``.
 
-This module is the source of truth — pipelines that need a BERTScore
-import it through ``metrics.scorers``.
+Asking for a BERTScore without the ``bert_score`` package installed raises
+instead of returning 0.0: a silent zero is indistinguishable from a genuinely
+bad extraction, so a partially installed environment would report success
+while producing meaningless similarity numbers. To run the battery without
+the heavy torch dependency, request ``rouge`` instead of ``bert`` (the
+pipelines that need matched pairs accept either).
+
+This module is the source of truth, pipelines import it through
+``metrics.scorers``.
 """
 from __future__ import annotations
 
@@ -63,10 +68,18 @@ def _get_scorer():
     return _scorer_cache
 
 
+_MISSING_MSG = (
+    "bert-score is not installed, so BERTScore cannot be computed.\n"
+    "  Install it:  pip install bert-score torch\n"
+    "  Or skip it:  request 'rouge' instead of 'bert' "
+    "(coverage/severity/entity accept either for matched pairs)."
+)
+
+
 def bertscore_score(pred, ref) -> float:
     """BERTScore F1 between ``pred`` and ``ref``. Empty inputs return 0.0."""
     if not _AVAILABLE:
-        return 0.0
+        raise RuntimeError(_MISSING_MSG)
     if pred is None or ref is None:
         return 0.0
     p = str(pred).strip()
@@ -76,7 +89,11 @@ def bertscore_score(pred, ref) -> float:
 
     scorer = _get_scorer()
     if scorer is None:
-        return 0.0
+        raise RuntimeError(
+            "bert-score is installed but the model could not be loaded "
+            "(see the error above). Check the network/cache, or request "
+            "'rouge' instead of 'bert'."
+        )
 
     try:
         _, _, F = scorer.score([p], [r])
