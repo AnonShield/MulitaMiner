@@ -12,46 +12,48 @@
 
 ---
 
-# ⚠️ Avaliadores de artefatos: escolha a branch correta
+# Artifact Index
 
-Este repositório hospeda **artefatos de artigos diferentes**, cada um em sua própria
-branch. Esta branch (`main`) **não é um artefato de avaliação** e serve apenas como
-índice.
+> ⚠️ **This branch (`main`) is not an evaluation artifact.** It is an index. The
+> repository hosts the artifacts of two different papers, each one on its own branch.
 
-> **Reviewers:** this repository hosts the artifacts of **different papers**, each on its
-> own branch. This branch (`main`) is **not** an evaluation artifact, it is only an index.
-> Pick the row matching the paper you are reviewing.
+| Paper | Artifact branch | Frozen tag |
+| ----- | --------------- | ---------- |
+| **SBSeg 2026 · Main Track**<br>*MulitaMiner: A Multi-Version Evaluation of LLM-Based Vulnerability Report Extraction*<br><sub>Pipeline progression V1 → V2 → V3, evaluated with **cloud LLMs** across 450 runs.</sub> | **[▶ `V3`](../../tree/V3)** | [`sbseg2026-artifact`](../../tree/sbseg2026-artifact) |
+| **WTICG 2026**<br>*On-Premise vs. Cloud: Local LLMs for Vulnerability Extraction from Security Scanner Reports*<br><sub>Nine **local models** (4B to 21B) compared against a DeepSeek cloud reference.</sub> | **[▶ `slms`](../../tree/slms)** | *added once finalized* |
 
-| Artigo / Paper | Branch | Abrir artefato |
-| -------------- | ------ | -------------- |
-| **SBSeg 2026 · Trilha Principal**<br>*MulitaMiner: A Multi-Version Evaluation of LLM-Based Vulnerability Report Extraction*<br><sub>Progressão do pipeline V1 → V2 → V3, avaliada com **LLMs em nuvem** (450 execuções).</sub> | [`V3`](../../tree/V3) | **[▶ Abrir / Open](../../tree/V3)** |
-| **WTICG 2026**<br>*On-Premise vs. Cloud: Local LLMs for Vulnerability Extraction from Security Scanner Reports*<br><sub>Nove **modelos locais** (4B a 21B) comparados a uma referência DeepSeek em nuvem.</sub> | [`slms`](../../tree/slms) | **[▶ Abrir / Open](../../tree/slms)** |
+Both papers deal with LLM-based vulnerability extraction, but they are distinct works:
+the **SBSeg** one measures how far **pipeline engineering** carries extraction quality
+using cloud models, while the **WTICG** one measures the quality cost of running **local
+models** to keep scanner reports confidential. Check the title before starting the review.
 
-Os dois artigos tratam de extração de vulnerabilidades com LLMs, mas são trabalhos
-distintos: o do **SBSeg** mede o efeito da **engenharia do pipeline** usando modelos em
-nuvem; o do **WTICG** mede o custo em qualidade de rodar **modelos locais** para preservar
-a confidencialidade dos relatórios. Confira o título antes de começar a avaliação.
+Every artifact branch carries its own complete `README.md`, with considered badges, basic
+information, dependencies, installation, minimum test and the claims of its paper.
 
-Cada branch traz seu próprio `README.md` completo, com selos considerados, informações
-básicas, dependências, instalação, teste mínimo e as reivindicações do respectivo artigo.
+## Branch or tag?
 
-## Material anterior
+The **branch** always holds the latest state of an artifact. The **tag** is frozen: it
+points at the exact commit submitted for evaluation and never moves, so the code under
+review cannot shift while you are reviewing it. Either link works, and both render the
+same README.
 
-| Conteúdo | Referência |
-| -------- | ---------- |
-| Artefato da versão anterior da ferramenta (dataset de 6.700 vulnerabilidades extraídas de 129 relatórios OpenVAS), publicado no Zenodo | [`v2-dataset-artifact`](../../tree/v2-dataset-artifact) |
+## Previous material
 
-Essa tag preserva o estado desta branch antes de ela se tornar um índice, para que
-referências já publicadas continuem válidas.
+| Content | Reference |
+| ------- | --------- |
+| Artifact of the previous version of the tool (dataset of 6,700 vulnerabilities extracted from 129 OpenVAS reports), archived on Zenodo | [`v2-dataset-artifact`](../../tree/v2-dataset-artifact) |
 
-## Sobre a ferramenta
+That tag preserves the state of this branch from before it became an index, so already
+published references remain valid.
 
-**MulitaMiner** é uma ferramenta automatizada para extrair e estruturar vulnerabilidades a
-partir de relatórios PDF heterogêneos produzidos por scanners de segurança (OpenVAS,
-Tenable WAS). Seu pipeline baseado em LLMs combina segmentação adaptativa por scanner e
-prompts especializados para converter achados não estruturados em registros consistentes e
-prontos para análise, com saídas padronizadas e validação de qualidade.
+## About the tool
+
+**MulitaMiner** is an automated tool for extracting and structuring vulnerabilities from
+heterogeneous PDF reports produced by security scanners (OpenVAS, Tenable WAS). Its
+LLM-based pipeline combines scanner-aware adaptive segmentation and specialized prompting
+to turn unstructured findings into consistent, analysis-ready records, with standardized
+outputs and quality validation.
 
 ## LICENSE
 
-Distribuído sob a licença MIT. Veja [LICENSE](LICENSE).
+Distributed under the MIT License. See [LICENSE](LICENSE).
