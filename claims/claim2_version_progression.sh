@@ -38,7 +38,7 @@ PY_LEGACY="$VENV/bin/python"
 [ -f "$PY_LEGACY" ] || PY_LEGACY="$VENV/Scripts/python.exe"
 "$PY_LEGACY" -m pip install --quiet "langchain>=0.1.0,<0.3.0" "langchain-openai>=0.1.0,<0.2.0" \
     "langchain-core>=0.1.0,<0.2.0" "pdfplumber>=0.10.0,<0.12.0" "tqdm>=4.0.0,<5.0.0" \
-    "tiktoken>=0.5.1,<0.7.0" "python-dotenv>=0.21.0" "deepmerge>=1.1.0,<2.0.0" \
+    "tiktoken>=0.7.0" "python-dotenv>=0.21.0" "deepmerge>=1.1.0,<2.0.0" \
     "pandas>=1.3.0,<3.0.0" "openpyxl>=3.0.0,<4.0.0"
 
 echo "[3/5] Extracting with V1 (DeepSeek) ..."
