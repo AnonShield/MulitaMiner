@@ -27,8 +27,28 @@ V2_RUN="$ROOT/claims/out/results_runs_v2/OpenVAS_JuiceShop/deepseek/run1"
 
 echo "[1/5] Unpacking V1 and V2 from versions/ ..."
 mkdir -p claims/out/versions
-[ -d "$V1_DIR" ] || "$PY" -m zipfile -e versions/mulitaminer-v1.zip claims/out/versions/
-[ -d "$V2_DIR" ] || "$PY" -m zipfile -e versions/mulitaminer-v2.zip claims/out/versions/
+
+extract_zip() {
+    # Windows-built zips can store '\' instead of '/' in entry names,
+    # which zipfile on Linux treats as a literal filename character
+    # instead of a path separator.
+    "$PY" -c "
+import zipfile, os, sys
+with zipfile.ZipFile(sys.argv[1]) as z:
+    for info in z.infolist():
+        name = info.filename.replace('\\\\', '/')
+        out_path = os.path.join(sys.argv[2], name)
+        if name.endswith('/'):
+            os.makedirs(out_path, exist_ok=True)
+            continue
+        os.makedirs(os.path.dirname(out_path), exist_ok=True)
+        with z.open(info) as src, open(out_path, 'wb') as dst:
+            dst.write(src.read())
+" "$1" "$2"
+}
+
+[ -d "$V1_DIR" ] || extract_zip "$ROOT/versions/mulitaminer-v1.zip" claims/out/versions/
+[ -d "$V2_DIR" ] || extract_zip "$ROOT/versions/mulitaminer-v2.zip" claims/out/versions/
 
 echo "[2/5] Preparing legacy virtualenv (V1/V2 extraction dependencies) ..."
 if [ ! -f "$VENV/bin/python" ] && [ ! -f "$VENV/Scripts/python.exe" ]; then
