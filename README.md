@@ -41,7 +41,6 @@ WTICG 2026.
 | [src/configs/llms/](src/configs/llms/) | One JSON per model: endpoint, context window, chunking |
 | [src/](src/) | Pipeline: PDF extraction, chunking, scanner strategies, LLM providers |
 | [metrics/](metrics/) | Metric battery: scorers, pipelines and aggregators |
-| [wticg/](wticg/) | Per-run artifacts of the paper's own evaluation (all models, all baselines) |
 | [docs/](docs/) | Detailed documentation |
 | [.env.example](.env.example) | Template for the API key file |
 
@@ -193,8 +192,7 @@ LOG        | Postfix SMTP Server Detection                      | CVSS 0.0 | 25/
 >
 > **The cloud endpoint drifts.** Hosted models are updated and load-balanced by their providers, so the DeepSeek side varies over time as well, independently of anything in this repository.
 >
-> **Scale.** The reference values below are means over **5 runs on 3 baselines** (15 extractions per model). This claim runs **once on the smallest baseline**, to keep the API cost and the local GPU time within what a review can reasonably spend.
->
+> **Scale.** The paper reports means over **5 runs on 3 baselines** (15 extractions per model). This claim runs **once on the smallest baseline**, to keep the API cost and the local GPU time within what a review can reasonably spend, so a single run naturally lands a little off any average.
 
 ### Claim #1: A local SLM matches the cloud on structured extraction
 
@@ -212,18 +210,26 @@ claims\claim1_local_vs_cloud.bat
 bash claims/claim1_local_vs_cloud.sh
 ```
 
-**Expected time**: **10 to 20 min** for the cloud extraction (11 min 37 s in the paper's own run of this baseline; 20 min when we re-ran it, the difference being API load), plus **2 to 3 min** for the local extraction on a recent GPU (2 min 25 s on an RTX 5080) and **~1 min** for the metric pass, with a one-off DistilBERT download on the first run. Without a GPU the local step takes considerably longer.
+**Expected time**: **10 to 20 min** for the cloud extraction (our own runs of this baseline took 11 min 37 s and 20 min, the difference being API load), plus **2 to 3 min** for the local extraction on a recent GPU (2 min 25 s on an RTX 5080) and **~1 min** for the metric pass, with a one-off DistilBERT download on the first run. Without a GPU the local step takes considerably longer.
 
 **Expected resources**: ~7 GB VRAM for the local model, plus ~2 GB RAM for the metric battery; one DeepSeek extraction over the API (a few cents)
 
-**Expected result**: a terminal table comparing both models. The values below come from the paper's own per-run artifacts for **this baseline** (JuiceShop), which is the right reference for a single-baseline claim, next to what a re-execution produced:
+**Expected result**: a terminal table comparing both models, close to this one:
 
-| Model | | BERTScore | Ent.F1 | Exact | Omiss ↓ | Halluc ↓ | Schema | Sev.mF1 |
-| ----- | - | --------- | ------ | ----- | ------- | -------- | ------ | ------- |
-| Llama 3.1 8B (local) | paper | 88.9 | 92.6 | 44.1 | 0.0 | 17.1 | 100.0 | 100.0 |
-| | re-run | 90.4 | **92.6** | **44.1** | **0.0** | 12.8 | **100.0** | **100.0** |
-| deepseek-v4-flash (cloud) | paper | 97.8 | 99.1 | 94.1 | 0.0 | 8.1 | 100.0 | 100.0 |
-| | re-run | 98.2 | 99.7 | 97.1 | **0.0** | 2.9 | **100.0** | **100.0** |
+```text
+Per-model extraction quality (single run, %)
+Baseline: OpenVAS_JuiceShop
+
+Model                        BERTScore     Ent.F1      Exact    Omiss v   Halluc v     Schema    Sev.mF1    Sev.cov
+-------------------------------------------------------------------------------------------------------------------
+Llama 3.1 8B                      90.4       92.6       44.1        0.0       12.8      100.0      100.0       91.2
+-------------------------------------------------------------------------------------------------------------------
+deepseek-v4-flash (cloud)         98.2       99.7       97.1        0.0       2.9       100.0      100.0       99.4
+
+BERTScore covers the free-text fields; Ent.F1 the deterministic ones
+(cvss, plugin, port, protocol, severity). Compare with Table 1 of the paper,
+keeping in mind this is a single run on one baseline.
+```
 
 What validates the claim: **schema conformance is 100% for both** and **Entity F1 lands within a few points**, confirming that deterministic extraction (cvss, plugin, port, protocol, severity) is solved on-premise. The cloud keeps its edge in **BERTScore** and in **Exact Record Match**, which is where the paper locates the residual gap: the narrative free-text fields.
 
