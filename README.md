@@ -1,35 +1,51 @@
 <div align="center">
 
   <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="imgs/MulitaMiner_logo_light.png">
-    <source media="(prefers-color-scheme: light)" srcset="imgs/MulitaMiner_logo_dark.png">
-    <img src="assets/MulitaMiner_logo_light" width="500" alt="MulitaMiner logo">
+    <source media="(prefers-color-scheme: dark)" srcset="imgs/MulitaMiner_logo_dark.png">
+    <source media="(prefers-color-scheme: light)" srcset="imgs/MulitaMiner_logo_light.png">
+    <img src="imgs/MulitaMiner_logo_light.png" width="500" alt="MulitaMiner logo">
   </picture>
 
 **Vulnerability Extraction from Security Reports using LLMs**
 
-_Automated · Structured · Multi-LLM_
+_On-Premise · Local SLMs · Privacy-Preserving_
 
-![Python](https://img.shields.io/badge/Python-3.8+-blue)
+![Python](https://img.shields.io/badge/Python-3.11+-blue)
 ![license](https://img.shields.io/badge/license-MIT-green)
-![status](https://img.shields.io/badge/status-active-orange)
-![update](https://img.shields.io/badge/last%20update-Mar%202026-lightgrey)
+![backend](https://img.shields.io/badge/backend-Ollama-lightgrey)
 
 </div>
 
-# MulitaMiner
+# MulitaMiner: local LLMs for vulnerability extraction
 
-**MulitaMiner** is an automated tool for extracting and structuring vulnerabilities from heterogeneous PDF reports produced by security scanners. Its LLM-based pipeline combines adaptive chunking and scanner-aware prompting to convert unstructured findings into consistent, analysis-ready vulnerability records, with standardized outputs and quality validation.
+**MulitaMiner** extracts and structures vulnerabilities from heterogeneous PDF reports produced by security scanners. This artifact evaluates whether the extraction can run **entirely on-premise**, so that reports never leave the organization, without losing the quality of a cloud API.
 
-As a key contribution, a dataset of **6,700 vulnerabilities** extracted from **129 OpenVAS reports** is provided, serving as a reference for future research. The dataset was evaluated against ground-truth records via host/IP and vulnerability name matching, achieving **Recall of 96.18%**, **Precision of 91.06%**, and **F1-score of 0.9355**. Additionally, the extraction tool was validated against structured baselines from 3 reports using BERTScore and ROUGE-L semantic similarity metrics.
+## Paper
 
-**Use Cases:**
+**On-Premise vs. Cloud: Local LLMs for Vulnerability Extraction from Security Scanner Reports**
+WTICG 2026.
 
-- **Security Analysis**: Automated extraction of vulnerabilities from scanner reports
-- **Enterprise Integration**: Support for CAIS formats for corporate systems
-- **Research and Development**: Comparative evaluation of different LLMs
+> **Abstract.** Cloud LLMs extract structured data from vulnerability-scanner reports accurately, but each report maps an organization's attack surface, so routing it to a third-party API trades confidentiality for that accuracy. We evaluate nine local models (4B to 21B) against a DeepSeek cloud reference on three ground-truth baselines. The best local model, on a consumer GPU, trails the cloud by only 1.2 points in free-text fidelity and matches it on structured fields; the spread across local models far exceeds this gap, making model choice the decisive factor for private, on-premise extraction.
+
+**Purpose of this artifact.** This branch (`slms`) reproduces the comparison at reviewer scale: the same pipeline, the same prompts and the same baseline are run with the cloud reference and with the best local model of the paper, and both are scored by the identical metric battery.
+
+> ⚠️ This repository also hosts a **different artifact** for another paper, on branch [`V3`](../../tree/V3) (SBSeg 2026 main track, cloud pipeline versions). Make sure you are on the branch that matches the paper you are reviewing.
 
 ## README Structure
+
+| Path | Content |
+| ---- | ------- |
+| [main.py](main.py) | CLI entry point: extraction, conversion and metric evaluation |
+| [claims/](claims/) | Claim script (`.sh` for Linux/macOS, `.bat` for Windows) and helpers |
+| [baselines/](baselines/) | Ground-truth baselines (PDF report + XLSX annotation) |
+| [src/configs/llms/](src/configs/llms/) | One JSON per model: endpoint, context window, chunking |
+| [src/](src/) | Pipeline: PDF extraction, chunking, scanner strategies, LLM providers |
+| [metrics/](metrics/) | Metric battery: scorers, pipelines and aggregators |
+| [wticg/](wticg/) | Per-run artifacts of the paper's own evaluation (all models, all baselines) |
+| [docs/](docs/) | Detailed documentation |
+| [.env.example](.env.example) | Template for the API key file |
+
+Sections of this README:
 
 - [Considered Badges](#considered-badges)
 - [Basic Information](#basic-information)
@@ -38,7 +54,6 @@ As a key contribution, a dataset of **6,700 vulnerabilities** extracted from **1
 - [Installation](#installation)
 - [Minimum Test](#minimum-test)
 - [Experiments](#experiments)
-- [Documentation](#documentation)
 - [LICENSE](#license)
 
 ## Considered Badges
@@ -47,243 +62,173 @@ The following badges are considered for evaluation: **Available**, **Functional*
 
 ## Basic Information
 
-### Execution Environment
+The artifact compares two execution modes, and their requirements differ:
 
-| Component   | Requirement                                      |
-| ----------- | ------------------------------------------------ |
-| **OS**      | Windows 10+, Linux (Ubuntu 20.04+), macOS 10.15+ |
-| **Python**  | 3.8+ (recommended: 3.10+)                        |
-| **RAM**     | 4GB+ (8GB recommended for large PDFs)            |
-| **Disk**    | 500MB for dependencies + space for outputs       |
-| **Network** | Internet connection required for LLM API calls   |
+| Component | Cloud reference (DeepSeek) | Local model (Llama 3.1 8B) |
+| --------- | -------------------------- | ---------------------------- |
+| **Hardware** | Any machine | GPU with **8 GB+ VRAM** recommended |
+| **RAM** | 4 GB | 8 GB (16 GB if running on CPU) |
+| **Disk** | 500 MB (dependencies) | + ~4.9 GB for the model weights |
+| **Network** | Required (API calls) | Only to download the model once |
+| **API key** | Required | Not needed |
 
-### Supported LLMs
+**OS**: Windows 10+, Linux (Ubuntu 20.04+) or macOS 10.15+. **Python**: 3.11+.
 
-| Provider | Models                |
-| -------- | --------------------- |
-| OpenAI   | GPT-4, GPT-5          |
-| Groq     | Llama3, Llama4, Qwen3 |
-| DeepSeek | deepseek-chat         |
+Ollama selects its compute backend automatically (CUDA, ROCm or Vulkan depending on the card), and falls back to CPU when no GPU is usable, which works but is much slower. Peak memory for `llama3.1:8b` at the paper's 16,000-token context window is about 7 GB; cards with less VRAM still run it, offloading the remaining layers to CPU.
 
 ## Dependencies
 
-### Main Dependencies
+### Python
 
-```
-langchain>=0.1.0,<0.3.0          # LLM framework
-langchain-openai>=0.1.0,<0.2.0   # OpenAI integration
-tiktoken>=0.5.1,<0.7.0           # Tokenization
-pdfplumber>=0.10.0,<0.12.0       # PDF extraction
-python-dotenv>=0.21.0            # Environment variables
-tqdm>=4.0.0,<5.0.0               # Progress bars
-pandas>=1.3.0,<3.0.0             # Data manipulation
-openpyxl>=3.0.0,<4.0.0           # Excel export
-```
-
-### Metrics Evaluation (Optional)
-
-```
-bert-score>=0.3.0,<0.4.0         # BERTScore
-rouge-score>=0.1.0               # ROUGE
-torch>=1.10.0,<3.0.0             # PyTorch (required for BERTScore)
-rapidfuzz>=3.0.0,<4.0.0          # Fuzzy matching
-```
-
-**Third-party resources:**
-
-- LLM API keys from providers (OpenAI, Groq, DeepSeek)
-- Sample PDF reports from security scanners (OpenVAS, Tenable WAS)
-
-See [docs/INSTALL.md](docs/INSTALL.md) for complete dependency details.
+All versions are pinned in [requirements.txt](requirements.txt) and [pyproject.toml](pyproject.toml). The core of the extraction is `langchain`, `pdfplumber`, `tiktoken` and `json-repair`; the metric battery adds `bert-score`, `rouge-score`, `torch`, `rapidfuzz` and `scipy`.
 
 ## Security Concerns
 
-**API Keys**: The tool requires LLM API keys configured in a `.env` file. Never commit this file to public repositories.
+**Why this paper exists.** Scanner reports describe an organization's attack surface: IP addresses, hostnames, open ports, service versions and exploitable weaknesses. Sending them to a third-party API discloses exactly that. The local path exists so nothing leaves the machine.
 
-**PDF Processing**: The tool processes PDF files locally. No data is sent to external services except for the LLM API calls (text chunks for vulnerability extraction).
+**Cloud reference.** Reproducing the comparison requires running the cloud side too, which does send the report text to the DeepSeek API. The bundled baselines are public, intentionally vulnerable applications (Juice Shop, bBWA, Artifactory), so no real attack surface is exposed by the evaluation. For real assessments, use the local path.
 
-**Network**: The tool makes HTTPS requests to LLM APIs. Ensure your network allows outbound connections to:
+**API keys.** Configured in a `.env` file, which is git-ignored. Never commit it.
 
-- `api.openai.com` (OpenAI)
-- `api.groq.com` (Groq)
-- `api.deepseek.com` (DeepSeek)
+**Ollama.** The default install listens on `localhost` only. Do not expose port 11434 to a network: the Ollama API has no authentication and allows pulling and **deleting** models.
 
 ## Installation
 
-### 1. Clone the Repository
+### 1. Clone the repository
 
 ```bash
-git clone https://github.com/AnonShield/MulitaMiner.git
+git clone -b slms https://github.com/AnonShield/MulitaMiner.git
 cd MulitaMiner
 ```
 
-### 2. Create Virtual Environment
+### 2. Create a virtual environment and install
 
 ```bash
 # Windows
-python3 -m venv .venv
+python -m venv .venv
 .venv\Scripts\activate
+pip install -r requirements.txt
 
-# Linux/Mac
+# Linux/macOS
 python3 -m venv .venv
 source .venv/bin/activate
-```
-
-### 3. Install Dependencies
-
-```bash
 pip install -r requirements.txt
 ```
 
-### 4. Configure API Keys
+### 3. Configure the API key
 
-Create/edit the `.env` file:
+Copy [.env.example](.env.example) to `.env` and fill in the DeepSeek key:
 
-```env
-API_KEY_GPT4 = "your-openai-api-key"
-API_KEY_LLAMA3 = "your-groq-api-key"
-API_KEY_DEEPSEEK = "your-deepseek-api-key"
+```bash
+# Windows
+copy .env.example .env
+
+# Linux/macOS
+cp .env.example .env
 ```
 
-See [docs/CONFIG.md](docs/CONFIG.md) for all configuration options.
+Only `API_KEY_DEEPSEEK` is required. The local model needs no key.
+
+### 4. Start Ollama
+
+The local model is served by [Ollama](https://ollama.com), pinned to the version used in the paper:
+
+```bash
+docker run -d --gpus=all -v ollama:/root/.ollama -p 11434:11434 \
+  --name ollama ollama/ollama:0.30.0
+```
+
+This needs the [NVIDIA Container Toolkit](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html) on the host. Alternatively, install Ollama natively from [ollama.com/download](https://ollama.com/download).
+
+**You do not need to pull the model or configure anything.** The claim script checks the server, downloads `llama3.1:8b` if it is missing, and sends the context window and chunking parameters of the paper on every request. To verify the setup on its own:
+
+```bash
+python claims/check_ollama.py llama31_local
+```
 
 ## Minimum Test
 
-After installation, run this minimal test to verify the setup:
+Two quick checks, in this order.
 
-### 1. Run Extraction
+### 1. Local backend
 
 ```bash
-# Basic extraction using Groq
-
-# Windows
-python main.py --input test\openvas\OpenVAS_JuiceShop.pdf --llm llama3 --scanner openvas --allow-duplicates --output-file openvas_test
-
-# Linux/macOS
-python3 main.py --input test/openvas/OpenVAS_JuiceShop.pdf --llm llama3 --scanner openvas --allow-duplicates --output-file openvas_test
+python claims/check_ollama.py llama31_local
 ```
 
-**Expected result**: openvas_test.json with extracted vulnerabilities and visual_layout.txt file
+**Expected result**: `[CHECK] All required models are available.` The model is downloaded automatically if missing, so the first run of this check may take a few minutes.
 
-### 2. Verify Output
+### 2. Pipeline and API key
 
-Check the generated JSON file for extracted vulnerabilities:
+Extract the smallest baseline with the cloud reference and summarize it:
 
 ```bash
 # Windows
-python tools/summarize_vulnerabilities.py --input openvas_test.json
+python main.py --input baselines\openvas\OpenVAS_JuiceShop.pdf --llm deepseek --scanner openvas --allow-duplicates --output-file minimum_test --output-dir claims\out\minimum_test
+python tools\summarize_vulnerabilities.py --input claims\out\minimum_test\minimum_test.json
 
 # Linux/macOS
-python3 tools/summarize_vulnerabilities.py --input openvas_test.json
+python3 main.py --input baselines/openvas/OpenVAS_JuiceShop.pdf --llm deepseek --scanner openvas --allow-duplicates --output-file minimum_test --output-dir claims/out/minimum_test
+python3 tools/summarize_vulnerabilities.py --input claims/out/minimum_test/minimum_test.json
 ```
 
-**Expected result**: Terminal print with summary of all extracted vulnerabilities in tabular format.
+**Expected time**: 10 to 20 minutes, depending on the API load at the time
+
+**Expected result**: a terminal table listing roughly 34 extracted vulnerabilities:
+
+```text
+SEVERITY   | NAME                                               | CVSS     | PORT/PROTO | CVE
+==============================================================================================
+HIGH       | SMTP too long line                                 | CVSS 7.5 | 25/tcp     | N/A
+MEDIUM     | Check if Mailserver answer to VRFY and EXPN ...    | CVSS 5.0 | 25/tcp     | N/A
+LOG        | Postfix SMTP Server Detection                      | CVSS 0.0 | 25/tcp     | N/A
+...
+```
 
 ## Experiments
 
-This section describes how to reproduce the main claims from the paper.
+> **Note on execution times**: the local model was run on an NVIDIA RTX 5080. Cloud latency varies with provider load, so treat the figure below as an order of magnitude rather than a fixed cost.
 
-> **Note**: The execution times are based on AMD Ryzen 5 5600G, 32GB RAM, 1TB SSD, Windows 11. Actual times may vary depending on system specifications, network latency, and API response times.
+> **Note on variability**: expect your numbers to differ from the ones below, and do not read small deviations as a reproduction failure. Two sources of variation apply here.
+>
+> **The cloud endpoint drifts.** Hosted models are updated and load-balanced by their providers, so the DeepSeek side varies over time as well, independently of anything in this repository.
+>
+> **Scale.** The reference values below are means over **5 runs on 3 baselines** (15 extractions per model). This claim runs **once on the smallest baseline**, to keep the API cost and the local GPU time within what a review can reasonably spend.
+>
 
-### Claim #1: Multi-LLM Vulnerability Extraction
+### Claim #1: A local SLM matches the cloud on structured extraction
 
-**Description**: MulitaMiner extracts vulnerabilities from PDF reports using multiple LLM providers (DeepSeek, GPT-4, LLaMa 3, etc).
+**Description**: the same pipeline, prompts and baseline are run with the cloud reference (`deepseek-v4-flash`) and with a local model served by Ollama (`llama3.1:8b`), and both are scored by the identical metric battery. This reproduces, at reviewer scale, the paper's central result: on-premise extraction matches the cloud on the deterministic fields and on schema conformance, and the residual gap sits in the free-text fields.
 
-**Configuration**: Edit `.env` with API keys for desired providers.
-
-**Execution**:
-
-```bash
-# Extract using DeepSeek (best cost-benefit in the paper) and other LLMs for comparison
-
-# Windows
-python main.py --input test\openvas\OpenVAS_JuiceShop.pdf --llm deepseek --scanner openvas --allow-duplicates --output-file openvas_test_deepseek
-python main.py --input test\openvas\OpenVAS_JuiceShop.pdf --llm gpt4 --scanner openvas --allow-duplicates --output-file openvas_test_gpt4
-python main.py --input test\openvas\OpenVAS_JuiceShop.pdf --llm llama3 --scanner openvas --allow-duplicates --output-file openvas_test_llama3
-
-# Linux/macOS
-python3 main.py --input test/openvas/OpenVAS_JuiceShop.pdf --llm deepseek --scanner openvas --allow-duplicates --output-file openvas_test_deepseek
-python3 main.py --input test/openvas/OpenVAS_JuiceShop.pdf --llm gpt4 --scanner openvas --allow-duplicates --output-file openvas_test_gpt4
-python3 main.py --input test/openvas/OpenVAS_JuiceShop.pdf --llm llama3 --scanner openvas --allow-duplicates --output-file openvas_test_llama3
-```
-
-**Expected time**: ~12 minutes for all extractions
-
-- Deepseek: ~6 minutes
-- GPT4: ~5 minutes
-- LLAMA3: ~45 seconds
-
-**Expected result**: openvas_test<llm_name>.json files with extracted vulnerabilities containing fields like `Name`, `description`, `severity`, `cvss`, `port`, `references`, etc.
-
-### Claim #2: Quality Evaluation with BERTScore/ROUGE-L
-
-**Description**: The tool evaluates extraction quality against ground truth baselines using BERTScore and ROUGE-L metrics, with similarity scores categorized as: Highly Similar (≥0.7), Moderately Similar (0.6-0.7), Low Similarity (0.4-0.6), and Divergent (<0.4).
+The paper evaluates nine local models; this claim runs one of them. `llama3.1:8b` was chosen because it needs the least VRAM of the pool (6.9 GB) and is the fastest to extract a report, so the claim stays runnable on modest hardware. To compare a different model instead, change `LOCAL_MODELS` at the top of [claims/claim1_local_vs_cloud.sh](claims/claim1_local_vs_cloud.sh); a config for every model of Table 1 is in [src/configs/llms/](src/configs/llms/).
 
 **Execution**:
 
 ```bash
-# Evaluate with BERTScore and ROUGE-L
-
 # Windows
-python metrics/bert/compare_extractions_bert.py --baseline-file test\openvas\OpenVAS_JuiceShop.xlsx --extraction-file openvas_test_deepseek.json --model deepseek --output-dir results_bert --allow-duplicates
-python metrics/rouge/compare_extractions_rouge.py --baseline-file test\openvas\OpenVAS_JuiceShop.xlsx --extraction-file openvas_test_deepseek.json --model deepseek --output-dir results_rouge --allow-duplicates
+claims\claim1_local_vs_cloud.bat
 
 # Linux/macOS
-python3 metrics/bert/compare_extractions_bert.py --baseline-file test/openvas/OpenVAS_JuiceShop.xlsx --extraction-file openvas_test_deepseek.json --model deepseek --output-dir results_bert --allow-duplicates
-python3 metrics/rouge/compare_extractions_rouge.py --baseline-file test/openvas/OpenVAS_JuiceShop.xlsx --extraction-file openvas_test_deepseek.json --model deepseek --output-dir results_rouge --allow-duplicates
+bash claims/claim1_local_vs_cloud.sh
 ```
 
-**Expected time**: ~15 seconds for BERT and ~3 seconds for ROUGE
+**Expected time**: **10 to 20 min** for the cloud extraction (11 min 37 s in the paper's own run of this baseline; 20 min when we re-ran it, the difference being API load), plus **2 to 3 min** for the local extraction on a recent GPU (2 min 25 s on an RTX 5080) and **~1 min** for the metric pass, with a one-off DistilBERT download on the first run. Without a GPU the local step takes considerably longer.
 
-**Expected result**: XLSX files with BERTScore and ROUGE-L metrics in ./results_bert and ./results_rouge directories.
+**Expected resources**: ~7 GB VRAM for the local model, plus ~2 GB RAM for the metric battery; one DeepSeek extraction over the API (a few cents)
 
-### Claim #3: Large-Scale Reproducibility
+**Expected result**: a terminal table comparing both models. The values below come from the paper's own per-run artifacts for **this baseline** (JuiceShop), which is the right reference for a single-baseline claim, next to what a re-execution produced:
 
-**Description**: MulitaMiner supports batch experiments across multiple reports, LLMs, and runs with checkpoint support to resume interrupted executions.
+| Model | | BERTScore | Ent.F1 | Exact | Omiss ↓ | Halluc ↓ | Schema | Sev.mF1 |
+| ----- | - | --------- | ------ | ----- | ------- | -------- | ------ | ------- |
+| Llama 3.1 8B (local) | paper | 88.9 | 92.6 | 44.1 | 0.0 | 17.1 | 100.0 | 100.0 |
+| | re-run | 90.4 | **92.6** | **44.1** | **0.0** | 12.8 | **100.0** | **100.0** |
+| deepseek-v4-flash (cloud) | paper | 97.8 | 99.1 | 94.1 | 0.0 | 8.1 | 100.0 | 100.0 |
+| | re-run | 98.2 | 99.7 | 97.1 | **0.0** | 2.9 | **100.0** | **100.0** |
 
-**Execution**:
+What validates the claim: **schema conformance is 100% for both** and **Entity F1 lands within a few points**, confirming that deterministic extraction (cvss, plugin, port, protocol, severity) is solved on-premise. The cloud keeps its edge in **BERTScore** and in **Exact Record Match**, which is where the paper locates the residual gap: the narrative free-text fields.
 
-```bash
-# Run full experiment suite
-
-# Windows
-python tools/run_experiments.py --input-dir test\openvas --llm deepseek --scanner openvas --metrics bert rouge --runs-per-model 5 --allow-duplicates
-
-# Linux/macOS
-python3 tools/run_experiments.py --input-dir test/openvas --llm deepseek --scanner openvas --metrics bert rouge --runs-per-model 5 --allow-duplicates
-```
-
-**Expected time**: ~40 minutes
-
-**Expected result**: Organized results in `results_runs/` with extracted vulnerabilities (JSON per run; pass `--convert xlsx` to also emit XLSX), BERTScore and ROUGE-L evaluation reports, an `aggregated_metrics.xlsx` summary, and a Markdown final report with token usage and cost estimation. Charts and visualizations are saved in `plot_runs/`.
-
-> **Note**:
-> For practical reasons (time, token cost, and infrastructure), this experiment does not use the same set of reports and LLMs as the paper. Here, a simplified version was used: only 1 report and 1 LLM (deepseek), chosen for its cost-effectiveness and performance.
-
----
-
-For detailed experiment configurations and paper results, see [docs/EXPERIMENTS.md](docs/EXPERIMENTS.md).
-
-## Documentation
-
-Detailed documentation is organized in separate files:
-
-| Document                                           | Description                          |
-| -------------------------------------------------- | ------------------------------------ |
-| [docs/INSTALL.md](docs/INSTALL.md)                 | Detailed installation guide          |
-| [docs/USAGE.md](docs/USAGE.md)                     | Complete usage guide with examples   |
-| [docs/CONFIG.md](docs/CONFIG.md)                   | API keys and token configuration     |
-| [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)       | Code structure and components        |
-| [docs/EXTENSIBILITY.md](docs/EXTENSIBILITY.md)     | Adding new scanners and LLMs         |
-| [docs/TROUBLESHOOTING.md](docs/TROUBLESHOOTING.md) | Common errors and optimization tips  |
-| [docs/EXPERIMENTS.md](docs/EXPERIMENTS.md)         | Experimental validation details      |
-| [docs/INVENTORY.md](docs/INVENTORY.md)             | Container inventory and distribution |
+Across the paper's full evaluation (Table 1, means over 5 runs and 3 baselines) the same pattern holds for the whole pool: Entity F1 ranges from 95.6 to 99.0 for every model including the cloud, while BERTScore spreads from 78.8 to 94.2. Deterministic extraction does not separate models; free-text fidelity does.
 
 ## LICENSE
 
-This project is licensed under the [MIT License](https://opensource.org/licenses/MIT).
-
-- **Permitted use**: Free for use, modification, distribution, and sublicensing, including for commercial purposes.
-- **Notice**: Provided "as is", without warranties. The user is responsible for use and secure configuration of data and keys.
-
-See the [LICENSE](LICENSE) file for the full license text.
+Distributed under the MIT License. See [LICENSE](LICENSE).
