@@ -20,7 +20,7 @@
 | Paper | Artifact branch | Frozen tag |
 | ----- | --------------- | ---------- |
 | **SBSeg 2026 · Main Track**<br>*MulitaMiner: A Multi-Version Evaluation of LLM-Based Vulnerability Report Extraction*<br><sub>Pipeline progression V1 → V2 → V3, evaluated with **cloud LLMs** across 450 runs.</sub> | **[▶ `V3`](../../tree/V3)** | [`sbseg2026-artifact`](../../tree/sbseg2026-artifact) |
-| **WTICG 2026**<br>*On-Premise vs. Cloud: Local LLMs for Vulnerability Extraction from Security Scanner Reports*<br><sub>Nine **local models** (4B to 21B) compared against a DeepSeek cloud reference.</sub> | **[▶ `slms`](../../tree/slms)** | *added once finalized* |
+| **WTICG 2026**<br>*On-Premise vs. Cloud: Local LLMs for Vulnerability Extraction from Security Scanner Reports*<br><sub>Nine **local models** (4B to 21B) compared against a DeepSeek cloud reference.</sub> | **[▶ `slms`](../../tree/slms)** | [`wticg2026-artifact`](../../tree/wticg2026-artifact) |
 
 Both papers deal with LLM-based vulnerability extraction, but they are distinct works:
 the **SBSeg** one measures how far **pipeline engineering** carries extraction quality
