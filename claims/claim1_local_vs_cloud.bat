@@ -13,15 +13,14 @@ set BASELINE=OpenVAS_JuiceShop
 set PDF=baselines\openvas\%BASELINE%.pdf
 set ROOT=claims\out\results_runs
 
-if not exist .env (
-    echo ERROR: copy .env.example to .env and fill in API_KEY_DEEPSEEK.
-    exit /b 1
-)
-python -c "import pathlib,sys; sys.exit(0 if 'API_KEY_DEEPSEEK' in pathlib.Path('.env').read_text(encoding='utf-8',errors='ignore') else 1)"
+python --version >nul 2>&1
 if errorlevel 1 (
-    echo ERROR: .env must define API_KEY_DEEPSEEK="..."
+    echo ERROR: no python on PATH. Activate the virtual environment first.
     exit /b 1
 )
+
+python claims\check_env.py
+if errorlevel 1 exit /b 1
 
 echo [1/4] Checking the local model backend ...
 python claims\check_ollama.py %LOCAL_MODELS%
@@ -34,15 +33,18 @@ if not exist "%OUT%" mkdir "%OUT%"
 python main.py --input "%PDF%" --llm %CLOUD_MODEL% --scanner openvas ^
     --allow-duplicates --output-file "%BASELINE%_%CLOUD_MODEL%_run1" --output-dir "%OUT%"
 if errorlevel 1 exit /b 1
+call :check_output "%OUT%\%BASELINE%_%CLOUD_MODEL%_run1.json" "the cloud reference (%CLOUD_MODEL%)"
+if errorlevel 1 exit /b 1
 
 for %%m in (%LOCAL_MODELS%) do (
     echo.
     echo [3/4] Extracting with the local model ^(%%m^) ...
     echo          This is the slow part: minutes on a GPU, longer on CPU.
-    set OUT=%ROOT%\%BASELINE%\%%m\run1
     if not exist "%ROOT%\%BASELINE%\%%m\run1" mkdir "%ROOT%\%BASELINE%\%%m\run1"
     python main.py --input "%PDF%" --llm %%m --scanner openvas ^
         --allow-duplicates --output-file "%BASELINE%_%%m_run1" --output-dir "%ROOT%\%BASELINE%\%%m\run1"
+    if errorlevel 1 exit /b 1
+    call :check_output "%ROOT%\%BASELINE%\%%m\run1\%BASELINE%_%%m_run1.json" "the local model (%%m)"
     if errorlevel 1 exit /b 1
 )
 
@@ -54,3 +56,17 @@ if errorlevel 1 exit /b 1
 echo.
 echo === Per-model extraction quality ===
 python claims\summarize_models.py "%ROOT%"
+exit /b 0
+
+REM An extraction that yields no vulnerability means the provider never answered;
+REM main.py still exits 0 in that case, so check the output explicitly.
+:check_output
+python -c "import json,sys; sys.exit(0 if json.load(open(sys.argv[1],encoding='utf-8')) else 1)" %1 2>nul
+if errorlevel 1 (
+    echo.
+    echo ERROR: %~2 extracted no vulnerabilities.
+    echo   The model never answered. Common causes: Ollama stopped mid-run,
+    echo   or the DeepSeek key is invalid or out of credit.
+    exit /b 1
+)
+exit /b 0

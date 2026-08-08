@@ -130,14 +130,25 @@ Only `API_KEY_DEEPSEEK` is required. The local model needs no key.
 
 ### 4. Start Ollama
 
-The local model is served by [Ollama](https://ollama.com), pinned to the version used in the paper:
+The local model is served by [Ollama](https://ollama.com), pinned to the version used in the paper. The simplest route on any hardware is the native installer from [ollama.com/download](https://ollama.com/download), which detects NVIDIA, AMD or CPU-only on its own.
+
+With Docker, pick the line that matches the machine. All three bind to `127.0.0.1`, so the server stays unreachable from the network:
 
 ```bash
-docker run -d --gpus=all -v ollama:/root/.ollama -p 11434:11434 \
-  --name ollama ollama/ollama:0.30.0
+# NVIDIA, needs the NVIDIA Container Toolkit on the host
+docker run -d --gpus=all -v ollama:/root/.ollama \
+  -p 127.0.0.1:11434:11434 --name ollama ollama/ollama:0.30.0
+
+# AMD (ROCm)
+docker run -d --device /dev/kfd --device /dev/dri -v ollama:/root/.ollama \
+  -p 127.0.0.1:11434:11434 --name ollama ollama/ollama:0.30.0-rocm
+
+# No GPU, runs on the CPU
+docker run -d -v ollama:/root/.ollama \
+  -p 127.0.0.1:11434:11434 --name ollama ollama/ollama:0.30.0
 ```
 
-This needs the [NVIDIA Container Toolkit](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html) on the host. Alternatively, install Ollama natively from [ollama.com/download](https://ollama.com/download).
+Without a GPU the extraction still completes, but the local step goes from a couple of minutes to hours.
 
 **You do not need to pull the model or configure anything.** The claim script checks the server, downloads `llama3.1:8b` if it is missing, and sends the context window and chunking parameters of the paper on every request. To verify the setup on its own:
 
@@ -188,9 +199,11 @@ LOG        | Postfix SMTP Server Detection                      | CVSS 0.0 | 25/
 
 > **Note on execution times**: the local model was run on an NVIDIA RTX 5080. Cloud latency varies with provider load, so treat the figure below as an order of magnitude rather than a fixed cost.
 
-> **Note on variability**: expect your numbers to differ from the ones below, and do not read small deviations as a reproduction failure. Two sources of variation apply here.
+> **Note on variability**: expect your numbers to differ from the ones below, and do not read small deviations as a reproduction failure. Three sources of variation apply here.
 >
 > **The cloud endpoint drifts.** Hosted models are updated and load-balanced by their providers, so the DeepSeek side varies over time as well, independently of anything in this repository.
+>
+> **The hardware matters.** The same model, at the same version and with the same prompts, can emit slightly different text on different GPUs, so the local side shifts a little from machine to machine.
 >
 > **Scale.** The paper reports means over **5 runs on 3 baselines** (15 extractions per model). This claim runs **once on the smallest baseline**, to keep the API cost and the local GPU time within what a review can reasonably spend, so a single run naturally lands a little off any average.
 
