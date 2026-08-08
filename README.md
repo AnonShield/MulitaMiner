@@ -223,7 +223,9 @@ claims\claim1_local_vs_cloud.bat
 bash claims/claim1_local_vs_cloud.sh
 ```
 
-**Expected time**: **10 to 20 min** for the cloud extraction (our own runs of this baseline took 11 min 37 s and 20 min, the difference being API load), plus **2 to 3 min** for the local extraction on a recent GPU (2 min 25 s on an RTX 5080) and **~1 min** for the metric pass, with a one-off DistilBERT download on the first run. Without a GPU the local step takes considerably longer.
+**Expected time**: **10 to 20 min** for the cloud extraction (our own runs of this baseline took 11 min 37 s and 20 min, the difference being API load), plus **~1 min** for the metric pass, with a one-off DistilBERT download on the first run.
+
+The local extraction is the part that varies most with the machine: about **2 to 3 min** on a recent NVIDIA card (2 min 25 s on an RTX 5080), around **20 min** on a mid-range or AMD one (22 min on a Radeon RX 6600 via Vulkan), and hours on CPU alone. A slow local step is expected, not a hang.
 
 **Expected resources**: ~7 GB VRAM for the local model, plus ~2 GB RAM for the metric battery; one DeepSeek extraction over the API (a few cents)
 
