@@ -1,13 +1,8 @@
-"""
-PDF extraction backends.
+"""PDF extraction backends.
 
-Each extractor encapsulates one way of turning a PDF into a (summary,
-extraction) pair of Documents, plus the file extension that best
-reflects its output format. Downstream code (block_creation, scanner
-strategies) stays agnostic to the backend — it just receives an
-`ExtractionResult` and threads `output_ext` through to filenames.
-
-Adding a new backend = new subclass + entry in `get_extractor`.
+Each extractor turns a PDF into a (summary, extraction) pair of Documents plus
+the extension matching its output format, so downstream code stays backend
+agnostic. New backend = new subclass + entry in get_extractor.
 """
 from abc import ABC, abstractmethod
 from dataclasses import dataclass

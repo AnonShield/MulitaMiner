@@ -1,7 +1,4 @@
-"""
-Processing of chunks and vulnerabilities.
-Contains tokenization, splitting, retry and consolidation logic.
-"""
+"""Text sanitization and LLM response content extraction."""
 
 import re
 import unicodedata
@@ -11,35 +8,19 @@ _THINK_BLOCK_RE = re.compile(r"<think>.*?</think>", re.DOTALL | re.IGNORECASE)
 _OPEN_THINK_RE = re.compile(r"<think>.*", re.DOTALL | re.IGNORECASE)
 
 def normalize_ligatures(text: str) -> str:
-    """
-    Normalize typographic ligatures into separate characters.
-    
-    PDFs often use ligatures (ﬁ, ﬂ, etc.) which are single characters.
-    NFKC decomposes these ligatures into separate characters:
-    - ﬁ (U+FB01) → fi
-    - ﬂ (U+FB02) → fl
-    - ﬀ (U+FB00) → ff
-    - ﬃ (U+FB03) → ffi
-    - ﬄ (U+FB04) → ffl
-    """
+    """Split PDF ligatures into separate characters via NFKC (U+FB01 -> fi)."""
     if not text:
         return text
     return unicodedata.normalize('NFKC', text)
 
 
 def sanitize_unicode_text(text: str) -> str:
-    """
-    Remove/replace problematic Unicode characters that cannot be encoded on Windows.
-    
-    Keeps text readable but removes special symbols that cause UnicodeEncodeError.
-    """
+    """Replace Unicode characters that raise UnicodeEncodeError on Windows."""
     if not text:
         return text
-    
-    # PRIMEIRO: Normaliza ligaduras (ﬁ → fi, ﬂ → fl, etc.)
+
     result = normalize_ligatures(text)
-    
-    # Common character replacements for problematic characters
+
     replacements = {
         '\u2717': '[X]',          # ✗ (checkmark)
         '\u2713': '[V]',          # ✓ (checkmark)
@@ -60,33 +41,26 @@ def sanitize_unicode_text(text: str) -> str:
     
     for problematic, replacement in replacements.items():
         result = result.replace(problematic, replacement)
-    
-    # Remove control characters and other problematic ones
-    # Keep letters, numbers, basic punctuation and spaces
+
+    # Non-ASCII survives only as letters, numbers, spaces or basic punctuation
     clean_chars = []
     for char in result:
         try:
-            # Try to encode in UTF-8 and then ASCII
             char.encode('ascii', 'strict')
             clean_chars.append(char)
         except (UnicodeEncodeError, UnicodeDecodeError):
-            # If unable to get ASCII, try gentler approach
             category = unicodedata.category(char)
-            # Keep letters (L*), numbers (N*), space (Zs)
             if category[0] in ['L', 'N'] or char.isspace() or char in ',.!?;:-':
                 clean_chars.append(char)
-            # Otherwise, ignore
-    
+
     return ''.join(clean_chars)
 
 
 def extract_response_content(response) -> str:
-    """
-    Extract response content from LLM response object.
+    """Get the text out of an LLM response (string or LangChain object).
 
-    Handles both string responses and LangChain response objects.
-    Strips <think>...</think> reasoning blocks emitted by thinking models
-    (Qwen3, DeepSeek-R1, etc.) so downstream JSON parsing sees only the answer.
+    Strips <think>...</think> blocks from reasoning models so JSON parsing
+    downstream sees only the answer.
     """
     if response is None:
         return ""

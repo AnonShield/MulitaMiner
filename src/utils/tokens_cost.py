@@ -4,13 +4,12 @@ from glob import glob
 import argparse
 import re
 
-# Preços por 1M de tokens (USD). ⚠️ CONFERIR na página oficial (mudam + têm desconto off-peak).
-# DeepSeek: "deepseek-coder" hoje é alias de "deepseek-chat" (V3.x) — use o preço do deepseek-chat.
-#   'cache_hit' = input que bateu no cache (bem mais barato); 'input' = input cache-miss; 'output' = saída.
-#   Os 3 só são usados com o usage REAL (results_tokens/usage_real_*.jsonl) via `calc_real_usage`.
+# USD per 1M tokens. Check the provider pages before trusting these: prices move
+# and some have off-peak discounts. 'cache_hit' is input served from the prompt
+# cache and is only used by calc_real_usage, which reads the API-reported usage.
 LLM_PRICES = {
     "gpt5": {"input": 0.25, "output": 2.0},
-    "deepseek": {"input": 0.14, "output": 0.28, "cache_hit": 0.0028},  # deepseek-v4-flash (aliases chat/coder caem aqui), USD/1M: cache-miss / output / cache-hit (jun/2026)
+    "deepseek": {"input": 0.14, "output": 0.28, "cache_hit": 0.0028},  # deepseek-v4-flash, jun/2026
     "llama3": {"input": 0.59, "output": 0.79},
     "llama4": {"input": 0.11, "output": 0.34},
     "gpt4": {"input": 0.15, "output": 0.6},
@@ -38,24 +37,20 @@ def calc_tokens_and_cost(tokens_dir):
         parts = fname.lower().split('_')
         llm = None
         
-        # Extract potential model name from filename
         fname_no_ext = fname.replace('_tokens.json', '')
         fname_normalized = normalize_model_name(fname_no_ext)
         
-        # Check against all known model names
         for original_name, key in MODEL_NAME_MAPPING.items():
             if normalize_model_name(original_name) in fname_normalized:
                 llm = key
                 break
         
-        # If not found, try simple key matching
         if not llm:
             for p in parts:
                 if p in LLM_PRICES:
                     llm = p
                     break
         
-        # Try prefix matching
         if not llm:
             for p in parts:
                 for key in LLM_PRICES:
@@ -65,7 +60,6 @@ def calc_tokens_and_cost(tokens_dir):
                 if llm:
                     break
         
-        # Try substring matching
         if not llm:
             for p in parts:
                 for key in LLM_PRICES:
@@ -99,10 +93,10 @@ def calc_tokens_and_cost(tokens_dir):
     return llm_totals, llm_costs, total_all_tokens, total_cost
 
 def _price_key(name):
-    """Mapeia o nome do --llm pra uma chave de LLM_PRICES. Modelos locais (Ollama) = None (sem custo de API)."""
+    """Map a --llm name to an LLM_PRICES key; None for local models, which cost nothing."""
     n = normalize_model_name(name or "")
     if "_local" in n:
-        return None  # roda local -> sem custo de API
+        return None
     for original, key in MODEL_NAME_MAPPING.items():
         if normalize_model_name(original) in n:
             return key
@@ -113,10 +107,11 @@ def _price_key(name):
 
 
 def calc_real_usage(tokens_dir):
-    """Lê os usage_real_*.jsonl (usage REAL da API) e calcula o custo com a tabela escalonada.
+    """Sum the API-reported usage from usage_real_*.jsonl and price it.
 
-    Para o DeepSeek usa o split de cache: custo = cache_hit*preço_hit + cache_miss*preço_input + output*preço_output.
-    Retorna {llm: {input, output, cache_hit, cache_miss, cost}}. cost=None se o modelo não tem preço (ex.: local).
+    Providers that split the prompt cache are billed at the cache rate for hits.
+    Returns {llm: {input, output, cache_hit, cache_miss, cost}}; cost is None for
+    models with no price, such as local ones.
     """
     files = glob(os.path.join(tokens_dir, "usage_real_*.jsonl"))
     agg = {}

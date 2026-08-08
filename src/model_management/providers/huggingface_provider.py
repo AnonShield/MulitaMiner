@@ -1,13 +1,4 @@
-"""
-HuggingFace provider for using LLM models from HuggingFace.
-
-Supports both:
-- Remote: HuggingFace Inference API (requires api_key)
-- Local: transformers running on a local GPU with 4-bit quantization
-  (no api_key needed)
-
-Supported models: Mistral, DeepSeek, Llama, Qwen, etc.
-"""
+"""HuggingFace providers: the Inference API (needs a key) and local transformers."""
 
 from .base_provider import BaseLLMProvider
 
@@ -16,17 +7,6 @@ class HuggingFaceRemoteProvider(BaseLLMProvider):
     """Provider for HuggingFace Inference API (remote)."""
     
     def __init__(self, config: dict):
-        """
-        Initialize HuggingFace remote provider.
-        
-        Args:
-            config: Configuration dict with:
-                - model: Model identifier (e.g., "mistralai/Mistral-7B-Instruct-v0.2")
-                - repo_id: HuggingFace repo ID (can use this instead of model)
-                - api_key: HuggingFace API token (required for remote)
-                - temperature: Temperature setting
-                - max_length: Max length of response
-        """
         try:
             from langchain_huggingface import HuggingFaceHub
         except ImportError:
@@ -37,7 +17,6 @@ class HuggingFaceRemoteProvider(BaseLLMProvider):
         
         self.config = config
         
-        # Get model name and API key
         model_id = config.get("model") or config.get("repo_id")
         api_key = config.get("api_key")
         
@@ -48,19 +27,16 @@ class HuggingFaceRemoteProvider(BaseLLMProvider):
         
         self.model_name = model_id
         
-        # Parse temperature
         temperature = config.get("temperature", 0.7)
         if temperature is None:
             temperature = 0.7
         temperature = float(temperature)
         
-        # Parse max_length
         max_length = config.get("max_length", 512)
         if max_length is None:
             max_length = 512
         max_length = int(max_length)
         
-        # Create HuggingFaceHub instance
         self.llm = HuggingFaceHub(
             repo_id=model_id,
             model_kwargs={
@@ -94,18 +70,6 @@ class HuggingFaceLocalProvider(BaseLLMProvider):
     """
 
     def __init__(self, config: dict):
-        """
-        Initialize a local transformers model.
-
-        Args:
-            config: Configuration dict with:
-                - model: HF repo id (e.g., "Qwen/Qwen3-8B")
-                - temperature: Sampling temperature (0.0 = greedy/deterministic)
-                - max_tokens: Max new tokens to generate
-                - quantization: "4bit" (default), "8bit", or "none"
-                - device_map: transformers device map (default "auto")
-                - disable_thinking: Skip the <think> block on models that support it
-        """
         try:
             import torch
             from transformers import (

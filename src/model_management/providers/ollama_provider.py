@@ -1,11 +1,8 @@
-"""
-Ollama provider for using local LLM models.
+"""Ollama provider, talking to /api/chat directly.
 
-Connects to Ollama running on localhost:11434 (or custom endpoint).
-Calls the Ollama HTTP API directly (/api/chat) so that runtime options —
-notably num_ctx — are sent on every request. langchain's ChatOllama did not
-reliably forward num_ctx, which silently left models running at the default
-context window.
+langchain's ChatOllama did not reliably forward num_ctx, which silently left
+models at their default context window, so the HTTP API is called by hand and
+the runtime options go out on every request.
 """
 
 import requests
@@ -16,18 +13,6 @@ class OllamaProvider(BaseLLMProvider):
     """Provider for Ollama local LLM models (direct HTTP API)."""
 
     def __init__(self, config: dict):
-        """
-        Initialize Ollama provider.
-
-        Args:
-            config: Configuration dict with:
-                - model: Model name (must be pulled in Ollama)
-                - endpoint: Ollama endpoint (default: http://localhost:11434)
-                - temperature: Temperature setting
-                - timeout: Request timeout
-                - max_tokens: Max tokens in response (-> num_predict)
-                - options: Runtime options forwarded to Ollama (num_ctx, top_k, ...)
-        """
         self.config = config
 
         endpoint = config.get("endpoint", "http://localhost:11434")
@@ -35,23 +20,20 @@ class OllamaProvider(BaseLLMProvider):
         self.model_name = config["model"]
         self.timeout = config.get("timeout", 120)
         self.disable_thinking = bool(config.get("disable_thinking", False))
-        # Ollama 'think' control for reasoning models (e.g. gpt-oss). Sent at the
-        # TOP LEVEL of the request (not inside options). None -> model default;
-        # False -> disable reasoning; or "low"/"medium"/"high" for gpt-oss.
+        # Reasoning control for models like gpt-oss. Goes at the top level of the
+        # request, not inside options. None keeps the model default.
         self.think = config.get("think")
 
-        # Parse temperature
         temperature = config.get("temperature", 0.0)
         if temperature is None:
             temperature = 0.0
 
-        # Parse max_tokens (-> num_predict, the output token cap)
+        # -> num_predict, the output token cap
         max_tokens = config.get("max_tokens", 4096)
         if max_tokens is None:
             max_tokens = 4096
 
-        # Options sent to Ollama on EVERY request. num_ctx and any other tuning
-        # come from config["options"]; this is what makes num_ctx actually apply.
+        # Sent on every request; this is what makes num_ctx actually apply.
         self.options = {
             "temperature": float(temperature),
             "num_predict": int(max_tokens),
@@ -80,7 +62,7 @@ class OllamaProvider(BaseLLMProvider):
             data = resp.json()
             model_params = data.get("model_info", {})
 
-            # Ollama reports context length under various keys depending on architecture
+            # the key name varies with the model architecture
             server_ctx = None
             for key in model_params:
                 if "context_length" in key:

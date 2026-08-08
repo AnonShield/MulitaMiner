@@ -9,14 +9,10 @@ import os
 from tqdm import tqdm
 
 
-# Substrings (case-insensitive) that mark an exception as a fatal API
-# condition — quota exhausted, rate-limited, bad auth, etc. The chunk-level
-# try/except swallows everything by design (parse failures, validation
-# failures, transient JSON garbage) and returns []. That semantic is fine
-# for code bugs, but DISASTROUS for billing errors: the run finishes with
-# 0 vulnerabilities and exit code 0, which run_experiments then marks as
-# "ok". This list lets ``_is_fatal_api_error`` re-raise those so the
-# process exits != 0 and the orchestrator records the run as failed.
+# Substrings (case-insensitive) marking an exception as a fatal API condition
+# (quota, rate limit, bad auth). The chunk-level try/except swallows everything
+# else by design, but swallowing billing errors would end the run with 0 vulns
+# and exit code 0; _is_fatal_api_error re-raises so the run is recorded failed.
 _FATAL_API_ERROR_HINTS = (
     "quota",
     "insufficient_quota",
@@ -34,10 +30,10 @@ _FATAL_API_ERROR_HINTS = (
 
 
 def _is_fatal_api_error(exc: BaseException) -> bool:
-    """True if ``exc`` looks like a billing / auth / quota error from any
-    LLM provider. Pattern-matches the exception type name and message —
-    works across openai, anthropic, langchain wrappers, etc., without
-    importing each SDK.
+    """True when exc looks like a billing/auth/quota error from any provider.
+
+    Pattern-matches the exception type name and message so it works across
+    SDKs without importing each one.
     """
     type_name = type(exc).__name__.lower()
     if any(tag in type_name for tag in ("ratelimit", "quota", "authentication", "permission")):
@@ -57,10 +53,9 @@ def get_token_based_chunks(text: str, max_tokens: int,
                            tokenizer=None,
                            llm_config: dict = None,
                            profile_config: dict = None) -> List[TokenChunk]:
-    # Validação: se reserve_for_response >= max_tokens, ajusta os valores
     if reserve_for_response >= max_tokens:
         original_reserve = reserve_for_response
-        reserve_for_response = max(100, int(max_tokens * 0.2))  # 20% de margem
+        reserve_for_response = max(100, int(max_tokens * 0.2))
         tqdm.write(f"⚠️  [CHUNKING] reserve_for_response ({original_reserve}) >= max_tokens ({max_tokens}). "
                    f"Adjusted to {reserve_for_response} to ensure valid chunk_size.")
 
@@ -76,7 +71,7 @@ def get_token_based_chunks(text: str, max_tokens: int,
     start = 0
     while start < len(tokens):
         end = min(start + chunk_size, len(tokens))
-        # Ensure standard list before decode - avoids errors with arrays/tensors
+        # Plain list before decode avoids errors with arrays/tensors
         chunk_tokens = list(tokens[start:end])
         chunk_text = tokenizer.decode(chunk_tokens)
         chunks.append(TokenChunk(chunk_text))
@@ -85,7 +80,6 @@ def get_token_based_chunks(text: str, max_tokens: int,
 
 def build_prompt(doc_chunk: TokenChunk, profile_config: Dict[str, Any]) -> str:
     prompt_template = profile_config.get('prompt_template', '') if profile_config else ''
-    # If it's a file path, load content
     if os.path.isfile(prompt_template):
         prompt_template = load_prompt(prompt_template)
     
@@ -95,15 +89,10 @@ def build_prompt(doc_chunk: TokenChunk, profile_config: Dict[str, Any]) -> str:
     if "{context}" in prompt_template:
         return prompt_template.replace("{context}", wrapped)
     else:
-        # concatenates the block text to the end of the template
         return prompt_template.rstrip() + "\n\n" + wrapped
 
 def detect_scanner_pattern(text: str, profile_config: dict = None) -> dict:
-    """
-    Detect scanner pattern based on markers in text and profile settings.
-    Return chunking configurations specific to detected scanner.
-    """
-    # If profile has chunking configurations, use directly
+    """Detect the scanner from markers and return its chunking config."""
     if profile_config and 'chunking' in profile_config:
         chunking_config = profile_config['chunking'].copy()
         if chunking_config.get('marker_pattern'):
@@ -112,19 +101,15 @@ def detect_scanner_pattern(text: str, profile_config: dict = None) -> dict:
             if matches:
                 return chunking_config
 
-    # Fallback: Auto-detect
-    # Detect OpenVAS: starts with "NVT: "
+    # Auto-detect: OpenVAS by "NVT:" lines, Tenable WAS by its header phrase
     nvt_matches = re.findall(r'^\s*NVT:\s', text, re.MULTILINE)
-
-    # Detect Tenable WAS: pattern "VULNERABILITY CRITICAL/HIGH/MEDIUM/LOW PLUGIN ID XXXX"
     vuln_matches = re.findall(r'^\s*VULNERABILITY\s+(CRITICAL|HIGH|MEDIUM|LOW)\s+PLUGIN\s+ID\s+\d+', text, re.MULTILINE)
 
     if nvt_matches:
         return {
             'scanner_type': 'openvas',
-            # Match the severity/CVSS header that sits one line above NVT — keeps
-            # the `Severity (CVSS: X.Y)` context inside the chunk that owns the
-            # NVT. Detection still uses NVT: as the fingerprint above.
+            # The marker is the severity/CVSS header one line above NVT, so the
+            # "Severity (CVSS: X.Y)" context stays inside the chunk owning it
             'marker_pattern': r'^\s*(?:Critical|High|Medium|Low|Log)\s+\(CVSS:',
             'markers_found': len(nvt_matches),
             'force_break_at_markers': True,
@@ -147,11 +132,10 @@ def detect_scanner_pattern(text: str, profile_config: dict = None) -> dict:
         }
 
 def split_text_to_subchunks(text: str, target_size: int, profile_config: dict = None) -> List[str]:
-    """
-    Divide text into smaller subchunks - VERSION THAT RESPECTS MARKERS.
-    
-    The target_size parameter is expected to already be optimized by the caller
-    (typically intelligent_chunk_redivision which calculates it dynamically).
+    """Split text into subchunks respecting scanner markers.
+
+    target_size is expected to be pre-optimized by the caller
+    (intelligent_chunk_redivision computes it dynamically).
     """
     if len(text) <= target_size:
         return [text]
@@ -160,44 +144,35 @@ def split_text_to_subchunks(text: str, target_size: int, profile_config: dict = 
     if not lines:
         return [text]
 
-    # Use target_size directly without overly aggressive hard limit
-    # Allow up to 50K chars for better context preservation
     optimized_target = min(target_size, 50000)
 
-    # Detect pattern with customizable configurations
     pattern_info = detect_scanner_pattern(text, profile_config)
 
-    # If pattern not found, do simple optimized division
     if pattern_info.get('marker_pattern') is None:
         return _simple_split_by_size(text, optimized_target)
 
-    # Find indices of lines with detected marker
     marker_lines = []
     for i, line in enumerate(lines):
         if re.search(pattern_info['marker_pattern'], line):
             marker_lines.append(i)
 
-    # If no markers found even after detection, fallback
     if not marker_lines:
         return _simple_split_by_size(text, optimized_target)
 
-    # Capture pre-marker context (section header with severity/port/protocol for OpenVAS).
-    # Propagated to every subchunk so the LLM sees the header context even after redivision.
+    # Pre-marker context (severity/port/protocol header) is prefixed to every
+    # subchunk so the LLM keeps the header even after redivision
     pre_marker_text = ''.join(lines[:marker_lines[0]]) if marker_lines[0] > 0 else ''
 
     subchunks = []
-    # CUSTOMIZABLE STRATEGY: Use scanner configurations
     vulns_per_chunk = pattern_info.get('max_vulnerabilities_per_chunk', 3)
 
     i = 0
     while i < len(marker_lines):
-        # Determine how many vulns to include in this chunk
         vulns_in_chunk = 0
         chunk_lines = []
         chunk_size = 0
 
         while i < len(marker_lines) and vulns_in_chunk < vulns_per_chunk:
-            # Determine end of current block
             block_start = marker_lines[i]
             block_end = marker_lines[i + 1] if i + 1 < len(marker_lines) else len(lines)
 
@@ -205,48 +180,39 @@ def split_text_to_subchunks(text: str, target_size: int, profile_config: dict = 
             block_text = ''.join(block_lines)
             block_size = len(block_text)
 
-            # If adding this block exceeds optimized target AND we have at least 1 vuln
             if vulns_in_chunk > 0 and (chunk_size + block_size > optimized_target):
                 break
 
-            # If block alone is larger than target, divide internally
             if block_size > optimized_target:
-                # Save current chunk if not empty
+                # Oversized block: flush current chunk and split it internally
                 if chunk_lines:
                     subchunks.append(pre_marker_text + ''.join(chunk_lines))
 
-                # Divide large block and prefix pre_marker_text to every sub-block
                 sub_blocks = _split_block_by_size(block_text, optimized_target)
                 subchunks.extend(pre_marker_text + sb for sb in sub_blocks)
 
-                # Reset for next chunk
                 chunk_lines = []
                 chunk_size = 0
                 vulns_in_chunk = 0
             else:
-                # Add block to the current chunk
                 chunk_lines.extend(block_lines)
                 chunk_size += block_size
                 vulns_in_chunk += 1
 
             i += 1
 
-        # Save chunk if not empty
         if chunk_lines:
             subchunks.append(pre_marker_text + ''.join(chunk_lines))
 
     return subchunks if subchunks else [text]
 
 def _split_block_by_size(text: str, target_size: int) -> List[str]:
-    """
-    Divide a text block into subchunks by lines.
-    Avoids infinite recursion with depth limit.
-    """
+    """Split one text block into subchunks by lines."""
     if len(text) <= target_size:
         return [text]
 
-    # Guard against infinite recursion
-    if target_size < 1000:  # Absolute minimum
+    # Below this floor, cut blindly instead of recursing forever
+    if target_size < 1000:
         chunks = []
         for i in range(0, len(text), 1000):
             chunks.append(text[i:i+1000])
@@ -260,7 +226,6 @@ def _split_block_by_size(text: str, target_size: int) -> List[str]:
     for line in lines:
         line_len = len(line)
 
-        # If adding this line exceeds target_size, save the current chunk
         if current and (current_len + line_len > target_size):
             subchunks.append(''.join(current))
             current = []
@@ -272,13 +237,11 @@ def _split_block_by_size(text: str, target_size: int) -> List[str]:
     if current:
         subchunks.append(''.join(current))
 
-    # AVOID RECURSION - if result still has large chunks, accept as is
+    # Oversized chunks that remain are accepted as-is (no recursion)
     return subchunks if subchunks else [text]
 
 def _simple_split_by_size(text: str, target_size: int) -> List[str]:
-    """
-    Simple split by size (by lines) when there are no vulnerability markers.
-    """
+    """Line-based split by size, for text without vulnerability markers."""
     if len(text) <= target_size:
         return [text]
 
@@ -313,29 +276,12 @@ def smart_chunk_vulnerabilities(
     profile_config: dict = None,
     scanner_type: str = None
 ) -> List[TokenChunk]:
-    """
-    Intelligent chunking that respects ALL constraints simultaneously:
-    - Vulnerability boundaries (marker_pattern)
-    - Token limits (max_tokens - reserve_for_response)
-    - Character size limits (dynamically calculated from tokenizer)
-    - Vulnerability count limits (max_vulnerabilities_per_chunk)
-    
-    Args:
-        text: Full block text to chunk
-        marker_pattern: Regex pattern to detect vulnerability start (e.g., "^\\s*NVT:")
-        max_tokens: Maximum tokens per chunk (from LLM config)
-        reserve_for_response: Token reserve for LLM response
-        max_vulnerabilities_per_chunk: Max vulns to group
-        tokenizer: tiktoken tokenizer (or will initialize from config)
-        profile_config: Profile configuration (optional, used to extract llm_config)
-        scanner_type: Scanner type (e.g., 'tenable' or 'openvas')
-    
-    Returns:
-        List[TokenChunk]: Chunks that respect all constraints
-    """
+    """Chunk respecting all constraints simultaneously: vulnerability
+    boundaries (marker_pattern), token budget (max_tokens minus
+    reserve_for_response), a char cap derived from token density, and
+    max_vulnerabilities_per_chunk."""
     from src.model_management import count_tokens, get_tokenizer
-    
-    # Initialize tokenizer if needed - prioritize config-based tokenizer
+
     if tokenizer is None:
         llm_config = None
         if profile_config and 'llm_config' in profile_config:
@@ -344,16 +290,13 @@ def smart_chunk_vulnerabilities(
         if llm_config:
             tokenizer = get_tokenizer(llm_config)
         else:
-            # Fallback only if no config available
             try:
                 tokenizer = tiktoken.encoding_for_model("gpt-3.5-turbo")
             except Exception:
                 tokenizer = tiktoken.get_encoding("cl100k_base")
-    
-    # No pair-handling adjustment - Tenable always has instances field
+
     max_vulns_adjusted = max_vulnerabilities_per_chunk
 
-    # If no marker pattern, fallback to simple token-based chunking
     if not marker_pattern:
         return get_token_based_chunks(
             text,
@@ -363,18 +306,15 @@ def smart_chunk_vulnerabilities(
             profile_config=profile_config
         )
 
-    # Parse text into lines
     lines = text.splitlines(keepends=True)
     if not lines:
         return [TokenChunk(text)]
 
-    # Find vulnerability boundaries via marker
     marker_indices = []
     for i, line in enumerate(lines):
         if re.search(marker_pattern, line, re.MULTILINE):
             marker_indices.append(i)
-    
-    # If no markers found, fallback
+
     if not marker_indices:
         return get_token_based_chunks(
             text,
@@ -384,19 +324,15 @@ def smart_chunk_vulnerabilities(
             profile_config=profile_config
         )
     
-    # Calculate effective chunk size
     chunk_size_tokens = max_tokens - reserve_for_response
-    
-    # Calculate optimized_target_chars dynamically based on actual text characteristics
-    # Use full text for exact proportion (no approximation error from sampling)
+
+    # Char cap derived from the text's real char/token density (full text, no
+    # sampling error), with an 85% safety margin; ceiling follows LLM capacity
     token_count = count_tokens(text, tokenizer)
     chars_per_token = len(text) / max(token_count, 1)
-    # Apply 85% safety margin to balance safety and chunk size
     optimized_target_chars = int(chunk_size_tokens * chars_per_token * 0.85)
-    # Relaxed limit: respect LLM config capacity instead of hardcoding 8K
     optimized_target_chars = min(optimized_target_chars, max(30000, chunk_size_tokens * 2))
-    
-    # Build chunks respecting ALL constraints simultaneously
+
     chunks = []
     i = 0
 
@@ -404,10 +340,8 @@ def smart_chunk_vulnerabilities(
         current_chunk_lines = []
         current_chunk_tokens = 0
         vulns_in_chunk = 0
-        
-        # Progressively add vulnerabilities while all constraints are respected
+
         while i < len(marker_indices) and vulns_in_chunk < max_vulns_adjusted:
-            # Determine vulnerability boundaries
             vuln_start = marker_indices[i]
             vuln_end = marker_indices[i + 1] if i + 1 < len(marker_indices) else len(lines)
             
@@ -415,21 +349,17 @@ def smart_chunk_vulnerabilities(
             vuln_text = ''.join(vuln_lines)
             vuln_tokens = count_tokens(vuln_text, tokenizer)
             
-            # Check if adding this vuln would exceed ANY constraint
             would_exceed_tokens = (current_chunk_tokens + vuln_tokens) > chunk_size_tokens
             would_exceed_chars = (len(''.join(current_chunk_lines)) + len(vuln_text)) > optimized_target_chars
             would_exceed_vulns = vulns_in_chunk >= max_vulns_adjusted
-            
-            # If we have at least 1 vuln and would exceed limit, stop and save chunk
+
             if vulns_in_chunk > 0 and (would_exceed_tokens or would_exceed_chars or would_exceed_vulns):
                 break
-            
-            # If this single vuln exceeds ANY size limit on its own, include it anyway
-            # but save the chunk immediately - let intelligent_chunk_redivision handle subdivision if needed.
-            # Covers both token overflow AND char overflow. Without the char clause, a vuln_text
-            # larger than optimized_target_chars but smaller than chunk_size_tokens would loop
-            # forever: would_exceed_chars=True breaks inner loop without advancing i, and outer
-            # loop restarts on the same marker indefinitely.
+
+            # A vuln exceeding a limit on its own is sent anyway (redivision
+            # handles it later). The char clause is required: without it a vuln
+            # over the char cap but under the token cap would never advance i
+            # and the outer loop would restart on the same marker forever.
             single_vuln_exceeds = (
                 vuln_tokens > chunk_size_tokens
                 or len(vuln_text) > optimized_target_chars
@@ -445,9 +375,8 @@ def smart_chunk_vulnerabilities(
                 current_chunk_tokens += vuln_tokens
                 vulns_in_chunk += 1
                 i += 1
-                break  # Save chunk and let redivision handle it
-            
-            # Add vuln to current chunk if within all constraints
+                break
+
             if not (would_exceed_tokens or would_exceed_chars or would_exceed_vulns):
                 current_chunk_lines.extend(vuln_lines)
                 current_chunk_tokens += vuln_tokens
@@ -455,13 +384,11 @@ def smart_chunk_vulnerabilities(
                 i += 1
             else:
                 break
-        
-        # Save chunk if not empty
+
         if current_chunk_lines:
             chunk_text = ''.join(current_chunk_lines)
             chunks.append(TokenChunk(chunk_text))
-    
-    # Fallback if no chunks were created
+
     if not chunks:
         chunks.append(TokenChunk(text))
     
@@ -472,20 +399,7 @@ def intelligent_chunk_redivision(chunk_content: str, max_tokens: int,
                                   error_context: Dict[str, Any],
                                   tokenizer=None, reserve_for_response: int = 1000,
                                   profile_config: dict = None) -> List[str]:
-    """
-    Intelligently redivide a failed chunk based on error context.
-    
-    Args:
-        chunk_content: Content that failed validation
-        max_tokens: Maximum tokens per chunk (from LLM config)
-        error_context: Error details that triggered redivision (token_valid, errors, etc.)
-        tokenizer: Tokenizer to use for token counting
-        reserve_for_response: Token reserve for LLM response (default: 1000, consistent with chunking)
-        profile_config: Profile configuration (optional, used to detect vulnerability markers for respecting boundaries)
-    
-    Returns:
-        List of smaller chunks
-    """
+    """Redivide a failed chunk; error_context steers how aggressive the split is."""
     if tokenizer is None:
         try:
             tokenizer = tiktoken.encoding_for_model("gpt-3.5-turbo")
@@ -526,14 +440,9 @@ def _is_empty_response(content: str) -> bool:
 
 def _detect_underextraction(chunk_content: str, num_extracted: int,
                              profile_config: Dict[str, Any]) -> bool:
-    """
-    Local LLMs (gemma4/mistral 7B) often "lost-in-the-middle" on large chunks:
-    the response parses as valid JSON but contains far fewer vulnerabilities
-    than the chunk actually has. We catch this by comparing the count of
-    scanner markers (e.g. NVT:) in the chunk against the number of items the
-    LLM returned. If the LLM returned less than half the markers it saw,
-    treat as a soft failure and force redivision.
-    """
+    """Detect "lost-in-the-middle" responses: valid JSON with far fewer vulns
+    than the chunk has scanner markers. Less than half the markers counts as a
+    soft failure that forces redivision."""
     if not profile_config:
         return False
     marker_pattern = profile_config.get('chunking', {}).get('marker_pattern')
@@ -551,16 +460,10 @@ def _detect_underextraction(chunk_content: str, num_extracted: int,
 def _invoke_validate_log(llm, prompt: str, chunk_content: str, max_tokens: int,
                          tokenizer, num_predict, debug_mode: bool,
                          debug_kwargs: dict) -> tuple:
-    """
-    Single LLM call: invoke, validate response, optionally log to debug JSONL.
+    """One LLM call: invoke, validate, optionally log to the debug JSONL.
 
-    Args:
-        debug_kwargs: pdf_name, llm_name, block_idx, chunk_idx, retry_count,
-            was_redivided. Other debug fields (chunk_chars, vulns_extracted,
-            recovered_via, etc.) are derived here so callers stay simple.
-
-    Returns:
-        (response_content, response_tokens, validation_dict)
+    Returns (response_content, response_tokens, validation_dict); derived
+    debug fields are computed here so callers stay simple.
     """
     response = llm.invoke(prompt)
     content = extract_response_content(response)
@@ -594,21 +497,10 @@ def _retry_empty_response(llm, prompt: str, chunk_content: str, max_tokens: int,
                           tokenizer, num_predict, debug_mode: bool,
                           debug_base: dict, max_retries: int = 2,
                           context_label: str = "CHUNK") -> tuple:
-    """
-    Re-call the LLM up to `max_retries` times when the initial response was `[]`.
-
-    Empty `[]` may be a legitimate "no vulns here" answer OR a transient LLM
-    failure. A simple repeat call often resolves the latter at low cost.
-
-    Args:
-        debug_base: pdf_name, llm_name, chunk_idx, was_redivided.
-                    `retry_count` is set automatically per attempt.
-
-    Returns:
-        (content, total_extra_tokens, validation) of the first successful retry,
-        or (None, total_extra_tokens, None) if all retries also returned empty
-        or invalid JSON.
-    """
+    """Re-call the LLM when the response was `[]`: it may be a legitimate
+    "no vulns here" answer or a transient failure, and a cheap repeat call
+    resolves the latter. Returns (content, extra_tokens, validation) on the
+    first successful retry, or (None, extra_tokens, None)."""
     total_extra_tokens = 0
     for attempt in range(max_retries):
         debug_kwargs = {**debug_base, 'retry_count': attempt + 1}
@@ -639,7 +531,6 @@ def robust_chunk_processing(doc_chunk: TokenChunk, llm, profile_config: Dict[str
     all_vulnerabilities = []
     total_tokens_output = 0
 
-    # Ensure tokenizer is initialized from LLM config if not provided
     if tokenizer is None:
         from src.model_management import get_tokenizer
         if profile_config and 'llm_config' in profile_config:
@@ -660,14 +551,13 @@ def robust_chunk_processing(doc_chunk: TokenChunk, llm, profile_config: Dict[str
             'was_redivided': False,
         }
 
-        # First attempt
         response_content, response_tokens, validation = _invoke_validate_log(
             llm, prompt, doc_chunk.page_content, max_tokens, tokenizer,
             num_predict, debug_mode, {**debug_base, 'retry_count': 0}
         )
         total_tokens_output += response_tokens
 
-        # Empty `[]` may be transient — retry before deciding it's the real answer
+        # Empty `[]` may be transient; retry before accepting it as the answer
         if _is_empty_response(response_content):
             tqdm.write("[CHUNK] Empty response [] detected. Retrying...")
             _, extra_tokens, retry_validation = _retry_empty_response(
@@ -693,7 +583,7 @@ def robust_chunk_processing(doc_chunk: TokenChunk, llm, profile_config: Dict[str
                 return {'vulnerabilities': validation['json_data'],
                         'tokens_output': total_tokens_output}
 
-        # Invalid JSON but chunk size is OK — retry without redivision
+        # Invalid JSON but chunk size is fine: retry without redividing
         if not validation['needs_redivision']:
             for retry in range(2):
                 response_content, response_tokens, validation = _invoke_validate_log(
@@ -729,8 +619,8 @@ def robust_chunk_processing(doc_chunk: TokenChunk, llm, profile_config: Dict[str
                 )
                 total_tokens_output += sub_tokens
 
-                # Same empty-retry policy applies to sub-chunks: a fragmented vuln
-                # may still hold extractable content even without the leading marker.
+                # Same empty-retry policy: a fragmented vuln may still hold
+                # extractable content even without the leading marker
                 if _is_empty_response(sub_content):
                     tqdm.write(f"[SUB-CHUNK {idx + 1}] Empty response []. Retrying...")
                     _, extra_tokens, retry_validation = _retry_empty_response(

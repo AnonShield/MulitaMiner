@@ -1,9 +1,4 @@
-"""
-Configuration loader for LLM and Scanner profiles.
-
-Handles loading and parsing of model configurations from JSON files,
-including environment variable substitution.
-"""
+"""Load LLM and scanner profile configs from JSON, resolving ${ENV_VAR} values."""
 
 import os
 import json
@@ -13,15 +8,7 @@ from dotenv import load_dotenv
 
 
 def load_profile(profile_name):
-    """
-    Load a scanner profile configuration by its short name.
-    
-    Args:
-        profile_name: Name of the profile (e.g., 'openvas', 'tenable', 'cais_openvas')
-    
-    Returns:
-        dict: Profile configuration or None if not found
-    """
+    """Load a scanner profile by short name, or None if there is no such file."""
     profile_name = profile_name.lower()
     path = f"src/configs/scanners/{profile_name}.json"
     try:
@@ -33,18 +20,7 @@ def load_profile(profile_name):
 
 
 def load_llm(llm_name):
-    """
-    Load an LLM configuration by its short name.
-    
-    Supports environment variable substitution in format ${VAR_NAME}.
-    Auto-detects LLM type if not specified in JSON.
-    
-    Args:
-        llm_name: Name of the LLM (e.g., 'gpt4', 'deepseek', 'ollama-local')
-    
-    Returns:
-        dict: LLM configuration with resolved environment variables and type field
-    """
+    """Load an LLM config by short name, resolving ${VAR} values and the provider."""
     load_dotenv()
     
     llm_name = llm_name.lower()
@@ -57,7 +33,6 @@ def load_llm(llm_name):
         print(f"[ERROR] LLM configuration file not found for '{llm_name}' at '{path}'.")
         return None
 
-    # Replace environment variables in format ${NAME}
     for k, v in config.items():
         if isinstance(v, str):
             match = re.fullmatch(r"\$\{([A-Z0-9_]+)\}", v)
@@ -69,7 +44,6 @@ def load_llm(llm_name):
     if config.get("provider") == "hf":
         config["provider"] = "huggingface"
 
-    # Auto-detect provider if not specified
     if "provider" not in config:
         endpoint = config.get("endpoint", "").lower()
         

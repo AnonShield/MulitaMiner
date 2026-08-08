@@ -1,7 +1,4 @@
-"""
-Converters module for different output formats.
-Converts vulnerability data from JSON to various formats.
-"""
+"""Converters from extracted JSON to CSV/TSV/XLSX."""
 
 from .base_converter import BaseConverter
 from .xlsx_converter import XLSXConverter, convert_json_to_xlsx

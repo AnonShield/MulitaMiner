@@ -1,7 +1,4 @@
-"""
-Classe base abstrata para conversores de formato
-Define a interface comum para todos os conversores
-"""
+"""Abstract base class for output format converters."""
 
 from abc import ABC, abstractmethod
 import json
@@ -11,16 +8,13 @@ from datetime import datetime
 
 
 class BaseConverter(ABC):
-    """
-    Classe base abstrata para conversores de formato
-    """
-    
+    """Common interface for all format converters."""
+
     def __init__(self):
-        # Campos do nosso formato JSON atual
         self.supported_fields = [
             'Name',
             'name',
-            'Synopsis', 
+            'Synopsis',
             'Description',
             'Plugin Output',
             'Solution',
@@ -29,105 +23,57 @@ class BaseConverter(ABC):
             'CVSSv4',
             'Risk'
         ]
-    
+
     def load_json_data(self, json_file_path: str) -> List[Dict[str, Any]]:
-        """
-        Load JSON data from file
-        
-        Args:
-            json_file_path: Path to JSON file
-            
-        Returns:
-            List of dictionaries with vulnerability data
-        """
+        """Load a list of vulnerability dicts from a JSON file."""
         try:
             with open(json_file_path, 'r', encoding='utf-8') as f:
                 data = json.load(f)
-            
+
             if not isinstance(data, list):
                 raise ValueError("JSON deve conter uma lista de vulnerabilidades")
-            
+
             return data
         except FileNotFoundError:
             raise FileNotFoundError(f"Arquivo JSON não encontrado: {json_file_path}")
         except json.JSONDecodeError as e:
             raise ValueError(f"Erro ao decodificar JSON: {e}")
-    
+
     def validate_data(self, data: List[Dict[str, Any]]) -> bool:
-        """
-        Validate if data is in expected format
-        
-        Args:
-            data: List of dictionaries with vulnerability data
-            
-        Returns:
-            True if data is valid
-        """
+        """Check that data is a list of dicts with a 'name'/'Name' field."""
         if not isinstance(data, list):
             return False
-        
+
         for item in data:
             if not isinstance(item, dict):
                 return False
-            
-            # Check if has at least 'name' field (lowercase) or 'Name' (uppercase)
+
             if 'name' not in item and 'Name' not in item:
                 return False
-        
+
         return True
-    
+
     def get_output_filename(self, input_filename: str, extension: str) -> str:
-        """
-        Generate output filename based on input file
-        
-        Args:
-            input_filename: Input filename
-            extension: Output file extension (without dot)
-            
-        Returns:
-            Output filename (same directory, same name, different extension)
-        """
+        """Same directory and base name as the input, with a new extension."""
         input_dir = os.path.dirname(input_filename)
         base_name = os.path.splitext(os.path.basename(input_filename))[0]
         output_filename = f"{base_name}.{extension}"
         return os.path.join(input_dir, output_filename) if input_dir else output_filename
-    
+
     def normalize_field_value(self, value: Any) -> str:
-        """
-        Normaliza valores de campos para string
-        
-        Args:
-            value: Valor a ser normalizado
-            
-        Returns:
-            String normalizada
-        """
+        """Normalize a field value to a plain string."""
         if value is None:
             return ""
         if isinstance(value, (list, dict)):
             return str(value)
         return str(value).strip()
-    
+
     @abstractmethod
     def convert(self, json_file_path: str, output_file_path: Optional[str] = None) -> str:
-        """
-        Converte arquivo JSON para o formato específico
-        
-        Args:
-            json_file_path: Caminho para o arquivo JSON de entrada
-            output_file_path: Caminho opcional para o arquivo de saída
-            
-        Returns:
-            Caminho do arquivo gerado
-        """
+        """Convert the JSON file and return the generated file path."""
         pass
-    
+
     @abstractmethod
     def get_format_name(self) -> str:
-        """
-        Retorna o nome do formato
-        
-        Returns:
-            Nome do formato (ex: "XLSX", "CSV")
-        """
+        """Return the format name (e.g. "XLSX", "CSV")."""
         pass

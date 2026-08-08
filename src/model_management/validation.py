@@ -1,11 +1,4 @@
-"""
-JSON response validation and error detection for LLM outputs.
-
-Provides robust validation of LLM responses, including:
-- JSON parsing with multiple fallback strategies
-- Token counting and limit validation
-- Error detection and redivision determination
-"""
+"""Parse and validate LLM JSON output, and decide when a chunk must be split."""
 
 import json
 import re

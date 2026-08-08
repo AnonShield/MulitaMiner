@@ -16,23 +16,21 @@ _CID_MAP = {
 }
 
 def _restore_cid_glyphs(text: str) -> str:
-    # Wrap continuation: "word-part\n   (cid:44)→rest" is the same word split.
+    # "word-part\n   (cid:44)->rest" is one word split across a wrap
     text = re.sub(r'\n[ \t]*\(cid:44\)→', '', text)
     for cid, glyph in _CID_MAP.items():
         text = text.replace(f'(cid:{cid})', glyph)
-    # Fallback: any CID we don't know yet gets dropped (prior behaviour).
+    # Unknown CIDs are dropped
     text = re.sub(r'\(cid:\d+\)', '', text)
-    # De-hyphenate soft-wrapped words: "down-\n   loaded" → "downloaded".
+    # De-hyphenate soft-wrapped words ("down-\n loaded" -> "downloaded")
     text = re.sub(r'(\w)-\n[ \t]*(\w)', r'\1\2', text)
     return text
 
 def merge_page_continuations(text_pages):
-    """
-    Merge sections cut by page breaks.
+    """Merge sections cut by page breaks.
 
-    Strategies:
-    1. OpenVAS: Detects markers '...continues on next page...'
-    2. Tenable: Detects sentence breaks without final punctuation
+    Two strategies: explicit '...continues on next page' markers (OpenVAS)
+    and sentence breaks without final punctuation (Tenable).
     """
     if len(text_pages) <= 1:
         return text_pages
@@ -45,7 +43,7 @@ def merge_page_continuations(text_pages):
         skip_until_next_section = False
 
         for j, line in enumerate(lines):
-            # === STRATEGY 1: Explicit markers ===
+            # Strategy 1: explicit continuation markers
             if '. . . continues on next page' in line.lower() or '...continues on next page' in line.lower() or 'continues on next page' in line.lower():
                 continuation_found = False
                 for next_page_idx in range(i+1, len(text_pages)):
@@ -54,12 +52,11 @@ def merge_page_continuations(text_pages):
 
                     for k, next_line in enumerate(next_lines):
                         if '. . . continued from previous page' in next_line.lower() or '...continued from previous page' in next_line.lower() or 'continued from previous page' in next_line.lower():
-                            # Found continuation - merge
                             continuation_text = []
                             for m in range(k+1, len(next_lines)):
                                 cont_line = next_lines[m]
                                 if cont_line.strip() and not cont_line.startswith(' ') and len(cont_line.strip()) > 3:
-                                    # Check if it's a section header indicating end of continuation
+                                    # A section header ends the continuation
                                     header_text = cont_line.strip()
                                     if any(keyword in header_text.lower() for keyword in [
                                         'vulnerability detection result', 'solution', 'vulnerability detection method',
@@ -70,14 +67,13 @@ def merge_page_continuations(text_pages):
                                     continuation_text.append(cont_line)
 
                             if continuation_text:
-                                # Merge continuation with previous line
                                 if processed_lines and processed_lines[-1].strip():
                                     processed_lines[-1] += ' ' + ' '.join(continuation_text)
                                 else:
                                     processed_lines.extend(continuation_text)
                                 continuation_found = True
 
-                                # Mark continuation as processed
+                                # Strip the merged text from the source page
                                 text_pages[next_page_idx] = (next_page_num,
                                     '\n'.join(next_lines[:k]) + '\n' + '\n'.join(next_lines[k+1:]))
                             break
@@ -85,16 +81,14 @@ def merge_page_continuations(text_pages):
                     if continuation_found:
                         break
 
-                # Do not add the marker
+                # The marker line itself is dropped
                 continue
 
-            # === STRATEGY 2: Detection by context ===
+            # Strategy 2: incomplete line, check if the next page continues it
             elif _is_incomplete_line(line) and i+1 < len(text_pages):
-                # Line seems incomplete - check if next page continues
                 next_page_text = text_pages[i+1][1]
                 next_lines = next_page_text.split('\n')
 
-                # Look for first non-empty line in next page
                 continuation_start = None
                 for k, next_line in enumerate(next_lines):
                     if next_line.strip():
@@ -102,12 +96,10 @@ def merge_page_continuations(text_pages):
                         break
 
                 if continuation_start is not None:
-                    # Check if continuation makes contextual sense
                     continuation_text = []
                     for m in range(continuation_start, len(next_lines)):
                         cont_line = next_lines[m]
                         if cont_line.strip() and not cont_line.startswith(' ') and len(cont_line.strip()) > 3:
-                            # Check if it's a header indicating new section
                             header_text = cont_line.strip()
                             if any(keyword in header_text.lower() for keyword in [
                                 'solution', 'references', 'cvss', 'cve-', 'plugin details',
@@ -118,21 +110,18 @@ def merge_page_continuations(text_pages):
                             continuation_text.append(cont_line)
 
                     if continuation_text and _makes_sense_as_continuation(line, continuation_text[0]):
-                        # Merge continuation
                         processed_lines[-1] += ' ' + ' '.join(continuation_text)
 
-                        # Mark continuation as processed
                         text_pages[i+1] = (text_pages[i+1][0],
                             '\n'.join(next_lines[:continuation_start]) + '\n' +
                             '\n'.join(next_lines[continuation_start + len(continuation_text):]))
                         continue
 
             elif '. . . continued from previous page' in line.lower() or '...continued from previous page' in line.lower() or 'continued from previous page' in line.lower():
-                # This is an already merged continuation - skip
+                # Already merged above; skip until the next section header
                 skip_until_next_section = True
                 continue
             elif skip_until_next_section:
-                # Skip lines until finding next section
                 if line.strip() and not line.startswith(' ') and len(line.strip()) > 3:
                     header_text = line.strip()
                     if any(keyword in header_text.lower() for keyword in [
@@ -152,22 +141,17 @@ def merge_page_continuations(text_pages):
     return merged_pages
 
 def _is_incomplete_line(line):
-    """
-    Check if a line seems to be incomplete
-    """
+    """Heuristic: does this line look cut off mid-sentence?"""
     line = line.strip()
     if not line:
         return False
 
-    # Short line probably is not incomplete
     if len(line) < 20:
         return False
 
-    # If ends with punctuation, probably complete
     if line.endswith(('.', '!', '?', ':', ';')):
         return False
 
-    # If ends with complete word followed by space, may be incomplete
     words = line.split()
     if len(words) > 3 and not line.endswith(' '):
         return True
@@ -175,20 +159,16 @@ def _is_incomplete_line(line):
     return False
 
 def _makes_sense_as_continuation(prev_line, next_line):
-     """
-     Check if next line makes sense as continuation of previous one.
-     """
+     """Heuristic: does next_line read as a continuation of prev_line?"""
      prev_line = prev_line.strip().lower()
      next_line = next_line.strip().lower()
 
-     # If next line starts with common word, probably is continuation
      common_starts = ['the', 'a', 'an', 'and', 'or', 'but', 'however', 'therefore', 'thus', 'hence']
 
      first_word = next_line.split()[0] if next_line.split() else ""
      if first_word in common_starts:
          return True
 
-     # If next line starts with lowercase, probably continues
      if next_line and next_line[0].islower():
          return True
 
@@ -212,16 +192,15 @@ def extract_visual_layout_from_pdf(pdf_path):
                      linhas = texto_pagina.split('\n')
                      texto_processado = ""
                      for linha in linhas:
-                         # Remove typical report footers (ex: 'Page X of Y')
+                         # Drop report footers ("Page X of Y", export header)
                          if re.search(r'Page \d+ of \d+', linha):
                              continue
-                         # Remove footers with report name and page
                          if re.search(r'Web Application Scanning Detailed Scan Export:.*Page \d+ of \d+', linha):
                              continue
                          linha_preservada = linha.replace('\t', '    ')
                          texto_processado += linha_preservada + '\n'
-                     # Sanitization by page (CID restoration happens post-join
-                     # so cross-page wrap markers like (cid:44)→ can be joined).
+                     # Per-page sanitization; CID restoration runs after the join
+                     # so cross-page wrap markers can be merged first
                      texto_processado = texto_processado.replace('ÔåÆ', '->')
                      texto_processado = texto_processado.replace('ÔÇÖ', "'")
                      texto_processado = texto_processado.replace('ÔÇ£', '"').replace('ÔÇØ', '"')
@@ -230,17 +209,13 @@ def extract_visual_layout_from_pdf(pdf_path):
                  else:
                      paginas_texto.append((num_pagina, f"[Página {num_pagina} - Sem texto detectado]\n\n"))
 
-             # MERGE SECTIONS CUT BY PAGE BREAKS
              paginas_texto = merge_page_continuations(paginas_texto)
 
-             # Extrair o texto completo do PDF
              texto_completo = ''.join([p[1] for p in paginas_texto])
-             
-             # Normalize typographic ligatures
+
              texto_completo = unicodedata.normalize('NFKC', texto_completo)
              texto_completo = _restore_cid_glyphs(texto_completo)
 
-             # Find start of first vulnerability
              scanner = None
              if 'openvas' in os.path.basename(pdf_path).lower():
                  scanner = 'openvas'
@@ -295,7 +270,6 @@ def extract_visual_layout_from_pdf(pdf_path):
                  texto_extracao = texto_completo
                  print("[VISUAL] Scanner not identified or without marker. Table of contents empty.")
 
-             # Save visual layout (summary/index only)
              if sumario.strip():
                  documentos.append(Document(
                      page_content=sumario,
@@ -306,7 +280,6 @@ def extract_visual_layout_from_pdf(pdf_path):
                      }
                  ))
 
-             # Extraction document (only content after summary)
              documentos.append(Document(
                  page_content=texto_extracao,
                  metadata={
@@ -316,7 +289,7 @@ def extract_visual_layout_from_pdf(pdf_path):
                  }
              ))
 
-             # Return documents (first summary, then extraction)
+             # Documents are ordered: summary first, then extraction
              if not documentos or all(not d.page_content.strip() for d in documentos):
                  print("Warning: No text was extracted from PDF. The file may be corrupted or contain only images.")
                  return None
@@ -326,23 +299,14 @@ def extract_visual_layout_from_pdf(pdf_path):
          return None
 
 def _resolve_visual_cache_dir(output_dir):
-     """Pick where the visual_layouts cache lives.
+     """Locate the visual_layouts cache dir.
 
-     Priority (most-specific first):
-       1. If ``output_dir`` is inside an experiments root (``results_runs[_*]``),
-          cache lives at ``<results_runs_*>/visual_layouts/`` — keeps the
-          cache co-located with the experiment outputs.
-       2. Otherwise, fall back to ``<project_root>/visual_layouts/`` — useful
-          when running ``main.py`` ad-hoc with a custom output dir.
-
-     Heuristic: walk up from output_dir; the first ancestor whose name starts
-     with ``results_runs`` is the experiments root. Stops at filesystem root
-     to avoid infinite loops on weird paths.
+     Inside an experiments tree the cache sits at <results_runs*>/visual_layouts/
+     (co-located with the outputs); otherwise it falls back to the project root.
      """
      if output_dir:
          current = os.path.abspath(output_dir)
-         # Cap at 6 levels — typical structure is results_runs/<baseline>/<llm>/<run>/
-         # so 3-4 hops up is enough; extra cushion for nested experiments.
+         # 6 levels is plenty for results_runs/<baseline>/<llm>/<run>/
          for _ in range(6):
              parent = os.path.dirname(current)
              if parent == current:
@@ -350,34 +314,15 @@ def _resolve_visual_cache_dir(output_dir):
              if os.path.basename(current).lower().startswith("results_runs"):
                  return os.path.join(current, "visual_layouts")
              current = parent
-     # Fallback: project root (parent of src/utils/).
      project_root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
      return os.path.join(project_root, "visual_layouts")
 
 
 def save_visual_layout(content, pdf_path, process_id=None, output_ext="txt", output_dir=None):
-     """
-     Salva o layout visual extraído (texto cru do PDF) em cache compartilhado.
+     """Cache the extracted visual layout and return its path (None on error).
 
-     The visual layout is **deterministic per PDF** — the same input file
-     always produces the same layout text. So caching it once per baseline
-     lets subsequent runs of the same PDF reuse it without re-extraction.
-
-     Cache location depends on context (see :func:`_resolve_visual_cache_dir`):
-       - When invoked under ``results_runs[_*]/`` (the experiments tree),
-         cached files live at ``<that_root>/visual_layouts/``.
-       - Otherwise, project root ``visual_layouts/``.
-
-     Args:
-         content:    extracted layout text (from the PDF reader's summary).
-         pdf_path:   source PDF path — used to derive the cache key.
-         process_id: ignored; kept for caller compatibility.
-         output_ext: txt or md.
-         output_dir: a run dir or output target — used only to locate the
-                     experiments root for cache placement.
-     Returns:
-         Absolute path to the (cached or newly written) layout file, or
-         ``None`` on write error.
+     The layout is deterministic per PDF, so later runs of the same file reuse
+     the cached copy. process_id is ignored, kept for caller compatibility.
      """
      base_name = os.path.splitext(os.path.basename(pdf_path))[0]
      filename = f"{base_name}.{output_ext}"
@@ -401,10 +346,7 @@ def save_visual_layout(content, pdf_path, process_id=None, output_ext="txt", out
          return None
 
 def load_pdf_with_marker(pdf_path):
-    """
-    Extract PDF to Markdown using Marker library.
-    Returns a list of Document objects compatible with the rest of the pipeline.
-    """
+    """Extract the PDF to Markdown via Marker; returns Documents or None."""
     try:
         from marker.converters.pdf import PdfConverter
         from marker.models import create_model_dict
@@ -420,29 +362,24 @@ def load_pdf_with_marker(pdf_path):
         rendered = converter(pdf_path)
         full_text, _, _ = text_from_rendered(rendered)
 
-        # Marker injects <span id="page-X-Y"></span> anchors that break
-        # downstream header regexes (e.g. "## <span...>High 9390/tcp").
+        # Marker injects <span id="page-X-Y"></span> anchors that would break
+        # the downstream header regexes
         full_text = re.sub(r'<span[^>]*></span>\s*', '', full_text)
 
         if not full_text or not full_text.strip():
             print("Warning: No text extracted by Marker. The file may be corrupted or contain only images.")
             return None
         
-        # Find table of contents / summary boundary
         scanner = None
         if 'openvas' in os.path.basename(pdf_path).lower():
             scanner = 'openvas'
         elif 'tenable' in os.path.basename(pdf_path).lower():
             scanner = 'tenable'
-        
-        # Split into summary and extraction
+
         if scanner == 'openvas':
-            # Cut at the first severity header (e.g. "High 25/tcp"). This
-            # avoids losing the first NVT — marker fuses severity + NVT into
-            # a single line ("## High (CVSS: 7.5) NVT: SMTP too long line"),
-            # so a plain "^NVT:" cut would skip that finding entirely. TOC
-            # rows live inside markdown tables and start with "|", so they
-            # don't match.
+            # Cut at the first severity header, not at "^NVT:": marker fuses
+            # severity and NVT into one line, so an NVT cut would drop the first
+            # finding. TOC rows start with "|" and do not match.
             marker_pattern = r'^\s*#*\s*(?:Critical|High|Medium|Low|Log)\s+(?:\d+|general)/[a-zA-Z0-9_-]+'
             match_inicio_vuln = re.search(marker_pattern, full_text, re.MULTILINE | re.IGNORECASE)
             if match_inicio_vuln:
@@ -455,7 +392,6 @@ def load_pdf_with_marker(pdf_path):
                 texto_extracao = full_text
                 print(f"[MARKER] No severity header found. Table of contents empty.")
         elif scanner == 'tenable':
-            # Similar logic for Tenable if a marker is identified
             sumario = ''
             texto_extracao = full_text
             print("[MARKER] Tenable WAS: Treating entire content as extraction.")
@@ -463,8 +399,7 @@ def load_pdf_with_marker(pdf_path):
             sumario = ''
             texto_extracao = full_text
             print("[MARKER] Scanner not identified. Treating entire content as extraction.")
-        
-        # Create documents
+
         documentos = []
         
         if sumario.strip():

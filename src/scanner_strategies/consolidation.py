@@ -1,9 +1,7 @@
 from typing import List, Dict
 
 def deduplicate_by_name(vulnerabilities: list, field: str = "Name") -> list:
-    """
-    Remove duplicatas baseando-se no campo especificado, mantendo a vulnerabilidade mais completa (mais campos preenchidos).
-    """
+    """Remove duplicates by field, keeping the record with most filled fields."""
     if not vulnerabilities:
         return []
     from collections import defaultdict
@@ -16,7 +14,6 @@ def deduplicate_by_name(vulnerabilities: list, field: str = "Name") -> list:
         if len(group) == 1:
             result.append(group[0])
         else:
-            # Keep the most complete (more non-empty fields)
             def count_filled_fields(vuln):
                 return sum(1 for k, val in vuln.items() if val not in [None, '', [], {}, 0])
             most_complete = max(group, key=count_filled_fields)
@@ -26,20 +23,7 @@ def deduplicate_by_name(vulnerabilities: list, field: str = "Name") -> list:
 def generate_consolidation_log(strategy_report: dict = None, description_filtering_removed: int = 0, 
                               all_groups: dict = None, vulnerabilities_input: int = 0,
                               vulnerabilities_after_strategy: int = 0, vulnerabilities_final: int = 0) -> str:
-    """
-    Gera um log modular e legível de consolidação.
-    
-    Args:
-        strategy_report: Dict retornado por strategy.get_consolidation_report()
-        description_filtering_removed: Quantas vulns foram removidas pela filtragem de description
-        all_groups: Dict com grupos de vulnerabilidades para detalhes
-        vulnerabilities_input: Total na entrada
-        vulnerabilities_after_strategy: Total após strategy processing
-        vulnerabilities_final: Total final (após filtragem)
-    
-    Returns:
-        String com o log formatado
-    """
+    """Build the human-readable consolidation log text."""
     lines = []
     lines.append("=" * 70)
     lines.append("CONSOLIDATION & DEDUPLICATION REPORT")
@@ -76,8 +60,7 @@ def generate_consolidation_log(strategy_report: dict = None, description_filteri
     lines.append("=" * 70)
     
     log_text = "\n".join(lines)
-    
-    # Adiciona detalhes dos grupos se fornecidos
+
     if all_groups:
         log_text += "\nDETAIL: Vulnerability Groups\n"
         log_text += "-" * 70 + "\n"
@@ -106,18 +89,12 @@ def generate_consolidation_log(strategy_report: dict = None, description_filteri
 
 
 def central_custom_allow_duplicates(vulnerabilities: list, profile_config: dict = None, allow_duplicates = True, custom_strategy: str = None, output_file: str = None) -> list:
-    """
-    Pipeline central para deduplicação/consolidação:
-    - Consulta registry.py para estratégia customizada
-    - Cada estratégia define QUANDO seu custom deve ativar via get_custom_activation_value()
-    - Se custom não deve ativar: usa default behavior (True=sem modificação, False=dedup por Name)
-    - Se não houver estratégia: usa default behavior sempre
-    - Gera logs de merge, deduplicação e removed para todos os scanners
-    
-    Comportamento:
-    - allow_duplicates=True (default): retorna tudo sem modificação
-    - allow_duplicates=False: remove duplicatas agrupando por Name
-    - Exceto quando estratégia define custom: ex OpenVAS (True) ou Tenable (False)
+    """Central deduplication/consolidation pipeline.
+
+    The scanner strategy decides (via get_custom_activation_value) for which
+    allow_duplicates value its custom logic runs; otherwise the default applies:
+    True keeps everything, False dedups by Name. Also writes the consolidation
+    and removed-items logs.
     """
     from .registry import get_strategy
     import os
@@ -130,8 +107,7 @@ def central_custom_allow_duplicates(vulnerabilities: list, profile_config: dict 
         source = profile_config['reader']
     
     strategy = get_strategy(source) if source else None
-    
-    # Setup output files
+
     if not output_file and profile_config and 'output_file' in profile_config:
         output_file = profile_config['output_file']
     if not output_file:
@@ -139,26 +115,20 @@ def central_custom_allow_duplicates(vulnerabilities: list, profile_config: dict 
     
     dedup_log_path = os.path.splitext(output_file)[0] + '_deduplication_log.txt'
     removed_log_path = os.path.splitext(output_file)[0] + '_removed_log.txt'
-    
-    # Captura estado ANTES
+
     input_count = len(vulnerabilities)
-    
-    # Determina se deve usar custom strategy
+
+    # Activation value can be a single bool or a collection of bools
     use_custom = False
     if strategy and hasattr(strategy, 'get_custom_activation_value') and hasattr(strategy, 'vulnerability_processing_logic'):
         custom_activation_value = strategy.get_custom_activation_value()
-        
-        # Suporta: bool único OU set/list/tuple de bools
+
         if isinstance(custom_activation_value, (set, list, tuple)):
-            # Custom ativa se allow_duplicates está na coleção
             use_custom = (custom_activation_value is not None and allow_duplicates in custom_activation_value)
         else:
-            # Ativa custom se: (1) strategy define custom e (2) allow_duplicates bate com o valor de ativação
             use_custom = (custom_activation_value is not None and allow_duplicates == custom_activation_value)
-    
-    # Executa custom ou default
+
     if use_custom:
-        # Custom strategy
         print(f"[DEDUPLICATION] Custom mode: allow_duplicates={allow_duplicates} (scanner: {source})")
         result = strategy.vulnerability_processing_logic(vulnerabilities, allow_duplicates, profile_config)
         after_strategy_count = len(result)
@@ -170,18 +140,16 @@ def central_custom_allow_duplicates(vulnerabilities: list, profile_config: dict 
                 removed=input_count - after_strategy_count
             )
     else:
-        # Default behavior
         print(f"[DEDUPLICATION] Default mode: allow_duplicates={allow_duplicates}")
         if allow_duplicates is True:
-            result = vulnerabilities  # Sem modificação
+            result = vulnerabilities
             dedup_reason = "no deduplication (duplicates allowed)"
         else:
-            result = deduplicate_by_name(vulnerabilities, field='Name')  # Dedup simples
+            result = deduplicate_by_name(vulnerabilities, field='Name')
             dedup_reason = "deduplicated by Name field"
-        
+
         after_strategy_count = len(result)
-        
-        # Report para default behavior
+
         strategy_report = {
             'strategy_name': 'Default Behavior',
             'description': 'Default deduplication logic',
@@ -191,7 +159,7 @@ def central_custom_allow_duplicates(vulnerabilities: list, profile_config: dict 
             'reason': dedup_reason
         }
     
-    # Filter by valid Name and description (applies to all modes)
+    # Valid Name and description are required in all modes
     def has_valid_description(vuln):
         desc = vuln.get("description")
         if not desc:
@@ -213,8 +181,7 @@ def central_custom_allow_duplicates(vulnerabilities: list, profile_config: dict 
             valid_result.append(v)
         else:
             removed.append(v)
-    
-    # Save removed items log
+
     if removed:
         with open(removed_log_path, 'w', encoding='utf-8') as f:
             f.write(f"# LOG OF REMOVED VULNERABILITIES (missing valid Name or description)\n\n")
@@ -225,8 +192,8 @@ def central_custom_allow_duplicates(vulnerabilities: list, profile_config: dict 
         print(f"[DEDUPLICATION] Removed items log: {removed_log_path}")
     
     result = valid_result
-    
-    # Rebuild grouping para detalhes do log
+
+    # Rebuild grouping for the log details
     from collections import defaultdict
     def make_hashable(val):
         if isinstance(val, list):
@@ -248,8 +215,7 @@ def central_custom_allow_duplicates(vulnerabilities: list, profile_config: dict 
         else:
             key = (name, make_hashable(port), make_hashable(protocol))
         grouped[key].append(v)
-    
-    # Generate modular log
+
     log_content = generate_consolidation_log(
         strategy_report=strategy_report,
         description_filtering_removed=len(removed),
@@ -258,8 +224,7 @@ def central_custom_allow_duplicates(vulnerabilities: list, profile_config: dict 
         vulnerabilities_after_strategy=after_strategy_count,
         vulnerabilities_final=len(result)
     )
-    
-    # Save consolidation log
+
     with open(dedup_log_path, 'w', encoding='utf-8') as f:
         f.write(log_content)
     print(f"[DEDUPLICATION] Consolidation log saved to: {dedup_log_path}")

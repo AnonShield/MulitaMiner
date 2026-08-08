@@ -3,33 +3,6 @@
 Walks ``results_runs/`` (default) or any ``--root`` you pass, and for each
 ``<root>/<target>/<llm>/<runN>/`` invokes every selected metric script
 in parallel. Auto-runs the multi_run aggregator at the end.
-
-Used both as a standalone tool (re-running metrics on existing extractions)
-and as the post-pass triggered by ``run_experiments.py``.
-
-The list of available methods, the dispatch table and the dependency
-auto-resolution all reuse :mod:`main` (no duplication). Adding a new
-metric to ``main.METRIC_SCRIPTS`` automatically exposes it here too.
-
-Usage examples::
-
-    # Default — every registered metric, every run under results_runs/
-    python tools/run_metrics.py
-
-    # Pointing at a specific results root (e.g. when you keep multiple)
-    python tools/run_metrics.py --root results_runs_v3
-
-    # Multiple roots in one go (paper-style cross-version comparison)
-    python tools/run_metrics.py --root results_runs_v2 results_runs_v3
-
-    # Filter by target / model
-    python tools/run_metrics.py --only-target OpenVAS_JuiceShop --only-llm llama4
-
-    # Subset of metrics — auto-deps still apply
-    python tools/run_metrics.py --methods coverage severity
-
-    # Re-run even when outputs already exist
-    python tools/run_metrics.py --force
 """
 from __future__ import annotations
 
@@ -43,15 +16,13 @@ from pathlib import Path
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(PROJECT_ROOT))
 
-# Single source of truth for available metrics + their CLIs + their order.
-from main import (  # noqa: E402
+from main import ( 
     ALL_METHODS_ORDER,
     METRIC_SCRIPTS,
     expand_evaluation_methods,
 )
 
-# Single canonical results root by default. Multi-root walks (e.g. for the
-# V2-vs-V3 paper experiment) are opt-in via ``--root``.
+# Single canonical results root by default. Multi-root walks
 DEFAULT_ROOT: Path = PROJECT_ROOT / "results_runs"
 BASELINES_DIR = PROJECT_ROOT / "baselines"
 
@@ -114,11 +85,6 @@ def discover_runs(
 
 def _expected_extraction_file(run_dir: Path, target: str, llm: str) -> Path | None:
     """Locate the extraction file inside ``run_dir`` — JSON preferred.
-
-    Pipelines now read JSON natively (the tool's default output), so we look
-    for ``<target>_<llm>_<run>*.json`` first. Fall back to the legacy XLSX
-    glob for older runs that only have the converted output. Files matching
-    metric-output globs are excluded so we never confuse them with the input.
     """
     metric_outputs = {p for pat in _OUTPUT_PATTERNS.values() for p in run_dir.glob(pat)}
 
@@ -137,9 +103,6 @@ def metric_done(run_dir: Path, method: str) -> bool:
     return bool(pattern and any(run_dir.glob(pattern)))
 
 
-# Methods routed through compare_extractions.run_pipeline (no subprocess).
-# BERTScore loads a transformer model once per process — running in-process
-# means we pay the load cost once across all runs instead of once per subprocess.
 _IN_PROCESS_SCORERS: dict[str, str] = {"bert": "bertscore", "rouge": "rouge_l"}
 
 
@@ -173,8 +136,6 @@ def run_metric_subprocess(
         subprocess.run(cmd, check=True, capture_output=True, text=True)
         return True, None
     except subprocess.CalledProcessError as exc:
-        # Surface the full traceback so subtle errors (numpy/pandas type clashes
-        # that only manifest on certain extractions) aren't reduced to a one-liner.
         out = (exc.stderr or exc.stdout or "").strip()
         if not out:
             return False, f"exit {exc.returncode} (no stderr)"
@@ -190,9 +151,6 @@ def run_metric_in_process(
     allow_duplicates: bool,
 ) -> tuple[bool, str | None]:
     """Run bert/rouge directly via compare_extractions.run_pipeline.
-
-    Reuses the same Python process across calls so heavy resources
-    (BERTScore transformer) load exactly once.
     """
     extraction = _expected_extraction_file(run_dir, target, llm)
     if extraction is None:
@@ -343,15 +301,10 @@ def main() -> None:
             else:
                 print(f"{tag} {rel}  ok")
 
-    # Iterate methods in dependency order. Schema runs first; bert/rouge produce
-    # the matched-pairs that entity/severity/coverage consume; so phase order is
-    # crucial regardless of within-phase parallelism.
     for method in methods:
         completed = [0]
         is_in_process = method in _IN_PROCESS_SCORERS
-        # In-process scorers (bert/rouge) hold a shared transformer model;
-        # parallelizing across threads serializes on torch anyway and forces
-        # multiple model loads. Run sequentially in-process.
+
         workers = 1 if is_in_process else max(1, args.workers)
         print(f"\n[PHASE] {method} ({'in-process' if is_in_process else 'subprocess'}, "
               f"workers={workers})")

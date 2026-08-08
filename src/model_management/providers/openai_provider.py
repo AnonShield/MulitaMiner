@@ -1,8 +1,4 @@
-"""
-OpenAI provider for using ChatGPT models via API.
-
-This provider handles all OpenAI API models (GPT-4, GPT-3.5, etc).
-"""
+"""OpenAI provider (GPT models over the API)."""
 
 import os
 from langchain_openai import ChatOpenAI
@@ -13,30 +9,15 @@ class OpenAIProvider(BaseLLMProvider):
     """Provider for OpenAI API models (GPT-4, GPT-3.5, etc)."""
     
     def __init__(self, config: dict):
-        """
-        Initialize OpenAI provider.
-        
-        Args:
-            config: Configuration dict with:
-                - api_key: OpenAI API key
-                - endpoint: API endpoint (usually https://api.openai.com/v1)
-                - model: Model name
-                - temperature: Temperature setting
-                - timeout: Request timeout
-                - max_completion_tokens: Max tokens in response
-        """
         self.config = config
-        
-        # Set API key
+
         os.environ["OPENAI_API_KEY"] = config["api_key"]
-        
-        # Parse temperature
+
         temperature = config.get("temperature", 1.0)
         if temperature is None:
             temperature = 1.0
         temperature = float(temperature)
         
-        # Parse max_tokens
         max_tokens = None
         if "max_completion_tokens" in config:
             max_tokens = config["max_completion_tokens"]
@@ -49,7 +30,6 @@ class OpenAIProvider(BaseLLMProvider):
             max_tokens = 4096
         max_tokens = int(max_tokens)
         
-        # Create ChatOpenAI instance
         self.llm = ChatOpenAI(
             model=config["model"],
             temperature=temperature,
@@ -65,7 +45,7 @@ class OpenAIProvider(BaseLLMProvider):
         response = self.llm.invoke(prompt)
         try:
             from src.utils.usage_log import log_real_usage
-            log_real_usage(response, self.model_name)  # captura usage REAL antes de reduzir a .content
+            log_real_usage(response, self.model_name)  # needs the raw response, not .content
         except Exception:
             pass
         return response.content

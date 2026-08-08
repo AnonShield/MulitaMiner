@@ -1,27 +1,10 @@
-"""
-Prompt loading utility.
-
-Handles loading prompt templates from files or returning them as strings.
-"""
+"""Prompt loading utility."""
 
 import os
 
 
 def load_prompt(prompt):
-    """
-    Load a prompt template from a file or return as string.
-    
-    Tries multiple path resolution strategies:
-    1. Direct file path
-    2. Relative to project root
-    3. Return as string if not a file
-    
-    Args:
-        prompt: File path or prompt string
-    
-    Returns:
-        str: Prompt content or original string
-    """
+    """Read prompt from a path (direct or project-relative); else return as-is."""
     if os.path.isfile(prompt):
         with open(prompt, "r", encoding="utf-8") as f:
             return f.read()

@@ -12,10 +12,9 @@ class TenableWASStrategy(ScannerStrategy):
         """Custom consolidation activates when allow_duplicates=False"""
         return False
     
-    # Header detection — accepts optional markdown heading prefix (`#+ `) and
-    # section-number prefix (`2.1.1 `) so reports rendered via the markdown
-    # extractor still match. Tenable's "VULNERABILITY ... PLUGIN ID" phrase
-    # is distinctive enough that we don't need an alt-order regex like OpenVAS.
+    # Optional markdown heading (`#+ `) and section-number (`2.1.1 `) prefixes
+    # keep markdown-extracted reports matching; the "VULNERABILITY ... PLUGIN ID"
+    # phrase is distinctive enough to not need an alt-order regex like OpenVAS
     HEADER_PATTERN = re.compile(
         r'(?:#+\s+)?(?:\d+(?:\.\d+)*\s+)?VULNERABILITY\s+(CRITICAL|HIGH|MEDIUM|LOW|INFO)\s+PLUGIN\s+ID\s+\d+',
         re.IGNORECASE
@@ -26,14 +25,7 @@ class TenableWASStrategy(ScannerStrategy):
     )
     
     def create_blocks(self, report_text: str, temp_dir: str, initial_context: Tuple, output_ext: str = "txt") -> List[Dict]:
-        """
-        Create blocks by severity for Tenable WAS.
-        Strategy: Single pass through text, detecting each header
-        "VULNERABILITY <SEVERITY> PLUGIN ID" and assigning content until next header.
-
-        Args:
-            output_ext: Extension to use for block files (e.g. "txt", "md")
-        """
+        """One block per severity: single pass assigning content between headers."""
         file_ext = f".{output_ext}"
         
         severidades = ["CRITICAL", "HIGH", "MEDIUM", "LOW", "INFO"]
@@ -50,7 +42,8 @@ class TenableWASStrategy(ScannerStrategy):
             
             if header_match:
                 if not first_header_found:
-                    # Determine severity of orphaned content (before first header)
+                    # Content before the first header gets the severity of its
+                    # own SEVERITY field, when present
                     orphan_severity = None
                     for orphan_line in pre_header_lines:
                         m = self.SEVERITY_FIELD_PATTERN.match(orphan_line)
@@ -73,8 +66,7 @@ class TenableWASStrategy(ScannerStrategy):
         
         if current_severity and current_block:
             blocks_por_severidade[current_severity].extend(current_block)
-        
-        # Create block files only for severities with content
+
         blocks = []
         for severidade in severidades:
             bloco = blocks_por_severidade[severidade]
@@ -92,12 +84,9 @@ class TenableWASStrategy(ScannerStrategy):
         return blocks
     
     def vulnerability_processing_logic(self, vulns: List[Dict], allow_duplicates: bool = True, profile_config: Dict = None) -> List[Dict]:
-        """
-        Consolidate Tenable WAS vulnerabilities already extracted into unified model.
-        """
+        """Defensive dedup by (Name, plugin), merging instances and empty fields."""
         if not vulns:
             return []
-        # Defensive deduplication by Name + plugin
         seen = {}
         for v in vulns:
             key = (v.get('Name', '').strip(), v.get('plugin'))
@@ -108,7 +97,6 @@ class TenableWASStrategy(ScannerStrategy):
                 new_instances = v.get('instances', [])
                 if new_instances:
                     existing.setdefault('instances', []).extend(new_instances)
-                # Preenche campos vazios do existente com dados do novo
                 for field in ['description', 'solution', 'cvss', 'references']:
                     if not existing.get(field) and v.get(field):
                         existing[field] = v[field]
@@ -131,7 +119,6 @@ class TenableWASStrategy(ScannerStrategy):
                         max_n = n
                         target_instance = instance
         consolidated = target_instance.copy()
-        # Campos arrays reais do JSON atual
         merge_array_fields = profile_config.get('merge_array_fields', [
             'description', 'solution', 'references', 'cvss', 'detection_result', 'detection_method',
             'impact', 'insight', 'product_detection_result', 'log_method', 'instances'
@@ -141,7 +128,6 @@ class TenableWASStrategy(ScannerStrategy):
         ]
         merge_scalar_fields = profile_config.get('merge_scalar_fields', ['port', 'protocol', 'plugin', 'plugin_details']) if profile_config else ['port', 'protocol', 'plugin', 'plugin_details']
         preserve_highest_severity = profile_config.get('preserve_highest_severity', True) if profile_config else True
-        # Merge arrays
         for field in merge_array_fields:
             all_values = []
             for instance in instances:
@@ -158,7 +144,6 @@ class TenableWASStrategy(ScannerStrategy):
                     seen.add(key)
                     unique.append(item)
             consolidated[field] = unique
-        # Merge escalares
         for field in merge_scalar_fields:
             if consolidated.get(field) in [None, "", 0, {}]:
                 for instance in sorted(instances, key=lambda x: self._extract_instance_number(x.get('Name', '')), reverse=True):
@@ -173,9 +158,7 @@ class TenableWASStrategy(ScannerStrategy):
         return consolidated
     
     def get_consolidation_report(self, input_count: int, output_count: int, removed: int) -> Dict:
-        """
-        Return report specific to Tenable strategy.
-        """
+        """Tenable-specific consolidation report."""
         return {
             'strategy_name': 'Tenable WAS custom merge',
             'description': 'Groups vulnerabilities by (Name, plugin), merges instances and metadata',
@@ -202,7 +185,6 @@ class TenableWASStrategy(ScannerStrategy):
         ]
         merge_scalar_fields = profile_config.get('merge_scalar_fields', ['port', 'protocol', 'plugin', 'plugin_details']) if profile_config else ['port', 'protocol', 'plugin', 'plugin_details']
         preserve_highest_severity = profile_config.get('preserve_highest_severity', True) if profile_config else True
-        # Merge arrays
         for field in merge_array_fields:
             all_values = []
             for vuln in vulnerabilities:
@@ -219,7 +201,6 @@ class TenableWASStrategy(ScannerStrategy):
                     seen.add(key)
                     unique.append(item)
             consolidated[field] = unique
-        # Merge escalares
         for field in merge_scalar_fields:
             if consolidated.get(field) in [None, "", 0, {}]:
                 for vuln in vulnerabilities:
@@ -238,10 +219,9 @@ class TenableWASStrategy(ScannerStrategy):
         return int(match.group(1)) if match else 0
 
 def join_tenable_base_and_instances(vulns):
-    """
-    Junta vulnerabilidades base e suas instances pelo nome base e plugin_id.
-    Retorna uma lista consolidada, onde cada base tem seu campo 'instances' preenchido corretamente.
-    Se houver instances sem base correspondente, cria vulnerabilidade isolada para elas.
+    """Join base vulnerabilities with their instances by (base name, plugin).
+
+    Instances without a matching base get a synthetic base record.
     """
     base_dict = {}
     instances_dict = {}
@@ -276,7 +256,6 @@ def join_tenable_base_and_instances(vulns):
         print(f"  Instances {k}: {len(lst)} instances")
 
     result = []
-    # For each key, if base exists, associate instances; if not exists, create synthetic base
     all_keys = set(base_dict.keys()) | set(instances_dict.keys())
     for key in all_keys:
         if key in base_dict:
@@ -284,7 +263,7 @@ def join_tenable_base_and_instances(vulns):
             base['instances'] = instances_dict.get(key, [])
             result.append(base)
         else:
-            # Create synthetic base from first instance
+            # Synthetic base from the first instance
             inst_list = instances_dict.get(key, [])
             if inst_list:
                 first = inst_list[0]

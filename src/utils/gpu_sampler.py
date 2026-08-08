@@ -1,12 +1,7 @@
-"""
-Background sampler for per-run GPU metrics via `nvidia-smi`.
+"""Poll `nvidia-smi` during a run for peak VRAM, energy (Wh) and utilization.
 
-While a run executes, polls memory.used, power.draw and utilization, then
-reports peak VRAM, integrated GPU energy (Wh) and utilization stats. No-ops
-gracefully when `nvidia-smi` is unavailable (cloud runs, non-NVIDIA hosts).
-
-Note: the numbers reflect the WHOLE GPU during the run window (the model plus
-anything else on the card) and energy is the GPU board only — not CPU/system.
+No-ops when nvidia-smi is missing. The numbers cover the whole GPU during the
+run window, not just this process, and energy is board-only.
 """
 
 import subprocess

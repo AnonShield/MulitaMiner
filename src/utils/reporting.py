@@ -97,7 +97,7 @@ def generate_final_report(
     else:
         lines.append("_No token data found._")
 
-    # Usage REAL da API (usage_real_*.jsonl): contagem exata + custo com cache do DeepSeek.
+    # Exact counts reported by the API, priced with the prompt-cache split.
     from src.utils.tokens_cost import calc_real_usage
     real = calc_real_usage(tokens_dir)
     real = {k: v for k, v in real.items() if (v.get("input") or v.get("output"))}
