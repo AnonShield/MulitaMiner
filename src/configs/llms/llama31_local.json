@@ -12,6 +12,6 @@
   },
   "tokenizer": {
     "type": "huggingface",
-    "model": "meta-llama/Llama-3.1-8B-Instruct"
+    "model": "NousResearch/Meta-Llama-3.1-8B-Instruct"
   }
 }
