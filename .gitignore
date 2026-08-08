@@ -229,3 +229,8 @@ __marimo__/
 output/
 # Claim outputs
 claims/out/
+outputs/
+CLAUDE.md
+resources/
+archive/
+.claude/
