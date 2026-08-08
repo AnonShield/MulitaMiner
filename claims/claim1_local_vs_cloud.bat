@@ -33,7 +33,7 @@ if not exist "%OUT%" mkdir "%OUT%"
 python main.py --input "%PDF%" --llm %CLOUD_MODEL% --scanner openvas ^
     --allow-duplicates --output-file "%BASELINE%_%CLOUD_MODEL%_run1" --output-dir "%OUT%"
 if errorlevel 1 exit /b 1
-call :check_output "%OUT%\%BASELINE%_%CLOUD_MODEL%_run1.json" "the cloud reference (%CLOUD_MODEL%)"
+call :check_output "%OUT%\%BASELINE%_%CLOUD_MODEL%_run1.json" "the cloud reference %CLOUD_MODEL%"
 if errorlevel 1 exit /b 1
 
 for %%m in (%LOCAL_MODELS%) do (
@@ -44,7 +44,7 @@ for %%m in (%LOCAL_MODELS%) do (
     python main.py --input "%PDF%" --llm %%m --scanner openvas ^
         --allow-duplicates --output-file "%BASELINE%_%%m_run1" --output-dir "%ROOT%\%BASELINE%\%%m\run1"
     if errorlevel 1 exit /b 1
-    call :check_output "%ROOT%\%BASELINE%\%%m\run1\%BASELINE%_%%m_run1.json" "the local model (%%m)"
+    call :check_output "%ROOT%\%BASELINE%\%%m\run1\%BASELINE%_%%m_run1.json" "the local model %%m"
     if errorlevel 1 exit /b 1
 )
 
@@ -60,13 +60,13 @@ exit /b 0
 
 REM An extraction that yields no vulnerability means the provider never answered;
 REM main.py still exits 0 in that case, so check the output explicitly.
+REM No parenthesised block here: %~2 is echoed raw, and a ")" inside it would
+REM close the block while cmd parses it, breaking the script even on success.
 :check_output
 python -c "import json,sys; sys.exit(0 if json.load(open(sys.argv[1],encoding='utf-8')) else 1)" %1 2>nul
-if errorlevel 1 (
-    echo.
-    echo ERROR: %~2 extracted no vulnerabilities.
-    echo   The model never answered. Common causes: Ollama stopped mid-run,
-    echo   or the DeepSeek key is invalid or out of credit.
-    exit /b 1
-)
-exit /b 0
+if not errorlevel 1 exit /b 0
+echo.
+echo ERROR: %~2 extracted no vulnerabilities.
+echo   The model never answered. Common causes: Ollama stopped mid-run,
+echo   or the DeepSeek key is invalid or out of credit.
+exit /b 1
