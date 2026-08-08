@@ -198,7 +198,7 @@ LOG        | Postfix SMTP Server Detection                      | CVSS 0.0 | 25/
 
 **Description**: the same pipeline, prompts and baseline are run with the cloud reference (`deepseek-v4-flash`) and with a local model served by Ollama (`llama3.1:8b`), and both are scored by the identical metric battery. This reproduces, at reviewer scale, the paper's central result: on-premise extraction matches the cloud on the deterministic fields and on schema conformance, and the residual gap sits in the free-text fields.
 
-The paper evaluates nine local models; this claim runs one of them. `llama3.1:8b` was chosen because it needs the least VRAM of the pool (6.9 GB) and is the fastest to extract a report, so the claim stays runnable on modest hardware. To compare a different model instead, change `LOCAL_MODELS` at the top of [claims/claim1_local_vs_cloud.sh](claims/claim1_local_vs_cloud.sh); a config for every model of Table 1 is in [src/configs/llms/](src/configs/llms/).
+The paper evaluates nine local models; this claim runs one of them. `llama3.1:8b` was chosen because it needs the least VRAM of the pool (6.9 GB) and is the fastest to extract a report, so the claim stays runnable on modest hardware.
 
 **Execution**:
 

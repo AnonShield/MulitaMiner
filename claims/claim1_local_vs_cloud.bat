@@ -5,7 +5,7 @@ REM then scores them with the identical metric battery.
 setlocal
 cd /d "%~dp0.."
 
-REM Models compared, in table order. Add or swap entries to change the comparison.
+REM Models compared, in table order.
 set CLOUD_MODEL=deepseek
 set LOCAL_MODELS=llama31_local
 

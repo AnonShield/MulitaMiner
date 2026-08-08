@@ -6,7 +6,7 @@ set -e
 cd "$(dirname "$0")/.."
 PY="$(command -v python3 || command -v python)"
 
-# Models compared, in table order. Add or swap entries to change the comparison.
+# Models compared, in table order.
 CLOUD_MODEL=deepseek
 LOCAL_MODELS="llama31_local"
 
