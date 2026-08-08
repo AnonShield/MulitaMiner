@@ -181,7 +181,7 @@ def main():
     parser_llm.add_argument('--show-files', action='store_true', help='Show token counts for individual files')
     parser_llm.add_argument('--price-per-1M', type=float, default=None, help='Price per 1M tokens (USD)')
 
-    parser_real = subparsers.add_parser('real', help='Custo a partir do usage REAL da API (usage_real_*.jsonl)')
+    parser_real = subparsers.add_parser('real', help='Cost from the usage the API itself reported (usage_real_*.jsonl)')
     parser_real.add_argument('--tokens-dir', type=str, default='results_tokens', help='Directory of token files')
 
     args = parser.parse_args()
@@ -212,12 +212,12 @@ def main():
     elif args.mode == 'real':
         rows = calc_real_usage(args.tokens_dir)
         if not rows:
-            print(f"Nenhum usage_real_*.jsonl em {args.tokens_dir} (rode uma extração com modelo de API primeiro).")
+            print(f"No usage_real_*.jsonl in {args.tokens_dir}. Run an extraction with an API model first.")
         for llm, a in rows.items():
             print(f"\nLLM: {llm}")
-            print(f"  input REAL: {a['input']:,}  (cache_hit={a['cache_hit']:,}, cache_miss={a['cache_miss']:,})")
-            print(f"  output REAL: {a['output']:,}")
-            print("  custo REAL: " + (f"US$ {a['cost']:.4f}" if a['cost'] is not None else "— (sem preço / modelo local)"))
+            print(f"  real input: {a['input']:,}  (cache_hit={a['cache_hit']:,}, cache_miss={a['cache_miss']:,})")
+            print(f"  real output: {a['output']:,}")
+            print("  real cost: " + (f"US$ {a['cost']:.4f}" if a['cost'] is not None else "- (no price / local model)"))
 
 if __name__ == "__main__":
     main()

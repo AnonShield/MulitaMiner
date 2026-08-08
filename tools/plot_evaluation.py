@@ -304,7 +304,7 @@ def plot_text_rouge(summary, out_dir):
     sns.boxplot(data=melted, x="field", y="rouge_l", palette="Greens", ax=ax)
     sns.stripplot(data=melted, x="field", y="rouge_l", color="black", alpha=0.3, size=3, ax=ax)
     ax.set_ylim(0, 1.05)
-    ax.set_title("ROUGE-L por campo texto (apenas both-filled, 129 PDFs)\nlog_method omitido: CSV nativo do OpenVAS não exporta esse campo")
+    ax.set_title("ROUGE-L per free-text field (both-filled only, 129 PDFs)\nlog_method omitted: the native OpenVAS CSV does not export it")
     plt.xticks(rotation=20, ha="right")
     fig.tight_layout()
     fig.savefig(out_dir / "05_text_rouge.png", dpi=120, bbox_inches="tight")
@@ -355,10 +355,10 @@ def plot_invented_vs_missing(errors, out_dir):
     fig, ax = plt.subplots(figsize=(14, 8))
     top_sorted = top.sort_values("total")
     ax.barh(top_sorted["pdf"], top_sorted["missing"], color="#dc2626",
-            label="missing (baseline tem, LLM não detectou)")
+            label="missing (in the baseline, not detected by the LLM)")
     ax.barh(top_sorted["pdf"], top_sorted["invented"], left=top_sorted["missing"],
-            color="#3b82f6", label="invented (LLM achou, baseline não tem)")
-    ax.set_title("Top 20 PDFs com mais erros (missing + invented)")
+            color="#3b82f6", label="invented (found by the LLM, absent from the baseline)")
+    ax.set_title("Top 20 PDFs by error count (missing + invented)")
     ax.legend(loc="lower right")
     fig.tight_layout()
     fig.savefig(out_dir / "08_errors_top20.png", dpi=120, bbox_inches="tight")

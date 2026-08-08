@@ -31,13 +31,13 @@ class BaseConverter(ABC):
                 data = json.load(f)
 
             if not isinstance(data, list):
-                raise ValueError("JSON deve conter uma lista de vulnerabilidades")
+                raise ValueError("JSON must contain a list of vulnerabilities")
 
             return data
         except FileNotFoundError:
-            raise FileNotFoundError(f"Arquivo JSON não encontrado: {json_file_path}")
+            raise FileNotFoundError(f"JSON file not found: {json_file_path}")
         except json.JSONDecodeError as e:
-            raise ValueError(f"Erro ao decodificar JSON: {e}")
+            raise ValueError(f"Could not decode JSON: {e}")
 
     def validate_data(self, data: List[Dict[str, Any]]) -> bool:
         """Check that data is a list of dicts with a 'name'/'Name' field."""

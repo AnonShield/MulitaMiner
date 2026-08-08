@@ -54,13 +54,13 @@ class CSVConverter(BaseConverter):
         """Append a metadata section to the same CSV file."""
         try:
             writer.writerow([])
-            writer.writerow(['=== METADADOS ==='])
+            writer.writerow(['=== METADATA ==='])
             writer.writerow([])
 
-            writer.writerow(['Propriedade', 'Valor'])
+            writer.writerow(['Property', 'Value'])
             writer.writerow(['Generated date', datetime.now().strftime("%Y-%m-%d %H:%M:%S")])
             writer.writerow(['Total vulnerabilities', len(data)])
-            writer.writerow(['Conversor', f"{self.get_format_name()} Converter"])
+            writer.writerow(['Converter', f"{self.get_format_name()} Converter"])
 
             if data:
                 severity_counts = {}
@@ -135,17 +135,17 @@ class CSVConverter(BaseConverter):
                 base_name = os.path.splitext(os.path.basename(output_file_path))[0]
                 metadata_file = self.create_metadata_csv(data, output_dir, base_name)
 
-            print(f"Arquivo CSV criado com sucesso: {output_file_path}")
-            print(f"Total de vulnerabilidades: {len(data)}")
+            print(f"CSV file created: {output_file_path}")
+            print(f"Total vulnerabilities: {len(data)}")
             if metadata_file:
-                print(f"Metadados salvos em: {metadata_file}")
+                print(f"Metadata saved to: {metadata_file}")
             elif self.include_metadata:
                 print("Metadata included in main CSV file")
 
             return output_file_path
 
         except Exception as e:
-            raise Exception(f"Erro ao criar arquivo CSV: {e}")
+            raise Exception(f"Could not create the CSV file: {e}")
 
 
 class TSVConverter(CSVConverter):

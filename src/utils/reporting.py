@@ -115,8 +115,8 @@ def generate_final_report(
                 f"{a['output']:,} | {cost_s} |"
             )
         lines.append(f"| **TOTAL** | | | | | **{tot_real_cost:.4f}** |")
-        lines.append("\n_Contagem real retornada pela API (modelos locais não retornam usage → não aparecem). "
-                     "Confirme o valor oficial no dashboard do provedor._")
+        lines.append("\n_Counts reported by the API itself; local models report no usage, "
+                     "so they do not appear here. Confirm the billed amount on the provider dashboard._")
 
     lines.append(_section("Timing"))
     if timing_report:

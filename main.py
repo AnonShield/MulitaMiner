@@ -356,8 +356,8 @@ def main():
         return
     real_start_time = time.time()
 
-    # Contexto p/ o log de usage REAL (results_tokens/usage_real_*.jsonl):
-    # grava o baseline (target) e o run no registro -> custo real por baseline sem depender de PID.
+    # Context for the usage log: recording the baseline and the run makes the
+    # real cost attributable per baseline without relying on the PID.
     try:
         if getattr(args, 'input', None):
             os.environ['MULITA_TARGET'] = os.path.splitext(os.path.basename(args.input))[0]
@@ -403,7 +403,6 @@ def main():
     print(f"[CONFIG] Reserve for response: {reserve_response}")
     print(f"{'='*60}\n")
 
-    # Extração do PDF com layout visual
     print(f"[PDF] Loading PDF from: {args.input}")
     
     extractor = get_extractor(getattr(args, 'use_markdown', False))
@@ -429,8 +428,8 @@ def main():
 
     extraction_text = result.extraction.page_content
 
-    # Texto bruto da extração — útil para inspeção, mas só persiste com --debug
-    # para não criar lixo na raiz do projeto em runs normais.
+    # Raw extraction text, useful for inspection but only kept under --debug so a
+    # normal run does not litter the project root.
     if args.debug:
         pdf_base_name = os.path.splitext(os.path.basename(args.input))[0]
         extraction_file = os.path.join(args.output_dir, f"extraction_{pdf_base_name}.{output_ext}")
@@ -454,7 +453,6 @@ def main():
     )
     print(f"[BLOCKS] {len(session_blocks)} session blocks created")
 
-    # Se nenhum bloco for criado, interrompe a execução para evitar erros
     if not session_blocks:
         print("[ERROR] No session blocks were created. Aborting.")
         return
