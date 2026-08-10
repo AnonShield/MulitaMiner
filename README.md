@@ -301,41 +301,41 @@ BERTScore model loaded successfully!
 # Windows
 python tools/TMM_metrics_run.py `
   --baseline baselines/native/vulnnet_scans_openvas.csv `
-  --versions TMMv1:artifacts/v1/openvas_129_dockers/deepseek_v1.csv:deepseek `
-             TMMv1:artifacts/v1/openvas_129_dockers/gpt4_v1.csv:gpt4 `
-             TMMv1:artifacts/v1/openvas_129_dockers/gpt5_v1.csv:gpt5 `
-             TMMv1:artifacts/v1/openvas_129_dockers/llama3_v1.csv:llama3 `
-             TMMv1:artifacts/v1/openvas_129_dockers/llama4_v1.csv:llama4 `
-             TMMv2:artifacts/v2/openvas_129_dockers/deepseek_v2.csv:deepseek `
-             TMMv2:artifacts/v2/openvas_129_dockers/gpt4_v2.csv:gpt4 `
-             TMMv2:artifacts/v2/openvas_129_dockers/gpt5_v2.csv:gpt5 `
-             TMMv2:artifacts/v2/openvas_129_dockers/llama3_v2.csv:llama3 `
-             TMMv2:artifacts/v2/openvas_129_dockers/llama4_v2.csv:llama4 `
-             TMMv3:artifacts/v3/openvas_129_dockers/deepseek_v3.csv:deepseek `
-             TMMv3:artifacts/v3/openvas_129_dockers/gpt4_v3.csv:gpt4 `
-             TMMv3:artifacts/v3/openvas_129_dockers/gpt5_v3.csv:gpt5 `
-             TMMv3:artifacts/v3/openvas_129_dockers/llama3_v3.csv:llama3 `
-             TMMv3:artifacts/v3/openvas_129_dockers/llama4_v3.csv:llama4 `
+  --versions v1:artifacts/v1/openvas_129_dockers/deepseek_v1.csv:deepseek `
+             v1:artifacts/v1/openvas_129_dockers/gpt4_v1.csv:gpt4 `
+             v1:artifacts/v1/openvas_129_dockers/gpt5_v1.csv:gpt5 `
+             v1:artifacts/v1/openvas_129_dockers/llama3_v1.csv:llama3 `
+             v1:artifacts/v1/openvas_129_dockers/llama4_v1.csv:llama4 `
+             v2:artifacts/v2/openvas_129_dockers/deepseek_v2.csv:deepseek `
+             v2:artifacts/v2/openvas_129_dockers/gpt4_v2.csv:gpt4 `
+             v2:artifacts/v2/openvas_129_dockers/gpt5_v2.csv:gpt5 `
+             v2:artifacts/v2/openvas_129_dockers/llama3_v2.csv:llama3 `
+             v2:artifacts/v2/openvas_129_dockers/llama4_v2.csv:llama4 `
+             v3:artifacts/v3/openvas_129_dockers/deepseek_v3.csv:deepseek `
+             v3:artifacts/v3/openvas_129_dockers/gpt4_v3.csv:gpt4 `
+             v3:artifacts/v3/openvas_129_dockers/gpt5_v3.csv:gpt5 `
+             v3:artifacts/v3/openvas_129_dockers/llama3_v3.csv:llama3 `
+             v3:artifacts/v3/openvas_129_dockers/llama4_v3.csv:llama4 `
   --xlsx artifacts/TMM_metrics_all_versions.xlsx
 
 # Linux/macOS
 python3 tools/TMM_metrics_run.py \
   --baseline baselines/native/vulnnet_scans_openvas.csv \
-  --versions TMMv1:artifacts/v1/openvas_129_dockers/deepseek_v1.csv:deepseek \
-             TMMv1:artifacts/v1/openvas_129_dockers/gpt4_v1.csv:gpt4 \
-             TMMv1:artifacts/v1/openvas_129_dockers/gpt5_v1.csv:gpt5 \
-             TMMv1:artifacts/v1/openvas_129_dockers/llama3_v1.csv:llama3 \
-             TMMv1:artifacts/v1/openvas_129_dockers/llama4_v1.csv:llama4 \
-             TMMv2:artifacts/v2/openvas_129_dockers/deepseek_v2.csv:deepseek \
-             TMMv2:artifacts/v2/openvas_129_dockers/gpt4_v2.csv:gpt4 \
-             TMMv2:artifacts/v2/openvas_129_dockers/gpt5_v2.csv:gpt5 \
-             TMMv2:artifacts/v2/openvas_129_dockers/llama3_v2.csv:llama3 \
-             TMMv2:artifacts/v2/openvas_129_dockers/llama4_v2.csv:llama4 \
-             TMMv3:artifacts/v3/openvas_129_dockers/deepseek_v3.csv:deepseek \
-             TMMv3:artifacts/v3/openvas_129_dockers/gpt4_v3.csv:gpt4 \
-             TMMv3:artifacts/v3/openvas_129_dockers/gpt5_v3.csv:gpt5 \
-             TMMv3:artifacts/v3/openvas_129_dockers/llama3_v3.csv:llama3 \
-             TMMv3:artifacts/v3/openvas_129_dockers/llama4_v3.csv:llama4 \
+  --versions v1:artifacts/v1/openvas_129_dockers/deepseek_v1.csv:deepseek \
+             v1:artifacts/v1/openvas_129_dockers/gpt4_v1.csv:gpt4 \
+             v1:artifacts/v1/openvas_129_dockers/gpt5_v1.csv:gpt5 \
+             v1:artifacts/v1/openvas_129_dockers/llama3_v1.csv:llama3 \
+             v1:artifacts/v1/openvas_129_dockers/llama4_v1.csv:llama4 \
+             v2:artifacts/v2/openvas_129_dockers/deepseek_v2.csv:deepseek \
+             v2:artifacts/v2/openvas_129_dockers/gpt4_v2.csv:gpt4 \
+             v2:artifacts/v2/openvas_129_dockers/gpt5_v2.csv:gpt5 \
+             v2:artifacts/v2/openvas_129_dockers/llama3_v2.csv:llama3 \
+             v2:artifacts/v2/openvas_129_dockers/llama4_v2.csv:llama4 \
+             v3:artifacts/v3/openvas_129_dockers/deepseek_v3.csv:deepseek \
+             v3:artifacts/v3/openvas_129_dockers/gpt4_v3.csv:gpt4 \
+             v3:artifacts/v3/openvas_129_dockers/gpt5_v3.csv:gpt5 \
+             v3:artifacts/v3/openvas_129_dockers/llama3_v3.csv:llama3 \
+             v3:artifacts/v3/openvas_129_dockers/llama4_v3.csv:llama4 \
   --xlsx artifacts/TMM_metrics_all_versions.xlsx
 ```
 
