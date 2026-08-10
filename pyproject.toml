@@ -1,0 +1,32 @@
+[project]
+name = "mulita-miner"
+version = "0.1.0"
+description = "PDF Vulnerability Extractor - Extract vulnerabilities from PDF reports using LLM"
+requires-python = ">=3.11"
+
+dependencies = [
+    "langchain==0.3.28",
+    "langchain-core==0.3.84",
+    "langchain-openai==0.3.35",
+    "langchain-ollama==0.3.10",
+    "pdfplumber==0.11.9",
+    "tqdm==4.67.3",
+    "tiktoken==0.12.0",
+    "python-dotenv==1.2.2",
+    "deepmerge==1.1.1",
+    "json-repair==0.59.5",
+    "pandas==2.3.3",
+    "openpyxl==3.1.5",
+    "rapidfuzz==3.14.5",
+    "numpy==1.26.4",
+    "matplotlib==3.10.8",
+    "seaborn==0.13.2",
+    "bert-score==0.3.13",
+    "rouge-score==0.1.2",
+    "scipy==1.13.1",
+    "torch==2.11.0",
+    "scikit-learn==1.8.0",
+    "jinja2==3.1.6",
+    "marker-pdf>=1.10.2",
+    "playwright>=1.60.0",
+]

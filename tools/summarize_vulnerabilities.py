@@ -49,9 +49,14 @@ def print_vulnerability_summary(vuln):
     severity = vuln.get("severity", "N/A").upper()
     name = vuln.get("Name", "N/A")
     
-    # CVSS
-    cvss_list = vuln.get("cvss", [])
-    cvss = cvss_list[0] if cvss_list else "N/A"
+    # CVSS: OpenVAS emits a scalar (7.5), Tenable emits a list (["score", "vector"])
+    cvss_raw = vuln.get("cvss")
+    if isinstance(cvss_raw, list):
+        cvss = cvss_raw[0] if cvss_raw else "N/A"
+    elif cvss_raw is None or cvss_raw == "":
+        cvss = "N/A"
+    else:
+        cvss = cvss_raw
     
     # Port and protocol
     port = vuln.get("port", "N/A")

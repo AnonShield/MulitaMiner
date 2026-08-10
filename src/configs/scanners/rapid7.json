@@ -8,8 +8,6 @@
   "chunking": {
     "scanner_type": "rapid7",
     "marker_pattern": "^\\s*Vulnerability:\\s",
-    "has_pairs": false,
-    "min_chunk_tokens": 900,
     "force_break_at_markers": true,
     "preserve_vulnerability_blocks": true,
     "max_vulnerabilities_per_chunk": 5,

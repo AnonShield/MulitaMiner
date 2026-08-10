@@ -1,0 +1,18 @@
+{
+  "provider": "ollama",
+  "model": "qwen35-custom",
+  "endpoint": "http://localhost:11434",
+  "temperature": 0.0,
+  "max_tokens": 4000,
+  "max_chunk_size": 7000,
+  "reserve_for_response": 2500,
+  "timeout": 7200,
+  "disable_thinking": true,
+  "options": {
+    "num_ctx": 10000
+  },
+  "tokenizer": {
+    "type": "huggingface",
+    "model": "Qwen/Qwen3.5-9B"
+  }
+}

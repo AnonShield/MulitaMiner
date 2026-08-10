@@ -9,6 +9,15 @@ from .config import FIX_COMMON_TYPOS
 
 def normalize_name(s: str) -> str:
     """Normaliza nome de vulnerabilidade para maximizar o pareamento."""
+    # Defensive: ndarray-like values crash ``pd.isna`` (returns array, not bool).
+    try:
+        import numpy as np
+        if isinstance(s, np.ndarray):
+            s = s.tolist()
+    except ImportError:
+        pass
+    if isinstance(s, (list, tuple)):
+        s = " ".join(str(x) for x in s if x is not None)
     if pd.isna(s):
         return ""
     s0 = str(s)
@@ -24,6 +33,19 @@ def normalize_name(s: str) -> str:
 
 def normalize_field_data(val) -> str:
     """Advanced normalization to ensure consistent comparison between baseline and extraction."""
+    # Coerce numpy/pandas array-like into a plain Python list before any
+    # truthiness check — ``pd.isna`` returns an array (not a bool) when given
+    # an ndarray/Series, which crashes the ``elif`` below with a
+    # "truth value of an array is ambiguous" ValueError.
+    try:
+        import numpy as np
+        if isinstance(val, np.ndarray):
+            val = val.tolist()
+    except ImportError:
+        pass
+    if hasattr(val, "tolist") and not isinstance(val, (str, bytes, list, tuple)):
+        val = val.tolist()
+
     # Check if it's list/tuple first (before pd.isna)
     if isinstance(val, (list, tuple)):
         # Converte lista em texto separado por pontos

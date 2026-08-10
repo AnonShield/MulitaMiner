@@ -1,8 +1,8 @@
 # Experiments
 
-This document describes the experiments conducted to validate MulitaMiner, as presented in the paper.
+This document describes the experiments conducted to validate TMM, as presented in the paper.
 
-## Ground Truth Baselines
+## Ground Truth Curated Baselines
 
 The model selection for dataset extraction was based on empirical evaluation of five LLMs against three manually constructed baselines (ground truth):
 
@@ -15,7 +15,7 @@ The model selection for dataset extraction was based on empirical evaluation of 
 
 These baselines were constructed by two security specialists and serve as ground truth for evaluating extraction quality.
 
-## Evaluation Metrics
+## Evaluation Metrics to Curated Baselines
 
 Extraction quality is measured using two complementary dimensions:
 
@@ -26,146 +26,79 @@ Results are categorized into similarity bands:
 
 - **Highly Similar**: ≥ 0.7
 - **Moderately Similar**: 0.6 - 0.7
-- **Low Similarity**: 0.4 - 0.6
+- **Slight Similarity**: 0.4 - 0.6
 - **Divergent**: < 0.4
 - **Absent**: Vulnerability in baseline but not extracted
 - **Excedent**: Vulnerability extracted but not in baseline
 
 ## LLM Comparison Results
 
-### DeepSeek Performance
+### Per-Version Extraction Datasets (129 Docker Reports) for Native Baseline
 
-DeepSeek presented highly competitive results in both metrics:
+The 129 OpenVAS PDF reports in [`dockers/`](../dockers/) (see [docs/INVENTORY.md](INVENTORY.md) for the full container list) were extracted by all 5 LLMs across 3 pipeline iterations (V1, V2, V3), each consolidated into a per-LLM CSV dataset under `artifacts/<version>/openvas_129_dockers/` and evaluated against the same ground-truth baseline ([`baselines/native/vulnnet_scans_openvas.csv`](../baselines/native/vulnnet_scans_openvas.csv)):
 
-- High and consistent BERTScore values across all evaluated scenarios
-- Especially strong on Juice Shop and bBWA baselines
-- Strong semantic preservation of vulnerability descriptions
+| LLM      | V1 rows | V2 rows | V3 rows |
+| -------- | ------- | ------- | ------- |
+| DeepSeek | 13,274  | 6,706   | 6,511   |
+| GPT-4    | 8,396   | 6,805   | 6,168   |
+| GPT-5    | 3,528   | 5,699   | 6,432   |
+| LLaMa 3  | 7,463   | 6,625   | 6,449   |
+| LLaMa 4  | 10,094  | 6,585   | 6,401   |
 
-### Token Consumption and Cost
+Row counts are raw extracted entries per dataset (pre host+name matching against the baseline). The drop and convergence from V1 to V3 reflects successive fixes to the extraction/consolidation pipeline, reducing duplicate/split entries across LLMs.
 
-| LLM       | Input Tokens  | Output Tokens | Total Tokens  | Cost (US$) |
-| --------- | ------------- | ------------- | ------------- | ---------- |
-| DeepSeek  | 7,696,630     | 1,422,522     | 9,119,152     | **2.75**   |
-| GPT-4     | 7,696,630     | 1,194,135     | 8,890,765     | 3.74       |
-| GPT-5     | 7,696,630     | 1,280,084     | 8,976,714     | 4.48       |
-| LLaMa 3   | 7,696,630     | 1,422,519     | 9,119,149     | 5.66       |
-| LLaMa 4   | 7,696,630     | 1,345,762     | 9,042,392     | 1.30       |
-| **Total** | **38,483,150** | **6,665,022** | **45,148,172** | **17.95**  |
+Metrics for each version (and a combined V1+V2+V3 comparison) are computed with [`tools/TMM_metrics_run.py`](../tools/TMM_metrics_run.py) — see the "Consolidated Multi-LLM Metrics Report" claim in the main [README](../README.md#experiments) for the exact commands, producing `artifacts/<version>/TMM_metrics_<version>.xlsx` and `artifacts/TMM_metrics_all_versions.xlsx`.
 
-**Conclusion**: DeepSeek delivered the best balance between extraction quality and cost.
+### Token Consumption and Cost (TMMv3 Batch)
 
-## Dataset Statistics
+Tokens and cost per model in the TMMv3 batch (129 PDFs per model):
 
-The dataset comprises **6,700 vulnerabilities** extracted from **129 OpenVAS PDF reports**, processed by DeepSeek and consolidated in a structured format with scanner-independent schema.
-
-### Severity Distribution
-
-| Severity  | Count     | Percentage |
-| --------- | --------- | ---------- |
-| Critical  | 964       | 14.39%     |
-| High      | 1,465     | 21.87%     |
-| Medium    | 1,908     | 28.48%     |
-| Low       | 494       | 7.37%      |
-| Log       | 1,869     | 27.90%     |
-| **Total** | **6,700** | **100%**   |
-
-The concentration of **36.25%** of vulnerabilities in Critical and High categories reinforces the practical value for SecDevOps teams in remediation prioritization.
-
-### Extraction Accuracy
-
-Comparison against OpenVAS CSV baseline (6,343 vulnerabilities) using fuzzy matching (85% threshold):
-
-| Metric                       | Value       |
-| ---------------------------- | ----------- |
-| Baseline total (OpenVAS CSV) | 6,343       |
-| Extracted total              | 6,700       |
-| **Recall**                   | **96.18%**  |
-| **Precision**                | **91.06%**  |
-| **F1-score**                 | **0.9355**  |
-| False positives              | 599 (8.94%) |
-| False negatives              | 242 (3.82%) |
+| Model     | Version                             | Input tokens   | Output tokens  | Cost         | Cost/PDF   |
+| --------- | ------------------------------------ | -------------: | -------------: | -----------: | ---------: |
+| DeepSeek  | `deepseek-coder`                     | 22,867,811     | 4,863,716      | US$4.56      | US$0.035   |
+| GPT-4     | `gpt-4o-mini-2024-07-18`             | 13,355,126     | 5,229,819      | US$5.14      | US$0.040   |
+| GPT-5     | `gpt-5-mini-2025-08-07`              | 22,092,445     | 4,505,512      | US$44.13     | US$0.342   |
+| LLaMA 3   | `llama-3.3-70b-versatile`            | 16,528,717     | 7,668,978      | US$15.81     | US$0.123   |
+| LLaMA 4   | `llama-4-scout-17b-16e-instruct`     | 14,243,919     | 7,659,172      | US$4.17      | US$0.032   |
+| **Total** | --                                    | **89,088,018** | **29,927,197** | **US$73.82** | --         |
 
 ## Running Experiments
+
+### Metrics Report per Version (TMM_metrics_run.py)
+
+Compute BERTScore/ROUGE-L/deterministic-field metrics for all 5 LLMs of a given version against the native baseline, and generate the consolidated XLSX report:
+
+```bash
+# V1
+python tools/TMM_metrics_run.py --baseline baselines/native/vulnnet_scans_openvas.csv --versions TMMv1:artifacts/v1/openvas_129_dockers/deepseek_v1.csv:deepseek TMMv1:artifacts/v1/openvas_129_dockers/gpt4_v1.csv:gpt4 TMMv1:artifacts/v1/openvas_129_dockers/gpt5_v1.csv:gpt5 TMMv1:artifacts/v1/openvas_129_dockers/llama3_v1.csv:llama3 TMMv1:artifacts/v1/openvas_129_dockers/llama4_v1.csv:llama4 --xlsx artifacts/v1/TMM_metrics_v1.xlsx
+
+# V2
+python tools/TMM_metrics_run.py --baseline baselines/native/vulnnet_scans_openvas.csv --versions TMMv2:artifacts/v2/openvas_129_dockers/deepseek_v2.csv:deepseek TMMv2:artifacts/v2/openvas_129_dockers/gpt4_v2.csv:gpt4 TMMv2:artifacts/v2/openvas_129_dockers/gpt5_v2.csv:gpt5 TMMv2:artifacts/v2/openvas_129_dockers/llama3_v2.csv:llama3 TMMv2:artifacts/v2/openvas_129_dockers/llama4_v2.csv:llama4 --xlsx artifacts/v2/TMM_metrics_v2.xlsx
+
+# V3
+python tools/TMM_metrics_run.py --baseline baselines/native/vulnnet_scans_openvas.csv --versions TMMv3:artifacts/v3/openvas_129_dockers/deepseek_v3.csv:deepseek TMMv3:artifacts/v3/openvas_129_dockers/gpt4_v3.csv:gpt4 TMMv3:artifacts/v3/openvas_129_dockers/gpt5_v3.csv:gpt5 TMMv3:artifacts/v3/openvas_129_dockers/llama3_v3.csv:llama3 TMMv3:artifacts/v3/openvas_129_dockers/llama4_v3.csv:llama4 --xlsx artifacts/v3/TMM_metrics_v3.xlsx
+
+# All versions combined (15 LLM x version entries in one report)
+python tools/TMM_metrics_run.py --baseline baselines/native/vulnnet_scans_openvas.csv --versions TMMv1:artifacts/v1/openvas_129_dockers/deepseek_v1.csv:deepseek TMMv1:artifacts/v1/openvas_129_dockers/gpt4_v1.csv:gpt4 TMMv1:artifacts/v1/openvas_129_dockers/gpt5_v1.csv:gpt5 TMMv1:artifacts/v1/openvas_129_dockers/llama3_v1.csv:llama3 TMMv1:artifacts/v1/openvas_129_dockers/llama4_v1.csv:llama4 TMMv2:artifacts/v2/openvas_129_dockers/deepseek_v2.csv:deepseek TMMv2:artifacts/v2/openvas_129_dockers/gpt4_v2.csv:gpt4 TMMv2:artifacts/v2/openvas_129_dockers/gpt5_v2.csv:gpt5 TMMv2:artifacts/v2/openvas_129_dockers/llama3_v2.csv:llama3 TMMv2:artifacts/v2/openvas_129_dockers/llama4_v2.csv:llama4 TMMv3:artifacts/v3/openvas_129_dockers/deepseek_v3.csv:deepseek TMMv3:artifacts/v3/openvas_129_dockers/gpt4_v3.csv:gpt4 TMMv3:artifacts/v3/openvas_129_dockers/gpt5_v3.csv:gpt5 TMMv3:artifacts/v3/openvas_129_dockers/llama3_v3.csv:llama3 TMMv3:artifacts/v3/openvas_129_dockers/llama4_v3.csv:llama4 --xlsx artifacts/TMM_metrics_all_versions.xlsx
+```
+
+Each run produces sheets for Summary, Overview (global + per-version), All LLMs, one sheet per LLM, and Omission & Hallucination analysis. Close the target `.xlsx` in Excel before re-running — the script cannot overwrite a file that's open (locked on Windows).
 
 ### Full Experiment Suite
 
 ```bash
-# Run experiments with specified configurations
-
 # Windows
-python tools/run_experiments.py --input-dir test\openvas --llms deepseek gpt4 --scanners openvas --evaluation-methods bert rouge --runs-per-model 5 --allow-duplicates true
+python tools/batch_pdf_extractor.py --input-dir dockers --scanner openvas --llm deepseek --convert csv [--allow-duplicates] [--output-dir <output_directory>]
+python tools/batch_pdf_extractor.py --input-dir dockers --scanner openvas --llm gpt4 --convert csv [--allow-duplicates] [--output-dir <output_directory>]
+python tools/batch_pdf_extractor.py --input-dir dockers --scanner openvas --llm gpt5 --convert csv [--allow-duplicates] [--output-dir <output_directory>]
+python tools/batch_pdf_extractor.py --input-dir dockers --scanner openvas --llm llama4 --convert csv [--allow-duplicates] [--output-dir <output_directory>]
+python tools/batch_pdf_extractor.py --input-dir dockers --scanner openvas --llm llama3 --convert csv [--allow-duplicates] [--output-dir <output_directory>]
 
 # Linux/macOS
-python3 tools/run_experiments.py --input-dir test/openvas --llms deepseek gpt4 --scanners openvas --evaluation-methods bert rouge --runs-per-model 5 --allow-duplicates true
+python3 tools/batch_pdf_extractor.py --input-dir dockers --scanner openvas --llm deepseek --convert csv [--allow-duplicates] [--output-dir <output_directory>]
+python3 tools/batch_pdf_extractor.py --input-dir dockers --scanner openvas --llm gpt4 --convert csv [--allow-duplicates] [--output-dir <output_directory>]
+python3 tools/batch_pdf_extractor.py --input-dir dockers --scanner openvas --llm gpt5 --convert csv [--allow-duplicates] [--output-dir <output_directory>]
+python3 tools/batch_pdf_extractor.py --input-dir dockers --scanner openvas --llm llama4 --convert csv [--allow-duplicates] [--output-dir <output_directory>]
+python3 tools/batch_pdf_extractor.py --input-dir dockers --scanner openvas --llm llama3 --convert csv [--allow-duplicates] [--output-dir <output_directory>]
 
-# Resume from checkpoint if interrupted
-
-# Windows
-python tools/run_experiments.py --input-dir test\openvas --llms deepseek --scanners openvas --checkpoint-file run_checkpoints_2026-03-16T12-28-08.json
-
-# Linux/macOS
-python3 tools/run_experiments.py --input-dir test/openvas --llms deepseek --scanners openvas --checkpoint-file run_checkpoints_2026-03-16T12-28-08.json
 ```
-
-**Key Features:**
-
-- Runs extraction, export, and evaluation for all pairs (report, scanner, LLM, run)
-- Checkpoint support: resumes interrupted executions via `--checkpoint-file`
-- Generates detailed logs, output files, metrics, and automatic summaries
-- **Automatic reporting**: Generates comprehensive final report with timing and token cost analysis
-- **Automatic chart generation**: Calls `process_results.py` automatically at the end
-- Outputs organized in respective evaluation directories based on metrics
-
-**Parameters:**
-
-- `--input-dir`: Directory containing paired .xlsx (baseline) and .pdf (report) files
-- `--llms`: Space-separated LLMs to test (e.g., `deepseek gpt4 llama3`)
-- `--scanners`: Space-separated scanners (e.g., `openvas tenable`)
-- `--evaluation-methods`: Evaluation methods (default: `bert`, can add `rouge`)
-- `--runs-per-model`: Number of runs per combination (default: 10)
-- `--allow-duplicates`: Boolean per scanner in order (e.g., `true false` for `openvas tenable`)
-- `--checkpoint-file`: Checkpoint file to resume from
-
-### Output Structure
-
-Results are automatically organized by:
-
-- `results_runs/` → `<baseline>/<llm>/run<N>/` (extraction and metrics outputs)
-- `resultados_bert/` (when BERT evaluation enabled)
-- `resultados_rouge/` (when ROUGE evaluation enabled)
-- Final report with timing and token cost analysis
-- Checkpoint files for resuming interrupted runs
-
-### Automatic Chart Generation
-
-Charts are automatically generated at the end of `run_experiments.py` execution. To generate charts manually:
-
-```bash
-# Windows
-python tools/process_results.py
-
-# Linux/macOS
-python3 tools/process_results.py
-```
-
-Generates:
-
-- Similarity category distribution charts (stacked bar)
-- Metric heatmaps (BERT/ROUGE) per LLM and baseline
-- Statistical summaries and visualizations
-
-## Deduplication Strategies
-
-### OpenVAS
-
-- `--allow-duplicates` (**recommended**): uses custom strategy for maximum granularity
-- Removes only exact duplicates (same Name, port, protocol)
-- Legitimate vulnerabilities may repeat on different ports
-
-### Tenable WAS
-
-- Without `--allow-duplicates` (**recommended**): uses custom strategy for smart merge
-- Groups instances/bases of the same type
-- Consolidates arrays (URLs, description, etc.)
-
-These strategies were designed to balance granularity and efficiency, avoiding vulnerability exceedances and respecting the structure of each scanner.

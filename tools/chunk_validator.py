@@ -10,11 +10,13 @@ Analyzes all generated chunks to ensure:
 
 import os
 import sys
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'src'))
+project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+if project_root not in sys.path:
+    sys.path.insert(0, project_root)
 
-from utils.pdf_loader import load_pdf_with_pypdf2
-from utils.processing import get_token_based_chunks, split_text_to_subchunks, detect_scanner_pattern
-from utils.utils import load_profile, load_llm
+from src.utils.pdf_loader import load_pdf_with_pypdf2
+from src.utils.chunking import get_token_based_chunks, split_text_to_subchunks, detect_scanner_pattern
+from src.model_management import load_profile, load_llm
 import tiktoken
 import re
 

@@ -1,4 +1,5 @@
 temp_blocks/
+.claude/
 # Results and temporary outputs
 plot_runs/
 results_runs/

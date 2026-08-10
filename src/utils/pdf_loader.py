@@ -5,6 +5,27 @@ from langchain_core.documents import Document
 import pdfplumber
 import datetime
 
+_CID_MAP = {
+    16: '"',
+    17: '"',
+    27: 'ff',
+    28: 'fi',
+    29: 'fl',
+    30: 'ffi',
+    31: 'ffl',
+}
+
+def _restore_cid_glyphs(text: str) -> str:
+    # Wrap continuation: "word-part\n   (cid:44)→rest" is the same word split.
+    text = re.sub(r'\n[ \t]*\(cid:44\)→', '', text)
+    for cid, glyph in _CID_MAP.items():
+        text = text.replace(f'(cid:{cid})', glyph)
+    # Fallback: any CID we don't know yet gets dropped (prior behaviour).
+    text = re.sub(r'\(cid:\d+\)', '', text)
+    # De-hyphenate soft-wrapped words: "down-\n   loaded" → "downloaded".
+    text = re.sub(r'(\w)-\n[ \t]*(\w)', r'\1\2', text)
+    return text
+
 def merge_page_continuations(text_pages):
     """
     Merge sections cut by page breaks.
@@ -154,192 +175,323 @@ def _is_incomplete_line(line):
     return False
 
 def _makes_sense_as_continuation(prev_line, next_line):
-    """
-    Check if next line makes sense as continuation of previous one.
-    """
-    prev_line = prev_line.strip().lower()
-    next_line = next_line.strip().lower()
+     """
+     Check if next line makes sense as continuation of previous one.
+     """
+     prev_line = prev_line.strip().lower()
+     next_line = next_line.strip().lower()
 
-    # If next line starts with common word, probably is continuation
-    common_starts = ['the', 'a', 'an', 'and', 'or', 'but', 'however', 'therefore', 'thus', 'hence']
+     # If next line starts with common word, probably is continuation
+     common_starts = ['the', 'a', 'an', 'and', 'or', 'but', 'however', 'therefore', 'thus', 'hence']
 
-    first_word = next_line.split()[0] if next_line.split() else ""
-    if first_word in common_starts:
-        return True
+     first_word = next_line.split()[0] if next_line.split() else ""
+     if first_word in common_starts:
+         return True
 
-    # If next line starts with lowercase, probably continues
-    if next_line and next_line[0].islower():
-        return True
+     # If next line starts with lowercase, probably continues
+     if next_line and next_line[0].islower():
+         return True
 
-    return False
+     return False
 
 def extract_visual_layout_from_pdf(pdf_path):
-    print(f"Extracting visual layout from PDF: {os.path.basename(pdf_path)}")
+     print(f"Extracting visual layout from PDF: {os.path.basename(pdf_path)}")
+     try:
+         with pdfplumber.open(pdf_path) as pdf:
+             documentos = []
+             print(f"Total pages found: {len(pdf.pages)}")
+             paginas_texto = []
+             for num_pagina, pagina in enumerate(pdf.pages, 1):
+                 texto_pagina = pagina.extract_text(
+                     layout=True,
+                     x_tolerance=1,
+                     y_tolerance=1,
+                     keep_blank_chars=True
+                 )
+                 if texto_pagina:
+                     linhas = texto_pagina.split('\n')
+                     texto_processado = ""
+                     for linha in linhas:
+                         # Remove typical report footers (ex: 'Page X of Y')
+                         if re.search(r'Page \d+ of \d+', linha):
+                             continue
+                         # Remove footers with report name and page
+                         if re.search(r'Web Application Scanning Detailed Scan Export:.*Page \d+ of \d+', linha):
+                             continue
+                         linha_preservada = linha.replace('\t', '    ')
+                         texto_processado += linha_preservada + '\n'
+                     # Sanitization by page (CID restoration happens post-join
+                     # so cross-page wrap markers like (cid:44)→ can be joined).
+                     texto_processado = texto_processado.replace('ÔåÆ', '->')
+                     texto_processado = texto_processado.replace('ÔÇÖ', "'")
+                     texto_processado = texto_processado.replace('ÔÇ£', '"').replace('ÔÇØ', '"')
+                     texto_processado = re.sub(r"[ ]{2,}", ' ', texto_processado)
+                     paginas_texto.append((num_pagina, texto_processado.rstrip() + '\n'))
+                 else:
+                     paginas_texto.append((num_pagina, f"[Página {num_pagina} - Sem texto detectado]\n\n"))
+
+             # MERGE SECTIONS CUT BY PAGE BREAKS
+             paginas_texto = merge_page_continuations(paginas_texto)
+
+             # Extrair o texto completo do PDF
+             texto_completo = ''.join([p[1] for p in paginas_texto])
+             
+             # Normalize typographic ligatures
+             texto_completo = unicodedata.normalize('NFKC', texto_completo)
+             texto_completo = _restore_cid_glyphs(texto_completo)
+
+             # Find start of first vulnerability
+             scanner = None
+             if 'openvas' in os.path.basename(pdf_path).lower():
+                 scanner = 'openvas'
+             elif 'tenable' in os.path.basename(pdf_path).lower():
+                 scanner = 'tenable'
+
+             if scanner == 'openvas':
+                 marker_pattern = r'^\s*NVT:'
+                 match_inicio_vuln = re.search(marker_pattern, texto_completo, re.MULTILINE)
+                 if match_inicio_vuln:
+                     start_pos = match_inicio_vuln.start()
+                     sumario = texto_completo[:start_pos]
+                     texto_extracao = texto_completo[start_pos:]
+                     print(f"[VISUAL] Table of contents extracted up to {start_pos} characters using marker '{marker_pattern}'.")
+                 else:
+                     sumario = ''
+                     texto_extracao = texto_completo
+                     print(f"[VISUAL] No marker '{marker_pattern}' found. Table of contents empty.")
+             
+             elif scanner == 'tenable':
+                 export_marker = 'Web Application Scanning Detailed Scan Export:'
+                 early_patterns = [
+                     re.compile(r'VULNERABILITY\s+(CRITICAL|HIGH|MEDIUM|LOW|INFO)\s+PLUGIN\s+ID\s+\d+', re.IGNORECASE),
+                     re.compile(r'CVSSV[34]\s+BASE\s+SCORE\s+[\d.]+', re.IGNORECASE),
+                     re.compile(r'PUBLICATION\s+DATE\s+\d{4}-\d{2}-\d{2}', re.IGNORECASE),
+                 ]
+
+                 earliest_pos = len(texto_completo)
+                 for pattern in early_patterns:
+                     m = pattern.search(texto_completo)
+                     if m and m.start() < earliest_pos:
+                         earliest_pos = m.start()
+
+                 if earliest_pos < len(texto_completo):
+                     last_export_pos = texto_completo.rfind(export_marker, 0, earliest_pos)
+                     if last_export_pos != -1:
+                         line_start_export = texto_completo.rfind('\n', 0, last_export_pos)
+                         cut_pos = line_start_export + 1 if line_start_export != -1 else 0
+                     else:
+                         cut_pos = earliest_pos
+
+                     sumario = texto_completo[:cut_pos].rstrip()
+                     texto_extracao = texto_completo[cut_pos:]
+                     texto_extracao = re.sub(r'Web Application Scanning Detailed Scan Export:[^\n]*', '', texto_extracao)
+                     print(f"[VISUAL] Tenable WAS: Table of contents extracted up to {cut_pos} characters.")
+                 else:
+                     sumario = ''
+                     texto_extracao = texto_completo
+                     print("[VISUAL] Tenable WAS: No marker found. Table of contents empty.")
+             else:
+                 sumario = ''
+                 texto_extracao = texto_completo
+                 print("[VISUAL] Scanner not identified or without marker. Table of contents empty.")
+
+             # Save visual layout (summary/index only)
+             if sumario.strip():
+                 documentos.append(Document(
+                     page_content=sumario,
+                     metadata={
+                         "source": pdf_path,
+                         "pages": "SUMARIO",
+                         "extraction_method": "pdfplumber_visual_SUMMARY"
+                     }
+                 ))
+
+             # Extraction document (only content after summary)
+             documentos.append(Document(
+                 page_content=texto_extracao,
+                 metadata={
+                     "source": pdf_path,
+                     "pages": "EXTRACAO",
+                     "extraction_method": "pdfplumber_visual_EXTRACTION"
+                 }
+             ))
+
+             # Return documents (first summary, then extraction)
+             if not documentos or all(not d.page_content.strip() for d in documentos):
+                 print("Warning: No text was extracted from PDF. The file may be corrupted or contain only images.")
+                 return None
+             return documentos
+     except Exception as e:
+         print(f"Error extracting visual layout: {e}")
+         return None
+
+def _resolve_visual_cache_dir(output_dir):
+     """Pick where the visual_layouts cache lives.
+
+     Priority (most-specific first):
+       1. If ``output_dir`` is inside an experiments root (``results_runs[_*]``),
+          cache lives at ``<results_runs_*>/visual_layouts/`` — keeps the
+          cache co-located with the experiment outputs.
+       2. Otherwise, fall back to ``<project_root>/visual_layouts/`` — useful
+          when running ``main.py`` ad-hoc with a custom output dir.
+
+     Heuristic: walk up from output_dir; the first ancestor whose name starts
+     with ``results_runs`` is the experiments root. Stops at filesystem root
+     to avoid infinite loops on weird paths.
+     """
+     if output_dir:
+         current = os.path.abspath(output_dir)
+         # Cap at 6 levels — typical structure is results_runs/<baseline>/<llm>/<run>/
+         # so 3-4 hops up is enough; extra cushion for nested experiments.
+         for _ in range(6):
+             parent = os.path.dirname(current)
+             if parent == current:
+                 break
+             if os.path.basename(current).lower().startswith("results_runs"):
+                 return os.path.join(current, "visual_layouts")
+             current = parent
+     # Fallback: project root (parent of src/utils/).
+     project_root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+     return os.path.join(project_root, "visual_layouts")
+
+
+def save_visual_layout(content, pdf_path, process_id=None, output_ext="txt", output_dir=None):
+     """
+     Salva o layout visual extraído (texto cru do PDF) em cache compartilhado.
+
+     The visual layout is **deterministic per PDF** — the same input file
+     always produces the same layout text. So caching it once per baseline
+     lets subsequent runs of the same PDF reuse it without re-extraction.
+
+     Cache location depends on context (see :func:`_resolve_visual_cache_dir`):
+       - When invoked under ``results_runs[_*]/`` (the experiments tree),
+         cached files live at ``<that_root>/visual_layouts/``.
+       - Otherwise, project root ``visual_layouts/``.
+
+     Args:
+         content:    extracted layout text (from the PDF reader's summary).
+         pdf_path:   source PDF path — used to derive the cache key.
+         process_id: ignored; kept for caller compatibility.
+         output_ext: txt or md.
+         output_dir: a run dir or output target — used only to locate the
+                     experiments root for cache placement.
+     Returns:
+         Absolute path to the (cached or newly written) layout file, or
+         ``None`` on write error.
+     """
+     base_name = os.path.splitext(os.path.basename(pdf_path))[0]
+     filename = f"{base_name}.{output_ext}"
+
+     cache_dir = _resolve_visual_cache_dir(output_dir)
+     os.makedirs(cache_dir, exist_ok=True)
+     cached_path = os.path.join(cache_dir, filename)
+
+     if os.path.isfile(cached_path):
+         return cached_path
+
+     try:
+         with open(cached_path, 'w', encoding='utf-8') as f:
+             f.write(f"Layout Visual Extraído: {os.path.basename(pdf_path)}\n")
+             f.write(f"Extraído em: {datetime.datetime.now().strftime('%d/%m/%Y às %H:%M:%S')}\n")
+             f.write("=" * 80 + "\n\n")
+             f.write(content)
+         return cached_path
+     except Exception as e:
+         print(f"Error saving visual layout: {e}")
+         return None
+
+def load_pdf_with_marker(pdf_path):
+    """
+    Extract PDF to Markdown using Marker library.
+    Returns a list of Document objects compatible with the rest of the pipeline.
+    """
     try:
-        with pdfplumber.open(pdf_path) as pdf:
-            documentos = []
-            print(f"Total pages found: {len(pdf.pages)}")
-            paginas_texto = []
-            for num_pagina, pagina in enumerate(pdf.pages, 1):
-                texto_pagina = pagina.extract_text(
-                    layout=True,
-                    x_tolerance=1,
-                    y_tolerance=1,
-                    keep_blank_chars=True
-                )
-                if texto_pagina:
-                    linhas = texto_pagina.split('\n')
-                    texto_processado = ""
-                    for linha in linhas:
-                        # Remove typical report footers (ex: 'Page X of Y')
-                        if re.search(r'Page \d+ of \d+', linha):
-                            continue
-                        # Remove footers with report name and page
-                        if re.search(r'Web Application Scanning Detailed Scan Export:.*Page \d+ of \d+', linha):
-                            continue
-                        linha_preservada = linha.replace('\t', '    ')
-                        texto_processado += linha_preservada + '\n'
-                    # Sanitization by page
-                    texto_processado = re.sub(r"\(cid:\d+\)", "", texto_processado)
-                    texto_processado = texto_processado.replace('→', '->')
-                    texto_processado = texto_processado.replace('’', "'")
-                    texto_processado = texto_processado.replace('“', '"').replace('”', '"')
-                    texto_processado = re.sub(r"[ ]{2,}", ' ', texto_processado)
-                    paginas_texto.append((num_pagina, texto_processado.rstrip() + '\n'))
-                else:
-                    paginas_texto.append((num_pagina, f"[Página {num_pagina} - Sem texto detectado]\n\n"))
+        from marker.converters.pdf import PdfConverter
+        from marker.models import create_model_dict
+        from marker.output import text_from_rendered
+    except ImportError:
+        print("ERROR: marker-pdf not installed. Install with: pip install marker-pdf")
+        return None
 
+    try:
+        print(f"Extracting PDF with Marker: {os.path.basename(pdf_path)}")
 
+        converter = PdfConverter(artifact_dict=create_model_dict())
+        rendered = converter(pdf_path)
+        full_text, _, _ = text_from_rendered(rendered)
 
+        # Marker injects <span id="page-X-Y"></span> anchors that break
+        # downstream header regexes (e.g. "## <span...>High 9390/tcp").
+        full_text = re.sub(r'<span[^>]*></span>\s*', '', full_text)
 
-            # MERGE SECTIONS CUT BY PAGE BREAKS
-            paginas_texto = merge_page_continuations(paginas_texto)
-
-
-            # Extrair o texto completo do PDF
-            texto_completo = ''.join([p[1] for p in paginas_texto])
-            
-            # Normalize typographic ligatures (ﬁ → fi, ﬂ → fl, etc.)
-            # This is important because PDFs often use ligatures that are single characters
-            texto_completo = unicodedata.normalize('NFKC', texto_completo)
-
-            # Find start of first vulnerability
-            # OpenVAS: marker 'NVT:'
-            # Tenable: everything until first 'Web Application Scanning Detailed Scan Export...' after 'Scan Results'
-            # Unifies separation using same patterns from chunking
-            scanner = None
-            if 'openvas' in os.path.basename(pdf_path).lower():
-                scanner = 'openvas'
-            elif 'tenable' in os.path.basename(pdf_path).lower():
-                scanner = 'tenable'
-
-            if scanner == 'openvas':
-                marker_pattern = r'^\s*NVT:'
-                match_inicio_vuln = re.search(marker_pattern, texto_completo, re.MULTILINE)
-                if match_inicio_vuln:
-                    start_pos = match_inicio_vuln.start()
-                    sumario = texto_completo[:start_pos]
-                    texto_extracao = texto_completo[start_pos:]
-                    print(f"[VISUAL] Table of contents extracted up to {start_pos} characters using marker '{marker_pattern}'.")
-                else:
-                    sumario = ''
-                    texto_extracao = texto_completo
-                    print(f"[VISUAL] No marker '{marker_pattern}' found. Table of contents empty.")
-            
-            elif scanner == 'tenable':
-                export_marker = 'Web Application Scanning Detailed Scan Export:'
-
-                # Search for first sign of real vulnerability content
-                # Pode ser o header formal OU o bloco BASE sem header (CVSS, Plugin Details)
-                early_patterns = [
-                    re.compile(r'VULNERABILITY\s+(CRITICAL|HIGH|MEDIUM|LOW|INFO)\s+PLUGIN\s+ID\s+\d+', re.IGNORECASE),
-                    re.compile(r'CVSSV[34]\s+BASE\s+SCORE\s+[\d.]+', re.IGNORECASE),
-                    re.compile(r'PUBLICATION\s+DATE\s+\d{4}-\d{2}-\d{2}', re.IGNORECASE),
-                ]
-
-                earliest_pos = len(texto_completo)
-                for pattern in early_patterns:
-                    m = pattern.search(texto_completo)
-                    if m and m.start() < earliest_pos:
-                        earliest_pos = m.start()
-
-                if earliest_pos < len(texto_completo):
-                    # Search for last export marker before vulnerability content
-                    last_export_pos = texto_completo.rfind(export_marker, 0, earliest_pos)
-
-                    if last_export_pos != -1:
-                        line_start_export = texto_completo.rfind('\n', 0, last_export_pos)
-                        cut_pos = line_start_export + 1 if line_start_export != -1 else 0
-                    else:
-                        cut_pos = earliest_pos
-
-                    print(f"[DEBUG] earliest_pos={earliest_pos}")
-                    print(f"[DEBUG] last_export_pos={last_export_pos}")
-                    print(f"[DEBUG] cut_pos={cut_pos}")
-
-                    sumario = texto_completo[:cut_pos].rstrip()
-                    texto_extracao = texto_completo[cut_pos:]
-                    texto_extracao = re.sub(r'Web Application Scanning Detailed Scan Export:[^\n]*', '', texto_extracao)
-                    print(f"[VISUAL] Tenable WAS: Table of contents extracted up to {cut_pos} characters.")
-                else:
-                    sumario = ''
-                    texto_extracao = texto_completo
-                    print("[VISUAL] Tenable WAS: No marker found. Table of contents empty.")
+        if not full_text or not full_text.strip():
+            print("Warning: No text extracted by Marker. The file may be corrupted or contain only images.")
+            return None
+        
+        # Find table of contents / summary boundary
+        scanner = None
+        if 'openvas' in os.path.basename(pdf_path).lower():
+            scanner = 'openvas'
+        elif 'tenable' in os.path.basename(pdf_path).lower():
+            scanner = 'tenable'
+        
+        # Split into summary and extraction
+        if scanner == 'openvas':
+            # Cut at the first severity header (e.g. "High 25/tcp"). This
+            # avoids losing the first NVT — marker fuses severity + NVT into
+            # a single line ("## High (CVSS: 7.5) NVT: SMTP too long line"),
+            # so a plain "^NVT:" cut would skip that finding entirely. TOC
+            # rows live inside markdown tables and start with "|", so they
+            # don't match.
+            marker_pattern = r'^\s*#*\s*(?:Critical|High|Medium|Low|Log)\s+(?:\d+|general)/[a-zA-Z0-9_-]+'
+            match_inicio_vuln = re.search(marker_pattern, full_text, re.MULTILINE | re.IGNORECASE)
+            if match_inicio_vuln:
+                start_pos = match_inicio_vuln.start()
+                sumario = full_text[:start_pos]
+                texto_extracao = full_text[start_pos:]
+                print(f"[MARKER] Table of contents extracted up to {start_pos} characters.")
             else:
                 sumario = ''
-                texto_extracao = texto_completo
-                print("[VISUAL] Scanner not identified or without marker. Table of contents empty.")
-
-            # Save visual layout (summary/index only)
-            if sumario.strip():
-                documentos.append(Document(
-                    page_content=sumario,
-                    metadata={
-                        "source": pdf_path,
-                        "pages": "SUMARIO",
-                        "extraction_method": "pdfplumber_visual_SUMMARY"
-                    }
-                ))
-
-            # Extraction document (only content after summary)
+                texto_extracao = full_text
+                print(f"[MARKER] No severity header found. Table of contents empty.")
+        elif scanner == 'tenable':
+            # Similar logic for Tenable if a marker is identified
+            sumario = ''
+            texto_extracao = full_text
+            print("[MARKER] Tenable WAS: Treating entire content as extraction.")
+        else:
+            sumario = ''
+            texto_extracao = full_text
+            print("[MARKER] Scanner not identified. Treating entire content as extraction.")
+        
+        # Create documents
+        documentos = []
+        
+        if sumario.strip():
             documentos.append(Document(
-                page_content=texto_extracao,
+                page_content=sumario,
                 metadata={
                     "source": pdf_path,
-                    "pages": "EXTRACAO",
-                    "extraction_method": "pdfplumber_visual_EXTRACTION"
+                    "pages": "SUMARIO",
+                    "extraction_method": "marker_SUMMARY"
                 }
             ))
+        
+        documentos.append(Document(
+            page_content=texto_extracao,
+            metadata={
+                "source": pdf_path,
+                "pages": "EXTRACAO",
+                "extraction_method": "marker_EXTRACTION"
+            }
+        ))
+        
+        return documentos if documentos else None
+        
+    except Exception as e:
+        print(f"Error extracting with Marker: {e}")
+        return None
 
-            # Return documents (first summary, then extraction)
-            if not documentos or all(not d.page_content.strip() for d in documentos):
-                print("Warning: No text was extracted from PDF. The file may be corrupted or contain only images.")
-                return None
-            return documentos
-    except Exception as e:
-        print(f"Error extracting visual layout: {e}")
-        return None
-    
-def save_visual_layout(content, pdf_path, process_id=None):
-    """
-    Salva o layout visual extraído em arquivo TXT para referência.
-    """
-    base_name = os.path.splitext(os.path.basename(pdf_path))[0]
-    if process_id:
-        output_visual_path = f"visual_layout_extracted_{base_name}_{process_id}.txt"
-    else:
-        output_visual_path = f"visual_layout_extracted_{base_name}.txt"
-    try:
-        with open(output_visual_path, 'w', encoding='utf-8') as f:
-            # Informative header
-            f.write(f"Layout Visual Extraído: {os.path.basename(pdf_path)}\n")
-            f.write(f"Extraído em: {datetime.datetime.now().strftime('%d/%m/%Y às %H:%M:%S')}\n")
-            f.write("=" * 80 + "\n\n")
-            f.write(content)
-        return output_visual_path
-    except Exception as e:
-        print(f"Error saving visual layout: {e}")
-        return None
 
 def load_pdf_with_pypdf2(pdf_path):
-    return extract_visual_layout_from_pdf(pdf_path)
+     return extract_visual_layout_from_pdf(pdf_path)

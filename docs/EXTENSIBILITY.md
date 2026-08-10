@@ -1,10 +1,10 @@
 # Extensibility Guide
 
-This document explains how to extend MulitaMiner with new scanners and LLM providers.
+This document explains how to extend TMM with new scanners and LLM providers.
 
 ## Adding a New Scanner
 
-MulitaMiner was designed to be easily expanded, allowing integration of new scanners (extraction tools) without changing the system core.
+TMM was designed to be easily expanded, allowing integration of new scanners (extraction tools) without changing the system core.
 
 ### 1. Create a Prompt Template
 
@@ -34,31 +34,99 @@ Define: scanner name, template path, consolidation fields (`consolidation_field`
 
 ### 3. (Optional) Custom Block Logic
 
-MulitaMiner segments reports into **blocks** (preserving report structure) before dividing into **chunks** (respecting token limits). This ensures the LLM processes related vulnerabilities together.
+TMM segments reports into **blocks** (preserving report structure) before dividing into **chunks** (respecting token limits). This ensures the LLM processes related vulnerabilities together.
 
 - **OpenVAS** example: Blocks group by `(severity, port, protocol)` — naturally preserving report sessions
 - **Tenable** example: Blocks group by severity — logically grouping related vulnerabilities
+- **Default behavior:** If no custom logic, creates a single block with entire report
 
-**If your scanner has a unique report structure** (e.g., grouped by asset, plugin family, or custom sections), implement custom block logic:
+**If your scanner has a unique report structure** (e.g., grouped by asset, plugin family, or custom sections), implement custom block logic in your `ScannerStrategy` subclass:
 
-- Create a function in `src/utils/block_creation.py` (e.g., `_create_blocks_mynewscanner()`)
-- Integrate in `create_session_blocks_from_text()` by adding a new branch
+#### In your strategy file (e.g., `src/scanner_strategies/mynewscanner.py`):
 
-**If not implemented:** The system divides the text into sequential chunks based on the LLM's token limit. This works well for structured reports, but may mix vulnerabilities in more complex ones.
+```python
+class MyNewScannerStrategy(ScannerStrategy):
+    scanner_name = 'mynewscanner'
+    requires_visual_layout = False  # Set to True if you need visual layout
+
+    def extract_visual_context(self, visual_layout_path: str) -> Tuple[List, None, None, None]:
+        """Optional: Extract context from visual layout."""
+        # Your custom logic here
+        return initial_context_lines, severity, port, protocol
+
+    def create_blocks(self, report_text: str, temp_dir: str, initial_context: Tuple) -> List[Dict]:
+        """Optional: Create custom blocks."""
+        # Your block creation logic here
+        # Return list of {'file': path, 'port': port, 'protocol': protocol, 'severity': severity}
+        return blocks
+```
+
+Then register in `src/scanner_strategies/registry.py`:
+
+```python
+from .mynewscanner import MyNewScannerStrategy
+
+SCANNER_STRATEGIES = {
+    'openvas': OpenVASStrategy(),
+    'tenable': TenableWASStrategy(),
+    'mynewscanner': MyNewScannerStrategy(),  # ← Add here
+}
+```
+
+**If not implemented:** The base class provides default behavior:
+
+- Returns empty visual context (backward compatible)
+- Creates a single block with the entire report text
 
 ### 4. (Optional) Custom Consolidation Logic
 
-If the scanner needs special rules to group/merge vulnerabilities:
+If your scanner needs special rules to group/merge vulnerabilities, implement a **modular activation system** that gives users control over when custom consolidation activates:
+
+#### Step 1: Create Your Strategy Class
 
 1. Create a class in a new `.py` file inside `src/scanner_strategies/` (e.g., `mycustomscanner.py`)
 2. Inherit from `ScannerStrategy` (see `base.py`)
-3. Implement the method `vulnerability_processing_logic(self, vulns, allow_duplicates=True, profile_config=None)` - this is where your consolidation/deduplication logic goes
-4. (Optional) Override `get_consolidation_report()` to provide structured information about your consolidation process
-5. Register your class in `src/scanner_strategies/registry.py`
+3. Register your class in `src/scanner_strategies/registry.py`
 
 The key you use to register must match the scanner name declared in your profile JSON.
 
-#### Required Method: `vulnerability_processing_logic`
+#### Step 2: Implement `get_custom_activation_value()` (REQUIRED)
+
+This method defines **WHEN** your custom consolidation activates:
+
+```python
+def get_custom_activation_value(self) -> bool | set | list | tuple | None:
+    """
+    Define when custom consolidation activates based on --allow-duplicates flag.
+
+    Returns:
+        bool:              Activates when flag matches (True or False)
+        set/list/tuple:    Activates for multiple flag values (e.g., {True, False})
+        None:              No custom consolidation (always use default)
+
+    Examples:
+        return True           # Custom runs when --allow-duplicates is provided
+        return False          # Custom runs when --allow-duplicates is NOT provided
+        return {True, False}  # Custom runs in BOTH cases (but with different logic)
+        return None           # No custom (always use default deduplication)
+    """
+    # Example: activate custom when user wants NO duplicates
+    return False
+```
+
+**Behavior Matrix:**
+
+| Your Custom Activation | CLI Flag             | Result                       |
+| ---------------------- | -------------------- | ---------------------------- |
+| `True`                 | `--allow-duplicates` | ✅ Runs CUSTOM               |
+| `True`                 | (no flag)            | Runs DEFAULT                 |
+| `False`                | `--allow-duplicates` | Runs DEFAULT                 |
+| `False`                | (no flag)            | ✅ Runs CUSTOM               |
+| `{True, False}`        | `--allow-duplicates` | ✅ Runs CUSTOM (True logic)  |
+| `{True, False}`        | (no flag)            | ✅ Runs CUSTOM (False logic) |
+| `None`                 | Any                  | Always DEFAULT               |
+
+#### Step 3: Implement `vulnerability_processing_logic()` (REQUIRED)
 
 ```python
 def vulnerability_processing_logic(self, vulns: List[Dict], allow_duplicates: bool = True, profile_config: Dict = None) -> List[Dict]:
@@ -67,7 +135,7 @@ def vulnerability_processing_logic(self, vulns: List[Dict], allow_duplicates: bo
 
     Args:
         vulns: List of vulnerability dictionaries
-        allow_duplicates: Flag indicating deduplication preference (your strategy can ignore this)
+        allow_duplicates: Current flag value (for reference in dual-custom scenarios)
         profile_config: Scanner profile configuration dict
 
     Returns:
@@ -92,9 +160,9 @@ def vulnerability_processing_logic(self, vulns: List[Dict], allow_duplicates: bo
     return result
 ```
 
-#### Optional Method: `get_consolidation_report`
+#### Step 4: Implement `get_consolidation_report()` (OPTIONAL)
 
-Override this method to provide detailed, human-readable information about your consolidation process. This report will be included in the consolidation log file.
+Override this method to provide detailed information about your consolidation process:
 
 ```python
 def get_consolidation_report(self, input_count: int, output_count: int, removed: int) -> Dict:
@@ -121,7 +189,32 @@ def get_consolidation_report(self, input_count: int, output_count: int, removed:
     }
 ```
 
-**Example:** See `src/scanner_strategies/openvas.py` for a complete implementation.
+#### Advanced Example: Dual Custom (Different Logic per Flag)
+
+If you need DIFFERENT logic depending on the flag value:
+
+```python
+def get_custom_activation_value(self) -> bool | set | list | tuple | None:
+    return {True, False}  # Activate in BOTH cases
+
+def vulnerability_processing_logic(self, vulns: List[Dict], allow_duplicates: bool = True, profile_config: Dict = None) -> List[Dict]:
+    if allow_duplicates is True:
+        # Logic A: Keep all distinct names, merge by port
+        return self._merge_by_port(vulns)
+    else:
+        # Logic B: Keep all distinct names+plugin, strong consolidation
+        return self._consolidate_by_plugin(vulns)
+
+def _merge_by_port(self, vulns):
+    # Your Port-based merge logic
+    pass
+
+def _consolidate_by_plugin(self, vulns):
+    # Your plugin-based consolidation logic
+    pass
+```
+
+**Examples:** See `src/scanner_strategies/openvas.py` and `src/scanner_strategies/tenablewas.py` for complete implementations.
 
 ### Understanding the Consolidation Pipeline
 
@@ -271,62 +364,155 @@ Check the log file to verify consolidation worked correctly!
 
 ## Adding a New LLM
 
-The system accepts any model compatible with the OpenAI API. Just create a JSON configuration file in `src/configs/llms/`.
+TMM supports multiple LLM providers with a flexible, extensible architecture:
 
-### Configuration Example
+### Provider Types
+
+| Provider Type                | Complexity | Setup                      | Examples                      |
+| ---------------------------- | ---------- | -------------------------- | ----------------------------- |
+| Cloud API (OpenAI, DeepSeek) | Easy       | JSON config only           | gpt-4, deepseek-coder, Groq   |
+| Local (Ollama or LLM Studio) | Medium     | Install tool + JSON config | mistral, granite, neural-chat |
+| Custom Provider              | Hard       | Python class + JSON config | Proprietary API, special case |
+
+### Option 1: Add Cloud API Model
+
+Create JSON in `src/configs/llms/`. **For full field reference and more examples, see [CONFIG.md](CONFIG.md#llm-configuration-files).**
+
+Quick example - Create `src/configs/llms/myapi.json`:
 
 ```json
 {
-  "api_key": "${API_KEY_ANTHROPIC}",
-  "endpoint": "https://api.anthropic.com/v1",
-  "model": "claude-3-haiku-20240307",
-  "temperature": 0,
-  "max_tokens": 4096,
-  "timeout": 60,
-  "reserve_for_response": 3000,
-  "prompt_overhead": 300,
-  "system_overhead": 200,
-  "safety_buffer": 200,
-  "max_chunk_size": 2396,
-  "calculation_formula": "max_chunk_size = max_tokens - reserve_for_response - prompt_overhead - system_overhead - safety_buffer"
+  "api_key": "${API_KEY_MYSERVICE}",
+  "endpoint": "https://api.myservice.com/v1",
+  "model": "mymodel-v2",
+  "temperature": 0.0,
+  "max_completion_tokens": 8000,
+  "max_chunk_size": 6000,
+  "reserve_for_response": 1500,
+  "tokenizer": {
+    "type": "tiktoken",
+    "model": "cl100k_base"
+  }
 }
 ```
 
-### Important Fields
+Add to `.env`: `API_KEY_MYSERVICE=your-api-key`
 
-- `api_key`: API key (use `${VARIABLE_NAME}` to reference variables from .env)
-- `endpoint`: Endpoint URL
-- `model`: Model name
-- `temperature`: Creativity level (0 = deterministic)
-- `max_tokens`: Maximum tokens for the model
-- `reserve_for_response`: Space reserved for LLM output
-- Chunking and safety parameters
+Use: `python main.py --input scan.pdf --llm myapi --scanner myscanner`
 
-### Tested Models
+### Option 2: Add Local Model
 
-- **OpenAI**: `gpt-3.5-turbo`, `gpt-4`, `gpt-4-turbo`
-- **Groq**: `llama-3.1-8b-instant`, `mixtral-8x7b-32768`
-- **Anthropic**: `claude-3-haiku`, `claude-3-sonnet`
-- **DeepSeek**: `deepseek-chat`
-- Any API compatible with OpenAI format
+Create JSON in `src/configs/llms/`. **For setup instructions, see [CONFIG.md → Local LLMs Setup](CONFIG.md#local-llms-setup).**
+
+Quick example - Create `src/configs/llms/mylocal.json`:
+
+```json
+{
+  "provider": "ollama",
+  "model": "neural-chat",
+  "endpoint": "http://localhost:11434",
+  "temperature": 0.0,
+  "max_tokens": 4096,
+  "max_chunk_size": 3000,
+  "reserve_for_response": 1000,
+  "timeout": 120,
+  "tokenizer": {
+    "type": "huggingface",
+    "model": "Intel/neural-chat-7b-v3-3"
+  }
+}
+```
+
+Use: `python main.py --input scan.pdf --llm mylocal --scanner myscanner`
+
+### Option 3: Create Custom Provider
+
+For proprietary APIs or specialized inference backends not covered by built-in providers.
+
+#### Step 1: Create Provider Class
+
+File: `src/model_management/providers/myprovider.py`
+
+```python
+from .base_provider import BaseLLMProvider
+
+class MyproviderProvider(BaseLLMProvider):
+    """Custom provider for MyService API."""
+
+    def __init__(self, config: dict):
+        self.config = config
+        self.llm = MyServiceClient(
+            endpoint=config["endpoint"],
+            api_key=config.get("api_key"),
+            model=config["model"],
+            temperature=config["temperature"]
+        )
+
+    def invoke(self, prompt: str) -> str:
+        """Send prompt and return response text."""
+        response = self.llm.request(prompt)
+        # Must return string, not Message object
+        return response.content if hasattr(response, 'content') else str(response)
+
+    def get_model_name(self) -> str:
+        return self.config.get("model", "unknown")
+```
+
+#### Step 2: Create Config JSON
+
+File: `src/configs/llms/myprovider.json`
+
+```json
+{
+  "provider": "myprovider",
+  "endpoint": "https://api.myservice.com/v1",
+  "api_key": "${API_KEY_MYSERVICE}",
+  "model": "mymodel-v2",
+  "temperature": 0.0,
+  "max_tokens": 4096,
+  "max_chunk_size": 3000,
+  "reserve_for_response": 500,
+  "timeout": 60,
+  "tokenizer": {
+    "type": "huggingface",
+    "model": "mistralai/Mistral-7B"
+  }
+}
+```
+
+#### Step 3: Use It
+
+System auto-discovers the provider:
+
+```bash
+python main.py --input scan.pdf --llm myprovider --scanner myscanner
+```
+
+**How it works:**
+
+1. Loads `myprovider.json` → sees `"provider": "myprovider"`
+2. Auto-imports `MyproviderProvider` from `myprovider_provider.py`
+3. Instantiates and uses it
+
+#### Class Naming Convention
+
+- File: `src/model_management/providers/{name}_provider.py`
+- Class: `{Name}Provider` (capitalize first letter)
+
+Examples:
+
+- `groq_provider.py` → `GroqProvider`
+- `anthropic_provider.py` → `AnthropicProvider`
+- `myservice_provider.py` → `MyserviceProvider`
 
 ---
 
 ## Extension Points
 
-| Extension Point           | Location                  | Purpose                      |
-| ------------------------- | ------------------------- | ---------------------------- |
-| New LLM providers         | `src/configs/llms/`       | Add new model configurations |
-| New processing strategies | `src/configs/scanners/`   | Define scanner behavior      |
-| New extraction templates  | `src/configs/templates/`  | Custom prompts for LLMs      |
-| New export formats        | `src/converters/`         | Add CSV, XLSX, etc.          |
-| New scanner strategies    | `src/scanner_strategies/` | Custom consolidation logic   |
-
-### Automatic Validation
-
-- **Token calculation**: automatic for new LLMs
-- **Template validation**: JSON format check
-- **Scanner test**: `chunk_validator.py` for debugging
-- **Integration test**: end-to-end extraction with real documents
-
-The system was designed to grow organically, maintaining compatibility with existing configurations and facilitating integration of new security tools and LLMs.
+| Extension Point          | Location                          | Purpose                    |
+| ------------------------ | --------------------------------- | -------------------------- |
+| New LLM (config)         | `src/configs/llms/`               | Add model via JSON         |
+| New LLM provider (code)  | `src/model_management/providers/` | Custom backend/API support |
+| New scanner strategy     | `src/scanner_strategies/`         | Custom consolidation logic |
+| New scanner (config)     | `src/configs/scanners/`           | Define scanner behavior    |
+| New extraction templates | `src/configs/templates/`          | Custom prompts for LLMs    |

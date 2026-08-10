@@ -84,7 +84,7 @@ class CSVConverter(BaseConverter):
             writer.writerow([])
             
             writer.writerow(['Propriedade', 'Valor'])
-            writer.writerow(['Generated date', datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")])
+            writer.writerow(['Generated date', datetime.now().strftime("%Y-%m-%d %H:%M:%S")])
             writer.writerow(['Total vulnerabilities', len(data)])
             writer.writerow(['Conversor', f"{self.get_format_name()} Converter"])
             

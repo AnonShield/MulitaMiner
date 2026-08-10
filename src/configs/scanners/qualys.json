@@ -8,8 +8,6 @@
   "chunking": {
     "scanner_type": "qualys",
     "marker_pattern": "^\\s*QID:\\s*\\d+",
-    "has_pairs": false,
-    "min_chunk_tokens": 1000,
     "force_break_at_markers": true,
     "preserve_vulnerability_blocks": true,
     "max_vulnerabilities_per_chunk": 4,

@@ -1,0 +1,1823 @@
+{
+  "baseline": "baselines/native/vulnnet_scans_openvas.csv",
+  "compute_version": "2",
+  "versions": {
+    "deepseek|TMMv1": {
+      "description": {
+        "tipo": "Semântico",
+        "n_pairs": 5978,
+        "rouge_l": {
+          "mean": 0.8889,
+          "min": 0.0,
+          "max": 1.0
+        },
+        "token_f1": {
+          "mean": 0.8999,
+          "min": 0.0,
+          "max": 1.0
+        },
+        "tfidf_cosine": {
+          "mean": 0.8932,
+          "min": 0.0,
+          "max": 1.0
+        },
+        "bertscore_proxy": {
+          "method": "Soft-F1 (TF-IDF word vectors)",
+          "precision": 0.8781,
+          "recall": 0.9408,
+          "f1_mean": 0.902,
+          "f1_min": 0.0,
+          "f1_max": 1.0
+        }
+      },
+      "detection_result": {
+        "tipo": "Semântico",
+        "n_pairs": 5978,
+        "rouge_l": {
+          "mean": 0.8755,
+          "min": 0.0,
+          "max": 1.0
+        },
+        "token_f1": {
+          "mean": 0.8823,
+          "min": 0.0,
+          "max": 1.0
+        },
+        "tfidf_cosine": {
+          "mean": 0.885,
+          "min": 0.0,
+          "max": 1.0
+        },
+        "bertscore_proxy": {
+          "method": "Soft-F1 (TF-IDF word vectors)",
+          "precision": 0.8417,
+          "recall": 0.8308,
+          "f1_mean": 0.8322,
+          "f1_min": 0.0,
+          "f1_max": 1.0
+        }
+      },
+      "detection_method": {
+        "tipo": "Semântico",
+        "n_pairs": 5978,
+        "rouge_l": {
+          "mean": 0.529,
+          "min": 0.0,
+          "max": 1.0
+        },
+        "token_f1": {
+          "mean": 0.508,
+          "min": 0.0,
+          "max": 0.9855
+        },
+        "tfidf_cosine": {
+          "mean": 0.5138,
+          "min": 0.0,
+          "max": 1.0
+        },
+        "bertscore_proxy": {
+          "method": "Soft-F1 (TF-IDF word vectors)",
+          "precision": 0.5149,
+          "recall": 0.5013,
+          "f1_mean": 0.5046,
+          "f1_min": 0.0,
+          "f1_max": 0.9998
+        }
+      },
+      "product_detection_result": {
+        "tipo": "Semântico",
+        "n_pairs": 5978,
+        "rouge_l": {
+          "mean": 0.543,
+          "min": 0.0,
+          "max": 1.0
+        },
+        "token_f1": {
+          "mean": 0.489,
+          "min": 0.0,
+          "max": 1.0
+        },
+        "tfidf_cosine": {
+          "mean": 0.5841,
+          "min": 0.0,
+          "max": 1.0
+        },
+        "bertscore_proxy": {
+          "method": "Soft-F1 (TF-IDF word vectors)",
+          "precision": 0.5474,
+          "recall": 0.5547,
+          "f1_mean": 0.548,
+          "f1_min": 0.0,
+          "f1_max": 1.0
+        }
+      },
+      "impact": {
+        "tipo": "Semântico",
+        "n_pairs": 5978,
+        "rouge_l": {
+          "mean": 0.2593,
+          "min": 0.0,
+          "max": 1.0
+        },
+        "token_f1": {
+          "mean": 0.2662,
+          "min": 0.0,
+          "max": 1.0
+        },
+        "tfidf_cosine": {
+          "mean": 0.2622,
+          "min": 0.0,
+          "max": 1.0
+        },
+        "bertscore_proxy": {
+          "method": "Soft-F1 (TF-IDF word vectors)",
+          "precision": 0.2655,
+          "recall": 0.2695,
+          "f1_mean": 0.267,
+          "f1_min": 0.0,
+          "f1_max": 1.0
+        }
+      },
+      "solution": {
+        "tipo": "Semântico",
+        "n_pairs": 5978,
+        "rouge_l": {
+          "mean": 0.5333,
+          "min": 0.0,
+          "max": 1.0
+        },
+        "token_f1": {
+          "mean": 0.516,
+          "min": 0.0,
+          "max": 1.0
+        },
+        "tfidf_cosine": {
+          "mean": 0.5388,
+          "min": 0.0,
+          "max": 1.0
+        },
+        "bertscore_proxy": {
+          "method": "Soft-F1 (TF-IDF word vectors)",
+          "precision": 0.4549,
+          "recall": 0.6153,
+          "f1_mean": 0.5199,
+          "f1_min": 0.0,
+          "f1_max": 1.0
+        }
+      },
+      "insight": {
+        "tipo": "Semântico",
+        "n_pairs": 5978,
+        "rouge_l": {
+          "mean": 0.4879,
+          "min": 0.0,
+          "max": 1.0
+        },
+        "token_f1": {
+          "mean": 0.4942,
+          "min": 0.0,
+          "max": 1.0
+        },
+        "tfidf_cosine": {
+          "mean": 0.4939,
+          "min": 0.0,
+          "max": 1.0
+        },
+        "bertscore_proxy": {
+          "method": "Soft-F1 (TF-IDF word vectors)",
+          "precision": 0.4872,
+          "recall": 0.4925,
+          "f1_mean": 0.4868,
+          "f1_min": 0.0,
+          "f1_max": 1.0
+        }
+      },
+      "references": {
+        "tipo": "Semântico",
+        "n_pairs": 5978,
+        "set_f1_cve": {
+          "mean": 0.7051,
+          "min": 0.0,
+          "max": 1.0
+        }
+      },
+      "cvss": {
+        "tipo": "Determinístico",
+        "n_pairs": 5938,
+        "exact_match_rate": 0.8126,
+        "precision": 0.8126,
+        "recall": 0.8126,
+        "f1": 0.8126
+      },
+      "port": {
+        "tipo": "Determinístico",
+        "n_pairs": 2879,
+        "exact_match_rate": 0.9673,
+        "precision": 0.9673,
+        "recall": 0.9673,
+        "f1": 0.9673
+      },
+      "protocol": {
+        "tipo": "Determinístico",
+        "n_pairs": 2881,
+        "exact_match_rate": 0.9958,
+        "precision": 0.9958,
+        "recall": 0.9958,
+        "f1": 0.9958
+      },
+      "severity": {
+        "tipo": "Determinístico",
+        "n_pairs": 5978,
+        "exact_match_rate": 0.9471,
+        "precision_macro": 0.9542,
+        "recall_macro": 0.9237,
+        "f1_macro": 0.936,
+        "confusion_matrix": {
+          "labels": [
+            "LOG",
+            "LOW",
+            "MEDIUM",
+            "HIGH",
+            "CRITICAL"
+          ],
+          "matrix": [
+            [
+              1506,
+              0,
+              1,
+              10,
+              6
+            ],
+            [
+              51,
+              293,
+              0,
+              13,
+              0
+            ],
+            [
+              9,
+              9,
+              1651,
+              85,
+              2
+            ],
+            [
+              0,
+              0,
+              12,
+              1372,
+              2
+            ],
+            [
+              12,
+              0,
+              0,
+              104,
+              840
+            ]
+          ],
+          "per_class": {
+            "LOG": {
+              "precision": 0.9544,
+              "recall": 0.9888,
+              "f1-score": 0.9713,
+              "support": 1523.0
+            },
+            "LOW": {
+              "precision": 0.9702,
+              "recall": 0.8207,
+              "f1-score": 0.8892,
+              "support": 357.0
+            },
+            "MEDIUM": {
+              "precision": 0.9922,
+              "recall": 0.9402,
+              "f1-score": 0.9655,
+              "support": 1756.0
+            },
+            "HIGH": {
+              "precision": 0.8662,
+              "recall": 0.9899,
+              "f1-score": 0.9239,
+              "support": 1386.0
+            },
+            "CRITICAL": {
+              "precision": 0.9882,
+              "recall": 0.8787,
+              "f1-score": 0.9302,
+              "support": 956.0
+            }
+          }
+        }
+      },
+      "log_method": {
+        "tipo": "N/A",
+        "n_pairs": 0
+      },
+      "plugin_details": {
+        "tipo": "N/A",
+        "n_pairs": 0
+      },
+      "instances": {
+        "tipo": "N/A",
+        "n_pairs": 0
+      },
+      "source": {
+        "tipo": "N/A",
+        "n_pairs": 0
+      },
+      "plugin": {
+        "tipo": "N/A",
+        "n_pairs": 0
+      }
+    },
+    "gpt4|TMMv1": {
+      "description": {
+        "tipo": "Semântico",
+        "n_pairs": 5950,
+        "rouge_l": {
+          "mean": 0.9527,
+          "min": 0.0,
+          "max": 1.0
+        },
+        "token_f1": {
+          "mean": 0.9596,
+          "min": 0.0,
+          "max": 1.0
+        },
+        "tfidf_cosine": {
+          "mean": 0.956,
+          "min": 0.0,
+          "max": 1.0
+        },
+        "bertscore_proxy": {
+          "method": "Soft-F1 (TF-IDF word vectors)",
+          "precision": 0.9686,
+          "recall": 0.9577,
+          "f1_mean": 0.9604,
+          "f1_min": 0.0,
+          "f1_max": 1.0
+        }
+      },
+      "detection_result": {
+        "tipo": "Semântico",
+        "n_pairs": 5950,
+        "rouge_l": {
+          "mean": 0.8387,
+          "min": 0.0,
+          "max": 1.0
+        },
+        "token_f1": {
+          "mean": 0.7934,
+          "min": 0.0,
+          "max": 1.0
+        },
+        "tfidf_cosine": {
+          "mean": 0.8382,
+          "min": 0.0,
+          "max": 1.0
+        },
+        "bertscore_proxy": {
+          "method": "Soft-F1 (TF-IDF word vectors)",
+          "precision": 0.9109,
+          "recall": 0.7231,
+          "f1_mean": 0.7881,
+          "f1_min": 0.0,
+          "f1_max": 1.0
+        }
+      },
+      "detection_method": {
+        "tipo": "Semântico",
+        "n_pairs": 5950,
+        "rouge_l": {
+          "mean": 0.2951,
+          "min": 0.0,
+          "max": 1.0
+        },
+        "token_f1": {
+          "mean": 0.4107,
+          "min": 0.0,
+          "max": 0.9552
+        },
+        "tfidf_cosine": {
+          "mean": 0.2277,
+          "min": 0.0,
+          "max": 1.0
+        },
+        "bertscore_proxy": {
+          "method": "Soft-F1 (TF-IDF word vectors)",
+          "precision": 0.6369,
+          "recall": 0.3193,
+          "f1_mean": 0.419,
+          "f1_min": 0.0,
+          "f1_max": 0.9892
+        }
+      },
+      "product_detection_result": {
+        "tipo": "Semântico",
+        "n_pairs": 5950,
+        "rouge_l": {
+          "mean": 0.4591,
+          "min": 0.0,
+          "max": 1.0
+        },
+        "token_f1": {
+          "mean": 0.4949,
+          "min": 0.0,
+          "max": 1.0
+        },
+        "tfidf_cosine": {
+          "mean": 0.5497,
+          "min": 0.0,
+          "max": 1.0
+        },
+        "bertscore_proxy": {
+          "method": "Soft-F1 (TF-IDF word vectors)",
+          "precision": 0.5746,
+          "recall": 0.482,
+          "f1_mean": 0.5189,
+          "f1_min": 0.0,
+          "f1_max": 1.0
+        }
+      },
+      "impact": {
+        "tipo": "Semântico",
+        "n_pairs": 5950,
+        "rouge_l": {
+          "mean": 0.2748,
+          "min": 0.0,
+          "max": 1.0
+        },
+        "token_f1": {
+          "mean": 0.2789,
+          "min": 0.0,
+          "max": 1.0
+        },
+        "tfidf_cosine": {
+          "mean": 0.2775,
+          "min": 0.0,
+          "max": 1.0
+        },
+        "bertscore_proxy": {
+          "method": "Soft-F1 (TF-IDF word vectors)",
+          "precision": 0.2797,
+          "recall": 0.2799,
+          "f1_mean": 0.2796,
+          "f1_min": 0.0,
+          "f1_max": 1.0
+        }
+      },
+      "solution": {
+        "tipo": "Semântico",
+        "n_pairs": 5950,
+        "rouge_l": {
+          "mean": 0.6153,
+          "min": 0.0,
+          "max": 1.0
+        },
+        "token_f1": {
+          "mean": 0.6152,
+          "min": 0.0,
+          "max": 1.0
+        },
+        "tfidf_cosine": {
+          "mean": 0.6083,
+          "min": 0.0,
+          "max": 1.0
+        },
+        "bertscore_proxy": {
+          "method": "Soft-F1 (TF-IDF word vectors)",
+          "precision": 0.6134,
+          "recall": 0.6326,
+          "f1_mean": 0.6186,
+          "f1_min": 0.0,
+          "f1_max": 1.0
+        }
+      },
+      "insight": {
+        "tipo": "Semântico",
+        "n_pairs": 5950,
+        "rouge_l": {
+          "mean": 0.4677,
+          "min": 0.0,
+          "max": 1.0
+        },
+        "token_f1": {
+          "mean": 0.4736,
+          "min": 0.0,
+          "max": 1.0
+        },
+        "tfidf_cosine": {
+          "mean": 0.4764,
+          "min": 0.0,
+          "max": 1.0
+        },
+        "bertscore_proxy": {
+          "method": "Soft-F1 (TF-IDF word vectors)",
+          "precision": 0.4772,
+          "recall": 0.4614,
+          "f1_mean": 0.4663,
+          "f1_min": 0.0,
+          "f1_max": 1.0
+        }
+      },
+      "references": {
+        "tipo": "Semântico",
+        "n_pairs": 5950,
+        "set_f1_cve": {
+          "mean": 0.734,
+          "min": 0.0,
+          "max": 1.0
+        }
+      },
+      "cvss": {
+        "tipo": "Determinístico",
+        "n_pairs": 5761,
+        "exact_match_rate": 0.8592,
+        "precision": 0.8592,
+        "recall": 0.8592,
+        "f1": 0.8592
+      },
+      "port": {
+        "tipo": "Determinístico",
+        "n_pairs": 3605,
+        "exact_match_rate": 0.977,
+        "precision": 0.977,
+        "recall": 0.977,
+        "f1": 0.977
+      },
+      "protocol": {
+        "tipo": "Determinístico",
+        "n_pairs": 3606,
+        "exact_match_rate": 0.9975,
+        "precision": 0.9975,
+        "recall": 0.9975,
+        "f1": 0.9975
+      },
+      "severity": {
+        "tipo": "Determinístico",
+        "n_pairs": 5945,
+        "exact_match_rate": 0.963,
+        "precision_macro": 0.9663,
+        "recall_macro": 0.9317,
+        "f1_macro": 0.9463,
+        "confusion_matrix": {
+          "labels": [
+            "LOG",
+            "LOW",
+            "MEDIUM",
+            "HIGH",
+            "CRITICAL"
+          ],
+          "matrix": [
+            [
+              1500,
+              0,
+              2,
+              14,
+              0
+            ],
+            [
+              52,
+              277,
+              6,
+              22,
+              0
+            ],
+            [
+              2,
+              9,
+              1706,
+              25,
+              0
+            ],
+            [
+              0,
+              0,
+              20,
+              1364,
+              0
+            ],
+            [
+              0,
+              0,
+              1,
+              67,
+              878
+            ]
+          ],
+          "per_class": {
+            "LOG": {
+              "precision": 0.9653,
+              "recall": 0.9894,
+              "f1-score": 0.9772,
+              "support": 1516.0
+            },
+            "LOW": {
+              "precision": 0.9685,
+              "recall": 0.7759,
+              "f1-score": 0.8616,
+              "support": 357.0
+            },
+            "MEDIUM": {
+              "precision": 0.9833,
+              "recall": 0.9793,
+              "f1-score": 0.9813,
+              "support": 1742.0
+            },
+            "HIGH": {
+              "precision": 0.9142,
+              "recall": 0.9855,
+              "f1-score": 0.9485,
+              "support": 1384.0
+            },
+            "CRITICAL": {
+              "precision": 1.0,
+              "recall": 0.9281,
+              "f1-score": 0.9627,
+              "support": 946.0
+            }
+          }
+        }
+      },
+      "log_method": {
+        "tipo": "N/A",
+        "n_pairs": 0
+      },
+      "plugin_details": {
+        "tipo": "N/A",
+        "n_pairs": 0
+      },
+      "instances": {
+        "tipo": "N/A",
+        "n_pairs": 0
+      },
+      "source": {
+        "tipo": "N/A",
+        "n_pairs": 0
+      },
+      "plugin": {
+        "tipo": "N/A",
+        "n_pairs": 0
+      }
+    },
+    "gpt5|TMMv1": {
+      "description": {
+        "tipo": "Semântico",
+        "n_pairs": 2022,
+        "rouge_l": {
+          "mean": 0.8409,
+          "min": 0.0,
+          "max": 1.0
+        },
+        "token_f1": {
+          "mean": 0.8457,
+          "min": 0.0,
+          "max": 1.0
+        },
+        "tfidf_cosine": {
+          "mean": 0.8249,
+          "min": 0.0,
+          "max": 1.0
+        },
+        "bertscore_proxy": {
+          "method": "Soft-F1 (TF-IDF word vectors)",
+          "precision": 0.8229,
+          "recall": 0.8854,
+          "f1_mean": 0.8464,
+          "f1_min": 0.0,
+          "f1_max": 1.0
+        }
+      },
+      "detection_result": {
+        "tipo": "Semântico",
+        "n_pairs": 2022,
+        "rouge_l": {
+          "mean": 0.7529,
+          "min": 0.0,
+          "max": 1.0
+        },
+        "token_f1": {
+          "mean": 0.7519,
+          "min": 0.0,
+          "max": 1.0
+        },
+        "tfidf_cosine": {
+          "mean": 0.7496,
+          "min": 0.0,
+          "max": 1.0
+        },
+        "bertscore_proxy": {
+          "method": "Soft-F1 (TF-IDF word vectors)",
+          "precision": 0.718,
+          "recall": 0.7392,
+          "f1_mean": 0.7161,
+          "f1_min": 0.0,
+          "f1_max": 1.0
+        }
+      },
+      "detection_method": {
+        "tipo": "Semântico",
+        "n_pairs": 2022,
+        "rouge_l": {
+          "mean": 0.3764,
+          "min": 0.0,
+          "max": 1.0
+        },
+        "token_f1": {
+          "mean": 0.4049,
+          "min": 0.0,
+          "max": 0.9583
+        },
+        "tfidf_cosine": {
+          "mean": 0.336,
+          "min": 0.0,
+          "max": 1.0
+        },
+        "bertscore_proxy": {
+          "method": "Soft-F1 (TF-IDF word vectors)",
+          "precision": 0.4783,
+          "recall": 0.3655,
+          "f1_mean": 0.3998,
+          "f1_min": 0.0,
+          "f1_max": 0.9996
+        }
+      },
+      "product_detection_result": {
+        "tipo": "Semântico",
+        "n_pairs": 2022,
+        "rouge_l": {
+          "mean": 0.536,
+          "min": 0.0,
+          "max": 1.0
+        },
+        "token_f1": {
+          "mean": 0.4947,
+          "min": 0.0,
+          "max": 1.0
+        },
+        "tfidf_cosine": {
+          "mean": 0.5986,
+          "min": 0.0,
+          "max": 1.0
+        },
+        "bertscore_proxy": {
+          "method": "Soft-F1 (TF-IDF word vectors)",
+          "precision": 0.5219,
+          "recall": 0.5497,
+          "f1_mean": 0.5319,
+          "f1_min": 0.0,
+          "f1_max": 1.0
+        }
+      },
+      "impact": {
+        "tipo": "Semântico",
+        "n_pairs": 2022,
+        "rouge_l": {
+          "mean": 0.2582,
+          "min": 0.0,
+          "max": 1.0
+        },
+        "token_f1": {
+          "mean": 0.2606,
+          "min": 0.0,
+          "max": 1.0
+        },
+        "tfidf_cosine": {
+          "mean": 0.254,
+          "min": 0.0,
+          "max": 1.0
+        },
+        "bertscore_proxy": {
+          "method": "Soft-F1 (TF-IDF word vectors)",
+          "precision": 0.2617,
+          "recall": 0.2622,
+          "f1_mean": 0.2617,
+          "f1_min": 0.0,
+          "f1_max": 1.0
+        }
+      },
+      "solution": {
+        "tipo": "Semântico",
+        "n_pairs": 2022,
+        "rouge_l": {
+          "mean": 0.4668,
+          "min": 0.0,
+          "max": 1.0
+        },
+        "token_f1": {
+          "mean": 0.4455,
+          "min": 0.0,
+          "max": 1.0
+        },
+        "tfidf_cosine": {
+          "mean": 0.4592,
+          "min": 0.0,
+          "max": 1.0
+        },
+        "bertscore_proxy": {
+          "method": "Soft-F1 (TF-IDF word vectors)",
+          "precision": 0.3955,
+          "recall": 0.5306,
+          "f1_mean": 0.4502,
+          "f1_min": 0.0,
+          "f1_max": 1.0
+        }
+      },
+      "insight": {
+        "tipo": "Semântico",
+        "n_pairs": 2022,
+        "rouge_l": {
+          "mean": 0.3466,
+          "min": 0.0,
+          "max": 1.0
+        },
+        "token_f1": {
+          "mean": 0.3479,
+          "min": 0.0,
+          "max": 1.0
+        },
+        "tfidf_cosine": {
+          "mean": 0.351,
+          "min": 0.0,
+          "max": 1.0
+        },
+        "bertscore_proxy": {
+          "method": "Soft-F1 (TF-IDF word vectors)",
+          "precision": 0.3622,
+          "recall": 0.3462,
+          "f1_mean": 0.3496,
+          "f1_min": 0.0,
+          "f1_max": 1.0
+        }
+      },
+      "references": {
+        "tipo": "Semântico",
+        "n_pairs": 2022,
+        "set_f1_cve": {
+          "mean": 0.4898,
+          "min": 0.0,
+          "max": 1.0
+        }
+      },
+      "cvss": {
+        "tipo": "Determinístico",
+        "n_pairs": 2022,
+        "exact_match_rate": 0.7987,
+        "precision": 0.7987,
+        "recall": 0.7987,
+        "f1": 0.7987
+      },
+      "port": {
+        "tipo": "Determinístico",
+        "n_pairs": 1017,
+        "exact_match_rate": 0.9882,
+        "precision": 0.9882,
+        "recall": 0.9882,
+        "f1": 0.9882
+      },
+      "protocol": {
+        "tipo": "Determinístico",
+        "n_pairs": 1018,
+        "exact_match_rate": 1.0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0
+      },
+      "severity": {
+        "tipo": "Determinístico",
+        "n_pairs": 2022,
+        "exact_match_rate": 0.9688,
+        "precision_macro": 0.9698,
+        "recall_macro": 0.961,
+        "f1_macro": 0.9644,
+        "confusion_matrix": {
+          "labels": [
+            "LOG",
+            "LOW",
+            "MEDIUM",
+            "HIGH",
+            "CRITICAL"
+          ],
+          "matrix": [
+            [
+              431,
+              0,
+              0,
+              0,
+              0
+            ],
+            [
+              3,
+              97,
+              1,
+              1,
+              0
+            ],
+            [
+              0,
+              3,
+              634,
+              1,
+              0
+            ],
+            [
+              0,
+              0,
+              8,
+              468,
+              0
+            ],
+            [
+              0,
+              1,
+              4,
+              41,
+              329
+            ]
+          ],
+          "per_class": {
+            "LOG": {
+              "precision": 0.9931,
+              "recall": 1.0,
+              "f1-score": 0.9965,
+              "support": 431.0
+            },
+            "LOW": {
+              "precision": 0.9604,
+              "recall": 0.951,
+              "f1-score": 0.9557,
+              "support": 102.0
+            },
+            "MEDIUM": {
+              "precision": 0.9799,
+              "recall": 0.9937,
+              "f1-score": 0.9868,
+              "support": 638.0
+            },
+            "HIGH": {
+              "precision": 0.9159,
+              "recall": 0.9832,
+              "f1-score": 0.9483,
+              "support": 476.0
+            },
+            "CRITICAL": {
+              "precision": 1.0,
+              "recall": 0.8773,
+              "f1-score": 0.9347,
+              "support": 375.0
+            }
+          }
+        }
+      },
+      "log_method": {
+        "tipo": "N/A",
+        "n_pairs": 0
+      },
+      "plugin_details": {
+        "tipo": "N/A",
+        "n_pairs": 0
+      },
+      "instances": {
+        "tipo": "N/A",
+        "n_pairs": 0
+      },
+      "source": {
+        "tipo": "N/A",
+        "n_pairs": 0
+      },
+      "plugin": {
+        "tipo": "N/A",
+        "n_pairs": 0
+      }
+    },
+    "llama3|TMMv1": {
+      "description": {
+        "tipo": "Semântico",
+        "n_pairs": 5890,
+        "rouge_l": {
+          "mean": 0.8907,
+          "min": 0.0,
+          "max": 1.0
+        },
+        "token_f1": {
+          "mean": 0.9032,
+          "min": 0.0,
+          "max": 1.0
+        },
+        "tfidf_cosine": {
+          "mean": 0.897,
+          "min": 0.0,
+          "max": 1.0
+        },
+        "bertscore_proxy": {
+          "method": "Soft-F1 (TF-IDF word vectors)",
+          "precision": 0.9144,
+          "recall": 0.928,
+          "f1_mean": 0.91,
+          "f1_min": 0.0,
+          "f1_max": 1.0
+        }
+      },
+      "detection_result": {
+        "tipo": "Semântico",
+        "n_pairs": 5890,
+        "rouge_l": {
+          "mean": 0.8498,
+          "min": 0.0,
+          "max": 1.0
+        },
+        "token_f1": {
+          "mean": 0.8372,
+          "min": 0.0,
+          "max": 1.0
+        },
+        "tfidf_cosine": {
+          "mean": 0.8657,
+          "min": 0.0,
+          "max": 1.0
+        },
+        "bertscore_proxy": {
+          "method": "Soft-F1 (TF-IDF word vectors)",
+          "precision": 0.8643,
+          "recall": 0.7789,
+          "f1_mean": 0.8069,
+          "f1_min": 0.0,
+          "f1_max": 1.0
+        }
+      },
+      "detection_method": {
+        "tipo": "Semântico",
+        "n_pairs": 5890,
+        "rouge_l": {
+          "mean": 0.3174,
+          "min": 0.0,
+          "max": 1.0
+        },
+        "token_f1": {
+          "mean": 0.4253,
+          "min": 0.0,
+          "max": 0.9552
+        },
+        "tfidf_cosine": {
+          "mean": 0.2586,
+          "min": 0.0,
+          "max": 1.0
+        },
+        "bertscore_proxy": {
+          "method": "Soft-F1 (TF-IDF word vectors)",
+          "precision": 0.6441,
+          "recall": 0.3394,
+          "f1_mean": 0.4354,
+          "f1_min": 0.0,
+          "f1_max": 0.9892
+        }
+      },
+      "product_detection_result": {
+        "tipo": "Semântico",
+        "n_pairs": 5890,
+        "rouge_l": {
+          "mean": 0.5217,
+          "min": 0.0,
+          "max": 1.0
+        },
+        "token_f1": {
+          "mean": 0.4828,
+          "min": 0.0,
+          "max": 1.0
+        },
+        "tfidf_cosine": {
+          "mean": 0.5759,
+          "min": 0.0,
+          "max": 1.0
+        },
+        "bertscore_proxy": {
+          "method": "Soft-F1 (TF-IDF word vectors)",
+          "precision": 0.5726,
+          "recall": 0.5386,
+          "f1_mean": 0.5513,
+          "f1_min": 0.0,
+          "f1_max": 1.0
+        }
+      },
+      "impact": {
+        "tipo": "Semântico",
+        "n_pairs": 5890,
+        "rouge_l": {
+          "mean": 0.2692,
+          "min": 0.0,
+          "max": 1.0
+        },
+        "token_f1": {
+          "mean": 0.2745,
+          "min": 0.0,
+          "max": 1.0
+        },
+        "tfidf_cosine": {
+          "mean": 0.2735,
+          "min": 0.0,
+          "max": 1.0
+        },
+        "bertscore_proxy": {
+          "method": "Soft-F1 (TF-IDF word vectors)",
+          "precision": 0.2753,
+          "recall": 0.2754,
+          "f1_mean": 0.275,
+          "f1_min": 0.0,
+          "f1_max": 1.0
+        }
+      },
+      "solution": {
+        "tipo": "Semântico",
+        "n_pairs": 5890,
+        "rouge_l": {
+          "mean": 0.5984,
+          "min": 0.0,
+          "max": 1.0
+        },
+        "token_f1": {
+          "mean": 0.5996,
+          "min": 0.0,
+          "max": 1.0
+        },
+        "tfidf_cosine": {
+          "mean": 0.5916,
+          "min": 0.0,
+          "max": 1.0
+        },
+        "bertscore_proxy": {
+          "method": "Soft-F1 (TF-IDF word vectors)",
+          "precision": 0.6015,
+          "recall": 0.6141,
+          "f1_mean": 0.6027,
+          "f1_min": 0.0,
+          "f1_max": 1.0
+        }
+      },
+      "insight": {
+        "tipo": "Semântico",
+        "n_pairs": 5890,
+        "rouge_l": {
+          "mean": 0.5022,
+          "min": 0.0,
+          "max": 1.0
+        },
+        "token_f1": {
+          "mean": 0.518,
+          "min": 0.0,
+          "max": 1.0
+        },
+        "tfidf_cosine": {
+          "mean": 0.5223,
+          "min": 0.0,
+          "max": 1.0
+        },
+        "bertscore_proxy": {
+          "method": "Soft-F1 (TF-IDF word vectors)",
+          "precision": 0.5268,
+          "recall": 0.5064,
+          "f1_mean": 0.5125,
+          "f1_min": 0.0,
+          "f1_max": 1.0
+        }
+      },
+      "references": {
+        "tipo": "Semântico",
+        "n_pairs": 5890,
+        "set_f1_cve": {
+          "mean": 0.8005,
+          "min": 0.0,
+          "max": 1.0
+        }
+      },
+      "cvss": {
+        "tipo": "Determinístico",
+        "n_pairs": 5399,
+        "exact_match_rate": 0.8829,
+        "precision": 0.8829,
+        "recall": 0.8829,
+        "f1": 0.8829
+      },
+      "port": {
+        "tipo": "Determinístico",
+        "n_pairs": 3679,
+        "exact_match_rate": 0.975,
+        "precision": 0.975,
+        "recall": 0.975,
+        "f1": 0.975
+      },
+      "protocol": {
+        "tipo": "Determinístico",
+        "n_pairs": 3679,
+        "exact_match_rate": 0.9948,
+        "precision": 0.9948,
+        "recall": 0.9948,
+        "f1": 0.9948
+      },
+      "severity": {
+        "tipo": "Determinístico",
+        "n_pairs": 5801,
+        "exact_match_rate": 0.9731,
+        "precision_macro": 0.9723,
+        "recall_macro": 0.953,
+        "f1_macro": 0.9619,
+        "confusion_matrix": {
+          "labels": [
+            "LOG",
+            "LOW",
+            "MEDIUM",
+            "HIGH",
+            "CRITICAL"
+          ],
+          "matrix": [
+            [
+              1492,
+              0,
+              6,
+              4,
+              0
+            ],
+            [
+              48,
+              298,
+              3,
+              2,
+              0
+            ],
+            [
+              0,
+              11,
+              1654,
+              15,
+              0
+            ],
+            [
+              0,
+              0,
+              29,
+              1309,
+              3
+            ],
+            [
+              1,
+              2,
+              0,
+              32,
+              892
+            ]
+          ],
+          "per_class": {
+            "LOG": {
+              "precision": 0.9682,
+              "recall": 0.9933,
+              "f1-score": 0.9806,
+              "support": 1502.0
+            },
+            "LOW": {
+              "precision": 0.9582,
+              "recall": 0.849,
+              "f1-score": 0.9003,
+              "support": 351.0
+            },
+            "MEDIUM": {
+              "precision": 0.9775,
+              "recall": 0.9845,
+              "f1-score": 0.981,
+              "support": 1680.0
+            },
+            "HIGH": {
+              "precision": 0.9611,
+              "recall": 0.9761,
+              "f1-score": 0.9686,
+              "support": 1341.0
+            },
+            "CRITICAL": {
+              "precision": 0.9966,
+              "recall": 0.9622,
+              "f1-score": 0.9791,
+              "support": 927.0
+            }
+          }
+        }
+      },
+      "log_method": {
+        "tipo": "N/A",
+        "n_pairs": 0
+      },
+      "plugin_details": {
+        "tipo": "N/A",
+        "n_pairs": 0
+      },
+      "instances": {
+        "tipo": "N/A",
+        "n_pairs": 0
+      },
+      "source": {
+        "tipo": "N/A",
+        "n_pairs": 0
+      },
+      "plugin": {
+        "tipo": "N/A",
+        "n_pairs": 0
+      }
+    },
+    "llama4|TMMv1": {
+      "description": {
+        "tipo": "Semântico",
+        "n_pairs": 5732,
+        "rouge_l": {
+          "mean": 0.8791,
+          "min": 0.0,
+          "max": 1.0
+        },
+        "token_f1": {
+          "mean": 0.8903,
+          "min": 0.0,
+          "max": 1.0
+        },
+        "tfidf_cosine": {
+          "mean": 0.8839,
+          "min": 0.0,
+          "max": 1.0
+        },
+        "bertscore_proxy": {
+          "method": "Soft-F1 (TF-IDF word vectors)",
+          "precision": 0.8932,
+          "recall": 0.9029,
+          "f1_mean": 0.8928,
+          "f1_min": 0.0,
+          "f1_max": 1.0
+        }
+      },
+      "detection_result": {
+        "tipo": "Semântico",
+        "n_pairs": 5732,
+        "rouge_l": {
+          "mean": 0.8004,
+          "min": 0.0,
+          "max": 1.0
+        },
+        "token_f1": {
+          "mean": 0.7761,
+          "min": 0.0,
+          "max": 1.0
+        },
+        "tfidf_cosine": {
+          "mean": 0.8122,
+          "min": 0.0,
+          "max": 1.0
+        },
+        "bertscore_proxy": {
+          "method": "Soft-F1 (TF-IDF word vectors)",
+          "precision": 0.8457,
+          "recall": 0.7263,
+          "f1_mean": 0.7628,
+          "f1_min": 0.0,
+          "f1_max": 1.0
+        }
+      },
+      "detection_method": {
+        "tipo": "Semântico",
+        "n_pairs": 5732,
+        "rouge_l": {
+          "mean": 0.2506,
+          "min": 0.0,
+          "max": 1.0
+        },
+        "token_f1": {
+          "mean": 0.3448,
+          "min": 0.0,
+          "max": 0.9455
+        },
+        "tfidf_cosine": {
+          "mean": 0.1991,
+          "min": 0.0,
+          "max": 1.0
+        },
+        "bertscore_proxy": {
+          "method": "Soft-F1 (TF-IDF word vectors)",
+          "precision": 0.5411,
+          "recall": 0.27,
+          "f1_mean": 0.3545,
+          "f1_min": 0.0,
+          "f1_max": 0.9998
+        }
+      },
+      "product_detection_result": {
+        "tipo": "Semântico",
+        "n_pairs": 5732,
+        "rouge_l": {
+          "mean": 0.4259,
+          "min": 0.0,
+          "max": 1.0
+        },
+        "token_f1": {
+          "mean": 0.3381,
+          "min": 0.0,
+          "max": 1.0
+        },
+        "tfidf_cosine": {
+          "mean": 0.5217,
+          "min": 0.0,
+          "max": 1.0
+        },
+        "bertscore_proxy": {
+          "method": "Soft-F1 (TF-IDF word vectors)",
+          "precision": 0.5619,
+          "recall": 0.3634,
+          "f1_mean": 0.3947,
+          "f1_min": 0.0,
+          "f1_max": 1.0
+        }
+      },
+      "impact": {
+        "tipo": "Semântico",
+        "n_pairs": 5732,
+        "rouge_l": {
+          "mean": 0.2632,
+          "min": 0.0,
+          "max": 1.0
+        },
+        "token_f1": {
+          "mean": 0.2668,
+          "min": 0.0,
+          "max": 1.0
+        },
+        "tfidf_cosine": {
+          "mean": 0.2655,
+          "min": 0.0,
+          "max": 1.0
+        },
+        "bertscore_proxy": {
+          "method": "Soft-F1 (TF-IDF word vectors)",
+          "precision": 0.2675,
+          "recall": 0.2678,
+          "f1_mean": 0.2674,
+          "f1_min": 0.0,
+          "f1_max": 1.0
+        }
+      },
+      "solution": {
+        "tipo": "Semântico",
+        "n_pairs": 5732,
+        "rouge_l": {
+          "mean": 0.5848,
+          "min": 0.0,
+          "max": 1.0
+        },
+        "token_f1": {
+          "mean": 0.5867,
+          "min": 0.0,
+          "max": 1.0
+        },
+        "tfidf_cosine": {
+          "mean": 0.5809,
+          "min": 0.0,
+          "max": 1.0
+        },
+        "bertscore_proxy": {
+          "method": "Soft-F1 (TF-IDF word vectors)",
+          "precision": 0.5961,
+          "recall": 0.5886,
+          "f1_mean": 0.5892,
+          "f1_min": 0.0,
+          "f1_max": 1.0
+        }
+      },
+      "insight": {
+        "tipo": "Semântico",
+        "n_pairs": 5732,
+        "rouge_l": {
+          "mean": 0.4635,
+          "min": 0.0,
+          "max": 1.0
+        },
+        "token_f1": {
+          "mean": 0.4693,
+          "min": 0.0,
+          "max": 1.0
+        },
+        "tfidf_cosine": {
+          "mean": 0.4754,
+          "min": 0.0,
+          "max": 1.0
+        },
+        "bertscore_proxy": {
+          "method": "Soft-F1 (TF-IDF word vectors)",
+          "precision": 0.4788,
+          "recall": 0.4551,
+          "f1_mean": 0.4627,
+          "f1_min": 0.0,
+          "f1_max": 1.0
+        }
+      },
+      "references": {
+        "tipo": "Semântico",
+        "n_pairs": 5732,
+        "set_f1_cve": {
+          "mean": 0.662,
+          "min": 0.0,
+          "max": 1.0
+        }
+      },
+      "cvss": {
+        "tipo": "Determinístico",
+        "n_pairs": 5340,
+        "exact_match_rate": 0.8822,
+        "precision": 0.8822,
+        "recall": 0.8822,
+        "f1": 0.8822
+      },
+      "port": {
+        "tipo": "Determinístico",
+        "n_pairs": 3511,
+        "exact_match_rate": 0.9778,
+        "precision": 0.9778,
+        "recall": 0.9778,
+        "f1": 0.9778
+      },
+      "protocol": {
+        "tipo": "Determinístico",
+        "n_pairs": 3512,
+        "exact_match_rate": 0.9966,
+        "precision": 0.9966,
+        "recall": 0.9966,
+        "f1": 0.9966
+      },
+      "severity": {
+        "tipo": "Determinístico",
+        "n_pairs": 5712,
+        "exact_match_rate": 0.9463,
+        "precision_macro": 0.951,
+        "recall_macro": 0.9252,
+        "f1_macro": 0.9359,
+        "confusion_matrix": {
+          "labels": [
+            "LOG",
+            "LOW",
+            "MEDIUM",
+            "HIGH",
+            "CRITICAL"
+          ],
+          "matrix": [
+            [
+              1379,
+              0,
+              4,
+              18,
+              12
+            ],
+            [
+              43,
+              282,
+              3,
+              10,
+              1
+            ],
+            [
+              5,
+              11,
+              1598,
+              72,
+              6
+            ],
+            [
+              2,
+              0,
+              11,
+              1323,
+              3
+            ],
+            [
+              3,
+              0,
+              2,
+              101,
+              823
+            ]
+          ],
+          "per_class": {
+            "LOG": {
+              "precision": 0.963,
+              "recall": 0.9759,
+              "f1-score": 0.9694,
+              "support": 1413.0
+            },
+            "LOW": {
+              "precision": 0.9625,
+              "recall": 0.8319,
+              "f1-score": 0.8924,
+              "support": 339.0
+            },
+            "MEDIUM": {
+              "precision": 0.9876,
+              "recall": 0.9444,
+              "f1-score": 0.9656,
+              "support": 1692.0
+            },
+            "HIGH": {
+              "precision": 0.8681,
+              "recall": 0.9881,
+              "f1-score": 0.9242,
+              "support": 1339.0
+            },
+            "CRITICAL": {
+              "precision": 0.974,
+              "recall": 0.8859,
+              "f1-score": 0.9278,
+              "support": 929.0
+            }
+          }
+        }
+      },
+      "log_method": {
+        "tipo": "N/A",
+        "n_pairs": 0
+      },
+      "plugin_details": {
+        "tipo": "N/A",
+        "n_pairs": 0
+      },
+      "instances": {
+        "tipo": "N/A",
+        "n_pairs": 0
+      },
+      "source": {
+        "tipo": "N/A",
+        "n_pairs": 0
+      },
+      "plugin": {
+        "tipo": "N/A",
+        "n_pairs": 0
+      }
+    }
+  },
+  "version_order": [
+    "deepseek|TMMv1",
+    "gpt4|TMMv1",
+    "gpt5|TMMv1",
+    "llama3|TMMv1",
+    "llama4|TMMv1"
+  ],
+  "version_llms": {
+    "deepseek|TMMv1": "deepseek",
+    "gpt4|TMMv1": "gpt4",
+    "gpt5|TMMv1": "gpt5",
+    "llama3|TMMv1": "llama3",
+    "llama4|TMMv1": "llama4"
+  },
+  "version_pairs": [
+    [
+      "TMMv1",
+      "artifacts/v1/openvas_129_dockers/deepseek_v1.csv",
+      "deepseek"
+    ],
+    [
+      "TMMv1",
+      "artifacts/v1/openvas_129_dockers/gpt4_v1.csv",
+      "gpt4"
+    ],
+    [
+      "TMMv1",
+      "artifacts/v1/openvas_129_dockers/gpt5_v1.csv",
+      "gpt5"
+    ],
+    [
+      "TMMv1",
+      "artifacts/v1/openvas_129_dockers/llama3_v1.csv",
+      "llama3"
+    ],
+    [
+      "TMMv1",
+      "artifacts/v1/openvas_129_dockers/llama4_v1.csv",
+      "llama4"
+    ]
+  ],
+  "campo_order": [
+    "description",
+    "detection_result",
+    "detection_method",
+    "product_detection_result",
+    "impact",
+    "solution",
+    "insight",
+    "references",
+    "cvss",
+    "port",
+    "protocol",
+    "severity",
+    "log_method",
+    "plugin_details",
+    "instances",
+    "source",
+    "plugin"
+  ],
+  "campo_meta": {
+    "description": {
+      "tipo": "Semântico",
+      "metrica_principal": "ROUGE-L"
+    },
+    "detection_result": {
+      "tipo": "Semântico",
+      "metrica_principal": "ROUGE-L"
+    },
+    "detection_method": {
+      "tipo": "Semântico",
+      "metrica_principal": "ROUGE-L"
+    },
+    "product_detection_result": {
+      "tipo": "Semântico",
+      "metrica_principal": "ROUGE-L"
+    },
+    "impact": {
+      "tipo": "Semântico",
+      "metrica_principal": "ROUGE-L"
+    },
+    "solution": {
+      "tipo": "Semântico",
+      "metrica_principal": "ROUGE-L"
+    },
+    "insight": {
+      "tipo": "Semântico",
+      "metrica_principal": "ROUGE-L"
+    },
+    "references": {
+      "tipo": "Semântico",
+      "metrica_principal": "Set-F1 (CVE)"
+    },
+    "cvss": {
+      "tipo": "Determinístico",
+      "metrica_principal": "Exact Match"
+    },
+    "port": {
+      "tipo": "Determinístico",
+      "metrica_principal": "Exact Match"
+    },
+    "protocol": {
+      "tipo": "Determinístico",
+      "metrica_principal": "Exact Match"
+    },
+    "severity": {
+      "tipo": "Determinístico",
+      "metrica_principal": "F1-macro"
+    },
+    "log_method": {
+      "tipo": "N/A",
+      "metrica_principal": "N/A"
+    },
+    "plugin_details": {
+      "tipo": "N/A",
+      "metrica_principal": "N/A"
+    },
+    "instances": {
+      "tipo": "N/A",
+      "metrica_principal": "N/A"
+    },
+    "source": {
+      "tipo": "N/A",
+      "metrica_principal": "N/A"
+    },
+    "plugin": {
+      "tipo": "N/A",
+      "metrica_principal": "N/A"
+    }
+  },
+  "run_timestamp": "2026-07-19 07:27:17",
+  "file_hashes": {
+    "baseline": {
+      "path": "baselines/native/vulnnet_scans_openvas.csv",
+      "md5": "c3ccd8156c84b4ed41498caf107eef6f"
+    },
+    "deepseek|TMMv1": {
+      "path": "artifacts/v1/openvas_129_dockers/deepseek_v1.csv",
+      "md5": "39ab0520b34b074c4843685054e3845f",
+      "llm": "deepseek",
+      "label": "TMMv1"
+    },
+    "gpt4|TMMv1": {
+      "path": "artifacts/v1/openvas_129_dockers/gpt4_v1.csv",
+      "md5": "fc781b52f9dee1d65fb3d6bb25ef93a1",
+      "llm": "gpt4",
+      "label": "TMMv1"
+    },
+    "gpt5|TMMv1": {
+      "path": "artifacts/v1/openvas_129_dockers/gpt5_v1.csv",
+      "md5": "4b569deefe177744ee44ddb5091fcad8",
+      "llm": "gpt5",
+      "label": "TMMv1"
+    },
+    "llama3|TMMv1": {
+      "path": "artifacts/v1/openvas_129_dockers/llama3_v1.csv",
+      "md5": "09e7ca90b75dce5182d57e0c8460c472",
+      "llm": "llama3",
+      "label": "TMMv1"
+    },
+    "llama4|TMMv1": {
+      "path": "artifacts/v1/openvas_129_dockers/llama4_v1.csv",
+      "md5": "964290055c31abdf7c72c579efbd77e2",
+      "llm": "llama4",
+      "label": "TMMv1"
+    }
+  }
+}

@@ -1,6 +1,6 @@
 # Troubleshooting Guide
 
-This document covers common errors and optimization tips for MulitaMiner.
+This document covers common errors and optimization tips for TMM.
 
 ## Token Errors
 
