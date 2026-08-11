@@ -246,8 +246,6 @@ BERTScore covers the free-text fields; Ent.F1 the deterministic ones
 keeping in mind this is a single run on one baseline.
 ```
 
-What validates the claim: **schema conformance is 100% for both** and **Entity F1 lands within a few points**, confirming that deterministic extraction (cvss, plugin, port, protocol, severity) is solved on-premise. The cloud keeps its edge in **BERTScore** and in **Exact Record Match**, which is where the paper locates the residual gap: the narrative free-text fields.
-
 Across the paper's full evaluation (Table 1, means over 5 runs and 3 baselines) the same pattern holds for the whole pool: Entity F1 ranges from 95.6 to 99.0 for every model including the cloud, while BERTScore spreads from 78.8 to 94.2. Deterministic extraction does not separate models; free-text fidelity does.
 
 ## LICENSE
