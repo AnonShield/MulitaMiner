@@ -237,9 +237,9 @@ Baseline: OpenVAS_JuiceShop
 
 Model                        BERTScore     Ent.F1      Exact    Omiss v   Halluc v     Schema    Sev.mF1    Sev.cov
 -------------------------------------------------------------------------------------------------------------------
-Llama 3.1 8B                      90.4       92.6       44.1        0.0       12.8      100.0      100.0       91.2
+Llama 3.1 8B                      90.3       92.8       44.1        0.0       15.0      100.0      100.0       90.7
 -------------------------------------------------------------------------------------------------------------------
-deepseek-v4-flash (cloud)         98.2       99.7       97.1        0.0       2.9       100.0      100.0       99.4
+deepseek-v4-flash (cloud)         97.9       99.4       94.1        0.0        5.6      100.0      100.0       98.9
 
 BERTScore covers the free-text fields; Ent.F1 the deterministic ones
 (cvss, plugin, port, protocol, severity). Compare with Table 1 of the paper,
