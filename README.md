@@ -143,7 +143,6 @@ See [docs/INSTALL.md](docs/INSTALL.md) for complete dependency details.
 **Network**: The tool makes HTTPS requests to LLM APIs. Ensure your network allows outbound connections to:
 
 - `api.openai.com` (OpenAI)
-- `api.groq.com` (Groq)
 - `api.deepseek.com` (DeepSeek)
 
 ## Installation
