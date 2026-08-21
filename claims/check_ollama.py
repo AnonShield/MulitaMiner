@@ -64,7 +64,7 @@ def main() -> int:
         print()
         print("  Start it with Docker:")
         print("    docker run -d --gpus=all -v ollama:/root/.ollama \\")
-        print("      -p 11434:11434 --name ollama ollama/ollama:0.30.0")
+        print("      -p 127.0.0.1:11434:11434 --name ollama ollama/ollama:0.30.0")
         print()
         print("  or install it natively from https://ollama.com/download")
         return 1
