@@ -79,41 +79,41 @@ Ollama selects its compute backend automatically (CUDA, ROCm or Vulkan depending
 
 ### Language and runtime
 
-| Component | Version | Role |
-| --------- | ------- | ---- |
-| Python | 3.11 or 3.12 | pipeline, metric battery and scripts |
-| Ollama | 0.30.0 | server for the local model |
-| `llama3.1:8b` | Q4_K_M, ~4.9 GB | local model of the comparison, pulled by the artifact |
-| DeepSeek API | `deepseek-v4-flash` | cloud reference, reached over HTTPS |
+| Component | Version |
+| --------- | ------- |
+| Python | 3.11 or 3.12 |
+| Ollama | 0.30.0 |
+| `llama3.1:8b` | Q4_K_M, ~4.9 GB |
+| DeepSeek API | `deepseek-v4-flash` |
 
 ### Python packages
 
 The table lists the direct dependencies, declared in [pyproject.toml](pyproject.toml). [requirements.txt](requirements.txt) is generated from `uv.lock` (`uv export --frozen --no-hashes --no-emit-project -o requirements.txt`) and pins the transitive set as well, so `pip install -r requirements.txt` and `uv sync` install exactly the same versions.
 
-| Package | Version | Role |
-| ------- | ------- | ---- |
-| langchain | 0.3.28 | orchestration of the extraction chain |
-| langchain-core | 0.3.84 | base abstractions of langchain |
-| langchain-openai | 0.3.35 | client for the DeepSeek endpoint (OpenAI-compatible) |
-| langchain-ollama | 0.3.10 | client for the local backend |
-| pdfplumber | 0.11.9 | text extraction from the PDF reports |
-| tiktoken | 0.12.0 | token counting and chunk budget |
-| json-repair | 0.59.5 | recovery of malformed JSON returned by the model |
-| deepmerge | 1.1.1 | merge of the per-chunk results |
-| python-dotenv | 1.2.2 | reading the API key from `.env` |
-| tqdm | 4.67.3 | progress bar |
-| pandas | 2.3.3 | tabular handling and XLSX export |
-| openpyxl | 3.1.5 | XLSX writer |
-| bert-score | 0.3.13 | BERTScore metric |
-| rouge-score | 0.1.2 | ROUGE-L metric |
-| torch | 2.11.0 | backend for BERTScore |
-| rapidfuzz | 3.14.5 | fuzzy alignment between extraction and baseline |
-| scikit-learn | 1.8.0 | agreement metrics and classification reports |
-| numpy | 1.26.4 | numeric base |
-| scipy | 1.13.1 | optimal alignment and statistical tests over the runs |
-| matplotlib | 3.10.8 | charts |
-| seaborn | 0.13.2 | chart styling |
-| jinja2 | 3.1.6 | HTML report generation |
+| Package | Version |
+| ------- | ------- |
+| langchain | 0.3.28 |
+| langchain-core | 0.3.84 |
+| langchain-openai | 0.3.35 |
+| langchain-ollama | 0.3.10 |
+| pdfplumber | 0.11.9 |
+| tiktoken | 0.12.0 |
+| json-repair | 0.59.5 |
+| deepmerge | 1.1.1 |
+| python-dotenv | 1.2.2 |
+| tqdm | 4.67.3 |
+| pandas | 2.3.3 |
+| openpyxl | 3.1.5 |
+| bert-score | 0.3.13 |
+| rouge-score | 0.1.2 |
+| torch | 2.11.0 |
+| rapidfuzz | 3.14.5 |
+| scikit-learn | 1.8.0 |
+| numpy | 1.26.4 |
+| scipy | 1.13.1 |
+| matplotlib | 3.10.8 |
+| seaborn | 0.13.2 |
+| jinja2 | 3.1.6 |
 
 ## Security Concerns
 
