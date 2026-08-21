@@ -78,7 +78,7 @@ The following badges are considered for evaluation: **Available**, **Functional*
 | Component   | Requirement                                      |
 | ----------- | ------------------------------------------------ |
 | **OS**      | Windows 10+, Linux (Ubuntu 20.04+), macOS 10.15+ |
-| **Python**  | 3.11 or 3.12 (tested on 3.11)                    |
+| **Python**  | 3.11 or 3.12 (both tested)                       |
 | **RAM**     | 4GB+ (8GB recommended for large PDFs)            |
 | **Disk**    | 500MB for dependencies + space for outputs       |
 | **Network** | Internet connection required for LLM API calls   |
