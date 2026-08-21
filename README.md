@@ -208,6 +208,8 @@ If no supported interpreter is available locally, the bundled [Dockerfile](Docke
 docker build -t mulitaminer .
 ```
 
+The build takes a few minutes and produces a large image (~3 GB): besides the CPU build of PyTorch, it bakes in the DistilBERT model used by BERTScore, so the metric phase of the claims does not depend on downloading it from the network at run time.
+
 The image never contains your API key: [.dockerignore](.dockerignore) keeps `.env` out of the build context, and the file is mounted read-only when the container runs. Two mounts are used below: `.env` carries the DeepSeek key into the container, and `claims/out` keeps the generated outputs on the host.
 
 ```bash
@@ -265,7 +267,7 @@ Both claims use **DeepSeek only**, the API key provided for evaluation (configur
 
 > **Note on execution times**: based on AMD Ryzen 5 5600G, 32GB RAM, 1TB SSD, Windows 11. Actual times may vary depending on system specifications, network latency, and API response times.
 
-> **Note on variability**: LLM decoding is stochastic and hosted models are updated by their providers over time, so single-run results are expected to deviate by a few percentage points from the reference values below (reference values are means of 10 runs from the paper's evaluation). What validates each claim is the trend, not the exact figure: in the paper's full evaluation (5 LLMs × 3 baselines × 10 runs per configuration), all headline differences between versions hold with non-overlapping 95% bootstrap confidence intervals, e.g. Exact Record Match 37.5% [34.3, 40.7] (V1) → 88.0% [86.9, 89.2] (V2) → 90.4% [89.3, 91.5] (V3), and vulnerability-level omission 20.5% [16.2, 25.2] → 8.1% [6.5, 9.9] → 1.7% [1.4, 2.0].
+> **Note on variability**: LLM decoding is stochastic and hosted models are updated by their providers over time, so single-run results are expected to deviate by a few percentage points from the reference values below (reference values are means of 10 runs from the paper's evaluation). What validates each claim is the trend, not the exact figure: in the paper's full evaluation (5 LLMs × 3 baselines × 10 runs per configuration), all headline differences between versions hold with non-overlapping 95% bootstrap confidence intervals, e.g. Exact Record Match 37.5% [34.3, 40.7] (V1) → 88.0% [86.9, 89.2] (V2) → 90.4% [89.3, 91.5] (V3), and vulnerability-level omission 20.5% [16.2, 25.2] → 8.1% [6.5, 9.9] → 1.7% [1.4, 2.0]. The claims below run **one extraction per version**, so that the artifact can be evaluated in minutes instead of the hours the full 450-run evaluation takes; every reference value they are compared against is a mean of 10 runs.
 
 ### Claim #1: Structured Extraction with Quantitative Evaluation (V3 pipeline)
 
@@ -335,4 +337,4 @@ bash claims/claim2_version_progression.sh
 | Exact Record Match   | 0.21 | 0.91 | 0.94 |
 | Field-level omission | 13%  | 5%   | 4%   |
 
-Single-run values may deviate from the table (e.g. V1 Exact Record Match anywhere in the 0.15-0.25 range, see the variability note above). What validates the claim is the ordering: V1 scores far below V2 and V3 on Exact Record Match, and omission falls monotonically from V1 to V3, reproducing at small scale the aggregate result of the paper (Table 3: ERM 37.5% → 88.0% → 90.4%).
+Single-run values may deviate from the table (e.g. V1 Exact Record Match anywhere in the 0.15-0.25 range, see the variability note above). What validates the claim is the ordering: V1 scores far below V2 and V3 on Exact Record Match, reproducing at small scale the aggregate result of the paper (Table 3: ERM 37.5% → 88.0% → 90.4%).
