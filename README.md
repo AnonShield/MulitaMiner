@@ -83,6 +83,8 @@ The following badges are considered for evaluation: **Available**, **Functional*
 | **Disk**    | 500MB for dependencies + space for outputs       |
 | **Network** | Internet connection required for LLM API calls   |
 
+A [Dockerfile](Dockerfile) with the interpreter and dependencies already pinned is provided as an alternative, see [Alternative: Docker](#alternative-docker).
+
 ### Supported LLMs
 
 | Provider | Models                |
@@ -132,7 +134,7 @@ See [docs/INSTALL.md](docs/INSTALL.md) for complete dependency details.
 
 ## Security Concerns
 
-**API Keys**: The tool requires LLM API keys configured in a `.env` file. Never commit this file to public repositories.
+**API Keys**: The tool requires LLM API keys configured in a `.env` file. Never commit this file to public repositories. The Docker image does not embed it either: `.env` is excluded from the build context by [.dockerignore](.dockerignore) and mounted read-only at run time.
 
 **PDF Processing**: PDF parsing, chunking and all metric computation happen locally.
 
@@ -199,6 +201,36 @@ Only the DeepSeek key is required to reproduce the claims; the other keys in the
 
 See [docs/CONFIG.md](docs/CONFIG.md) for all configuration options.
 
+### Alternative: Docker
+
+If no supported interpreter is available locally, the bundled [Dockerfile](Dockerfile) pins Python 3.11 and installs the same requirements:
+
+```bash
+docker build -t mulitaminer .
+```
+
+The image never contains your API key: [.dockerignore](.dockerignore) keeps `.env` out of the build context, and the file is mounted read-only when the container runs. Two mounts are used below: `.env` carries the DeepSeek key into the container, and `claims/out` keeps the generated outputs on the host.
+
+```bash
+# Minimum test
+docker run --rm -it \
+  -v "$PWD/.env:/app/.env:ro" \
+  -v "$PWD/claims/out:/app/claims/out" \
+  mulitaminer \
+  python main.py --input baselines/openvas/OpenVAS_JuiceShop.pdf --llm deepseek \
+    --scanner openvas --allow-duplicates --output-file openvas_test \
+    --output-dir claims/out/minimum_test
+
+# Claim 1 (Claim 2 is the same command with claim2_version_progression.sh)
+docker run --rm -it \
+  -v "$PWD/.env:/app/.env:ro" \
+  -v "$PWD/claims/out:/app/claims/out" \
+  mulitaminer \
+  bash claims/claim1_extraction_metrics.sh
+```
+
+On Windows PowerShell, replace `$PWD` with `${PWD}` and the trailing `\` with a backtick.
+
 ## Minimum Test
 
 After installation (including the `.env` file with the DeepSeek key), run a single extraction of the smallest report (OWASP Juice Shop) and summarize it in the terminal:
@@ -230,7 +262,7 @@ LOG        | Postfix SMTP Server Detection                      | CVSS 0.0 | 25/
 
 This section describes how to reproduce the main claims from the paper. Each claim has a ready-to-run script in [claims/](claims/) (`.bat` for Windows, `.sh` for Linux/macOS), to be executed from the repository root with the virtual environment active. Outputs are written to `claims/out/`.
 
-Both claims use **DeepSeek only**, the API key provided for evaluation (configure `.env` as shown in [Installation](#installation)).
+Both claims use **DeepSeek only**, the API key provided for evaluation (configure `.env` as shown in [Installation](#installation)). Both scripts also run inside the Docker image, see [Alternative: Docker](#alternative-docker).
 
 > **Note on execution times**: based on AMD Ryzen 5 5600G, 32GB RAM, 1TB SSD, Windows 11. Actual times may vary depending on system specifications, network latency, and API response times.
 
