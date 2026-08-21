@@ -10,7 +10,7 @@
 
 _Automated · Structured · Multi-LLM_
 
-![Python](https://img.shields.io/badge/Python-3.11+-blue)
+![Python](https://img.shields.io/badge/Python-3.11%20%7C%203.12-blue)
 ![license](https://img.shields.io/badge/license-MIT-green)
 ![status](https://img.shields.io/badge/status-active-orange)
 ![update](https://img.shields.io/badge/last%20update-Mar%202026-lightgrey)

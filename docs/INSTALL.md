@@ -38,6 +38,8 @@ curl -LsSf https://astral.sh/uv/install.sh | sh
 uv sync
 ```
 
+`uv` reads [.python-version](../.python-version) and the `requires-python` range, and downloads Python 3.11 by itself, so this path also works on machines whose default interpreter is 3.13+.
+
 ```bash
 # Activate the virtual environment
 
@@ -61,6 +63,10 @@ python3.11 -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
 ```
+
+#### Alternative: Docker
+
+If neither interpreter is available, build the bundled [Dockerfile](../Dockerfile), which pins Python 3.11 and installs the same requirements. See [Alternative: Docker](../README.md#alternative-docker) in the README for the build and run commands.
 
 ## Main Python Dependencies
 
