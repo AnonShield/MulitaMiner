@@ -283,7 +283,7 @@ claims\claim1_extraction_metrics.bat
 bash claims/claim1_extraction_metrics.sh
 ```
 
-**Expected time**: ~5 minutes (~3 for the extraction; the first metrics run also downloads the DistilBERT model used by BERTScore)
+**Expected time**: ~5 minutes (~3 for the extraction; on a native install the first metrics run also downloads the DistilBERT model used by BERTScore, which the Docker image already carries)
 
 **Expected resources**: ~2 GB RAM during the metric pass (PyTorch/BERTScore); ~300 MB extra disk for the DistilBERT model on first use; one DeepSeek extraction over the API (a fraction of a US dollar in tokens)
 
