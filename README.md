@@ -17,7 +17,7 @@
 > ⚠️ **This branch (`main`) is not an evaluation artifact.** It is an index. The
 > repository hosts the artifacts of two different papers, each one on its own branch.
 
-| Paper | Artifact branch | Frozen tag |
+| Paper | Artifact branch | Submission tag |
 | ----- | --------------- | ---------- |
 | **SBSeg 2026 · Main Track**<br>*MulitaMiner: A Multi-Version Evaluation of LLM-Based Vulnerability Report Extraction*<br><sub>Pipeline progression V1 → V2 → V3, evaluated with **cloud LLMs** across 450 runs.</sub> | **[▶ `V3`](../../tree/V3)** | [`sbseg2026-artifact`](../../tree/sbseg2026-artifact) |
 | **WTICG 2026**<br>*On-Premise vs. Cloud: Local LLMs for Vulnerability Extraction from Security Scanner Reports*<br><sub>Nine **local models** (4B to 21B) compared against a DeepSeek cloud reference.</sub> | **[▶ `slms`](../../tree/slms)** | [`wticg2026-artifact`](../../tree/wticg2026-artifact) |
@@ -32,10 +32,10 @@ information, dependencies, installation, minimum test and the claims of its pape
 
 ## Branch or tag?
 
-The **branch** always holds the latest state of an artifact. The **tag** is frozen: it
-points at the exact commit submitted for evaluation and never moves, so the code under
-review cannot shift while you are reviewing it. Either link works, and both render the
-same README.
+The **branch** always holds the latest state of an artifact. The **tag** points at the
+commit submitted for the current evaluation round, and is updated only when the artifact
+is revised in response to a review, so the code under review does not shift while you are
+reviewing it. Either link works, and both render the same README.
 
 ## Previous material
 
