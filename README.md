@@ -10,7 +10,7 @@
 
 _On-Premise · Local SLMs · Privacy-Preserving_
 
-![Python](https://img.shields.io/badge/Python-3.11+-blue)
+![Python](https://img.shields.io/badge/Python-3.11%20%7C%203.12-blue)
 ![license](https://img.shields.io/badge/license-MIT-green)
 ![backend](https://img.shields.io/badge/backend-Ollama-lightgrey)
 
@@ -71,15 +71,49 @@ The artifact compares two execution modes, and their requirements differ:
 | **Network** | Required (API calls) | Only to download the model once |
 | **API key** | Required | Not needed |
 
-**OS**: Windows 10+, Linux (Ubuntu 20.04+) or macOS 10.15+. **Python**: 3.11+.
+**OS**: Windows 10+, Linux (Ubuntu 20.04+) or macOS 10.15+. **Python**: 3.11 or 3.12. Do not use 3.13 or newer: the pinned `numpy` 1.26.4 and `scipy` 1.13.1 publish no wheels above 3.12, and the install fails while trying to build them from source.
 
 Ollama selects its compute backend automatically (CUDA, ROCm or Vulkan depending on the card), and falls back to CPU when no GPU is usable, which works but is much slower. Peak memory for `llama3.1:8b` at the paper's 16,000-token context window is about 7 GB; cards with less VRAM still run it, offloading the remaining layers to CPU.
 
 ## Dependencies
 
-### Python
+### Language and runtime
 
-All versions are pinned in [requirements.txt](requirements.txt) and [pyproject.toml](pyproject.toml). The core of the extraction is `langchain`, `pdfplumber`, `tiktoken` and `json-repair`; the metric battery adds `bert-score`, `rouge-score`, `torch`, `rapidfuzz` and `scipy`.
+| Component | Version | Role |
+| --------- | ------- | ---- |
+| Python | 3.11 or 3.12 | pipeline, metric battery and scripts |
+| Ollama | 0.30.0 | server for the local model |
+| `llama3.1:8b` | Q4_K_M, ~4.9 GB | local model of the comparison, pulled by the artifact |
+| DeepSeek API | `deepseek-v4-flash` | cloud reference, reached over HTTPS |
+
+### Python packages
+
+The table lists the direct dependencies, declared in [pyproject.toml](pyproject.toml). [requirements.txt](requirements.txt) is generated from `uv.lock` (`uv export --frozen --no-hashes --no-emit-project -o requirements.txt`) and pins the transitive set as well, so `pip install -r requirements.txt` and `uv sync` install exactly the same versions.
+
+| Package | Version | Role |
+| ------- | ------- | ---- |
+| langchain | 0.3.28 | orchestration of the extraction chain |
+| langchain-core | 0.3.84 | base abstractions of langchain |
+| langchain-openai | 0.3.35 | client for the DeepSeek endpoint (OpenAI-compatible) |
+| langchain-ollama | 0.3.10 | client for the local backend |
+| pdfplumber | 0.11.9 | text extraction from the PDF reports |
+| tiktoken | 0.12.0 | token counting and chunk budget |
+| json-repair | 0.59.5 | recovery of malformed JSON returned by the model |
+| deepmerge | 1.1.1 | merge of the per-chunk results |
+| python-dotenv | 1.2.2 | reading the API key from `.env` |
+| tqdm | 4.67.3 | progress bar |
+| pandas | 2.3.3 | tabular handling and XLSX export |
+| openpyxl | 3.1.5 | XLSX writer |
+| bert-score | 0.3.13 | BERTScore metric |
+| rouge-score | 0.1.2 | ROUGE-L metric |
+| torch | 2.11.0 | backend for BERTScore |
+| rapidfuzz | 3.14.5 | fuzzy alignment between extraction and baseline |
+| scikit-learn | 1.8.0 | agreement metrics and classification reports |
+| numpy | 1.26.4 | numeric base |
+| scipy | 1.13.1 | optimal alignment and statistical tests over the runs |
+| matplotlib | 3.10.8 | charts |
+| seaborn | 0.13.2 | chart styling |
+| jinja2 | 3.1.6 | HTML report generation |
 
 ## Security Concerns
 
@@ -130,9 +164,9 @@ Only `API_KEY_DEEPSEEK` is required. The local model needs no key.
 
 ### 4. Start Ollama
 
-The local model is served by [Ollama](https://ollama.com), pinned to the version used in the paper. The simplest route on any hardware is the native installer from [ollama.com/download](https://ollama.com/download), which detects NVIDIA, AMD or CPU-only on its own.
+The local model is served by [Ollama](https://ollama.com), pinned to the version used in the paper (0.30.0). **The recommended route on any hardware is the native installer** from [ollama.com/download](https://ollama.com/download), which detects NVIDIA, AMD or CPU-only on its own and needs nothing else on the host.
 
-With Docker, pick the line that matches the machine. All three bind to `127.0.0.1`, so the server stays unreachable from the network:
+Docker is an alternative, and only pays off if the host is already set up for it: the GPU line requires the [NVIDIA Container Toolkit](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html) installed and configured on the host. Without it the container starts but ignores the GPU, or fails outright; in that case use the native installer instead of debugging Docker. Pick the line that matches the machine. All three bind to `127.0.0.1`, so the server stays unreachable from the network:
 
 ```bash
 # NVIDIA, needs the NVIDIA Container Toolkit on the host

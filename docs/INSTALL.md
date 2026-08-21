@@ -4,7 +4,7 @@ This document provides detailed installation instructions for MulitaMiner.
 
 ## System Requirements
 
-- **Python**: 3.11+
+- **Python**: 3.11 or 3.12
 - **RAM**: 4GB+ recommended for large PDF processing
 - **OS**: Windows, Linux, or macOS
 
