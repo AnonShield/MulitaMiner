@@ -9,6 +9,13 @@ Usage:
 """
 import os
 import sys
+
+if not (3, 11) <= sys.version_info < (3, 13):
+    sys.exit(
+        f"MulitaMiner requires Python 3.11 or 3.12 (found {sys.version.split()[0]}). "
+        "The pinned numpy/scipy versions have no wheels for Python 3.13+."
+    )
+
 import argparse
 import json
 import subprocess

@@ -78,7 +78,7 @@ The following badges are considered for evaluation: **Available**, **Functional*
 | Component   | Requirement                                      |
 | ----------- | ------------------------------------------------ |
 | **OS**      | Windows 10+, Linux (Ubuntu 20.04+), macOS 10.15+ |
-| **Python**  | 3.11+ (tested on 3.11)                           |
+| **Python**  | 3.11 or 3.12 (tested on 3.11)                    |
 | **RAM**     | 4GB+ (8GB recommended for large PDFs)            |
 | **Disk**    | 500MB for dependencies + space for outputs       |
 | **Network** | Internet connection required for LLM API calls   |
@@ -155,14 +155,22 @@ cd MulitaMiner
 
 ### 2. Create Virtual Environment
 
+MulitaMiner runs on **Python 3.11 or 3.12**. Python 3.13+ is not supported: the pinned `numpy`/`scipy` releases publish no wheels for it and `pip` would try to compile them from source.
+
 ```bash
 # Windows
-python3 -m venv .venv
+py -3.11 -m venv .venv
 .venv\Scripts\activate
 
 # Linux/Mac
-python3 -m venv .venv
+python3.11 -m venv .venv
 source .venv/bin/activate
+```
+
+Check the interpreter before installing:
+
+```bash
+python -c "import sys; print(sys.version)"   # must report 3.11.x or 3.12.x
 ```
 
 ### 3. Install Dependencies

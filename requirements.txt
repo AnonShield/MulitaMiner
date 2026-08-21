@@ -1,6 +1,9 @@
 # =================================================================
 # PDF VULNERABILITY EXTRACTOR - REQUIREMENTS
 # =================================================================
+#
+# Requires Python 3.11 or 3.12: the pinned numpy/scipy releases ship no
+# wheels for 3.13+, so pip would try to build them from source.
 
 
 # Core Dependencies - Required for basic functionality
@@ -49,6 +52,7 @@ requests==2.32.3
 #
 # =================================================================
 # Notes:
+# - Supported interpreters: Python 3.11 and 3.12 only
 # - Standard library modules (os, sys, argparse, json, csv, 
 #   datetime, typing, abc) are included with Python
 # - pandas and openpyxl are optional for XLSX conversion

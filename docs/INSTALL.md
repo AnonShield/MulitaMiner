@@ -4,7 +4,7 @@ This document provides detailed installation instructions for MulitaMiner.
 
 ## System Requirements
 
-- **Python**: 3.11+
+- **Python**: 3.11 or 3.12 (3.13+ is not supported: the pinned numpy/scipy have no wheels for it)
 - **RAM**: 4GB+ recommended for large PDF processing
 - **OS**: Windows, Linux, or macOS
 
@@ -52,12 +52,12 @@ source .venv/bin/activate
 
 ```bash
 # Windows
-python -m venv .venv
+py -3.11 -m venv .venv
 .venv\Scripts\activate
 pip install -r requirements.txt
 
 # Linux/macOS
-python3 -m venv .venv
+python3.11 -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
 ```
