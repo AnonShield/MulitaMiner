@@ -66,7 +66,7 @@ pip install -r requirements.txt
 
 #### Alternative: Docker
 
-If neither interpreter is available, build the bundled [Dockerfile](../Dockerfile), which pins Python 3.11 and installs the same requirements. See [Alternative: Docker](../README.md#alternative-docker) in the README for the build and run commands.
+This page documents the native installation. The evaluation path of the artifact is the Docker image, which pins Python 3.11 and the same requirements: see [Installation](../README.md#installation) in the README.
 
 ## Main Python Dependencies
 

@@ -78,12 +78,12 @@ The following badges are considered for evaluation: **Available**, **Functional*
 | Component   | Requirement                                      |
 | ----------- | ------------------------------------------------ |
 | **OS**      | Windows 10+, Linux (Ubuntu 20.04+), macOS 10.15+ |
-| **Python**  | 3.11 or 3.12                      |
+| **Docker**  | Docker Engine 20.10+ (Docker Desktop on Windows and macOS) |
 | **RAM**     | 4GB+ (8GB recommended for large PDFs)            |
-| **Disk**    | 500MB for dependencies + space for outputs       |
+| **Disk**    | ~3 GB for the image + space for outputs          |
 | **Network** | Internet connection required for LLM API calls   |
 
-A [Dockerfile](Dockerfile) with the interpreter and dependencies already pinned is provided as an alternative, see [Alternative: Docker](#alternative-docker).
+Everything runs inside the bundled [Dockerfile](Dockerfile), which pins Python 3.11 and every dependency, so nothing beyond Docker has to be installed on the host.
 
 ### Supported LLMs
 
@@ -154,33 +154,15 @@ git clone -b V3 https://github.com/AnonShield/MulitaMiner.git
 cd MulitaMiner
 ```
 
-### 2. Create Virtual Environment
-
-MulitaMiner runs on **Python 3.11 or 3.12**. Python 3.13+ is not supported: the pinned `numpy`/`scipy` releases publish no wheels for it and `pip` would try to compile them from source.
+### 2. Build the Image
 
 ```bash
-# Windows (use py -3.12 for Python 3.12)
-py -3.11 -m venv .venv
-.venv\Scripts\activate
-
-# Linux/Mac (use python3.12 for Python 3.12)
-python3.11 -m venv .venv
-source .venv/bin/activate
+docker build -t mulitaminer .
 ```
 
-Check the interpreter before installing:
+The build takes a few minutes and produces a large image (~3 GB): besides the CPU build of PyTorch, it bakes in the DistilBERT model used by BERTScore, so the metric phase of the claims does not depend on downloading it at run time.
 
-```bash
-python -c "import sys; print(sys.version)"   # must report 3.11.x or 3.12.x
-```
-
-### 3. Install Dependencies
-
-```bash
-pip install -r requirements.txt
-```
-
-### 4. Configure API Keys
+### 3. Configure API Keys
 
 Copy [.env.example](.env.example) to `.env` at the repository root and fill in the DeepSeek key:
 
@@ -198,24 +180,18 @@ API_KEY_DEEPSEEK = "your-deepseek-api-key"   # required for the experiment claim
 
 Only the DeepSeek key is required to reproduce the claims; the other keys in the example file are optional.
 
-See [docs/CONFIG.md](docs/CONFIG.md) for all configuration options.
+The key never enters the image: [.dockerignore](.dockerignore) keeps `.env` out of the build context. Every command in the sections below mounts it read-only at run time, alongside a second mount for `claims/out`, which keeps the generated outputs on the host.
 
-### Alternative: Docker
+See [docs/CONFIG.md](docs/CONFIG.md) for all configuration options, and [docs/INSTALL.md](docs/INSTALL.md) for a native installation with Python 3.11 or 3.12, for machines where Docker is not an option.
 
-If no supported interpreter is available locally, the bundled [Dockerfile](Dockerfile) pins Python 3.11 and installs the same requirements, replacing steps 2 and 3:
+## Minimum Test
 
-```bash
-git clone -b V3 https://github.com/AnonShield/MulitaMiner.git
-cd MulitaMiner
-docker build -t mulitaminer .
-```
+Run a single extraction of the smallest report (OWASP Juice Shop) and summarize it in the terminal:
 
-The build takes a few minutes and produces a large image (~3 GB): besides the CPU build of PyTorch, it bakes in the DistilBERT model used by BERTScore, so the metric phase of the claims does not depend on downloading it from the network at run time.
-
-The image never contains your API key: [.dockerignore](.dockerignore) keeps `.env` out of the build context, and the file is mounted read-only when the container runs. Two mounts are used below: the `.env` of step 4 carries the DeepSeek key into the container, and `claims/out` keeps the generated outputs on the host.
+Linux/macOS:
 
 ```bash
-# Minimum test
+# Extraction
 docker run --rm -it \
   -v "$PWD/.env:/app/.env:ro" \
   -v "$PWD/claims/out:/app/claims/out" \
@@ -224,28 +200,34 @@ docker run --rm -it \
     --scanner openvas --allow-duplicates --output-file openvas_test \
     --output-dir claims/out/minimum_test
 
-# Claim 1 (Claim 2 is the same command with claim2_version_progression.sh)
+# Summary
 docker run --rm -it \
   -v "$PWD/.env:/app/.env:ro" \
   -v "$PWD/claims/out:/app/claims/out" \
   mulitaminer \
-  bash claims/claim1_extraction_metrics.sh
+  python tools/summarize_vulnerabilities.py \
+    --input claims/out/minimum_test/openvas_test.json
 ```
 
-On Windows PowerShell, replace `$PWD` with `${PWD}` and the trailing `\` with a backtick.
+Windows (PowerShell):
 
-## Minimum Test
+```powershell
+# Extraction
+docker run --rm -it `
+  -v "${PWD}/.env:/app/.env:ro" `
+  -v "${PWD}/claims/out:/app/claims/out" `
+  mulitaminer `
+  python main.py --input baselines/openvas/OpenVAS_JuiceShop.pdf --llm deepseek `
+    --scanner openvas --allow-duplicates --output-file openvas_test `
+    --output-dir claims/out/minimum_test
 
-After installation (including the `.env` file with the DeepSeek key), run a single extraction of the smallest report (OWASP Juice Shop) and summarize it in the terminal:
-
-```bash
-# Windows
-python main.py --input baselines\openvas\OpenVAS_JuiceShop.pdf --llm deepseek --scanner openvas --allow-duplicates --output-file openvas_test --output-dir claims\out\minimum_test
-python tools\summarize_vulnerabilities.py --input claims\out\minimum_test\openvas_test.json
-
-# Linux/macOS
-python3 main.py --input baselines/openvas/OpenVAS_JuiceShop.pdf --llm deepseek --scanner openvas --allow-duplicates --output-file openvas_test --output-dir claims/out/minimum_test
-python3 tools/summarize_vulnerabilities.py --input claims/out/minimum_test/openvas_test.json
+# Summary
+docker run --rm -it `
+  -v "${PWD}/.env:/app/.env:ro" `
+  -v "${PWD}/claims/out:/app/claims/out" `
+  mulitaminer `
+  python tools/summarize_vulnerabilities.py `
+    --input claims/out/minimum_test/openvas_test.json
 ```
 
 **Expected time**: ~3 minutes
@@ -263,9 +245,9 @@ LOG        | Postfix SMTP Server Detection                      | CVSS 0.0 | 25/
 
 ## Experiments
 
-This section describes how to reproduce the main claims from the paper. Each claim has a ready-to-run script in [claims/](claims/) (`.bat` for Windows, `.sh` for Linux/macOS), to be executed from the repository root with the virtual environment active. Outputs are written to `claims/out/`.
+This section describes how to reproduce the main claims from the paper. Each claim has a ready-to-run script in [claims/](claims/), executed inside the container from the repository root. Outputs are written to `claims/out/` on the host.
 
-Both claims use **DeepSeek only**, the API key provided for evaluation (configure `.env` as shown in [Installation](#installation)). Both scripts also run inside the Docker image, see [Alternative: Docker](#alternative-docker).
+Both claims use **DeepSeek only**, the API key provided for evaluation (configure `.env` as shown in [Installation](#installation)).
 
 > **Note on execution times**: based on AMD Ryzen 5 5600G, 32GB RAM, 1TB SSD, Windows 11. Actual times may vary depending on system specifications, network latency, and API response times.
 
@@ -277,17 +259,29 @@ Both claims use **DeepSeek only**, the API key provided for evaluation (configur
 
 **Execution**:
 
-```bash
-# Windows
-claims\claim1_extraction_metrics.bat
+Linux/macOS:
 
-# Linux/macOS
-bash claims/claim1_extraction_metrics.sh
+```bash
+docker run --rm -it \
+  -v "$PWD/.env:/app/.env:ro" \
+  -v "$PWD/claims/out:/app/claims/out" \
+  mulitaminer \
+  bash claims/claim1_extraction_metrics.sh
 ```
 
-**Expected time**: ~5 minutes (~3 for the extraction; on a native install the first metrics run also downloads the DistilBERT model used by BERTScore, which the Docker image already carries)
+Windows (PowerShell):
 
-**Expected resources**: ~2 GB RAM during the metric pass (PyTorch/BERTScore); ~300 MB extra disk for the DistilBERT model on first use; one DeepSeek extraction over the API (a fraction of a US dollar in tokens)
+```powershell
+docker run --rm -it `
+  -v "${PWD}/.env:/app/.env:ro" `
+  -v "${PWD}/claims/out:/app/claims/out" `
+  mulitaminer `
+  bash claims/claim1_extraction_metrics.sh
+```
+
+**Expected time**: ~5 minutes (~3 for the extraction, the rest for the metric battery)
+
+**Expected resources**: ~2 GB RAM during the metric pass (PyTorch/BERTScore); one DeepSeek extraction over the API (a fraction of a US dollar in tokens)
 
 **Expected result**: a terminal table listing the extracted vulnerabilities (approximately 34 records following the canonical 18-field schema: `Name`, `description`, `severity`, `cvss`, `port`, `protocol`, `references`, etc.), followed by a terminal metric summary. Reference values for DeepSeek on JuiceShop under V3 (mean of 10 runs in the paper's evaluation): Exact Record Match in the 0.90-0.95 range, field-level omission in the 3-6% range, severity macro-F1 ≥ 0.9. The underlying extraction JSON and metric reports are also written to `claims/out/results_runs_v3/` for inspection.
 
@@ -320,17 +314,29 @@ Severity macro-F1          0.93
 
 **Execution**:
 
-```bash
-# Windows
-claims\claim2_version_progression.bat
+Linux/macOS:
 
-# Linux/macOS
-bash claims/claim2_version_progression.sh
+```bash
+docker run --rm -it \
+  -v "$PWD/.env:/app/.env:ro" \
+  -v "$PWD/claims/out:/app/claims/out" \
+  mulitaminer \
+  bash claims/claim2_version_progression.sh
+```
+
+Windows (PowerShell):
+
+```powershell
+docker run --rm -it `
+  -v "${PWD}/.env:/app/.env:ro" `
+  -v "${PWD}/claims/out:/app/claims/out" `
+  mulitaminer `
+  bash claims/claim2_version_progression.sh
 ```
 
 **Expected time**: ~10 minutes (legacy dependency install + two extractions + metrics)
 
-**Expected resources**: ~2 GB RAM during the metric pass; ~500 MB extra disk for the unpacked V1/V2 snapshots and their virtual environment; two DeepSeek extractions over the API (a fraction of a US dollar in tokens)
+**Expected resources**: ~2 GB RAM during the metric pass; ~500 MB extra disk under `claims/out/` for the unpacked V1/V2 snapshots and their virtual environment; two DeepSeek extractions over the API (a fraction of a US dollar in tokens)
 
 **Expected result**: a terminal table comparing the three versions side by side on the same extraction task. Reference values for DeepSeek on JuiceShop (mean of 10 runs in the paper's evaluation):
 
