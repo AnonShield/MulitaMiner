@@ -202,15 +202,17 @@ See [docs/CONFIG.md](docs/CONFIG.md) for all configuration options.
 
 ### Alternative: Docker
 
-If no supported interpreter is available locally, the bundled [Dockerfile](Dockerfile) pins Python 3.11 and installs the same requirements:
+If no supported interpreter is available locally, the bundled [Dockerfile](Dockerfile) pins Python 3.11 and installs the same requirements, replacing steps 2 and 3:
 
 ```bash
+git clone -b V3 https://github.com/AnonShield/MulitaMiner.git
+cd MulitaMiner
 docker build -t mulitaminer .
 ```
 
 The build takes a few minutes and produces a large image (~3 GB): besides the CPU build of PyTorch, it bakes in the DistilBERT model used by BERTScore, so the metric phase of the claims does not depend on downloading it from the network at run time.
 
-The image never contains your API key: [.dockerignore](.dockerignore) keeps `.env` out of the build context, and the file is mounted read-only when the container runs. Two mounts are used below: `.env` carries the DeepSeek key into the container, and `claims/out` keeps the generated outputs on the host.
+The image never contains your API key: [.dockerignore](.dockerignore) keeps `.env` out of the build context, and the file is mounted read-only when the container runs. Two mounts are used below: the `.env` of step 4 carries the DeepSeek key into the container, and `claims/out` keeps the generated outputs on the host.
 
 ```bash
 # Minimum test
