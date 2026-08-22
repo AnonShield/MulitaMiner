@@ -159,11 +159,11 @@ cd MulitaMiner
 MulitaMiner runs on **Python 3.11 or 3.12**. Python 3.13+ is not supported: the pinned `numpy`/`scipy` releases publish no wheels for it and `pip` would try to compile them from source.
 
 ```bash
-# Windows
+# Windows (use py -3.12 for Python 3.12)
 py -3.11 -m venv .venv
 .venv\Scripts\activate
 
-# Linux/Mac
+# Linux/Mac (use python3.12 for Python 3.12)
 python3.11 -m venv .venv
 source .venv/bin/activate
 ```

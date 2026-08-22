@@ -53,12 +53,12 @@ source .venv/bin/activate
 #### Alternative: pip + venv
 
 ```bash
-# Windows
+# Windows (use py -3.12 for Python 3.12)
 py -3.11 -m venv .venv
 .venv\Scripts\activate
 pip install -r requirements.txt
 
-# Linux/macOS
+# Linux/macOS (use python3.12 for Python 3.12)
 python3.11 -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
